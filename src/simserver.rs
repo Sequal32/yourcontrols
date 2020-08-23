@@ -1,15 +1,13 @@
-use std::net::{TcpListener, UdpSocket};
-use std::thread;
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
 use crossbeam_channel::{Sender, Receiver, unbounded};
-use serde_json::{json, Value};
+use serde_json::{Value};
 use std::io::{Write, Read};
+use std::net::{TcpListener, UdpSocket};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::thread;
 
-pub struct ControllingState {
-}
 
-pub struct DualServer {
+pub struct Server {
 }
 
 pub enum OpCodes {
@@ -31,22 +29,23 @@ fn handle_data(data: &Value) -> Result<OpCodes, &'static str> {
     }
 }
 
-impl DualServer {
+impl Server {
     pub fn new() -> Self  {
         return Self {
             
         }
     }
 
-    pub fn start(&mut self, port: u32) -> (Sender<Value>, Receiver<Value>) {
+    pub fn start(&mut self, port: u16) -> Result<(Sender<Value>, Receiver<Value>), std::io::Error> {
         let (servertx, serverrx) = unbounded::<Value>();
         let (clienttx, clientrx) = unbounded::<Value>();
 
-        
-        std::thread::spawn(move || {
-            let listener = TcpListener::bind(format!("127.0.0.1:{}", port)).unwrap();
-            let udp = UdpSocket::bind(format!("127.0.0.1:{}", port + 1)).unwrap();
+        let listener = match TcpListener::bind(format!("0.0.0.0:{}", port)) {
+            Ok(listener) => listener,
+            Err(n) => {return Err(n)}
+        };
 
+        thread::spawn(move || {
             loop {
                 for stream in listener.incoming() {
                     let mut stream = match stream {
@@ -59,17 +58,18 @@ impl DualServer {
                     let tx = servertx.clone();
                     let rx = clientrx.clone();
                     // Address to send udp packets with
-                    let addr = stream.local_addr().unwrap();
+                    let mut addr = stream.peer_addr().unwrap();
+
+                    println!("NEW CONNECTION {}", addr.ip().to_string());
 
                     // Create clones of streams that each thread can use safely
                     let mut stream_clone = stream.try_clone().unwrap();
-                    let udpclone = udp.try_clone().unwrap();
 
                     // Will determine thread disconnection
                     let did_disconnect = Arc::new(AtomicBool::new(false));
                     let disconnect_clone = did_disconnect.clone();
 
-                    std::thread::spawn(move || {
+                    thread::spawn(move || {
                         loop {
                             let mut buf = [0; 1024];
                             let tcpdata = stream.read(&mut buf);
@@ -81,6 +81,7 @@ impl DualServer {
                                     break
                                 },
                                 Ok(n) => {
+                                    // Receive data
                                     tx.send(serde_json::from_str(&String::from_utf8(buf[..n].to_vec()).unwrap()).unwrap()).expect("Error transmitting data!");
                                 },
                                 Err(_) => ()
@@ -88,46 +89,26 @@ impl DualServer {
                         }
                     });
                     
-                    std::thread::spawn(move || {
-                        loop {
-                            let data = rx.recv();
+                    loop {
+                        // Send to all clients
+                        let data = rx.recv();
 
-                            if disconnect_clone.load(Ordering::SeqCst) {break}
+                        if disconnect_clone.load(Ordering::SeqCst) {break}
 
-                            match data {
-                                Ok(value) => {
-                                    let payload_string = value["payload"].to_string();
-                                    let payload = payload_string.as_bytes();
-                                    match value["type"].as_str().unwrap() {
-                                        "udp" => udpclone.send_to(payload, addr),
-                                        "tcp" => stream_clone.write(payload),
-                                        _ => panic!("Undefined value type!")
-                                    }.expect("Error receiving data!");
-                                },
-                                Err(_) => break
-                            }
+                        match data {
+                            Ok(value) => {
+                                let payload_string = value.to_string() + "\n";
+                                let payload = payload_string.as_bytes();
+                                stream_clone.write(payload).expect("!");
+                            },
+                            Err(_) => break
                         }
-                    });
+                    }
                 }
             }
         });
         
 
-        return (clienttx, serverrx);
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn test_recv() {
-        let mut server = DualServer::new();
-        let (tx, rx) = server.start(32005);
-        loop {
-            // tx.send(Value::from("[\"hello\"]"));
-            println!("{:?}", rx.recv());
-            // std::thread::sleep_ms(1000);
-        }
+        return Ok((clienttx, serverrx));
     }
 }
