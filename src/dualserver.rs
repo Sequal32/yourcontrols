@@ -1,5 +1,7 @@
 use std::net::{TcpListener, UdpSocket};
 use std::thread;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use crossbeam_channel::{Sender, Receiver, unbounded};
 use serde_json::{json, Value};
 use std::io::{Write, Read};
@@ -64,10 +66,10 @@ impl DualServer {
                     let udpclone = udp.try_clone().unwrap();
 
                     // Will determine thread disconnection
-                    let mut did_disconnect = false;
+                    let did_disconnect = Arc::new(AtomicBool::new(false));
+                    let disconnect_clone = did_disconnect.clone();
 
                     std::thread::spawn(move || {
-                        let disconnect_bool = &mut did_disconnect;
                         loop {
                             let mut buf = [0; 1024];
                             let tcpdata = stream.read(&mut buf);
@@ -75,7 +77,7 @@ impl DualServer {
                             match tcpdata {
                                 // socket closed
                                 Ok(n) if n == 0 => {
-                                    *disconnect_bool = true;
+                                    did_disconnect.store(true, Ordering::SeqCst);
                                     break
                                 },
                                 Ok(n) => {
@@ -90,11 +92,12 @@ impl DualServer {
                         loop {
                             let data = rx.recv();
 
-                            if did_disconnect {break}
+                            if disconnect_clone.load(Ordering::SeqCst) {break}
 
                             match data {
                                 Ok(value) => {
-                                    let payload = value["payload"].as_str().unwrap().as_bytes();
+                                    let payload_string = value["payload"].to_string();
+                                    let payload = payload_string.as_bytes();
                                     match value["type"].as_str().unwrap() {
                                         "udp" => udpclone.send_to(payload, addr),
                                         "tcp" => stream_clone.write(payload),
