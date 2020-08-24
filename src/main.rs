@@ -1,6 +1,8 @@
+mod definitions;
 mod simserver;
 mod simclient;
 mod simconfig;
+mod syncdefs;
 mod interpolate;
 
 use chrono;
@@ -8,7 +10,7 @@ use simconnectsdk;
 use simserver::Server;
 use simclient::Client;
 use interpolate::{interpolate_f64};
-use serde_json::{json, Value, Number};
+use serde_json::{json, Value};
 use serde::{Deserialize, Serialize};
 use std::{str::FromStr, net::Ipv4Addr};
 use simconfig::Config;
@@ -71,61 +73,6 @@ struct PeriodicalStruct {
     cabin_on: bool,
 }
 
-fn map_data(conn: &simconnectsdk::SimConnector) {
-    conn.add_data_definition(0, "Plane Latitude", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "Plane Longitude", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "PLANE ALTITUDE", "Feet", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    
-    conn.add_data_definition(0, "PLANE PITCH DEGREES", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "PLANE BANK DEGREES", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "PLANE HEADING DEGREES MAGNETIC", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(0, "GENERAL ENG THROTTLE LEVER POSITION:1", "Percent", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "GENERAL ENG MIXTURE LEVER POSITION:1", "Percent", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    // conn.add_data_definition(0, "GENERAL ENG PROP LEVER POSITION:1", "Percent", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(0, "VELOCITY WORLD X", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "VELOCITY WORLD Y", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "VELOCITY WORLD Z", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ACCELERATION WORLD X", "Feet per second squared", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ACCELERATION WORLD Y", "Feet per second squared", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ACCELERATION WORLD Z", "Feet per second squared", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ROTATION VELOCITY BODY X", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ROTATION VELOCITY BODY Y", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ROTATION VELOCITY BODY Z", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(0, "AIRSPEED TRUE", "Knots", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "YOKE X POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "YOKE Y POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(0, "RUDDER PEDAL POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "RUDDER POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ELEVATOR POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "AILERON POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(0, "ELEVATOR TRIM POSITION", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "RUDDER POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "BRAKE LEFT POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "BRAKE RIGHT POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "FLAPS HANDLE INDEX", "Number", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    // conn.add_data_definition(0, "GEAR HANDLE POSITION", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, u32::MAX);
-    // conn.add_data_definition(0, "GEAR CENTER POSITION", "Percent Over 100", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    // conn.add_data_definition(0, "GEAR LEFT POSITION", "Percent Over 100", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    // conn.add_data_definition(0, "GEAR RIGHT POSITION", "Percent Over 100", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(1, "LIGHT STROBE", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 0);
-    conn.add_data_definition(1, "LIGHT PANEL", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 1);
-    conn.add_data_definition(1, "LIGHT LANDING", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 2);
-    conn.add_data_definition(1, "LIGHT TAXI", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 3);
-    conn.add_data_definition(1, "LIGHT BEACON", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 4);
-    conn.add_data_definition(1, "LIGHT NAV", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 5);
-    conn.add_data_definition(1, "LIGHT LOGO", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 6);
-    conn.add_data_definition(1, "LIGHT WING", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 7);
-    conn.add_data_definition(1, "LIGHT RECOGNITION", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 8);
-    conn.add_data_definition(1, "LIGHT CABIN", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 9);
-}
-
 fn main() {
     // Load configuration file
     let config = Config::read_from_file("config.json").unwrap_or_default();
@@ -133,19 +80,25 @@ fn main() {
     // Set up sim connect
     let mut conn = simconnectsdk::SimConnector::new();
     conn.connect("Simple Shared Cockpit");
-    map_data(&conn);
+
+    definitions::map_data(&conn);
+    definitions::map_events(&conn);
+
     conn.request_data_on_sim_object(0, 0, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
     conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
 
-    conn.map_client_event_to_sim_event(1, "FREEZE_LATITUDE_LONGITUDE_TOGGLE");
-    conn.map_client_event_to_sim_event(2, "FREEZE_ALTITUDE_TOGGLE");
-    
-    // conn.map_client_event_to_sim_event(0, "STROBES_TOGGLE");
-    // conn.transmit_client_event(1, 0, 0, 1, 0);
+    conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
+    conn.map_client_event_to_sim_event(1001, "FREEZE_ALTITUDE_SET");
+    conn.map_client_event_to_sim_event(1002, "FREEZE_ATTITUDE_SET");
+    conn.map_client_event_to_sim_event(1003, "FREEZE_LATITUDE_LONGITUDE_TOGGLE");
+    conn.map_client_event_to_sim_event(1004, "FREEZE_ALTITUDE_TOGGLE");
+    conn.map_client_event_to_sim_event(1005, "FREEZE_ATTITUDE_TOGGLE");
 
+    conn.map_input_event_to_client_event(1, "Ctrl+Shift+Y", 2001, 0, u32::MAX, 0, false);
     // Whether to start a client or a server
 
-    let is_server;
+    let mut has_control;
+    let mut can_take_control = false;
 
     println!("Enter ip to connect or type s to start server: ");
     let result: String = text_io::read!("{}");
@@ -155,7 +108,7 @@ fn main() {
             match server.start(config.port) {
                 Ok((tx, rx)) => {
                     println!("Server started!");
-                    is_server = true;
+                    has_control = true;
                     (tx, rx)
                 },
                 Err(err) => panic!("Could not start server! {:?}", err)
@@ -165,7 +118,7 @@ fn main() {
             Ok(ip) => match Client::start(ip, config.port) {
                 Ok((tx, rx)) => {
                     println!("Client connected!");
-                    is_server = false;
+                    has_control = false;
                     (tx, rx)
                 },
                 Err(err) => panic!("Could not start client! {:?}", err)
@@ -173,10 +126,19 @@ fn main() {
             Err(_) => panic!("Invalid ip provided!")
         }
     };
+    conn.transmit_client_event(1, 1000, 0, 5, 0);
+    conn.transmit_client_event(1, 1001, 0, 5, 0);
+    conn.transmit_client_event(1, 1002, 0, 5, 0);
+    if has_control {
+        conn.transmit_client_event(1, 1003, 0, 5, 0);
+        conn.transmit_client_event(1, 1004, 0, 5, 0);
+        conn.transmit_client_event(1, 1005, 0, 5, 0);
+    }
 
     let mut instant = std::time::Instant::now();
     let mut last_pos_update: Option<Value> = None;
     let mut pos_update: Option<Value> = None;
+    let mut current_pos: Option<Value> = None;
     // Set data upon receipt
     let mut interpolation_time = 0.0;
     let mut add_alpha = 0.0;
@@ -201,6 +163,7 @@ fn main() {
                             send_type = "physics";
                             let val = serde_json::to_value(&sim_data).unwrap();
                             data_string = val.to_string();
+                            current_pos = Some(val);
                         },
                         1 => {
                             let sim_data: PeriodicalStruct = std::mem::transmute_copy(&(*data).dwData);
@@ -211,13 +174,13 @@ fn main() {
                     };
 
                     // Update position data
-                    if is_server && tick % 15 == 0 {
+                    if has_control && tick % 15 == 0 {
                         tx.send(json!({
                             "type": send_type,
                             "data": data_string,
                             "time": chrono::Utc::now().timestamp_millis()
                         })).expect("!");
-                    } else if !is_server {
+                    } else if !has_control {
                         match (&last_pos_update, &pos_update) {
                             (Some(last), Some(current)) => {
                                 // Interpolate previous recorded position with previous update
@@ -234,18 +197,8 @@ fn main() {
                                         updated_map.insert(key.to_string(), value.clone());
                                     }
                                 }
-    
+
                                 let mut updated: PosStruct = serde_json::from_value(serde_json::value::to_value(updated_map).unwrap()).unwrap();
-                                // Disable physics
-                                updated.velocity_x = 0.0;
-                                updated.velocity_y = 0.0;
-                                updated.velocity_z = 0.0;
-                                updated.accel_x = 0.0;
-                                updated.accel_y = 0.0;
-                                updated.accel_z = 0.0;
-                                updated.rotation_vel_x = 0.0;
-                                updated.rotation_vel_y = 0.0;
-                                updated.rotation_vel_z = 0.0;
                                 let data_pointer: *mut std::ffi::c_void = &mut updated as *mut PosStruct as *mut std::ffi::c_void;
                                 conn.set_data_on_sim_object(0, 0, 0, 0, std::mem::size_of::<PosStruct>() as u32, data_pointer);
                             },
@@ -260,7 +213,33 @@ fn main() {
                     println!("{:?}", (*data).dwException);
                 }
             },
-            _ => {}
+            Ok(simconnectsdk::DispatchResult::Event(data)) => {
+                unsafe {
+                    match (*data).uGroupID {
+                        0 => {
+                            tx.send(json!({
+                                "type": "event",
+                                "eventid": (*data).uEventID,
+                                "data": (*data).dwData
+                            })).expect("!");
+                        },
+                        1 => {
+                            if has_control {
+                                tx.send(json!({
+                                    "type": "relieve_control"
+                                })).expect("!");
+                            } else if can_take_control {
+                                tx.send(json!({
+                                    "type": "transfer_control"
+                                })).expect("!");
+                            }
+                        },
+
+                        _ => ()
+                    }
+                }
+            }
+            _ => ()
         };
         
         match rx.try_recv() {
@@ -270,18 +249,28 @@ fn main() {
                         Some(p) => {
                             let cache_interpolation_time = interpolation_time;
                             interpolation_time = (value["time"].as_i64().unwrap()-p["time"].as_i64().unwrap()) as f64;
-
                             add_alpha = (instant.elapsed().as_secs_f64() - cache_interpolation_time/1000.0)/interpolation_time;
                             if add_alpha < 0.0 {add_alpha = 0.0}
                             
                             instant = std::time::Instant::now();
-                            last_pos_update = pos_update.clone();
+                            last_pos_update = current_pos.take();
                         },
                         _ => (),
                     }
                     pos_update = Some(serde_json::from_str(value["data"].as_str().unwrap()).unwrap());
                     last_packet = Some(value);
                 },
+                "event" => {
+                    let event_id = value["eventid"].as_u64().unwrap();
+                    let data = value["data"].as_i64().unwrap();
+                    conn.transmit_client_event(1, event_id as u32, data as u32, 0, 0);
+                },
+                "relievecontrol" => {
+                    can_take_control = true;
+                },
+                "transfercontrol" => {
+                    if has_control {has_control = false;}
+                }
                 _ => ()
             },
             Err(_) => {}
