@@ -1,17 +1,20 @@
 mod simserver;
 mod simclient;
 mod simconfig;
-use simconnectsdk;
+mod interpolate;
 
+use chrono;
+use simconnectsdk;
 use simserver::Server;
 use simclient::Client;
-use serde_json::json;
+use interpolate::{interpolate_f64};
+use serde_json::{json, Value, Number};
 use serde::{Deserialize, Serialize};
 use std::{str::FromStr, net::Ipv4Addr};
 use simconfig::Config;
 
 #[repr(C)]
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone)]
 struct PosStruct {
     // 3D
     lat: f64,
@@ -69,13 +72,13 @@ struct PeriodicalStruct {
 }
 
 fn map_data(conn: &simconnectsdk::SimConnector) {
-    conn.add_data_definition(0, "Plane Latitude", "degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "Plane Longitude", "degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
+    conn.add_data_definition(0, "Plane Latitude", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
+    conn.add_data_definition(0, "Plane Longitude", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
     conn.add_data_definition(0, "PLANE ALTITUDE", "Feet", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
     
-    conn.add_data_definition(0, "PLANE PITCH DEGREES", "degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "PLANE BANK DEGREES", "degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "PLANE HEADING DEGREES MAGNETIC", "degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
+    conn.add_data_definition(0, "PLANE PITCH DEGREES", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
+    conn.add_data_definition(0, "PLANE BANK DEGREES", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
+    conn.add_data_definition(0, "PLANE HEADING DEGREES MAGNETIC", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
 
     conn.add_data_definition(0, "GENERAL ENG THROTTLE LEVER POSITION:1", "Percent", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
     conn.add_data_definition(0, "GENERAL ENG MIXTURE LEVER POSITION:1", "Percent", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
@@ -136,9 +139,10 @@ fn main() {
 
     // Whether to start a client or a server
 
+    let is_server;
+
     println!("Enter ip to connect or type s to start server: ");
     let result: String = text_io::read!("{}");
-    let is_server: bool;
     let (tx, rx) = match result.len() {
         1 => { 
             let mut server = Server::new();
@@ -163,9 +167,16 @@ fn main() {
             Err(_) => panic!("Invalid ip provided!")
         }
     };
-    
-    let mut tick = 0;
 
+    let mut instant = std::time::Instant::now();
+    let mut last_pos_update: Option<Value> = None;
+    let mut pos_update: Option<Value> = None;
+    // Set data upon receipt
+    let mut interpolation_time = 0.0;
+    let mut last_packet: Option<Value> = None;
+
+    let mut tick = 0;
+    
     loop {
         let message = conn.get_next_message();
         match message {
@@ -175,15 +186,14 @@ fn main() {
                     let send_type: &str;
                     let data_string: String;
 
+                    tick += 1;
+
                     match (*data).dwDefineID {
                         0 => {
-                            // Reduce send rate
-                            // if tick % 5 != 0 || !is_server {continue}
-                            tick += 1;
-
                             let sim_data: PosStruct = std::mem::transmute_copy(&(*data).dwData);
                             send_type = "physics";
-                            data_string = serde_json::to_string(&sim_data).unwrap();
+                            let val = serde_json::to_value(&sim_data).unwrap();
+                            data_string = val.to_string();
                         },
                         1 => {
                             let sim_data: PeriodicalStruct = std::mem::transmute_copy(&(*data).dwData);
@@ -193,12 +203,41 @@ fn main() {
                         _ => panic!("Not covered!")
                     };
 
-                    tx.send(json!({
-                        "type": send_type,
-                        "data": data_string
-                    })).expect("!");
+                    // Update position data
+                    if is_server && tick % 15 == 0 {
+                        tx.send(json!({
+                            "type": send_type,
+                            "data": data_string,
+                            "time": chrono::Utc::now().timestamp_millis()
+                        })).expect("!");
+                    } else if !is_server {
+                        match (&last_pos_update, &pos_update) {
+                            (Some(last), Some(current)) => {
+                                // Interpolate previous recorded position with previous update
+                                let current_object = current.as_object().unwrap();
+                                let mut updated_map = serde_json::Map::new();
+
+                                let alpha = instant.elapsed().as_millis() as f64/interpolation_time;
+    
+                                for (key, value) in last.as_object().unwrap() {
+                                    if value.is_f64() {
+                                        let interpolated = interpolate_f64(value.as_f64().unwrap(), current_object[key].as_f64().unwrap(), alpha);
+                                        updated_map.insert(key.to_string(), Value::from(interpolated));
+                                    } else {
+                                        updated_map.insert(key.to_string(), value.clone());
+                                    }
+                                }
+                                println!("{:?} {:?} {:?} {:?}", last["lat"], current["lat"], alpha, updated_map["lat"]);
+    
+                                let mut updated: PosStruct = serde_json::from_value(serde_json::value::to_value(updated_map).unwrap()).unwrap();
+                                // println!("{:?}", updated);
+                                let data_pointer: *mut std::ffi::c_void = &mut updated as *mut PosStruct as *mut std::ffi::c_void;
+                                conn.set_data_on_sim_object(0, 0, 0, 0, std::mem::size_of::<PosStruct>() as u32, data_pointer);
+                            },
+                            _ => ()
+                        }
+                    }
                 }
-                
             },
             // Exception occured
             Ok(simconnectsdk::DispatchResult::Exception(data)) => {
@@ -208,18 +247,26 @@ fn main() {
             },
             _ => {}
         };
-        // Set data upon receipt
+        
         match rx.try_recv() {
             Ok(value) => match value["type"].as_str().unwrap() {
                 "physics" => {
-                    let mut data: PosStruct = serde_json::from_str(value["data"].as_str().unwrap()).unwrap();
-                    println!("{:?}", data);
-                    let data_pointer: *mut std::ffi::c_void = &mut data as *mut PosStruct as *mut std::ffi::c_void;
-                    conn.set_data_on_sim_object(0, 0, 0, 0, std::mem::size_of::<PosStruct>() as u32, data_pointer);
+                    match last_packet {
+                        Some(p) => {
+                            interpolation_time = (value["time"].as_i64().unwrap()-p["time"].as_i64().unwrap()) as f64;
+                            instant = std::time::Instant::now();
+                            last_pos_update = pos_update.clone();
+                        },
+                        _ => (),
+                    }
+                    pos_update = Some(serde_json::from_str(value["data"].as_str().unwrap()).unwrap());
+                    last_packet = Some(value);
                 },
                 _ => ()
             },
-            Err(_) => {continue;}
+            Err(_) => {}
         }
+
+        std::thread::sleep(std::time::Duration::from_millis(16));
     }
 }

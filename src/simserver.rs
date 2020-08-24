@@ -1,32 +1,13 @@
 use crossbeam_channel::{Sender, Receiver, unbounded};
 use serde_json::{Value};
 use std::io::{Write, Read};
-use std::net::{TcpListener, UdpSocket};
+use std::net::{TcpListener};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
 
 
 pub struct Server {
-}
-
-pub enum OpCodes {
-    Update(Value),
-    UpdatePeriodical(Value),
-    Init(Value),
-    RequestControl,
-    RelieveControl,
-}
-
-fn handle_data(data: &Value) -> Result<OpCodes, &'static str> {
-    match data["op"].as_str() {
-        Some("update") => Ok(OpCodes::Update(data["payload"].clone())),
-        Some("periodical") => Ok(OpCodes::UpdatePeriodical(data["payload"].clone())),
-        Some("init") => Ok(OpCodes::Init(data["payload"].clone())),
-        Some("request") => Ok(OpCodes::RequestControl),
-        Some("relieve") => Ok(OpCodes::RelieveControl),
-        _ => Err("Undefined opcode.")
-    }
 }
 
 impl Server {
@@ -58,7 +39,7 @@ impl Server {
                     let tx = servertx.clone();
                     let rx = clientrx.clone();
                     // Address to send udp packets with
-                    let mut addr = stream.peer_addr().unwrap();
+                    let addr = stream.peer_addr().unwrap();
 
                     println!("NEW CONNECTION {}", addr.ip().to_string());
 

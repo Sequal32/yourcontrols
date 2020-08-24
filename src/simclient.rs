@@ -1,9 +1,8 @@
 use crossbeam_channel::{Sender, Receiver, unbounded};
 use serde_json::{Value};
 use std::net::{SocketAddr, IpAddr, TcpStream, Ipv4Addr};
-use std::io::{Write, Read, BufReader, BufRead};
+use std::io::{Write, BufReader, BufRead};
 use std::thread;
-use std::str::FromStr;
 
 pub struct Client {}
 
@@ -16,6 +15,7 @@ impl Client {
             Ok(stream) => stream,
             Err(_) => {return Err("Error opening stream!")}
         };
+        let stream_clone = stream.try_clone().unwrap();
 
         thread::spawn(move || {
             thread::spawn(move || {
@@ -23,24 +23,23 @@ impl Client {
                     // Send data to server
                     match serverrx.recv() {
                         Ok(data) => {
-                            stream.write_all(data.to_string().as_bytes());
+                            stream.write_all(data.to_string().as_bytes()).expect("!");
                         }
-                        Err(_) => {}
+                        Err(_) => break
                     }
                 }
                 
             });
-
+            let mut reader = BufReader::new(&stream_clone);
             loop {
                 let mut buf = String::new();
-                let mut reader = BufReader::new(&stream);
                 // Send data to program
                 match reader.read_line(&mut buf) {
                     Ok(_) => match serde_json::from_str(&buf.trim()) {
                         Ok(data) => clienttx.send(data).expect("!"),
                         Err(_) => ()
                     },
-                    Err(_) => ()
+                    Err(_) => break
                 };
             }
         });
