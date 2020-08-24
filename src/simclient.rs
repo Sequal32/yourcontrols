@@ -24,7 +24,7 @@ impl Client {
                     // Send data to server
                     match serverrx.recv() {
                         Ok(data) => {
-                            stream.write_all(data.to_string().as_bytes()).expect("!");
+                            stream.write_all((data.to_string() + "\n").as_bytes()).expect("!");
                         }
                         Err(_) => break
                     }

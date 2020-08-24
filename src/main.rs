@@ -40,7 +40,7 @@ struct PosStruct {
     rotation_vel_x: f64,
     rotation_vel_y: f64,
     rotation_vel_z: f64,
-    airspeed: f64,
+    // airspeed: f64,
     yoke_x: f64,
     yoke_y: f64,
     // Surfaces
@@ -51,9 +51,6 @@ struct PosStruct {
 
     elevator_trim: f64,
     rudder_trim: f64,
-    brake_left: f64,
-    brake_right: f64,
-    flaps: i32,
 
     // gear_handle: i16,
     // gear_center: f64,
@@ -72,6 +69,12 @@ struct SyncStruct {
     logo_on: bool,
     recognition_on: bool,
     cabin_on: bool,
+}
+
+fn transfer_control(conn: &simconnectsdk::SimConnector, has_control: bool) {
+    conn.transmit_client_event(1, 1000, !has_control as u32, 5, 0);
+    conn.transmit_client_event(1, 1001, !has_control as u32, 5, 0);
+    conn.transmit_client_event(1, 1002, !has_control as u32, 5, 0);
 }
 
 fn main() {
@@ -98,6 +101,8 @@ fn main() {
     conn.set_input_priority(2, simconnectsdk::SIMCONNECT_GROUP_PRIORITY_HIGHEST);
     conn.set_input_group_state(2, 1);
     conn.add_client_event_to_notification_group(1, 1005, false);
+
+    conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_ONCE);
     // Init syncable stuff
 
     // Whether to start a client or a server
@@ -130,14 +135,7 @@ fn main() {
             Err(_) => panic!("Invalid ip provided!")
         }
     };
-    conn.transmit_client_event(1, 1000, 0, 5, 0);
-    conn.transmit_client_event(1, 1001, 0, 5, 0);
-    conn.transmit_client_event(1, 1002, 0, 5, 0);
-    if has_control {
-        conn.transmit_client_event(1, 1003, 0, 5, 0);
-        conn.transmit_client_event(1, 1004, 0, 5, 0);
-        conn.transmit_client_event(1, 1005, 0, 5, 0);
-    }
+    transfer_control(&conn, has_control);
 
     let mut instant = std::time::Instant::now();
     let mut last_pos_update: Option<Value> = None;
@@ -172,8 +170,7 @@ fn main() {
                             let val = serde_json::to_value(&sim_data).unwrap();
                             data_string = val.to_string();
                             current_pos = Some(val);
-
-                            should_send = tick % 15 == 0;
+                            should_send = has_control && tick % 15 == 0;
                         },
                         1 => {
                             let sim_data: SyncStruct = std::mem::transmute_copy(&(*data).dwData);
@@ -186,15 +183,14 @@ fn main() {
                     };
 
                     // Update position data
-                    if has_control {
-                        if should_send {
-                            tx.send(json!({
-                                "type": send_type,
-                                "data": data_string,
-                                "time": chrono::Utc::now().timestamp_millis()
-                            })).expect("!");
-                        }
-                    } else {
+                    if should_send {
+                        tx.send(json!({
+                            "type": send_type,
+                            "data": data_string,
+                            "time": chrono::Utc::now().timestamp_millis()
+                        })).expect("!");
+                    }
+                    if !has_control {
                         match (&last_pos_update, &pos_update) {
                             (Some(last), Some(current)) => {
                                 // Interpolate previous recorded position with previous update
@@ -212,9 +208,20 @@ fn main() {
                                     }
                                 }
 
-                                let mut updated: PosStruct = serde_json::from_value(serde_json::value::to_value(updated_map).unwrap()).unwrap();
+                                let val = serde_json::value::to_value(updated_map).unwrap();
+                                let mut updated: PosStruct = serde_json::from_value(val.clone()).unwrap();
                                 let data_pointer: *mut std::ffi::c_void = &mut updated as *mut PosStruct as *mut std::ffi::c_void;
                                 conn.set_data_on_sim_object(0, 0, 0, 0, std::mem::size_of::<PosStruct>() as u32, data_pointer);
+
+                                current_pos = Some(val);
+
+                                if alpha > 10.0 {
+                                    last_pos_update = None;
+                                    has_control = true;
+                                    transfer_control(&conn, true);
+                                    can_take_control = false;
+                                    println!("No packet received within the last 10 seconds, taking control.");
+                                }
                             },
                             _ => ()
                         }
@@ -229,7 +236,6 @@ fn main() {
             },
             Ok(simconnectsdk::DispatchResult::Event(data)) => {
                 unsafe {
-                println!("{:?}", *data);
                     match (*data).uGroupID {
                         0 => {
                             tx.send(json!({
@@ -240,10 +246,13 @@ fn main() {
                         },
                         1 => {
                             if has_control {
+                                println!("RELIEVING CONTROL");
                                 tx.send(json!({
                                     "type": "relieve_control"
                                 })).expect("!");
                             } else if can_take_control {
+                                println!("TAKING CONTROL");
+                                has_control = true;
                                 tx.send(json!({
                                     "type": "transfer_control"
                                 })).expect("!");
@@ -276,12 +285,16 @@ fn main() {
                     last_packet = Some(value);
                 },
                 "sync_toggle" => {
-                    let data: Value = serde_json::from_str(&value["data"].as_str().unwrap()).unwrap();
-                    let last = (&last_bool_sync).as_ref().unwrap();
-                    for (key, value) in data.as_object().unwrap() {
-                        let last = last[key].as_bool().unwrap();
-                        let current = value.as_bool().unwrap();
-                        sync_map.get(key.as_str()).unwrap().sync(&conn, last, current);
+                    match (&last_bool_sync).as_ref() {
+                        Some(last) => {
+                            let data: Value = serde_json::from_str(&value["data"].as_str().unwrap()).unwrap();
+                            for (key, value) in data.as_object().unwrap() {
+                                let last = last[key].as_bool().unwrap();
+                                let current = value.as_bool().unwrap();
+                                sync_map.get(key.as_str()).unwrap().sync(&conn, last, current);
+                            }
+                        },
+                        None => ()
                     }
                 },
                 "event" => {
@@ -289,15 +302,22 @@ fn main() {
                     let data = value["data"].as_i64().unwrap();
                     conn.transmit_client_event(1, event_id as u32, data as u32, 0, 0);
                 },
-                "relievecontrol" => {
+                "relieve_control" => {
+                    println!("CAN TAKE CONTROL");
                     can_take_control = true;
                 },
-                "transfercontrol" => {
-                    if has_control {has_control = false;}
+                "transfer_control" => {
+                    println!("TRANSFER GIVEN UP");
+                    if has_control {
+                        has_control = false;
+                        can_take_control = false;
+                        transfer_control(&conn, false);
+                    }
                 }
                 _ => ()
             },
-            Ok(ReceiveData::NewConnection) => {
+            Ok(ReceiveData::NewConnection(ip)) => {
+                println!("NEW CONNECTION: {}", ip);
                 if has_control {
                     conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_ONCE);
                 }
@@ -305,6 +325,6 @@ fn main() {
             _ => ()
         }
 
-        std::thread::sleep(std::time::Duration::from_millis(1));
+        std::thread::sleep(std::time::Duration::from_millis(16));
     }
 }

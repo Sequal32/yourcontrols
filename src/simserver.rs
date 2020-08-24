@@ -1,6 +1,6 @@
 use crossbeam_channel::{Sender, Receiver, unbounded};
 use serde_json::{Value};
-use std::io::{Write, Read};
+use std::io::{Write, Read, BufReader, BufRead};
 use std::net::{TcpListener};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -12,7 +12,7 @@ pub struct Server {
 
 pub enum ReceiveData {
     Data(Value),
-    NewConnection,
+    NewConnection(String),
 }
 
 impl Server {
@@ -34,7 +34,7 @@ impl Server {
         thread::spawn(move || {
             loop {
                 for stream in listener.incoming() {
-                    let mut stream = match stream {
+                    let stream = match stream {
                         Ok(stream) => stream,
                         Err(_) => continue
                     };
@@ -44,10 +44,8 @@ impl Server {
                     let tx = servertx.clone();
                     let rx = clientrx.clone();
                     // Address to send udp packets with
-                    let addr = stream.peer_addr().unwrap();
-
-                    println!("NEW CONNECTION {}", addr.ip().to_string());
-                    tx.send(ReceiveData::NewConnection).expect("!");
+                    let addr = stream.peer_addr().unwrap().ip().to_string();
+                    tx.send(ReceiveData::NewConnection(addr)).expect("!");
 
                     // Create clones of streams that each thread can use safely
                     let mut stream_clone = stream.try_clone().unwrap();
@@ -56,20 +54,21 @@ impl Server {
                     let did_disconnect = Arc::new(AtomicBool::new(false));
                     let disconnect_clone = did_disconnect.clone();
 
+                    let mut reader = BufReader::new(stream);
+
                     thread::spawn(move || {
                         loop {
-                            let mut buf = [0; 1024];
-                            let tcpdata = stream.read(&mut buf);
+                            let mut buf = String::new();
 
-                            match tcpdata {
+                            match reader.read_line(&mut buf) {
                                 // socket closed
-                                Ok(n) if n == 0 => {
-                                    did_disconnect.store(true, Ordering::SeqCst);
-                                    break
-                                },
                                 Ok(n) => {
+                                    if n == 0 {
+                                        did_disconnect.store(true, Ordering::SeqCst);
+                                        break
+                                    }
                                     // Receive data
-                                    tx.send(ReceiveData::Data(serde_json::from_str(&String::from_utf8(buf[..n].to_vec()).unwrap()).unwrap())).expect("Error transmitting data!");
+                                    tx.send(ReceiveData::Data(serde_json::from_str(&buf).unwrap())).expect("Error transmitting data!");
                                 },
                                 Err(_) => ()
                             }
