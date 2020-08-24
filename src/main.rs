@@ -137,6 +137,12 @@ fn main() {
     conn.request_data_on_sim_object(0, 0, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
     conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
 
+    conn.map_client_event_to_sim_event(1, "FREEZE_LATITUDE_LONGITUDE_TOGGLE");
+    conn.map_client_event_to_sim_event(2, "FREEZE_ALTITUDE_TOGGLE");
+    
+    // conn.map_client_event_to_sim_event(0, "STROBES_TOGGLE");
+    // conn.transmit_client_event(1, 0, 0, 1, 0);
+
     // Whether to start a client or a server
 
     let is_server;
@@ -173,6 +179,7 @@ fn main() {
     let mut pos_update: Option<Value> = None;
     // Set data upon receipt
     let mut interpolation_time = 0.0;
+    let mut add_alpha = 0.0;
     let mut last_packet: Option<Value> = None;
 
     let mut tick = 0;
@@ -217,7 +224,7 @@ fn main() {
                                 let current_object = current.as_object().unwrap();
                                 let mut updated_map = serde_json::Map::new();
 
-                                let alpha = instant.elapsed().as_millis() as f64/interpolation_time;
+                                let alpha = instant.elapsed().as_millis() as f64/interpolation_time + add_alpha;
     
                                 for (key, value) in last.as_object().unwrap() {
                                     if value.is_f64() {
@@ -227,10 +234,18 @@ fn main() {
                                         updated_map.insert(key.to_string(), value.clone());
                                     }
                                 }
-                                println!("{:?} {:?} {:?} {:?}", last["lat"], current["lat"], alpha, updated_map["lat"]);
     
                                 let mut updated: PosStruct = serde_json::from_value(serde_json::value::to_value(updated_map).unwrap()).unwrap();
-                                // println!("{:?}", updated);
+                                // Disable physics
+                                updated.velocity_x = 0.0;
+                                updated.velocity_y = 0.0;
+                                updated.velocity_z = 0.0;
+                                updated.accel_x = 0.0;
+                                updated.accel_y = 0.0;
+                                updated.accel_z = 0.0;
+                                updated.rotation_vel_x = 0.0;
+                                updated.rotation_vel_y = 0.0;
+                                updated.rotation_vel_z = 0.0;
                                 let data_pointer: *mut std::ffi::c_void = &mut updated as *mut PosStruct as *mut std::ffi::c_void;
                                 conn.set_data_on_sim_object(0, 0, 0, 0, std::mem::size_of::<PosStruct>() as u32, data_pointer);
                             },
@@ -253,7 +268,12 @@ fn main() {
                 "physics" => {
                     match last_packet {
                         Some(p) => {
+                            let cache_interpolation_time = interpolation_time;
                             interpolation_time = (value["time"].as_i64().unwrap()-p["time"].as_i64().unwrap()) as f64;
+
+                            add_alpha = (instant.elapsed().as_secs_f64() - cache_interpolation_time/1000.0)/interpolation_time;
+                            if add_alpha < 0.0 {add_alpha = 0.0}
+                            
                             instant = std::time::Instant::now();
                             last_pos_update = pos_update.clone();
                         },
@@ -267,6 +287,6 @@ fn main() {
             Err(_) => {}
         }
 
-        std::thread::sleep(std::time::Duration::from_millis(16));
+        std::thread::sleep(std::time::Duration::from_millis(1));
     }
 }
