@@ -14,6 +14,7 @@ use serde_json::{json, Value};
 use serde::{Deserialize, Serialize};
 use std::{str::FromStr, net::Ipv4Addr};
 use simconfig::Config;
+use simserver::ReceiveData;
 
 #[repr(C)]
 #[derive(Serialize, Deserialize, Debug, Copy, Clone)]
@@ -61,7 +62,7 @@ struct PosStruct {
 }
 #[derive(Serialize, Deserialize, Debug)]
 #[repr(C)]
-struct PeriodicalStruct {
+struct SyncStruct {
     strobe_on: bool,
     panel_on: bool,
     landing_on: bool,
@@ -82,10 +83,9 @@ fn main() {
     conn.connect("Simple Shared Cockpit");
 
     definitions::map_data(&conn);
-    definitions::map_events(&conn);
+    let sync_map = definitions::map_events(&conn);
 
     conn.request_data_on_sim_object(0, 0, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
-    conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
 
     conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
     conn.map_client_event_to_sim_event(1001, "FREEZE_ALTITUDE_SET");
@@ -94,13 +94,17 @@ fn main() {
     conn.map_client_event_to_sim_event(1004, "FREEZE_ALTITUDE_TOGGLE");
     conn.map_client_event_to_sim_event(1005, "FREEZE_ATTITUDE_TOGGLE");
 
-    conn.map_input_event_to_client_event(1, "Ctrl+Shift+Y", 2001, 0, u32::MAX, 0, false);
+    conn.map_input_event_to_client_event(2, "Shift+U", 1005, 0, u32::MAX, 0, false);
+    conn.set_input_priority(2, simconnectsdk::SIMCONNECT_GROUP_PRIORITY_HIGHEST);
+    conn.set_input_group_state(2, 1);
+    conn.add_client_event_to_notification_group(1, 1005, false);
+    // Init syncable stuff
+
     // Whether to start a client or a server
 
     let mut has_control;
     let mut can_take_control = false;
 
-    println!("Enter ip to connect or type s to start server: ");
     let result: String = text_io::read!("{}");
     let (tx, rx) = match result.len() {
         1 => { 
@@ -144,6 +148,8 @@ fn main() {
     let mut add_alpha = 0.0;
     let mut last_packet: Option<Value> = None;
 
+    let mut last_bool_sync: Option<Value> = None;
+
     let mut tick = 0;
     
     loop {
@@ -157,6 +163,8 @@ fn main() {
 
                     tick += 1;
 
+                    let mut should_send = true;
+
                     match (*data).dwDefineID {
                         0 => {
                             let sim_data: PosStruct = std::mem::transmute_copy(&(*data).dwData);
@@ -164,23 +172,29 @@ fn main() {
                             let val = serde_json::to_value(&sim_data).unwrap();
                             data_string = val.to_string();
                             current_pos = Some(val);
+
+                            should_send = tick % 15 == 0;
                         },
                         1 => {
-                            let sim_data: PeriodicalStruct = std::mem::transmute_copy(&(*data).dwData);
-                            send_type = "periodical";
-                            data_string = serde_json::to_string(&sim_data).unwrap();
+                            let sim_data: SyncStruct = std::mem::transmute_copy(&(*data).dwData);
+                            send_type = "sync_toggle";
+                            let val = serde_json::to_value(&sim_data).unwrap();
+                            data_string = val.to_string();
+                            last_bool_sync = Some(val);
                         },
                         _ => panic!("Not covered!")
                     };
 
                     // Update position data
-                    if has_control && tick % 15 == 0 {
-                        tx.send(json!({
-                            "type": send_type,
-                            "data": data_string,
-                            "time": chrono::Utc::now().timestamp_millis()
-                        })).expect("!");
-                    } else if !has_control {
+                    if has_control {
+                        if should_send {
+                            tx.send(json!({
+                                "type": send_type,
+                                "data": data_string,
+                                "time": chrono::Utc::now().timestamp_millis()
+                            })).expect("!");
+                        }
+                    } else {
                         match (&last_pos_update, &pos_update) {
                             (Some(last), Some(current)) => {
                                 // Interpolate previous recorded position with previous update
@@ -215,6 +229,7 @@ fn main() {
             },
             Ok(simconnectsdk::DispatchResult::Event(data)) => {
                 unsafe {
+                println!("{:?}", *data);
                     match (*data).uGroupID {
                         0 => {
                             tx.send(json!({
@@ -243,7 +258,7 @@ fn main() {
         };
         
         match rx.try_recv() {
-            Ok(value) => match value["type"].as_str().unwrap() {
+            Ok(ReceiveData::Data(value)) => match value["type"].as_str().unwrap() {
                 "physics" => {
                     match last_packet {
                         Some(p) => {
@@ -260,6 +275,15 @@ fn main() {
                     pos_update = Some(serde_json::from_str(value["data"].as_str().unwrap()).unwrap());
                     last_packet = Some(value);
                 },
+                "sync_toggle" => {
+                    let data: Value = serde_json::from_str(&value["data"].as_str().unwrap()).unwrap();
+                    let last = (&last_bool_sync).as_ref().unwrap();
+                    for (key, value) in data.as_object().unwrap() {
+                        let last = last[key].as_bool().unwrap();
+                        let current = value.as_bool().unwrap();
+                        sync_map.get(key.as_str()).unwrap().sync(&conn, last, current);
+                    }
+                },
                 "event" => {
                     let event_id = value["eventid"].as_u64().unwrap();
                     let data = value["data"].as_i64().unwrap();
@@ -273,7 +297,12 @@ fn main() {
                 }
                 _ => ()
             },
-            Err(_) => {}
+            Ok(ReceiveData::NewConnection) => {
+                if has_control {
+                    conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_ONCE);
+                }
+            },
+            _ => ()
         }
 
         std::thread::sleep(std::time::Duration::from_millis(1));

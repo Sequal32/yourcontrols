@@ -10,6 +10,11 @@ use std::thread;
 pub struct Server {
 }
 
+pub enum ReceiveData {
+    Data(Value),
+    NewConnection,
+}
+
 impl Server {
     pub fn new() -> Self  {
         return Self {
@@ -17,8 +22,8 @@ impl Server {
         }
     }
 
-    pub fn start(&mut self, port: u16) -> Result<(Sender<Value>, Receiver<Value>), std::io::Error> {
-        let (servertx, serverrx) = unbounded::<Value>();
+    pub fn start(&mut self, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error> {
+        let (servertx, serverrx) = unbounded::<ReceiveData>();
         let (clienttx, clientrx) = unbounded::<Value>();
 
         let listener = match TcpListener::bind(format!("0.0.0.0:{}", port)) {
@@ -42,6 +47,7 @@ impl Server {
                     let addr = stream.peer_addr().unwrap();
 
                     println!("NEW CONNECTION {}", addr.ip().to_string());
+                    tx.send(ReceiveData::NewConnection).expect("!");
 
                     // Create clones of streams that each thread can use safely
                     let mut stream_clone = stream.try_clone().unwrap();
@@ -63,7 +69,7 @@ impl Server {
                                 },
                                 Ok(n) => {
                                     // Receive data
-                                    tx.send(serde_json::from_str(&String::from_utf8(buf[..n].to_vec()).unwrap()).unwrap()).expect("Error transmitting data!");
+                                    tx.send(ReceiveData::Data(serde_json::from_str(&String::from_utf8(buf[..n].to_vec()).unwrap()).unwrap())).expect("Error transmitting data!");
                                 },
                                 Err(_) => ()
                             }
