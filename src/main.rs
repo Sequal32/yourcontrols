@@ -99,10 +99,8 @@ fn main() {
     conn.map_client_event_to_sim_event(1004, "FREEZE_ALTITUDE_TOGGLE");
     conn.map_client_event_to_sim_event(1005, "FREEZE_ATTITUDE_TOGGLE");
 
-    conn.map_input_event_to_client_event(2, "Shift+U", 1005, 0, u32::MAX, 0, false);
-    conn.set_input_priority(2, simconnectsdk::SIMCONNECT_GROUP_PRIORITY_HIGHEST);
-    conn.set_input_group_state(2, 1);
-    conn.add_client_event_to_notification_group(1, 1005, false);
+    conn.map_client_event_to_sim_event(2000, "TOGGLE_WATER_RUDDER");
+    conn.add_client_event_to_notification_group(1, 2000, false);
 
     conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_ONCE);
     // Whether to start a client or a server

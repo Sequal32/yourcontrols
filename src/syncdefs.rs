@@ -4,10 +4,6 @@ pub trait Syncable<T> {
     fn sync(&self, conn: &simconnectsdk::SimConnector, from: T, to: T);
 }
 
-enum SyncStat {
-    ToggleNeedsAdjustment
-}
-
 pub struct ToggleSwitch {
     event_id: u32,
 }

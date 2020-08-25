@@ -777,7 +777,3 @@ pub fn map_events(conn: &simconnectsdk::SimConnector) -> HashMap<&str, Box<dyn S
 
     return sync_map;
 }
-
-fn map_sim_var_to_event() {
-    
-}
