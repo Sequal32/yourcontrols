@@ -9,7 +9,7 @@ use chrono;
 use simconnectsdk;
 use simserver::Server;
 use simclient::Client;
-use interpolate::{interpolate_f64};
+use interpolate::{interpolate_f64, interpolate_f64_degrees};
 use serde_json::{json, Value};
 use serde::{Deserialize, Serialize};
 use std::{str::FromStr, net::Ipv4Addr};
@@ -51,11 +51,6 @@ struct PosStruct {
 
     elevator_trim: f64,
     rudder_trim: f64,
-
-    // gear_handle: i16,
-    // gear_center: f64,
-    // gear_left: f64,
-    // gear_right: f64,
 }
 #[derive(Serialize, Deserialize, Debug)]
 #[repr(C)]
@@ -79,7 +74,14 @@ fn transfer_control(conn: &simconnectsdk::SimConnector, has_control: bool) {
 
 fn main() {
     // Load configuration file
-    let config = Config::read_from_file("config.json").unwrap_or_default();
+    let config = match Config::read_from_file("config.json") {
+        Ok(config) => config,
+        Err(_) => {
+            let config = Config::default();
+            config.write_to_file("config.json").expect("!");
+            config
+        }
+    };
     
     // Set up sim connect
     let mut conn = simconnectsdk::SimConnector::new();
@@ -103,13 +105,12 @@ fn main() {
     conn.add_client_event_to_notification_group(1, 1005, false);
 
     conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_ONCE);
-    // Init syncable stuff
-
     // Whether to start a client or a server
 
     let mut has_control;
     let mut can_take_control = false;
 
+    println!("Enter ip to connect or type s to start server: ");
     let result: String = text_io::read!("{}");
     let (tx, rx) = match result.len() {
         1 => { 
@@ -170,7 +171,7 @@ fn main() {
                             let val = serde_json::to_value(&sim_data).unwrap();
                             data_string = val.to_string();
                             current_pos = Some(val);
-                            should_send = has_control && tick % 15 == 0;
+                            should_send = has_control && tick % config.update_rate == 0;
                         },
                         1 => {
                             let sim_data: SyncStruct = std::mem::transmute_copy(&(*data).dwData);
@@ -201,7 +202,10 @@ fn main() {
     
                                 for (key, value) in last.as_object().unwrap() {
                                     if value.is_f64() {
-                                        let interpolated = interpolate_f64(value.as_f64().unwrap(), current_object[key].as_f64().unwrap(), alpha);
+                                        let interpolated = match key.as_str() {
+                                            "pitch" | "bank" | "heading" => interpolate_f64_degrees(value.as_f64().unwrap(), current_object[key].as_f64().unwrap(), alpha),
+                                            _ => interpolate_f64(value.as_f64().unwrap(), current_object[key].as_f64().unwrap(), alpha)
+                                        };
                                         updated_map.insert(key.to_string(), Value::from(interpolated));
                                     } else {
                                         updated_map.insert(key.to_string(), value.clone());
@@ -215,12 +219,12 @@ fn main() {
 
                                 current_pos = Some(val);
 
-                                if alpha > 10.0 {
+                                if alpha > config.conn_timeout {
                                     last_pos_update = None;
                                     has_control = true;
                                     transfer_control(&conn, true);
                                     can_take_control = false;
-                                    println!("No packet received within the last 10 seconds, taking control.");
+                                    println!("No packet received within the last {} seconds, taking control.", config.conn_timeout);
                                 }
                             },
                             _ => ()
@@ -268,7 +272,7 @@ fn main() {
         
         match rx.try_recv() {
             Ok(ReceiveData::Data(value)) => match value["type"].as_str().unwrap() {
-                "physics" => {
+                "physics" => { // Interpolate position update
                     match last_packet {
                         Some(p) => {
                             let cache_interpolation_time = interpolation_time;
@@ -284,7 +288,7 @@ fn main() {
                     pos_update = Some(serde_json::from_str(value["data"].as_str().unwrap()).unwrap());
                     last_packet = Some(value);
                 },
-                "sync_toggle" => {
+                "sync_toggle" => { // Initial synchronize
                     match (&last_bool_sync).as_ref() {
                         Some(last) => {
                             let data: Value = serde_json::from_str(&value["data"].as_str().unwrap()).unwrap();
@@ -303,12 +307,12 @@ fn main() {
                     conn.transmit_client_event(1, event_id as u32, data as u32, 0, 0);
                 },
                 "relieve_control" => {
-                    println!("CAN TAKE CONTROL");
+                    println!("CAN TAKE CONTROLS");
                     can_take_control = true;
                 },
                 "transfer_control" => {
-                    println!("TRANSFER GIVEN UP");
                     if has_control {
+                        println!("CONTROLS GIVEN UP");
                         has_control = false;
                         can_take_control = false;
                         transfer_control(&conn, false);

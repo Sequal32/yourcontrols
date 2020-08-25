@@ -6,24 +6,22 @@ use derive_getters::Getters;
 
 #[derive(Deserialize, Serialize, Getters)]
 pub struct Config {
-    pub port: u16
+    pub port: u16,
+    pub update_rate: u16,
+    pub conn_timeout: f64,
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
-            port: 7777
+            port: 7777,
+            update_rate: 10,
+            conn_timeout: 10.0
         }
     }
 }
 
 impl Config {
-    pub fn new(port: u16) -> Self {
-        return Self {
-            port: port
-        }
-    }
-
     pub fn write_to_file(&self, filename: &str) -> Result<(), &str> {
         let mut file = match File::create(filename) {
             Ok(file) => file,

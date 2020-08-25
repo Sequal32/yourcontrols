@@ -357,7 +357,7 @@ pub fn map_events(conn: &simconnectsdk::SimConnector) -> HashMap<&str, Box<dyn S
     event_map.insert("SPOILERS_ARM_ON", event_map.len() as u32);
     event_map.insert("SPOILERS_ARM_OFF", event_map.len() as u32);
     event_map.insert("SPOILERS_ARM_SET", event_map.len() as u32);
-    // event_map.insert("AXIS_SPOILER_SET", event_map.len() as u32);
+    event_map.insert("AXIS_SPOILER_SET", event_map.len() as u32);
     event_map.insert("FLAPS_SET", event_map.len() as u32);
     event_map.insert("AXIS_FLAPS_SET", event_map.len() as u32);
     event_map.insert("AP_MASTER", event_map.len() as u32);
@@ -730,8 +730,8 @@ pub fn map_events(conn: &simconnectsdk::SimConnector) -> HashMap<&str, Box<dyn S
     event_map.insert("TOGGLE_ALTERNATOR3", event_map.len() as u32);
     event_map.insert("TOGGLE_ALTERNATOR4", event_map.len() as u32);
     event_map.insert("TOGGLE_MASTER_BATTERY_ALTERNATOR", event_map.len() as u32);
-    // event_map.insert("AXIS_LEFT_BRAKE_SET", event_map.len() as u32);
-    // event_map.insert("AXIS_RIGHT_BRAKE_SET", event_map.len() as u32);
+    event_map.insert("AXIS_LEFT_BRAKE_SET", event_map.len() as u32);
+    event_map.insert("AXIS_RIGHT_BRAKE_SET", event_map.len() as u32);
     event_map.insert("TOGGLE_AIRCRAFT_EXIT", event_map.len() as u32);
     event_map.insert("TOGGLE_WING_FOLD", event_map.len() as u32);
     event_map.insert("SET_WING_FOLD", event_map.len() as u32);

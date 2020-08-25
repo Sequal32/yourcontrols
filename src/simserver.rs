@@ -74,22 +74,26 @@ impl Server {
                             }
                         }
                     });
-                    
-                    loop {
-                        // Send to all clients
-                        let data = rx.recv();
 
-                        if disconnect_clone.load(Ordering::SeqCst) {break}
-
-                        match data {
-                            Ok(value) => {
-                                let payload_string = value.to_string() + "\n";
-                                let payload = payload_string.as_bytes();
-                                stream_clone.write(payload).expect("!");
-                            },
-                            Err(_) => break
+                    thread::spawn(move || {
+                        loop {
+                            // Send to all clients
+                            let data = rx.recv();
+    
+                            if disconnect_clone.load(Ordering::SeqCst) {break}
+    
+                            match data {
+                                Ok(value) => {
+                                    let payload_string = value.to_string() + "\n";
+                                    let payload = payload_string.as_bytes();
+                                    stream_clone.write(payload).expect("!");
+                                },
+                                Err(_) => break
+                            }
                         }
-                    }
+                    });
+                    
+                    
                 }
             }
         });
