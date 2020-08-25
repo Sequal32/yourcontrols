@@ -2,9 +2,8 @@ use std::fs::File;
 use std::io::{Write, BufReader};
 use serde_json;
 use serde::{Deserialize, Serialize};
-use derive_getters::Getters;
 
-#[derive(Deserialize, Serialize, Getters)]
+#[derive(Deserialize, Serialize)]
 pub struct Config {
     pub port: u16,
     pub update_rate: u16,

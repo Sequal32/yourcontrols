@@ -233,7 +233,7 @@ fn main() {
             // Exception occured
             Ok(simconnectsdk::DispatchResult::Exception(data)) => {
                 unsafe {
-                    println!("{:?}", (*data).dwException);
+                    // println!("{:?}", (*data).dwException);
                 }
             },
             Ok(simconnectsdk::DispatchResult::Event(data)) => {
