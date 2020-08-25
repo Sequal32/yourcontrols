@@ -82,7 +82,11 @@ impl Server {
                                     // Receive data
                                     tx.send(ReceiveData::Data(serde_json::from_str(&buf).unwrap())).expect("Error transmitting data!");
                                 },
-                                Err(_) => ()
+                                Err(_) => {
+                                    did_disconnect.store(true, SeqCst);
+                                    number_connections.fetch_min(1, SeqCst);
+                                    break
+                                }
                             }
                         }
                     });

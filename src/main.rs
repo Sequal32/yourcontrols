@@ -20,20 +20,6 @@ use simserver::{TransferClient, ReceiveData};
 use simserver::Server;
 use std::{str::FromStr, net::Ipv4Addr};
 
-#[derive(Serialize, Deserialize, Debug)]
-#[repr(C)]
-struct SyncStruct {
-    strobe_on: bool,
-    panel_on: bool,
-    landing_on: bool,
-    taxi_on: bool,
-    beacon_on: bool,
-    nav_on: bool,
-    logo_on: bool,
-    recognition_on: bool,
-    cabin_on: bool,
-}
-
 fn transfer_control(conn: &simconnectsdk::SimConnector, has_control: bool) {
     conn.transmit_client_event(1, 1000, !has_control as u32, 5, 0);
     conn.transmit_client_event(1, 1001, !has_control as u32, 5, 0);
@@ -88,7 +74,7 @@ fn main() {
             let transfer = match server.start(config.port) {
                 Ok((tx, rx)) => {
                     println!("Server started!");
-                    has_control = false;
+                    has_control = true;
                     (tx, rx)
                 },
                 Err(err) => panic!("Could not start server! {:?}", err)
@@ -200,7 +186,6 @@ fn main() {
                                 }
                                 let (size_bytes, data_pointer) = definitions.sim_vars.write_to_data(&updated_map);
                                 conn.set_data_on_sim_object(0, 0, 0, 0, size_bytes as u32, data_pointer);
-
                                 current_pos = Some(updated_map);
 
                                 if alpha > config.conn_timeout {
@@ -257,19 +242,21 @@ fn main() {
         match rx.try_recv() {
             Ok(ReceiveData::Data(value)) => match value["type"].as_str().unwrap() {
                 "physics" => { // Interpolate position update
-                    match last_packet {
-                        Some(p) => {
-                            let cache_interpolation_time = interpolation_time;
-                            interpolation_time = (value["time"].as_i64().unwrap()-p["time"].as_i64().unwrap()) as f64;
-                            add_alpha = (instant.elapsed().as_secs_f64() - cache_interpolation_time/1000.0)/interpolation_time;
-                            if add_alpha < 0.0 {add_alpha = 0.0}
-                            instant = std::time::Instant::now();
-                            last_pos_update = current_pos.take();
-                        },
-                        _ => (),
+                    if !has_control {
+                        match last_packet {
+                            Some(p) => {
+                                let cache_interpolation_time = interpolation_time;
+                                interpolation_time = (value["time"].as_i64().unwrap()-p["time"].as_i64().unwrap()) as f64;
+                                add_alpha = (instant.elapsed().as_secs_f64() - cache_interpolation_time/1000.0)/interpolation_time;
+                                if add_alpha < 0.0 {add_alpha = 0.0}
+                                instant = std::time::Instant::now();
+                                last_pos_update = current_pos.take();
+                            },
+                            _ => (),
+                        }
+                        pos_update = Some(serde_json::from_str(value["data"].as_str().unwrap()).unwrap());
+                        last_packet = Some(value);
                     }
-                    pos_update = Some(serde_json::from_str(value["data"].as_str().unwrap()).unwrap());
-                    last_packet = Some(value);
                 },
                 "sync_toggle" => { // Initial synchronize
                     if definitions.has_synced_bool_values() {
