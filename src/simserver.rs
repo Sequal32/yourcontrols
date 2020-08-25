@@ -3,22 +3,26 @@ use serde_json::{Value};
 use std::io::{Write, BufReader, BufRead};
 use std::net::{TcpListener};
 use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicI32, Ordering::SeqCst};
 use std::thread;
 
+pub trait TransferClient {
+    fn get_connected_count(&self) -> i32;
+}
 
 pub struct Server {
+    pub number_connections: Arc<AtomicI32>
 }
 
 pub enum ReceiveData {
     Data(Value),
-    NewConnection(String),
+    NewConnection(String)
 }
 
 impl Server {
     pub fn new() -> Self  {
         return Self {
-            
+            number_connections: Arc::new(AtomicI32::new(0))
         }
     }
 
@@ -30,6 +34,8 @@ impl Server {
             Ok(listener) => listener,
             Err(n) => {return Err(n)}
         };
+
+        let number_connections = self.number_connections.clone();
 
         thread::spawn(move || {
             loop {
@@ -56,6 +62,9 @@ impl Server {
 
                     let mut reader = BufReader::new(stream);
 
+                    let number_connections = number_connections.clone();
+                    number_connections.fetch_add(1, SeqCst);
+
                     thread::spawn(move || {
                         loop {
                             let mut buf = String::new();
@@ -64,7 +73,8 @@ impl Server {
                                 // socket closed
                                 Ok(n) => {
                                     if n == 0 {
-                                        did_disconnect.store(true, Ordering::SeqCst);
+                                        did_disconnect.store(true, SeqCst);
+                                        number_connections.fetch_min(1, SeqCst);
                                         break
                                     }
                                     // Receive data
@@ -80,7 +90,7 @@ impl Server {
                             // Send to all clients
                             let data = rx.recv();
     
-                            if disconnect_clone.load(Ordering::SeqCst) {break}
+                            if disconnect_clone.load(SeqCst) {break}
     
                             match data {
                                 Ok(value) => {
@@ -100,5 +110,11 @@ impl Server {
         
 
         return Ok((clienttx, serverrx));
+    }
+}
+
+impl TransferClient for Server {
+    fn get_connected_count(&self) -> i32 {
+        return self.number_connections.load(SeqCst);
     }
 }

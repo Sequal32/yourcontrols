@@ -3,12 +3,16 @@ use serde_json::{Value};
 use std::net::{SocketAddr, IpAddr, TcpStream, Ipv4Addr};
 use std::io::{Write, BufReader, BufRead};
 use std::thread;
-use crate::simserver::ReceiveData;
+use crate::simserver::{TransferClient, ReceiveData};
 
 pub struct Client {}
 
 impl Client {
-    pub fn start(ip: Ipv4Addr, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), &'static str>  {
+    pub fn new() -> Self {
+        Self {}
+    }
+
+    pub fn start(&self, ip: Ipv4Addr, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), &'static str>  {
         let (servertx, serverrx) = unbounded::<Value>();
         let (clienttx, clientrx) = unbounded::<ReceiveData>();
 
@@ -47,5 +51,11 @@ impl Client {
         
 
         return Ok((servertx, clientrx));
+    }
+}
+
+impl TransferClient for Client {
+    fn get_connected_count(&self) -> i32 {
+        return 1;
     }
 }

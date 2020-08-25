@@ -14,7 +14,7 @@ use serde_json::{json, Value};
 use serde::{Deserialize, Serialize};
 use std::{str::FromStr, net::Ipv4Addr};
 use simconfig::Config;
-use simserver::ReceiveData;
+use simserver::{TransferClient, ReceiveData};
 
 #[repr(C)]
 #[derive(Serialize, Deserialize, Debug, Copy, Clone)]
@@ -107,29 +107,41 @@ fn main() {
 
     let mut has_control;
     let mut can_take_control = false;
+    let transfer_client: Box<dyn TransferClient>;
 
     println!("Enter ip to connect or type s to start server: ");
     let result: String = text_io::read!("{}");
     let (tx, rx) = match result.len() {
         1 => { 
             let mut server = Server::new();
-            match server.start(config.port) {
+
+            let transfer = match server.start(config.port) {
                 Ok((tx, rx)) => {
                     println!("Server started!");
                     has_control = true;
                     (tx, rx)
                 },
                 Err(err) => panic!("Could not start server! {:?}", err)
-            }
+            };
+
+            transfer_client = Box::new(server);
+            transfer
         },
         _ => match Ipv4Addr::from_str(&result) {
-            Ok(ip) => match Client::start(ip, config.port) {
-                Ok((tx, rx)) => {
-                    println!("Client connected!");
-                    has_control = false;
-                    (tx, rx)
-                },
-                Err(err) => panic!("Could not start client! {:?}", err)
+            Ok(ip) => {
+                let client = Client::new();
+
+                let transfer = match client.start(ip, config.port) {
+                    Ok((tx, rx)) => {
+                        println!("Client connected!");
+                        has_control = false;
+                        (tx, rx)
+                    },
+                    Err(err) => panic!("Could not start client! {:?}", err)
+                };
+
+                transfer_client = Box::new(client);
+                transfer
             },
             Err(_) => panic!("Invalid ip provided!")
         }
@@ -180,6 +192,8 @@ fn main() {
                         },
                         _ => panic!("Not covered!")
                     };
+
+                    should_send = should_send && transfer_client.get_connected_count() > 0;
 
                     // Update position data
                     if should_send {
