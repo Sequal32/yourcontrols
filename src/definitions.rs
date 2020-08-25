@@ -1,779 +1,126 @@
+use crate::{bytereader::{StructData, InDataTypes, StructDataTypes, data_type_as_bool}, syncdefs::{Syncable, ToggleSwitch, ToggleSwitchSet}};
+use csv;
+use serde::Deserialize;
 use std::collections::HashMap;
-use crate::syncdefs::{Syncable, ToggleSwitch, ToggleSwitchSet};
+use std::fs::File;
+use std::io::{BufReader, BufRead};
+use indexmap::IndexMap;
 
-pub fn map_data(conn: &simconnectsdk::SimConnector) {
-    conn.add_data_definition(0, "Plane Latitude", "Degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "Plane Longitude", "Degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "PLANE ALTITUDE", "Feet", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    
-    conn.add_data_definition(0, "PLANE PITCH DEGREES", "Degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "PLANE BANK DEGREES", "Degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "PLANE HEADING DEGREES MAGNETIC", "Degrees", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(0, "GENERAL ENG THROTTLE LEVER POSITION:1", "Percent", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "GENERAL ENG MIXTURE LEVER POSITION:1", "Percent", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    // conn.add_data_definition(0, "GENERAL ENG PROP LEVER POSITION:1", "Percent", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(0, "VELOCITY WORLD X", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "VELOCITY WORLD Y", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "VELOCITY WORLD Z", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ACCELERATION WORLD X", "Feet per second squared", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ACCELERATION WORLD Y", "Feet per second squared", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ACCELERATION WORLD Z", "Feet per second squared", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ROTATION VELOCITY BODY X", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ROTATION VELOCITY BODY Y", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ROTATION VELOCITY BODY Z", "Feet per second", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    // conn.add_data_definition(0, "AIRSPEED TRUE", "Knots", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "YOKE X POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "YOKE Y POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(0, "RUDDER PEDAL POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "RUDDER POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "ELEVATOR POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "AILERON POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(0, "ELEVATOR TRIM POSITION", "Radians", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    conn.add_data_definition(0, "RUDDER POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    // conn.add_data_definition(0, "BRAKE LEFT POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    // conn.add_data_definition(0, "BRAKE RIGHT POSITION", "Position", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    // conn.add_data_definition(0, "FLAPS HANDLE INDEX", "Number", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    // conn.add_data_definition(0, "GEAR HANDLE POSITION", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, u32::MAX);
-    // conn.add_data_definition(0, "GEAR CENTER POSITION", "Percent Over 100", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    // conn.add_data_definition(0, "GEAR LEFT POSITION", "Percent Over 100", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-    // conn.add_data_definition(0, "GEAR RIGHT POSITION", "Percent Over 100", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
-
-    conn.add_data_definition(1, "LIGHT STROBE", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 0);
-    conn.add_data_definition(1, "LIGHT PANEL", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 1);
-    conn.add_data_definition(1, "LIGHT LANDING", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 2);
-    conn.add_data_definition(1, "LIGHT TAXI", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 3);
-    conn.add_data_definition(1, "LIGHT BEACON", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 4);
-    conn.add_data_definition(1, "LIGHT NAV", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 5);
-    conn.add_data_definition(1, "LIGHT LOGO", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 6);
-    conn.add_data_definition(1, "LIGHT WING", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 7);
-    conn.add_data_definition(1, "LIGHT RECOGNITION", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 8);
-    conn.add_data_definition(1, "LIGHT CABIN", "Bool", simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, 9);
-    
+#[derive(Deserialize)]
+struct SimVar {
+    var_name: String,
+    unit_name: String,
+    type_name: String
 }
 
-pub fn map_events(conn: &simconnectsdk::SimConnector) -> HashMap<&str, Box<dyn Syncable<bool>>> {
-    let mut event_map: HashMap<&str, u32> = HashMap::new();
-    event_map.insert("SLING_PICKUP_RELEASE", event_map.len() as u32);
-    event_map.insert("HOIST_SWITCH_EXTEND", event_map.len() as u32);
-    event_map.insert("HOIST_SWITCH_RETRACT", event_map.len() as u32);
-    event_map.insert("HOIST_SWITCH_SET", event_map.len() as u32);
-    event_map.insert("HOIST_DEPLOY_TOGGLE", event_map.len() as u32);
-    event_map.insert("HOIST_DEPLOY_SET", event_map.len() as u32);
-    event_map.insert("ANTIDETONATION_TANK_VALVE_TOGGLE", event_map.len() as u32);
-    event_map.insert("NITROUS_TANK_VALVE_TOGGLE", event_map.len() as u32);
-    event_map.insert("TOGGLE_RACERESULTS_WINDOW", event_map.len() as u32);
-    event_map.insert("TAKEOFF_ASSIST_ARM_TOGGLE", event_map.len() as u32);
-    event_map.insert("TAKEOFF_ASSIST_ARM_SET", event_map.len() as u32);
-    event_map.insert("TAKEOFF_ASSIST_FIRE", event_map.len() as u32);
-    event_map.insert("TOGGLE_LAUNCH_BAR_SWITCH", event_map.len() as u32);
-    event_map.insert("SET_LAUNCH_BAR_SWITCH", event_map.len() as u32);
-    event_map.insert("REPAIR_AND_REFUEL", event_map.len() as u32);
-    event_map.insert("DME_SELECT", event_map.len() as u32);
-    event_map.insert("FUEL_DUMP_TOGGLE", event_map.len() as u32);
-    event_map.insert("VIEW_COCKPIT_FORWARD", event_map.len() as u32);
-    event_map.insert("VIEW_VIRTUAL_COCKPIT_FORWARD", event_map.len() as u32);
-    event_map.insert("TOW_PLANE_RELEASE", event_map.len() as u32);
-    event_map.insert("TOW_PLANE_REQUEST", event_map.len() as u32);
-    event_map.insert("REQUEST_FUEL_KEY", event_map.len() as u32);
-    event_map.insert("RELEASE_DROPPABLE_OBJECTS", event_map.len() as u32);
-    event_map.insert("VIEW_LINKING_SET", event_map.len() as u32);
-    event_map.insert("VIEW_LINKING_TOGGLE", event_map.len() as u32);
-    event_map.insert("RADIO_SELECTED_DME_IDENT_ENABLE", event_map.len() as u32);
-    event_map.insert("RADIO_SELECTED_DME_IDENT_DISABLE", event_map.len() as u32);
-    event_map.insert("RADIO_SELECTED_DME_IDENT_SET", event_map.len() as u32);
-    event_map.insert("RADIO_SELECTED_DME_IDENT_TOGGLE", event_map.len() as u32);
-    event_map.insert("GAUGE_KEYSTROKE", event_map.len() as u32);
-    event_map.insert("SIMUI_WINDOW_HIDESHOW", event_map.len() as u32);
-    event_map.insert("TOGGLE_VARIOMETER_SWITCH", event_map.len() as u32);
-    event_map.insert("TOGGLE_TURN_INDICATOR_SWITCH", event_map.len() as u32);
-    event_map.insert("VIEW_WINDOW_TITLES_TOGGLE", event_map.len() as u32);
-    event_map.insert("TOGGLE_JETWAY", event_map.len() as u32);
-    event_map.insert("RETRACT_FLOAT_SWITCH_DEC", event_map.len() as u32);
-    event_map.insert("RETRACT_FLOAT_SWITCH_INC", event_map.len() as u32);
-    event_map.insert("TOGGLE_WATER_BALLAST_VALVE", event_map.len() as u32);
-    event_map.insert("VIEW_CHASE_DISTANCE_ADD", event_map.len() as u32);
-    event_map.insert("VIEW_CHASE_DISTANCE_SUB", event_map.len() as u32);
-    event_map.insert("APU_STARTER", event_map.len() as u32);
-    event_map.insert("APU_OFF_SWITCH", event_map.len() as u32);
-    event_map.insert("APU_GENERATOR_SWITCH_TOGGLE", event_map.len() as u32);
-    event_map.insert("APU_GENERATOR_SWITCH_SET", event_map.len() as u32);
-    event_map.insert("EXTINGUISH_ENGINE_FIRE", event_map.len() as u32);
-    event_map.insert("AP_MAX_BANK_INC", event_map.len() as u32);
-    event_map.insert("AP_MAX_BANK_DEC", event_map.len() as u32);
-    event_map.insert("AP_N1_HOLD", event_map.len() as u32);
-    event_map.insert("AP_N1_REF_INC", event_map.len() as u32);
-    event_map.insert("AP_N1_REF_DEC", event_map.len() as u32);
-    event_map.insert("AP_N1_REF_SET", event_map.len() as u32);
-    event_map.insert("HYDRAULIC_SWITCH_TOGGLE", event_map.len() as u32);
-    event_map.insert("BLEED_AIR_SOURCE_CONTROL_INC", event_map.len() as u32);
-    event_map.insert("BLEED_AIR_SOURCE_CONTROL_DEC", event_map.len() as u32);
-    event_map.insert("TURBINE_IGNITION_SWITCH_TOGGLE", event_map.len() as u32);
-    event_map.insert("CABIN_NO_SMOKING_ALERT_SWITCH_TOGGLE", event_map.len() as u32);
-    event_map.insert("CABIN_SEATBELTS_ALERT_SWITCH_TOGGLE", event_map.len() as u32);
-    event_map.insert("ANTISKID_BRAKES_TOGGLE", event_map.len() as u32);
-    event_map.insert("GPWS_SWITCH_TOGGLE", event_map.len() as u32);
-    event_map.insert("VIDEO_RECORD_TOGGLE", event_map.len() as u32);
-    event_map.insert("TOGGLE_AIRPORT_NAME_DISPLAY", event_map.len() as u32);
-    event_map.insert("CAPTURE_SCREENSHOT", event_map.len() as u32);
-    event_map.insert("MOUSE_LOOK_TOGGLE", event_map.len() as u32);
-    event_map.insert("YAXIS_INVERT_TOGGLE", event_map.len() as u32);
-    event_map.insert("AUTORUDDER_TOGGLE", event_map.len() as u32);
-    event_map.insert("FLY_BY_WIRE_ELAC_TOGGLE", event_map.len() as u32);
-    event_map.insert("FLY_BY_WIRE_FAC_TOGGLE", event_map.len() as u32);
-    event_map.insert("FLY_BY_WIRE_SEC_TOGGLE", event_map.len() as u32);
-    event_map.insert("MANUAL_FUEL_PRESSURE_PUMP", event_map.len() as u32);
-    event_map.insert("STEERING_INC", event_map.len() as u32);
-    event_map.insert("STEERING_DEC", event_map.len() as u32);
-    event_map.insert("STEERING_SET", event_map.len() as u32);
-    event_map.insert("PRESSURIZATION_PRESSURE_ALT_INC", event_map.len() as u32);
-    event_map.insert("PRESSURIZATION_PRESSURE_ALT_DEC", event_map.len() as u32);
-    event_map.insert("PRESSURIZATION_CLIMB_RATE_INC", event_map.len() as u32);
-    event_map.insert("PRESSURIZATION_CLIMB_RATE_DEC", event_map.len() as u32);
-    event_map.insert("PRESSURIZATION_PRESSURE_DUMP_SWTICH", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_LEFT_MAIN", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_LEFT_MAIN", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_LEFT_MAIN", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_LEFT_MAIN", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_RIGHT_MAIN", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_RIGHT_MAIN", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_RIGHT_MAIN", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_RIGHT_MAIN", event_map.len() as u32);
-    event_map.insert("POINT_OF_INTEREST_TOGGLE_POINTER", event_map.len() as u32);
-    event_map.insert("POINT_OF_INTEREST_CYCLE_PREVIOUS", event_map.len() as u32);
-    event_map.insert("POINT_OF_INTEREST_CYCLE_NEXT", event_map.len() as u32);
-    event_map.insert("G1000_PFD_FLIGHTPLAN_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_PFD_PROCEDURE_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_PFD_ZOOMIN_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_PFD_ZOOMOUT_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_PFD_DIRECTTO_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_PFD_MENU_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_PFD_CLEAR_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_PFD_ENTER_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_PFD_CURSOR_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_PFD_GROUP_KNOB_INC", event_map.len() as u32);
-    event_map.insert("G1000_PFD_GROUP_KNOB_DEC", event_map.len() as u32);
-    event_map.insert("G1000_PFD_PAGE_KNOB_INC", event_map.len() as u32);
-    event_map.insert("G1000_PFD_PAGE_KNOB_DEC", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY1", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY2", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY3", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY4", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY5", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY6", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY7", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY8", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY9", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY10", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY11", event_map.len() as u32);
-    event_map.insert("G1000_PFD_SOFTKEY12", event_map.len() as u32);
-    event_map.insert("G1000_MFD_FLIGHTPLAN_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_MFD_PROCEDURE_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_MFD_ZOOMIN_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_MFD_ZOOMOUT_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_MFD_DIRECTTO_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_MFD_MENU_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_MFD_CLEAR_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_MFD_ENTER_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_MFD_CURSOR_BUTTON", event_map.len() as u32);
-    event_map.insert("G1000_MFD_GROUP_KNOB_INC", event_map.len() as u32);
-    event_map.insert("G1000_MFD_GROUP_KNOB_DEC", event_map.len() as u32);
-    event_map.insert("G1000_MFD_PAGE_KNOB_INC", event_map.len() as u32);
-    event_map.insert("G1000_MFD_PAGE_KNOB_DEC", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY1", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY2", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY3", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY4", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY5", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY6", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY7", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY8", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY9", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY10", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY11", event_map.len() as u32);
-    event_map.insert("G1000_MFD_SOFTKEY2", event_map.len() as u32);
-    event_map.insert("PROP_PITCH_SET", event_map.len() as u32);
-    event_map.insert("PROP_PITCH_LO", event_map.len() as u32);
-    event_map.insert("PROP_PITCH_INCR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH_INCR_SMALL", event_map.len() as u32);
-    event_map.insert("PROP_PITCH_DECR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH_HI", event_map.len() as u32);
-    event_map.insert("PROP_PITCH1_SET", event_map.len() as u32);
-    event_map.insert("PROP_PITCH2_SET", event_map.len() as u32);
-    event_map.insert("PROP_PITCH3_SET", event_map.len() as u32);
-    event_map.insert("PROP_PITCH4_SET", event_map.len() as u32);
-    event_map.insert("PROP_PITCH1_LO", event_map.len() as u32);
-    event_map.insert("PROP_PITCH1_INCR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH1_INCR_SMALL", event_map.len() as u32);
-    event_map.insert("PROP_PITCH1_DECR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH1_HI", event_map.len() as u32);
-    event_map.insert("PROP_PITCH2_LO", event_map.len() as u32);
-    event_map.insert("PROP_PITCH2_INCR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH2_INCR_SMALL", event_map.len() as u32);
-    event_map.insert("PROP_PITCH2_DECR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH2_HI", event_map.len() as u32);
-    event_map.insert("PROP_PITCH3_LO", event_map.len() as u32);
-    event_map.insert("PROP_PITCH3_INCR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH3_INCR_SMALL", event_map.len() as u32);
-    event_map.insert("PROP_PITCH3_DECR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH3_HI", event_map.len() as u32);
-    event_map.insert("PROP_PITCH4_LO", event_map.len() as u32);
-    event_map.insert("PROP_PITCH4_INCR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH4_INCR_SMALL", event_map.len() as u32);
-    event_map.insert("PROP_PITCH4_DECR", event_map.len() as u32);
-    event_map.insert("PROP_PITCH4_HI", event_map.len() as u32);
-    event_map.insert("AXIS_PROPELLER_SET", event_map.len() as u32);
-    event_map.insert("AXIS_PROPELLER1_SET", event_map.len() as u32);
-    event_map.insert("AXIS_PROPELLER2_SET", event_map.len() as u32);
-    event_map.insert("AXIS_PROPELLER3_SET", event_map.len() as u32);
-    event_map.insert("AXIS_PROPELLER4_SET", event_map.len() as u32);
-    event_map.insert("JET_STARTER", event_map.len() as u32);
-    event_map.insert("MAGNETO_SET", event_map.len() as u32);
-    event_map.insert("TOGGLE_STARTER1", event_map.len() as u32);
-    event_map.insert("TOGGLE_STARTER2", event_map.len() as u32);
-    event_map.insert("TOGGLE_STARTER3", event_map.len() as u32);
-    event_map.insert("TOGGLE_STARTER4", event_map.len() as u32);
-    event_map.insert("TOGGLE_ALL_STARTERS", event_map.len() as u32);
-    event_map.insert("ENGINE_AUTO_START", event_map.len() as u32);
-    event_map.insert("ENGINE_AUTO_SHUTDOWN", event_map.len() as u32);
-    event_map.insert("MAGNETO", event_map.len() as u32);
-    event_map.insert("MAGNETO_DECR", event_map.len() as u32);
-    event_map.insert("MAGNETO_INCR", event_map.len() as u32);
-    event_map.insert("MAGNETO1_OFF", event_map.len() as u32);
-    event_map.insert("MAGNETO1_RIGHT", event_map.len() as u32);
-    event_map.insert("MAGNETO1_LEFT", event_map.len() as u32);
-    event_map.insert("MAGNETO1_BOTH", event_map.len() as u32);
-    event_map.insert("MAGNETO1_START", event_map.len() as u32);
-    event_map.insert("MAGNETO2_OFF", event_map.len() as u32);
-    event_map.insert("MAGNETO2_RIGHT", event_map.len() as u32);
-    event_map.insert("MAGNETO2_LEFT", event_map.len() as u32);
-    event_map.insert("MAGNETO2_BOTH", event_map.len() as u32);
-    event_map.insert("MAGNETO2_START", event_map.len() as u32);
-    event_map.insert("MAGNETO3_OFF", event_map.len() as u32);
-    event_map.insert("MAGNETO3_RIGHT", event_map.len() as u32);
-    event_map.insert("MAGNETO3_LEFT", event_map.len() as u32);
-    event_map.insert("MAGNETO3_BOTH", event_map.len() as u32);
-    event_map.insert("MAGNETO3_START", event_map.len() as u32);
-    event_map.insert("MAGNETO4_OFF", event_map.len() as u32);
-    event_map.insert("MAGNETO4_RIGHT", event_map.len() as u32);
-    event_map.insert("MAGNETO4_LEFT", event_map.len() as u32);
-    event_map.insert("MAGNETO4_BOTH", event_map.len() as u32);
-    event_map.insert("MAGNETO4_START", event_map.len() as u32);
-    event_map.insert("MAGNETO_OFF", event_map.len() as u32);
-    event_map.insert("MAGNETO_RIGHT", event_map.len() as u32);
-    event_map.insert("MAGNETO_LEFT", event_map.len() as u32);
-    event_map.insert("MAGNETO_BOTH", event_map.len() as u32);
-    event_map.insert("MAGNETO_START", event_map.len() as u32);
-    event_map.insert("MAGNETO1_DECR", event_map.len() as u32);
-    event_map.insert("MAGNETO1_INCR", event_map.len() as u32);
-    event_map.insert("MAGNETO2_DECR", event_map.len() as u32);
-    event_map.insert("MAGNETO2_INCR", event_map.len() as u32);
-    event_map.insert("MAGNETO3_DECR", event_map.len() as u32);
-    event_map.insert("MAGNETO3_INCR", event_map.len() as u32);
-    event_map.insert("MAGNETO4_DECR", event_map.len() as u32);
-    event_map.insert("MAGNETO4_INCR", event_map.len() as u32);
-    event_map.insert("YES", event_map.len() as u32);
-    event_map.insert("MAGNETO1_SET", event_map.len() as u32);
-    event_map.insert("MAGNETO2_SET", event_map.len() as u32);
-    event_map.insert("MAGNETO3_SET", event_map.len() as u32);
-    event_map.insert("MAGNETO4_SET", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_ON", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_OFF", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_SET", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_TOGGLE", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_TOGGLE_ENG1", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_TOGGLE_ENG2", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_TOGGLE_ENG3", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_TOGGLE_ENG4", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_SET_ENG1", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_SET_ENG2", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_SET_ENG3", event_map.len() as u32);
-    event_map.insert("ANTI_ICE_SET_ENG4", event_map.len() as u32);
-    event_map.insert("TOGGLE_FUEL_VALVE_ALL", event_map.len() as u32);
-    event_map.insert("TOGGLE_FUEL_VALVE_ENG1", event_map.len() as u32);
-    event_map.insert("TOGGLE_FUEL_VALVE_ENG2", event_map.len() as u32);
-    event_map.insert("TOGGLE_FUEL_VALVE_ENG3", event_map.len() as u32);
-    event_map.insert("TOGGLE_FUEL_VALVE_ENG4", event_map.len() as u32);
-    event_map.insert("COWLFLAP1_SET", event_map.len() as u32);
-    event_map.insert("COWLFLAP2_SET", event_map.len() as u32);
-    event_map.insert("COWLFLAP3_SET", event_map.len() as u32);
-    event_map.insert("COWLFLAP4_SET", event_map.len() as u32);
-    event_map.insert("INC_COWL_FLAPS", event_map.len() as u32);
-    event_map.insert("DEC_COWL_FLAPS", event_map.len() as u32);
-    event_map.insert("INC_COWL_FLAPS1", event_map.len() as u32);
-    event_map.insert("DEC_COWL_FLAPS1", event_map.len() as u32);
-    event_map.insert("INC_COWL_FLAPS2", event_map.len() as u32);
-    event_map.insert("DEC_COWL_FLAPS2", event_map.len() as u32);
-    event_map.insert("INC_COWL_FLAPS3", event_map.len() as u32);
-    event_map.insert("DEC_COWL_FLAPS3", event_map.len() as u32);
-    event_map.insert("INC_COWL_FLAPS4", event_map.len() as u32);
-    event_map.insert("DEC_COWL_FLAPS4", event_map.len() as u32);
-    event_map.insert("FUEL_PUMP", event_map.len() as u32);
-    event_map.insert("TOGGLE_ELECT_FUEL_PUMP", event_map.len() as u32);
-    event_map.insert("TOGGLE_ELECT_FUEL_PUMP1", event_map.len() as u32);
-    event_map.insert("TOGGLE_ELECT_FUEL_PUMP2", event_map.len() as u32);
-    event_map.insert("TOGGLE_ELECT_FUEL_PUMP3", event_map.len() as u32);
-    event_map.insert("TOGGLE_ELECT_FUEL_PUMP4", event_map.len() as u32);
-    event_map.insert("ENGINE_PRIMER", event_map.len() as u32);
-    event_map.insert("TOGGLE_PRIMER", event_map.len() as u32);
-    event_map.insert("TOGGLE_PRIMER1", event_map.len() as u32);
-    event_map.insert("TOGGLE_PRIMER2", event_map.len() as u32);
-    event_map.insert("TOGGLE_PRIMER3", event_map.len() as u32);
-    event_map.insert("TOGGLE_PRIMER4", event_map.len() as u32);
-    event_map.insert("TOGGLE_FEATHER_SWITCHES", event_map.len() as u32);
-    event_map.insert("TOGGLE_FEATHER_SWITCH_1", event_map.len() as u32);
-    event_map.insert("TOGGLE_FEATHER_SWITCH_2", event_map.len() as u32);
-    event_map.insert("TOGGLE_FEATHER_SWITCH_3", event_map.len() as u32);
-    event_map.insert("TOGGLE_FEATHER_SWITCH_4", event_map.len() as u32);
-    event_map.insert("TOGGLE_PROPELLER_SYNC", event_map.len() as u32);
-    event_map.insert("TOGGLE_AUTOFEATHER_ARM", event_map.len() as u32);
-    event_map.insert("TOGGLE_AFTERBURNER", event_map.len() as u32);
-    event_map.insert("TOGGLE_AFTERBURNER1", event_map.len() as u32);
-    event_map.insert("TOGGLE_AFTERBURNER2", event_map.len() as u32);
-    event_map.insert("TOGGLE_AFTERBURNER3", event_map.len() as u32);
-    event_map.insert("TOGGLE_AFTERBURNER4", event_map.len() as u32);
-    event_map.insert("ENGINE", event_map.len() as u32);
-    event_map.insert("SPOILERS_TOGGLE", event_map.len() as u32);
-    event_map.insert("FLAPS_UP", event_map.len() as u32);
-    event_map.insert("FLAPS_1", event_map.len() as u32);
-    event_map.insert("FLAPS_2", event_map.len() as u32);
-    event_map.insert("FLAPS_3", event_map.len() as u32);
-    event_map.insert("FLAPS_DOWN", event_map.len() as u32);
-    event_map.insert("FLAPS_INCR", event_map.len() as u32);
-    event_map.insert("FLAPS_DECR", event_map.len() as u32);
-    // event_map.insert("AXIS_ELEVATOR_SET", event_map.len() as u32);
-    // event_map.insert("AXIS_AILERONS_SET", event_map.len() as u32);
-    // event_map.insert("AXIS_RUDDER_SET", event_map.len() as u32);
-    // event_map.insert("AXIS_ELEV_TRIM_SET", event_map.len() as u32);
-    event_map.insert("SPOILERS_SET", event_map.len() as u32);
-    event_map.insert("SPOILERS_ARM_TOGGLE", event_map.len() as u32);
-    event_map.insert("SPOILERS_ON", event_map.len() as u32);
-    event_map.insert("SPOILERS_OFF", event_map.len() as u32);
-    event_map.insert("SPOILERS_ARM_ON", event_map.len() as u32);
-    event_map.insert("SPOILERS_ARM_OFF", event_map.len() as u32);
-    event_map.insert("SPOILERS_ARM_SET", event_map.len() as u32);
-    event_map.insert("AXIS_SPOILER_SET", event_map.len() as u32);
-    event_map.insert("FLAPS_SET", event_map.len() as u32);
-    event_map.insert("AXIS_FLAPS_SET", event_map.len() as u32);
-    event_map.insert("AP_MASTER", event_map.len() as u32);
-    event_map.insert("AUTOPILOT_OFF", event_map.len() as u32);
-    event_map.insert("AUTOPILOT_ON", event_map.len() as u32);
-    event_map.insert("YAW_DAMPER_TOGGLE", event_map.len() as u32);
-    event_map.insert("AP_PANEL_HEADING_HOLD", event_map.len() as u32);
-    event_map.insert("AP_PANEL_ALTITUDE_HOLD", event_map.len() as u32);
-    event_map.insert("AP_ATT_HOLD_ON", event_map.len() as u32);
-    event_map.insert("AP_LOC_HOLD_ON", event_map.len() as u32);
-    event_map.insert("AP_APR_HOLD_ON", event_map.len() as u32);
-    event_map.insert("AP_HDG_HOLD_ON", event_map.len() as u32);
-    event_map.insert("AP_ALT_HOLD_ON", event_map.len() as u32);
-    event_map.insert("AP_WING_LEVELER_ON", event_map.len() as u32);
-    event_map.insert("AP_BC_HOLD_ON", event_map.len() as u32);
-    event_map.insert("AP_NAV1_HOLD_ON", event_map.len() as u32);
-    event_map.insert("AP_ATT_HOLD_OFF", event_map.len() as u32);
-    event_map.insert("AP_LOC_HOLD_OFF", event_map.len() as u32);
-    event_map.insert("AP_APR_HOLD_OFF", event_map.len() as u32);
-    event_map.insert("AP_HDG_HOLD_OFF", event_map.len() as u32);
-    event_map.insert("AP_ALT_HOLD_OFF", event_map.len() as u32);
-    event_map.insert("AP_WING_LEVELER_OFF", event_map.len() as u32);
-    event_map.insert("AP_BC_HOLD_OFF", event_map.len() as u32);
-    event_map.insert("AP_NAV1_HOLD_OFF", event_map.len() as u32);
-    event_map.insert("AP_AIRSPEED_HOLD", event_map.len() as u32);
-    event_map.insert("AUTO_THROTTLE_ARM", event_map.len() as u32);
-    event_map.insert("AUTO_THROTTLE_TO_GA", event_map.len() as u32);
-    event_map.insert("HEADING_BUG_INC", event_map.len() as u32);
-    event_map.insert("HEADING_BUG_DEC", event_map.len() as u32);
-    event_map.insert("HEADING_BUG_SET", event_map.len() as u32);
-    event_map.insert("AP_PANEL_SPEED_HOLD", event_map.len() as u32);
-    event_map.insert("AP_ALT_VAR_INC", event_map.len() as u32);
-    event_map.insert("AP_ALT_VAR_DEC", event_map.len() as u32);
-    event_map.insert("AP_VS_VAR_INC", event_map.len() as u32);
-    event_map.insert("AP_VS_VAR_DEC", event_map.len() as u32);
-    event_map.insert("AP_SPD_VAR_INC", event_map.len() as u32);
-    event_map.insert("AP_SPD_VAR_DEC", event_map.len() as u32);
-    event_map.insert("AP_PANEL_MACH_HOLD", event_map.len() as u32);
-    event_map.insert("AP_MACH_VAR_INC", event_map.len() as u32);
-    event_map.insert("AP_MACH_VAR_DEC", event_map.len() as u32);
-    event_map.insert("AP_MACH_HOLD", event_map.len() as u32);
-    event_map.insert("AP_ALT_VAR_SET_METRIC", event_map.len() as u32);
-    event_map.insert("AP_VS_VAR_SET_ENGLISH", event_map.len() as u32);
-    event_map.insert("AP_SPD_VAR_SET", event_map.len() as u32);
-    event_map.insert("AP_MACH_VAR_SET", event_map.len() as u32);
-    event_map.insert("YAW_DAMPER_ON", event_map.len() as u32);
-    event_map.insert("YAW_DAMPER_OFF", event_map.len() as u32);
-    event_map.insert("YAW_DAMPER_SET", event_map.len() as u32);
-    event_map.insert("AP_AIRSPEED_ON", event_map.len() as u32);
-    event_map.insert("AP_AIRSPEED_OFF", event_map.len() as u32);
-    event_map.insert("AP_AIRSPEED_SET", event_map.len() as u32);
-    event_map.insert("AP_MACH_ON", event_map.len() as u32);
-    event_map.insert("AP_MACH_OFF", event_map.len() as u32);
-    event_map.insert("AP_MACH_SET", event_map.len() as u32);
-    event_map.insert("AP_PANEL_ALTITUDE_ON", event_map.len() as u32);
-    event_map.insert("AP_PANEL_ALTITUDE_OFF", event_map.len() as u32);
-    event_map.insert("AP_PANEL_ALTITUDE_SET", event_map.len() as u32);
-    event_map.insert("AP_PANEL_HEADING_ON", event_map.len() as u32);
-    event_map.insert("AP_PANEL_HEADING_OFF", event_map.len() as u32);
-    event_map.insert("AP_PANEL_HEADING_SET", event_map.len() as u32);
-    event_map.insert("AP_PANEL_MACH_ON", event_map.len() as u32);
-    event_map.insert("AP_PANEL_MACH_OFF", event_map.len() as u32);
-    event_map.insert("AP_PANEL_MACH_SET", event_map.len() as u32);
-    event_map.insert("AP_PANEL_SPEED_ON", event_map.len() as u32);
-    event_map.insert("AP_PANEL_SPEED_OFF", event_map.len() as u32);
-    event_map.insert("AP_PANEL_SPEED_SET", event_map.len() as u32);
-    event_map.insert("AP_ALT_VAR_SET_ENGLISH", event_map.len() as u32);
-    event_map.insert("AP_VS_VAR_SET_METRIC", event_map.len() as u32);
-    event_map.insert("TOGGLE_FLIGHT_DIRECTOR", event_map.len() as u32);
-    event_map.insert("SYNC_FLIGHT_DIRECTOR_PITCH", event_map.len() as u32);
-    event_map.insert("INCREASE_AUTOBRAKE_CONTROL", event_map.len() as u32);
-    event_map.insert("DECREASE_AUTOBRAKE_CONTROL", event_map.len() as u32);
-    event_map.insert("AP_PANEL_SPEED_HOLD_TOGGLE", event_map.len() as u32);
-    event_map.insert("AP_PANEL_MACH_HOLD_TOGGLE", event_map.len() as u32);
-    event_map.insert("AP_NAV_SELECT_SET", event_map.len() as u32);
-    event_map.insert("HEADING_BUG_SELECT", event_map.len() as u32);
-    event_map.insert("ALTITUDE_BUG_SELECT", event_map.len() as u32);
-    event_map.insert("VSI_BUG_SELECT", event_map.len() as u32);
-    event_map.insert("AIRSPEED_BUG_SELECT", event_map.len() as u32);
-    event_map.insert("AP_PITCH_REF_INC_UP", event_map.len() as u32);
-    event_map.insert("AP_PITCH_REF_INC_DN", event_map.len() as u32);
-    event_map.insert("AP_PITCH_REF_SELECT", event_map.len() as u32);
-    event_map.insert("AP_ATT_HOLD", event_map.len() as u32);
-    event_map.insert("AP_LOC_HOLD", event_map.len() as u32);
-    event_map.insert("AP_APR_HOLD", event_map.len() as u32);
-    event_map.insert("AP_HDG_HOLD", event_map.len() as u32);
-    event_map.insert("AP_ALT_HOLD", event_map.len() as u32);
-    event_map.insert("AP_WING_LEVELER", event_map.len() as u32);
-    event_map.insert("AP_BC_HOLD", event_map.len() as u32);
-    event_map.insert("AP_NAV1_HOLD", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_OFF", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_ALL", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_LEFT", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_RIGHT", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_LEFT_AUX", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_RIGHT_AUX", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_CENTER", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_SET", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_OFF", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_ALL", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_LEFT", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_RIGHT", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_LEFT_AUX", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_RIGHT_AUX", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_CENTER", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_2_SET", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_OFF", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_ALL", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_LEFT", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_RIGHT", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_LEFT_AUX", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_RIGHT_AUX", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_CENTER", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_3_SET", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_OFF", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_ALL", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_LEFT", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_RIGHT", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_LEFT_AUX", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_RIGHT_AUX", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_CENTER", event_map.len() as u32);
-    event_map.insert("FUEL_SELECTOR_4_SET", event_map.len() as u32);
-    event_map.insert("CROSS_FEED_OPEN", event_map.len() as u32);
-    event_map.insert("CROSS_FEED_TOGGLE", event_map.len() as u32);
-    event_map.insert("CROSS_FEED_OFF", event_map.len() as u32);
-    event_map.insert("XPNDR", event_map.len() as u32);
-    event_map.insert("ADF", event_map.len() as u32);
-    event_map.insert("DME", event_map.len() as u32);
-    event_map.insert("COM_RADIO", event_map.len() as u32);
-    event_map.insert("VOR_OBS", event_map.len() as u32);
-    event_map.insert("NAV_RADIO", event_map.len() as u32);
-    event_map.insert("COM_RADIO_WHOLE_DEC", event_map.len() as u32);
-    event_map.insert("COM_RADIO_WHOLE_INC", event_map.len() as u32);
-    event_map.insert("COM_RADIO_FRACT_DEC", event_map.len() as u32);
-    event_map.insert("COM_RADIO_FRACT_INC", event_map.len() as u32);
-    event_map.insert("NAV1_RADIO_WHOLE_DEC", event_map.len() as u32);
-    event_map.insert("NAV1_RADIO_WHOLE_INC", event_map.len() as u32);
-    event_map.insert("NAV1_RADIO_FRACT_DEC", event_map.len() as u32);
-    event_map.insert("NAV1_RADIO_FRACT_INC", event_map.len() as u32);
-    event_map.insert("NAV2_RADIO_WHOLE_DEC", event_map.len() as u32);
-    event_map.insert("NAV2_RADIO_WHOLE_INC", event_map.len() as u32);
-    event_map.insert("NAV2_RADIO_FRACT_DEC", event_map.len() as u32);
-    event_map.insert("NAV2_RADIO_FRACT_INC", event_map.len() as u32);
-    event_map.insert("ADF_100_INC", event_map.len() as u32);
-    event_map.insert("ADF_10_INC", event_map.len() as u32);
-    event_map.insert("ADF_1_INC", event_map.len() as u32);
-    event_map.insert("XPNDR_1000_INC", event_map.len() as u32);
-    event_map.insert("XPNDR_100_INC", event_map.len() as u32);
-    event_map.insert("XPNDR_10_INC", event_map.len() as u32);
-    event_map.insert("XPNDR_1_INC", event_map.len() as u32);
-    event_map.insert("VOR1_OBI_DEC", event_map.len() as u32);
-    event_map.insert("VOR1_OBI_INC", event_map.len() as u32);
-    event_map.insert("VOR2_OBI_DEC", event_map.len() as u32);
-    event_map.insert("VOR2_OBI_INC", event_map.len() as u32);
-    event_map.insert("ADF_100_DEC", event_map.len() as u32);
-    event_map.insert("ADF_10_DEC", event_map.len() as u32);
-    event_map.insert("ADF_1_DEC", event_map.len() as u32);
-    event_map.insert("COM_RADIO_SET", event_map.len() as u32);
-    event_map.insert("NAV1_RADIO_SET", event_map.len() as u32);
-    event_map.insert("NAV2_RADIO_SET", event_map.len() as u32);
-    event_map.insert("ADF_SET", event_map.len() as u32);
-    event_map.insert("XPNDR_SET", event_map.len() as u32);
-    event_map.insert("VOR1_SET", event_map.len() as u32);
-    event_map.insert("VOR2_SET", event_map.len() as u32);
-    event_map.insert("DME1_TOGGLE", event_map.len() as u32);
-    event_map.insert("DME2_TOGGLE", event_map.len() as u32);
-    event_map.insert("RADIO_VOR1_IDENT_DISABLE", event_map.len() as u32);
-    event_map.insert("RADIO_VOR2_IDENT_DISABLE", event_map.len() as u32);
-    event_map.insert("RADIO_DME1_IDENT_DISABLE", event_map.len() as u32);
-    event_map.insert("RADIO_DME2_IDENT_DISABLE", event_map.len() as u32);
-    event_map.insert("RADIO_ADF_IDENT_DISABLE", event_map.len() as u32);
-    event_map.insert("RADIO_VOR1_IDENT_ENABLE", event_map.len() as u32);
-    event_map.insert("RADIO_VOR2_IDENT_ENABLE", event_map.len() as u32);
-    event_map.insert("RADIO_DME1_IDENT_ENABLE", event_map.len() as u32);
-    event_map.insert("RADIO_DME2_IDENT_ENABLE", event_map.len() as u32);
-    event_map.insert("RADIO_ADF_IDENT_ENABLE", event_map.len() as u32);
-    event_map.insert("RADIO_VOR1_IDENT_TOGGLE", event_map.len() as u32);
-    event_map.insert("RADIO_VOR2_IDENT_TOGGLE", event_map.len() as u32);
-    event_map.insert("RADIO_DME1_IDENT_TOGGLE", event_map.len() as u32);
-    event_map.insert("RADIO_DME2_IDENT_TOGGLE", event_map.len() as u32);
-    event_map.insert("RADIO_ADF_IDENT_TOGGLE", event_map.len() as u32);
-    event_map.insert("RADIO_VOR1_IDENT_SET", event_map.len() as u32);
-    event_map.insert("RADIO_VOR2_IDENT_SET", event_map.len() as u32);
-    event_map.insert("RADIO_DME1_IDENT_SET", event_map.len() as u32);
-    event_map.insert("RADIO_DME2_IDENT_SET", event_map.len() as u32);
-    event_map.insert("RADIO_ADF_IDENT_SET", event_map.len() as u32);
-    event_map.insert("ADF_CARD_INC", event_map.len() as u32);
-    event_map.insert("ADF_CARD_DEC", event_map.len() as u32);
-    event_map.insert("ADF_CARD_SET", event_map.len() as u32);
-    event_map.insert("TOGGLE_DME", event_map.len() as u32);
-    event_map.insert("AVIONICS_MASTER_SET", event_map.len() as u32);
-    event_map.insert("TOGGLE_AVIONICS_MASTER", event_map.len() as u32);
-    event_map.insert("COM_STBY_RADIO_SET", event_map.len() as u32);
-    event_map.insert("COM_STBY_RADIO_SWAP", event_map.len() as u32);
-    event_map.insert("COM_RADIO_FRACT_DEC_CARRY", event_map.len() as u32);
-    event_map.insert("COM_RADIO_FRACT_INC_CARRY", event_map.len() as u32);
-    event_map.insert("COM2_RADIO_WHOLE_DEC", event_map.len() as u32);
-    event_map.insert("COM2_RADIO_WHOLE_INC", event_map.len() as u32);
-    event_map.insert("COM2_RADIO_FRACT_DEC", event_map.len() as u32);
-    event_map.insert("COM2_RADIO_FRACT_DEC_CARRY", event_map.len() as u32);
-    event_map.insert("COM2_RADIO_FRACT_INC", event_map.len() as u32);
-    event_map.insert("COM2_RADIO_FRACT_INC_CARRY", event_map.len() as u32);
-    event_map.insert("COM2_RADIO_SET", event_map.len() as u32);
-    event_map.insert("COM2_STBY_RADIO_SET", event_map.len() as u32);
-    event_map.insert("COM2_RADIO_SWAP", event_map.len() as u32);
-    event_map.insert("NAV1_RADIO_FRACT_DEC_CARRY", event_map.len() as u32);
-    event_map.insert("NAV1_RADIO_FRACT_INC_CARRY", event_map.len() as u32);
-    event_map.insert("NAV1_STBY_SET", event_map.len() as u32);
-    event_map.insert("NAV1_RADIO_SWAP", event_map.len() as u32);
-    event_map.insert("NAV2_RADIO_FRACT_DEC_CARRY", event_map.len() as u32);
-    event_map.insert("NAV2_RADIO_FRACT_INC_CARRY", event_map.len() as u32);
-    event_map.insert("NAV2_STBY_SET", event_map.len() as u32);
-    event_map.insert("NAV2_RADIO_SWAP", event_map.len() as u32);
-    event_map.insert("ADF1_RADIO_TENTHS_DEC", event_map.len() as u32);
-    event_map.insert("ADF1_RADIO_TENTHS_INC", event_map.len() as u32);
-    event_map.insert("XPNDR_1000_DEC", event_map.len() as u32);
-    event_map.insert("XPNDR_100_DEC", event_map.len() as u32);
-    event_map.insert("XPNDR_10_DEC", event_map.len() as u32);
-    event_map.insert("XPNDR_1_DEC", event_map.len() as u32);
-    event_map.insert("XPNDR_DEC_CARRY", event_map.len() as u32);
-    event_map.insert("XPNDR_INC_CARRY", event_map.len() as u32);
-    event_map.insert("ADF_FRACT_DEC_CARRY", event_map.len() as u32);
-    event_map.insert("ADF_FRACT_INC_CARRY", event_map.len() as u32);
-    event_map.insert("COM1_TRANSMIT_SELECT", event_map.len() as u32);
-    event_map.insert("COM2_TRANSMIT_SELECT", event_map.len() as u32);
-    event_map.insert("COM_RECEIVE_ALL_TOGGLE", event_map.len() as u32);
-    event_map.insert("COM_RECEIVE_ALL_SET", event_map.len() as u32);
-    event_map.insert("MARKER_SOUND_TOGGLE", event_map.len() as u32);
-    event_map.insert("ADF_COMPLETE_SET", event_map.len() as u32);
-    event_map.insert("ADF1_WHOLE_INC", event_map.len() as u32);
-    event_map.insert("ADF1_WHOLE_DEC", event_map.len() as u32);
-    event_map.insert("ADF2_100_INC", event_map.len() as u32);
-    event_map.insert("ADF2_10_INC", event_map.len() as u32);
-    event_map.insert("ADF2_1_INC", event_map.len() as u32);
-    event_map.insert("ADF2_RADIO_TENTHS_INC", event_map.len() as u32);
-    event_map.insert("ADF2_100_DEC", event_map.len() as u32);
-    event_map.insert("ADF2_10_DEC", event_map.len() as u32);
-    event_map.insert("ADF2_1_DEC", event_map.len() as u32);
-    event_map.insert("ADF2_RADIO_TENTHS_DEC", event_map.len() as u32);
-    event_map.insert("ADF2_WHOLE_INC", event_map.len() as u32);
-    event_map.insert("ADF2_WHOLE_DEC", event_map.len() as u32);
-    event_map.insert("ADF2_FRACT_DEC_CARRY", event_map.len() as u32);
-    event_map.insert("ADF2_FRACT_INC_CARRY", event_map.len() as u32);
-    event_map.insert("ADF2_COMPLETE_SET", event_map.len() as u32);
-    event_map.insert("RADIO_ADF2_IDENT_DISABLE", event_map.len() as u32);
-    event_map.insert("RADIO_ADF2_IDENT_ENABLE", event_map.len() as u32);
-    event_map.insert("RADIO_ADF2_IDENT_TOGGLE", event_map.len() as u32);
-    event_map.insert("RADIO_ADF2_IDENT_SET", event_map.len() as u32);
-    event_map.insert("FREQUENCY_SWAP", event_map.len() as u32);
-    event_map.insert("TOGGLE_GPS_DRIVES_NAV1", event_map.len() as u32);
-    event_map.insert("GPS_POWER_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_NEAREST_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_OBS_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_MSG_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_MSG_BUTTON_DOWN", event_map.len() as u32);
-    event_map.insert("GPS_MSG_BUTTON_UP", event_map.len() as u32);
-    event_map.insert("GPS_FLIGHTPLAN_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_TERRAIN_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_PROCEDURE_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_ZOOMIN_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_ZOOMOUT_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_DIRECTTO_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_MENU_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_CLEAR_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_CLEAR_ALL_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_CLEAR_BUTTON_DOWN", event_map.len() as u32);
-    event_map.insert("GPS_CLEAR_BUTTON_UP", event_map.len() as u32);
-    event_map.insert("GPS_ENTER_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_CURSOR_BUTTON", event_map.len() as u32);
-    event_map.insert("GPS_GROUP_KNOB_INC", event_map.len() as u32);
-    event_map.insert("GPS_GROUP_KNOB_DEC", event_map.len() as u32);
-    event_map.insert("GPS_PAGE_KNOB_INC", event_map.len() as u32);
-    event_map.insert("GPS_PAGE_KNOB_DEC", event_map.len() as u32);
-    event_map.insert("EGT", event_map.len() as u32);
-    event_map.insert("EGT_INC", event_map.len() as u32);
-    event_map.insert("EGT_DEC", event_map.len() as u32);
-    event_map.insert("EGT_SET", event_map.len() as u32);
-    event_map.insert("BAROMETRIC", event_map.len() as u32);
-    event_map.insert("GYRO_DRIFT_INC", event_map.len() as u32);
-    event_map.insert("GYRO_DRIFT_DEC", event_map.len() as u32);
-    event_map.insert("KOHLSMAN_INC", event_map.len() as u32);
-    event_map.insert("KOHLSMAN_DEC", event_map.len() as u32);
-    event_map.insert("KOHLSMAN_SET", event_map.len() as u32);
-    event_map.insert("TRUE_AIRSPEED_CAL_INC", event_map.len() as u32);
-    event_map.insert("TRUE_AIRSPEED_CAL_DEC", event_map.len() as u32);
-    event_map.insert("TRUE_AIRSPEED_CAL_SET", event_map.len() as u32);
-    event_map.insert("EGT1_INC", event_map.len() as u32);
-    event_map.insert("EGT1_DEC", event_map.len() as u32);
-    event_map.insert("EGT1_SET", event_map.len() as u32);
-    event_map.insert("EGT2_INC", event_map.len() as u32);
-    event_map.insert("EGT2_DEC", event_map.len() as u32);
-    event_map.insert("EGT2_SET", event_map.len() as u32);
-    event_map.insert("EGT3_INC", event_map.len() as u32);
-    event_map.insert("EGT3_DEC", event_map.len() as u32);
-    event_map.insert("EGT3_SET", event_map.len() as u32);
-    event_map.insert("EGT4_INC", event_map.len() as u32);
-    event_map.insert("EGT4_DEC", event_map.len() as u32);
-    event_map.insert("EGT4_SET", event_map.len() as u32);
-    event_map.insert("ATTITUDE_BARS_POSITION_UP", event_map.len() as u32);
-    event_map.insert("ATTITUDE_BARS_POSITION_DOWN", event_map.len() as u32);
-    event_map.insert("ATTITUDE_CAGE_BUTTON", event_map.len() as u32);
-    event_map.insert("RESET_G_FORCE_INDICATOR", event_map.len() as u32);
-    event_map.insert("RESET_MAX_RPM_INDICATOR", event_map.len() as u32);
-    event_map.insert("HEADING_GYRO_SET", event_map.len() as u32);
-    event_map.insert("GYRO_DRIFT_SET", event_map.len() as u32);
-    event_map.insert("STROBES_TOGGLE", event_map.len() as u32);
-    event_map.insert("ALL_LIGHTS_TOGGLE", event_map.len() as u32);
-    event_map.insert("PANEL_LIGHTS_TOGGLE", event_map.len() as u32);
-    event_map.insert("LANDING_LIGHTS_TOGGLE", event_map.len() as u32);
-    event_map.insert("LANDING_LIGHT_UP", event_map.len() as u32);
-    event_map.insert("LANDING_LIGHT_DOWN", event_map.len() as u32);
-    event_map.insert("LANDING_LIGHT_LEFT", event_map.len() as u32);
-    event_map.insert("LANDING_LIGHT_RIGHT", event_map.len() as u32);
-    event_map.insert("LANDING_LIGHT_HOME", event_map.len() as u32);
-    event_map.insert("STROBES_ON", event_map.len() as u32);
-    event_map.insert("STROBES_OFF", event_map.len() as u32);
-    event_map.insert("STROBES_SET", event_map.len() as u32);
-    event_map.insert("PANEL_LIGHTS_ON", event_map.len() as u32);
-    event_map.insert("PANEL_LIGHTS_OFF", event_map.len() as u32);
-    event_map.insert("PANEL_LIGHTS_SET", event_map.len() as u32);
-    event_map.insert("LANDING_LIGHTS_ON", event_map.len() as u32);
-    event_map.insert("LANDING_LIGHTS_OFF", event_map.len() as u32);
-    event_map.insert("LANDING_LIGHTS_SET", event_map.len() as u32);
-    event_map.insert("TOGGLE_BEACON_LIGHTS", event_map.len() as u32);
-    event_map.insert("TOGGLE_TAXI_LIGHTS", event_map.len() as u32);
-    event_map.insert("TOGGLE_LOGO_LIGHTS", event_map.len() as u32);
-    event_map.insert("TOGGLE_RECOGNITION_LIGHTS", event_map.len() as u32);
-    event_map.insert("TOGGLE_WING_LIGHTS", event_map.len() as u32);
-    event_map.insert("TOGGLE_NAV_LIGHTS", event_map.len() as u32);
-    event_map.insert("TOGGLE_CABIN_LIGHTS", event_map.len() as u32);
-    event_map.insert("TOGGLE_VACUUM_FAILURE", event_map.len() as u32);
-    event_map.insert("TOGGLE_ELECTRICAL_FAILURE", event_map.len() as u32);
-    event_map.insert("TOGGLE_PITOT_BLOCKAGE", event_map.len() as u32);
-    event_map.insert("TOGGLE_STATIC_PORT_BLOCKAGE", event_map.len() as u32);
-    event_map.insert("TOGGLE_HYDRAULIC_FAILURE", event_map.len() as u32);
-    event_map.insert("TOGGLE_TOTAL_BRAKE_FAILURE", event_map.len() as u32);
-    event_map.insert("TOGGLE_LEFT_BRAKE_FAILURE", event_map.len() as u32);
-    event_map.insert("TOGGLE_RIGHT_BRAKE_FAILURE", event_map.len() as u32);
-    event_map.insert("TOGGLE_ENGINE1_FAILURE", event_map.len() as u32);
-    event_map.insert("TOGGLE_ENGINE2_FAILURE", event_map.len() as u32);
-    event_map.insert("TOGGLE_ENGINE3_FAILURE", event_map.len() as u32);
-    event_map.insert("TOGGLE_ENGINE4_FAILURE", event_map.len() as u32);
-    event_map.insert("SMOKE_TOGGLE", event_map.len() as u32);
-    event_map.insert("GEAR_TOGGLE", event_map.len() as u32);
-    event_map.insert("BRAKES", event_map.len() as u32);
-    event_map.insert("GEAR_SET", event_map.len() as u32);
-    event_map.insert("BRAKES_LEFT", event_map.len() as u32);
-    event_map.insert("BRAKES_RIGHT", event_map.len() as u32);
-    event_map.insert("PARKING_BRAKES", event_map.len() as u32);
-    event_map.insert("GEAR_PUMP", event_map.len() as u32);
-    event_map.insert("PITOT_HEAT_TOGGLE", event_map.len() as u32);
-    event_map.insert("SMOKE_ON", event_map.len() as u32);
-    event_map.insert("SMOKE_OFF", event_map.len() as u32);
-    event_map.insert("SMOKE_SET", event_map.len() as u32);
-    event_map.insert("PITOT_HEAT_ON", event_map.len() as u32);
-    event_map.insert("PITOT_HEAT_OFF", event_map.len() as u32);
-    event_map.insert("PITOT_HEAT_SET", event_map.len() as u32);
-    event_map.insert("GEAR_UP", event_map.len() as u32);
-    event_map.insert("GEAR_DOWN", event_map.len() as u32);
-    event_map.insert("TOGGLE_MASTER_BATTERY", event_map.len() as u32);
-    event_map.insert("TOGGLE_MASTER_ALTERNATOR", event_map.len() as u32);
-    event_map.insert("TOGGLE_ELECTRIC_VACUUM_PUMP", event_map.len() as u32);
-    event_map.insert("TOGGLE_ALTERNATE_STATIC", event_map.len() as u32);
-    event_map.insert("DECREASE_DECISION_HEIGHT", event_map.len() as u32);
-    event_map.insert("INCREASE_DECISION_HEIGHT", event_map.len() as u32);
-    event_map.insert("TOGGLE_STRUCTURAL_DEICE", event_map.len() as u32);
-    event_map.insert("TOGGLE_PROPELLER_DEICE", event_map.len() as u32);
-    event_map.insert("TOGGLE_ALTERNATOR1", event_map.len() as u32);
-    event_map.insert("TOGGLE_ALTERNATOR2", event_map.len() as u32);
-    event_map.insert("TOGGLE_ALTERNATOR3", event_map.len() as u32);
-    event_map.insert("TOGGLE_ALTERNATOR4", event_map.len() as u32);
-    event_map.insert("TOGGLE_MASTER_BATTERY_ALTERNATOR", event_map.len() as u32);
-    event_map.insert("AXIS_LEFT_BRAKE_SET", event_map.len() as u32);
-    event_map.insert("AXIS_RIGHT_BRAKE_SET", event_map.len() as u32);
-    event_map.insert("TOGGLE_AIRCRAFT_EXIT", event_map.len() as u32);
-    event_map.insert("TOGGLE_WING_FOLD", event_map.len() as u32);
-    event_map.insert("SET_WING_FOLD", event_map.len() as u32);
-    event_map.insert("TOGGLE_TAIL_HOOK_HANDLE", event_map.len() as u32);
-    event_map.insert("SET_TAIL_HOOK_HANDLE", event_map.len() as u32);
-    event_map.insert("TOGGLE_WATER_RUDDER", event_map.len() as u32);
-    event_map.insert("TOGGLE_PUSHBACK", event_map.len() as u32);
-    event_map.insert("KEY_TUG_HEADING", event_map.len() as u32);
-    event_map.insert("KEY_TUG_SPEED", event_map.len() as u32);
-    event_map.insert("TUG_DISABLE", event_map.len() as u32);
-    event_map.insert("TOGGLE_MASTER_IGNITION_SWITCH", event_map.len() as u32);
-    event_map.insert("TOGGLE_TAILWHEEL_LOCK", event_map.len() as u32);
-    event_map.insert("ADD_FUEL_QUANTITY", event_map.len() as u32);
-    event_map.insert("CLOCK_HOURS_DEC", event_map.len() as u32);
-    event_map.insert("CLOCK_HOURS_INC", event_map.len() as u32);
-    event_map.insert("CLOCK_MINUTES_DEC", event_map.len() as u32);
-    event_map.insert("CLOCK_MINUTES_INC", event_map.len() as u32);
-    event_map.insert("CLOCK_SECONDS_ZERO", event_map.len() as u32);
-    event_map.insert("CLOCK_HOURS_SET", event_map.len() as u32);
-    event_map.insert("CLOCK_MINUTES_SET", event_map.len() as u32);
-    event_map.insert("ZULU_HOURS_SET", event_map.len() as u32);
-    event_map.insert("ZULU_MINUTES_SET", event_map.len() as u32);
-    event_map.insert("ZULU_DAY_SET", event_map.len() as u32);
-    event_map.insert("ZULU_YEAR_SET", event_map.len() as u32);
-    
-    event_map.shrink_to_fit();
+#[derive(Deserialize)]
+struct SyncBool {
+    var_name: String,
+    unit_name: String,
+    type_name: String,
+    event_name: String,
+    sync_type: String
+}
 
-    for (event_name, event_id) in &event_map {
-        conn.map_client_event_to_sim_event(*event_id, event_name);
-        conn.add_client_event_to_notification_group(0, *event_id, true);
+pub struct Definitions {
+    pub sim_vars: StructData,
+    pub event_map: HashMap<String, u32>,
+    
+    bool_sync: HashMap<String, Box<dyn Syncable<bool>>>,
+    last_bool_values: Option<IndexMap<String, StructDataTypes>>
+}
+
+impl Definitions {
+    pub fn new(conn: &simconnectsdk::SimConnector) -> Self {
+        let mut object = Self {
+            sim_vars: StructData::new(),
+            event_map: HashMap::new(),
+            bool_sync: HashMap::new(),
+            last_bool_values: None
+        };
+
+        object.map_data(conn);
+        object.map_events(conn);
+
+        return object;
     }
 
-    let mut sync_map: HashMap<&str, Box<dyn Syncable<bool>>> = HashMap::new();
-    sync_map.insert("strobe_on", Box::new(ToggleSwitchSet::new((&event_map).get("STROBES_SET").unwrap().clone())));
-    sync_map.insert("panel_on", Box::new(ToggleSwitchSet::new((&event_map).get("PANEL_LIGHTS_SET").unwrap().clone())));
-    sync_map.insert("landing_on", Box::new(ToggleSwitchSet::new((&event_map).get("LANDING_LIGHTS_SET").unwrap().clone())));
-    sync_map.insert("taxi_on", Box::new(ToggleSwitch::new((&event_map).get("TOGGLE_TAXI_LIGHTS").unwrap().clone())));
-    sync_map.insert("beacon_on", Box::new(ToggleSwitch::new((&event_map).get("TOGGLE_BEACON_LIGHTS").unwrap().clone())));
-    sync_map.insert("nav_on", Box::new(ToggleSwitch::new((&event_map).get("TOGGLE_NAV_LIGHTS").unwrap().clone())));
-    sync_map.insert("logo_on", Box::new(ToggleSwitch::new((&event_map).get("TOGGLE_LOGO_LIGHTS").unwrap().clone())));
-    sync_map.insert("recognition_on", Box::new(ToggleSwitch::new((&event_map).get("TOGGLE_RECOGNITION_LIGHTS").unwrap().clone())));
-    sync_map.insert("cabin_on", Box::new(ToggleSwitch::new((&event_map).get("TOGGLE_CABIN_LIGHTS").unwrap().clone())));
+    fn map_data(&mut self, conn: &simconnectsdk::SimConnector) {
+        let mut reader = csv::ReaderBuilder::new();
+        reader.trim(csv::Trim::All);
+        let mut reader = reader.from_path("sim_vars.dat").expect("Could not open sim_vars.dat! Ensure that the file is in the directory, or redownload.");
 
-    return sync_map;
+        for result in reader.deserialize() {
+            let result: SimVar = result.unwrap();
+            match result.type_name.as_str() {
+                "f64" => {
+                    conn.add_data_definition(0, result.var_name.as_str(), result.unit_name.as_str(), simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
+                    self.sim_vars.add_definition(result.var_name, InDataTypes::F64)
+                }
+                _ => ()
+            };
+        }
+    }
+
+    pub fn map_bool_sync_events(&mut self, conn: &simconnectsdk::SimConnector, filename: &str, define_id: u32) -> StructData {
+        let mut reader = csv::ReaderBuilder::new();
+        reader.trim(csv::Trim::All);
+        let mut reader = reader.from_path(filename).expect(format!("Could not open {}! Ensure that the file is in the directory, or redownload.", filename).as_str());
+    
+        let mut sim_vars = StructData::new();
+        for result in reader.deserialize() {
+    
+            let result: SyncBool = result.unwrap();
+            let event_id = self.event_map.get(&result.event_name).unwrap().clone();
+    
+            match result.type_name.as_str() {
+                "i32" => {
+                    conn.add_data_definition(define_id, result.var_name.as_str(), result.unit_name.as_str(), simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, u32::MAX);
+                    sim_vars.add_definition(result.var_name.to_string(), InDataTypes::Bool);
+                    match result.sync_type.as_str() {
+                        "SWITCH" => {self.bool_sync.insert(result.var_name, Box::new(ToggleSwitch::new(event_id)));}
+                        "SWITCHSET" => {self.bool_sync.insert(result.var_name, Box::new(ToggleSwitchSet::new(event_id)));}
+                        _ => {}
+                    };
+                }
+                _ => ()
+            };
+        }
+
+        return sim_vars;
+    }
+
+    fn map_events(&mut self, conn: &simconnectsdk::SimConnector)  {
+        let reader = BufReader::new(File::open("sim_events.dat").expect("Could not open sim_vars.dat! Ensure that the file is in the directory, or redownload."));
+    
+        for result in reader.lines() {
+            match result {
+                Ok(line) => {
+                    if line.trim() != "" {
+                        let event_id = self.event_map.len() as u32;
+                        self.event_map.insert(line.trim().to_string(), event_id);
+                        conn.map_client_event_to_sim_event(event_id, line.as_str());
+                        conn.add_client_event_to_notification_group(0, event_id, true);
+                    }
+                }
+                Err(_) => ()
+            }
+        }
+    }
+
+    pub fn sync_boolean(&self, conn: &simconnectsdk::SimConnector, sim_var: &String, to: bool) {
+        let last_val = self.last_bool_values.as_ref().expect("Not synced yet!").get(sim_var).unwrap();
+
+        self.bool_sync.get(sim_var)
+            .expect("Could not sync! Value does not exist!")
+            .sync(conn, data_type_as_bool(*last_val).unwrap(), to)
+    }
+
+    pub fn has_synced_bool_values(&self) -> bool {
+        return self.last_bool_values.is_some();
+    }
+
+    pub fn record_boolean_values(&mut self, vals: IndexMap<String, StructDataTypes>) {
+        self.last_bool_values = Some(vals);
+    }
 }

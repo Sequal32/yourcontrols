@@ -16,7 +16,8 @@ pub struct Server {
 
 pub enum ReceiveData {
     Data(Value),
-    NewConnection(String)
+    NewConnection(String),
+    ConnectionLost(String)
 }
 
 impl Server {
@@ -48,10 +49,11 @@ impl Server {
                     // Create sender/receivers that each thread can use safely
 
                     let tx = servertx.clone();
+                    let tx2 = tx.clone();
                     let rx = clientrx.clone();
                     // Address to send udp packets with
                     let addr = stream.peer_addr().unwrap().ip().to_string();
-                    tx.send(ReceiveData::NewConnection(addr)).expect("!");
+                    tx.send(ReceiveData::NewConnection(addr.to_string())).expect("!");
 
                     // Create clones of streams that each thread can use safely
                     let mut stream_clone = stream.try_clone().unwrap();
@@ -96,7 +98,13 @@ impl Server {
                                 Ok(value) => {
                                     let payload_string = value.to_string() + "\n";
                                     let payload = payload_string.as_bytes();
-                                    stream_clone.write(payload).expect("!");
+                                    match stream_clone.write(payload) {
+                                        Ok(_) => (),
+                                        Err(_) => {
+                                            tx2.send(ReceiveData::ConnectionLost(addr.to_string())).expect("Error transmitting data (client)!");
+                                            break
+                                        }
+                                    }
                                 },
                                 Err(_) => break
                             }

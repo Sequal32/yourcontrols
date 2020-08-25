@@ -1,7 +1,7 @@
-use std::fs::File;
-use std::io::{Write, BufReader};
 use serde_json;
 use serde::{Deserialize, Serialize};
+use std::fs::File;
+use std::io::{Write, BufReader};
 
 #[derive(Deserialize, Serialize)]
 pub struct Config {

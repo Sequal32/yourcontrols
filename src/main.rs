@@ -1,57 +1,25 @@
+mod bytereader;
 mod definitions;
-mod simserver;
+mod interpolate;
 mod simclient;
 mod simconfig;
+mod simserver;
 mod syncdefs;
-mod interpolate;
 
+use bytereader::{StructDataTypes, data_type_as_bool};
 use chrono;
-use simconnectsdk;
-use simserver::Server;
-use simclient::Client;
+use definitions::Definitions;
+use indexmap::IndexMap;
 use interpolate::{interpolate_f64, interpolate_f64_degrees};
 use serde_json::{json, Value};
 use serde::{Deserialize, Serialize};
-use std::{str::FromStr, net::Ipv4Addr};
+use simclient::Client;
 use simconfig::Config;
+use simconnectsdk;
 use simserver::{TransferClient, ReceiveData};
+use simserver::Server;
+use std::{str::FromStr, net::Ipv4Addr};
 
-#[repr(C)]
-#[derive(Serialize, Deserialize, Debug, Copy, Clone)]
-struct PosStruct {
-    // 3D
-    lat: f64,
-    lon: f64,
-    alt: f64,
-    pitch: f64,
-    bank: f64,
-    heading: f64,
-    // // Quadrant
-    throttle: f64,
-    mixture: f64,
-    // prop: f64,
-    // // Physics
-    velocity_x: f64,
-    velocity_y: f64,
-    velocity_z: f64,
-    accel_x: f64,
-    accel_y: f64,
-    accel_z: f64,
-    rotation_vel_x: f64,
-    rotation_vel_y: f64,
-    rotation_vel_z: f64,
-    // airspeed: f64,
-    yoke_x: f64,
-    yoke_y: f64,
-    // Surfaces
-    rudder_pedal: f64,
-    rudder: f64,
-    elevator: f64,
-    aileron: f64,
-
-    elevator_trim: f64,
-    rudder_trim: f64,
-}
 #[derive(Serialize, Deserialize, Debug)]
 #[repr(C)]
 struct SyncStruct {
@@ -72,6 +40,7 @@ fn transfer_control(conn: &simconnectsdk::SimConnector, has_control: bool) {
     conn.transmit_client_event(1, 1002, !has_control as u32, 5, 0);
 }
 
+type SimValue = IndexMap<String, StructDataTypes>;
 fn main() {
     // Load configuration file
     let config = match Config::read_from_file("config.json") {
@@ -87,10 +56,11 @@ fn main() {
     let mut conn = simconnectsdk::SimConnector::new();
     conn.connect("Simple Shared Cockpit");
 
-    definitions::map_data(&conn);
-    let sync_map = definitions::map_events(&conn);
+    let mut definitions = Definitions::new(&conn);
+    let bool_defs = definitions.map_bool_sync_events(&conn, "sync_bools.dat", 1);
 
     conn.request_data_on_sim_object(0, 0, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
+    conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
 
     conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
     conn.map_client_event_to_sim_event(1001, "FREEZE_ALTITUDE_SET");
@@ -102,13 +72,13 @@ fn main() {
     conn.map_client_event_to_sim_event(2000, "TOGGLE_WATER_RUDDER");
     conn.add_client_event_to_notification_group(1, 2000, false);
 
-    conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_ONCE);
     // Whether to start a client or a server
 
     let mut has_control;
     let mut can_take_control = false;
     let transfer_client: Box<dyn TransferClient>;
 
+    // Initial connection
     println!("Enter ip to connect or type s to start server: ");
     let result: String = text_io::read!("{}");
     let (tx, rx) = match result.len() {
@@ -118,7 +88,7 @@ fn main() {
             let transfer = match server.start(config.port) {
                 Ok((tx, rx)) => {
                     println!("Server started!");
-                    has_control = true;
+                    has_control = false;
                     (tx, rx)
                 },
                 Err(err) => panic!("Could not start server! {:?}", err)
@@ -148,17 +118,17 @@ fn main() {
     };
     transfer_control(&conn, has_control);
 
+    let mut should_sync = false;
+    // Interpolation Vars //
+
     let mut instant = std::time::Instant::now();
-    let mut last_pos_update: Option<Value> = None;
-    let mut pos_update: Option<Value> = None;
-    let mut current_pos: Option<Value> = None;
+    let mut last_pos_update: Option<SimValue> = None;
+    let mut pos_update: Option<SimValue> = None;
+    let mut current_pos: Option<SimValue> = None;
     // Set data upon receipt
     let mut interpolation_time = 0.0;
     let mut add_alpha = 0.0;
     let mut last_packet: Option<Value> = None;
-
-    let mut last_bool_sync: Option<Value> = None;
-
     let mut tick = 0;
     
     loop {
@@ -172,23 +142,23 @@ fn main() {
 
                     tick += 1;
 
-                    let mut should_send = true;
+                    let mut should_send;
 
                     match (*data).dwDefineID {
                         0 => {
-                            let sim_data: PosStruct = std::mem::transmute_copy(&(*data).dwData);
+                            let sim_data: SimValue = definitions.sim_vars.read_from_dword(std::mem::transmute_copy(&(*data).dwData));
                             send_type = "physics";
-                            let val = serde_json::to_value(&sim_data).unwrap();
-                            data_string = val.to_string();
-                            current_pos = Some(val);
+                            data_string = serde_json::to_string(&sim_data).unwrap();
+                            current_pos = Some(sim_data);
                             should_send = has_control && tick % config.update_rate == 0;
                         },
                         1 => {
-                            let sim_data: SyncStruct = std::mem::transmute_copy(&(*data).dwData);
+                            let sim_data: SimValue = bool_defs.read_from_dword(std::mem::transmute_copy(&(*data).dwData));
                             send_type = "sync_toggle";
-                            let val = serde_json::to_value(&sim_data).unwrap();
-                            data_string = val.to_string();
-                            last_bool_sync = Some(val);
+                            data_string = serde_json::to_string(&sim_data).unwrap();
+                            definitions.record_boolean_values(sim_data);
+                            should_send = should_sync;
+                            should_sync = false;
                         },
                         _ => panic!("Not covered!")
                     };
@@ -207,29 +177,31 @@ fn main() {
                         match (&last_pos_update, &pos_update) {
                             (Some(last), Some(current)) => {
                                 // Interpolate previous recorded position with previous update
-                                let current_object = current.as_object().unwrap();
-                                let mut updated_map = serde_json::Map::new();
+                                let mut updated_map = SimValue::new();
 
                                 let alpha = instant.elapsed().as_millis() as f64/interpolation_time + add_alpha;
     
-                                for (key, value) in last.as_object().unwrap() {
-                                    if value.is_f64() {
-                                        let interpolated = match key.as_str() {
-                                            "pitch" | "bank" | "heading" => interpolate_f64_degrees(value.as_f64().unwrap(), current_object[key].as_f64().unwrap(), alpha),
-                                            _ => interpolate_f64(value.as_f64().unwrap(), current_object[key].as_f64().unwrap(), alpha)
-                                        };
-                                        updated_map.insert(key.to_string(), Value::from(interpolated));
-                                    } else {
-                                        updated_map.insert(key.to_string(), value.clone());
+                                for (key, value) in last {
+                                    match value {
+                                        StructDataTypes::I32(_) => {
+                                            updated_map.insert(key.to_string(), *value);
+                                        }
+                                        StructDataTypes::F64(v) => {
+                                            if let StructDataTypes::F64(current_value) = current[key] {
+                                                let interpolated = match key.as_str() {
+                                                    "pitch" | "bank" | "heading" => interpolate_f64_degrees(*v, current_value, alpha),
+                                                    _ => interpolate_f64(*v, current_value, alpha)
+                                                };
+                                                updated_map.insert(key.to_string(), StructDataTypes::F64(interpolated));
+                                            }
+                                        }
+                                        _ => ()
                                     }
                                 }
+                                let (size_bytes, data_pointer) = definitions.sim_vars.write_to_data(&updated_map);
+                                conn.set_data_on_sim_object(0, 0, 0, 0, size_bytes as u32, data_pointer);
 
-                                let val = serde_json::value::to_value(updated_map).unwrap();
-                                let mut updated: PosStruct = serde_json::from_value(val.clone()).unwrap();
-                                let data_pointer: *mut std::ffi::c_void = &mut updated as *mut PosStruct as *mut std::ffi::c_void;
-                                conn.set_data_on_sim_object(0, 0, 0, 0, std::mem::size_of::<PosStruct>() as u32, data_pointer);
-
-                                current_pos = Some(val);
+                                current_pos = Some(updated_map);
 
                                 if alpha > config.conn_timeout {
                                     last_pos_update = None;
@@ -247,7 +219,7 @@ fn main() {
             // Exception occured
             Ok(simconnectsdk::DispatchResult::Exception(data)) => {
                 unsafe {
-                    // println!("{:?}", (*data).dwException);
+                    println!("{:?}", (*data).dwException);
                 }
             },
             Ok(simconnectsdk::DispatchResult::Event(data)) => {
@@ -291,7 +263,6 @@ fn main() {
                             interpolation_time = (value["time"].as_i64().unwrap()-p["time"].as_i64().unwrap()) as f64;
                             add_alpha = (instant.elapsed().as_secs_f64() - cache_interpolation_time/1000.0)/interpolation_time;
                             if add_alpha < 0.0 {add_alpha = 0.0}
-                            
                             instant = std::time::Instant::now();
                             last_pos_update = current_pos.take();
                         },
@@ -301,16 +272,13 @@ fn main() {
                     last_packet = Some(value);
                 },
                 "sync_toggle" => { // Initial synchronize
-                    match (&last_bool_sync).as_ref() {
-                        Some(last) => {
-                            let data: Value = serde_json::from_str(&value["data"].as_str().unwrap()).unwrap();
-                            for (key, value) in data.as_object().unwrap() {
-                                let last = last[key].as_bool().unwrap();
-                                let current = value.as_bool().unwrap();
-                                sync_map.get(key.as_str()).unwrap().sync(&conn, last, current);
-                            }
-                        },
-                        None => ()
+                    if definitions.has_synced_bool_values() {
+                        let data: SimValue = serde_json::from_str(&value["data"].as_str().unwrap()).unwrap();
+                        for (key, value) in data {
+                            let current = data_type_as_bool(value).unwrap();
+                            // Synchronize
+                            definitions.sync_boolean(&conn, &key, current);
+                        }
                     }
                 },
                 "event" => {
@@ -334,9 +302,7 @@ fn main() {
             },
             Ok(ReceiveData::NewConnection(ip)) => {
                 println!("NEW CONNECTION: {}", ip);
-                if has_control {
-                    conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_ONCE);
-                }
+                should_sync = true;
             },
             _ => ()
         }
