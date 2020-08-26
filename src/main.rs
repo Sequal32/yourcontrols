@@ -15,12 +15,12 @@ use serde_json::{json, Value};
 use serde::{Deserialize, Serialize};
 use simclient::Client;
 use simconfig::Config;
-use simconnectsdk;
+use simconnect;
 use simserver::{TransferClient, ReceiveData};
 use simserver::Server;
 use std::{str::FromStr, net::Ipv4Addr};
 
-fn transfer_control(conn: &simconnectsdk::SimConnector, has_control: bool) {
+fn transfer_control(conn: &simconnect::SimConnector, has_control: bool) {
     conn.transmit_client_event(1, 1000, !has_control as u32, 5, 0);
     conn.transmit_client_event(1, 1001, !has_control as u32, 5, 0);
     conn.transmit_client_event(1, 1002, !has_control as u32, 5, 0);
@@ -39,14 +39,14 @@ fn main() {
     };
     
     // Set up sim connect
-    let mut conn = simconnectsdk::SimConnector::new();
+    let mut conn = simconnect::SimConnector::new();
     conn.connect("Simple Shared Cockpit");
 
     let mut definitions = Definitions::new(&conn);
     let bool_defs = definitions.map_bool_sync_events(&conn, "sync_bools.dat", 1);
 
-    conn.request_data_on_sim_object(0, 0, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
-    conn.request_data_on_sim_object(1, 1, 0, simconnectsdk::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
+    conn.request_data_on_sim_object(0, 0, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
+    conn.request_data_on_sim_object(1, 1, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
 
     conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
     conn.map_client_event_to_sim_event(1001, "FREEZE_ALTITUDE_SET");
@@ -120,7 +120,7 @@ fn main() {
     loop {
         let message = conn.get_next_message();
         match message {
-            Ok(simconnectsdk::DispatchResult::SimobjectData(data)) => {
+            Ok(simconnect::DispatchResult::SimobjectData(data)) => {
                 // Send data to clients or to server
                 unsafe {
                     let send_type: &str;
@@ -202,12 +202,12 @@ fn main() {
                 }
             },
             // Exception occured
-            Ok(simconnectsdk::DispatchResult::Exception(data)) => {
+            Ok(simconnect::DispatchResult::Exception(data)) => {
                 unsafe {
                     println!("{:?}", (*data).dwException);
                 }
             },
-            Ok(simconnectsdk::DispatchResult::Event(data)) => {
+            Ok(simconnect::DispatchResult::Event(data)) => {
                 unsafe {
                     match (*data).uGroupID {
                         0 => {

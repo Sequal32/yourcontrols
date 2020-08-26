@@ -20,7 +20,7 @@ impl AircraftState {
         self.bool_sync.insert(sim_var_name, switch);
     }
 
-    pub fn sync_bool(&self, conn: &simconnectsdk::SimConnector, sim_var_name: &'static str) -> Result((), &str) {
+    pub fn sync_bool(&self, conn: &simconnect::SimConnector, sim_var_name: &'static str) -> Result((), &str) {
         match self.bool_sync.get(sim_var_name) {
             Some(toggle) => {
                 toggle.sync(conn, from, to);

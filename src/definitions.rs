@@ -31,7 +31,7 @@ pub struct Definitions {
 }
 
 impl Definitions {
-    pub fn new(conn: &simconnectsdk::SimConnector) -> Self {
+    pub fn new(conn: &simconnect::SimConnector) -> Self {
         let mut object = Self {
             sim_vars: StructData::new(),
             event_map: HashMap::new(),
@@ -45,7 +45,7 @@ impl Definitions {
         return object;
     }
 
-    fn map_data(&mut self, conn: &simconnectsdk::SimConnector) {
+    fn map_data(&mut self, conn: &simconnect::SimConnector) {
         let mut reader = csv::ReaderBuilder::new();
         reader.trim(csv::Trim::All);
         let mut reader = reader.from_path("sim_vars.dat").expect("Could not open sim_vars.dat! Ensure that the file is in the directory, or redownload.");
@@ -54,7 +54,7 @@ impl Definitions {
             let result: SimVar = result.unwrap();
             match result.type_name.as_str() {
                 "f64" => {
-                    conn.add_data_definition(0, result.var_name.as_str(), result.unit_name.as_str(), simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
+                    conn.add_data_definition(0, result.var_name.as_str(), result.unit_name.as_str(), simconnect::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64, u32::MAX);
                     self.sim_vars.add_definition(result.var_name, InDataTypes::F64)
                 }
                 _ => ()
@@ -62,7 +62,7 @@ impl Definitions {
         }
     }
 
-    pub fn map_bool_sync_events(&mut self, conn: &simconnectsdk::SimConnector, filename: &str, define_id: u32) -> StructData {
+    pub fn map_bool_sync_events(&mut self, conn: &simconnect::SimConnector, filename: &str, define_id: u32) -> StructData {
         let mut reader = csv::ReaderBuilder::new();
         reader.trim(csv::Trim::All);
         let mut reader = reader.from_path(filename).expect(format!("Could not open {}! Ensure that the file is in the directory, or redownload.", filename).as_str());
@@ -75,7 +75,7 @@ impl Definitions {
     
             match result.type_name.as_str() {
                 "i32" => {
-                    conn.add_data_definition(define_id, result.var_name.as_str(), result.unit_name.as_str(), simconnectsdk::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, u32::MAX);
+                    conn.add_data_definition(define_id, result.var_name.as_str(), result.unit_name.as_str(), simconnect::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_INT32, u32::MAX);
                     sim_vars.add_definition(result.var_name.to_string(), InDataTypes::Bool);
                     match result.sync_type.as_str() {
                         "SWITCH" => {self.bool_sync.insert(result.var_name, Box::new(ToggleSwitch::new(event_id)));}
@@ -90,7 +90,7 @@ impl Definitions {
         return sim_vars;
     }
 
-    fn map_events(&mut self, conn: &simconnectsdk::SimConnector)  {
+    fn map_events(&mut self, conn: &simconnect::SimConnector)  {
         let reader = BufReader::new(File::open("sim_events.dat").expect("Could not open sim_vars.dat! Ensure that the file is in the directory, or redownload."));
     
         for result in reader.lines() {
@@ -108,7 +108,7 @@ impl Definitions {
         }
     }
 
-    pub fn sync_boolean(&self, conn: &simconnectsdk::SimConnector, sim_var: &String, to: bool) {
+    pub fn sync_boolean(&self, conn: &simconnect::SimConnector, sim_var: &String, to: bool) {
         let last_val = self.last_bool_values.as_ref().expect("Not synced yet!").get(sim_var).unwrap();
 
         self.bool_sync.get(sim_var)

@@ -1,7 +1,7 @@
-use simconnectsdk;
+use simconnect;
 
 pub trait Syncable<T> {
-    fn sync(&self, conn: &simconnectsdk::SimConnector, from: T, to: T);
+    fn sync(&self, conn: &simconnect::SimConnector, from: T, to: T);
 }
 
 pub struct ToggleSwitch {
@@ -17,7 +17,7 @@ impl ToggleSwitch {
 }
 
 impl Syncable<bool> for ToggleSwitch {
-    fn sync(&self, conn: &simconnectsdk::SimConnector, from: bool, to: bool) {
+    fn sync(&self, conn: &simconnect::SimConnector, from: bool, to: bool) {
         if from != to {
             conn.transmit_client_event(1, self.event_id, 0, 5, 0);
         }
@@ -37,7 +37,7 @@ impl ToggleSwitchSet {
 }
 
 impl Syncable<bool> for ToggleSwitchSet {
-    fn sync(&self, conn: &simconnectsdk::SimConnector, _: bool, to: bool) {
+    fn sync(&self, conn: &simconnect::SimConnector, _: bool, to: bool) {
         match to {
             true => conn.transmit_client_event(1, self.event_id, 1, 5, 0),
             false => conn.transmit_client_event(1, self.event_id, 0, 5, 0)
