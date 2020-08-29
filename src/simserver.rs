@@ -8,10 +8,12 @@ use std::thread;
 
 pub trait TransferClient {
     fn get_connected_count(&self) -> i32;
+    fn stop(&self);
 }
 
 pub struct Server {
-    pub number_connections: Arc<AtomicI32>
+    pub number_connections: Arc<AtomicI32>,
+    should_stop: Arc<AtomicBool>
 }
 
 pub enum ReceiveData {
@@ -23,7 +25,8 @@ pub enum ReceiveData {
 impl Server {
     pub fn new() -> Self  {
         return Self {
-            number_connections: Arc::new(AtomicI32::new(0))
+            number_connections: Arc::new(AtomicI32::new(0)),
+            should_stop: Arc::new(AtomicBool::new(false))
         }
     }
 
@@ -37,6 +40,8 @@ impl Server {
         };
 
         let number_connections = self.number_connections.clone();
+        let should_stop = self.should_stop.clone();
+        let should_stop2 = should_stop.clone();
 
         thread::spawn(move || {
             loop {
@@ -60,6 +65,8 @@ impl Server {
 
                     // Will determine thread disconnection
                     let did_disconnect = Arc::new(AtomicBool::new(false));
+                    let should_stop = should_stop.clone();
+                    let should_stop2 = should_stop.clone();
                     let disconnect_clone = did_disconnect.clone();
 
                     let mut reader = BufReader::new(stream);
@@ -70,6 +77,8 @@ impl Server {
                     thread::spawn(move || {
                         loop {
                             let mut buf = String::new();
+
+                            if should_stop.load(SeqCst) {break}
 
                             match reader.read_line(&mut buf) {
                                 // socket closed
@@ -95,8 +104,7 @@ impl Server {
                         loop {
                             // Send to all clients
                             let data = rx.recv();
-    
-                            if disconnect_clone.load(SeqCst) {break}
+                            if disconnect_clone.load(SeqCst) || should_stop2.load(SeqCst) {break}
     
                             match data {
                                 Ok(value) => {
@@ -128,5 +136,9 @@ impl Server {
 impl TransferClient for Server {
     fn get_connected_count(&self) -> i32 {
         return self.number_connections.load(SeqCst);
+    }
+
+    fn stop(&self) {
+        self.should_stop.store(true, SeqCst);
     }
 }

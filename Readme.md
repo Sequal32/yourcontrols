@@ -1,5 +1,6 @@
 ![](/assets/logo.png)
-[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/fo-real.svg)](https://forthebadge.com) 
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/fo-real.svg)](https://forthebadge.com)
+
 A simple shared cockpit solution for MSFS2020.
 
 ## Setup
