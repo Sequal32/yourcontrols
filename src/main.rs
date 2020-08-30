@@ -11,7 +11,7 @@ use app::{App, AppMessage};
 use bytereader::{StructDataTypes, data_type_as_bool};
 use definitions::Definitions;
 use indexmap::IndexMap;
-use interpolate::{interpolate_f64, interpolate_f64_degrees};
+use interpolate::{InterpolateStruct};
 use serde_json::{json, Value};
 use serde::{Deserialize, Serialize};
 use simclient::Client;
@@ -95,15 +95,9 @@ fn main() {
     let mut can_take_control = false;
     let mut should_sync = false;
     // Interpolation Vars //
-
-    let mut instant = std::time::Instant::now();
-    let mut last_pos_update: Option<SimValue> = None;
-    let mut pos_update: Option<SimValue> = None;
-    let mut current_pos: Option<SimValue> = None;
+    let mut interpolation = InterpolateStruct::new();
+    interpolation.add_special_floats(&mut vec!["PLANE PITCH DEGREES".to_string(), "PLANE BANK DEGREES".to_string(), "PLANE HEADING DEGREES MAGNETIC".to_string()]);
     // Set data upon receipt
-    let mut interpolation_time = 0.0;
-    let mut add_alpha = 0.0;
-    let mut last_packet: Option<Value> = None;
     let mut tick = 0;
 
     loop {
@@ -112,6 +106,7 @@ fn main() {
             let rx = &transfer_client.rx;
 
             let message = conn.get_next_message();
+            // Simconnect message
             match message {
                 Ok(simconnect::DispatchResult::SimobjectData(data)) => {
                     // Send data to clients or to server
@@ -128,8 +123,8 @@ fn main() {
                                 let sim_data: SimValue = definitions.sim_vars.read_from_dword(std::mem::transmute_copy(&(*data).dwData));
                                 send_type = "physics";
                                 data_string = serde_json::to_string(&sim_data).unwrap();
-                                current_pos = Some(sim_data);
                                 should_send = has_control && tick % config.update_rate == 0;
+                                interpolation.record_current(sim_data);
                             },
                             1 => {
                                 let sim_data: SimValue = bool_defs.read_from_dword(std::mem::transmute_copy(&(*data).dwData));
@@ -153,35 +148,9 @@ fn main() {
                             })).expect("!");
                         }
                         if !has_control {
-                            match (&last_pos_update, &pos_update) {
-                                (Some(last), Some(current)) => {
-                                    // Interpolate previous recorded position with previous update
-                                    let mut updated_map = SimValue::new();
-
-                                    let alpha = instant.elapsed().as_millis() as f64/interpolation_time + add_alpha;
-        
-                                    for (key, value) in last {
-                                        match value {
-                                            StructDataTypes::I32(_) => {
-                                                updated_map.insert(key.to_string(), *value);
-                                            }
-                                            StructDataTypes::F64(v) => {
-                                                if let StructDataTypes::F64(current_value) = current[key] {
-                                                    let interpolated = match key.as_str() {
-                                                        "pitch" | "bank" | "heading" => interpolate_f64_degrees(*v, current_value, alpha),
-                                                        _ => interpolate_f64(*v, current_value, alpha)
-                                                    };
-                                                    updated_map.insert(key.to_string(), StructDataTypes::F64(interpolated));
-                                                }
-                                            }
-                                            _ => ()
-                                        }
-                                    }
-                                    let (size_bytes, data_pointer) = definitions.sim_vars.write_to_data(&updated_map);
-                                    conn.set_data_on_sim_object(0, 0, 0, 0, size_bytes as u32, data_pointer);
-                                    current_pos = Some(updated_map);
-                                },
-                                _ => ()
+                            if let Some(updated_map) = interpolation.interpolate() {
+                                let (size_bytes, data_pointer) = definitions.sim_vars.write_to_data(&updated_map);
+                                conn.set_data_on_sim_object(0, 0, 0, 0, size_bytes as u32, data_pointer);
                             }
                         }
                     }
@@ -222,24 +191,12 @@ fn main() {
                 }
                 _ => ()
             };
-            
+            // Data from the person in control
             match rx.try_recv() {
                 Ok(ReceiveData::Data(value)) => match value["type"].as_str().unwrap() {
                     "physics" => { // Interpolate position update
                         if !has_control {
-                            match last_packet {
-                                Some(p) => {
-                                    let cache_interpolation_time = interpolation_time;
-                                    interpolation_time = (value["time"].as_i64().unwrap()-p["time"].as_i64().unwrap()) as f64;
-                                    add_alpha = (instant.elapsed().as_secs_f64() - cache_interpolation_time/1000.0)/interpolation_time;
-                                    if add_alpha < 0.0 {add_alpha = 0.0}
-                                    instant = std::time::Instant::now();
-                                    last_pos_update = current_pos.take();
-                                },
-                                _ => (),
-                            }
-                            pos_update = Some(serde_json::from_str(value["data"].as_str().unwrap()).unwrap());
-                            last_packet = Some(value);
+                            interpolation.record_latest(serde_json::from_value(value["data"].clone()).unwrap());
                         }
                     },
                     "sync_toggle" => { // Initial synchronize
