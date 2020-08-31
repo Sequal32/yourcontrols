@@ -13,13 +13,12 @@ use definitions::Definitions;
 use indexmap::IndexMap;
 use interpolate::{InterpolateStruct};
 use serde_json::{json, Value};
-use serde::{Deserialize, Serialize};
 use simclient::Client;
 use simconfig::Config;
 use simconnect;
 use simserver::{TransferClient, ReceiveData};
 use simserver::Server;
-use std::{str::FromStr, net::Ipv4Addr};
+use std::net::Ipv4Addr;
 use crossbeam_channel::{Receiver, Sender};
 
 struct TransferStruct {
@@ -227,8 +226,8 @@ fn main() {
                     }
                     _ => ()
                 },
-                Ok(ReceiveData::NewConnection(ip)) => {
-                    println!("NEW CONNECTION: {}", ip);
+                Ok(ReceiveData::NewConnection(ip)) | Ok(ReceiveData::ConnectionLost(ip)) => {
+                    app_interface.server_started(transfer_client.client.get_connected_count());
                     should_sync = true;
                 },
                 _ => ()
@@ -251,6 +250,7 @@ fn main() {
                     }
                 }
                 AppMessage::Connect(ip, port) => {
+                    app_interface.attempt();
                     match start_client(ip, port) {
                         Ok(transfer) => {
                             app_interface.connected();

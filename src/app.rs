@@ -76,7 +76,7 @@ impl<'a> App<'a> {
     }
 
     pub fn invoke(&mut self, type_string: &str, data: Option<&str>) {
-        self.app.eval(get_message_str(type_string, data.unwrap_or_default()).as_str());
+        self.app.eval(get_message_str(type_string, data.unwrap_or_default()).as_str()).ok();
     }
 
     pub fn error(&mut self, error_string: &str) {
