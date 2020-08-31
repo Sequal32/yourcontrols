@@ -1,5 +1,6 @@
 var connect_button = document.getElementById('connect-button')
 var server_button = document.getElementById('server-button')
+var control_button = document.getElementById('control-button')
 var alert = document.getElementById("alert")
 
 var server_page_button = document.getElementById("server-page")
@@ -73,18 +74,32 @@ function MessageReceived(data) {
             break;
         case "server_failed":
         case "disconnected":
-            PagesVisible(true)
-            ResetForm()
+            alert.updatetext("danger", "Not connected.")
+            
             trying_connection = false
             is_connected = false
-            alert.updatetext("danger", "Not connected.")
+            control_button.hidden = true
+
+            PagesVisible(true)
+            ResetForm()
             break;
         case "server":
             OnConnected()
-            alert.updatetext("success", "Server started!")
+            alert.updatetext("success", `Server started! ${data["data"]} clients connected.`)
             break;
         case "error":
             alert.updatetext("danger", data["data"])
+            break;
+        case "controlavail":
+            control_button.hidden = false
+            control_button.innerHTML = "Take Control"
+            break;
+        case "control":
+            control_button.innerHTML = "Relieve Control"
+            control_button.hidden = false
+            break;
+        case "lostcontrol":
+            control_button.hidden = true
             break;
     }
 }
@@ -127,11 +142,14 @@ document.getElementById("main-form").onsubmit = function(e) {
     var validip = ValidateIp(server_input.value)
     var validport = ValidatePort(port_input.value)
 
-    if (on_client) Validate(server_input, validip)
     Validate(port_input, validport)
 
-    if (on_client && !validip) {return}
-    if (!validport) {return}
-
-    invoke({type: "server", ip: server_input.value, port: parseInt(port_input.value)})
+    if (on_client) {
+        Validate(server_input, validip)
+        if (!validip || !validport) {return}
+        invoke({type: "connect", ip: server_input.value, port: parseInt(port_input.value)})
+    } else {
+        if (!validport) {return}
+        invoke({type: "server", port: parseInt(port_input.value)})
+    }
 }

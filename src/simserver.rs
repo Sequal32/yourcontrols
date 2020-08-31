@@ -44,7 +44,7 @@ impl Server {
         listener.set_nonblocking(true).ok();
 
         thread::spawn(move || {
-            'main: loop {
+            loop {
                 if let Ok((stream, addr)) = listener.accept() {
                     // Create sender/receivers that each thread can use safely
 

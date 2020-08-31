@@ -71,8 +71,11 @@ impl<'a> App<'a> {
         }
     }
 
-    pub fn step(&mut self) {
-        self.app.step();
+    pub fn step(&mut self) -> bool {
+        match self.app.step() {
+            Some(_) => true,
+            None => false
+        }
     }
 
     pub fn invoke(&mut self, type_string: &str, data: Option<&str>) {
@@ -109,9 +112,5 @@ impl<'a> App<'a> {
 
     pub fn server_started(&mut self, client_count: u16) {
         self.invoke("server", Some(client_count.to_string().as_str()));
-    }
-
-    pub fn server_failed(&mut self) {
-        self.invoke("serverfail", None);
     }
 }

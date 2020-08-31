@@ -180,6 +180,7 @@ fn main() {
                                         "type": "transfer_control"
                                     })).expect("!");
                                     has_control = true;
+                                    app_interface.gain_control();
                                     transfer_control(&conn, has_control);
                                 }
                             },
@@ -214,19 +215,19 @@ fn main() {
                         conn.transmit_client_event(1, event_id as u32, data as u32, 0, 0);
                     },
                     "relieve_control" => {
-                        println!("CAN TAKE CONTROLS");
+                        app_interface.can_take_control();
                         can_take_control = true;
                     },
                     "transfer_control" => {
                         if has_control {
-                            println!("CONTROLS GIVEN UP");
+                            app_interface.lose_control();
                             has_control = true;
                             transfer_control(&conn, has_control);
                         }
                     }
                     _ => ()
                 },
-                Ok(ReceiveData::NewConnection(ip)) | Ok(ReceiveData::ConnectionLost(ip)) => {
+                Ok(ReceiveData::NewConnection(_)) | Ok(ReceiveData::ConnectionLost(_)) => {
                     app_interface.server_started(transfer_client.client.get_connected_count());
                     should_sync = true;
                 },
@@ -243,6 +244,7 @@ fn main() {
                             app_interface.server_started(0);
                             transfer_client = Some(transfer);
 
+                            app_interface.gain_control();
                             has_control = true;
                             transfer_control(&conn, has_control);
                         },
@@ -272,7 +274,7 @@ fn main() {
             Err(_) => {}
         }
 
-        app_interface.step();
+        if !(app_interface.step()) {break};
 
         std::thread::sleep(std::time::Duration::from_millis(1));
     }
