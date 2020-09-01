@@ -12,6 +12,7 @@ var server_input = document.getElementById("server-input")
 var trying_connection = false
 var is_connected = false
 var on_client = true
+var has_control = false
 
 // General functions
 function invoke(data) {
@@ -95,10 +96,12 @@ function MessageReceived(data) {
             control_button.innerHTML = "Take Control"
             break;
         case "control":
+            has_control = true
             control_button.innerHTML = "Relieve Control"
             control_button.hidden = false
             break;
         case "lostcontrol":
+            has_control = false
             control_button.hidden = true
             break;
     }
@@ -131,6 +134,14 @@ client_page_button.onclick = function() {
     client_page_button.classList.add("active")
     server_page_button.classList.remove("active")
     PageChange(true)
+}
+
+control_button.onclick = function() {
+    if (has_control) {
+        invoke({"type":"relieve"})
+    } else {
+        invoke({"type":"take"})
+    }
 }
 
 document.getElementById("main-form").onsubmit = function(e) {

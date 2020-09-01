@@ -70,7 +70,6 @@ fn main() {
     let mut definitions = Definitions::new(&conn);
     let bool_defs = definitions.map_bool_sync_events(&conn, "sync_bools.dat", 1);
 
-    conn.request_data_on_sim_object(0, 0, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
     conn.request_data_on_sim_object(1, 1, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
 
     conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
@@ -79,6 +78,9 @@ fn main() {
     conn.map_client_event_to_sim_event(1003, "FREEZE_LATITUDE_LONGITUDE_TOGGLE");
     conn.map_client_event_to_sim_event(1004, "FREEZE_ALTITUDE_TOGGLE");
     conn.map_client_event_to_sim_event(1005, "FREEZE_ATTITUDE_TOGGLE");
+
+    conn.subcribe_to_system_event(5000, "Frame");
+    conn.set_system_event_state(5000, simconnect::SIMCONNECT_STATE_SIMCONNECT_STATE_ON);
 
     conn.map_client_event_to_sim_event(2000, "TOGGLE_WATER_RUDDER");
     conn.add_client_event_to_notification_group(1, 2000, false);
@@ -96,8 +98,9 @@ fn main() {
     // Interpolation Vars //
     let mut interpolation = InterpolateStruct::new();
     interpolation.add_special_floats(&mut vec!["PLANE PITCH DEGREES".to_string(), "PLANE BANK DEGREES".to_string(), "PLANE HEADING DEGREES MAGNETIC".to_string()]);
-    // Set data upon receipt
+
     let mut tick = 0;
+    let tick_rollover = 1000 / config.update_rate;
 
     loop {
         if let Some(transfer_client) = transfer_client.as_mut() {
@@ -113,8 +116,6 @@ fn main() {
                         let send_type: &str;
                         let data_string: String;
 
-                        tick += 1;
-
                         let mut should_send;
 
                         match (*data).dwDefineID {
@@ -122,7 +123,7 @@ fn main() {
                                 let sim_data: SimValue = definitions.sim_vars.read_from_dword(std::mem::transmute_copy(&(*data).dwData));
                                 send_type = "physics";
                                 data_string = serde_json::to_string(&sim_data).unwrap();
-                                should_send = has_control && tick % config.update_rate == 0;
+                                should_send = has_control;
                                 interpolation.record_current(sim_data);
                             },
                             1 => {
@@ -130,7 +131,7 @@ fn main() {
                                 send_type = "sync_toggle";
                                 data_string = serde_json::to_string(&sim_data).unwrap();
                                 definitions.record_boolean_values(sim_data);
-                                should_send = should_sync;
+                                should_send = should_sync && has_control;
                                 should_sync = false;
                             },
                             _ => panic!("Not covered!")
@@ -146,12 +147,6 @@ fn main() {
                                 "time": std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()
                             })).expect("!");
                         }
-                        if !has_control {
-                            if let Some(updated_map) = interpolation.interpolate() {
-                                let (size_bytes, data_pointer) = definitions.sim_vars.write_to_data(&updated_map);
-                                conn.set_data_on_sim_object(0, 0, 0, 0, size_bytes as u32, data_pointer);
-                            }
-                        }
                     }
                 },
                 // Exception occured
@@ -160,6 +155,14 @@ fn main() {
                         println!("{:?}", (*data).dwException);
                     }
                 },
+                Ok(simconnect::DispatchResult::EventFrame(_)) => {
+                    if !has_control {
+                        if let Some(updated_map) = interpolation.interpolate() {
+                            let mut bytes = definitions.sim_vars.write_to_data(&updated_map);
+                            conn.set_data_on_sim_object(0, 0, 0, 0, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
+                        }
+                    }
+                }
                 Ok(simconnect::DispatchResult::Event(data)) => {
                     unsafe {
                         match (*data).uGroupID {
@@ -196,7 +199,7 @@ fn main() {
                 Ok(ReceiveData::Data(value)) => match value["type"].as_str().unwrap() {
                     "physics" => { // Interpolate position update
                         if !has_control {
-                            interpolation.record_latest(serde_json::from_value(value["data"].clone()).unwrap());
+                            interpolation.record_latest(serde_json::from_str(value["data"].as_str().unwrap()).unwrap());
                         }
                     },
                     "sync_toggle" => { // Initial synchronize
@@ -221,7 +224,7 @@ fn main() {
                     "transfer_control" => {
                         if has_control {
                             app_interface.lose_control();
-                            has_control = true;
+                            has_control = false;
                             transfer_control(&conn, has_control);
                         }
                     }
@@ -232,6 +235,17 @@ fn main() {
                     should_sync = true;
                 },
                 _ => ()
+            }
+        }
+
+        if !has_control {
+            if let Some(t) = interpolation.get_last_position_time() {
+                if t.elapsed().as_secs() > 30 {
+                    transfer_client.as_ref().unwrap().client.stop();
+                    app_interface.disconnected();
+                    has_control = true;
+                    transfer_control(&conn, has_control);
+                }
             }
         }
 
@@ -248,7 +262,7 @@ fn main() {
                             has_control = true;
                             transfer_control(&conn, has_control);
                         },
-                        Err(_) => app_interface.error("Could not start server!")
+                        Err(e) => app_interface.error(format!("Could not start server! Reason: {}", e.to_string()).as_str())
                     }
                 }
                 AppMessage::Connect(ip, port) => {
@@ -267,15 +281,33 @@ fn main() {
                 AppMessage::Disconnect => {
                     transfer_client.as_ref().unwrap().client.stop();
                     app_interface.disconnected();
+                    has_control = true;
+                    transfer_control(&conn, has_control);
                 }
-                AppMessage::TakeControl => {}
-                AppMessage::RelieveControl => {}
+                AppMessage::TakeControl => {
+                    if can_take_control {
+                        transfer_client.as_ref().unwrap().tx.send(json!({
+                            "type": "transfer_control"
+                        })).expect("!");
+                        has_control = true;
+                        app_interface.gain_control();
+                        transfer_control(&conn, has_control);
+                    }
+                }
+                AppMessage::RelieveControl => {
+                    transfer_client.as_ref().unwrap().tx.send(json!({
+                        "type": "relieve_control"
+                    })).expect("!");
+                }
             }
             Err(_) => {}
         }
 
-        if !(app_interface.step()) {break};
-
+        tick += 1;
+        if tick % tick_rollover == 0 {
+            conn.request_data_on_sim_object(0, 0, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_ONCE);
+        }
+        if app_interface.exited() {break}
         std::thread::sleep(std::time::Duration::from_millis(1));
     }
 }

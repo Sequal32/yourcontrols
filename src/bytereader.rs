@@ -68,7 +68,7 @@ impl StructData {
         self.read_from_bytes(Box::new(data))
     }
 
-    pub fn write_to_data(&self, data: &IndexMap<String, StructDataTypes>) -> (usize, *mut std::ffi::c_void) {
+    pub fn write_to_data(&self, data: &IndexMap<String, StructDataTypes>) -> Vec<u8> {
         let mut buf: Vec<u8> = vec![];
         for (name, _) in &self.data_map {
             let val = data.get(name).unwrap();
@@ -79,7 +79,7 @@ impl StructData {
                 StructDataTypes::F64(n) => buf.extend(n.to_be_bytes().iter().rev()),
             };
         }
-        return (buf.len(), buf.as_mut_ptr() as *mut std::ffi::c_void)
+        return buf
     }
 }
 

@@ -68,6 +68,7 @@ impl Server {
 
                     let number_connections = number_connections.clone();
                     number_connections.fetch_add(1, SeqCst);
+                    stream.set_nonblocking(false).ok();
 
                     thread::spawn(move || {
                         loop {

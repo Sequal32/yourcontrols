@@ -10,6 +10,7 @@ struct Record {
 pub struct InterpolateStruct {
     last: Option<Record>,
     latest: Option<Record>,
+    at_latest: Option<Record>,
     current: Option<Record>,
     special_floats: Vec<String>,
     interpolation_time: f64,
@@ -20,7 +21,7 @@ pub struct InterpolateStruct {
 
 impl Default for InterpolateStruct {
     fn default() -> Self {
-        Self {last: None, latest: None, current: None, special_floats: vec![], interpolation_time: 0.0, add_alpha: 0.0, next_add_alpha: 0.0}
+        Self {last: None, latest: None, current: None, at_latest: None, special_floats: vec![], interpolation_time: 0.0, add_alpha: 0.0, next_add_alpha: 0.0}
     }
 }
 
@@ -32,10 +33,14 @@ impl InterpolateStruct {
     pub fn new() -> Self {return Self::default()}
 
     pub fn record_latest(&mut self, data: IndexMap<String, StructDataTypes>) {
-        self.latest = Some(Record {data, time: get_time()});
         self.last = self.latest.take();
-        self.interpolation_time = self.latest.as_ref().unwrap().time.duration_since(self.last.as_ref().unwrap().time).as_secs_f64();
-        self.add_alpha = self.next_add_alpha;
+        self.at_latest = self.current.take();
+        self.latest = Some(Record {data, time: get_time()});
+
+        if self.last.is_some() {
+            self.interpolation_time = self.latest.as_ref().unwrap().time.duration_since(self.last.as_ref().unwrap().time).as_secs_f64();
+            self.add_alpha = self.next_add_alpha;
+        }
     }
 
     pub fn record_current(&mut self, data: IndexMap<String, StructDataTypes>) {
@@ -46,15 +51,23 @@ impl InterpolateStruct {
         self.special_floats.append(data);
     }
 
+    pub fn get_last_position_time(&self) -> Option<Instant> {
+        if let Some(s) = &self.latest {
+            return Some(s.time);
+        }
+        return None;
+    }
+
     pub fn interpolate(&mut self) -> Option<IndexMap<String, StructDataTypes>> {
-        if self.latest.is_none() || self.last.is_none() {return None}
+        if self.latest.is_none() || self.at_latest.is_none() {return None}
 
         let mut interpolated = IndexMap::<String, StructDataTypes>::new();
 
-        let current = self.current.as_ref().unwrap();
+        let current = self.at_latest.as_ref().unwrap();
         let latest = self.latest.as_ref().unwrap();
 
-        let alpha = current.time.duration_since(latest.time).as_secs_f64()/self.interpolation_time + self.add_alpha;
+        let alpha = latest.time.elapsed().as_secs_f64()/self.interpolation_time + self.add_alpha;
+        if alpha > 10.0 {return None}
         
         // Account for lag (prevent plane moving backward)
         if alpha > 1.0 {
