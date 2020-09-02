@@ -97,7 +97,9 @@ fn main() {
     let mut should_sync = false;
     // Interpolation Vars //
     let mut interpolation = InterpolateStruct::new();
-    interpolation.add_special_floats(&mut vec!["PLANE PITCH DEGREES".to_string(), "PLANE BANK DEGREES".to_string(), "PLANE HEADING DEGREES MAGNETIC".to_string()]);
+    interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
+    interpolation.add_special_floats_wrap90(&mut vec!["PLANE PITCH DEGREES".to_string()]);
+    interpolation.add_special_floats_wrap180(&mut vec!["PLANE BANK DEGREES".to_string()]);
 
     let mut tick = 0;
     let tick_rollover = 1000 / config.update_rate;
@@ -199,7 +201,7 @@ fn main() {
                 Ok(ReceiveData::Data(value)) => match value["type"].as_str().unwrap() {
                     "physics" => { // Interpolate position update
                         if !has_control {
-                            interpolation.record_latest(serde_json::from_str(value["data"].as_str().unwrap()).unwrap());
+                            interpolation.record_latest(serde_json::from_str(value["data"].as_str().unwrap()).unwrap(), value["time"].as_f64().unwrap());
                         }
                     },
                     "sync_toggle" => { // Initial synchronize
@@ -239,8 +241,8 @@ fn main() {
         }
 
         if !has_control {
-            if let Some(t) = interpolation.get_last_position_time() {
-                if t.elapsed().as_secs() > 30 {
+            if let Some(t) = interpolation.get_time_since_last_position() {
+                if t > 30.0 {
                     transfer_client.as_ref().unwrap().client.stop();
                     app_interface.disconnected();
                     has_control = true;
@@ -275,7 +277,7 @@ fn main() {
                             has_control = false;
                             transfer_control(&conn, has_control);
                         }
-                        Err(_) => app_interface.error("Could not connect to the server!")
+                        Err(e) => app_interface.error(format!("Could not connect to the server! Reason: {}", e.to_string()).as_str())
                     }
                 }
                 AppMessage::Disconnect => {

@@ -1,4 +1,4 @@
-use crossbeam_channel::{Sender, Receiver, unbounded};
+use crossbeam_channel::{Sender, Receiver, bounded};
 use serde_json::{Value};
 use std::net::{SocketAddr, IpAddr, TcpStream, Ipv4Addr};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
@@ -18,8 +18,8 @@ impl Client {
     }
 
     pub fn start(&self, ip: Ipv4Addr, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error>  {
-        let (servertx, serverrx) = unbounded::<Value>();
-        let (clienttx, clientrx) = unbounded::<ReceiveData>();
+        let (servertx, serverrx) = bounded::<Value>(10);
+        let (clienttx, clientrx) = bounded::<ReceiveData>(10);
 
         let mut stream = TcpStream::connect_timeout(&SocketAddr::new(IpAddr::V4(ip), port), std::time::Duration::from_secs(5))?;
         let stream_clone = stream.try_clone().unwrap();

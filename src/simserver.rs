@@ -1,4 +1,4 @@
-use crossbeam_channel::{Sender, Receiver, unbounded};
+use crossbeam_channel::{Sender, Receiver, bounded};
 use serde_json::{Value};
 use std::io::{Write, BufReader, BufRead};
 use std::net::{TcpListener};
@@ -31,8 +31,8 @@ impl Server {
     }
 
     pub fn start(&mut self, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error> {
-        let (servertx, serverrx) = unbounded::<ReceiveData>();
-        let (clienttx, clientrx) = unbounded::<Value>();
+        let (servertx, serverrx) = bounded::<ReceiveData>(10);
+        let (clienttx, clientrx) = bounded::<Value>(10);
 
         let listener = match TcpListener::bind(format!("0.0.0.0:{}", port)) {
             Ok(listener) => listener,
