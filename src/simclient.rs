@@ -23,9 +23,9 @@ impl Client {
 
         let mut stream = TcpStream::connect_timeout(&SocketAddr::new(IpAddr::V4(ip), port), std::time::Duration::from_secs(5))?;
         let stream_clone = stream.try_clone().unwrap();
-        let stream_clone2 = stream.try_clone().unwrap();
 
         let should_stop = self.should_stop.clone();
+        let should_stop2 = self.should_stop.clone();
 
         thread::spawn(move || {
             thread::spawn(move || {
@@ -37,16 +37,7 @@ impl Client {
                         }
                         Err(_) => break
                     }
-                }
-                
-            });
-
-            thread::spawn(move || {
-                loop {
-                    if should_stop.load(SeqCst) {
-                        stream_clone2.shutdown(std::net::Shutdown::Both).expect("!");
-                    }   
-                    std::thread::sleep(std::time::Duration::from_millis(100));
+                    if should_stop.load(SeqCst) {break}
                 }
             });
 
@@ -55,12 +46,19 @@ impl Client {
                 let mut buf = String::new();
                 // Send data to program
                 match reader.read_line(&mut buf) {
+                    // Disconnected
+                    Ok(0) => {
+                        should_stop2.store(true, SeqCst);
+                        break;
+                    }
                     Ok(_) => match serde_json::from_str(&buf.trim()) {
                         Ok(data) => clienttx.send(ReceiveData::Data(data)).expect("!"),
                         Err(_) => ()
                     },
+                    // Reader error
                     Err(_) => break
                 };
+                if should_stop2.load(SeqCst) {break}
             }
         });
         
@@ -76,6 +74,10 @@ impl TransferClient for Client {
 
     fn stop(&self) {
         self.should_stop.store(true, SeqCst);
+    }
+
+    fn stopped(&self) -> bool {
+        self.should_stop.load(SeqCst)
     }
 
     fn is_server(&self) -> bool {

@@ -9,6 +9,7 @@ use std::thread;
 pub trait TransferClient {
     fn get_connected_count(&self) -> u16;
     fn stop(&self);
+    fn stopped(&self) -> bool;
     fn is_server(&self) -> bool;
 }
 
@@ -78,7 +79,7 @@ impl Server {
                         loop {
                             let mut buf = String::new();
 
-                            if should_stop.load(SeqCst) {break}
+                            if should_stop.load(SeqCst) {number_connections.fetch_min(1, SeqCst); break}
 
                             match reader.read_line(&mut buf) {
                                 // socket closed
@@ -92,7 +93,7 @@ impl Server {
                                     // Receive data
                                     tx.send(ReceiveData::Data(serde_json::from_str(&buf).unwrap())).expect("Error transmitting data!");
                                 },
-                                Err(e) => {
+                                Err(_) => {
                                     did_disconnect.store(true, SeqCst);
                                     number_connections.fetch_min(1, SeqCst);
                                     tx.send(ReceiveData::ConnectionLost(addr_clone.to_string())).ok();
@@ -147,5 +148,9 @@ impl TransferClient for Server {
 
     fn is_server(&self) -> bool {
         true
+    }
+
+    fn stopped(&self) -> bool {
+        self.should_stop.load(SeqCst)
     }
 }

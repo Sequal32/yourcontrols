@@ -58,7 +58,7 @@ fn main() {
         Ok(config) => config,
         Err(_) => {
             let config = Config::default();
-            config.write_to_file("config.json").expect("!");
+            config.write_to_file("config.json").expect("Could not write to config.json!");
             config
         }
     };
@@ -90,12 +90,13 @@ fn main() {
 
     //
     let mut update_rate_instant = Instant::now();
-    let update_rate = config.update_rate as f64 / 60.0;
+    let update_rate = 1.0 / config.update_rate as f64;
     // Whether to start a client or a server
 
     let mut has_control = false;
     let mut can_take_control = false;
     let mut should_sync = false;
+    let mut was_error = false;
     let mut time_since_control = Instant::now();
     // Interpolation Vars //
     let mut interpolation = InterpolateStruct::new(update_rate);
@@ -117,10 +118,10 @@ fn main() {
                     let data_string: String;
 
                     let mut should_send = false;
-                    let de_data = unsafe {*data};
+                    let define_id = unsafe{(*data).dwDefineID};
                     let dw_data: [u8; 1024] = unsafe {std::mem::transmute_copy(&(*data).dwData)};
 
-                    match de_data.dwDefineID {
+                    match define_id {
                         0 => {
                             let sim_data: SimValue = definitions.sim_vars.read_from_dword(dw_data);
                             send_type = "physics";
@@ -168,10 +169,10 @@ fn main() {
                     }
                 },
                 Ok(simconnect::DispatchResult::Event(data)) => {
-                    let de_data: simconnect::SIMCONNECT_RECV_EVENT = unsafe {*data};
-                    let event_id = de_data.uEventID;
-                    let dw_data = de_data.dwData;
-                    match de_data.uEventID {
+                    let event_id = unsafe{(*data).uEventID};
+                    let dw_data = unsafe{(*data).dwData};
+                    let group_id = unsafe{(*data).uGroupID};
+                    match group_id {
                         0 => {
                             tx.send(json!({
                                 "type": "event",
@@ -242,18 +243,26 @@ fn main() {
                 },
                 _ => ()
             }
-            if !has_control {
+            if !has_control && time_since_control.elapsed().as_secs() > 10 {
                 if let Some(t) = interpolation.get_time_since_last_position() {
-                    if t > 30.0 && time_since_control.elapsed().as_secs() > 10 {
+                    if t > 30.0 {
                         if !client.client.is_server() {
-                            transfer_client.as_ref().unwrap().client.stop();
-                            transfer_client = None;
+                            client.client.stop();
+                            app_interface.client_fail("Peer timeout.");
+                            was_error = true;
                         };
-                        
-                        has_control = true;
-                        transfer_control(&conn, has_control);
                     }
                 }
+            }
+
+            if client.client.stopped() {
+                transfer_client = None;
+
+                if !was_error {app_interface.disconnected()}
+
+                has_control = true;
+                was_error = false;
+                transfer_control(&conn, has_control);
             }
         }
 
@@ -267,10 +276,13 @@ fn main() {
                             transfer_client = Some(transfer);
 
                             app_interface.gain_control();
-                            has_control = false;
+                            has_control = true;
                             transfer_control(&conn, has_control);
                         },
-                        Err(e) => app_interface.error(format!("Could not start server! Reason: {}", e.to_string()).as_str())
+                        Err(e) => {
+                            app_interface.server_fail(e.to_string().as_str());
+                            // Was error not nessecary here, stopped does not get fired
+                        }
                     }
                 }
                 AppMessage::Connect(ip, port) => {
@@ -284,20 +296,22 @@ fn main() {
                             has_control = false;
                             transfer_control(&conn, has_control);
                         }
-                        Err(e) => app_interface.error(format!("Could not connect to the server! Reason: {}", e.to_string()).as_str())
+                        Err(e) => {
+                            app_interface.client_fail(e.to_string().as_str());
+                            // Was error not nessecary here
+                        }
                     }
                 }
                 AppMessage::Disconnect => {
-                    transfer_client.as_ref().unwrap().client.stop();
-                    app_interface.disconnected();
-                    has_control = true;
-                    transfer_control(&conn, has_control);
+                    if let Some(client) = transfer_client.as_ref() {
+                        client.client.stop();
+                    }
                 }
                 AppMessage::TakeControl => {
                     if can_take_control {
                         transfer_client.as_ref().unwrap().tx.send(json!({
                             "type": "transfer_control"
-                        })).expect("!");
+                        })).ok();
                         has_control = true;
                         app_interface.gain_control();
                         transfer_control(&conn, has_control);
@@ -306,7 +320,7 @@ fn main() {
                 AppMessage::RelieveControl => {
                     transfer_client.as_ref().unwrap().tx.send(json!({
                         "type": "relieve_control"
-                    })).expect("!");
+                    })).ok();
                 }
             }
             Err(_) => {}

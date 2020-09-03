@@ -130,6 +130,14 @@ impl App {
         self.invoke("disconnected", None);
     }
 
+    pub fn server_fail(&mut self, reason: &str) {
+        self.invoke("server_fail", Some(reason));
+    }
+
+    pub fn client_fail(&mut self, reason: &str) {
+        self.invoke("client_fail", Some(reason));
+    }
+
     pub fn gain_control(&mut self) {
         self.invoke("control", None);
     }

@@ -36,9 +36,22 @@ function OnConnected() {
     connect_button.updatetext("danger", "Disconnect")
     server_button.updatetext("danger", "Stop Server")
     
+    trying_connection = false
     server_input.disabled = true
     port_input.disabled = true
     is_connected = true
+}
+
+function OnDisconnect(text) {
+    alert.updatetext("danger", text)
+    is_connected = false
+    trying_connection = false
+    control_button.hidden = true
+    server_input.disabled = false
+    port_input.disabled = false
+
+    PagesVisible(true)
+    ResetForm()
 }
 
 function PageChange(isClient) {
@@ -73,16 +86,14 @@ function MessageReceived(data) {
             alert.updatetext("success", "Connected to server.")
             connect_button.updatetext("danger", "Disconnect")
             break;
-        case "server_failed":
+        case "server_fail":
+            OnDisconnect("Server failed to start. Reason: " + data["data"])
+            break;
+        case "client_fail":
+            OnDisconnect("Client disconnected. Reason: " + data["data"])
+            break;
         case "disconnected":
-            alert.updatetext("danger", "Not connected.")
-            
-            trying_connection = false
-            is_connected = false
-            control_button.hidden = true
-
-            PagesVisible(true)
-            ResetForm()
+            OnDisconnect("Not Connected.")
             break;
         case "server":
             OnConnected()
@@ -93,11 +104,11 @@ function MessageReceived(data) {
             break;
         case "controlavail":
             control_button.hidden = false
-            control_button.innerHTML = "Take Control"
+            control_button.updatetext("primary", "Take Control")
             break;
         case "control":
             has_control = true
-            control_button.innerHTML = "Relieve Control"
+            control_button.updatetext("primary", "Relieve Control")
             control_button.hidden = false
             break;
         case "lostcontrol":
@@ -117,6 +128,11 @@ connect_button.updatetext = function(typeString, text) {
 server_button.updatetext = function(typeString, text) {
     server_button.className = server_button.className.replace(/btn-\w+/gi, "btn-" + typeString)
     server_button.innerHTML = text
+}
+
+control_button.updatetext = function(typeString, text) {
+    control_button.className = control_button.className.replace(/btn-\w+/gi, "btn-" + typeString)
+    control_button.innerHTML = text
 }
 
 alert.updatetext = function(typeString, text) {
@@ -142,6 +158,7 @@ control_button.onclick = function() {
     } else {
         invoke({"type":"take"})
     }
+    control_button.updatetext("secondary", "Waiting")
 }
 
 document.getElementById("main-form").onsubmit = function(e) {
@@ -154,6 +171,7 @@ document.getElementById("main-form").onsubmit = function(e) {
     var validport = ValidatePort(port_input.value)
 
     Validate(port_input, validport)
+    trying_connection = true
 
     if (on_client) {
         Validate(server_input, validip)
