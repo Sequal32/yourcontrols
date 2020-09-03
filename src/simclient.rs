@@ -77,4 +77,8 @@ impl TransferClient for Client {
     fn stop(&self) {
         self.should_stop.store(true, SeqCst);
     }
+
+    fn is_server(&self) -> bool {
+        false
+    }
 }

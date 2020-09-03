@@ -42,8 +42,7 @@ impl App {
         std::thread::spawn(move || {
             let webview = web_view::builder()
             .title("Shared Cockpit")
-            .content(web_view::Content::Html(format!(r#"
-            <!DOCTYPE html>
+            .content(web_view::Content::Html(format!(r#"<!DOCTYPE html>
                 <html>
                 <head>
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -51,7 +50,7 @@ impl App {
                 </head>
                 <body>{body}</body>
                 <script>{js}</script>
-                <image src={logo}, class="logo-image"/>
+                <img src="{logo}", class="logo-image"/>
                 </html>
             "#, 
             css = include_str!("../web/stylesheet.css"), 
@@ -62,7 +61,6 @@ impl App {
 
             .invoke_handler(move |web_view, arg| {
                 let data: serde_json::Value = serde_json::from_str(arg).unwrap();
-                println!("{:?}", data);
                 match data["type"].as_str().unwrap() {
                     "connect" => {
                         match Ipv4Addr::from_str(data["ip"].as_str().unwrap()) {

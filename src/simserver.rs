@@ -9,6 +9,7 @@ use std::thread;
 pub trait TransferClient {
     fn get_connected_count(&self) -> u16;
     fn stop(&self);
+    fn is_server(&self) -> bool;
 }
 
 pub struct Server {
@@ -70,9 +71,14 @@ impl Server {
                     number_connections.fetch_add(1, SeqCst);
                     stream.set_nonblocking(false).ok();
 
+                    let should_stop = should_stop.clone();
+                    let should_stop2 = should_stop.clone();
+
                     thread::spawn(move || {
                         loop {
                             let mut buf = String::new();
+
+                            if should_stop.load(SeqCst) {break}
 
                             match reader.read_line(&mut buf) {
                                 // socket closed
@@ -100,7 +106,7 @@ impl Server {
                         loop {
                             // Send to all clients
                             let data = rx.recv();
-                            if disconnect_clone.load(SeqCst) {break}
+                            if disconnect_clone.load(SeqCst) || should_stop2.load(SeqCst) {break}
     
                             match data {
                                 Ok(value) => {
@@ -137,5 +143,9 @@ impl TransferClient for Server {
 
     fn stop(&self) {
         self.should_stop.store(true, SeqCst);
+    }
+
+    fn is_server(&self) -> bool {
+        true
     }
 }

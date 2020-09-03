@@ -19,8 +19,8 @@ pub struct InterpolateStruct {
     special_floats_wrap180: Vec<String>,
     special_floats_wrap90: Vec<String>,
 
-    add_alpha: f64,
-    next_add_alpha: f64
+    add_time: f64,
+    next_add_time: f64
 }
 
 impl Default for InterpolateStruct {
@@ -32,8 +32,8 @@ impl Default for InterpolateStruct {
             at_latest: None, 
             instant_at_latest: std::time::Instant::now(), 
             interpolation_time: 0.0, 
-            add_alpha: 0.0, 
-            next_add_alpha: 0.0,
+            add_time: 0.0, 
+            next_add_time: 0.0,
 
             special_floats_regular: vec![],
             special_floats_wrap90: vec![],
@@ -47,7 +47,12 @@ fn get_time() -> f64 {
 }
 
 impl InterpolateStruct {
-    pub fn new() -> Self {return Self::default()}
+    pub fn new(interpolation_time: f64) -> Self {
+        return Self {
+            interpolation_time,
+            .. Default::default()
+        }
+    }
 
     pub fn record_latest(&mut self, data: IndexMap<String, StructDataTypes>, time: f64) {
         self.last = self.latest.take();
@@ -56,8 +61,7 @@ impl InterpolateStruct {
         self.instant_at_latest = std::time::Instant::now();
 
         if self.last.is_some() {
-            self.interpolation_time = self.latest.as_ref().unwrap().time-self.last.as_ref().unwrap().time;
-            self.add_alpha = self.next_add_alpha;
+            self.add_time = self.add_time;
         }
     }
 
@@ -78,27 +82,23 @@ impl InterpolateStruct {
     }
 
     pub fn get_time_since_last_position(&self) -> Option<f64> {
-        if let Some(s) = &self.latest {
-            return Some(self.instant_at_latest.elapsed().as_secs_f64());
-        }
-        return None;
+        return Some(self.instant_at_latest.elapsed().as_secs_f64());
     }
 
     pub fn interpolate(&mut self) -> Option<IndexMap<String, StructDataTypes>> {
-        if self.latest.is_none() || self.at_latest.is_none() || self.interpolation_time == 0.0 {return None}
+        if self.latest.is_none() || self.at_latest.is_none() {return None}
 
         let mut interpolated = IndexMap::<String, StructDataTypes>::new();
 
         let current = self.at_latest.as_ref().unwrap();
         let latest = self.latest.as_ref().unwrap();
 
-        let alpha = self.instant_at_latest.elapsed().as_secs_f64()/self.interpolation_time + self.add_alpha;
+        let elapsed = self.instant_at_latest.elapsed().as_secs_f64();
+        let alpha = (elapsed + self.add_time)/self.interpolation_time;
         if alpha > 10.0 {return None}
         
         // Account for lag (prevent plane moving backward)
-        if alpha > 1.0 {
-            self.next_add_alpha = alpha - 1.0;
-        }
+        // if alpha > 1.0 {self.next_add_time = elapsed - self.interpolation_time}
         
         for (key, value) in &latest.data {
             // Interpolate between next position and current position
@@ -124,9 +124,10 @@ impl InterpolateStruct {
             }
         }
 
-        self.current = Some(Record{data: interpolated.clone(), time: get_time()});
+        self.current = Some(Record {data: interpolated.clone(), time: get_time()});
 
         return Some(interpolated);
+        // return None;
     }
 }
 

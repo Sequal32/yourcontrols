@@ -14,7 +14,7 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             port: 7777,
-            update_rate: 10,
+            update_rate: 30,
             conn_timeout: 10.0
         }
     }
