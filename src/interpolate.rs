@@ -1,6 +1,7 @@
 use crate::bytereader::{StructDataTypes};
 use indexmap::IndexMap;
 use std::time::{Instant};
+use std::collections::VecDeque;
 
 struct Record {
     data: IndexMap<String, StructDataTypes>,
@@ -15,12 +16,11 @@ pub struct InterpolateStruct {
     instant_at_latest: Instant,
     interpolation_time: f64,
 
+    packet_queue: VecDeque<Record>,
+
     special_floats_regular: Vec<String>,
     special_floats_wrap180: Vec<String>,
     special_floats_wrap90: Vec<String>,
-
-    add_time: f64,
-    next_add_time: f64
 }
 
 impl Default for InterpolateStruct {
@@ -32,9 +32,8 @@ impl Default for InterpolateStruct {
             at_latest: None, 
             instant_at_latest: std::time::Instant::now(), 
             interpolation_time: 0.0, 
-            add_time: 0.0, 
-            next_add_time: 0.0,
 
+            packet_queue: VecDeque::new(),
             special_floats_regular: vec![],
             special_floats_wrap90: vec![],
             special_floats_wrap180: vec![],
@@ -54,14 +53,23 @@ impl InterpolateStruct {
         }
     }
 
-    pub fn record_latest(&mut self, data: IndexMap<String, StructDataTypes>, time: f64) {
-        self.last = self.latest.take();
+    fn to_next(&mut self) {
+        let last = self.latest.take();
+        self.latest = self.packet_queue.pop_back();
         self.at_latest = self.current.take();
-        self.latest = Some(Record {data, time: time});
         self.instant_at_latest = std::time::Instant::now();
+        
+        if last.is_some() {
+            // Calculate time to next position by taking the diff of the latest packet to the previous one
+            self.interpolation_time = self.latest.as_ref().unwrap().time-last.unwrap().time;
+        }
+    }
 
-        if self.last.is_some() {
-            self.add_time = self.add_time;
+    pub fn record_latest(&mut self, data: IndexMap<String, StructDataTypes>, time: f64) {
+        self.packet_queue.push_front(Record {data, time});
+        // Initial packet setting
+        if self.latest.is_none() {
+            self.to_next();
         }
     }
 
@@ -94,11 +102,11 @@ impl InterpolateStruct {
         let latest = self.latest.as_ref().unwrap();
 
         let elapsed = self.instant_at_latest.elapsed().as_secs_f64();
-        let alpha = (elapsed + self.add_time)/self.interpolation_time;
-        if alpha > 10.0 {return None}
-        
+        let alpha = elapsed/self.interpolation_time;
+
+
         // Account for lag (prevent plane moving backward)
-        // if alpha > 1.0 {self.next_add_time = elapsed - self.interpolation_time}
+        // if alpha > 1.0 && alpha < 2.0 {self.next_add_time = elapsed - self.interpolation_time}
         
         for (key, value) in &latest.data {
             // Interpolate between next position and current position
@@ -126,6 +134,13 @@ impl InterpolateStruct {
 
         self.current = Some(Record {data: interpolated.clone(), time: get_time()});
 
+        // If the packet queue is overflowing, we want to get to the next position ASAP
+        // If we reached the next position in time, we can go to the next packet if the buffer has one
+        if self.packet_queue.len() > 3 || alpha > 1.0 && self.packet_queue.len() > 0 {
+            self.to_next();
+        }
+
+        if alpha > 10.0 {return None}
         return Some(interpolated);
         // return None;
     }
