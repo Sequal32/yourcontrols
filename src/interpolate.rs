@@ -9,7 +9,6 @@ struct Record {
 }
 
 pub struct InterpolateStruct {
-    last: Option<Record>,
     latest: Option<Record>,
     at_latest: Option<Record>,
     current: Option<Record>,
@@ -26,7 +25,6 @@ pub struct InterpolateStruct {
 impl Default for InterpolateStruct {
     fn default() -> Self {
         Self {
-            last: None, 
             latest: None, 
             current: None, 
             at_latest: None, 

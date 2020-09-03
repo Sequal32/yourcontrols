@@ -1,8 +1,8 @@
 use base64;
 use std::fs::File;
-use web_view::{self, WebView, Handle, };
+use web_view::{self, Handle};
 use std::{str::FromStr, net::Ipv4Addr, io::Read};
-use crossbeam_channel::{Sender, Receiver, unbounded};
+use crossbeam_channel::{Receiver, unbounded};
 use std::sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}, MutexGuard};
 
 pub enum AppMessage {
@@ -113,14 +113,9 @@ impl App {
         let data = data.unwrap_or_default().to_string();
         let type_string = type_string.to_owned();
         handle.as_ref().unwrap().dispatch(move |webview| {
-            println!("{}", get_message_str(type_string.as_str(), data.as_str()).as_str());
             webview.eval(get_message_str(type_string.as_str(), data.as_str()).as_str()).ok();
             Ok(())
         }).ok();
-    }
-
-    pub fn error(&mut self, error_string: &str) {
-        self.invoke("error", Some(error_string));
     }
 
     pub fn attempt(&mut self) {

@@ -1,4 +1,6 @@
-use std::io::{Read, Cursor};
+use byteorder::{LittleEndian, ReadBytesExt};
+use std::io::{Cursor};
+use std::ptr;
 use indexmap::IndexMap;
 use serde::{Serialize, Deserialize};
 #[derive(Debug, Serialize, Deserialize, Copy, Clone)]
@@ -32,40 +34,41 @@ impl StructData {
         self.data_map.insert(key, data_type);
     }
 
-    pub fn read_from_bytes(&self, data: Box<[u8]>) -> IndexMap<String, StructDataTypes> {
+    pub fn read_from_bytes(&self, start: *const u32) -> IndexMap<String, StructDataTypes> {
         let mut return_data: IndexMap<String, StructDataTypes> = IndexMap::new();
-        let mut reader = Cursor::new(data);
+        let mut current_pos = start;
+        
         for (key, data_type) in &self.data_map {
             unsafe {
+                let mut buf: Vec<u8> = vec![];
+                buf.extend_from_slice(&ptr::read(current_pos).to_le_bytes());
+
+                match data_type {
+                    InDataTypes::I64 | InDataTypes::F64 => {buf.extend_from_slice(&ptr::read(current_pos.offset(1)).to_le_bytes());}
+                    _ => ()
+                }
+
+                let mut cursor = Cursor::new(buf);
+
                 match data_type {
                     InDataTypes::Bool => {
-                        let mut buf: [u8; 8] = [0; 8];
-                        reader.read_exact(&mut buf).ok();
-                        return_data.insert(key.to_string(), StructDataTypes::Bool(std::mem::transmute_copy(&buf)))
+                        return_data.insert(key.to_string(), StructDataTypes::Bool(std::mem::transmute_copy(&cursor.read_i32::<LittleEndian>().unwrap())))
                     }
                     InDataTypes::I32 => {
-                        let mut buf: [u8; 8] = [0; 8];
-                        reader.read_exact(&mut buf).ok();
-                        return_data.insert(key.to_string(), StructDataTypes::I32(std::mem::transmute_copy(&buf)))
+                        return_data.insert(key.to_string(), StructDataTypes::I32(cursor.read_i32::<LittleEndian>().unwrap()))
                     }
                     InDataTypes::I64 => {
-                        let mut buf: [u8; 8] = [0; 8];
-                        reader.read_exact(&mut buf).ok();
-                        return_data.insert(key.to_string(), StructDataTypes::I64(std::mem::transmute_copy(&buf)))
+                        return_data.insert(key.to_string(), StructDataTypes::I64(cursor.read_i64::<LittleEndian>().unwrap()))
                     }
                     InDataTypes::F64 => {
-                        let mut buf: [u8; 8] = [0; 8];
-                        reader.read_exact(&mut buf).ok();
-                        return_data.insert(key.to_string(), StructDataTypes::F64(std::mem::transmute_copy(&buf)))
+                        return_data.insert(key.to_string(), StructDataTypes::F64(cursor.read_f64::<LittleEndian>().unwrap()))
                     }
                 };
+
+                current_pos = current_pos.offset(2);
             }
         }
         return return_data;
-    }
-
-    pub fn read_from_dword(&self, data: [u8; 1024]) -> IndexMap<String, StructDataTypes> {
-        self.read_from_bytes(Box::new(data))
     }
 
     pub fn write_to_data(&self, data: &IndexMap<String, StructDataTypes>) -> Vec<u8> {

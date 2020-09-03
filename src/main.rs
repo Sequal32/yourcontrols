@@ -52,14 +52,14 @@ fn transfer_control(conn: &simconnect::SimConnector, has_control: bool) {
 }
 
 type SimValue = IndexMap<String, StructDataTypes>;
-const config_filename: &str = "config.json";
+const CONFIG_FILENAME: &str = "config.json";
 fn main() {
     // Load configuration file
-    let mut config = match Config::read_from_file(config_filename) {
+    let mut config = match Config::read_from_file(CONFIG_FILENAME) {
         Ok(config) => config,
         Err(_) => {
             let config = Config::default();
-            config.write_to_file(config_filename).expect(format!("Could not write to {}!", config_filename).as_str());
+            config.write_to_file(CONFIG_FILENAME).expect(format!("Could not write to {}!", CONFIG_FILENAME).as_str());
             config
         }
     };
@@ -123,11 +123,12 @@ fn main() {
 
                     let mut should_send = false;
                     let define_id = unsafe{(*data).dwDefineID};
-                    let dw_data: [u8; 1024] = unsafe {std::mem::transmute_copy(&(*data).dwData)};
+                    
+                    let data_pointer = unsafe{&(*data).dwData} as *const u32;
 
                     match define_id {
                         0 => {
-                            let sim_data: SimValue = definitions.sim_vars.read_from_dword(dw_data);
+                            let sim_data: SimValue = definitions.sim_vars.read_from_bytes(data_pointer);
                             send_type = "physics";
                             data_string = serde_json::to_string(&sim_data).unwrap();
                             interpolation.record_current(sim_data);
@@ -138,7 +139,7 @@ fn main() {
                             }
                         },
                         1 => {
-                            let sim_data: SimValue = bool_defs.read_from_dword(dw_data);
+                            let sim_data: SimValue = bool_defs.read_from_bytes(data_pointer);
                             send_type = "sync_toggle";
                             data_string = serde_json::to_string(&sim_data).unwrap();
                             definitions.record_boolean_values(sim_data);
@@ -249,7 +250,7 @@ fn main() {
             }
             if !has_control && time_since_control.elapsed().as_secs() > 10 {
                 if let Some(t) = interpolation.get_time_since_last_position() {
-                    if t > 30.0 {
+                    if t > config.conn_timeout {
                         if !client.client.is_server() {
                             client.client.stop();
                             app_interface.client_fail("Peer timeout.");
@@ -306,7 +307,7 @@ fn main() {
                         }
                     }
                     config.set_ip(ip.to_string());
-                    config.write_to_file(config_filename);
+                    config.write_to_file(CONFIG_FILENAME).ok();
                 }
                 AppMessage::Disconnect => {
                     if let Some(client) = transfer_client.as_ref() {
