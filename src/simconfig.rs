@@ -8,6 +8,7 @@ pub struct Config {
     pub port: u16,
     pub update_rate: u16,
     pub conn_timeout: f64,
+    pub ip: String
 }
 
 impl Default for Config {
@@ -15,7 +16,8 @@ impl Default for Config {
         Self {
             port: 7777,
             update_rate: 30,
-            conn_timeout: 10.0
+            conn_timeout: 10.0,
+            ip: "".to_string()
         }
     }
 }
@@ -47,5 +49,9 @@ impl Config {
             Ok(data) => Ok(data),
             Err(_) => Err("Configuration file corrupted.")
         }
+    }
+
+    pub fn set_ip(&mut self, ip: String) {
+        self.ip = ip;
     }
 }

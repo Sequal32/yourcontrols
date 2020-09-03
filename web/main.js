@@ -115,6 +115,12 @@ function MessageReceived(data) {
             has_control = false
             control_button.hidden = true
             break;
+        case "set_ip":
+            server_input.value = data["data"]
+            break;
+        case "set_port":
+            port_input.value = data["data"]
+            break;
     }
 }
 

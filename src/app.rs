@@ -1,9 +1,9 @@
 use base64;
 use std::fs::File;
-use web_view::{self, WebView, };
+use web_view::{self, WebView, Handle, };
 use std::{str::FromStr, net::Ipv4Addr, io::Read};
 use crossbeam_channel::{Sender, Receiver, unbounded};
-use std::sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}};
+use std::sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}, MutexGuard};
 
 pub enum AppMessage {
     Server(u16),
@@ -104,11 +104,16 @@ impl App {
     }
 
     pub fn invoke(&mut self, type_string: &str, data: Option<&str>) {
-        let handle = self.app_handle.lock().unwrap();
-        if handle.is_none() {return}
+        let handle: MutexGuard<Option<Handle<i32>>>;
+        // Wait for a handle
+        loop {
+            let handle_ok = self.app_handle.lock().unwrap();
+            if handle_ok.is_some() {handle = handle_ok; break} else {std::thread::sleep(std::time::Duration::from_millis(100))}
+        }
         let data = data.unwrap_or_default().to_string();
         let type_string = type_string.to_owned();
         handle.as_ref().unwrap().dispatch(move |webview| {
+            println!("{}", get_message_str(type_string.as_str(), data.as_str()).as_str());
             webview.eval(get_message_str(type_string.as_str(), data.as_str()).as_str()).ok();
             Ok(())
         }).ok();
@@ -128,6 +133,14 @@ impl App {
 
     pub fn disconnected(&mut self) {
         self.invoke("disconnected", None);
+    }
+
+    pub fn set_port(&mut self, port: u16) {
+        self.invoke("set_port", Some(port.to_string().as_str()));
+    }
+
+    pub fn set_ip(&mut self, ip: &str) {
+        self.invoke("set_ip", Some(ip));
     }
 
     pub fn server_fail(&mut self, reason: &str) {

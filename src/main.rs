@@ -52,13 +52,14 @@ fn transfer_control(conn: &simconnect::SimConnector, has_control: bool) {
 }
 
 type SimValue = IndexMap<String, StructDataTypes>;
+const config_filename: &str = "config.json";
 fn main() {
     // Load configuration file
-    let config = match Config::read_from_file("config.json") {
+    let mut config = match Config::read_from_file(config_filename) {
         Ok(config) => config,
         Err(_) => {
             let config = Config::default();
-            config.write_to_file("config.json").expect("Could not write to config.json!");
+            config.write_to_file(config_filename).expect(format!("Could not write to {}!", config_filename).as_str());
             config
         }
     };
@@ -103,6 +104,9 @@ fn main() {
     interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
     interpolation.add_special_floats_wrap90(&mut vec!["PLANE PITCH DEGREES".to_string()]);
     interpolation.add_special_floats_wrap180(&mut vec!["PLANE BANK DEGREES".to_string()]);
+
+    app_interface.set_ip(config.ip.as_str());
+    app_interface.set_port(config.port);
 
     loop {
         if let Some(client) = transfer_client.as_mut() {
@@ -301,6 +305,8 @@ fn main() {
                             // Was error not nessecary here
                         }
                     }
+                    config.set_ip(ip.to_string());
+                    config.write_to_file(config_filename);
                 }
                 AppMessage::Disconnect => {
                     if let Some(client) = transfer_client.as_ref() {
