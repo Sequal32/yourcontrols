@@ -73,10 +73,10 @@ impl StructData {
         for (name, _) in &self.data_map {
             let val = data.get(name).unwrap();
             match val {
-                StructDataTypes::Bool(n) => buf.extend((*n as i64).to_be_bytes().iter().rev()), // Reverse bytes as SDK expects little endian, while this returns big-endian
-                StructDataTypes::I32(n) => buf.extend(n.to_be_bytes().iter().rev()),
-                StructDataTypes::I64(n) => buf.extend(n.to_be_bytes().iter().rev()),
-                StructDataTypes::F64(n) => buf.extend(n.to_be_bytes().iter().rev()),
+                StructDataTypes::Bool(n) => buf.extend((*n as i64).to_le_bytes().iter()),
+                StructDataTypes::I32(n) => buf.extend(n.to_le_bytes().iter()),
+                StructDataTypes::I64(n) => buf.extend(n.to_le_bytes().iter()),
+                StructDataTypes::F64(n) => buf.extend(n.to_le_bytes().iter()),
             };
         }
         return buf
