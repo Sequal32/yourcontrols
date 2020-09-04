@@ -9,6 +9,7 @@ struct Record {
 }
 
 pub struct InterpolateStruct {
+    last: Option<Record>,
     latest: Option<Record>,
     at_latest: Option<Record>,
     current: Option<Record>,
@@ -25,6 +26,7 @@ pub struct InterpolateStruct {
 impl Default for InterpolateStruct {
     fn default() -> Self {
         Self {
+            last: None, 
             latest: None, 
             current: None, 
             at_latest: None, 
@@ -53,7 +55,11 @@ impl InterpolateStruct {
 
     fn to_next(&mut self) {
         let last = self.latest.take();
-        self.latest = self.packet_queue.pop_back();
+        loop {
+            self.latest = self.packet_queue.pop_back();
+            if self.packet_queue.len() <= 3 {break}
+        }
+
         self.at_latest = self.current.take();
         self.instant_at_latest = std::time::Instant::now();
         
@@ -103,8 +109,12 @@ impl InterpolateStruct {
         let alpha = elapsed/self.interpolation_time;
 
 
-        // Account for lag (prevent plane moving backward)
-        // if alpha > 1.0 && alpha < 2.0 {self.next_add_time = elapsed - self.interpolation_time}
+        if self.packet_queue.len() > 3 {
+            let next = latest.data.clone();
+            self.to_next();
+            self.current = Some(Record {data: next.clone(), time: get_time()});
+            return Some(next);
+        }
         
         for (key, value) in &latest.data {
             // Interpolate between next position and current position
