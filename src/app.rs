@@ -52,7 +52,7 @@ fn get_ip_from_data(data: &Value) -> Result<Ipv4Addr, String> {
 
 impl App {
 
-    pub fn setup() -> Self {
+    pub fn setup(ip: String, port: u16) -> Self {
         let (tx, rx) = unbounded();
 
         let mut logo = vec![];
@@ -98,7 +98,7 @@ impl App {
                                 },
                             Err(e) => {
                                 web_view.eval(
-                                    get_message_str("error", format!("Invalid IP or hostname. Reason: {}", e).as_str()).as_str()
+                                    get_message_str("client_fail", format!("Invalid IP or hostname. Reason: {}", e).as_str()).as_str()
                                 ).ok();
                             }
                         };
@@ -107,6 +107,10 @@ impl App {
                     "server" => {tx.send(AppMessage::Server(data["port"].as_u64().unwrap() as u16)).ok();},
                     "relieve" => {tx.send(AppMessage::RelieveControl).ok();},
                     "take" => {tx.send(AppMessage::TakeControl).ok();}
+                    "startup" => {
+                        web_view.eval(get_message_str("set_ip", ip.as_str()).as_str()).ok();
+                        web_view.eval(get_message_str("set_port", port.to_string().as_str()).as_str()).ok();
+                    }
                     _ => ()
                 };
 
@@ -139,18 +143,8 @@ impl App {
     }
 
     pub fn invoke(&mut self, type_string: &str, data: Option<&str>) {
-        let handle: MutexGuard<Option<Handle<i32>>>;
-        // Wait for a handle
-        loop {
-            let handle_ok = self.app_handle.lock().unwrap();
-            if handle_ok.is_some() {
-                handle = handle_ok; 
-                thread::sleep(Duration::from_millis(100));
-                break
-            } else {
-                thread::sleep(Duration::from_millis(100))
-            }
-        }
+        let handle = self.app_handle.lock().unwrap();
+        if handle.is_none() {return}
         // Send data to javascript
         let data = data.unwrap_or_default().to_string();
         let type_string = type_string.to_owned();
@@ -170,14 +164,6 @@ impl App {
 
     pub fn disconnected(&mut self) {
         self.invoke("disconnected", None);
-    }
-
-    pub fn set_port(&mut self, port: u16) {
-        self.invoke("set_port", Some(port.to_string().as_str()));
-    }
-
-    pub fn set_ip(&mut self, ip: &str) {
-        self.invoke("set_ip", Some(ip));
     }
 
     pub fn server_fail(&mut self, reason: &str) {

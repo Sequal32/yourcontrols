@@ -1,5 +1,6 @@
 ![](/assets/logo.png)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
+![](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge) ![](https://img.shields.io/github/downloads/Sequal32/yourcontrol/total?style=for-the-badge)
 
 A simple shared cockpit solution for MSFS2020.
 
@@ -17,6 +18,14 @@ A simple shared cockpit solution for MSFS2020.
 2. To transfer control, you can either assign a key to `Toggle Water Rudder` or use the UI to either
    * **Relieve control** if you're currently flying
    * **Accept control** when the person flying relieves control
+
+## Troubleshooting
+### Missing DLL
+Run the provided vcredist_x64.exe to resolve this.
+
+### Input Delay / Buffer Overloaded
+If the buffer overloaded message is displaying, you will experience network delay with your partner as you're running behind on processing packets. To relieve this, lower the update rate in `config.json`.
+
 ## Configuring
 Config.json
 ```

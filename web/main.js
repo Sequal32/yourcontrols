@@ -135,6 +135,8 @@ function MessageReceived(data) {
     }
 }
 
+invoke({"type":"startup"})
+
 // Buttons functions
 
 connect_button.updatetext = function(typeString, text) {

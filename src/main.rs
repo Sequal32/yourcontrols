@@ -86,7 +86,7 @@ fn main() {
     conn.map_client_event_to_sim_event(2000, "TOGGLE_WATER_RUDDER");
     conn.add_client_event_to_notification_group(1, 2000, false);
 
-    let mut app_interface = App::setup();
+    let mut app_interface = App::setup(config.ip.clone(), config.port);
 
     // Transfer
     let mut transfer_client: Option<TransferStruct> = None;
@@ -107,9 +107,6 @@ fn main() {
     interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
     interpolation.add_special_floats_wrap90(&mut vec!["PLANE PITCH DEGREES".to_string()]);
     interpolation.add_special_floats_wrap180(&mut vec!["PLANE BANK DEGREES".to_string()]);
-
-    app_interface.set_ip(config.ip.as_str());
-    app_interface.set_port(config.port);
 
     loop {
         if let Some(client) = transfer_client.as_mut() {
