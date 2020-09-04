@@ -75,6 +75,10 @@ function ValidateIp(str) {
     return str.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/gi)
 }
 
+function ValidateHostname(str) {
+    return str.match(/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/gi)
+}
+
 // Handle server messages
 function MessageReceived(data) {
     switch (data["type"]) {
@@ -174,15 +178,25 @@ document.getElementById("main-form").onsubmit = function(e) {
     if (is_connected) {invoke({type: "disconnect"}); return}
 
     var validip = ValidateIp(server_input.value)
+    var validhostname = ValidateHostname(server_input.value)
     var validport = ValidatePort(port_input.value)
 
     Validate(port_input, validport)
     trying_connection = true
 
     if (on_client) {
-        Validate(server_input, validip)
-        if (!validip || !validport) {return}
-        invoke({type: "connect", ip: server_input.value, port: parseInt(port_input.value)})
+        if (!validport) {return}
+        let data = {type: "connect", port: parseInt(port_input.value)}
+
+        Validate(server_input, validip || validhostname)
+        // Match hostname or ip
+        if (validhostname) {
+            data["hostname"] = server_input.value
+            invoke(data);
+        } else if (validip) {
+            data["ip"] = server_input.value
+            invoke(data);
+        }
     } else {
         if (!validport) {return}
         invoke({type: "server", port: parseInt(port_input.value)})

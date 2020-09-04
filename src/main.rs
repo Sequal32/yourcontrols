@@ -292,7 +292,7 @@ fn main() {
                         }
                     }
                 }
-                AppMessage::Connect(ip, port) => {
+                AppMessage::Connect(ip, input_string, port) => {
                     app_interface.attempt();
                     match start_client(ip, port) {
                         Ok(transfer) => {
@@ -308,7 +308,7 @@ fn main() {
                             // Was error not nessecary here
                         }
                     }
-                    config.set_ip(ip.to_string());
+                    config.set_ip(input_string);
                     config.write_to_file(CONFIG_FILENAME).ok();
                 }
                 AppMessage::Disconnect => {

@@ -1,13 +1,15 @@
 use base64;
-use std::fs::File;
-use web_view::{self, Handle};
-use std::{str::FromStr, net::Ipv4Addr, io::Read};
 use crossbeam_channel::{Receiver, unbounded};
-use std::sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}, MutexGuard};
+use dns_lookup::lookup_host;
+use std::{str::FromStr, net::Ipv4Addr, io::Read};
+use std::fs::File;
+use std::{time::Duration, sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}, MutexGuard}, thread};
+use web_view::{self, Handle};
+use serde_json::Value;
 
 pub enum AppMessage {
     Server(u16),
-    Connect(Ipv4Addr, u16),
+    Connect(Ipv4Addr, String, u16),
     Disconnect,
     TakeControl,
     RelieveControl,
@@ -26,6 +28,28 @@ pub struct App {
     pub rx: Receiver<AppMessage>
 }
 
+fn get_ip_from_data(data: &Value) -> Result<Ipv4Addr, String> {
+    match data.get("ip") {
+        // Parse ip string as Ipv4Addr
+        Some(ip_str) => match Ipv4Addr::from_str(ip_str.as_str().unwrap()) {
+            Ok(ip) => Ok(ip),
+            Err(_) => Err("Could not parse ip.".to_string())
+        }
+        None => match data.get("hostname") {
+            // Resolve hostname
+            Some(hostname_str) => match lookup_host(hostname_str.as_str().unwrap()) {
+                Ok(hostnames) => match hostnames.iter().filter(|ip| {ip.is_ipv4()}).nth(0) {
+                    // Only accept ipv4
+                    Some(std::net::IpAddr::V4(ip)) => Ok(ip.clone()),
+                    _ => Err("No Ipv4 addresses resolved to the specified hostname.".to_string())
+                }
+                Err(e) => Err(e.to_string())
+            }
+            None => Err("Invalid data passed.".to_string())
+        }
+    }
+}
+
 impl App {
 
     pub fn setup() -> Self {
@@ -39,7 +63,7 @@ impl App {
         let exited = Arc::new(AtomicBool::new(false));
         let exited_clone = exited.clone();
 
-        std::thread::spawn(move || {
+        thread::spawn(move || {
             let webview = web_view::builder()
             .title("Shared Cockpit")
             .content(web_view::Content::Html(format!(r#"<!DOCTYPE html>
@@ -63,9 +87,20 @@ impl App {
                 let data: serde_json::Value = serde_json::from_str(arg).unwrap();
                 match data["type"].as_str().unwrap() {
                     "connect" => {
-                        match Ipv4Addr::from_str(data["ip"].as_str().unwrap()) {
-                            Ok(ip) => {tx.send(AppMessage::Connect(ip, data["port"].as_u64().unwrap() as u16)).ok();},
-                            Err(_) => {web_view.eval(get_message_str("error", "Invalid IP.").as_str()).ok();}
+                        match get_ip_from_data(&data) {
+                            Ok(ip) => {
+                                tx.send(
+                                    AppMessage::Connect(
+                                        ip, 
+                                        if data.get("ip").is_some() {data["ip"].as_str().unwrap().to_string()} else {data["hostname"].as_str().unwrap().to_string()}, 
+                                        data["port"].as_u64().unwrap() as u16)
+                                    ).ok();
+                                },
+                            Err(e) => {
+                                web_view.eval(
+                                    get_message_str("error", format!("Invalid IP or hostname. Reason: {}", e).as_str()).as_str()
+                                ).ok();
+                            }
                         };
                     },
                     "disconnect" => {tx.send(AppMessage::Disconnect).ok();},
@@ -108,8 +143,15 @@ impl App {
         // Wait for a handle
         loop {
             let handle_ok = self.app_handle.lock().unwrap();
-            if handle_ok.is_some() {handle = handle_ok; break} else {std::thread::sleep(std::time::Duration::from_millis(100))}
+            if handle_ok.is_some() {
+                handle = handle_ok; 
+                thread::sleep(Duration::from_millis(100));
+                break
+            } else {
+                thread::sleep(Duration::from_millis(100))
+            }
         }
+        // Send data to javascript
         let data = data.unwrap_or_default().to_string();
         let type_string = type_string.to_owned();
         handle.as_ref().unwrap().dispatch(move |webview| {
