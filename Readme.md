@@ -15,8 +15,9 @@ A simple shared cockpit solution for MSFS2020.
     * Server: **Port forward** either `7777` or the specified port in the application. Navigate to the server tab, enter port and click start server. You will have initial control of the aircraft.
     * Clients: Navigate to the client tab and enter the **server's ip and port** and click connect.
 1. Fly!
-2. To transfer control, you can either assign a key to `Toggle Water Rudder` or use the UI to either
-   * **Relieve control** if you're currently flying
+1. To transfer control, click the button in the program to either
+   * **Relieve control** if you're currently flying 
+    Note: After 20 seconds, the request will be cancelled.
    * **Accept control** when the person flying relieves control
 
 ## Troubleshooting

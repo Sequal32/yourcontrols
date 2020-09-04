@@ -83,9 +83,6 @@ fn main() {
     conn.map_client_event_to_sim_event(1004, "FREEZE_ALTITUDE_TOGGLE");
     conn.map_client_event_to_sim_event(1005, "FREEZE_ATTITUDE_TOGGLE");
 
-    conn.map_client_event_to_sim_event(2000, "TOGGLE_WATER_RUDDER");
-    conn.add_client_event_to_notification_group(1, 2000, false);
-
     let mut app_interface = App::setup(config.ip.clone(), config.port);
 
     // Transfer
@@ -98,10 +95,13 @@ fn main() {
 
     let mut has_control = false;
     let mut can_take_control = false;
+    let mut relieving_control = false;
+
     let mut should_sync = false;
     let mut was_error = false;
     let mut was_overloaded = false;
     let mut time_since_control = Instant::now();
+    let mut time_since_relieve = Instant::now();
     // Interpolation Vars //
     let mut interpolation = InterpolateStruct::new(config.buffer_size);
     interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
@@ -181,22 +181,7 @@ fn main() {
                                 "eventid": event_id,
                                 "data": dw_data
                             })).ok();
-                        },
-                        1 => {
-                            if has_control {
-                                tx.send(json!({
-                                    "type": "relieve_control"
-                                })).ok();
-                            } else if can_take_control {
-                                tx.send(json!({
-                                    "type": "transfer_control"
-                                })).ok();
-                                has_control = true;
-                                app_interface.gain_control();
-                                transfer_control(&conn, has_control);
-                            }
-                        },
-
+                        }
                         _ => ()
                     }
                 }
@@ -236,6 +221,10 @@ fn main() {
                             time_since_control = Instant::now();
                             transfer_control(&conn, has_control);
                         }
+                    },
+                    "cancel_relieve" => {
+                        app_interface.lose_control();
+                        can_take_control = false;
                     }
                     _ => ()
                 },
@@ -264,6 +253,13 @@ fn main() {
                     let mut bytes = definitions.sim_vars.write_to_data(&updated_map);
                     conn.set_data_on_sim_object(0, 0, 0, 0, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
                 }
+            // Relieve control response timeout
+            } else if has_control && relieving_control && time_since_relieve.elapsed().as_secs() > 20 {
+                relieving_control = false;
+                app_interface.gain_control();
+                tx.send(json!({
+                    "type": "cancel_relieve"
+                })).ok();
             }
 
             if client.client.stopped() {
@@ -331,6 +327,8 @@ fn main() {
                     }
                 }
                 AppMessage::RelieveControl => {
+                    relieving_control = true;
+                    time_since_relieve = Instant::now();
                     transfer_client.as_ref().unwrap().tx.send(json!({
                         "type": "relieve_control"
                     })).ok();
