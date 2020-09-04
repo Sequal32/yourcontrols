@@ -2,6 +2,7 @@ var connect_button = document.getElementById('connect-button')
 var server_button = document.getElementById('server-button')
 var control_button = document.getElementById('control-button')
 var alert = document.getElementById("alert")
+var overloaded_alert = document.getElementById("overloaded-alert")
 
 var server_page_button = document.getElementById("server-page")
 var client_page_button = document.getElementById("client-page")
@@ -124,6 +125,12 @@ function MessageReceived(data) {
             break;
         case "set_port":
             port_input.value = data["data"]
+            break;
+        case "overloaded":
+            overloaded_alert.hidden = false
+            break;
+        case "stable":
+            overloaded_alert.hidden = true
             break;
     }
 }

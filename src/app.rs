@@ -203,4 +203,12 @@ impl App {
     pub fn server_started(&mut self, client_count: u16) {
         self.invoke("server", Some(client_count.to_string().as_str()));
     }
+
+    pub fn overloaded(&mut self) {
+        self.invoke("overloaded", None);
+    }
+
+    pub fn stable(&mut self) {
+        self.invoke("stable", None);
+    }
 }

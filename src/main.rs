@@ -100,6 +100,7 @@ fn main() {
     let mut can_take_control = false;
     let mut should_sync = false;
     let mut was_error = false;
+    let mut was_overloaded = false;
     let mut time_since_control = Instant::now();
     // Interpolation Vars //
     let mut interpolation = InterpolateStruct::new(config.buffer_size);
@@ -247,11 +248,24 @@ fn main() {
                 },
                 _ => ()
             }
-            if !has_control && time_since_control.elapsed().as_secs() > 10 {
-                if interpolation.get_time_since_last_position() > config.conn_timeout && !client.client.is_server() {
+            if !has_control {
+                if time_since_control.elapsed().as_secs() > 10 && interpolation.get_time_since_last_position() > config.conn_timeout && !client.client.is_server() {
                     client.client.stop();
                     app_interface.client_fail("Peer timeout.");
                     was_error = true;
+                }
+
+                if interpolation.overloaded() && !was_overloaded {
+                    was_overloaded = true;
+                    app_interface.overloaded();
+                } else if !interpolation.overloaded() && was_overloaded {
+                    was_overloaded = false;
+                    app_interface.stable();
+                }
+
+                if let Some(updated_map) = interpolation.interpolate() {
+                    let mut bytes = definitions.sim_vars.write_to_data(&updated_map);
+                    conn.set_data_on_sim_object(0, 0, 0, 0, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
                 }
             }
 
@@ -263,13 +277,6 @@ fn main() {
                 has_control = true;
                 was_error = false;
                 transfer_control(&conn, has_control);
-            }
-        }
-
-        if !has_control {
-            if let Some(updated_map) = interpolation.interpolate() {
-                let mut bytes = definitions.sim_vars.write_to_data(&updated_map);
-                conn.set_data_on_sim_object(0, 0, 0, 0, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
             }
         }
 
