@@ -7,6 +7,7 @@ use std::io::{Write, BufReader};
 pub struct Config {
     pub port: u16,
     pub update_rate: u16,
+    pub buffer_size: usize,
     pub conn_timeout: f64,
     pub ip: String
 }
@@ -16,6 +17,7 @@ impl Default for Config {
         Self {
             port: 7777,
             update_rate: 30,
+            buffer_size: 3,
             conn_timeout: 10.0,
             ip: "".to_string()
         }

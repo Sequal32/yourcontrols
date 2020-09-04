@@ -102,7 +102,7 @@ fn main() {
     let mut was_error = false;
     let mut time_since_control = Instant::now();
     // Interpolation Vars //
-    let mut interpolation = InterpolateStruct::new(update_rate);
+    let mut interpolation = InterpolateStruct::new(config.buffer_size);
     interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
     interpolation.add_special_floats_wrap90(&mut vec!["PLANE PITCH DEGREES".to_string()]);
     interpolation.add_special_floats_wrap180(&mut vec!["PLANE BANK DEGREES".to_string()]);
@@ -133,7 +133,11 @@ fn main() {
                             let sim_data: SimValue = definitions.sim_vars.read_from_bytes(data_pointer);
                             send_type = "physics";
                             data_string = serde_json::to_string(&sim_data).unwrap();
-                            interpolation.record_current(sim_data);
+
+                            // Don't update interpolation position if it's just going to get overwritten anyway
+                            if interpolation.get_time_since_last_position() > 1.0 {
+                                interpolation.record_current(sim_data);
+                            }
                             // Update when time elapsed > than calculated update rate
                             if update_rate_instant.elapsed().as_secs_f64() > update_rate {
                                 update_rate_instant = Instant::now();
@@ -160,13 +164,6 @@ fn main() {
                             "data": data_string,
                             "time": std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64()
                         })).ok();
-                    }
-
-                    if !has_control {
-                        if let Some(updated_map) = interpolation.interpolate() {
-                            let mut bytes = definitions.sim_vars.write_to_data(&updated_map);
-                            conn.set_data_on_sim_object(0, 0, 0, 0, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
-                        }
                     }
                 },
                 // Exception occured
@@ -251,14 +248,10 @@ fn main() {
                 _ => ()
             }
             if !has_control && time_since_control.elapsed().as_secs() > 10 {
-                if let Some(t) = interpolation.get_time_since_last_position() {
-                    if t > config.conn_timeout {
-                        if !client.client.is_server() {
-                            client.client.stop();
-                            app_interface.client_fail("Peer timeout.");
-                            was_error = true;
-                        };
-                    }
+                if interpolation.get_time_since_last_position() > config.conn_timeout && !client.client.is_server() {
+                    client.client.stop();
+                    app_interface.client_fail("Peer timeout.");
+                    was_error = true;
                 }
             }
 
@@ -270,6 +263,13 @@ fn main() {
                 has_control = true;
                 was_error = false;
                 transfer_control(&conn, has_control);
+            }
+        }
+
+        if !has_control {
+            if let Some(updated_map) = interpolation.interpolate() {
+                let mut bytes = definitions.sim_vars.write_to_data(&updated_map);
+                conn.set_data_on_sim_object(0, 0, 0, 0, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
             }
         }
 

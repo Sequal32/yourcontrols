@@ -9,7 +9,6 @@ struct Record {
 }
 
 pub struct InterpolateStruct {
-    last: Option<Record>,
     latest: Option<Record>,
     at_latest: Option<Record>,
     current: Option<Record>,
@@ -17,6 +16,7 @@ pub struct InterpolateStruct {
     interpolation_time: f64,
 
     packet_queue: VecDeque<Record>,
+    buffer_size: usize,
 
     special_floats_regular: Vec<String>,
     special_floats_wrap180: Vec<String>,
@@ -26,12 +26,13 @@ pub struct InterpolateStruct {
 impl Default for InterpolateStruct {
     fn default() -> Self {
         Self {
-            last: None, 
             latest: None, 
             current: None, 
             at_latest: None, 
             instant_at_latest: std::time::Instant::now(), 
             interpolation_time: 0.0, 
+
+            buffer_size: 3,
 
             packet_queue: VecDeque::new(),
             special_floats_regular: vec![],
@@ -46,25 +47,22 @@ fn get_time() -> f64 {
 }
 
 impl InterpolateStruct {
-    pub fn new(interpolation_time: f64) -> Self {
+    pub fn new(buffer_size: usize) -> Self {
         return Self {
-            interpolation_time,
+            buffer_size,
             .. Default::default()
         }
     }
 
     fn to_next(&mut self) {
         let last = self.latest.take();
-        loop {
-            self.latest = self.packet_queue.pop_back();
-            if self.packet_queue.len() <= 3 {break}
-        }
 
-        self.at_latest = self.current.take();
-        self.instant_at_latest = std::time::Instant::now();
-        
+        self.latest = self.packet_queue.pop_back();
+        self.at_latest = self.current.take();     
+
         if last.is_some() {
             // Calculate time to next position by taking the diff of the latest packet to the previous one
+            self.instant_at_latest = std::time::Instant::now();
             self.interpolation_time = self.latest.as_ref().unwrap().time-last.unwrap().time;
         }
     }
@@ -93,8 +91,8 @@ impl InterpolateStruct {
         self.special_floats_wrap180.append(data);
     }
 
-    pub fn get_time_since_last_position(&self) -> Option<f64> {
-        return Some(self.instant_at_latest.elapsed().as_secs_f64());
+    pub fn get_time_since_last_position(&self) -> f64 {
+        return self.instant_at_latest.elapsed().as_secs_f64();
     }
 
     pub fn interpolate(&mut self) -> Option<IndexMap<String, StructDataTypes>> {
@@ -105,15 +103,11 @@ impl InterpolateStruct {
         let current = self.at_latest.as_ref().unwrap();
         let latest = self.latest.as_ref().unwrap();
 
-        let elapsed = self.instant_at_latest.elapsed().as_secs_f64();
-        let alpha = elapsed/self.interpolation_time;
+        let elapsed = self.get_time_since_last_position();
+        let mut alpha = elapsed/self.interpolation_time;
 
-
-        if self.packet_queue.len() > 3 {
-            let next = latest.data.clone();
-            self.to_next();
-            self.current = Some(Record {data: next.clone(), time: get_time()});
-            return Some(next);
+        if alpha > 1.0 {
+            alpha = 1.0
         }
         
         for (key, value) in &latest.data {
@@ -144,13 +138,19 @@ impl InterpolateStruct {
 
         // If the packet queue is overflowing, we want to get to the next position ASAP
         // If we reached the next position in time, we can go to the next packet if the buffer has one
-        if self.packet_queue.len() > 3 || alpha > 1.0 && self.packet_queue.len() > 0 {
+        if alpha >= 1.0 && self.packet_queue.len() > 0 {
             self.to_next();
+            // Catch up in the queue
+            if self.packet_queue.len() > self.buffer_size {
+                self.interpolation_time *= (self.buffer_size + 1) as f64/(self.packet_queue.len() - self.buffer_size) as f64 * 0.5
+            }
         }
 
-        if alpha > 10.0 {return None}
         return Some(interpolated);
-        // return None;
+    }
+
+    pub fn overloaded(&self) -> bool {
+        return self.packet_queue.len() > self.buffer_size + 15
     }
 }
 
