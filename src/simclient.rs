@@ -20,6 +20,7 @@ impl Client {
     pub fn start(&self, ip: Ipv4Addr, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error>  {
         let (servertx, serverrx) = bounded::<Value>(10);
         let (clienttx, clientrx) = bounded::<ReceiveData>(10);
+        let tx2 = clienttx.clone();
 
         let mut stream = TcpStream::connect_timeout(&SocketAddr::new(IpAddr::V4(ip), port), std::time::Duration::from_secs(5))?;
         let stream_clone = stream.try_clone().unwrap();
@@ -35,7 +36,7 @@ impl Client {
                         Ok(data) => {
                             stream.write_all((data.to_string() + "\n").as_bytes()).expect("!");
                         }
-                        Err(_) => break
+                        Err(_) => {tx2.send(ReceiveData::TransferStopped("Connection lost".to_string())).ok();}
                     }
                     if should_stop.load(SeqCst) {break}
                 }
@@ -49,6 +50,7 @@ impl Client {
                     // Disconnected
                     Ok(0) => {
                         should_stop2.store(true, SeqCst);
+                        clienttx.send(ReceiveData::TransferStopped("Connection lost".to_string())).ok();
                         break;
                     }
                     Ok(_) => match serde_json::from_str(&buf.trim()) {
@@ -56,7 +58,10 @@ impl Client {
                         Err(_) => ()
                     },
                     // Reader error
-                    Err(_) => break
+                    Err(e) => {
+                        should_stop2.store(true, SeqCst);
+                        clienttx.send(ReceiveData::TransferStopped(e.to_string())).ok();
+                    }
                 };
                 if should_stop2.load(SeqCst) {break}
             }

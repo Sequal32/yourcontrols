@@ -232,13 +232,22 @@ fn main() {
                     app_interface.server_started(client.client.get_connected_count());
                     should_sync = true;
                 },
+                Ok(ReceiveData::TransferStopped(reason)) => {
+                    app_interface.client_fail(reason.as_str());
+                }
                 _ => ()
             }
             if !has_control {
-                if time_since_control.elapsed().as_secs() > 10 && interpolation.get_time_since_last_position() > config.conn_timeout && !client.client.is_server() {
-                    client.client.stop();
-                    app_interface.client_fail("Peer timeout.");
-                    was_error = true;
+                if time_since_control.elapsed().as_secs() > 10 && interpolation.get_time_since_last_position() > config.conn_timeout {
+                    if !client.client.is_server() {
+                        client.client.stop();
+                        app_interface.client_fail("Peer timeout.");
+                        was_error = true;
+                    } else {
+                        app_interface.gain_control();
+                        has_control = true;
+                        transfer_control(&conn, has_control);
+                    }
                 }
 
                 if interpolation.overloaded() && !was_overloaded {

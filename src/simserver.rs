@@ -21,7 +21,8 @@ pub struct Server {
 pub enum ReceiveData {
     Data(Value),
     NewConnection(String),
-    ConnectionLost(String)
+    ConnectionLost(String),
+    TransferStopped(String),
 }
 
 impl Server {
@@ -57,7 +58,7 @@ impl Server {
                     let addr = Arc::new(addr.to_string());
                     let addr_clone = addr.clone();
                     let addr_clone2 = addr.clone();
-                    tx.send(ReceiveData::NewConnection(addr.to_string())).expect("!");
+                    tx.send(ReceiveData::NewConnection(addr.to_string())).ok();
 
                     // Create clones of streams that each thread can use safely
                     let mut stream_clone = stream.try_clone().unwrap();
@@ -76,6 +77,12 @@ impl Server {
                     let should_stop2 = should_stop.clone();
 
                     thread::spawn(move || {
+                        let connection_lost = || {
+                            did_disconnect.store(true, SeqCst);
+                            number_connections.fetch_min(1, SeqCst);
+                            tx.send(ReceiveData::ConnectionLost(addr_clone.to_string())).ok();
+                        };
+
                         loop {
                             let mut buf = String::new();
 
@@ -83,20 +90,16 @@ impl Server {
 
                             match reader.read_line(&mut buf) {
                                 // socket closed
-                                Ok(n) => {
-                                    if n == 0 {
-                                        did_disconnect.store(true, SeqCst);
-                                        number_connections.fetch_min(1, SeqCst);
-                                        tx.send(ReceiveData::ConnectionLost(addr_clone.to_string())).ok();
-                                        break
-                                    }
+                                Ok(0) => {
+                                    connection_lost();
+                                    break
+                                }
+                                Ok(_) => {
                                     // Receive data
                                     tx.send(ReceiveData::Data(serde_json::from_str(&buf).unwrap())).expect("Error transmitting data!");
                                 },
                                 Err(_) => {
-                                    did_disconnect.store(true, SeqCst);
-                                    number_connections.fetch_min(1, SeqCst);
-                                    tx.send(ReceiveData::ConnectionLost(addr_clone.to_string())).ok();
+                                    connection_lost();
                                     break
                                 }
                             }
@@ -116,12 +119,15 @@ impl Server {
                                     match stream_clone.write(payload) {
                                         Ok(_) => (),
                                         Err(_) => {
-                                            tx2.send(ReceiveData::ConnectionLost(addr_clone2.to_string())).expect("Error transmitting data (client)!");
+                                            tx2.send(ReceiveData::ConnectionLost(addr_clone2.to_string())).ok();
                                             break
                                         }
                                     }
                                 },
-                                Err(_) => break
+                                Err(_) => {
+                                    tx2.send(ReceiveData::ConnectionLost(addr_clone2.to_string())).ok();
+                                    break
+                                }
                             }
                         }
                     });
