@@ -102,7 +102,7 @@ function MessageReceived(data) {
             break;
         case "server":
             OnConnected()
-            alert.updatetext("success", `Server started! ${data["data"]} clients connected.`)
+            alert.updatetext("success", "Server started! " + data["data"] + " clients connected.")
             break;
         case "error":
             alert.updatetext("danger", data["data"])
