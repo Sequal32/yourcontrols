@@ -31,21 +31,21 @@ pub struct Definitions {
 }
 
 impl Definitions {
-    pub fn new(conn: &simconnect::SimConnector) -> Self {
-        let mut object = Self {
+    pub fn new() -> Self {
+        Self {
             sim_vars: StructData::new(),
             event_map: HashMap::new(),
             bool_sync: HashMap::new(),
             last_bool_values: None
-        };
-
-        object.map_data(conn);
-        object.map_events(conn);
-
-        return object;
+        }
     }
 
-    fn map_data(&mut self, conn: &simconnect::SimConnector) {
+    pub fn map_all(&mut self, conn: &simconnect::SimConnector) {
+        self.map_data(conn);
+        self.map_events(conn);
+    }
+
+    pub fn map_data(&mut self, conn: &simconnect::SimConnector) {
         let mut reader = csv::ReaderBuilder::new();
         reader.trim(csv::Trim::All);
         let mut reader = reader.from_path("sim_vars.dat").expect("Could not open sim_vars.dat! Ensure that the file is in the directory, or redownload.");

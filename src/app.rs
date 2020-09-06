@@ -3,8 +3,7 @@ use crossbeam_channel::{Receiver, unbounded};
 use dns_lookup::lookup_host;
 use std::{str::FromStr, net::Ipv4Addr, io::Read};
 use std::fs::File;
-use std::{time::Duration, sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}, MutexGuard}, thread};
-use web_view::{self, Handle};
+use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
 use serde_json::Value;
 
 pub enum AppMessage {
@@ -13,6 +12,7 @@ pub enum AppMessage {
     Disconnect,
     TakeControl,
     RelieveControl,
+    Startup,
 }
 
 fn get_message_str(type_string: &str, data: &str) -> String {
@@ -51,8 +51,7 @@ fn get_ip_from_data(data: &Value) -> Result<Ipv4Addr, String> {
 }
 
 impl App {
-
-    pub fn setup(ip: String, port: u16) -> Self {
+    pub fn setup() -> Self {
         let (tx, rx) = unbounded();
 
         let mut logo = vec![];
@@ -107,10 +106,7 @@ impl App {
                     "server" => {tx.send(AppMessage::Server(data["port"].as_u64().unwrap() as u16)).ok();},
                     "relieve" => {tx.send(AppMessage::RelieveControl).ok();},
                     "take" => {tx.send(AppMessage::TakeControl).ok();}
-                    "startup" => {
-                        web_view.eval(get_message_str("set_ip", ip.as_str()).as_str()).ok();
-                        web_view.eval(get_message_str("set_port", port.to_string().as_str()).as_str()).ok();
-                    }
+                    "startup" => {tx.send(AppMessage::Startup).ok();}
                     _ => ()
                 };
 
@@ -152,6 +148,18 @@ impl App {
             webview.eval(get_message_str(type_string.as_str(), data.as_str()).as_str()).ok();
             Ok(())
         }).ok();
+    }
+
+    pub fn error(&mut self, msg: &str) {
+        self.invoke("error", Some(msg));
+    }
+
+    pub fn set_port(&mut self, port: u16) {
+        self.invoke("set_port", Some(port.to_string().as_str()));
+    }
+
+    pub fn set_ip(&mut self, ip: &str) {
+        self.invoke("set_ip", Some(ip));
     }
 
     pub fn attempt(&mut self) {

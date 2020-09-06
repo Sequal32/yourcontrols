@@ -10,7 +10,7 @@ mod simserver;
 mod syncdefs;
 
 use app::{App, AppMessage};
-use bytereader::{StructDataTypes, data_type_as_bool};
+use bytereader::{StructDataTypes, data_type_as_bool, StructData};
 use definitions::Definitions;
 use indexmap::IndexMap;
 use interpolate::{InterpolateStruct};
@@ -53,6 +53,21 @@ fn transfer_control(conn: &simconnect::SimConnector, has_control: bool) {
     conn.transmit_client_event(1, 1002, !has_control as u32, 5, 0);
 }
 
+fn on_simconnect_connect(conn: &simconnect::SimConnector, definitions: &mut Definitions) -> StructData {
+    definitions.map_all(conn);
+    conn.request_data_on_sim_object(0, 0, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
+    conn.request_data_on_sim_object(1, 1, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
+
+    conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
+    conn.map_client_event_to_sim_event(1001, "FREEZE_ALTITUDE_SET");
+    conn.map_client_event_to_sim_event(1002, "FREEZE_ATTITUDE_SET");
+    conn.map_client_event_to_sim_event(1003, "FREEZE_LATITUDE_LONGITUDE_TOGGLE");
+    conn.map_client_event_to_sim_event(1004, "FREEZE_ALTITUDE_TOGGLE");
+    conn.map_client_event_to_sim_event(1005, "FREEZE_ATTITUDE_TOGGLE");
+    
+    return definitions.map_bool_sync_events(&conn, "sync_bools.dat", 1);
+}
+
 type SimValue = IndexMap<String, StructDataTypes>;
 const CONFIG_FILENAME: &str = "config.json";
 fn main() {
@@ -68,22 +83,12 @@ fn main() {
     
     // Set up sim connect
     let mut conn = simconnect::SimConnector::new();
-    conn.connect("Simple Shared Cockpit");
+    let mut connected = false;
 
-    let mut definitions = Definitions::new(&conn);
-    let bool_defs = definitions.map_bool_sync_events(&conn, "sync_bools.dat", 1);
+    let mut definitions = Definitions::new();
+    let mut bool_defs: Option<StructData> = None;
 
-    conn.request_data_on_sim_object(0, 0, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
-    conn.request_data_on_sim_object(1, 1, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
-
-    conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
-    conn.map_client_event_to_sim_event(1001, "FREEZE_ALTITUDE_SET");
-    conn.map_client_event_to_sim_event(1002, "FREEZE_ATTITUDE_SET");
-    conn.map_client_event_to_sim_event(1003, "FREEZE_LATITUDE_LONGITUDE_TOGGLE");
-    conn.map_client_event_to_sim_event(1004, "FREEZE_ALTITUDE_TOGGLE");
-    conn.map_client_event_to_sim_event(1005, "FREEZE_ATTITUDE_TOGGLE");
-
-    let mut app_interface = App::setup(config.ip.clone(), config.port);
+    let mut app_interface = App::setup();
 
     // Transfer
     let mut transfer_client: Option<TransferStruct> = None;
@@ -98,6 +103,7 @@ fn main() {
     let mut relieving_control = false;
 
     let mut should_sync = false;
+    let mut need_update = false;
     let mut was_error = false;
     let mut was_overloaded = false;
     let mut time_since_control = Instant::now();
@@ -109,6 +115,7 @@ fn main() {
     interpolation.add_special_floats_wrap180(&mut vec!["PLANE BANK DEGREES".to_string()]);
 
     loop {
+        let mut was_no_message = true;
         if let Some(client) = transfer_client.as_mut() {
             let tx = &client.tx;
             let rx = &client.rx;
@@ -117,6 +124,7 @@ fn main() {
             // Simconnect message
             match message {
                 Ok(simconnect::DispatchResult::SimobjectData(data)) => {
+                    was_no_message = false;
                     // Send data to clients or to server
                     let send_type: &str;
                     let data_string: String;
@@ -133,8 +141,9 @@ fn main() {
                             data_string = serde_json::to_string(&sim_data).unwrap();
 
                             // Don't update interpolation position if it's just going to get overwritten anyway
-                            if interpolation.get_time_since_last_position() > 1.0 {
+                            if need_update || interpolation.get_time_since_last_position() > 1.0 {
                                 interpolation.record_current(sim_data);
+                                need_update = false;
                             }
                             // Update when time elapsed > than calculated update rate
                             if update_rate_instant.elapsed().as_secs_f64() > update_rate {
@@ -143,7 +152,7 @@ fn main() {
                             }
                         },
                         1 => {
-                            let sim_data: SimValue = bool_defs.read_from_bytes(data_pointer);
+                            let sim_data: SimValue = bool_defs.as_ref().unwrap().read_from_bytes(data_pointer);
                             send_type = "sync_toggle";
                             data_string = serde_json::to_string(&sim_data).unwrap();
                             definitions.record_boolean_values(sim_data);
@@ -157,7 +166,7 @@ fn main() {
 
                     // Update position data
                     if should_send {
-                        tx.send(json!({
+                        tx.try_send(json!({
                             "type": send_type,
                             "data": data_string,
                             "time": std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64()
@@ -176,7 +185,7 @@ fn main() {
                     let group_id = unsafe{(*data).uGroupID};
                     match group_id {
                         0 => {
-                            tx.send(json!({
+                            tx.try_send(json!({
                                 "type": "event",
                                 "eventid": event_id,
                                 "data": dw_data
@@ -184,7 +193,8 @@ fn main() {
                         }
                         _ => ()
                     }
-                }
+                },
+                Err(_) => connected = false,
                 _ => ()
             };
             // Data from the person in control
@@ -258,15 +268,17 @@ fn main() {
                     app_interface.stable();
                 }
 
-                if let Some(updated_map) = interpolation.interpolate() {
-                    let mut bytes = definitions.sim_vars.write_to_data(&updated_map);
-                    conn.set_data_on_sim_object(0, 0, 0, 0, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
+                if !need_update {
+                    if let Some(updated_map) = interpolation.interpolate() {
+                        let mut bytes = definitions.sim_vars.write_to_data(&updated_map);
+                        conn.set_data_on_sim_object(0, 0, 0, 0, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
+                    }
                 }
             // Relieve control response timeout
             } else if has_control && relieving_control && time_since_relieve.elapsed().as_secs() > 20 {
                 relieving_control = false;
                 app_interface.gain_control();
-                tx.send(json!({
+                tx.try_send(json!({
                     "type": "cancel_relieve"
                 })).ok();
             }
@@ -286,39 +298,44 @@ fn main() {
         match app_interface.rx.try_recv() {
             Ok(msg) => match msg {
                 AppMessage::Server(port ) => {
-                    match start_server(port) {
-                        Ok(transfer) => {
-                            app_interface.server_started(0);
-                            transfer_client = Some(transfer);
+                    if connected {
+                        match start_server(port) {
+                            Ok(transfer) => {
+                                app_interface.server_started(0);
+                                transfer_client = Some(transfer);
 
-                            app_interface.gain_control();
-                            has_control = true;
-                            transfer_control(&conn, has_control);
-                        },
-                        Err(e) => {
-                            app_interface.server_fail(e.to_string().as_str());
-                            // Was error not nessecary here, stopped does not get fired
+                                app_interface.gain_control();
+                                has_control = true;
+                                transfer_control(&conn, has_control);
+                            },
+                            Err(e) => {
+                                app_interface.server_fail(e.to_string().as_str());
+                                // Was error not nessecary here, stopped does not get fired
+                            }
                         }
                     }
                 }
                 AppMessage::Connect(ip, input_string, port) => {
-                    app_interface.attempt();
-                    match start_client(ip, port) {
-                        Ok(transfer) => {
-                            app_interface.connected();
-                            transfer_client = Some(transfer);
-                            time_since_control = Instant::now();
+                    if connected {
+                        app_interface.attempt();
+                        match start_client(ip, port) {
+                            Ok(transfer) => {
+                                app_interface.connected();
+                                transfer_client = Some(transfer);
+                                time_since_control = Instant::now();
 
-                            has_control = false;
-                            transfer_control(&conn, has_control);
+                                has_control = false;
+                                need_update = true;
+                                transfer_control(&conn, has_control);
+                            }
+                            Err(e) => {
+                                app_interface.client_fail(e.to_string().as_str());
+                                // Was error not nessecary here
+                            }
                         }
-                        Err(e) => {
-                            app_interface.client_fail(e.to_string().as_str());
-                            // Was error not nessecary here
-                        }
+                        config.set_ip(input_string);
+                        config.write_to_file(CONFIG_FILENAME).ok();
                     }
-                    config.set_ip(input_string);
-                    config.write_to_file(CONFIG_FILENAME).ok();
                 }
                 AppMessage::Disconnect => {
                     if let Some(client) = transfer_client.as_ref() {
@@ -327,7 +344,7 @@ fn main() {
                 }
                 AppMessage::TakeControl => {
                     if can_take_control {
-                        transfer_client.as_ref().unwrap().tx.send(json!({
+                        transfer_client.as_ref().unwrap().tx.try_send(json!({
                             "type": "transfer_control"
                         })).ok();
                         has_control = true;
@@ -338,14 +355,31 @@ fn main() {
                 AppMessage::RelieveControl => {
                     relieving_control = true;
                     time_since_relieve = Instant::now();
-                    transfer_client.as_ref().unwrap().tx.send(json!({
+                    transfer_client.as_ref().unwrap().tx.try_send(json!({
                         "type": "relieve_control"
                     })).ok();
+                },
+                AppMessage::Startup => {
+                    std::thread::sleep(Duration::from_millis(100));
+                    app_interface.set_ip(config.ip.as_str());
+                    app_interface.set_port(config.port);
                 }
             }
             Err(_) => {}
+        } 
+        // Try to connect to simconnect if not connected
+        if !connected {
+            connected = conn.connect("Your Control");
+            if connected {
+                app_interface.disconnected();
+                bool_defs = Some(on_simconnect_connect(&conn, &mut definitions));
+            } else {
+                app_interface.error("Trying to connect to SimConnect...");
+            };
         }
+
+        if was_no_message {std::thread::sleep(Duration::from_millis(1))}
+        // Attempt Simconnect connection
         if app_interface.exited() {break}
-        std::thread::sleep(Duration::from_millis(1));
     }
 }
