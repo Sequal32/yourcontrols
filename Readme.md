@@ -45,7 +45,6 @@ Config.json
 </details>
 
 ## Known bugs
-* The number of connections shown on the server may be inaccurate as clients disconnect.
 * The client will still show connected to the server after the server closes - circumvented by the connection timeout defined in the config.json.
 * Not all switchable switches are currently synchronized due to the current state of SimConnect.
 

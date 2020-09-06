@@ -34,7 +34,7 @@ impl Server {
     }
 
     pub fn start(&mut self, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error> {
-        let (servertx, serverrx) = bounded::<ReceiveData>(10);
+        let (servertx, serverrx) = bounded::<ReceiveData>(0);
         let (clienttx, clientrx) = bounded::<Value>(10);
 
         let listener = match TcpListener::bind(format!("0.0.0.0:{}", port)) {
@@ -58,35 +58,38 @@ impl Server {
                     let addr = Arc::new(addr.to_string());
                     let addr_clone = addr.clone();
                     let addr_clone2 = addr.clone();
-                    tx.send(ReceiveData::NewConnection(addr.to_string())).ok();
 
                     // Create clones of streams that each thread can use safely
                     let mut stream_clone = stream.try_clone().unwrap();
 
                     // Will determine thread disconnection
                     let did_disconnect = Arc::new(AtomicBool::new(false));
+                    let did_disconnect2 = did_disconnect.clone();
                     let disconnect_clone = did_disconnect.clone();
 
                     let mut reader = BufReader::new(stream.try_clone().unwrap());
 
                     let number_connections = number_connections.clone();
+                    let number_connections2 = number_connections.clone();
                     number_connections.fetch_add(1, SeqCst);
                     stream.set_nonblocking(false).ok();
 
                     let should_stop = should_stop.clone();
                     let should_stop2 = should_stop.clone();
 
+                    tx.send(ReceiveData::NewConnection(addr.to_string())).ok();
+
                     thread::spawn(move || {
                         let connection_lost = || {
                             did_disconnect.store(true, SeqCst);
-                            number_connections.fetch_min(1, SeqCst);
+                            number_connections.fetch_sub(1, SeqCst);
                             tx.send(ReceiveData::ConnectionLost(addr_clone.to_string())).ok();
                         };
 
                         loop {
                             let mut buf = String::new();
 
-                            if should_stop.load(SeqCst) {number_connections.fetch_min(1, SeqCst); break}
+                            if should_stop.load(SeqCst) {break}
 
                             match reader.read_line(&mut buf) {
                                 // socket closed
@@ -107,8 +110,13 @@ impl Server {
                     });
 
                     thread::spawn(move || {
+                        let connection_lost = || {
+                            did_disconnect2.store(true, SeqCst);
+                            number_connections2.fetch_sub(1, SeqCst);
+                            tx2.send(ReceiveData::ConnectionLost(addr_clone2.to_string())).ok();
+                        };
+
                         loop {
-                            // Send to all clients
                             let data = rx.recv();
                             if disconnect_clone.load(SeqCst) || should_stop2.load(SeqCst) {break}
     
@@ -119,13 +127,13 @@ impl Server {
                                     match stream_clone.write(payload) {
                                         Ok(_) => (),
                                         Err(_) => {
-                                            tx2.send(ReceiveData::ConnectionLost(addr_clone2.to_string())).ok();
+                                            connection_lost();
                                             break
                                         }
                                     }
                                 },
                                 Err(_) => {
-                                    tx2.send(ReceiveData::ConnectionLost(addr_clone2.to_string())).ok();
+                                    connection_lost();
                                     break
                                 }
                             }

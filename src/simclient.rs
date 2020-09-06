@@ -54,7 +54,7 @@ impl Client {
                         break;
                     }
                     Ok(_) => match serde_json::from_str(&buf.trim()) {
-                        Ok(data) => clienttx.send(ReceiveData::Data(data)).expect("!"),
+                        Ok(data) => {clienttx.send(ReceiveData::Data(data)).ok();},
                         Err(_) => ()
                     },
                     // Reader error
