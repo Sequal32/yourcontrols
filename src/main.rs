@@ -55,6 +55,9 @@ fn transfer_control(conn: &simconnect::SimConnector, has_control: bool) {
 
 fn on_simconnect_connect(conn: &simconnect::SimConnector, definitions: &mut Definitions) -> StructData {
     definitions.map_all(conn);
+
+    let bool_defs = definitions.map_bool_sync_events(&conn, "sync_bools.dat", 1);
+
     conn.request_data_on_sim_object(0, 0, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME);
     conn.request_data_on_sim_object(1, 1, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND);
 
@@ -65,7 +68,7 @@ fn on_simconnect_connect(conn: &simconnect::SimConnector, definitions: &mut Defi
     conn.map_client_event_to_sim_event(1004, "FREEZE_ALTITUDE_TOGGLE");
     conn.map_client_event_to_sim_event(1005, "FREEZE_ATTITUDE_TOGGLE");
     
-    return definitions.map_bool_sync_events(&conn, "sync_bools.dat", 1);
+    return bool_defs
 }
 
 type SimValue = IndexMap<String, StructDataTypes>;
@@ -194,7 +197,6 @@ fn main() {
                         _ => ()
                     }
                 },
-                Err(_) => connected = false,
                 _ => ()
             };
             // Data from the person in control
