@@ -301,6 +301,7 @@ fn main() {
             Ok(msg) => match msg {
                 AppMessage::Server(is_v6, port ) => {
                     if connected {
+                        app_interface.attempt();
                         match start_server(is_v6, port) {
                             Ok(transfer) => {
                                 app_interface.server_started(0);
