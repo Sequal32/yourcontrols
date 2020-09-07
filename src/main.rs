@@ -229,7 +229,9 @@ fn main() {
                     "transfer_control" => {
                         if has_control {
                             app_interface.lose_control();
+                            interpolation.reset();
                             has_control = false;
+                            need_update = true;
                             time_since_control = Instant::now();
                             transfer_control(&conn, has_control);
                         }

@@ -149,6 +149,13 @@ impl InterpolateStruct {
         return Some(interpolated);
     }
 
+    pub fn reset(&mut self) {
+        self.latest = None;
+        self.current = None;
+        self.at_latest = None;
+        self.packet_queue.clear();
+    }
+
     pub fn overloaded(&self) -> bool {
         return self.packet_queue.len() > self.buffer_size + 15
     }
