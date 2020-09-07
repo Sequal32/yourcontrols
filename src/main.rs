@@ -1,4 +1,4 @@
-// #![windows_subsystem = "windows"]
+#![windows_subsystem = "windows"]
 
 mod app;
 mod bytereader;
@@ -86,7 +86,7 @@ fn main() {
     
     // Set up sim connect
     let mut conn = simconnect::SimConnector::new();
-    let mut connected = true;
+    let mut connected = false;
 
     let mut definitions = Definitions::new();
     let mut bool_defs: Option<StructData> = None;

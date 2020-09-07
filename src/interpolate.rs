@@ -141,7 +141,6 @@ impl InterpolateStruct {
         if alpha >= 1.0 && self.packet_queue.len() > 0 {
             self.to_next();
             // Catch up in the queue
-            println!("{:?}", self.packet_queue.len());
             if self.packet_queue.len() > self.buffer_size {
                 self.interpolation_time *= (self.buffer_size + 1) as f64/(self.packet_queue.len() - self.buffer_size) as f64 * 0.5
             }

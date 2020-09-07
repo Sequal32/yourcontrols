@@ -2,7 +2,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 ![](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge) ![](https://img.shields.io/github/downloads/Sequal32/yourcontrol/total?style=for-the-badge)
 
-A simple shared cockpit solution for MSFS2020.
+A simple shared cockpit solution for Microsoft Flight Simulator.
 
 ## Features
 * Frequent and smooth position updates through linear interpolation
@@ -11,11 +11,13 @@ A simple shared cockpit solution for MSFS2020.
 ## Setup
 1. Grab the latest [release](https://github.com/Sequal32/yourcontrol/releases/latest) and unzip to a directory of your choice.
 1. Launch FS2020 and make sure you and your partner(s) spawn in *close* to each other in the **same aircraft state** (all spawn on runway or all spawn on ramp)
-1. Start up the included .exe file. (Note: At the time of writing, only IPv4 addresses are supported.)
-    * Server: [Port forward](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/) either `7777` or the specified port in the application. Navigate to the server tab, enter port and click start server. You will have initial control of the aircraft.
+2. Start up the included .exe file.
+    * Server: 
+      1. If your router does not support UPNP, [port forward](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/) either `7777` or the specified port in the application. If you don't know if your router supports UPNP, you can attempt to connect without any additional steps, and then port forward if needed.
+      2. Navigate to the server tab, enter port and click start server. You will have initial control of the aircraft.
     * Clients: Navigate to the client tab and enter the **server's ip and port** and click connect.
-1. Fly!
-1. To transfer control, click the button in the program to either
+3. Fly!
+4. To transfer control, click the button in the program to either
    * **Relieve control** if you're currently flying 
     Note: After 20 seconds, the request will be cancelled.
    * **Accept control** when the person flying relieves control
