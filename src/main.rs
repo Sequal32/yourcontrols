@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 mod app;
 mod bytereader;
@@ -20,7 +20,7 @@ use simconfig::Config;
 use simconnect;
 use simserver::{TransferClient, ReceiveData};
 use simserver::Server;
-use std::{time::{Duration, Instant}, net::Ipv4Addr, io::Error};
+use std::{time::{Duration, Instant}, net::{IpAddr}, io::Error};
 use crossbeam_channel::{Receiver, Sender};
 
 struct TransferStruct {
@@ -29,16 +29,16 @@ struct TransferStruct {
     client: Box<dyn TransferClient>
 }
 
-fn start_server(port: u16) -> Result<TransferStruct, Error> {
+fn start_server(is_v6: bool, port: u16) -> Result<TransferStruct, Error> {
     let mut server = Server::new();
-    let (tx, rx) = server.start(port)?;
+    let (tx, rx) = server.start(is_v6, port)?;
 
     Ok(TransferStruct {
         tx, rx, client: Box::new(server)
     })
 }
 
-fn start_client(ip: Ipv4Addr, port: u16) -> Result<TransferStruct, Error> {
+fn start_client(ip: IpAddr, port: u16) -> Result<TransferStruct, Error> {
     let client = Client::new();
     let (tx, rx) = client.start(ip, port)?;
 
@@ -86,7 +86,7 @@ fn main() {
     
     // Set up sim connect
     let mut conn = simconnect::SimConnector::new();
-    let mut connected = false;
+    let mut connected = true;
 
     let mut definitions = Definitions::new();
     let mut bool_defs: Option<StructData> = None;
@@ -299,9 +299,9 @@ fn main() {
         // GUI
         match app_interface.rx.try_recv() {
             Ok(msg) => match msg {
-                AppMessage::Server(port ) => {
+                AppMessage::Server(is_v6, port ) => {
                     if connected {
-                        match start_server(port) {
+                        match start_server(is_v6, port) {
                             Ok(transfer) => {
                                 app_interface.server_started(0);
                                 transfer_client = Some(transfer);

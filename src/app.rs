@@ -1,14 +1,14 @@
 use base64;
 use crossbeam_channel::{Receiver, unbounded};
 use dns_lookup::lookup_host;
-use std::{str::FromStr, net::Ipv4Addr, io::Read};
+use std::{str::FromStr, net::{Ipv6Addr, Ipv4Addr, IpAddr}, io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
 use serde_json::Value;
 
 pub enum AppMessage {
-    Server(u16),
-    Connect(Ipv4Addr, String, u16),
+    Server(bool, u16),
+    Connect(IpAddr, String, u16),
     Disconnect,
     TakeControl,
     RelieveControl,
@@ -28,24 +28,27 @@ pub struct App {
     pub rx: Receiver<AppMessage>
 }
 
-fn get_ip_from_data(data: &Value) -> Result<Ipv4Addr, String> {
+fn get_ip_from_data(data: &Value) -> Result<IpAddr, String> {
     match data.get("ip") {
         // Parse ip string as Ipv4Addr
         Some(ip_str) => match Ipv4Addr::from_str(ip_str.as_str().unwrap()) {
-            Ok(ip) => Ok(ip),
-            Err(_) => Err("Could not parse ip.".to_string())
+            Ok(ip) => Ok(IpAddr::V4(ip)),
+            Err(_) => match Ipv6Addr::from_str(ip_str.as_str().unwrap()) {
+                Ok(ip) => Ok(IpAddr::V6(ip)),
+                Err(_) => Err("Invalid IP.".to_string())
+            }
         }
         None => match data.get("hostname") {
             // Resolve hostname
             Some(hostname_str) => match lookup_host(hostname_str.as_str().unwrap()) {
-                Ok(hostnames) => match hostnames.iter().filter(|ip| {ip.is_ipv4()}).nth(0) {
+                Ok(hostnames) => match hostnames.iter().nth(0) {
                     // Only accept ipv4
-                    Some(std::net::IpAddr::V4(ip)) => Ok(ip.clone()),
-                    _ => Err("No Ipv4 addresses resolved to the specified hostname.".to_string())
+                    Some(ip) => Ok(ip.clone()),
+                    _ => Err("No valid IP addresses resolved to the specified hostname.".to_string())
                 }
                 Err(e) => Err(e.to_string())
             }
-            None => Err("Invalid data passed.".to_string())
+            None => Err("Invalid hostname.".to_string())
         }
     }
 }
@@ -97,13 +100,18 @@ impl App {
                                 },
                             Err(e) => {
                                 web_view.eval(
-                                    get_message_str("client_fail", format!("Invalid IP or hostname. Reason: {}", e).as_str()).as_str()
+                                    get_message_str("client_fail", e.as_str()).as_str()
                                 ).ok();
                             }
                         };
                     },
                     "disconnect" => {tx.send(AppMessage::Disconnect).ok();},
-                    "server" => {tx.send(AppMessage::Server(data["port"].as_u64().unwrap() as u16)).ok();},
+                    "server" => {
+                        tx.send(AppMessage::Server(
+                            data["is_v6"].as_bool().unwrap(), 
+                            data["port"].as_u64().unwrap() as u16)
+                        ).ok();
+                    },
                     "relieve" => {tx.send(AppMessage::RelieveControl).ok();},
                     "take" => {tx.send(AppMessage::TakeControl).ok();}
                     "startup" => {tx.send(AppMessage::Startup).ok();}

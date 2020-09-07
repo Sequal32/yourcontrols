@@ -1,6 +1,6 @@
 use crossbeam_channel::{Sender, Receiver, bounded};
 use serde_json::{Value};
-use std::net::{SocketAddr, IpAddr, TcpStream, Ipv4Addr};
+use std::net::{SocketAddr, IpAddr, TcpStream};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::io::{Write, BufReader, BufRead};
 use std::thread;
@@ -17,12 +17,12 @@ impl Client {
         }
     }
 
-    pub fn start(&self, ip: Ipv4Addr, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error>  {
+    pub fn start(&self, ip: IpAddr, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error>  {
         let (servertx, serverrx) = bounded::<Value>(10);
         let (clienttx, clientrx) = bounded::<ReceiveData>(10);
         let tx2 = clienttx.clone();
 
-        let mut stream = TcpStream::connect_timeout(&SocketAddr::new(IpAddr::V4(ip), port), std::time::Duration::from_secs(5))?;
+        let mut stream = TcpStream::connect_timeout(&SocketAddr::new(ip, port), std::time::Duration::from_secs(5))?;
         let stream_clone = stream.try_clone().unwrap();
 
         let should_stop = self.should_stop.clone();

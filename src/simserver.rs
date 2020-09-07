@@ -33,11 +33,12 @@ impl Server {
         }
     }
 
-    pub fn start(&mut self, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error> {
+    pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error> {
         let (servertx, serverrx) = bounded::<ReceiveData>(0);
         let (clienttx, clientrx) = bounded::<Value>(10);
 
-        let listener = match TcpListener::bind(format!("0.0.0.0:{}", port)) {
+        let bind_ip = if is_ipv6 {"::"} else {"0.0.0.0"};
+        let listener = match TcpListener::bind(format!("{}:{}", bind_ip, port)) {
             Ok(listener) => listener,
             Err(n) => {return Err(n)}
         };

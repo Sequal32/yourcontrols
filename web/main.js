@@ -9,6 +9,10 @@ var client_page_button = document.getElementById("client-page")
 
 var port_input = document.getElementById("port-input")
 var server_input = document.getElementById("server-input")
+// Radios
+var radios = document.getElementById("radios")
+var ip4radio = document.getElementById("ip4")
+var ip6radio = document.getElementById("ip6")
 
 var trying_connection = false
 var is_connected = false
@@ -40,6 +44,8 @@ function OnConnected() {
     trying_connection = false
     server_input.disabled = true
     port_input.disabled = true
+    ip4radio.disabled = true
+    ip6radio.disabled = true
     is_connected = true
 }
 
@@ -51,6 +57,9 @@ function OnDisconnect(text) {
     server_input.disabled = false
     port_input.disabled = false
 
+    ip4radio.disabled = false
+    ip6radio.disabled = false
+
     PagesVisible(true)
     ResetForm()
 }
@@ -60,6 +69,7 @@ function PageChange(isClient) {
     connect_button.hidden = !isClient
     server_button.hidden = isClient
     server_input.hidden = !isClient
+    radios.hidden = isClient
     ResetForm()
 }
 
@@ -73,7 +83,7 @@ function ValidatePort(str) {
 }
 
 function ValidateIp(str) {
-    return str.match(/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi)
+    return str.match(/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi) || str.match(/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/gi)
 }
 
 function ValidateHostname(str) {
@@ -197,17 +207,19 @@ document.getElementById("main-form").onsubmit = function(e) {
         if (!validport) {return}
         let data = {type: "connect", port: parseInt(port_input.value)}
 
-        Validate(server_input, validip || validhostname)
+        Validate(server_input, validip || validhostname || validip6)
         // Match hostname or ip
         if (validhostname) {
             data["hostname"] = server_input.value
-            invoke(data);
         } else if (validip) {
             data["ip"] = server_input.value
-            invoke(data);
         }
+        else {
+            return
+        }
+        invoke(data);
     } else {
         if (!validport) {return}
-        invoke({type: "server", port: parseInt(port_input.value)})
+        invoke({type: "server", port: parseInt(port_input.value), is_v6: ip6radio.checked})
     }
 }
