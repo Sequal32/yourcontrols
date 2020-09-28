@@ -1,10 +1,10 @@
-use crate::bytereader::{StructDataTypes};
-use indexmap::IndexMap;
-use std::time::{Instant};
+use std::{collections::HashMap, time::{Instant}};
 use std::collections::VecDeque;
 
+use crate::util::VarReaderTypes;
+
 struct Record {
-    data: IndexMap<String, StructDataTypes>,
+    data: HashMap<String, VarReaderTypes>,
     time: f64
 }
 
@@ -67,7 +67,7 @@ impl InterpolateStruct {
         }
     }
 
-    pub fn record_latest(&mut self, data: IndexMap<String, StructDataTypes>, time: f64) {
+    pub fn record_latest(&mut self, data: HashMap<String, VarReaderTypes>, time: f64) {
         self.packet_queue.push_front(Record {data, time});
         // Initial packet setting
         if self.latest.is_none() {
@@ -75,7 +75,7 @@ impl InterpolateStruct {
         }
     }
 
-    pub fn record_current(&mut self, data: IndexMap<String, StructDataTypes>) {
+    pub fn record_current(&mut self, data: HashMap<String, VarReaderTypes>) {
         self.current = Some(Record {data, time: get_time()});
     }
 
@@ -95,10 +95,10 @@ impl InterpolateStruct {
         return self.instant_at_latest.elapsed().as_secs_f64();
     }
 
-    pub fn interpolate(&mut self) -> Option<IndexMap<String, StructDataTypes>> {
+    pub fn interpolate(&mut self) -> Option<HashMap<String, VarReaderTypes>> {
         if self.latest.is_none() || self.at_latest.is_none() {return None}
 
-        let mut interpolated = IndexMap::<String, StructDataTypes>::new();
+        let mut interpolated = HashMap::<String, VarReaderTypes>::new();
 
         let current = self.at_latest.as_ref().unwrap();
         let latest = self.latest.as_ref().unwrap();
@@ -113,9 +113,9 @@ impl InterpolateStruct {
         for (key, value) in &latest.data {
             // Interpolate between next position and current position
             match value {
-                StructDataTypes::Bool(_) => {interpolated.insert(key.to_string(), value.clone());},
-                StructDataTypes::F64(n) => {
-                    if let Some(StructDataTypes::F64(current_value)) = current.data.get(key) {
+                VarReaderTypes::Bool(_) => {interpolated.insert(key.to_string(), value.clone());},
+                VarReaderTypes::F64(n) => {
+                    if let Some(VarReaderTypes::F64(current_value)) = current.data.get(key) {
                         let value: f64;
                         if self.special_floats_regular.contains(key) {
                             value = interpolate_f64_degrees(*current_value, *n, alpha);   
@@ -127,7 +127,7 @@ impl InterpolateStruct {
                         else {
                             value = interpolate_f64(*current_value, *n, alpha);
                         }
-                        interpolated.insert(key.to_string(), StructDataTypes::F64(value));
+                        interpolated.insert(key.to_string(), VarReaderTypes::F64(value));
                     }
                 }
                 _ => ()
