@@ -2,7 +2,7 @@ pub mod memwriter;
 
 use bimap::{self, BiHashMap};
 use simconnect::SimConnector;
-use std::{collections::{HashMap, VecDeque, hash_map::Entry}, rc::Rc};
+use std::{collections::{HashMap, VecDeque}};
 use memwriter::MemWriter;
 #[derive(Debug, Copy, Clone)]
 pub struct LVar {
@@ -34,7 +34,6 @@ struct ReceiveData {
 }
 
 pub struct LVars {
-    queue: VecDeque<GetResult>,
     requests: BiHashMap<String, u32>,
     next_request_id: u32,
     request_id: u32,
@@ -47,7 +46,6 @@ const LVARRECEIVE: u32 = 1;
 impl LVars {
     pub fn new(request_id: u32) -> Self {
         Self {
-            queue: VecDeque::new(),
             requests: BiHashMap::new(),
             request_id,
             next_request_id: 0
@@ -91,12 +89,9 @@ impl LVars {
         writer.deallocate();
     }
 
-    pub fn attempt_get(&mut self) -> Option<GetResult> {
-        return self.queue.pop_front();
-    }
-
     pub fn set(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>, val: &str) {
         self.map_request(var_name);
+        
         let mut writer = MemWriter::new(128, 4).unwrap();
         writer.write_i32(0);
         writer.pad(4);
@@ -112,18 +107,20 @@ impl LVars {
         writer.deallocate();
     }
 
-    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
+    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<GetResult> {
         unsafe {
-            if data._base.dwDefineID != LVARRECEIVE {return}
+            if data._base.dwDefineID != LVARRECEIVE {return None}
             let data: ReceiveData = std::mem::transmute_copy(&data._base.dwData);
-            self.queue.push_back(GetResult {
-                var_name: self.get_request_string(data.request_id).clone(),
-                var: LVar {
-                    integer: data.i,
-                    floating: data.f,
-                    // string: data.s
+            return Some(
+                GetResult {
+                    var_name: self.get_request_string(data.request_id).clone(),
+                    var: LVar {
+                        integer: data.i,
+                        floating: data.f,
+                        // string: data.s
+                    }
                 }
-            });
+            );
         }
     }
 

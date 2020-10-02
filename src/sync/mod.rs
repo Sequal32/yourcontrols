@@ -82,17 +82,14 @@ impl LVarSyncer {
         }
     }
 
-    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
-        self.transfer.process_client_data(data);
-    }
-    
-    pub fn get_next_need_sync(&mut self) -> Option<GetResult> {
-        let data = self.transfer.attempt_get()?;
-        if self.tracked.record_and_is_diff(&data.var_name, data.var.clone()) {
-            return Some(data);
-        } else {
-            return None;
+    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<GetResult> {
+        if let Some(data) = self.transfer.process_client_data(data) {
+            // If the data is different...
+            if self.tracked.record_and_is_diff(&data.var_name, data.var.clone()) {
+                return Some(data)
+            }
         }
+        None
     }
 
     pub fn set(&mut self, conn: &SimConnector, var_name: &str, value: &str) {

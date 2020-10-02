@@ -3,16 +3,13 @@ use serde_yaml::{self, Value};
 use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
-use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fs::File, rc::Rc, time::Instant};
-use std::io::Read;
-
+use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fs::File, time::Instant};
 use crate::{sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumSet, Syncable, ToggleSwitch, ToggleSwitchParam}, util::Category, util::InDataTypes, util::VarReaderTypes};
-use crate::util::LocalVar;
 
 pub enum ConfigLoadError {
     FileError,
     ReadError,
-    ParseError
+    ParseError(VarAddError)
 }
 
 #[derive(Debug)]
@@ -25,6 +22,7 @@ pub enum VarAddError {
     YamlParseError(serde_yaml::Error)
 }
 
+// Checks if a field in a Value exists, otherwise will return an error with the name of the field
 macro_rules! check_and_return_field {
     ($field_name:expr, $var:ident, str) => {
         match $var[$field_name].as_str() {
@@ -41,6 +39,7 @@ macro_rules! check_and_return_field {
     };
 }
 
+// Tries to cast the value into a Yaml object, returns an error if failed
 macro_rules! try_cast_yaml {
     ($value: ident) => {
         match serde_yaml::from_value($value) {
@@ -50,11 +49,17 @@ macro_rules! try_cast_yaml {
     }
 }
 
+// Name of aircraft variable and the value of it
 type AVarMap = HashMap<String, VarReaderTypes>;
+// Name of local variable and the value of it
 type LVarMap = HashMap<String, f64>;
+// Name of the event and the DWORD data associated with it
 type EventMap = HashMap<String, u32>;
 
+const LVAR_FETCH_SECONDS: f32 = 0.5;
+
 // Serde types
+// Describes how an aircraft variable can be set using a SimEvent
 #[derive(Deserialize)]
 struct VarEventEntry {
     var_name: String,
@@ -62,6 +67,7 @@ struct VarEventEntry {
     event_name: String
 }
 
+// Describes how an aircraft variable can be set using a "TOGGLE" event
 #[derive(Deserialize)]
 struct ToggleSwitchParamEntry {
     var_name: String,
@@ -70,6 +76,7 @@ struct ToggleSwitchParamEntry {
     event_param: u32
 }
 
+// Describes an aircraft variable to listen for changes
 #[derive(Deserialize)]
 struct VarEntry {
     var_name: String,
@@ -78,22 +85,26 @@ struct VarEntry {
     var_type: InDataTypes
 }
 
+// Describes an event to be listened to for fires
 #[derive(Deserialize)]
 struct EventEntry {
     event_name: String
 }
 
+// Describes a complex system (like a magneto) with 3 states governed by two variables
 #[derive(Deserialize)]
 struct BothSetEntry {
     vars: Vec<VarEntry>,
     mapping: Vec<Value>
 }
 
+// Holds a struct for listening to and syncing data
 struct SyncAction<T> {
     category: String,
     action: Box<dyn Syncable<T>>
 }
 
+// The struct that get_need_sync returns. Holds all the aircraft/local variables and events that have changed since the last call.
 #[derive(Deserialize, Serialize, Debug)]
 pub struct AllNeedSync {
     pub avars: AVarMap,
@@ -102,16 +113,21 @@ pub struct AllNeedSync {
 }
 
 pub struct Definitions {
+    // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchSet, ToggleSwitchParam)
     bool_maps: HashMap<String, Vec<SyncAction<bool>>>,
+    // Data that can be synced using numbers (NumSet)
     num_maps: HashMap<String, Vec<SyncAction<u32>>>,
+    // Events to listen to
     events: Events,
-
+    // Helper struct to retrieve and detect changes in local variables
     lvarstransfer: LVarSyncer,
+    // Helper struct to retrieve *changed* aircraft variables using the CHANGED and TAGGED flags in SimConnect
     avarstransfer: AircraftVars,
-
+    // Maps variable names to categories to determine when to sync
     categories: HashMap<String, Category>,
+    // Aircraft variables that should be synced and not just detected for changes
     sync_vars: HashSet<String>,
-
+    // Fetches LVars every X seconds
     last_lvar_check: Instant,
     // Queues
     aircraft_var_queue: AVarMap,
@@ -183,6 +199,7 @@ impl Definitions {
         let category = get_category_from_string(category)?;
 
         self.avarstransfer.add_var(var_name, var_units, var_type);
+        self.sync_vars.insert(var_name.to_string());
         self.categories.insert(var_name.to_string(), category);
         // self.avars.insert(var_name.to_string(), AircraftVar {
         //     category: category,
@@ -202,6 +219,7 @@ impl Definitions {
         Ok(())
     }
 
+    // Determines whether to add an aircraft variable or local variable based off the variable name
     fn add_var_string(&mut self, category: &str, var_name: &str, var_units: Option<&str>, var_type: InDataTypes) -> Result<String, VarAddError> {
         let actual_var_name = get_real_var_name(var_name);
 
@@ -264,6 +282,7 @@ impl Definitions {
         Ok(())
     }
 
+    // Calls the correct method for the specified "action" type
     fn parse_var(&mut self, category: &str, value: Value) -> Result<(), VarAddError> {
         let type_str = check_and_return_field!("type", value, str);
 
@@ -280,6 +299,7 @@ impl Definitions {
         return Ok(());
     }
 
+    // Iterates over the yaml's "actions"
     fn parse_yaml(&mut self, yaml: IndexMap<String, Vec<Value>>) -> Result<(), VarAddError> {
         for (key, value) in yaml {
             for var_data in value {
@@ -290,6 +310,7 @@ impl Definitions {
         Ok(())
     }
 
+    // Load yaml from file
     pub fn load_config(&mut self, filename: &str) -> Result<(), ConfigLoadError> {
         let file = match File::open(filename) {
             Ok(f) => f,
@@ -301,16 +322,22 @@ impl Definitions {
             Err(e) => return Err(ConfigLoadError::FileError)
         };
 
-        println!("{:?} DONE", self.parse_yaml(yaml));
-
-        Ok(())
+        match self.parse_yaml(yaml) {
+            Ok(_) => Ok(()),
+            Err(e) => Err(ConfigLoadError::ParseError(e))
+        }
     }
 
+    // Processes client data and adds to the result queue if it changed
     pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
-        self.lvarstransfer.process_client_data(data);
-        
+        if let Some(lvar) = self.lvarstransfer.process_client_data(data) {
+
+            self.local_var_queue.insert(lvar.var_name.to_string(), lvar.var.floating);
+
+        }
     }
 
+    // Processes event data name and the additional dword data
     pub fn process_event_data(&mut self, data: &simconnect::SIMCONNECT_RECV_EVENT) {
         if data.uGroupID != self.events.group_id {return}
 
@@ -318,36 +345,38 @@ impl Definitions {
         self.event_queue.insert(event_name.clone(), data.dwData);
     }
 
+    // Process changed aircraft variables and update SyncActions related to it
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
         if self.avarstransfer.define_id != data.dwDefineID {return}
-        // TODO sync
-        for (var_name, value) in self.avarstransfer.read_vars(data) {
+        
+        // Update all syncactions with the changed values
+        for (var_name, value) in data {
             if let Some(actions) = self.bool_maps.get_mut(&var_name) {
-                for action in actions {
-                    action.action.set_current(if data.dwData == 0 {false} else {true})
+                if let VarReaderTypes::Bool(value) = value {
+                    for action in actions {
+                        action.action.set_current(value)
+                    }
                 }
             }
     
             if let Some(actions) = self.num_maps.get_mut(&var_name) {
-                for action in actions {
-                    action.action.set_current(data.dwData)
+                if let VarReaderTypes::I32(value) = value {
+                    for action in actions {
+                        action.action.set_current(value as u32)
+                    }
                 }
             }
 
+            // Queue data for reading
             self.aircraft_var_queue.insert(var_name, value);
         }
     }
 
     pub fn step(&mut self, conn: &SimConnector) {
         // Fetch all lvars
-        if self.last_lvar_check.elapsed().as_secs() > 1 {
+        if self.last_lvar_check.elapsed().as_secs_f32() > LVAR_FETCH_SECONDS {
             self.lvarstransfer.fetch_all(conn);
             self.last_lvar_check = Instant::now();
-        }
-
-        // Check for changes
-        if let Some(lvar) = self.lvarstransfer.get_next_need_sync() {
-            self.local_var_queue.insert(lvar.var_name.to_string(), lvar.var.floating);
         }
     }
 
@@ -367,7 +396,36 @@ impl Definitions {
         return Some(data);
     }
 
-    pub fn write_aircraft_data(&self, conn: &SimConnector, data: &AVarMap) {
+    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap) {
+        let mut to_sync = AVarMap::new();
+        to_sync.reserve(data.len());
+        
+        // Only sync vars that are defined as so
+        for (var_name, data) in data {
+            if self.sync_vars.contains(var_name) {
+                to_sync.insert(var_name.clone(), data.clone());
+            } else {
+                // Otherwise sync them using defined events
+                if let Some(actions) = self.bool_maps.get_mut(var_name) {
+                    if let VarReaderTypes::Bool(value) = data {
+                        for action in actions {
+                            action.action.set_new(*value, conn)
+                        }
+                    }
+                    continue
+                }
+        
+                if let Some(actions) = self.num_maps.get_mut(var_name) {
+                    if let VarReaderTypes::I32(value) = data {
+                        for action in actions {
+                            action.action.set_new(*value as u32, conn)
+                        }
+                    }
+                    continue
+                }
+            }
+        }
+
         self.avarstransfer.set_vars(conn, data);
     }
 
@@ -379,24 +437,11 @@ impl Definitions {
 
     pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap) {
         for (event_name, value) in data {
-            if let Some(actions) = self.bool_maps.get_mut(event_name) {
-                for action in actions {
-                    action.action.set_new(if *value == 0 {false} else {true}, conn)
-                }
-                continue
-            }
-    
-            if let Some(actions) = self.num_maps.get_mut(event_name) {
-                for action in actions {
-                    action.action.set_new(*value, conn)
-                }
-                continue
-            }
-
             self.events.trigger_event(conn, event_name, *value);        
         }
     }
 
+    // To be called when SimConnect connects
     pub fn on_connected(&self, conn: &SimConnector) {
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);

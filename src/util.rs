@@ -14,7 +14,6 @@ pub enum Category {
 #[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq)]
 pub enum VarReaderTypes {
     Bool(bool),
-    U32(u32),
     I32(i32),
     I64(i64),
     F64(f64)
