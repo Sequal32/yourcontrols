@@ -1,7 +1,7 @@
 pub mod control;
 
 use bimap::BiHashMap;
-use std::{collections::{HashMap, HashSet, hash_map::Entry}, rc::Rc};
+use std::{collections::{HashMap, HashSet, hash_map::Entry}, io, rc::Rc};
 use simconnect::SimConnector;
 use crate::{lvars::{LVar, LVars, DiffChecker, GetResult},util::InDataTypes, util::LocalVar, util::VarReaderTypes, varreader::DataId, varreader::SimValue, varreader::VarReader};
 
@@ -134,11 +134,11 @@ impl AircraftVars {
         });
     }
 
-    pub fn read_vars(&self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) -> HashMap<String, VarReaderTypes> {
+    pub fn read_vars(&self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) -> Result<SimValue, io::Error> {
         return unsafe { self.reader.read_from_bytes(data.dwDefineCount, &data.dwData as *const u32) }
     }
 
-    pub fn set_vars(&self, conn: &SimConnector, data: &HashMap<String, VarReaderTypes>) {
+    pub fn set_vars(&self, conn: &SimConnector, data: &SimValue) {
         let mut bytes = self.reader.write_to_data(data);
         conn.set_data_on_sim_object(self.define_id, 0, 0, 0, 0, bytes.as_mut_ptr() as *mut std::ffi::c_void);
     }

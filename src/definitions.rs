@@ -349,26 +349,31 @@ impl Definitions {
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
         if self.avarstransfer.define_id != data.dwDefineID {return}
         
-        // Update all syncactions with the changed values
-        for (var_name, value) in data {
-            if let Some(actions) = self.bool_maps.get_mut(&var_name) {
-                if let VarReaderTypes::Bool(value) = value {
-                    for action in actions {
-                        action.action.set_current(value)
+        // Data might be bad/config files don't line up
+        if let Ok(data) = self.avarstransfer.read_vars(data) {
+
+            // Update all syncactions with the changed values
+            for (var_name, value) in data {
+                if let Some(actions) = self.bool_maps.get_mut(&var_name) {
+                    if let VarReaderTypes::Bool(value) = value {
+                        for action in actions {
+                            action.action.set_current(value)
+                        }
                     }
                 }
-            }
+        
+                if let Some(actions) = self.num_maps.get_mut(&var_name) {
+                    if let VarReaderTypes::I32(value) = value {
+                        for action in actions {
+                            action.action.set_current(value as u32)
+                        }
+                    }
+                }
     
-            if let Some(actions) = self.num_maps.get_mut(&var_name) {
-                if let VarReaderTypes::I32(value) = value {
-                    for action in actions {
-                        action.action.set_current(value as u32)
-                    }
-                }
+                // Queue data for reading
+                self.aircraft_var_queue.insert(var_name, value);
             }
 
-            // Queue data for reading
-            self.aircraft_var_queue.insert(var_name, value);
         }
     }
 

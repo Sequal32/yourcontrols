@@ -1,12 +1,10 @@
 use byteorder::{LittleEndian, ReadBytesExt};
-use std::{collections::HashMap, io::{Cursor}};
+use std::{collections::HashMap, io::{self, Cursor, ErrorKind}};
 use std::ptr;
 use indexmap::IndexMap;
 use serde::{Serialize, Deserialize};
 
 use crate::util::{InDataTypes, VarReaderTypes};
-
-pub type SimValue = IndexMap<String, VarReaderTypes>;
 
 struct DefinitionEntry {
     data_type: InDataTypes,
@@ -23,6 +21,8 @@ pub struct VarReader {
     datum_id_map: HashMap<String, u32>,
     data_map: Vec<DefinitionEntry>,
 }
+
+pub type SimValue = HashMap<String, VarReaderTypes>;
 
 // READ TAGGED DATA
 impl VarReader {
@@ -42,8 +42,8 @@ impl VarReader {
         return datum_id;
     }
 
-    pub fn read_from_bytes(&self, item_count: u32, start: *const u32) -> HashMap<String, VarReaderTypes> {
-        let mut return_data: HashMap<String, VarReaderTypes> = HashMap::new();
+    pub fn read_from_bytes(&self, item_count: u32, start: *const u32) -> Result<SimValue, io::Error> {
+        let mut return_data: SimValue = HashMap::new();
         let mut current_pos = start;
 
         for _ in 0..item_count {
@@ -58,28 +58,31 @@ impl VarReader {
                 let mut cursor = Cursor::new(buf);
 
                 // Read data id
-                let datum_id = cursor.read_u32::<LittleEndian>().unwrap();
+                let datum_id = cursor.read_u32::<LittleEndian>()?;
                 // Get the matching data mapped to the datum id
-                let data = self.data_map.get(datum_id as usize).unwrap();
+                let data = match self.data_map.get(datum_id as usize) {
+                    Some(d) => d,
+                    None => return Err(io::Error::new(ErrorKind::NotFound, "DatumID wasn't defined."))
+                };
                 
                 let result_data;
                 let data_size;
 
                 match data.data_type {
                     InDataTypes::Bool => {
-                        result_data = VarReaderTypes::Bool(std::mem::transmute_copy(&cursor.read_i32::<LittleEndian>().unwrap()));
+                        result_data = VarReaderTypes::Bool(std::mem::transmute_copy(&cursor.read_i32::<LittleEndian>()?));
                         data_size = 1;
                     }
                     InDataTypes::I32 => {
-                        result_data = VarReaderTypes::I32(cursor.read_i32::<LittleEndian>().unwrap());
+                        result_data = VarReaderTypes::I32(cursor.read_i32::<LittleEndian>()?);
                         data_size = 1;
                     }
                     InDataTypes::I64 => {
-                        result_data = VarReaderTypes::I64(cursor.read_i64::<LittleEndian>().unwrap());
+                        result_data = VarReaderTypes::I64(cursor.read_i64::<LittleEndian>()?);
                         data_size = 2;
                     }
                     InDataTypes::F64 => {
-                        result_data = VarReaderTypes::F64(cursor.read_f64::<LittleEndian>().unwrap());
+                        result_data = VarReaderTypes::F64(cursor.read_f64::<LittleEndian>()?);
                         data_size = 2;
                     }
                 };
@@ -90,7 +93,7 @@ impl VarReader {
             }
         }
         
-        return return_data;
+        return Ok(return_data);
     }
 
     pub fn write_to_data(&self, data: &HashMap<String, VarReaderTypes>) -> Vec<u8> {
@@ -156,7 +159,7 @@ mod tests {
         writer.write_i32(1);
         writer.write_f64(128.0);
 
-        let value = definitions.read_from_bytes(definitions.get_number_definitions(), writer.get_data_location() as *const u32);
+        let value = definitions.read_from_bytes(definitions.get_number_definitions(), writer.get_data_location() as *const u32).unwrap();
         assert_eq!(value["PLANE LATITUDE"], VarReaderTypes::F64(42.0));
         assert_eq!(value["PLANE LONGITUDE"], VarReaderTypes::F64(128.0));
 
@@ -172,11 +175,17 @@ mod tests {
         writer.write_i32(4);
         writer.write_i64(3);
 
-        let value = definitions.read_from_bytes(definitions.get_number_definitions(), writer.get_data_location() as *const u32);
+        let value = definitions.read_from_bytes(definitions.get_number_definitions(), writer.get_data_location() as *const u32).unwrap();
 
         assert_eq!(value["ELT ACTIVATED"], VarReaderTypes::Bool(false));
         assert_eq!(value["Some enum"], VarReaderTypes::I32(1));
         assert_eq!(value["Some big enum"], VarReaderTypes::I64(3));
+
+        // Test bad data
+        writer.write_i32(100);
+        writer.write_bool(false);
+        
+        assert!(definitions.read_from_bytes(definitions.get_number_definitions() + 1, writer.get_data_location() as *const u32).is_err());
     }
     
     #[test]
@@ -193,7 +202,7 @@ mod tests {
         let data = definitions.write_to_data(&new_data);
 
         // Read
-        let values = definitions.read_from_bytes(definitions.get_number_definitions(), data.as_ptr() as *const u32);
+        let values = definitions.read_from_bytes(definitions.get_number_definitions(), data.as_ptr() as *const u32).unwrap();
         assert_eq!(values["PLANE LATITUDE"], VarReaderTypes::F64(42.0));
         assert_eq!(values["PLANE LONGITUDE"], VarReaderTypes::F64(128.0));
     }

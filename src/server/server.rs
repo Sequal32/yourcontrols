@@ -153,8 +153,8 @@ impl Server {
                 // Clients to remove 
                 let mut to_drop = Vec::new();
                 // Read any data from client 
-                let next_send_data: Option<&[u8]> = match transfer.client_rx.try_recv() {
-                    Ok(data) => Some((data.to_string() + "\n").as_bytes()),
+                let next_send_string: Option<String> = match transfer.client_rx.try_recv() {
+                    Ok(data) => Some(data.to_string() + "\n"),
                     Err(_) => None
                 };
 
@@ -179,7 +179,7 @@ impl Server {
                         }
                     }
 
-                    match client.writer.write_to(&client.stream) {
+                    match client.writer.write_to(&mut client.stream) {
                         Ok(_) => {}
                         // Write error - connection dropped
                         Err(_) => {
@@ -187,8 +187,8 @@ impl Server {
                         }
                     };
                     // Send data from app to clients
-                    if let Some(data) = next_send_data {
-                        client.writer.to_write(data)
+                    if let Some(data) = next_send_string.as_ref() {
+                        client.writer.to_write(data.as_bytes())
                     }
                 }
     
