@@ -1,12 +1,13 @@
 pub mod control;
 
 use bimap::BiHashMap;
-use std::{collections::{HashMap, HashSet, hash_map::Entry}, io, rc::Rc};
+use std::{collections::{HashMap, HashSet}, io};
 use simconnect::SimConnector;
-use crate::{lvars::{LVar, LVars, DiffChecker, GetResult},util::InDataTypes, util::LocalVar, util::VarReaderTypes, varreader::DataId, varreader::SimValue, varreader::VarReader};
+use crate::{lvars::{LVar, LVars, DiffChecker, GetResult},util::InDataTypes, varreader::SimValue, varreader::VarReader};
 
 pub struct Events {
     event_map: BiHashMap<String, u32>,
+    should_notify: HashSet<u32>,
     pub group_id: u32
 }
 
@@ -14,11 +15,12 @@ impl Events {
     pub fn new(group_id: u32) -> Self {
         Self { 
             event_map: BiHashMap::new(),
+            should_notify: HashSet::new(),
             group_id
         } 
     }
 
-    pub fn get_or_map_event_id(&mut self, event_name: &str) -> u32 {
+    pub fn get_or_map_event_id(&mut self, event_name: &str, should_notify: bool) -> u32 {
         let next_event_id = self.event_map.len() as u32;
 
         if let Some(event_id) = self.event_map.get_by_left(&event_name.to_string()) {
@@ -28,6 +30,10 @@ impl Events {
         } else {
 
             self.event_map.insert(event_name.to_string(), next_event_id);
+
+            if should_notify {
+                self.should_notify.insert(next_event_id);
+            }
 
             return next_event_id
         }
@@ -44,7 +50,10 @@ impl Events {
     pub fn on_connected(&self, conn: &SimConnector) {
         for (event_name, event_id) in self.event_map.iter() {
             conn.map_client_event_to_sim_event(*event_id, event_name);
-            conn.add_client_event_to_notification_group(self.group_id, *event_id, true);
+
+            if self.should_notify.contains(event_id) {
+                conn.add_client_event_to_notification_group(self.group_id, *event_id, true);
+            }
         }
     }
 }

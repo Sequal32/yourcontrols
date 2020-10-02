@@ -238,7 +238,7 @@ impl Definitions {
     }
 
     fn add_toggle_switch(&mut self, category: &str, var: VarEventEntry) -> Result<(), VarAddError> { 
-        let event_id = self.events.get_or_map_event_id(&var.event_name);
+        let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
         let var_string = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
         self.add_bool_mapping(category, &var_string, Box::new(ToggleSwitch::new(event_id)));
@@ -247,7 +247,7 @@ impl Definitions {
     }
 
     fn add_toggle_switch_param(&mut self, category: &str, var: ToggleSwitchParamEntry) -> Result<(), VarAddError> {
-        let event_id = self.events.get_or_map_event_id(&var.event_name);
+        let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
         let var_string = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
         self.add_bool_mapping(category, &var_string, Box::new(ToggleSwitchParam::new(event_id, var.event_param as u32)));
@@ -256,7 +256,7 @@ impl Definitions {
     }
 
     fn add_num_set(&mut self, category: &str, var: VarEventEntry) -> Result<(), VarAddError> {
-        let event_id = self.events.get_or_map_event_id(&var.event_name);
+        let event_id = self.events.get_or_map_event_id(&var.event_name, false);
         self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
         self.add_num_mapping(category, &var.var_name, Box::new(NumSet::new(event_id)));
 
@@ -276,7 +276,7 @@ impl Definitions {
     fn add_event(&mut self, category: &str, event: EventEntry) -> Result<(), VarAddError> {
         let category = get_category_from_string(category)?;
 
-        self.events.get_or_map_event_id(&event.event_name);
+        self.events.get_or_map_event_id(&event.event_name, true);
         self.categories.insert(event.event_name.clone(), category);
 
         Ok(())
