@@ -10,6 +10,7 @@ use std::sync::atomic::{AtomicBool, AtomicU16, Ordering::SeqCst};
 use std::{str::FromStr};
 use super::{PartialReader, PartialWriter, TransferStoppedReason, process_message, util::{ReceiveData, TransferClient}};
 
+#[derive(Debug, Copy, Clone)]
 pub enum PortForwardResult {
     GatewayNotFound,
     LocalAddrNotFound,
@@ -84,6 +85,7 @@ impl Server {
         // Attempt to port forward
         if let Err(e) = self.port_forward(port) {
             self.port_error = Some(e);
+            println!("{:?}", e);
         }
 
         // Start listening for connections
@@ -164,6 +166,10 @@ impl Server {
                     // Read buffs
                     let mut buf = [0; 1024];
                     match client.stream.read(&mut buf) {
+                        // Read nothing - conenction dropped
+                        Ok(0) => {
+                            to_drop.push(index);
+                        }
                         Ok(_) => {
                             // Append bytes to reader
                             if let Some(data) = client.reader.try_read_string(&buf) {
@@ -173,16 +179,14 @@ impl Server {
                                 }
                             }
                         }
-                        // Read error - conenction dropped
-                        Err(_) => {
-                            to_drop.push(index);
-                        }
+                        
+                        Err(e) => ()
                     }
 
                     match client.writer.write_to(&mut client.stream) {
                         Ok(_) => {}
                         // Write error - connection dropped
-                        Err(_) => {
+                        Err(e) => {
                             to_drop.push(index);
                         }
                     };
@@ -205,8 +209,8 @@ impl Server {
                 }
 
                 if should_stop.load(SeqCst) {break}
+                sleep(Duration::from_millis(10));
             }
-            sleep(Duration::from_millis(10));
         });
     }
 
@@ -221,6 +225,7 @@ impl TransferClient for Server {
     }
 
     fn stop(&self) {
+        self.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::Requested)).ok();
         self.should_stop.store(true, SeqCst);
     }
 
@@ -229,7 +234,6 @@ impl TransferClient for Server {
     }
 
     fn stopped(&self) -> bool {
-        self.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::Requested)).ok();
         self.should_stop.load(SeqCst)
     }
 

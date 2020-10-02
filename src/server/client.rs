@@ -71,7 +71,12 @@ impl Client {
                 // Read data from server
                 let mut buf = [0; 1024];
                 match transfer.stream.read(&mut buf) {
-                    // Append data to reader
+                    // No data read, connection dropped
+                    Ok(0) => {
+                        transfer.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::ConnectionLost)).ok();
+                        should_stop.store(true, SeqCst);
+                        break;
+                    }
                     Ok(_) => {
                         if let Some(data) = transfer.reader.try_read_string(&buf) {
                             // Deserialize json
@@ -80,15 +85,8 @@ impl Client {
                             }
                         }
                     }
-                    // Connection dropped
-                    Err(_) => {
-                        transfer.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::ConnectionLost)).ok();
-                        should_stop.store(true, SeqCst);
-                        break;
-                    }
+                    Err(_) => {}
                 };
-
-               
     
                 // Send data from app to clients
                 if let Ok(data) = transfer.client_rx.try_recv() {
