@@ -1,17 +1,14 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
 use igd::{search_gateway, PortMappingProtocol};
 use local_ipaddress;
-use serde_json::{Value, json};
+use serde_json::{Value};
 use thread::sleep;
 use std::{io::{Read, Write}, net::IpAddr, net::TcpStream, thread, time::Duration};
 use std::net::{TcpListener, Ipv4Addr, SocketAddrV4};
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, AtomicU16, Ordering::SeqCst};
 use std::{str::FromStr};
-
-use crate::definitions::AllNeedSync;
-
-use super::util::{ControlTransferType, ReceiveData, TransferClient};
+use super::{process_message, util::{ReceiveData, TransferClient}};
 
 pub enum PortForwardResult {
     GatewayNotFound,
@@ -52,6 +49,19 @@ struct Client {
 struct TransferStruct {
     // Internal array of receivers to send receive data from clients
     clients: Vec<Client>,
+    // Internally receive data to send to clients
+    client_rx: Receiver<Value>,
+    // Send data to app to receive client data
+    server_tx: Sender<ReceiveData>,
+}
+
+pub struct Server {
+    number_connections: Arc<AtomicU16>,
+    port_error: Option<PortForwardResult>,
+    should_stop: Arc<AtomicBool>,
+
+    transfer: Option<Arc<Mutex<TransferStruct>>>,
+
     // Send data to clients
     client_tx: Sender<Value>,
     // Internally receive data to send to clients
@@ -63,21 +73,17 @@ struct TransferStruct {
     server_rx: Receiver<ReceiveData>,
 }
 
-pub struct Server {
-    number_connections: Arc<AtomicU16>,
-    port_error: Option<PortForwardResult>,
-    should_stop: Arc<AtomicBool>,
-
-    transfer: Option<Arc<Mutex<TransferStruct>>>
-}
-
 impl Server {
     pub fn new() -> Self  {
+        let (client_tx, client_rx) = unbounded();
+        let (server_tx, server_rx) = unbounded();
+
         return Self {
             number_connections: Arc::new(AtomicU16::new(0)),
             should_stop: Arc::new(AtomicBool::new(false)),
             port_error: None,
-            transfer: None
+            transfer: None,
+            client_rx, client_tx, server_rx, server_tx
         }
     }
 
@@ -95,7 +101,7 @@ impl Server {
         Ok(())
     }
 
-    pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error> {
+    pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(), std::io::Error> {
         // Attempt to port forward
         if let Err(e) = self.port_forward(port) {
             self.port_error = Some(e);
@@ -111,17 +117,12 @@ impl Server {
         // Needed to stop the server
         listener.set_nonblocking(true).ok();
 
-        let (client_tx, client_rx) = unbounded();
-        let (server_tx, server_rx) = unbounded();
-
         // to be used in run()
         self.transfer = Some(Arc::new(Mutex::new(
             TransferStruct {
                 clients: Vec::new(),
-                client_rx: client_rx.clone(), 
-                client_tx: client_tx.clone(),
-                server_rx: server_rx.clone(), 
-                server_tx: server_tx.clone()
+                client_rx: self.client_rx.clone(), 
+                server_tx: self.server_tx.clone()
             }
         )));
 
@@ -136,8 +137,10 @@ impl Server {
                 if let Ok((stream, addr)) = listener.accept() {
                     // Do not block as we need to iterate over all streams
                     stream.set_nonblocking(true).unwrap();
+
+                    let mut transfer = transfer.lock().unwrap();
                     // Append client transfers into vector
-                    transfer.lock().unwrap().clients.push(
+                    transfer.clients.push(
                         Client {
                             stream,
                             reader: PartialReader::new(),
@@ -146,7 +149,7 @@ impl Server {
                     );
                     // Increment number of connections and tell app
                     number_connections.fetch_add(1, SeqCst);
-                    server_tx.send(ReceiveData::NewConnection(addr.ip())).ok();
+                    transfer.server_tx.send(ReceiveData::NewConnection(addr.ip())).ok();
                 }
                 // Break the loop if the server's stopped
                 if should_stop.load(SeqCst) {break}
@@ -155,7 +158,7 @@ impl Server {
         });
         
 
-        return Ok((client_tx.clone(), server_rx.clone()));
+        return Ok(());
     }
 
     pub fn run(&mut self) {
@@ -166,7 +169,7 @@ impl Server {
         thread::spawn(move || {
             loop {
                 let transfer = &mut transfer.lock().unwrap();
-                let mut to_write: Vec<Value> = Vec::new();
+                let mut to_write = Vec::new();
     
                 // Read incoming stream data
                 for client in transfer.clients.iter_mut() {
@@ -176,8 +179,8 @@ impl Server {
     
                     // Append bytes to reader
                     if let Some(data) = client.reader.try_read_string(&buf) {
-                        // Deserialize json
-                        if let Ok(data) = serde_json::from_str(data.as_str()) {
+                        // Parse payload
+                        if let Ok(data) = process_message(&data) {
                             to_write.push(data);
                         }
                     }
@@ -185,7 +188,7 @@ impl Server {
     
                 // Send resulting incoming stream data to app
                 for data in to_write {
-                    transfer.server_tx.send(ReceiveData::Data(data)).ok();
+                    transfer.server_tx.send(data).ok();
                 }
     
                 // Send data from app to clients
@@ -237,34 +240,12 @@ impl TransferClient for Server {
         self.should_stop.load(SeqCst)
     }
 
-    fn change_control(&self, control_type: ControlTransferType) {
-        match control_type {
-            ControlTransferType::Take => {
-                self.send_value(json!({
-                    "type":"take_control"
-                }));
-            }
-            ControlTransferType::Relieve => {
-                self.send_value(json!({
-                    "type":"relieve_control"
-                }));
-            }
-            ControlTransferType::Cancel => {
-                self.send_value(json!({
-                    "type":"cancel_relieve"
-                }));
-            }
-        }
+    fn get_transmitter(&self) -> &Sender<Value> {
+        return &self.client_tx;
     }
 
-    fn send_value(&self, message: Value) {
-        self.transfer.as_ref().unwrap().lock().unwrap().client_tx.send(
-            message
-        ).ok();
-    }
-
-    fn update(&self, data: AllNeedSync) {
-        self.send_value(serde_json::to_value(data).unwrap());
+    fn get_receiver(&self) ->& Receiver<ReceiveData> {
+        return &self.server_rx;
     }
 }
 

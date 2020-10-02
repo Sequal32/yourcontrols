@@ -4,9 +4,8 @@ mod app;
 mod definitions;
 mod interpolate;
 mod lvars;
-mod simclient;
+mod server;
 mod simconfig;
-mod simserver;
 mod sync;
 mod syncdefs;
 mod varreader;
@@ -17,39 +16,14 @@ use definitions::Definitions;
 use crossbeam_channel::{Receiver, Sender};
 use interpolate::InterpolateStruct;
 use serde_json::{Value, json};
-use simclient::Client;
 use simconfig::Config;
+use server::{Client, ControlTransferType, ReceiveData, Server, TransferClient};
 use simconnect::{self, DispatchResult};
-use simserver::{TransferClient, ReceiveData};
-use simserver::Server;
-use std::{io::Error, net::{IpAddr}, rc::Rc, thread, time::Duration, time::Instant};
+use std::{io::Error, net::{IpAddr}, thread, time::Duration, time::Instant};
 
 use sync::*;
 use control::*;
 
-struct TransferStruct {
-    tx: Sender<Value>,
-    rx: Receiver<ReceiveData>,
-    client: Box<dyn TransferClient>
-}
-
-fn start_server(is_v6: bool, port: u16) -> Result<TransferStruct, Error> {
-    let mut server = Server::new();
-    let (tx, rx) = server.start(is_v6, port)?;
-
-    Ok(TransferStruct {
-        tx, rx, client: Box::new(server)
-    })
-}
-
-fn start_client(ip: IpAddr, port: u16) -> Result<TransferStruct, Error> {
-    let client = Client::new();
-    let (tx, rx) = client.start(ip, port)?;
-
-    Ok(TransferStruct {
-        tx, rx, client: Box::new(client)
-    })
-}
 
 const CONFIG_FILENAME: &str = "config.json";
 const APP_STARTUP_SLEEP_TIME: Duration = Duration::from_millis(100);
@@ -79,7 +53,7 @@ fn main() {
     let mut app_interface = App::setup();
 
     // Transfer
-    let mut transfer_client: Option<TransferStruct> = None;
+    let mut transfer_client: Option<Box<dyn TransferClient>> = None;
 
     //
     let mut update_rate_instant = Instant::now();
@@ -100,9 +74,6 @@ fn main() {
     loop {
         let mut was_no_message = true;
         if let Some(client) = transfer_client.as_mut() {
-            let tx = &client.tx;
-            let rx = &client.rx;
-
             let message = conn.get_next_message();
             // Simconnect message
             match message {
@@ -124,52 +95,58 @@ fn main() {
 
             definitions.step(&conn);
             // Data from the person in control
-            match rx.try_recv() {
-                Ok(ReceiveData::Data(value)) => match value["type"].as_str().unwrap() {
-                    
-                    "relieve_control" => {
-                        control.controls_available();
-                        app_interface.can_take_control();
-                    },
-                    "transfer_control" => {
-                        if control.has_control() {
-                            // Freeze aircraft
-                            control.lose_control(&conn);
-                            // Hide relieve control button
-                            app_interface.lose_control();
-                            interpolation.reset();
-                            need_update = true;
+            match client.get_next_message() {
+                Ok(ReceiveData::Update(sync_data)) => {
+                    todo!()
+                }
+                Ok(ReceiveData::ChangeControl(control_type)) => {
+                    match control_type {
+                        ControlTransferType::Take => {
+                            if control.has_control() {
+                                // Freeze aircraft
+                                control.lose_control(&conn);
+                                // Hide relieve control button
+                                app_interface.lose_control();
+                                interpolation.reset();
+                                need_update = true;
+                            }
                         }
-                    },
-                    "cancel_relieve" => {
-                        control.controls_unavailable();
-                        app_interface.lose_control();
+                        ControlTransferType::Relieve => {
+                            control.controls_available();
+                            app_interface.can_take_control();
+                        }
+                        ControlTransferType::Cancel => {
+                            control.controls_unavailable();
+                            app_interface.lose_control();
+                        }
                     }
-                    _ => ()
-                },
-                Ok(ReceiveData::NewConnection(_)) | Ok(ReceiveData::ConnectionLost(_)) => {
-                    app_interface.server_started(client.client.get_connected_count());
-                },
+                    
+                }
+                // Increment client counter
+                Ok(ReceiveData::NewConnection(ip)) | Ok(ReceiveData::ConnectionLost(ip)) => {
+                    app_interface.server_started(client.get_connected_count());
+                }
                 Ok(ReceiveData::TransferStopped(reason)) => {
                     app_interface.client_fail(reason.as_str());
                 }
-                _ => ()
+                Ok(_) | Err(_) => ()
             }
 
             // Handle sync vars
             let values = definitions.get_need_sync();
-            if values.is_some() {
+            if values.is_some() && control.has_control() {
                 println!("{:?}", values);
+                client.update(values.unwrap());
             }
 
             if !control.has_control() {
                 if control.time_since_control_change().as_secs() > 10 && interpolation.get_time_since_last_position() > config.conn_timeout {
-                    if !client.client.is_server() {
-                        client.client.stop();
+                    if client.is_server() {
+                        control.take_control(&conn);
+                    } else {
+                        client.stop();
                         app_interface.client_fail("Peer timeout.");
                         was_error = true;
-                    } else {
-                        control.take_control(&conn);
                     }
                 }
 
@@ -189,13 +166,11 @@ fn main() {
             // Relieve control response timeout
             } else if control.is_relieving_control() && control.time_since_relieve().as_secs() > 20 {
                 control.stop_relieiving();
-                tx.try_send(json!({
-                    "type": "cancel_relieve"
-                })).ok();
+                client.change_control(ControlTransferType::Cancel);
             }
 
             // Server stopped or client disconnected
-            if client.client.stopped() {
+            if client.stopped() {
                 control.take_control(&conn);
                 transfer_client = None;
                 // Message already set
@@ -207,15 +182,20 @@ fn main() {
         // GUI
         match app_interface.rx.try_recv() {
             Ok(msg) => match msg {
-                AppMessage::Server(is_v6, port ) => {
+                AppMessage::Server(is_ipv6, port ) => {
                     if connected {
+                        // Display attempting to start server
                         app_interface.attempt();
-                        match start_server(is_v6, port) {
+
+                        let mut server = Server::new();
+                        match server.start(is_ipv6, port) {
                             Ok(transfer) => {
+                                // Start the server loop
+                                server.run();
                                 // Display server started message
                                 app_interface.server_started(0);
                                 // Assign server as transfer client
-                                transfer_client = Some(transfer);
+                                transfer_client = Some(Box::new(server));
                                 // Unfreeze aircraft
                                 control.take_control(&conn);
                                 app_interface.gain_control();
@@ -229,13 +209,17 @@ fn main() {
                 }
                 AppMessage::Connect(ip, input_string, port) => {
                     if connected {
+                        // Display attempting to start server
                         app_interface.attempt();
-                        match start_client(ip, port) {
+
+                        let mut client = Client::new();
+                        
+                        match client.start(ip, port) {
                             Ok(transfer) => {
                                 // Display connected message
                                 app_interface.connected();
                                 // Assign client as the transfer client
-                                transfer_client = Some(transfer);
+                                transfer_client = Some(Box::new(client));
                                 // Freeze aircraft
                                 control.lose_control(&conn);
                             }
@@ -251,22 +235,24 @@ fn main() {
                 }
                 AppMessage::Disconnect => {
                     if let Some(client) = transfer_client.as_ref() {
-                        client.client.stop();
+                        client.stop();
                     }
                 }
                 AppMessage::TakeControl => {
                     if control.take_control(&conn) {
-                        app_interface.gain_control();
-                        transfer_client.as_ref().unwrap().tx.try_send(json!({
-                            "type": "transfer_control"
-                        })).ok();
+
+                        if let Some(client) = transfer_client.as_ref() {
+                            app_interface.gain_control();
+                            client.change_control(ControlTransferType::Take)
+                        }
+
                     }
                 }
                 AppMessage::RelieveControl => {
-                    control.relieve_control();
-                    transfer_client.as_ref().unwrap().tx.try_send(json!({
-                        "type": "relieve_control"
-                    })).ok();
+                    if let Some(client) = transfer_client.as_ref() {
+                        control.relieve_control();
+                        client.change_control(ControlTransferType::Relieve)
+                    }
                 },
                 AppMessage::Startup => {
                     thread::sleep(APP_STARTUP_SLEEP_TIME);

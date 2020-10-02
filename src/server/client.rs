@@ -4,58 +4,60 @@ use std::{io::Read, net::{SocketAddr, IpAddr, TcpStream}, sync::Mutex};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::io::Write;
 use std::thread;
-use crate::{definitions::AllNeedSync};
 
-use super::{server::PartialReader, util::{ControlTransferType, ReceiveData, TransferClient}};
+use super::{process_message, server::PartialReader, util::{ControlTransferType, ReceiveData, TransferClient}};
 
 struct TransferStruct {
     stream: TcpStream,
     
     reader: PartialReader,
-    // Send data to clients
-    client_tx: Sender<Value>,
     // Internally receive data to send to clients
     client_rx: Receiver<Value>,
-
     // Send data to app to receive client data
     server_tx: Sender<ReceiveData>,
-    // Recieve data from clients
-    server_rx: Receiver<ReceiveData>,
+    
 }
 
 pub struct Client {
     should_stop: Arc<AtomicBool>,
-    transfer: Option<Arc<Mutex<TransferStruct>>>
+    transfer: Option<Arc<Mutex<TransferStruct>>>,
+    // Recieve data from clients
+    server_rx: Receiver<ReceiveData>,
+    // Send data to clients
+    client_tx: Sender<Value>,
+    // Internally receive data to send to clients
+    client_rx: Receiver<Value>,
+    // Send data to app to receive client data
+    server_tx: Sender<ReceiveData>,
 }
 
 impl Client {
     pub fn new() -> Self {
+        let (client_tx, client_rx) = unbounded();
+        let (server_tx, server_rx) = unbounded();
+
         Self {
             should_stop: Arc::new(AtomicBool::new(false)),
-            transfer: None
+            transfer: None,
+            client_rx, client_tx, server_rx, server_tx
         }
     }
 
-    pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(Sender<Value>, Receiver<ReceiveData>), std::io::Error>  {
+    pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), std::io::Error>  {
         let stream = TcpStream::connect_timeout(&SocketAddr::new(ip, port), std::time::Duration::from_secs(5))?;
         stream.set_nonblocking(true).unwrap();
-
-        let (client_tx, client_rx) = unbounded();
-        let (server_tx, server_rx) = unbounded();
 
         // to be used in run()
         self.transfer = Some(Arc::new(Mutex::new(
             TransferStruct {
                 stream: stream,
                 reader: PartialReader::new(),
-                client_tx: client_tx.clone(),
-                client_rx: client_rx.clone(),
-                server_tx: server_tx.clone(),
-                server_rx: server_rx.clone(),
+                client_rx: self.client_rx.clone(),
+                server_tx: self.server_tx.clone(),
             }
         )));
 
-        return Ok((client_tx, server_rx));
+        return Ok(());
     }
 
     pub fn run(&self) {
@@ -72,8 +74,8 @@ impl Client {
 
                 if let Some(data) = transfer.reader.try_read_string(&buf) {
                     // Deserialize json
-                    if let Ok(data) = serde_json::from_str(data.as_str()) {
-                        transfer.server_tx.send(ReceiveData::Data(data));
+                    if let Ok(data) = process_message(&data) {
+                        transfer.server_tx.send(data);
                     }
                 }
     
@@ -133,13 +135,11 @@ impl TransferClient for Client {
         }
     }
 
-    fn send_value(&self, message: Value) {
-        self.transfer.as_ref().unwrap().lock().unwrap().client_tx.send(
-            message
-        ).ok();
+    fn get_transmitter(&self) -> &Sender<Value> {
+        return &self.client_tx
     }
 
-    fn update(&self, data: AllNeedSync) {
-        self.send_value(serde_json::to_value(data).unwrap());
+    fn get_receiver(&self) -> &Receiver<ReceiveData> {
+        return &self.server_rx
     }
 }
