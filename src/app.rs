@@ -1,5 +1,5 @@
 use base64;
-use crossbeam_channel::{Receiver, unbounded};
+use crossbeam_channel::{Receiver, TryRecvError, unbounded};
 use dns_lookup::lookup_host;
 use std::{str::FromStr, net::{Ipv6Addr, Ipv4Addr, IpAddr}, io::Read};
 use std::fs::File;
@@ -25,7 +25,8 @@ fn get_message_str(type_string: &str, data: &str) -> String {
 pub struct App {
     app_handle: Arc<Mutex<Option<web_view::Handle<i32>>>>,
     exited: Arc<AtomicBool>,
-    pub rx: Receiver<AppMessage>
+    rx: Receiver<AppMessage>,
+    was_overloaded: bool
 }
 
 fn get_ip_from_data(data: &Value) -> Result<IpAddr, String> {
@@ -138,12 +139,17 @@ impl App {
         Self {
             app_handle: handle,
             exited: exited,
-            rx
+            rx,
+            was_overloaded: false
         }
     }
 
     pub fn exited(&self) -> bool {
         return self.exited.load(SeqCst);
+    }
+
+    pub fn get_next_message(&self) -> Result<AppMessage, TryRecvError> {
+        return self.rx.try_recv();
     }
 
     pub fn invoke(&mut self, type_string: &str, data: Option<&str>) {
@@ -212,5 +218,13 @@ impl App {
 
     pub fn stable(&mut self) {
         self.invoke("stable", None);
+    }
+
+    pub fn update_overloaded(&mut self, is_overloaded: bool) {
+        if is_overloaded && !self.was_overloaded {
+            self.overloaded()
+        } else if !is_overloaded && self.was_overloaded {
+            self.stable()
+        }
     }
 }

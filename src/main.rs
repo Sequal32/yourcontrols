@@ -64,7 +64,6 @@ fn main() {
     let mut need_update = false;
     let mut was_error = false;
     let mut was_overloaded = false;
-    let mut time_since_control = Instant::now();
     // Interpolation Vars //
     let mut interpolation = InterpolateStruct::new(config.buffer_size);
     interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
@@ -123,13 +122,13 @@ fn main() {
                     
                 }
                 // Increment client counter
-                Ok(ReceiveData::NewConnection(ip)) | Ok(ReceiveData::ConnectionLost(ip)) => {
+                Ok(ReceiveData::NewConnection(_)) | Ok(ReceiveData::ConnectionLost(_)) => {
                     app_interface.server_started(client.get_connected_count());
                 }
                 Ok(ReceiveData::TransferStopped(reason)) => {
                     app_interface.client_fail(reason.as_str());
                 }
-                Ok(_) | Err(_) => ()
+                Err(_) => ()
             }
 
             // Handle sync vars
@@ -140,6 +139,8 @@ fn main() {
             }
 
             if !control.has_control() {
+                // Message timeout
+                // TODO: make timeout rely on server messages instead of interpolation
                 if control.time_since_control_change().as_secs() > 10 && interpolation.get_time_since_last_position() > config.conn_timeout {
                     if client.is_server() {
                         control.take_control(&conn);
@@ -150,14 +151,10 @@ fn main() {
                     }
                 }
 
-                if interpolation.overloaded() && !was_overloaded {
-                    was_overloaded = true;
-                    app_interface.overloaded();
-                } else if !interpolation.overloaded() && was_overloaded {
-                    was_overloaded = false;
-                    app_interface.stable();
-                }
 
+                app_interface.update_overloaded(interpolation.overloaded());
+
+                // Interpolate position if current position was set
                 if !need_update {
                     if let Some(updated_map) = interpolation.interpolate() {
                         definitions.write_aircraft_data(&conn, &updated_map);
@@ -180,7 +177,7 @@ fn main() {
         }
 
         // GUI
-        match app_interface.rx.try_recv() {
+        match app_interface.get_next_message() {
             Ok(msg) => match msg {
                 AppMessage::Server(is_ipv6, port ) => {
                     if connected {
@@ -189,7 +186,7 @@ fn main() {
 
                         let mut server = Server::new();
                         match server.start(is_ipv6, port) {
-                            Ok(transfer) => {
+                            Ok(_) => {
                                 // Start the server loop
                                 server.run();
                                 // Display server started message
@@ -215,7 +212,7 @@ fn main() {
                         let mut client = Client::new();
                         
                         match client.start(ip, port) {
-                            Ok(transfer) => {
+                            Ok(_) => {
                                 // Display connected message
                                 app_interface.connected();
                                 // Assign client as the transfer client
