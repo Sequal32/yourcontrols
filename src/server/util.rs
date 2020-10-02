@@ -65,7 +65,7 @@ pub fn process_message(message: &str) -> Result<ReceiveData, ParseError> {
         Some("take_control") => Ok(ReceiveData::ChangeControl(ControlTransferType::Take)),
         Some("relieve_control") => Ok(ReceiveData::ChangeControl(ControlTransferType::Relieve)),
         Some("cancel_relieve") => Ok(ReceiveData::ChangeControl(ControlTransferType::Cancel)),
-        Some(_) => Ok(ReceiveData::Data(value)),
+        Some(_) => Err(ParseError::InvalidType),
         _ => Err(ParseError::FieldMissing("type")),
     }
 }
@@ -86,7 +86,6 @@ pub enum ControlTransferType {
 
 // Various types of data to receive
 pub enum ReceiveData {
-    Data(Value),
     NewConnection(IpAddr),
     ConnectionLost(IpAddr),
     TransferStopped(String),

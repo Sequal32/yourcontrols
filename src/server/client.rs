@@ -70,14 +70,23 @@ impl Client {
     
                 // Read data from server
                 let mut buf = [0; 1024];
-                transfer.stream.read(&mut buf);
-
-                if let Some(data) = transfer.reader.try_read_string(&buf) {
-                    // Deserialize json
-                    if let Ok(data) = process_message(&data) {
-                        transfer.server_tx.send(data);
+                match transfer.stream.read(&mut buf) {
+                    // Append data to reader
+                    Ok(_) => {
+                        if let Some(data) = transfer.reader.try_read_string(&buf) {
+                            // Deserialize json
+                            if let Ok(data) = process_message(&data) {
+                                transfer.server_tx.send(data).ok();
+                            }
+                        }
                     }
-                }
+                    // Connection dropped
+                    Err(_) => {
+                        should_stop.store(true, SeqCst);
+                    }
+                };
+
+               
     
                 // Send data from app to clients
                 if let Ok(data) = transfer.client_rx.try_recv() {
