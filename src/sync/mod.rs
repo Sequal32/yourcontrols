@@ -149,7 +149,7 @@ impl AircraftVars {
 
     pub fn set_vars(&self, conn: &SimConnector, data: &SimValue) {
         let mut bytes = self.reader.write_to_data(data);
-        conn.set_data_on_sim_object(self.define_id, 0, 0, 0, 0, bytes.as_mut_ptr() as *mut std::ffi::c_void);
+        conn.set_data_on_sim_object(self.define_id, 0, simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED, data.len() as u32, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
     }
 
     pub fn on_connected(&self, conn: &SimConnector) {

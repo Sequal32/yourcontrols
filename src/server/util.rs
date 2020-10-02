@@ -18,7 +18,10 @@ pub trait TransferClient {
     }
 
     fn update(&self, data: AllNeedSync) {
-        self.send_value(serde_json::to_value(data).unwrap());
+        self.send_value(json!({
+            "type":"update",
+            "data":data
+        }));
     }
 
     fn get_next_message(&self) -> Result<ReceiveData, crossbeam_channel::TryRecvError> {
@@ -58,10 +61,10 @@ impl PartialReader {
     }
 
     pub fn try_read_string(&mut self, buf: &[u8]) -> Option<String> {
-        self.buffer.extend_from_slice(&buf);
-
+        self.buffer.extend_from_slice(buf);
+        
         if let Some(index) = self.buffer.iter().position(|&x| x == 0x0a) {
-            let result_string = String::from_utf8(self.buffer[0..index].to_vec()).unwrap();
+            let result_string = String::from_utf8(self.buffer[0..index + 1].to_vec()).unwrap();
             self.buffer.drain(0..index + 1);
             return Some(result_string);
         } else {
@@ -100,7 +103,7 @@ impl PartialWriter {
 
 pub fn process_message(message: &str) -> Result<ReceiveData, ParseError> {
     // Parse string into json
-    let value: Value = match serde_json::from_str(message) {
+    let value: Value = match serde_json::from_str(message.trim()) {
         Ok(v) => v,
         Err(e) => return Err(ParseError::InvalidJson(e))
     };

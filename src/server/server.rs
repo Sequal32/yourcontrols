@@ -170,9 +170,9 @@ impl Server {
                         Ok(0) => {
                             to_drop.push(index);
                         }
-                        Ok(_) => {
+                        Ok(n) => {
                             // Append bytes to reader
-                            if let Some(data) = client.reader.try_read_string(&buf) {
+                            if let Some(data) = client.reader.try_read_string(&buf[0..n]) {
                                 // Parse payload
                                 if let Ok(data) = process_message(&data) {
                                     to_write.push(data);

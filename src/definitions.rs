@@ -199,7 +199,6 @@ impl Definitions {
         let category = get_category_from_string(category)?;
 
         self.avarstransfer.add_var(var_name, var_units, var_type);
-        self.sync_vars.insert(var_name.to_string());
         self.categories.insert(var_name.to_string(), category);
         // self.avars.insert(var_name.to_string(), AircraftVar {
         //     category: category,
@@ -265,6 +264,7 @@ impl Definitions {
 
     fn add_var(&mut self, category: &str, var: VarEntry) -> Result<(), VarAddError> {
         self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
+        self.sync_vars.insert(var.var_name.clone());
 
         Ok(())
     }
@@ -444,6 +444,12 @@ impl Definitions {
         for (event_name, value) in data {
             self.events.trigger_event(conn, event_name, *value);        
         }
+    }
+
+    pub fn write_all(&mut self, conn: &SimConnector, data: &AllNeedSync) {
+        self.write_aircraft_data(conn, &data.avars);
+        self.write_local_data(conn, &data.lvars);
+        self.write_event_data(conn, &data.events);
     }
 
     // To be called when SimConnect connects

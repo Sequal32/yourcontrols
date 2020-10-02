@@ -77,8 +77,8 @@ impl Client {
                         should_stop.store(true, SeqCst);
                         break;
                     }
-                    Ok(_) => {
-                        if let Some(data) = transfer.reader.try_read_string(&buf) {
+                    Ok(n) => {
+                        if let Some(data) = transfer.reader.try_read_string(&buf[0..n]) {
                             // Deserialize json
                             if let Ok(data) = process_message(&data) {
                                 transfer.server_tx.send(data).ok();

@@ -10,6 +10,7 @@ mod sync;
 mod syncdefs;
 mod varreader;
 mod util;
+mod update;
 
 use app::{App, AppMessage};
 use definitions::Definitions;
@@ -69,7 +70,7 @@ fn main() {
     interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
     interpolation.add_special_floats_wrap90(&mut vec!["PLANE PITCH DEGREES".to_string()]);
     interpolation.add_special_floats_wrap180(&mut vec!["PLANE BANK DEGREES".to_string()]);
-
+    
     loop {
         let mut was_no_message = true;
         if let Some(client) = transfer_client.as_mut() {
@@ -96,7 +97,7 @@ fn main() {
             // Data from the person in control
             match client.get_next_message() {
                 Ok(ReceiveData::Update(sync_data)) => {
-                    todo!()
+                    definitions.write_all(&conn, &sync_data);
                 }
                 Ok(ReceiveData::ChangeControl(control_type)) => {
                     match control_type {
@@ -211,6 +212,8 @@ fn main() {
                         
                         match client.start(ip, port) {
                             Ok(_) => {
+                                // start the client loop
+                                client.run();
                                 // Display connected message
                                 app_interface.connected();
                                 // Assign client as the transfer client
