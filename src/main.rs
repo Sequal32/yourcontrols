@@ -126,7 +126,17 @@ fn main() {
                     app_interface.server_started(client.get_connected_count());
                 }
                 Ok(ReceiveData::TransferStopped(reason)) => {
-                    app_interface.client_fail(reason.as_str());
+                    // TAKE BACK CONTROL
+                    control.take_control(&conn);
+
+                    match reason {
+                        server::TransferStoppedReason::Requested => {
+                            app_interface.disconnected();
+                        }
+                        server::TransferStoppedReason::ConnectionLost => {
+                            app_interface.client_fail("Connection Lost.");
+                        }
+                    }
                 }
                 Err(_) => ()
             }
@@ -140,18 +150,6 @@ fn main() {
 
             if !control.has_control() {
                 // Message timeout
-                // TODO: make timeout rely on server messages instead of interpolation
-                if control.time_since_control_change().as_secs() > 10 && interpolation.get_time_since_last_position() > config.conn_timeout {
-                    if client.is_server() {
-                        control.take_control(&conn);
-                    } else {
-                        client.stop();
-                        app_interface.client_fail("Peer timeout.");
-                        was_error = true;
-                    }
-                }
-
-
                 app_interface.update_overloaded(interpolation.overloaded());
 
                 // Interpolate position if current position was set
@@ -236,7 +234,7 @@ fn main() {
                     }
                 }
                 AppMessage::TakeControl => {
-                    if control.take_control(&conn) {
+                    if control.try_take_control(&conn) {
 
                         if let Some(client) = transfer_client.as_ref() {
                             app_interface.gain_control();

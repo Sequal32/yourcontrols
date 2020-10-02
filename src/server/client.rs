@@ -5,7 +5,7 @@ use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::io::Write;
 use std::thread;
 
-use super::{PartialReader, process_message, util::{ControlTransferType, ReceiveData, TransferClient}};
+use super::{PartialReader, TransferStoppedReason, process_message, util::{ControlTransferType, ReceiveData, TransferClient}};
 
 struct TransferStruct {
     stream: TcpStream,
@@ -82,7 +82,9 @@ impl Client {
                     }
                     // Connection dropped
                     Err(_) => {
+                        transfer.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::ConnectionLost)).ok();
                         should_stop.store(true, SeqCst);
+                        break;
                     }
                 };
 
@@ -93,9 +95,10 @@ impl Client {
                     // Broadcast data to all clients
                     match transfer.stream.write_all((data.to_string() + "\n").as_bytes()) {
                         Ok(_) => {}
-                        Err(_) => {
+                        Err(e) => {
                             // Connection dropped
                             should_stop.store(true, SeqCst);
+                            transfer.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::ConnectionLost)).ok();
                             break
                         }
                     };
@@ -114,6 +117,7 @@ impl TransferClient for Client {
 
     fn stop(&self) {
         self.should_stop.store(true, SeqCst);
+        self.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::Requested)).ok();
     }
 
     fn stopped(&self) -> bool {

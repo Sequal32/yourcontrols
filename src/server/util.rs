@@ -85,7 +85,7 @@ impl PartialWriter {
         self.buffer.extend_from_slice(data);
     }
 
-    pub fn write_to(&mut self, writer: &impl Write) -> Result<(), std::io::Error> {
+    pub fn write_to(&mut self, writer: &mut impl Write) -> Result<(), std::io::Error> {
         if self.buffer.len() == 0 {return Ok(())}
 
         match writer.write(self.buffer.as_slice()) {
@@ -149,13 +149,12 @@ pub enum ReceiveData {
 
 pub enum TransferStoppedReason {
     Requested,
-    Error(String)
+    ConnectionLost
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use std::io::BufWriter;
 
     #[test]
     fn test_partial_reader() {

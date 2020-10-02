@@ -23,23 +23,27 @@ impl Control {
         }
     }
 
-    pub fn change_control(&self, conn: &SimConnector) {
+    fn change_control(&self, conn: &SimConnector) {
         conn.transmit_client_event(1, 1000, !self.has_control as u32, 5, 0);
         conn.transmit_client_event(1, 1001, !self.has_control as u32, 5, 0);
         conn.transmit_client_event(1, 1002, !self.has_control as u32, 5, 0);
     }
 
     // Control was successful
-    pub fn take_control(&mut self, conn: &SimConnector) -> bool {
+    pub fn try_take_control(&mut self, conn: &SimConnector) -> bool {
         if !self.can_take_control {return false}
 
+        self.take_control(conn);
+
+        return true;
+    }
+
+    pub fn take_control(&mut self, conn: &SimConnector) {
         self.can_take_control = false;
         self.has_control = true;
         self.control_change_time = Instant::now();
         self.change_control(conn);
         self.stop_relieiving();
-
-        return true;
     }
 
     pub fn lose_control(&mut self, conn: &SimConnector) {
