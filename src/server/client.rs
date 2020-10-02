@@ -5,7 +5,7 @@ use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::io::Write;
 use std::thread;
 
-use super::{process_message, server::PartialReader, util::{ControlTransferType, ReceiveData, TransferClient}};
+use super::{PartialReader, process_message, util::{ControlTransferType, ReceiveData, TransferClient}};
 
 struct TransferStruct {
     stream: TcpStream,

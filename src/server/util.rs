@@ -1,4 +1,4 @@
-use std::net::IpAddr;
+use std::{io::Write, net::IpAddr};
 use crossbeam_channel::{Receiver, Sender};
 use serde_json::{Value, json};
 use crate::definitions::AllNeedSync;
@@ -46,6 +46,58 @@ pub trait TransferClient {
     }
 }
 
+pub struct PartialReader {
+    buffer: Vec<u8>,
+}
+
+impl PartialReader {
+    pub fn new() -> Self {
+        Self {
+            buffer: Vec::new()
+        }
+    }
+
+    pub fn try_read_string(&mut self, buf: &[u8]) -> Option<String> {
+        self.buffer.extend_from_slice(&buf);
+
+        if let Some(index) = self.buffer.iter().position(|&x| x == 0x0a) {
+            let result_string = String::from_utf8(self.buffer[0..index].to_vec()).unwrap();
+            self.buffer.drain(0..index + 1);
+            return Some(result_string);
+        } else {
+            return None
+        }
+    }
+}
+
+pub struct PartialWriter {
+    buffer: Vec<u8>,
+}
+
+impl PartialWriter {
+    pub fn new() -> Self {
+        Self {
+            buffer: Vec::new(),
+        }
+    }
+
+    pub fn to_write(&mut self, data: &[u8]) {
+        self.buffer.extend_from_slice(data);
+    }
+
+    pub fn write_to(&mut self, writer: &impl Write) -> Result<(), std::io::Error> {
+        if self.buffer.len() == 0 {return Ok(())}
+
+        match writer.write(self.buffer.as_slice()) {
+            Ok(bytes_written) => {
+                self.buffer.drain(0..bytes_written);
+                Ok(())
+            }
+            Err(e) => Err(e)
+        }
+    }
+}
+
 pub fn process_message(message: &str) -> Result<ReceiveData, ParseError> {
     // Parse string into json
     let value: Value = match serde_json::from_str(message) {
@@ -88,9 +140,28 @@ pub enum ControlTransferType {
 pub enum ReceiveData {
     NewConnection(IpAddr),
     ConnectionLost(IpAddr),
-    TransferStopped(String),
+    TransferStopped(TransferStoppedReason),
     // Possible types of data to receive
     Update(AllNeedSync),
     ChangeControl(ControlTransferType),
     
+}
+
+pub enum TransferStoppedReason {
+    Requested,
+    Error(String)
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use std::io::BufWriter;
+
+    #[test]
+    fn test_partial_reader() {
+        let mut pr = PartialReader::new();
+        assert_eq!(pr.try_read_string("Hello".as_bytes()), None);
+        assert_eq!(pr.try_read_string("\nYes".as_bytes()).unwrap(), "Hello");
+        assert_eq!(pr.try_read_string("\nYes\n".as_bytes()).unwrap(), "Yes");
+    }
 }

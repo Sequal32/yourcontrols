@@ -8,7 +8,7 @@ use std::net::{TcpListener, Ipv4Addr, SocketAddrV4};
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, AtomicU16, Ordering::SeqCst};
 use std::{str::FromStr};
-use super::{process_message, util::{ReceiveData, TransferClient}};
+use super::{PartialReader, PartialWriter, TransferStoppedReason, process_message, util::{ReceiveData, TransferClient}};
 
 pub enum PortForwardResult {
     GatewayNotFound,
@@ -16,33 +16,12 @@ pub enum PortForwardResult {
     AddPortError
 }
 
-pub struct PartialReader {
-    buffer: Vec<u8>,
-}
-
-impl PartialReader {
-    pub fn new() -> Self {
-        Self {
-            buffer: Vec::new()
-        }
-    }
-
-    pub fn try_read_string(&mut self, buf: &[u8]) -> Option<String> {
-        self.buffer.extend_from_slice(&buf);
-
-        if let Some(index) = self.buffer.iter().position(|&x| x == 0x0a) {
-            let result_string = String::from_utf8(self.buffer[0..index].to_vec()).unwrap();
-            self.buffer.drain(0..index + 1);
-            return Some(result_string);
-        } else {
-            return None
-        }
-    }
-}
-
 struct Client {
     stream: TcpStream,
+    // May not be able to read all data in single loop
     reader: PartialReader,
+    // May not be able to write all data in single loop
+    writer: PartialWriter,
     address: IpAddr
 }
 
@@ -143,6 +122,7 @@ impl Server {
                     transfer.clients.push(
                         Client {
                             stream,
+                            writer: PartialWriter::new(),
                             reader: PartialReader::new(),
                             address: addr.ip()
                         }
@@ -170,40 +150,51 @@ impl Server {
             loop {
                 let transfer = &mut transfer.lock().unwrap();
                 let mut to_write = Vec::new();
-    
+                // Clients to remove 
+                let mut to_drop = Vec::new();
+                // Read any data from client 
+                let next_send_data: Option<&[u8]> = match transfer.client_rx.try_recv() {
+                    Ok(data) => Some((data.to_string() + "\n").as_bytes()),
+                    Err(_) => None
+                };
+
+                
                 // Read incoming stream data
-                for client in transfer.clients.iter_mut() {
+                for (index, client) in transfer.clients.iter_mut().enumerate() {
                     // Read buffs
                     let mut buf = [0; 1024];
-                    client.stream.read(&mut buf).ok();
-    
-                    // Append bytes to reader
-                    if let Some(data) = client.reader.try_read_string(&buf) {
-                        // Parse payload
-                        if let Ok(data) = process_message(&data) {
-                            to_write.push(data);
+                    match client.stream.read(&mut buf) {
+                        Ok(_) => {
+                            // Append bytes to reader
+                            if let Some(data) = client.reader.try_read_string(&buf) {
+                                // Parse payload
+                                if let Ok(data) = process_message(&data) {
+                                    to_write.push(data);
+                                }
+                            }
                         }
+                        // Read error - conenction dropped
+                        Err(_) => {
+                            to_drop.push(index);
+                        }
+                    }
+
+                    match client.writer.write_to(&client.stream) {
+                        Ok(_) => {}
+                        // Write error - connection dropped
+                        Err(_) => {
+                            to_drop.push(index);
+                        }
+                    };
+                    // Send data from app to clients
+                    if let Some(data) = next_send_data {
+                        client.writer.to_write(data)
                     }
                 }
     
                 // Send resulting incoming stream data to app
                 for data in to_write {
                     transfer.server_tx.send(data).ok();
-                }
-    
-                // Send data from app to clients
-                let mut to_drop = Vec::new();
-                if let Ok(data) = transfer.client_rx.try_recv() {
-                    // Broadcast data to all clients
-                    for (index, client) in transfer.clients.iter_mut().enumerate() {
-                        match client.stream.write_all((data.to_string() + "\n").as_bytes()) {
-                            Ok(_) => {}
-                            Err(_) => {
-                                // Connection dropped
-                                to_drop.push(index);
-                            }
-                        };
-                    }
                 }
     
                 // Remove any connections that got dropped and tell app
@@ -215,6 +206,7 @@ impl Server {
 
                 if should_stop.load(SeqCst) {break}
             }
+            sleep(Duration::from_millis(10));
         });
     }
 
@@ -237,6 +229,7 @@ impl TransferClient for Server {
     }
 
     fn stopped(&self) -> bool {
+        self.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::Requested)).ok();
         self.should_stop.load(SeqCst)
     }
 
@@ -246,17 +239,5 @@ impl TransferClient for Server {
 
     fn get_receiver(&self) ->& Receiver<ReceiveData> {
         return &self.server_rx;
-    }
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-    #[test]
-    fn test_partial_reader() {
-        let mut pr = PartialReader::new();
-        assert_eq!(pr.try_read_string("Hello".as_bytes()), None);
-        assert_eq!(pr.try_read_string("\nYes".as_bytes()).unwrap(), "Hello");
-        assert_eq!(pr.try_read_string("\nYes\n".as_bytes()).unwrap(), "Yes");
     }
 }
