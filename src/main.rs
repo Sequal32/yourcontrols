@@ -28,7 +28,7 @@ use control::*;
 
 const CONFIG_FILENAME: &str = "config.json";
 const APP_STARTUP_SLEEP_TIME: Duration = Duration::from_millis(100);
-const LOOP_SLEEP_TIME: Duration = Duration::from_millis(1);
+const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
 
 fn main() {
     // Load configuration file

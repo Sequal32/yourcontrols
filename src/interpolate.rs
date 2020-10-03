@@ -10,18 +10,32 @@ struct InterpolationData {
     value: f64,
     from_value: f64,
     target_value: f64,
-    interpolation_time: f64,
     time: Instant,
+    interpolation_time: f64,
+    options: InterpolateOptions,
     done: bool
 }
 
-#[derive(Default, Deserialize)]
+#[derive(Deserialize, Copy, Clone)]
 #[serde(default)]
 pub struct InterpolateOptions {
     overshoot: f64, // How many seconds to interpolate for after interpolation_time has been reached
+    time: f64,
     wrap360: bool,
     wrap180: bool,
     wrap90: bool
+}
+
+impl Default for InterpolateOptions {
+    fn default() -> Self {
+        Self {
+            overshoot: 0.0,
+            time: DEFAULT_INTERPOLATION_TIME,
+            wrap360: false,
+            wrap180: false,
+            wrap90: false,
+        }
+    }
 }
 
 pub struct Interpolate {
@@ -48,12 +62,18 @@ impl Interpolate {
 
         } else {
 
+            let options = match self.options.get(key) {
+                Some(o) => o.clone(),
+                None => {InterpolateOptions::default()}
+            };
+
             self.current_data.insert(key.to_string(), InterpolationData {
                 from_value: value,
                 value: value,
                 target_value: value,
-                interpolation_time: DEFAULT_INTERPOLATION_TIME,
                 time: Instant::now(),
+                interpolation_time: options.time,
+                options: options,
                 done: false
             });
 
@@ -75,9 +95,9 @@ impl Interpolate {
                     data.time = Instant::now();
 
                     if queue.len() > self.buffer_size {
-                        data.interpolation_time = DEFAULT_INTERPOLATION_TIME * (self.buffer_size as f64)/((queue.len() - self.buffer_size) as f64) * 0.5;
+                        data.interpolation_time = data.options.time * (self.buffer_size as f64)/((queue.len() - self.buffer_size) as f64) * 0.5;
                     } else {
-                        data.interpolation_time = DEFAULT_INTERPOLATION_TIME;
+                        data.interpolation_time = data.options.time;
                     }
                 }
             }
@@ -130,11 +150,13 @@ impl Interpolate {
     }
 }
 
-pub fn interpolate_f64(from: f64, to: f64, alpha: f64) -> f64 {
+// Helper functions
+
+fn interpolate_f64(from: f64, to: f64, alpha: f64) -> f64 {
     return from + alpha * (to-from);
 }
 
-pub fn interpolate_f64_degrees(from: f64, to: f64, alpha: f64) -> f64 {
+fn interpolate_f64_degrees(from: f64, to: f64, alpha: f64) -> f64 {
     // If we need to wrap
     if (from - to).abs() > 180.0 {
         // Turning right
@@ -152,11 +174,11 @@ pub fn interpolate_f64_degrees(from: f64, to: f64, alpha: f64) -> f64 {
     }
 }
 
-pub fn interpolate_f64_degrees_180(from: f64, to: f64, alpha: f64) -> f64 {
+fn interpolate_f64_degrees_180(from: f64, to: f64, alpha: f64) -> f64 {
     interpolate_f64_degrees(from + 180.0, to + 180.0, alpha) - 180.0
 }
 
-pub fn interpolate_f64_degrees_90(from: f64, to: f64, alpha: f64) -> f64 {
+fn interpolate_f64_degrees_90(from: f64, to: f64, alpha: f64) -> f64 {
     interpolate_f64_degrees(from + 270.0, to + 270.0, alpha) - 270.0
 }
 

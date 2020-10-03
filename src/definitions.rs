@@ -58,7 +58,10 @@ type LVarMap = HashMap<String, f64>;
 // Name of the event and the DWORD data associated with it
 type EventMap = HashMap<String, u32>;
 
-const LVAR_FETCH_SECONDS: f32 = 0.5;
+enum VarType {
+    AircraftVar,
+    LocalVar
+}
 
 // Serde types
 // Describes how an aircraft variable can be set using a SimEvent
@@ -75,7 +78,9 @@ struct NumSetEntry {
     var_name: String,
     var_units: Option<String>,
     event_name: String,
-    multiply_by: Option<i32>
+    multiply_by: Option<i32>,
+    #[serde(default)]
+    interpolate: Option<InterpolateOptions>
 }
 
 // Describes how an aircraft variable can be set using a "TOGGLE" event
@@ -137,14 +142,15 @@ pub struct Definitions {
     // Aircraft variables that should be synced and not just detected for changes
     sync_vars: HashSet<String>,
     // Fetches LVars every X seconds
-    last_lvar_check: Instant,
+    tick: u64,
     // Queues
     aircraft_var_queue: AVarMap,
     local_var_queue: LVarMap,
     event_queue: EventMap,
     
-    interpolation: Interpolate,
-    interpolate_vars: HashSet<String>
+    interpolation_avars: Interpolate,
+    interpolation_lvars: Interpolate,
+    interpolate_names: HashSet<String>
 }
 
 fn get_category_from_string(category: &str) -> Result<Category, VarAddError> {
@@ -173,13 +179,14 @@ impl Definitions {
             sync_vars: HashSet::new(),
             categories: HashMap::new(),
 
-            last_lvar_check: Instant::now(),
+            tick: 0,
             aircraft_var_queue: HashMap::new(),
             local_var_queue: HashMap::new(),
             event_queue: HashMap::new(),
 
-            interpolation: Interpolate::new(3),
-            interpolate_vars: HashSet::new()
+            interpolation_avars: Interpolate::new(3),
+            interpolation_lvars: Interpolate::new(3),
+            interpolate_names: HashSet::new()
         }
     }
 
@@ -233,27 +240,30 @@ impl Definitions {
     }
 
     // Determines whether to add an aircraft variable or local variable based off the variable name
-    fn add_var_string(&mut self, category: &str, var_name: &str, var_units: Option<&str>, var_type: InDataTypes) -> Result<String, VarAddError> {
+    fn add_var_string(&mut self, category: &str, var_name: &str, var_units: Option<&str>, var_type: InDataTypes) -> Result<(String, VarType), VarAddError> {
         let actual_var_name = get_real_var_name(var_name);
 
         if var_name.starts_with("L:") {
             // Keep var_name with L: in it to pass to execute_calculator code
             self.add_local_variable(category, var_name, var_units)?;
+
+            return Ok((actual_var_name, VarType::LocalVar))
+
         } else {
             if let Some(var_units) = var_units {
                 self.add_aircraft_variable(category, &actual_var_name, var_units, var_type)?;
             } else {
                 return Err(VarAddError::MissingField("var_units"))
             }
-        }
 
-        Ok(actual_var_name)
+            return Ok((actual_var_name, VarType::AircraftVar))
+        }
     }
 
     fn add_toggle_switch(&mut self, category: &str, var: VarEventEntry) -> Result<(), VarAddError> { 
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
-        let var_string = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
+        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
         self.add_bool_mapping(category, &var_string, Box::new(ToggleSwitch::new(event_id)));
 
         Ok(())
@@ -262,7 +272,7 @@ impl Definitions {
     fn add_toggle_switch_param(&mut self, category: &str, var: ToggleSwitchParamEntry) -> Result<(), VarAddError> {
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
-        let var_string = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
+        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
         self.add_bool_mapping(category, &var_string, Box::new(ToggleSwitchParam::new(event_id, var.event_param as u32)));
 
         Ok(())
@@ -277,18 +287,29 @@ impl Definitions {
             None => Box::new(NumSet::new(event_id))
         };
 
+        // Store SyncAction
         self.add_num_mapping(category, &var.var_name, action);
 
         Ok(())
     }
 
     fn add_var(&mut self, category: &str, var: VarEntry) -> Result<(), VarAddError> {
-        self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
+        let (var_name, var_type) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
+        // Tell definitions to sync this variable
         self.sync_vars.insert(var.var_name.clone());
 
+        // Handle interpolation for this variable
         if let Some(options) = var.interpolate {
-            self.interpolation.set_key_options(&var.var_name, options);
-            self.interpolate_vars.insert(var.var_name.clone());
+            match var_type {
+                VarType::AircraftVar => {
+                    self.interpolation_avars.set_key_options(&var_name, options);
+                }
+                VarType::LocalVar => {
+                    self.interpolation_lvars.set_key_options(&var_name, options);
+                }
+            }
+            
+            self.interpolate_names.insert(var_name);
         }
 
         Ok(())
@@ -410,14 +431,26 @@ impl Definitions {
 
     pub fn step(&mut self, conn: &SimConnector) {
         // Fetch all lvars
-        if self.last_lvar_check.elapsed().as_secs_f32() > LVAR_FETCH_SECONDS {
+        if self.tick % 50 == 0 {
             self.lvarstransfer.fetch_all(conn);
-            self.last_lvar_check = Instant::now();
         }
 
-        let to_interpolate = self.interpolation.step();
-        if to_interpolate.len() > 0 {
-            self.write_aircraft_data_unchecked(conn, &to_interpolate);
+        // Interpolate AVARS
+        let aircraft_interpolation_data = self.interpolation_avars.step();
+        self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
+        
+        // Interpolate LVARS
+        for (var_name, value) in self.interpolation_lvars.step() {
+            if let VarReaderTypes::F64(value) = value {
+                self.lvarstransfer.set(conn, &var_name, &value.to_string());
+            }
+        }
+
+        // Reset to prevent integer overflow
+        if self.tick == u64::MAX {
+            self.tick = 0;
+        } else {
+            self.tick += 1;
         }
     }
 
@@ -453,10 +486,10 @@ impl Definitions {
         for (var_name, data) in data {
             if self.sync_vars.contains(var_name) {
 
-                if self.interpolate_vars.contains(var_name) {
+                if self.interpolate_names.contains(var_name) {
                     // Queue data for interpolation
                     if let VarReaderTypes::F64(value) = data {
-                        self.interpolation.queue_interpolate(&var_name, *value)
+                        self.interpolation_avars.queue_interpolate(&var_name, *value)
                     }
                 } else {
                     // Set data right away
@@ -497,7 +530,11 @@ impl Definitions {
 
     pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap) {
         for (var_name, value) in data {
-            self.lvarstransfer.set(conn, var_name, value.to_string().as_ref())
+            if self.interpolate_names.contains(var_name) {
+                self.interpolation_lvars.queue_interpolate(var_name, *value);
+            } else {
+                self.lvarstransfer.set(conn, var_name, value.to_string().as_ref())
+            }
         }
     }
 
@@ -515,7 +552,7 @@ impl Definitions {
 
     // To be called when SimConnect connects
     pub fn on_connected(&mut self, conn: &SimConnector) {
-        self.interpolation.reset();
+        self.interpolation_avars.reset();
 
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
