@@ -61,7 +61,6 @@ fn main() {
     let update_rate = 1.0 / config.update_rate as f64;
     // Whether to start a client or a server
 
-    let mut should_sync = false;
     let mut need_update = false;
     let mut was_error = false;
     let mut was_overloaded = false;
@@ -91,7 +90,9 @@ fn main() {
             // Data from the person in control
             match client.get_next_message() {
                 Ok(ReceiveData::Update(sync_data)) => {
-                    definitions.on_receive_data(&conn, &sync_data);
+                    // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
+                    definitions.on_receive_data(&conn, &sync_data, !need_update);
+                    need_update = false;
                 }
                 Ok(ReceiveData::ChangeControl(control_type)) => {
                     match control_type {
@@ -99,6 +100,8 @@ fn main() {
                             if control.has_control() {
                                 // Freeze aircraft
                                 control.lose_control(&conn);
+                                // Set next update instead of interpolating
+                                need_update = true;
                                 // Hide relieve control button
                                 app_interface.lose_control();
                                 // Tell the other client that we've released control
@@ -107,6 +110,8 @@ fn main() {
                         }
                         ControlTransferType::Confirm =>  {
                             if control.try_take_control(&conn) {
+                                // Initialize state
+                                client.update(definitions.get_all_current());
                                 app_interface.gain_control();
                             }
                         }
@@ -124,7 +129,13 @@ fn main() {
                     
                 }
                 // Increment client counter
-                Ok(ReceiveData::NewConnection(_)) | Ok(ReceiveData::ConnectionLost(_)) => {
+                Ok(ReceiveData::NewConnection(_)) => {
+                    if control.has_control() {
+                        client.update(definitions.get_all_current());
+                    }
+                    app_interface.server_started(client.get_connected_count());
+                },
+                Ok(ReceiveData::ConnectionLost(_)) => {
                     app_interface.server_started(client.get_connected_count());
                 }
                 Ok(ReceiveData::TransferStopped(reason)) => {
@@ -191,6 +202,7 @@ fn main() {
                                 // Unfreeze aircraft
                                 control.take_control(&conn);
                                 app_interface.gain_control();
+                                need_update = true;
                             },
                             Err(e) => {
                                 app_interface.server_fail(e.to_string().as_str());
@@ -216,6 +228,7 @@ fn main() {
                                 transfer_client = Some(Box::new(client));
                                 // Freeze aircraft
                                 control.lose_control(&conn);
+                                need_update = true;
                             }
                             Err(e) => {
                                 app_interface.client_fail(e.to_string().as_str());

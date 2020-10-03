@@ -107,7 +107,8 @@ impl Interpolate {
             // Determine if we should be interpolating
             let options = self.options.get(key);
             if let Some(options) = options {
-                max_alpha = 1.0 + options.overshoot;
+                // TODO: overshoot logic
+                max_alpha = 1.0;
             } else {
                 max_alpha = 1.0;
             }
@@ -145,7 +146,6 @@ impl Interpolate {
     }
 
     pub fn reset(&mut self) {
-        self.options.clear();
         self.current_data.clear();
     }
 }

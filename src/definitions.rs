@@ -296,7 +296,7 @@ impl Definitions {
     fn add_var(&mut self, category: &str, var: VarEntry) -> Result<(), VarAddError> {
         let (var_name, var_type) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
         // Tell definitions to sync this variable
-        self.sync_vars.insert(var.var_name.clone());
+        self.sync_vars.insert(var_name.clone());
 
         // Handle interpolation for this variable
         if let Some(options) = var.interpolate {
@@ -478,7 +478,7 @@ impl Definitions {
         self.avarstransfer.set_vars(conn, data);
     }
 
-    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap) {
+    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap, interpolate: bool) {
         if data.len() == 0 {return}
 
         let mut to_sync = AVarMap::new();
@@ -488,7 +488,7 @@ impl Definitions {
         for (var_name, data) in data {
             if self.sync_vars.contains(var_name) {
 
-                if self.interpolate_names.contains(var_name) {
+                if interpolate && self.interpolate_names.contains(var_name) {
                     // Queue data for interpolation
                     if let VarReaderTypes::F64(value) = data {
                         self.interpolation_avars.queue_interpolate(&var_name, *value)
@@ -530,9 +530,9 @@ impl Definitions {
         self.avarstransfer.set_vars(conn, &to_sync);
     }
 
-    pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap) {
+    pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap, interpolate: bool) {
         for (var_name, value) in data {
-            if self.interpolate_names.contains(var_name) {
+            if interpolate && self.interpolate_names.contains(var_name) {
                 self.interpolation_lvars.queue_interpolate(var_name, *value);
             } else {
                 self.lvarstransfer.set(conn, var_name, value.to_string().as_ref())
@@ -546,9 +546,9 @@ impl Definitions {
         }
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: &AllNeedSync) {
-        self.write_aircraft_data(conn, &data.avars);
-        self.write_local_data(conn, &data.lvars);
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: &AllNeedSync, interpolate: bool) {
+        self.write_aircraft_data(conn, &data.avars, interpolate);
+        self.write_local_data(conn, &data.lvars, interpolate);
         self.write_event_data(conn, &data.events);
     }
 
@@ -561,5 +561,13 @@ impl Definitions {
         self.lvarstransfer.on_connected(conn);
 
         conn.request_data_on_sim_object(0, self.avarstransfer.define_id, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
+    }
+
+    pub fn get_all_current(&self) -> AllNeedSync {
+        AllNeedSync {
+            avars: self.avarstransfer.get_all_vars().clone(),
+            lvars: self.lvarstransfer.get_all_vars(),
+            events: EventMap::new(),
+        }
     }
 }

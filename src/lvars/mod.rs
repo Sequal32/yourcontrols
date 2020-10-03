@@ -172,4 +172,8 @@ impl<A, B> DiffChecker<A, B> where
         let v =  self.indexes.get(index)?;
         return Some(*v == *value);
     } 
+
+    pub fn get_all(&self) -> &HashMap<A,B> {
+        return &self.indexes;
+    }
 }

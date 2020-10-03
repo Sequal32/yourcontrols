@@ -110,11 +110,22 @@ impl LVarSyncer {
     pub fn on_connected(&self, conn: &SimConnector) {
         self.transfer.on_connected(conn);
     }
+
+    pub fn get_all_vars(&self) -> HashMap<String, f64> {
+        let mut return_map = HashMap::new();
+
+        for (var_name, value) in self.tracked.get_all() {
+            return_map.insert(var_name.clone(), value.floating);
+        }
+
+        return return_map
+    }
 }
 
 pub struct AircraftVars {
     pub define_id: u32,
     vars: HashMap<String, AircraftVar>,
+    current_values: SimValue,
     reader: VarReader
 }
 
@@ -129,6 +140,7 @@ impl AircraftVars {
         Self {
             define_id,
             vars: HashMap::new(),
+            current_values: HashMap::new(),
             reader: VarReader::new()
         }
     }
@@ -143,8 +155,21 @@ impl AircraftVars {
         });
     }
 
-    pub fn read_vars(&self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) -> Result<SimValue, io::Error> {
-        return unsafe { self.reader.read_from_bytes(data.dwDefineCount, &data.dwData as *const u32) }
+    pub fn read_vars(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) -> Result<SimValue, io::Error> {
+        let vars = match self.reader.read_from_bytes(data.dwDefineCount, &data.dwData as *const u32) {
+            Ok(v) => v,
+            Err(e) => return Err(e)
+        };
+
+        for (var_name, value) in vars.iter() {
+            self.current_values.insert(var_name.clone(), value.clone());
+        }
+        
+        return Ok(vars);
+    }
+
+    pub fn get_all_vars(&self) -> &SimValue {
+        return &self.current_values;
     }
 
     pub fn set_vars(&self, conn: &SimConnector, data: &SimValue) {
