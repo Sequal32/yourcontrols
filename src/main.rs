@@ -101,12 +101,20 @@ fn main() {
                                 control.lose_control(&conn);
                                 // Hide relieve control button
                                 app_interface.lose_control();
-                                need_update = true;
+                                // Tell the other client that we've released control
+                                client.change_control(ControlTransferType::Confirm);
+                            }
+                        }
+                        ControlTransferType::Confirm =>  {
+                            if control.try_take_control(&conn) {
+                                app_interface.gain_control();
                             }
                         }
                         ControlTransferType::Relieve => {
-                            control.controls_available();
-                            app_interface.can_take_control();
+                            if !control.has_control() {
+                                control.controls_available();
+                                app_interface.can_take_control();
+                            }
                         }
                         ControlTransferType::Cancel => {
                             control.controls_unavailable();
@@ -136,15 +144,17 @@ fn main() {
             }
 
             // Handle sync vars
-            let values = definitions.get_need_sync();
-            if values.is_some() && control.has_control() && update_rate_instant.elapsed().as_secs_f64() > update_rate {
-                client.update(values.unwrap());
+            if control.has_control() && update_rate_instant.elapsed().as_secs_f64() > update_rate {
+                if let Some(values) = definitions.get_need_sync() {
+                    client.update(values);
+                }
                 update_rate_instant = Instant::now();
             }
 
             if !control.has_control() {
                 // Message timeout
                 // app_interface.update_overloaded(interpolation.overloaded());
+                definitions.step_interpolate(&conn);
             // Relieve control response timeout
             } else if control.is_relieving_control() && control.time_since_relieve().as_secs() > 20 {
                 control.stop_relieiving();
@@ -223,13 +233,8 @@ fn main() {
                     }
                 }
                 AppMessage::TakeControl => {
-                    if control.try_take_control(&conn) {
-
-                        if let Some(client) = transfer_client.as_ref() {
-                            app_interface.gain_control();
-                            client.change_control(ControlTransferType::Take)
-                        }
-
+                    if let Some(client) = transfer_client.as_ref() {
+                        client.change_control(ControlTransferType::Take)
                     }
                 }
                 AppMessage::RelieveControl => {

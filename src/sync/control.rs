@@ -43,7 +43,7 @@ impl Control {
         self.has_control = true;
         self.control_change_time = Instant::now();
         self.change_control(conn);
-        self.stop_relieiving();
+        self.controls_unavailable();
     }
 
     pub fn lose_control(&mut self, conn: &SimConnector) {

@@ -126,26 +126,6 @@ impl TransferClient for Client {
         false
     }
 
-    fn change_control(&self, control_type: ControlTransferType) {
-        match control_type {
-            ControlTransferType::Take => {
-                self.send_value(json!({
-                    "type":"take_control"
-                }));
-            }
-            ControlTransferType::Relieve => {
-                self.send_value(json!({
-                    "type":"relieve_control"
-                }));
-            }
-            ControlTransferType::Cancel => {
-                self.send_value(json!({
-                    "type":"cancel_relieve"
-                }));
-            }
-        }
-    }
-
     fn get_transmitter(&self) -> &Sender<Value> {
         return &self.client_tx
     }

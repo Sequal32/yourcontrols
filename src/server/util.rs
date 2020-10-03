@@ -44,6 +44,11 @@ pub trait TransferClient {
                 self.send_value(json!({
                     "type":"cancel_relieve"
                 }));
+            },
+            ControlTransferType::Confirm => {
+                self.send_value(json!({
+                    "type":"confirm_relieve"
+                }));
             }
         }
     }
@@ -136,7 +141,8 @@ pub enum ParseError {
 pub enum ControlTransferType {
     Take,
     Relieve,
-    Cancel
+    Cancel,
+    Confirm
 }
 
 // Various types of data to receive

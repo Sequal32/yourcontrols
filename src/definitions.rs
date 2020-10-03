@@ -435,22 +435,24 @@ impl Definitions {
             self.lvarstransfer.fetch_all(conn);
         }
 
-        // Interpolate AVARS
-        let aircraft_interpolation_data = self.interpolation_avars.step();
-        self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
-        
-        // Interpolate LVARS
-        for (var_name, value) in self.interpolation_lvars.step() {
-            if let VarReaderTypes::F64(value) = value {
-                self.lvarstransfer.set(conn, &var_name, &value.to_string());
-            }
-        }
-
         // Reset to prevent integer overflow
         if self.tick == u64::MAX {
             self.tick = 0;
         } else {
             self.tick += 1;
+        }
+    }
+
+    pub fn step_interpolate(&mut self, conn: &SimConnector) {
+        // Interpolate AVARS
+        let aircraft_interpolation_data = self.interpolation_avars.step();
+        self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
+
+        // Interpolate LVARS
+        for (var_name, value) in self.interpolation_lvars.step() {
+            if let VarReaderTypes::F64(value) = value {
+                self.lvarstransfer.set(conn, &var_name, &value.to_string());
+            }
         }
     }
 
