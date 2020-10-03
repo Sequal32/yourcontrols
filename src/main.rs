@@ -15,7 +15,6 @@ mod update;
 use app::{App, AppMessage};
 use definitions::Definitions;
 use crossbeam_channel::{Receiver, Sender};
-use interpolate::InterpolateStruct;
 use serde_json::{Value, json};
 use simconfig::Config;
 use server::{Client, ControlTransferType, ReceiveData, Server, TransferClient};
@@ -66,10 +65,10 @@ fn main() {
     let mut was_error = false;
     let mut was_overloaded = false;
     // Interpolation Vars //
-    let mut interpolation = InterpolateStruct::new(config.buffer_size);
-    interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
-    interpolation.add_special_floats_wrap90(&mut vec!["PLANE PITCH DEGREES".to_string()]);
-    interpolation.add_special_floats_wrap180(&mut vec!["PLANE BANK DEGREES".to_string()]);
+    // let mut interpolation = Interpolate::new();
+    // interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
+    // interpolation.add_special_floats_wrap90(&mut vec!["PLANE PITCH DEGREES".to_string()]);
+    // interpolation.add_special_floats_wrap180(&mut vec!["PLANE BANK DEGREES".to_string()]);
     
     loop {
         let mut was_no_message = true;
@@ -107,7 +106,6 @@ fn main() {
                                 control.lose_control(&conn);
                                 // Hide relieve control button
                                 app_interface.lose_control();
-                                interpolation.reset();
                                 need_update = true;
                             }
                         }
@@ -151,14 +149,7 @@ fn main() {
 
             if !control.has_control() {
                 // Message timeout
-                app_interface.update_overloaded(interpolation.overloaded());
-
-                // Interpolate position if current position was set
-                if !need_update {
-                    if let Some(updated_map) = interpolation.interpolate() {
-                        definitions.write_aircraft_data(&conn, &updated_map);
-                    }
-                }
+                // app_interface.update_overloaded(interpolation.overloaded());
             // Relieve control response timeout
             } else if control.is_relieving_control() && control.time_since_relieve().as_secs() > 20 {
                 control.stop_relieiving();

@@ -1,163 +1,109 @@
-use std::{collections::HashMap, time::{Instant}};
-use std::collections::VecDeque;
+use std::{collections::{HashMap, hash_map::Entry}, time::Instant};
+use serde::Deserialize;
 
-use crate::util::VarReaderTypes;
+use crate::{util::VarReaderTypes, varreader::SimValue};
 
-struct Record {
-    data: HashMap<String, VarReaderTypes>,
-    time: f64
+const DEFAULT_INTERPOLATION_TIME: f32 = 0.2;
+
+struct InterpolationData {
+    value: f64,
+    from_value: f64,
+    target_value: f64,
+    interpolation_time: f32,
+    time: Instant,
+    done: bool
 }
 
-pub struct InterpolateStruct {
-    latest: Option<Record>,
-    at_latest: Option<Record>,
-    current: Option<Record>,
-    instant_at_latest: Instant,
-    interpolation_time: f64,
-
-    packet_queue: VecDeque<Record>,
-    buffer_size: usize,
-
-    special_floats_regular: Vec<String>,
-    special_floats_wrap180: Vec<String>,
-    special_floats_wrap90: Vec<String>,
+#[derive(Default, Deserialize)]
+#[serde(default)]
+pub struct InterpolateOptions {
+    overshoot: f32, // How many seconds to interpolate for after interpolation_time has been reached
+    wrap360: bool,
+    wrap180: bool,
+    wrap90: bool
 }
 
-impl Default for InterpolateStruct {
-    fn default() -> Self {
+pub struct Interpolate {
+    current_data: HashMap<String, InterpolationData>,
+    options: HashMap<String, InterpolateOptions>
+}
+
+impl Interpolate {
+    pub fn new() -> Self {
         Self {
-            latest: None, 
-            current: None, 
-            at_latest: None, 
-            instant_at_latest: std::time::Instant::now(), 
-            interpolation_time: 0.0, 
-
-            buffer_size: 3,
-
-            packet_queue: VecDeque::new(),
-            special_floats_regular: vec![],
-            special_floats_wrap90: vec![],
-            special_floats_wrap180: vec![],
-        }
-    }
-}
-
-fn get_time() -> f64 {
-    return std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64();
-}
-
-impl InterpolateStruct {
-    pub fn new(buffer_size: usize) -> Self {
-        return Self {
-            buffer_size,
-            .. Default::default()
+            current_data: HashMap::new(),
+            options: HashMap::new()
         }
     }
 
-    fn to_next(&mut self) {
-        let last = self.latest.take();
+    pub fn queue_interpolate(&mut self, key: &str, value: f64) {
+        match self.current_data.entry(key.to_string()) {
+            Entry::Occupied(mut o) => {
+                
+                let data = o.get_mut();
+                data.from_value = data.target_value;
+                data.target_value = value;
+                data.time = Instant::now();
 
-        self.latest = self.packet_queue.pop_back();
-        self.at_latest = self.current.take();     
+            }
+            Entry::Vacant(v) => {
+                
+                v.insert(InterpolationData {
+                    from_value: value,
+                    value: value,
+                    target_value: value,
+                    interpolation_time: DEFAULT_INTERPOLATION_TIME,
+                    time: Instant::now(),
+                    done: false
+                });
 
-        if last.is_some() {
-            // Calculate time to next position by taking the diff of the latest packet to the previous one
-            self.instant_at_latest = std::time::Instant::now();
-            self.interpolation_time = self.latest.as_ref().unwrap().time-last.unwrap().time;
+            }
         }
     }
 
-    pub fn record_latest(&mut self, data: HashMap<String, VarReaderTypes>, time: f64) {
-        self.packet_queue.push_front(Record {data, time});
-        // Initial packet setting
-        if self.latest.is_none() {
-            self.to_next();
-        }
-    }
+    pub fn step(&mut self) -> SimValue {
+        let mut return_data = HashMap::new();
 
-    pub fn record_current(&mut self, data: HashMap<String, VarReaderTypes>) {
-        self.current = Some(Record {data, time: get_time()});
-    }
+        for (key, data) in self.current_data.iter_mut() {
+            if data.done {continue}
 
-    pub fn add_special_floats_regular(&mut self, data: &mut Vec<String>) {
-        self.special_floats_regular.append(data);
-    }
+            let alpha = data.time.elapsed().as_secs_f32()/data.interpolation_time;
+            let max_alpha;
 
-    pub fn add_special_floats_wrap90(&mut self, data: &mut Vec<String>) {
-        self.special_floats_wrap90.append(data);
-    }
-
-    pub fn add_special_floats_wrap180(&mut self, data: &mut Vec<String>) {
-        self.special_floats_wrap180.append(data);
-    }
-
-    pub fn get_time_since_last_position(&self) -> f64 {
-        return self.instant_at_latest.elapsed().as_secs_f64();
-    }
-
-    pub fn interpolate(&mut self) -> Option<HashMap<String, VarReaderTypes>> {
-        if self.latest.is_none() || self.at_latest.is_none() {return None}
-
-        let mut interpolated = HashMap::<String, VarReaderTypes>::new();
-
-        let current = self.at_latest.as_ref().unwrap();
-        let latest = self.latest.as_ref().unwrap();
-
-        let elapsed = self.get_time_since_last_position();
-        let mut alpha = elapsed/self.interpolation_time;
-
-        if alpha > 1.0 {
-            alpha = 1.0
-        }
-        
-        for (key, value) in &latest.data {
-            // Interpolate between next position and current position
-            match value {
-                VarReaderTypes::Bool(_) => {interpolated.insert(key.to_string(), value.clone());},
-                VarReaderTypes::F64(n) => {
-                    if let Some(VarReaderTypes::F64(current_value)) = current.data.get(key) {
-                        let value: f64;
-                        if self.special_floats_regular.contains(key) {
-                            value = interpolate_f64_degrees(*current_value, *n, alpha);   
-                        } else if self.special_floats_wrap90.contains(key) {
-                            value = interpolate_f64_degrees_90(*current_value, *n, alpha);   
-                        } else if self.special_floats_wrap180.contains(key) {
-                            value = interpolate_f64_degrees_180(*current_value, *n, alpha);   
-                        }
-                        else {
-                            value = interpolate_f64(*current_value, *n, alpha);
-                        }
-                        interpolated.insert(key.to_string(), VarReaderTypes::F64(value));
-                    }
+            let options = self.options.get(key);
+            if let Some(options) = options {
+                if options.wrap360 {
+                    data.value = interpolate_f64_degrees(data.value, data.from_value, data.target_value);
+                } else if options.wrap180 {
+                    data.value = interpolate_f64_degrees_180(data.value, data.from_value, data.target_value);
+                } else if options.wrap90 {
+                    data.value = interpolate_f64_degrees_90(data.value, data.from_value, data.target_value);
+                } else {
+                    data.value = interpolate_f64(data.value, data.from_value, data.target_value);
                 }
-                _ => ()
+                max_alpha = 1.0 + options.overshoot;
+            } else {
+                max_alpha = 1.0;
+                data.value = interpolate_f64(data.value, data.from_value, data.target_value);
             }
+            
+            if alpha > max_alpha {
+                data.done = true;
+            }
+
+            return_data.insert(key.clone(), VarReaderTypes::F64(data.value));
         }
 
-        self.current = Some(Record {data: interpolated.clone(), time: get_time()});
+        return return_data;
+    }
 
-        // If the packet queue is overflowing, we want to get to the next position ASAP
-        // If we reached the next position in time, we can go to the next packet if the buffer has one
-        if alpha >= 1.0 && self.packet_queue.len() > 0 {
-            self.to_next();
-            // Catch up in the queue
-            if self.packet_queue.len() > self.buffer_size {
-                self.interpolation_time *= (self.buffer_size + 1) as f64/(self.packet_queue.len() - self.buffer_size) as f64 * 0.5
-            }
-        }
-
-        return Some(interpolated);
+    pub fn set_key_options(&mut self, key: &str, options: InterpolateOptions) {
+        self.options.insert(key.to_string(), options);
     }
 
     pub fn reset(&mut self) {
-        self.latest = None;
-        self.current = None;
-        self.at_latest = None;
-        self.packet_queue.clear();
-    }
-
-    pub fn overloaded(&self) -> bool {
-        return self.packet_queue.len() > self.buffer_size + 15
+        self.options.clear();
+        self.current_data.clear();
     }
 }
 

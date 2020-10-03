@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fs::File, time::Instant};
-use crate::{sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumSet, NumSetMultiply, Syncable, ToggleSwitch, ToggleSwitchParam}, util::Category, util::InDataTypes, util::VarReaderTypes};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumSet, NumSetMultiply, Syncable, ToggleSwitch, ToggleSwitchParam}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
 pub enum ConfigLoadError {
     FileError,
@@ -64,7 +64,7 @@ const LVAR_FETCH_SECONDS: f32 = 0.5;
 struct VarEventEntry {
     var_name: String,
     var_units: Option<String>,
-    event_name: String
+    event_name: String,
 }
 
 // Describes how an aircraft variable can be set using a SimEvent
@@ -91,7 +91,9 @@ struct VarEntry {
     var_name: String,
     #[serde(default)]
     var_units: Option<String>,
-    var_type: InDataTypes
+    var_type: InDataTypes,
+    #[serde(default)]
+    interpolate: Option<InterpolateOptions>
 }
 
 // Describes an event to be listened to for fires
@@ -137,7 +139,10 @@ pub struct Definitions {
     // Queues
     aircraft_var_queue: AVarMap,
     local_var_queue: LVarMap,
-    event_queue: EventMap
+    event_queue: EventMap,
+    
+    interpolation: Interpolate,
+    interpolate_vars: HashSet<String>
 }
 
 fn get_category_from_string(category: &str) -> Result<Category, VarAddError> {
@@ -170,6 +175,9 @@ impl Definitions {
             aircraft_var_queue: HashMap::new(),
             local_var_queue: HashMap::new(),
             event_queue: HashMap::new(),
+
+            interpolation: Interpolate::new(),
+            interpolate_vars: HashSet::new()
         }
     }
 
@@ -276,6 +284,11 @@ impl Definitions {
         self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
         self.sync_vars.insert(var.var_name.clone());
 
+        if let Some(options) = var.interpolate {
+            self.interpolation.set_key_options(&var.var_name, options);
+            self.interpolate_vars.insert(var.var_name.clone());
+        }
+
         Ok(())
     }
 
@@ -358,6 +371,7 @@ impl Definitions {
         if let Ok(data) = self.avarstransfer.read_vars(data) {
             // Update all syncactions with the changed values
             for (var_name, value) in data {
+                // Set current var syncactions
                 if let Some(actions) = self.action_maps.get_mut(&var_name) {
 
                     for action in actions {
@@ -377,6 +391,13 @@ impl Definitions {
                     }
                     
                 }
+
+                // Set interpolation current data
+                if self.interpolate_vars.contains(&var_name) {
+                    if let VarReaderTypes::F64(value) = value {
+                        self.interpolation.queue_interpolate(&var_name, value)
+                    }
+                }
     
                 // Queue data for reading
                 self.aircraft_var_queue.insert(var_name, value);
@@ -390,6 +411,11 @@ impl Definitions {
         if self.last_lvar_check.elapsed().as_secs_f32() > LVAR_FETCH_SECONDS {
             self.lvarstransfer.fetch_all(conn);
             self.last_lvar_check = Instant::now();
+        }
+
+        let to_interpolate = self.interpolation.step();
+        if to_interpolate.len() > 0 {
+            self.write_aircraft_data(conn, &to_interpolate);
         }
     }
 
@@ -410,6 +436,8 @@ impl Definitions {
     }
 
     pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap) {
+        if data.len() == 0 {return}
+
         let mut to_sync = AVarMap::new();
         to_sync.reserve(data.len());
         
@@ -443,6 +471,8 @@ impl Definitions {
             }
         }
 
+        if to_sync.len() == 0 {return;}
+
         self.avarstransfer.set_vars(conn, data);
     }
 
@@ -465,7 +495,9 @@ impl Definitions {
     }
 
     // To be called when SimConnect connects
-    pub fn on_connected(&self, conn: &SimConnector) {
+    pub fn on_connected(&mut self, conn: &SimConnector) {
+        self.interpolation.reset();
+
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
