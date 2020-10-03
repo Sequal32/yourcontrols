@@ -3,13 +3,13 @@ use serde::Deserialize;
 
 use crate::{util::VarReaderTypes, varreader::SimValue};
 
-const DEFAULT_INTERPOLATION_TIME: f32 = 0.2;
+const DEFAULT_INTERPOLATION_TIME: f64 = 10.2;
 
 struct InterpolationData {
     value: f64,
     from_value: f64,
     target_value: f64,
-    interpolation_time: f32,
+    interpolation_time: f64,
     time: Instant,
     done: bool
 }
@@ -17,7 +17,7 @@ struct InterpolationData {
 #[derive(Default, Deserialize)]
 #[serde(default)]
 pub struct InterpolateOptions {
-    overshoot: f32, // How many seconds to interpolate for after interpolation_time has been reached
+    overshoot: f64, // How many seconds to interpolate for after interpolation_time has been reached
     wrap360: bool,
     wrap180: bool,
     wrap90: bool
@@ -44,6 +44,7 @@ impl Interpolate {
                 data.from_value = data.target_value;
                 data.target_value = value;
                 data.time = Instant::now();
+                data.done = false;
 
             }
             Entry::Vacant(v) => {
@@ -67,30 +68,36 @@ impl Interpolate {
         for (key, data) in self.current_data.iter_mut() {
             if data.done {continue}
 
-            let alpha = data.time.elapsed().as_secs_f32()/data.interpolation_time;
+            let alpha = data.time.elapsed().as_secs_f64()/data.interpolation_time;
             let max_alpha;
-
+            // Determine if we should be interpolating
             let options = self.options.get(key);
             if let Some(options) = options {
-                if options.wrap360 {
-                    data.value = interpolate_f64_degrees(data.value, data.from_value, data.target_value);
-                } else if options.wrap180 {
-                    data.value = interpolate_f64_degrees_180(data.value, data.from_value, data.target_value);
-                } else if options.wrap90 {
-                    data.value = interpolate_f64_degrees_90(data.value, data.from_value, data.target_value);
-                } else {
-                    data.value = interpolate_f64(data.value, data.from_value, data.target_value);
-                }
                 max_alpha = 1.0 + options.overshoot;
             } else {
                 max_alpha = 1.0;
-                data.value = interpolate_f64(data.value, data.from_value, data.target_value);
             }
-            
+            // If we're done interpolation, do not interpolate anymore until the next request
             if alpha > max_alpha {
                 data.done = true;
+                return_data.insert(key.clone(), VarReaderTypes::F64(data.value));
+                continue
             }
-
+            // Interpolate according to options
+            if let Some(options) = options {
+                if options.wrap360 {
+                    data.value = interpolate_f64_degrees(data.from_value, data.target_value, alpha);
+                } else if options.wrap180 {
+                    data.value = interpolate_f64_degrees_180(data.from_value, data.target_value, alpha);
+                } else if options.wrap90 {
+                    data.value = interpolate_f64_degrees_90(data.from_value, data.target_value, alpha);
+                } else {
+                    data.value = interpolate_f64(data.from_value, data.target_value, alpha);
+                }
+            } else {
+                data.value = interpolate_f64(data.from_value, data.target_value, alpha);
+            }
+            
             return_data.insert(key.clone(), VarReaderTypes::F64(data.value));
         }
 
