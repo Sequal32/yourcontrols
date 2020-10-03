@@ -178,7 +178,7 @@ impl Definitions {
             local_var_queue: HashMap::new(),
             event_queue: HashMap::new(),
 
-            interpolation: Interpolate::new(),
+            interpolation: Interpolate::new(3),
             interpolate_vars: HashSet::new()
         }
     }
@@ -452,8 +452,18 @@ impl Definitions {
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             if self.sync_vars.contains(var_name) {
-                // Set data right away
-                to_sync.insert(var_name.clone(), data.clone());
+
+                if self.interpolate_vars.contains(var_name) {
+                    // Queue data for interpolation
+                    if let VarReaderTypes::F64(value) = data {
+                        self.interpolation.queue_interpolate(&var_name, *value)
+                    }
+                } else {
+                    // Set data right away
+                    to_sync.insert(var_name.clone(), data.clone());
+                }
+                
+
             } else {
                 // Otherwise sync them using defined events
                 if let Some(actions) = self.action_maps.get_mut(var_name) {
@@ -482,7 +492,7 @@ impl Definitions {
 
         if to_sync.len() == 0 {return;}
 
-        self.avarstransfer.set_vars(conn, data);
+        self.avarstransfer.set_vars(conn, &to_sync);
     }
 
     pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap) {
@@ -497,19 +507,7 @@ impl Definitions {
         }
     }
 
-    fn interpolate_vars(&mut self, data: &AVarMap) {
-        for (var_name, value) in data.iter() {
-            if self.interpolate_vars.contains(var_name) {
-                // Queue data for interpolation
-                if let VarReaderTypes::F64(value) = value {
-                    self.interpolation.queue_interpolate(&var_name, *value)
-                }
-            }
-        }
-    }
-
     pub fn on_receive_data(&mut self, conn: &SimConnector, data: &AllNeedSync) {
-        self.interpolate_vars(&data.avars);
         self.write_aircraft_data(conn, &data.avars);
         self.write_local_data(conn, &data.lvars);
         self.write_event_data(conn, &data.events);

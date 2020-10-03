@@ -20,6 +20,7 @@ use simconfig::Config;
 use server::{Client, ControlTransferType, ReceiveData, Server, TransferClient};
 use simconnect::{self, DispatchResult};
 use std::{io::Error, net::{IpAddr}, thread, time::Duration, time::Instant};
+use spin_sleep::sleep;
 
 use sync::*;
 use control::*;
@@ -64,11 +65,6 @@ fn main() {
     let mut need_update = false;
     let mut was_error = false;
     let mut was_overloaded = false;
-    // Interpolation Vars //
-    // let mut interpolation = Interpolate::new();
-    // interpolation.add_special_floats_regular(&mut vec!["PLANE HEADING DEGREES MAGNETIC".to_string()]);
-    // interpolation.add_special_floats_wrap90(&mut vec!["PLANE PITCH DEGREES".to_string()]);
-    // interpolation.add_special_floats_wrap180(&mut vec!["PLANE BANK DEGREES".to_string()]);
     loop {
         let mut was_no_message = true;
         if let Some(client) = transfer_client.as_mut() {
@@ -141,9 +137,9 @@ fn main() {
 
             // Handle sync vars
             let values = definitions.get_need_sync();
-            if values.is_some() && control.has_control() {
-                println!("{:?}", values);
+            if values.is_some() && control.has_control() && update_rate_instant.elapsed().as_secs_f64() > update_rate {
                 client.update(values.unwrap());
+                update_rate_instant = Instant::now();
             }
 
             if !control.has_control() {
@@ -264,7 +260,7 @@ fn main() {
             };
         }
 
-        if was_no_message {thread::sleep(LOOP_SLEEP_TIME)}
+        if was_no_message {sleep(LOOP_SLEEP_TIME)}
         // Attempt Simconnect connection
         if app_interface.exited() {break}
     }

@@ -1,9 +1,10 @@
 use std::{collections::{HashMap, hash_map::Entry}, time::Instant};
 use serde::Deserialize;
+use std::collections::VecDeque;
 
 use crate::{util::VarReaderTypes, varreader::SimValue};
 
-const DEFAULT_INTERPOLATION_TIME: f64 = 10.2;
+const DEFAULT_INTERPOLATION_TIME: f64 = 0.2;
 
 struct InterpolationData {
     value: f64,
@@ -25,40 +26,38 @@ pub struct InterpolateOptions {
 
 pub struct Interpolate {
     current_data: HashMap<String, InterpolationData>,
-    options: HashMap<String, InterpolateOptions>
+    data_queue: HashMap<String, VecDeque<f64>>,
+    options: HashMap<String, InterpolateOptions>,
+    buffer_size: usize
 }
 
 impl Interpolate {
-    pub fn new() -> Self {
+    pub fn new(buffer_size: usize) -> Self {
         Self {
             current_data: HashMap::new(),
-            options: HashMap::new()
+            data_queue: HashMap::new(),
+            options: HashMap::new(),
+            buffer_size
         }
     }
 
     pub fn queue_interpolate(&mut self, key: &str, value: f64) {
-        match self.current_data.entry(key.to_string()) {
-            Entry::Occupied(mut o) => {
-                
-                let data = o.get_mut();
-                data.from_value = data.target_value;
-                data.target_value = value;
-                data.time = Instant::now();
-                data.done = false;
+        if self.current_data.contains_key(key) {
 
-            }
-            Entry::Vacant(v) => {
-                
-                v.insert(InterpolationData {
-                    from_value: value,
-                    value: value,
-                    target_value: value,
-                    interpolation_time: DEFAULT_INTERPOLATION_TIME,
-                    time: Instant::now(),
-                    done: false
-                });
+            self.data_queue.get_mut(key).unwrap().push_back(value);
 
-            }
+        } else {
+
+            self.current_data.insert(key.to_string(), InterpolationData {
+                from_value: value,
+                value: value,
+                target_value: value,
+                interpolation_time: DEFAULT_INTERPOLATION_TIME,
+                time: Instant::now(),
+                done: false
+            });
+
+            self.data_queue.insert(key.to_string(), VecDeque::new());
         }
     }
 
@@ -66,7 +65,22 @@ impl Interpolate {
         let mut return_data = HashMap::new();
 
         for (key, data) in self.current_data.iter_mut() {
-            if data.done {continue}
+            if data.done {
+                let queue = self.data_queue.get_mut(key).unwrap();
+                // Interpolate to the next position
+                if let Some(next) = queue.pop_front() {
+                    data.from_value = data.target_value;
+                    data.target_value = next;
+                    data.done = false;
+                    data.time = Instant::now();
+
+                    if queue.len() > self.buffer_size {
+                        data.interpolation_time = DEFAULT_INTERPOLATION_TIME * (self.buffer_size as f64)/((queue.len() - self.buffer_size) as f64) * 0.5;
+                    } else {
+                        data.interpolation_time = DEFAULT_INTERPOLATION_TIME;
+                    }
+                }
+            }
 
             let alpha = data.time.elapsed().as_secs_f64()/data.interpolation_time;
             let max_alpha;
@@ -77,27 +91,29 @@ impl Interpolate {
             } else {
                 max_alpha = 1.0;
             }
+
+            
             // If we're done interpolation, do not interpolate anymore until the next request
-            if alpha > max_alpha {
+            if alpha >= max_alpha {
                 data.done = true;
-                return_data.insert(key.clone(), VarReaderTypes::F64(data.value));
-                continue
-            }
-            // Interpolate according to options
-            if let Some(options) = options {
-                if options.wrap360 {
-                    data.value = interpolate_f64_degrees(data.from_value, data.target_value, alpha);
-                } else if options.wrap180 {
-                    data.value = interpolate_f64_degrees_180(data.from_value, data.target_value, alpha);
-                } else if options.wrap90 {
-                    data.value = interpolate_f64_degrees_90(data.from_value, data.target_value, alpha);
+                data.value = data.target_value;
+            } else {
+                // Interpolate according to options
+                if let Some(options) = options {
+                    if options.wrap360 {
+                        data.value = interpolate_f64_degrees(data.from_value, data.target_value, alpha);
+                    } else if options.wrap180 {
+                        data.value = interpolate_f64_degrees_180(data.from_value, data.target_value, alpha);
+                    } else if options.wrap90 {
+                        data.value = interpolate_f64_degrees_90(data.from_value, data.target_value, alpha);
+                    } else {
+                        data.value = interpolate_f64(data.from_value, data.target_value, alpha);
+                    }
                 } else {
                     data.value = interpolate_f64(data.from_value, data.target_value, alpha);
                 }
-            } else {
-                data.value = interpolate_f64(data.from_value, data.target_value, alpha);
             }
-            
+        
             return_data.insert(key.clone(), VarReaderTypes::F64(data.value));
         }
 
