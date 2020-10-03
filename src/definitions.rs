@@ -6,8 +6,10 @@ use simconnect::SimConnector;
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fs::File, time::Instant};
 use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumSet, NumSetMultiply, Syncable, ToggleSwitch, ToggleSwitchParam}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
+#[derive(Debug)]
 pub enum ConfigLoadError {
     FileError,
+    YamlError(serde_yaml::Error),
     ReadError,
     ParseError(VarAddError)
 }
@@ -320,9 +322,16 @@ impl Definitions {
     // Iterates over the yaml's "actions"
     fn parse_yaml(&mut self, yaml: IndexMap<String, Vec<Value>>) -> Result<(), VarAddError> {
         for (key, value) in yaml {
-            for var_data in value {
-                self.parse_var(key.as_str(), var_data)?;
+            if key == "include" {
+                for include_file in value {
+                    self.load_config(include_file.as_str().unwrap()).ok();
+                }
+            } else {
+                for var_data in value {
+                    self.parse_var(key.as_str(), var_data)?;
+                }
             }
+            
         }
 
         Ok(())
@@ -337,7 +346,7 @@ impl Definitions {
 
         let yaml = match serde_yaml::from_reader(file) {
             Ok(y) => y,
-            Err(e) => return Err(ConfigLoadError::FileError)
+            Err(e) => return Err(ConfigLoadError::YamlError(e))
         };
 
         match self.parse_yaml(yaml) {
@@ -391,13 +400,6 @@ impl Definitions {
                     }
                     
                 }
-
-                // Set interpolation current data
-                if self.interpolate_vars.contains(&var_name) {
-                    if let VarReaderTypes::F64(value) = value {
-                        self.interpolation.queue_interpolate(&var_name, value)
-                    }
-                }
     
                 // Queue data for reading
                 self.aircraft_var_queue.insert(var_name, value);
@@ -415,7 +417,7 @@ impl Definitions {
 
         let to_interpolate = self.interpolation.step();
         if to_interpolate.len() > 0 {
-            self.write_aircraft_data(conn, &to_interpolate);
+            self.write_aircraft_data_unchecked(conn, &to_interpolate);
         }
     }
 
@@ -435,6 +437,12 @@ impl Definitions {
         return Some(data);
     }
 
+    // Skip checking with self.sync_vars and creating a new hashmap - used for interpolation
+    fn write_aircraft_data_unchecked(&mut self, conn: &SimConnector, data: &AVarMap) {
+        if data.len() == 0 {return}
+        self.avarstransfer.set_vars(conn, data);
+    }
+
     pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap) {
         if data.len() == 0 {return}
 
@@ -444,6 +452,7 @@ impl Definitions {
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             if self.sync_vars.contains(var_name) {
+                // Set data right away
                 to_sync.insert(var_name.clone(), data.clone());
             } else {
                 // Otherwise sync them using defined events
@@ -488,7 +497,19 @@ impl Definitions {
         }
     }
 
-    pub fn write_all(&mut self, conn: &SimConnector, data: &AllNeedSync) {
+    fn interpolate_vars(&mut self, data: &AVarMap) {
+        for (var_name, value) in data.iter() {
+            if self.interpolate_vars.contains(var_name) {
+                // Queue data for interpolation
+                if let VarReaderTypes::F64(value) = value {
+                    self.interpolation.queue_interpolate(&var_name, *value)
+                }
+            }
+        }
+    }
+
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: &AllNeedSync) {
+        self.interpolate_vars(&data.avars);
         self.write_aircraft_data(conn, &data.avars);
         self.write_local_data(conn, &data.lvars);
         self.write_event_data(conn, &data.events);
