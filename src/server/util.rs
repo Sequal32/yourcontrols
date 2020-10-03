@@ -125,6 +125,7 @@ pub fn process_message(message: &str) -> Result<ReceiveData, ParseError> {
         Some("take_control") => Ok(ReceiveData::ChangeControl(ControlTransferType::Take)),
         Some("relieve_control") => Ok(ReceiveData::ChangeControl(ControlTransferType::Relieve)),
         Some("cancel_relieve") => Ok(ReceiveData::ChangeControl(ControlTransferType::Cancel)),
+        Some("confirm_relieve") => Ok(ReceiveData::ChangeControl(ControlTransferType::Confirm)),
         Some(_) => Err(ParseError::InvalidType),
         _ => Err(ParseError::FieldMissing("type")),
     }
