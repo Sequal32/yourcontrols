@@ -229,7 +229,14 @@ shared:
     type: var
     var_name: L:XMLVAR_ELT_STATE
     var_type: i32
-
+  - #ASOBO_PASSENGER_Switch_Cabin_Heat_Template
+    type: var
+    var_name: L:XMLVAR_CabinHeat_Position_1
+    var_type: f64
+  - #ASOBO_PASSENGER_Switch_Cabin_Air_Template
+    type: var
+    var_name: L:XMLVAR_CabinAir_Position_1
+    var_type: f64
 
 
 master:
@@ -251,12 +258,13 @@ master:
     var_name: A:ELEVATOR TRIM PCT
     var_units: percent
     event_name: ELEVATOR_TRIM_SET
+    multiply_by: 163
   -
     type: NumSet
     var_name: A:FLAPS HANDLE PERCENT
     var_units: percent
     event_name: FLAPS_CONTINUOUS_SET
-    multiply_by: 16384
+    multiply_by: 163
   
   #TEMP
   

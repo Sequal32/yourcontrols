@@ -90,7 +90,7 @@ impl Syncable<bool> for ToggleSwitchParam {
 
 pub struct NumSet {
     event_id: u32,
-    current: u32
+    current: i32
 }
 
 impl NumSet {
@@ -102,13 +102,40 @@ impl NumSet {
     }
 }
 
-impl Syncable<u32> for NumSet {
-    fn set_current(&mut self, current: u32) {
+impl Syncable<i32> for NumSet {
+    fn set_current(&mut self, current: i32) {
         self.current = current
     }
 
-    fn set_new(&mut self, new: u32, conn: &simconnect::SimConnector) {
+    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
         if new == self.current {return}
-        conn.transmit_client_event(1, self.event_id, new, GROUP_ID, 0);
+        conn.transmit_client_event(1, self.event_id, new as u32, GROUP_ID, 0);
+    }
+}
+
+pub struct NumSetMultiply {
+    event_id: u32,
+    current: i32,
+    multiply_by: i32
+}
+
+impl NumSetMultiply {
+    pub fn new(event_id: u32, multiply_by: i32) -> Self {
+        Self {
+            event_id,
+            current: 0,
+            multiply_by
+        }
+    }
+}
+
+impl Syncable<i32> for NumSetMultiply {
+    fn set_current(&mut self, current: i32) {
+        self.current = current
+    }
+
+    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
+        if new == self.current {return}
+        conn.transmit_client_event(1, self.event_id, (new * self.multiply_by) as u32, GROUP_ID, 0);    
     }
 }

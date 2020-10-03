@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fs::File, time::Instant};
-use crate::{sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumSet, Syncable, ToggleSwitch, ToggleSwitchParam}, util::Category, util::InDataTypes, util::VarReaderTypes};
+use crate::{sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumSet, NumSetMultiply, Syncable, ToggleSwitch, ToggleSwitchParam}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
 pub enum ConfigLoadError {
     FileError,
@@ -67,6 +67,15 @@ struct VarEventEntry {
     event_name: String
 }
 
+// Describes how an aircraft variable can be set using a SimEvent
+#[derive(Deserialize)]
+struct NumSetEntry {
+    var_name: String,
+    var_units: Option<String>,
+    event_name: String,
+    multiply_by: Option<i32>
+}
+
 // Describes how an aircraft variable can be set using a "TOGGLE" event
 #[derive(Deserialize)]
 struct ToggleSwitchParamEntry {
@@ -116,7 +125,7 @@ pub struct Definitions {
     // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchSet, ToggleSwitchParam)
     bool_maps: HashMap<String, Vec<SyncAction<bool>>>,
     // Data that can be synced using numbers (NumSet)
-    num_maps: HashMap<String, Vec<SyncAction<u32>>>,
+    num_maps: HashMap<String, Vec<SyncAction<i32>>>,
     // Events to listen to
     events: Events,
     // Helper struct to retrieve and detect changes in local variables
@@ -183,7 +192,7 @@ impl Definitions {
         };
     }
 
-    fn add_num_mapping(&mut self, category: &str, var_name: &str, mapping: Box<dyn Syncable<u32>>) {
+    fn add_num_mapping(&mut self, category: &str, var_name: &str, mapping: Box<dyn Syncable<i32>>) {
         let mapping = SyncAction {
             category: category.to_string(),
             action: mapping,
@@ -254,10 +263,16 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_num_set(&mut self, category: &str, var: VarEventEntry) -> Result<(), VarAddError> {
+    fn add_num_set(&mut self, category: &str, var: NumSetEntry) -> Result<(), VarAddError> {
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
         self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
-        self.add_num_mapping(category, &var.var_name, Box::new(NumSet::new(event_id)));
+
+        let action: Box<dyn Syncable<i32>> = match var.multiply_by {
+            Some(n) => Box::new(NumSetMultiply::new(event_id, n)),
+            None => Box::new(NumSet::new(event_id))
+        };
+
+        self.add_num_mapping(category, &var.var_name, action);
 
         Ok(())
     }
@@ -365,7 +380,7 @@ impl Definitions {
                 if let Some(actions) = self.num_maps.get_mut(&var_name) {
                     if let VarReaderTypes::I32(value) = value {
                         for action in actions {
-                            action.action.set_current(value as u32)
+                            action.action.set_current(value)
                         }
                     }
                 }
@@ -423,7 +438,7 @@ impl Definitions {
                 if let Some(actions) = self.num_maps.get_mut(var_name) {
                     if let VarReaderTypes::I32(value) = data {
                         for action in actions {
-                            action.action.set_new(*value as u32, conn)
+                            action.action.set_new(*value, conn)
                         }
                     }
                     continue
@@ -442,7 +457,7 @@ impl Definitions {
 
     pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap) {
         for (event_name, value) in data {
-            self.events.trigger_event(conn, event_name, *value);        
+            self.events.trigger_event(conn, event_name, *value as u32);        
         }
     }
 
