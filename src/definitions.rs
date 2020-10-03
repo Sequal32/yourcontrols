@@ -100,13 +100,6 @@ struct EventEntry {
     event_name: String
 }
 
-// Describes a complex system (like a magneto) with 3 states governed by two variables
-#[derive(Deserialize)]
-struct BothSetEntry {
-    vars: Vec<VarEntry>,
-    mapping: Vec<Value>
-}
-
 // Holds a struct for listening to and syncing data
 struct SyncAction<T> {
     category: String,
@@ -121,11 +114,14 @@ pub struct AllNeedSync {
     pub events: EventMap
 }
 
+enum ActionType {
+    BoolAction(SyncAction<bool>),
+    NumAction(SyncAction<i32>),
+}
+
 pub struct Definitions {
     // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchSet, ToggleSwitchParam)
-    bool_maps: HashMap<String, Vec<SyncAction<bool>>>,
-    // Data that can be synced using numbers (NumSet)
-    num_maps: HashMap<String, Vec<SyncAction<i32>>>,
+    action_maps: HashMap<String, Vec<ActionType>>,
     // Events to listen to
     events: Events,
     // Helper struct to retrieve and detect changes in local variables
@@ -163,8 +159,7 @@ fn get_real_var_name(var_name: &str) -> String {
 impl Definitions {
     pub fn new() -> Self {
         Self {
-            bool_maps: HashMap::new(),
-            num_maps: HashMap::new(),
+            action_maps: HashMap::new(),
             events: Events::new(1),
             lvarstransfer: LVarSyncer::new(1),
             avarstransfer: AircraftVars::new(1),
@@ -179,26 +174,26 @@ impl Definitions {
     }
 
     fn add_bool_mapping(&mut self, category: &str, var_name: &str, mapping: Box<dyn Syncable<bool>>) {
-        let mapping = SyncAction {
+        let mapping = ActionType::BoolAction(SyncAction {
             category: category.to_string(),
             action: mapping,
-        };
+        });
 
-        match self.bool_maps.entry(var_name.to_string()) {
+        match self.action_maps.entry(var_name.to_string()) {
             Entry::Occupied(mut o) => { 
-                o.get_mut().push(mapping) 
+                o.get_mut().push(mapping)
             }
             Entry::Vacant(v) => { v.insert(vec![mapping]); }
         };
     }
 
     fn add_num_mapping(&mut self, category: &str, var_name: &str, mapping: Box<dyn Syncable<i32>>) {
-        let mapping = SyncAction {
+        let mapping = ActionType::NumAction(SyncAction {
             category: category.to_string(),
             action: mapping,
-        };
+        });
 
-        match self.num_maps.entry(get_real_var_name(var_name)) {
+        match self.action_maps.entry(get_real_var_name(var_name)) {
             Entry::Occupied(mut o) => { o.get_mut().push(mapping) }
             Entry::Vacant(v) => { v.insert(vec![mapping]); }
         };
@@ -284,10 +279,6 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_both_set(&mut self, category: &str, var: BothSetEntry) -> Result<(), VarAddError> {
-        Ok(())
-    }
-
     fn add_event(&mut self, category: &str, event: EventEntry) -> Result<(), VarAddError> {
         let category = get_category_from_string(category)?;
 
@@ -305,7 +296,6 @@ impl Definitions {
             "TOGGLESWITCH" => self.add_toggle_switch(category, try_cast_yaml!(value))?,
             "TOGGLESWITCHPARAM" => self.add_toggle_switch_param(category, try_cast_yaml!(value))?,
             "VAR" => self.add_var(category, try_cast_yaml!(value))?,
-            "BOTHSET" => self.add_both_set(category, try_cast_yaml!(value))?,
             "NUMSET" => self.add_num_set(category, try_cast_yaml!(value))?,
             "EVENT" => self.add_event(category, try_cast_yaml!(value))?,
             _ => return Err(VarAddError::InvalidSyncType(type_str.to_string()))
@@ -366,23 +356,26 @@ impl Definitions {
         
         // Data might be bad/config files don't line up
         if let Ok(data) = self.avarstransfer.read_vars(data) {
-
             // Update all syncactions with the changed values
             for (var_name, value) in data {
-                if let Some(actions) = self.bool_maps.get_mut(&var_name) {
-                    if let VarReaderTypes::Bool(value) = value {
-                        for action in actions {
-                            action.action.set_current(value)
+                if let Some(actions) = self.action_maps.get_mut(&var_name) {
+
+                    for action in actions {
+                        match value {
+                            VarReaderTypes::Bool(value) => {
+                                if let ActionType::BoolAction(action) = action {
+                                    action.action.set_current(value);
+                                }
+                            }
+                            VarReaderTypes::I32(value) => {
+                                if let ActionType::NumAction(action) = action {
+                                    action.action.set_current(value);
+                                }
+                            }
+                            _ => {}
                         }
                     }
-                }
-        
-                if let Some(actions) = self.num_maps.get_mut(&var_name) {
-                    if let VarReaderTypes::I32(value) = value {
-                        for action in actions {
-                            action.action.set_current(value)
-                        }
-                    }
+                    
                 }
     
                 // Queue data for reading
@@ -426,22 +419,26 @@ impl Definitions {
                 to_sync.insert(var_name.clone(), data.clone());
             } else {
                 // Otherwise sync them using defined events
-                if let Some(actions) = self.bool_maps.get_mut(var_name) {
-                    if let VarReaderTypes::Bool(value) = data {
-                        for action in actions {
-                            action.action.set_new(*value, conn)
+                if let Some(actions) = self.action_maps.get_mut(var_name) {
+                    for action in actions {
+
+                        match action {
+                            ActionType::BoolAction(action) => {
+                                if let VarReaderTypes::Bool(value) = data {
+                                    action.action.set_new(*value, conn)
+                                }
+                            }
+
+                            ActionType::NumAction(action) => {
+                                if let VarReaderTypes::I32(value) = data {
+                                    action.action.set_new(*value, conn);
+                                }
+                            }
+
+                            _ => {}
                         }
+                        
                     }
-                    continue
-                }
-        
-                if let Some(actions) = self.num_maps.get_mut(var_name) {
-                    if let VarReaderTypes::I32(value) = data {
-                        for action in actions {
-                            action.action.set_new(*value, conn)
-                        }
-                    }
-                    continue
                 }
             }
         }
