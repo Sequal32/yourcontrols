@@ -2,9 +2,10 @@ use simconnect;
 
 const GROUP_ID: u32 = 5;
 
-pub trait Syncable<T> {
+pub trait Syncable<T> where T: Default {
     fn set_current(&mut self, current: T);
     fn set_new(&mut self, new: T, conn: &simconnect::SimConnector);
+    fn get_multiply_by(&self) -> T {return Default::default()}
 }
 
 pub struct ToggleSwitch {
@@ -88,6 +89,34 @@ impl Syncable<bool> for ToggleSwitchParam {
     }
 }
 
+pub struct ToggleSwitchTwo {
+    off_event_id: u32,
+    on_event_id: u32,
+    current: bool
+}
+
+impl ToggleSwitchTwo {
+    pub fn new(off_event_id: u32, on_event_id: u32) -> Self { 
+        Self { 
+            off_event_id, 
+            on_event_id, 
+            current: false
+        } 
+    }
+}
+
+impl Syncable<bool> for ToggleSwitchTwo {
+    fn set_current(&mut self, current: bool) {
+        self.current = current
+    }
+
+    fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
+        if self.current == new {return}
+        let event_id = if new {self.on_event_id} else {self.off_event_id};
+        conn.transmit_client_event(0, event_id, 0, GROUP_ID, 0);
+    }
+}
+
 pub struct NumSet {
     event_id: u32,
     current: i32
@@ -110,6 +139,34 @@ impl Syncable<i32> for NumSet {
     fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
         if new == self.current {return}
         conn.transmit_client_event(1, self.event_id, new as u32, GROUP_ID, 0);
+    }
+}
+
+pub struct NumSetSwap {
+    event_id: u32,
+    swap_event_id: u32,
+    current: i32,
+}
+
+impl NumSetSwap {
+    pub fn new(event_id: u32, swap_event_id: u32) -> Self {
+        return Self {
+            event_id,
+            swap_event_id,
+            current: 0
+        }
+    }
+}
+
+impl Syncable<i32> for NumSetSwap {
+    fn set_current(&mut self, current: i32) {
+        self.current = current
+    }
+
+    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
+        if new == self.current {return}
+        conn.transmit_client_event(1, self.event_id, new as u32, GROUP_ID, 0);
+        conn.transmit_client_event(1, self.swap_event_id, 0, GROUP_ID, 0);
     }
 }
 
@@ -137,5 +194,45 @@ impl Syncable<i32> for NumSetMultiply {
     fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
         if new == self.current {return}
         conn.transmit_client_event(1, self.event_id, (new * self.multiply_by) as u32, GROUP_ID, 0);    
+    }
+
+    fn get_multiply_by(&self) -> i32 {return self.multiply_by}
+}
+
+pub struct NumIncrement<T> {
+    up_event_id: u32,
+    down_event_id: u32,
+    increment_amount: T,
+    current: T
+}
+
+impl<T> NumIncrement<T>  where T: Default {
+    pub fn new(up_event_id: u32, down_event_id: u32, increment_amount: T) -> Self { 
+        Self { 
+            up_event_id, 
+            down_event_id, 
+            increment_amount,
+            current: Default::default()
+        } 
+    }
+}
+
+impl<T> Syncable<T> for NumIncrement<T> where T: Default + std::ops::SubAssign + std::ops::AddAssign + std::cmp::PartialOrd + Copy {
+    fn set_current(&mut self, current: T) {
+        self.current = current
+    }
+
+    fn set_new(&mut self, new: T, conn: &simconnect::SimConnector) {
+        let mut working = self.current;
+
+        while working < new {
+            working -= self.increment_amount;
+            conn.transmit_client_event(1, self.up_event_id, 0, GROUP_ID, 0);
+        }
+
+        while working > new {
+            working += self.increment_amount;
+            conn.transmit_client_event(1, self.down_event_id, 0, GROUP_ID, 0);
+        }
     }
 }

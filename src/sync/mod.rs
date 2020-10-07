@@ -107,6 +107,10 @@ impl LVarSyncer {
         }
     }
 
+    pub fn set_unchecked(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>, value: &str) {
+        self.transfer.set(conn, var_name, var_units, value);
+    }
+
     pub fn on_connected(&self, conn: &SimConnector) {
         self.transfer.on_connected(conn);
     }
