@@ -83,6 +83,15 @@ struct NumSetEntry {
     interpolate: Option<InterpolateOptions>
 }
 
+#[derive(Deserialize)]
+struct NumSetWithIndexEntry {
+    var_name: String,
+    var_units: Option<String>,
+    event_name: String,
+    index_param: i32,
+    multiply_by: Option<i32>,
+}
+
 // Describes how an aircraft variable can be set using a "TOGGLE" event
 #[derive(Deserialize)]
 struct ToggleSwitchParamEntry {
@@ -148,6 +157,7 @@ enum ActionType {
     BoolAction(Box<dyn Syncable<bool>>),
     NumAction(Box<dyn Syncable<i32>>),
     FloatAction(NumSetEntry),
+    NumSetWithIndex(NumSetWithIndexEntry),
     NumFloatAction(Box<dyn Syncable<f64>>),
     // No BCD
     FreqSwapAction(Box<dyn Syncable<i32>>)
@@ -239,11 +249,6 @@ impl Definitions {
         self.add_mapping(var_name, mapping);
     }
 
-    fn add_custom_float_mapping(&mut self, var_name: &str, mapping: NumSetEntry) {
-        let mapping = ActionType::FloatAction(mapping);
-        self.add_mapping(var_name, mapping);
-    }
-
     fn add_aircraft_variable(&mut self, category: &str, var_name: &str, var_units: &str, var_type: InDataTypes) -> Result<(), VarAddError> {
         let category = get_category_from_string(category)?;
 
@@ -317,7 +322,7 @@ impl Definitions {
 
     fn add_toggle_switch_two(&mut self, category: &str, var: ToggleSwitchTwoEntry) -> Result<(), VarAddError> {
         let on_event_id = self.events.get_or_map_event_id(&var.on_event_name, false);
-        let off_event_id = self.events.get_or_map_event_id(&var.on_event_name, false);
+        let off_event_id = self.events.get_or_map_event_id(&var.off_event_name, false);
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
         self.add_bool_mapping( &var_string, Box::new(ToggleSwitchTwo::new(off_event_id, on_event_id)));
@@ -345,6 +350,13 @@ impl Definitions {
         // Store SyncAction
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
         self.add_num_mapping(&var_string, action);
+
+        Ok(())
+    }
+
+    fn add_num_set_with_index(&mut self, category: &str, var: NumSetWithIndexEntry) -> Result<(), VarAddError> {
+        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
+        self.add_mapping(&var_string, ActionType::NumSetWithIndex(var));
 
         Ok(())
     }
@@ -391,7 +403,7 @@ impl Definitions {
 
     fn add_float_var(&mut self, category: &str, var: NumSetEntry) -> Result<(), VarAddError> {
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::F64)?;
-        self.add_custom_float_mapping( &var_string, var);
+        self.add_mapping(&var_string, ActionType::FloatAction(var));
         Ok(())
     }
 
@@ -441,6 +453,7 @@ impl Definitions {
             "SWITCHON" => self.add_switch_on(category, try_cast_yaml!(value))?,
             // Uses LVar
             "NUMSETFLOAT" => self.add_float_var(category, try_cast_yaml!(value))?,
+            "NUMSETWITHINDEX" => self.add_num_set_with_index(category, try_cast_yaml!(value))?,
             "NUMSWAP" => self.add_num_swap(category, try_cast_yaml!(value))?,
             "VAR" => self.add_var(category, try_cast_yaml!(value))?,
             "NUMSET" => self.add_num_set(category, try_cast_yaml!(value))?,
@@ -650,6 +663,12 @@ impl Definitions {
                             ActionType::NumFloatAction(action) => {
                                 if let VarReaderTypes::F64(value) = data {
                                     action.set_new(*value, conn);
+                                }
+                            }
+
+                            ActionType::NumSetWithIndex(action) => {
+                                if let VarReaderTypes::I32(value) = data {
+                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), Some(""), &format!("{} {}", value, action.index_param));
                                 }
                             }
 

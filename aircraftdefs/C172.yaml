@@ -1,20 +1,33 @@
 include:
-  - aircraftdefs/physics.yaml
+  - aircraftdefs/general.yaml
+  - aircraftdefs/lights.yaml
+  - aircraftdefs/navigation.yaml
+  - aircraftdefs/radios.yaml
+  - aircraftdefs/AS1000.yaml
+  - aircraftdefs/autopilot.yaml
 
 shared:
   -
-    type: ToggleSwitch
+    type: ToggleSwitchParam
     var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+
+  - #ASOBO_ELECTRICAL_Switch_Battery_STBY_Template
+    type: ToggleSwitchParam
+    var_name: A:ELECTRICAL MASTER BATTERY:2
     var_units: bool
 
     event_name: TOGGLE_MASTER_BATTERY
+    event_param: 2
 
   - # ASOBO_ELECTRICAL_Switch_Alternator_Template
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: bool
 
-    event_name: TOGGLE_ALTERNATOR
+    event_name: TOGGLE_ALTERNATOR1
   
   - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
     type: ToggleSwitchParam
@@ -33,16 +46,12 @@ shared:
     event_param: 25
 
   - #ASOBO_ELECTRICAL_Switch_Battery_STBY_Template
-    type: ToggleSwitchParam
-    var_name: A:ELECTRICAL MASTER BATTERY:2
-    var_units: bool
-
-    event_name: TOGGLE_MASTER_BATTERY
-    event_param: 2
-
-  - #ASOBO_ELECTRICAL_Switch_Battery_STBY_Template
     type: Var
     var_name: L:XMLVAR_STBYBattery_Test
+    var_type: bool
+  - #ASOBO_ELECTRICAL_Switch_Battery_STBY_Template
+    type: Var
+    var_name: L:XMLVAR_STBYBattery_IsHeld
     var_type: bool
   -
     type: Var
@@ -74,122 +83,51 @@ shared:
     event_name: TOGGLE_FUEL_VALVE_ENG1
   
   -
-    type: var
+    type: NumSet
     var_name: A:FUEL TANK SELECTOR:1
     var_units: Enum
     var_type: i32
-  
-  -
-    type: var
-    var_name: A:FUEL TANK SELECTOR:2
-    var_units: Enum
-    var_type: i32
-
-  -
-    type: var
-    var_name: A:FUEL TANK SELECTOR:3
-    var_units: Enum
-    var_type: i32
-  -
-    type: var
-    var_name: A:FUEL TANK SELECTOR:4
-    var_units: Enum
-    var_type: i32
+    event_name: FUEL_SELECTOR_SET
   -
     type: var
     var_name: A:GENERAL ENG FUEL PUMP SWITCH:1
     var_units: Bool
     var_type: bool
 
-  -
-    type: var
-    var_name: A:BRAKE PARKING POSITION
-    var_units: Bool
-    var_type: bool
+  
   # DISPLAY/CABIN BRIGHTNESS
-  - #ASOBO_LIGHTING_Knob_Cabin_Template
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: Percent over 100
-    event_name: LIGHT_POTENTIOMETER_4_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:11
-    var_units: Percent over 100
-    event_name: LIGHT_POTENTIOMETER_11_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent over 100
-    event_name: LIGHT_POTENTIOMETER_12_SET
+  - # ASOBO_LIGHTING_Knob_SubTemplate
+    type: NumSetWithIndex
+    var_name: A:LIGHT PANEL POWER SETTING
+    var_units: Percent
+    var_type: i32
+    index_param: 0
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
   -
     type: var
     var_name: A:LIGHT CABIN ON
     var_units: Bool
     var_type: bool
-  # DECAL/GLARESHIELD BRIGHTNESS
-  - 
+  - # Avionics lighting ASOBO_LIGHTING_Knob_Avionics_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_4_SET
+  - # Glareshield lighting
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: Percent over 100
-    event_name: LIGHT_POTENTIOMETER_3_SET
-  # PEDALSTAL/PANEL BRIGHTNESS
-  - # ASOBO_LIGHTING_Knob_Pedestal_Template
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:6
-    var_units: Percent over 100
-    event_name: LIGHT_POTENTIOMETER_6_SET
-  # AVIONICS BRIGHTNESS
-  - # ASOBO_LIGHTING_Knob_Avionics_Template
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:9
-    var_units: Percent over 100
-    event_name: LIGHT_POTENTIOMETER_9_SET
-  # AMBIENT LIGHTING BRIGHTNESS
-  - # ASOBO_LIGHTING_Ambient_Template
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:7
-    var_units: Percent over 100
-    event_name: LIGHT_POTENTIOMETER_7_SET
-
-  # BACKUP DISPLAYS
-  - # ASOBO_INSTRUMENT_Knob_AttitudeCage_Template
-    type: var
-    var_name: A:AIRSPEED TRUE CALIBRATE
-    var_units: degrees
-    var_type: f64
-  - # ASOBO_INSTRUMENT_Altimeter_Template
-    type: var
-    var_name: A:KOHLSMAN SETTING HG
-    var_units: inHg
+    var_units: Percent
     var_type: i32
-
-  # Nav/logo/beacon etc lights
-  - # ASOBO_LIGHTING_Switch_Light_Beacon_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT BEACON
-    var_units: Bool
-    event_name: TOGGLE_BEACON_LIGHTS
-  - # ASOBO_LIGHTING_Switch_Light_Landing_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT LANDING
-    var_units: Bool
-    event_name: LANDING_LIGHTS_TOGGLE
-  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT TAXI
-    var_units: Bool
-    event_name: TOGGLE_TAXI_LIGHTS
-  - # ASOBO_LIGHTING_Switch_Light_Navigation_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT NAV
-    var_units: Bool
-    event_name: TOGGLE_NAV_LIGHTS
-  - # ASOBO_LIGHTING_Switch_Light_Strobe_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT STROBE
-    var_units: Bool
-    event_name: STROBES_TOGGLE
+    event_name: LIGHT_POTENTIOMETER_3_SET
+  # ASOBO_LIGHTING_Knob_Pedestal_Template
+  -
+    type: NumSetWithIndex
+    var_name: A:LIGHT PEDESTRAL POWER SETTING
+    var_units: Percent
+    var_type: i32
+    index_param: 0
+    event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
   # Deice
   - # ASOBO_DEICE_Switch_Pitot_Template
     type: ToggleSwitch
@@ -208,10 +146,12 @@ shared:
     var_units: Bool
     event_name: TOGGLE_ALTERNATE_STATIC
   -
-    type: var
+    type: TOGGLESWITCHTWO
     var_name: A:ELT ACTIVATED
     var_units: Bool
     var_type: bool
+    off_event_name: ELT_OFF
+    on_event_name: ELT_ON
   - 
     type: var
     var_name: L:XMLVAR_ELT_STATE
@@ -244,14 +184,16 @@ master:
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
     var_units: percent
+    var_type: i32
     event_name: ELEVATOR_TRIM_SET
-    multiply_by: 163
+    multiply_by: 164
   -
     type: NumSet
     var_name: A:FLAPS HANDLE PERCENT
     var_units: percent
+    var_type: i32
     event_name: FLAPS_CONTINUOUS_SET
-    multiply_by: 163
+    multiply_by: 164
   
   #TEMP
   
