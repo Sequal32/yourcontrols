@@ -236,3 +236,34 @@ impl<T> Syncable<T> for NumIncrement<T> where T: Default + std::ops::SubAssign +
         }
     }
 }
+
+pub struct NumIncrementSet {
+    up_event_id: u32,
+    down_event_id: u32,
+    current: i32,
+}
+
+impl NumIncrementSet {
+    pub fn new(up_event_id: u32, down_event_id: u32) -> Self {
+        return Self {
+            up_event_id,
+            down_event_id,
+            current: 0
+        }
+    }
+}
+
+impl Syncable<i32> for NumIncrementSet {
+    fn set_current(&mut self, current: i32) {
+        self.current = current
+    }
+
+    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
+        if new == self.current {return}
+        if new > self.current {
+            conn.transmit_client_event(1, self.up_event_id, (new - self.current) as u32, GROUP_ID, 0);
+        } else if new < self.current {
+            conn.transmit_client_event(1, self.down_event_id,  (self.current - new) as u32, GROUP_ID, 0);
+        }
+    }
+}

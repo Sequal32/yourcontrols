@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fs::File, time::Instant};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumIncrement, NumSet, NumSetMultiply, NumSetSwap, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchSet, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchSet, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -355,7 +355,17 @@ impl Definitions {
         let down_event_id = self.events.get_or_map_event_id(&var.down_event_name, false);
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
-        self.add_num_mapping(&var_string, Box::new(NumIncrement::<i32>::new(up_event_id, down_event_id, var.increment_by)));
+        self.add_num_mapping(&var_string, Box::new(NumIncrement::new(up_event_id, down_event_id, var.increment_by)));
+
+        Ok(())
+    }
+
+    fn add_num_increment_set(&mut self, category: &str, var: IncrementEntry<i32>) -> Result<(), VarAddError> {
+        let up_event_id = self.events.get_or_map_event_id(&var.up_event_name, false);
+        let down_event_id = self.events.get_or_map_event_id(&var.down_event_name, false);
+
+        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
+        self.add_num_mapping(&var_string, Box::new(NumIncrementSet::new(up_event_id, down_event_id)));
 
         Ok(())
     }
@@ -418,6 +428,7 @@ impl Definitions {
             "TOGGLESWITCHTWO" => self.add_toggle_switch_two(category, try_cast_yaml!(value))?,
             "NUMINCREMENTFLOAT" => self.add_num_increment_float(category, try_cast_yaml!(value))?,
             "NUMINCREMENT" => self.add_num_increment(category, try_cast_yaml!(value))?,
+            "NUMINCREMENTSET" => self.add_num_increment_set(category, try_cast_yaml!(value))?,
             // Uses LVar
             "NUMSETFLOAT" => self.add_float_var(category, try_cast_yaml!(value))?,
             "NUMSWAP" => self.add_num_swap(category, try_cast_yaml!(value))?,
