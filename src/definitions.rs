@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fs::File, time::Instant};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchSet, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchSet, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -325,6 +325,15 @@ impl Definitions {
         Ok(())
     }
 
+    fn add_switch_on(&mut self, category: &str, var: VarEventEntry) -> Result<(), VarAddError> {
+        let event_id = self.events.get_or_map_event_id(&var.event_name, false);
+        // Store SyncAction
+        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
+        self.add_bool_mapping(&var_string, Box::new(SwitchOn::new(event_id)));
+
+        Ok(())
+    }
+
     fn add_num_set(&mut self, category: &str, var: NumSetEntry) -> Result<(), VarAddError> {
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
@@ -374,8 +383,8 @@ impl Definitions {
         let up_event_id = self.events.get_or_map_event_id(&var.up_event_name, false);
         let down_event_id = self.events.get_or_map_event_id(&var.down_event_name, false);
 
-        self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::F64)?;
-        self.add_float_mapping( &var.var_name, Box::new(NumIncrement::<f64>::new(up_event_id, down_event_id, var.increment_by)));
+        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::F64)?;
+        self.add_float_mapping(&var_string, Box::new(NumIncrement::<f64>::new(up_event_id, down_event_id, var.increment_by)));
 
         Ok(())
     }
@@ -429,6 +438,7 @@ impl Definitions {
             "NUMINCREMENTFLOAT" => self.add_num_increment_float(category, try_cast_yaml!(value))?,
             "NUMINCREMENT" => self.add_num_increment(category, try_cast_yaml!(value))?,
             "NUMINCREMENTSET" => self.add_num_increment_set(category, try_cast_yaml!(value))?,
+            "SWITCHON" => self.add_switch_on(category, try_cast_yaml!(value))?,
             // Uses LVar
             "NUMSETFLOAT" => self.add_float_var(category, try_cast_yaml!(value))?,
             "NUMSWAP" => self.add_num_swap(category, try_cast_yaml!(value))?,

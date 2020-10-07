@@ -70,3 +70,76 @@ shared:
     var_name: A:TRANSPONDER CODE:1
     var_units: BCO16
     var_type: i32
+  # Sounds
+  - 
+    type: NumSet
+    var_name: A:NAV SOUND:1
+    var_units: Bool
+    var_type: i32
+    event_name: RADIO_VOR1_IDENT_SET
+  - 
+    type: NumSet
+    var_name: A:NAV SOUND:2
+    var_units: Bool
+    var_type: i32
+    event_name: RADIO_VOR2_IDENT_SET
+  - 
+    type: NumSet
+    var_name: A:DME SOUND:1
+    var_units: Bool
+    var_type: i32
+    event_name: RADIO_DME1_IDENT_SET
+  - 
+    type: NumSet
+    var_name: A:DME SOUND:2
+    var_units: Bool
+    var_type: i32
+    event_name: RADIO_DME2_IDENT_SET
+  - 
+    type: NumSet
+    var_name: A:ADF SOUND:1
+    var_units: Bool
+    var_type: i32
+    event_name: RADIO_ADF_IDENT_SET
+  - 
+    type: NumSet
+    var_name: A:ADF SOUND:2
+    var_units: Bool
+    var_type: i32
+    event_name: KEY_RADIO_VOR2_IDENT_SET
+  -
+    type: ToggleSwitch
+    var_name: A:MARKER SOUND
+    var_units: Bool
+    var_type: bool
+    event_name: MARKER_SOUND_TOGGLE
+  -
+    type: SwitchOn
+    var_name: A:COM TRANSMIT:1
+    var_units: Bool
+    var_type: bool
+    event_name: COM1_TRANSMIT_SELECT
+  -
+    type: SwitchOn
+    var_name: A:COM TRANSMIT:2
+    var_units: Bool
+    var_type: bool
+    event_name: COM2_TRANSMIT_SELECT
+  -
+    type: NumSet
+    var_name: A:COM RECIEVE ALL
+    var_units: Bool
+    var_type: bool
+    event_name: COM_RECEIVE_ALL_SET
+  -
+    type: SwitchOn
+    var_name: A:COM RECEIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: COM1_RECEIVE_SELECT
+  -
+    type: SwitchOn
+    var_name: A:COM RECEIVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: COM2_RECEIVE_SELECT

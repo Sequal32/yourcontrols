@@ -1,0 +1,43 @@
+shared:
+  -
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB
+    var_units: Millibars
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    multiply_by: 16
+  -
+    type: var
+    var_name: A:AIRSPEED TRUE CALIBRATE
+    var_units: Degrees
+    var_type: i32
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool,
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+  -
+    type: NumIncrementFloat
+    var_name: A:ATTITUDE BARS POSITION
+    var_units: Percent Over 100
+    var_type: f64,
+    up_event_name: ATTITUDE_BARS_POSITION_UP
+    down_event_name: ATTITUDE_BARS_POSITION_DOWN
+    increment_by: 0.05
+  -
+    type: NumIncrement
+    var_name: A:NAV OBS:1
+    var_units: Degrees
+    var_type: i32
+    up_event_name: VOR1_OBI_INC
+    down_event_name: VOR1_OBI_DEC
+    increment_by: 1
+  -
+    type: NumIncrement
+    var_name: A:NAV OBS:2
+    var_units: Degrees
+    var_type: i32
+    up_event_name: VOR1_OBI_INC
+    down_event_name: VOR2_OBI_DEC
+    increment_by: 1

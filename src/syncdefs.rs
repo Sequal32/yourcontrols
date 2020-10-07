@@ -29,7 +29,6 @@ impl Syncable<bool> for ToggleSwitch {
 
     fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
         if self.current == new {return}
-        self.current = new;
         conn.transmit_client_event(1, self.event_id, 0, GROUP_ID, 0);
     }
 }
@@ -113,7 +112,32 @@ impl Syncable<bool> for ToggleSwitchTwo {
     fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
         if self.current == new {return}
         let event_id = if new {self.on_event_id} else {self.off_event_id};
-        conn.transmit_client_event(0, event_id, 0, GROUP_ID, 0);
+        conn.transmit_client_event(1, event_id, 0, GROUP_ID, 0);
+    }
+}
+
+pub struct SwitchOn {
+    event_id: u32,
+    current: bool
+}
+
+impl SwitchOn {
+    pub fn new(event_id: u32) -> Self { 
+        Self { 
+            event_id, 
+            current: false
+        } 
+    }
+}
+
+impl Syncable<bool> for SwitchOn {
+    fn set_current(&mut self, current: bool) {
+        self.current = current
+    }
+
+    fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
+        if new == false {return}
+        conn.transmit_client_event(1, self.event_id, 0, GROUP_ID, 0);
     }
 }
 
@@ -225,14 +249,14 @@ impl<T> Syncable<T> for NumIncrement<T> where T: Default + std::ops::SubAssign +
     fn set_new(&mut self, new: T, conn: &simconnect::SimConnector) {
         let mut working = self.current;
 
-        while working < new {
+        while working > new {
             working -= self.increment_amount;
-            conn.transmit_client_event(1, self.up_event_id, 0, GROUP_ID, 0);
+            conn.transmit_client_event(1, self.down_event_id, 0, GROUP_ID, 0);
         }
 
-        while working > new {
+        while working < new {
             working += self.increment_amount;
-            conn.transmit_client_event(1, self.down_event_id, 0, GROUP_ID, 0);
+            conn.transmit_client_event(1, self.up_event_id, 0, GROUP_ID, 0);
         }
     }
 }
