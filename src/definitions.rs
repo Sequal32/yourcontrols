@@ -127,7 +127,9 @@ struct VarEntry {
     var_units: Option<String>,
     var_type: InDataTypes,
     #[serde(default)]
-    interpolate: Option<InterpolateOptions>
+    interpolate: Option<InterpolateOptions>,
+    #[serde(default)]
+    update_every: Option<f64>
 }
 
 // For swapping frequencies
@@ -173,6 +175,28 @@ enum ActionType {
     FreqSwapAction(Box<dyn Syncable<i32>>)
 }
 
+struct Period {
+    time: f64,
+    last_update: Instant
+}
+
+impl Period {
+    fn new(time: f64) -> Self {
+        Self {
+            time,
+            last_update: Instant::now()
+        }
+    }
+
+    fn do_update(&mut self) -> bool {
+        if self.last_update.elapsed().as_secs_f64() >= self.time {
+            self.last_update = Instant::now();
+            return true;
+        }
+        return false
+    }
+}
+
 pub struct Definitions {
     // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchSet, ToggleSwitchParam)
     action_maps: HashMap<String, Vec<ActionType>>,
@@ -185,7 +209,7 @@ pub struct Definitions {
     // Maps variable names to categories to determine when to sync
     categories: HashMap<String, Category>,
     // Maps variable names to periodical sync times
-    periods: HashMap<String, f64>,
+    periods: HashMap<String, Period>,
     // Aircraft variables that should be synced and not just detected for changes
     sync_vars: HashSet<String>,
     // Fetches LVars every X seconds
@@ -432,7 +456,12 @@ impl Definitions {
                 }
             }
             
-            self.interpolate_names.insert(var_name);
+            self.interpolate_names.insert(var_name.clone());
+        }
+
+        // Handle custom periods
+        if let Some(period) = var.update_every {
+            self.periods.insert(var_name.clone(), Period::new(period));
         }
 
         Ok(())
@@ -451,16 +480,14 @@ impl Definitions {
         // All types except event should have a var_name
         if let Some(var_name) = value["var_name"].as_str() {
             let real_var_name = get_real_var_name(var_name);
-            // Period
-            if let Some(period) = value["update_every"].as_f64() {
-                self.periods.insert(real_var_name, period);
-            }
         }
     }
 
     // Calls the correct method for the specified "action" type
     fn parse_var(&mut self, category: &str, value: Value) -> Result<(), VarAddError> {
         let type_str = check_and_return_field!("type", value, str);
+
+        // self.check_other_common_fields(&value);
 
         match type_str.to_uppercase().as_str() {
             "TOGGLESWITCH" => self.add_toggle_switch(category, try_cast_yaml!(value))?,
@@ -577,8 +604,16 @@ impl Definitions {
                     
                 }
     
-                // Queue data for reading
-                self.current_sync.avars.insert(var_name, value);
+                // Determine if this variable should be updated
+                let mut should_write = true;
+                if let Some(period) = self.periods.get_mut(&var_name) {
+                    should_write = period.do_update();
+                }
+
+                if should_write {
+                    // Queue data for reading
+                    self.current_sync.avars.insert(var_name, value);                    
+                }
             }
 
         }
