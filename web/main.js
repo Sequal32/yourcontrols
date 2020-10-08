@@ -3,6 +3,7 @@ var server_button = document.getElementById('server-button')
 var alert = document.getElementById("alert")
 var overloaded_alert = document.getElementById("overloaded-alert")
 
+var nav_bar = document.getElementById("nav");
 var server_page_button = document.getElementById("server-page")
 var client_page_button = document.getElementById("client-page")
 var connection_list_button = document.getElementById("connection-page")
@@ -102,13 +103,23 @@ function PageChange(pageName) {
             break
     }
 
-    
-    ResetForm()
+    if (!is_connected) {
+        ResetForm()
+    }
 }
 
 
 function PagesVisible(visible) {
-    document.getElementById("nav").hidden = !visible
+    if (visible) {
+        server_page_button.hidden = false
+        client_page_button.hidden = false
+    } else {
+        if (on_client) {
+            server_page_button.hidden = true
+        } else {
+            client_page_button.hidden = true
+        }
+    }
 }
 
 function ValidatePort(str) {
@@ -177,6 +188,12 @@ function MessageReceived(data) {
             break;
         case "lostconnection":
             connectionList.remove(data["data"])
+            break;
+        // Other client
+        case "observing":
+            break;
+        // Us
+        case "set_observing":
             break;
     }
 }

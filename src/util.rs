@@ -6,6 +6,7 @@ pub struct LocalVar {
     pub var_type: InDataTypes
 }
 
+#[derive(Eq, PartialEq)]
 pub enum Category {
     Shared,
     Master

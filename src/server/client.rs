@@ -5,7 +5,7 @@ use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::io::Write;
 use std::thread;
 
-use super::{PartialReader, TransferStoppedReason, process_message, util::{ControlTransferType, ReceiveData, TransferClient}};
+use super::{PartialReader, TransferStoppedReason, process_message, util::{ReceiveData, TransferClient}};
 
 struct TransferStruct {
     stream: TcpStream,
@@ -29,6 +29,8 @@ pub struct Client {
     client_rx: Receiver<Value>,
     // Send data to app to receive client data
     server_tx: Sender<ReceiveData>,
+    // IP
+    server_name: String
 }
 
 impl Client {
@@ -39,13 +41,16 @@ impl Client {
         Self {
             should_stop: Arc::new(AtomicBool::new(false)),
             transfer: None,
-            client_rx, client_tx, server_rx, server_tx
+            client_rx, client_tx, server_rx, server_tx,
+            server_name: String::new()
         }
     }
 
     pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), std::io::Error>  {
         let stream = TcpStream::connect_timeout(&SocketAddr::new(ip, port), std::time::Duration::from_secs(5))?;
         stream.set_nonblocking(true).unwrap();
+
+        self.server_name = stream.local_addr().unwrap().to_string();
 
         // to be used in run()
         self.transfer = Some(Arc::new(Mutex::new(
@@ -64,6 +69,8 @@ impl Client {
         let transfer = self.transfer.as_ref().unwrap().clone();
         let should_stop = self.should_stop.clone();
 
+        self.on_connected();
+
         thread::spawn(move || {
             loop {
                 let transfer = &mut transfer.lock().unwrap();
@@ -80,7 +87,7 @@ impl Client {
                     Ok(n) => {
                         if let Some(data) = transfer.reader.try_read_string(&buf[0..n]) {
                             // Deserialize json
-                            if let Ok(data) = process_message(&data) {
+                            if let Ok(data) = process_message(&data, None) {
                                 transfer.server_tx.send(data).ok();
                             }
                         }
@@ -132,5 +139,9 @@ impl TransferClient for Client {
 
     fn get_receiver(&self) -> &Receiver<ReceiveData> {
         return &self.server_rx
+    }
+
+    fn get_server_name(&self) -> &str {
+        return &self.server_name
     }
 }

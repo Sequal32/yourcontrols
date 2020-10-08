@@ -23,7 +23,8 @@ struct Client {
     reader: PartialReader,
     // May not be able to write all data in single loop
     writer: PartialWriter,
-    address: IpAddr
+    address: String,
+    name: String
 }
 
 struct TransferStruct {
@@ -82,11 +83,11 @@ impl Server {
     }
 
     pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(), std::io::Error> {
-        // Attempt to port forward
-        if let Err(e) = self.port_forward(port) {
-            self.port_error = Some(e);
-            println!("{:?}", e);
-        }
+        // // Attempt to port forward
+        // if let Err(e) = self.port_forward(port) {
+        //     self.port_error = Some(e);
+        //     println!("{:?}", e);
+        // }
 
         // Start listening for connections
         let bind_ip = if is_ipv6 {"::"} else {"0.0.0.0"};
@@ -126,12 +127,13 @@ impl Server {
                             stream,
                             writer: PartialWriter::new(),
                             reader: PartialReader::new(),
-                            address: addr.ip()
+                            address: addr.ip().to_string(),
+                            name: String::new()
                         }
                     );
                     // Increment number of connections and tell app
                     number_connections.fetch_add(1, SeqCst);
-                    transfer.server_tx.send(ReceiveData::NewConnection(addr.ip())).ok();
+                    transfer.server_tx.send(ReceiveData::NewConnection(addr.ip().to_string())).ok();
                 }
                 // Break the loop if the server's stopped
                 if should_stop.load(SeqCst) {break}
@@ -147,6 +149,8 @@ impl Server {
         let transfer = self.transfer.as_ref().unwrap().clone();
         let number_connections = self.number_connections.clone();
         let should_stop = self.should_stop.clone();
+
+        self.on_connected();
 
         thread::spawn(move || {
             loop {
@@ -174,7 +178,7 @@ impl Server {
                             // Append bytes to reader
                             if let Some(data) = client.reader.try_read_string(&buf[0..n]) {
                                 // Parse payload
-                                if let Ok(data) = process_message(&data) {
+                                if let Ok(data) = process_message(&data, Some(client.address.clone())) {
                                     to_write.push(data);
                                 }
                             }
@@ -243,5 +247,9 @@ impl TransferClient for Server {
 
     fn get_receiver(&self) ->& Receiver<ReceiveData> {
         return &self.server_rx;
+    }
+
+    fn get_server_name(&self) -> &str {
+        return "SERVER"
     }
 }

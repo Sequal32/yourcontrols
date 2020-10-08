@@ -10,8 +10,8 @@ pub enum AppMessage {
     Server(bool, u16),
     Connect(IpAddr, String, u16),
     Disconnect,
-    TakeControl,
-    RelieveControl,
+    TransferControl(String),
+    SetObserver(String, bool),
     Startup,
 }
 
@@ -76,12 +76,16 @@ impl App {
                     <style>{css}</style>
                 </head>
                 <body>{body}</body>
-                <script>{js}</script>
+                <script>
+                {js1}
+                {js}
+                </script>
                 <img src="{logo}", class="logo-image"/>
                 </html>
             "#, 
             css = include_str!("../web/stylesheet.css"), 
             js = include_str!("../web/main.js"), 
+            js1 = include_str!("../web/list.js"),
             body = include_str!("../web/index.html"),
             logo = format!("data:image/png;base64,{}", base64::encode(logo.as_slice()))
             )))
@@ -106,15 +110,24 @@ impl App {
                             }
                         };
                     },
+
                     "disconnect" => {tx.send(AppMessage::Disconnect).ok();},
+
                     "server" => {
                         tx.send(AppMessage::Server(
                             data["is_v6"].as_bool().unwrap(), 
                             data["port"].as_u64().unwrap() as u16)
                         ).ok();
                     },
-                    "relieve" => {tx.send(AppMessage::RelieveControl).ok();},
-                    "take" => {tx.send(AppMessage::TakeControl).ok();}
+
+                    "transfer_control" => {
+                        tx.send(AppMessage::TransferControl(data["target"].as_str().unwrap().to_string())).ok();
+                    },
+
+                    "set_observer" => {
+                        Ok(tx.send(AppMessage::SetObserver(data["target"].as_str().unwrap().to_string(), data["is_observer"].as_bool().unwrap())));
+                    }
+
                     "startup" => {tx.send(AppMessage::Startup).ok();}
                     _ => ()
                 };
@@ -152,7 +165,7 @@ impl App {
         return self.rx.try_recv();
     }
 
-    pub fn invoke(&mut self, type_string: &str, data: Option<&str>) {
+    pub fn invoke(&self, type_string: &str, data: Option<&str>) {
         let handle = self.app_handle.lock().unwrap();
         if handle.is_none() {return}
         // Send data to javascript
@@ -164,63 +177,71 @@ impl App {
         }).ok();
     }
 
-    pub fn error(&mut self, msg: &str) {
+    pub fn error(&self, msg: &str) {
         self.invoke("error", Some(msg));
     }
 
-    pub fn set_port(&mut self, port: u16) {
+    pub fn set_port(&self, port: u16) {
         self.invoke("set_port", Some(port.to_string().as_str()));
     }
 
-    pub fn set_ip(&mut self, ip: &str) {
+    pub fn set_ip(&self, ip: &str) {
         self.invoke("set_ip", Some(ip));
     }
 
-    pub fn attempt(&mut self) {
+    pub fn attempt(&self) {
         self.invoke("attempt", None);
     }
 
-    pub fn connected(&mut self) {
+    pub fn connected(&self) {
         self.invoke("connected", None);
     }
 
-    pub fn disconnected(&mut self) {
+    pub fn disconnected(&self) {
         self.invoke("disconnected", None);
     }
 
-    pub fn server_fail(&mut self, reason: &str) {
+    pub fn server_fail(&self, reason: &str) {
         self.invoke("server_fail", Some(reason));
     }
 
-    pub fn client_fail(&mut self, reason: &str) {
+    pub fn client_fail(&self, reason: &str) {
         self.invoke("client_fail", Some(reason));
     }
 
-    pub fn gain_control(&mut self) {
+    pub fn gain_control(&self) {
         self.invoke("control", None);
     }
 
-    pub fn lose_control(&mut self) {
+    pub fn lose_control(&self) {
         self.invoke("lostcontrol", None);
     }
 
-    pub fn can_take_control(&mut self) {
+    pub fn can_take_control(&self) {
         self.invoke("controlavail", None);
     }
 
-    pub fn server_started(&mut self, client_count: u16) {
+    pub fn server_started(&self, client_count: u16) {
         self.invoke("server", Some(client_count.to_string().as_str()));
     }
 
-    pub fn overloaded(&mut self) {
+    pub fn new_connection(&self, name: &str) {
+        self.invoke("newconnection", Some(name));
+    }
+
+    pub fn lost_connection(&self, name: &str) {
+        self.invoke("lostconnection", Some(name));
+    }
+
+    pub fn overloaded(&self) {
         self.invoke("overloaded", None);
     }
 
-    pub fn stable(&mut self) {
+    pub fn stable(&self) {
         self.invoke("stable", None);
     }
 
-    pub fn update_overloaded(&mut self, is_overloaded: bool) {
+    pub fn update_overloaded(&self, is_overloaded: bool) {
         if is_overloaded && !self.was_overloaded {
             self.overloaded()
         } else if !is_overloaded && self.was_overloaded {

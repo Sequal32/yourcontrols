@@ -1,7 +1,9 @@
-use std::{io::Write, net::IpAddr};
 use crossbeam_channel::{Receiver, Sender};
 use serde_json::{Value, json};
+use std::{io::Write, net::IpAddr};
+
 use crate::definitions::AllNeedSync;
+use super::payloads::*;
 
 pub trait TransferClient {
     fn get_connected_count(&self) -> u16;
@@ -11,9 +13,12 @@ pub trait TransferClient {
 
     fn get_transmitter(&self) -> &Sender<Value>;
     fn get_receiver(&self) -> &Receiver<ReceiveData>;
+    fn get_server_name(&self) -> &str;
     // Application specific functions
 
     fn send_value(&self, message: Value) {
+        let mut message = message;
+        message["from"] = Value::String(self.get_server_name().to_string());
         self.get_transmitter().send(message).ok();
     }
 
@@ -28,29 +33,26 @@ pub trait TransferClient {
         return self.get_receiver().try_recv();
     }
 
-    fn change_control(&self, control_type: ControlTransferType) {
-        match control_type {
-            ControlTransferType::Take => {
-                self.send_value(json!({
-                    "type":"take_control"
-                }));
-            }
-            ControlTransferType::Relieve => {
-                self.send_value(json!({
-                    "type":"relieve_control"
-                }));
-            }
-            ControlTransferType::Cancel => {
-                self.send_value(json!({
-                    "type":"cancel_relieve"
-                }));
-            },
-            ControlTransferType::Confirm => {
-                self.send_value(json!({
-                    "type":"confirm_relieve"
-                }));
-            }
-        }
+    fn transfer_control(&self, target: String) {
+        self.send_value(json!({
+            "type": "transfer_control",
+            "target": target
+        }));
+    }
+
+    fn set_observer(&self, target: String, is_observer: bool) {
+        self.send_value(json!({
+            "type": "set_observer",
+            "target": target,
+            "is_observer": is_observer
+        }));
+    }
+
+    fn on_connected(&self) {
+        self.send_value(json!({
+            "type": "name",
+            "data": self.get_server_name()
+        }))
     }
 }
 
@@ -106,26 +108,44 @@ impl PartialWriter {
     }
 }
 
-pub fn process_message(message: &str) -> Result<ReceiveData, ParseError> {
+pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveData, ParseError> {
     // Parse string into json
     let value: Value = match serde_json::from_str(message.trim()) {
         Ok(v) => v,
         Err(e) => return Err(ParseError::InvalidJson(e))
     };
 
+    let sender: String = match from {
+        Some(from) => from,
+        None => match value["from"].as_str() {
+            Some(from) => from.to_string(),
+            None => return Err(ParseError::FieldMissing("from"))
+        }
+    };
+
     // Determine message type
     match value["type"].as_str() {
         // Parse payload into AllNeedSync
-        Some("update") => {
-            match serde_json::from_value(value["data"].clone()) {
-                Ok(data) => Ok(ReceiveData::Update(data)),
-                Err(e) => Err(ParseError::InvalidPayload(e))
-            }
+        Some("update") => match serde_json::from_value(value["data"].clone()) {
+            Ok(data) => Ok(ReceiveData::Update(sender, data)),
+            Err(e) => Err(ParseError::InvalidPayload(e))
         }
-        Some("take_control") => Ok(ReceiveData::ChangeControl(ControlTransferType::Take)),
-        Some("relieve_control") => Ok(ReceiveData::ChangeControl(ControlTransferType::Relieve)),
-        Some("cancel_relieve") => Ok(ReceiveData::ChangeControl(ControlTransferType::Cancel)),
-        Some("confirm_relieve") => Ok(ReceiveData::ChangeControl(ControlTransferType::Confirm)),
+
+        Some("name") => match value["data"].as_str() {
+            Some(data) => Ok(ReceiveData::Name(sender, data.to_string())),
+            None => Err(ParseError::FieldMissing("data"))
+        }
+
+        Some("transfer_control") => match value["target"].as_str() {
+            Some(to) => Ok(ReceiveData::TransferControl(sender, to.to_string())),
+            None => Err(ParseError::FieldMissing("target"))
+        },
+
+        Some("set_observer") => match value["target"].as_str() {
+            Some(to) => Ok(ReceiveData::SetObserver(to.to_string(), value["is_observer"].as_bool().unwrap_or_default())),
+            None => Err(ParseError::FieldMissing("target"))
+        }
+
         Some(_) => Err(ParseError::InvalidType),
         _ => Err(ParseError::FieldMissing("type")),
     }
@@ -139,22 +159,20 @@ pub enum ParseError {
     InvalidType
 }
 
-pub enum ControlTransferType {
-    Take,
-    Relieve,
-    Cancel,
-    Confirm
-}
-
 // Various types of data to receive
 pub enum ReceiveData {
-    NewConnection(IpAddr),
-    ConnectionLost(IpAddr),
+    // IpAddr
+    NewConnection(String),
+    // IpAddr
+    ConnectionLost(String),
     TransferStopped(TransferStoppedReason),
     // Possible types of data to receive
-    Update(AllNeedSync),
-    ChangeControl(ControlTransferType),
-    
+    Update(String, AllNeedSync),
+    // From, To
+    TransferControl(String, String),
+    // Target, is_observer
+    SetObserver(String, bool),
+    Name(String, String)
 }
 
 pub enum TransferStoppedReason {

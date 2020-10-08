@@ -54,6 +54,7 @@ class ConnectionListItem {
         this.object = htmlObject
         this.controlButton = htmlObject.children[0]
         this.observeButton = htmlObject.children[1]
+        this.is_observer = false
         this.name = name
 
         this.controlButton.onclick = this.controlButtonClicked.bind(this)
@@ -65,9 +66,13 @@ class ConnectionListItem {
         this.observeButton.classList.toggle("btn-outline-secondary")
         this.observeButton.classList.toggle("btn-secondary")
 
+        this.is_observer = !this.is_observer
+        this.controlButton.hidden = this.is_observer
+
         invoke({
-            type: removing ? "remove_observer" : "set_observer",
-            data: this.name
+            type: "set_observer",
+            is_observer: removing,
+            target: this.name
         })
     }
 
@@ -75,12 +80,12 @@ class ConnectionListItem {
         this.controlButton.hidden = true
         invoke({
             type: "transfer_control",
-            data: this.name
+            target: this.name
         })
     }
 
     setButtonsVisibility(hasControl, isClient) {
-        this.controlButton.hidden = !hasControl
+        this.controlButton.hidden = this.is_observer || (!hasControl && !this.is_observer)
         this.observeButton.hidden = isClient
     }
 }

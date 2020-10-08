@@ -1,6 +1,7 @@
 // #![windows_subsystem = "windows"]
 
 mod app;
+mod clientmanager;
 mod definitions;
 mod interpolate;
 mod lvars;
@@ -13,13 +14,12 @@ mod util;
 mod update;
 
 use app::{App, AppMessage};
+use clientmanager::ClientManager;
 use definitions::Definitions;
-use crossbeam_channel::{Receiver, Sender};
-use serde_json::{Value, json};
 use simconfig::Config;
-use server::{Client, ControlTransferType, ReceiveData, Server, TransferClient};
+use server::{Client, ReceiveData, Server, TransferClient};
 use simconnect::{self, DispatchResult};
-use std::{io::Error, net::{IpAddr}, thread, time::Duration, time::Instant};
+use std::{thread, time::Duration, time::Instant};
 use spin_sleep::sleep;
 
 use sync::*;
@@ -44,12 +44,15 @@ fn main() {
     let mut conn = simconnect::SimConnector::new();
 
     let mut definitions = Definitions::new();
-    definitions.load_config("aircraftdefs/C172.yaml");
+    println!("{:?}", definitions.load_config("aircraftdefs/C172.yaml"));
 
     let mut control = Control::new();
 
+    let mut clients = ClientManager::new();
+
     // Set up sim connect
     let mut connected = false;
+    let mut observing = false;
 
     let mut app_interface = App::setup();
 
@@ -89,54 +92,38 @@ fn main() {
             definitions.step(&conn);
             // Data from the person in control
             match client.get_next_message() {
-                Ok(ReceiveData::Update(sync_data)) => {
+                Ok(ReceiveData::Update(sender, sync_data)) => {
+                    if clients.is_observer(&sender) {return}
                     // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
-                    definitions.on_receive_data(&conn, &sync_data, !need_update);
+                    println!("{}", sender);
+                    definitions.on_receive_data(&conn, &sync_data, clients.client_has_control(&sender), !need_update);
                     need_update = false;
                 }
-                Ok(ReceiveData::ChangeControl(control_type)) => {
-                    match control_type {
-                        ControlTransferType::Take => {
-                            if control.has_control() {
-                                // Freeze aircraft
-                                control.lose_control(&conn);
-                                // Set next update instead of interpolating
-                                need_update = true;
-                                // Hide relieve control button
-                                app_interface.lose_control();
-                                // Tell the other client that we've released control
-                                client.change_control(ControlTransferType::Confirm);
-                            }
-                        }
-                        ControlTransferType::Confirm =>  {
-                            if control.try_take_control(&conn) {
-                                // Initialize state
-                                client.update(definitions.get_all_current());
-                                app_interface.gain_control();
-                            }
-                        }
-                        ControlTransferType::Relieve => {
-                            if !control.has_control() {
-                                control.controls_available();
-                                app_interface.can_take_control();
-                            }
-                        }
-                        ControlTransferType::Cancel => {
-                            control.controls_unavailable();
-                            app_interface.lose_control();
-                        }
+                Ok(ReceiveData::TransferControl(sender, to)) => {
+                    // Someone is transferring controls to us
+                    if to == client.get_server_name() {
+                        control.take_control(&conn);
+                        app_interface.gain_control();
+                        clients.set_no_control();
+                    // Someone else has controls, if we have controls we let go and listen for their messages
+                    } else if control.has_control() {
+                        app_interface.lose_control();
+                        control.lose_control(&conn);
+                        clients.set_client_control(sender);
                     }
-                    
                 }
                 // Increment client counter
-                Ok(ReceiveData::NewConnection(_)) => {
+                Ok(ReceiveData::NewConnection(name)) => {
                     if control.has_control() {
                         client.update(definitions.get_all_current());
                     }
                     app_interface.server_started(client.get_connected_count());
+                    clients.add_client(name);
                 },
-                Ok(ReceiveData::ConnectionLost(_)) => {
+                Ok(ReceiveData::ConnectionLost(name)) => {
                     app_interface.server_started(client.get_connected_count());
+                    app_interface.lost_connection(&name);
+                    clients.remove_client(&name);
                 }
                 Ok(ReceiveData::TransferStopped(reason)) => {
                     // TAKE BACK CONTROL
@@ -151,11 +138,22 @@ fn main() {
                         }
                     }
                 }
+                Ok(ReceiveData::Name(sender, data)) => {
+                    app_interface.new_connection(&data);
+                    clients.set_client_name(&sender, data);
+                }
+                Ok(ReceiveData::SetObserver(target, is_observer)) => {
+                    if target == client.get_server_name() {
+                        observing = is_observer;
+                    } else {
+                        clients.set_observer(&target, is_observer);
+                    }
+                }
                 Err(_) => ()
             }
 
             // Handle sync vars
-            if control.has_control() && update_rate_instant.elapsed().as_secs_f64() > update_rate {
+            if !observing && control.has_control() && update_rate_instant.elapsed().as_secs_f64() > update_rate {
                 if let Some(values) = definitions.get_need_sync() {
                     client.update(values);
                 }
@@ -166,10 +164,6 @@ fn main() {
                 // Message timeout
                 // app_interface.update_overloaded(interpolation.overloaded());
                 definitions.step_interpolate(&conn);
-            // Relieve control response timeout
-            } else if control.is_relieving_control() && control.time_since_relieve().as_secs() > 20 {
-                control.stop_relieiving();
-                client.change_control(ControlTransferType::Cancel);
             }
 
             // Server stopped or client disconnected
@@ -245,17 +239,22 @@ fn main() {
                         client.stop();
                     }
                 }
-                AppMessage::TakeControl => {
+                AppMessage::TransferControl(to) => {
                     if let Some(client) = transfer_client.as_ref() {
-                        client.change_control(ControlTransferType::Take)
+                        // Convert from name to ip
+                        if let Some(ip) = clients.lookup_ip_from_name(&to) {
+                            clients.set_client_control(ip.clone());
+                            client.transfer_control(ip);
+                            control.lose_control(&conn);
+                        }
                     }
                 }
-                AppMessage::RelieveControl => {
+                AppMessage::SetObserver(ip, is_observer) => {
+                    clients.set_observer(&ip, is_observer);
                     if let Some(client) = transfer_client.as_ref() {
-                        control.relieve_control();
-                        client.change_control(ControlTransferType::Relieve)
+                        client.set_observer(ip, is_observer);
                     }
-                },
+                }
                 AppMessage::Startup => {
                     thread::sleep(APP_STARTUP_SLEEP_TIME);
                     app_interface.set_ip(config.ip.as_str());
@@ -266,16 +265,17 @@ fn main() {
         } 
         // Try to connect to simconnect if not connected
         if !connected {
-            connected = conn.connect("Your Control");
-            if connected {
-                // Display not connected to server message
-                app_interface.disconnected();
-                definitions.on_connected(&conn);
-                control.on_connected(&conn);
-            } else {
-                // Display trying to connect message
-                app_interface.error("Trying to connect to SimConnect...");
-            };
+            // connected = conn.connect("Your Control");
+            // if connected {
+            //     // Display not connected to server message
+            //     app_interface.disconnected();
+            //     definitions.on_connected(&conn);
+            //     control.on_connected(&conn);
+            // } else {
+            //     // Display trying to connect message
+            //     app_interface.error("Trying to connect to SimConnect...");
+            // };
+            connected = true;
         }
 
         if was_no_message {sleep(LOOP_SLEEP_TIME)}
