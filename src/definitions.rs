@@ -146,11 +146,21 @@ struct EventEntry {
 }
 
 // The struct that get_need_sync returns. Holds all the aircraft/local variables and events that have changed since the last call.
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct AllNeedSync {
     pub avars: AVarMap,
     pub lvars: LVarMap,
     pub events: EventMap
+}
+
+impl AllNeedSync {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        return self.avars.len() == 0 && self.lvars.len() == 0 && self.events.len() == 0
+    }
 }
 
 enum ActionType {
@@ -174,14 +184,14 @@ pub struct Definitions {
     avarstransfer: AircraftVars,
     // Maps variable names to categories to determine when to sync
     categories: HashMap<String, Category>,
+    // Maps variable names to periodical sync times
+    periods: HashMap<String, f64>,
     // Aircraft variables that should be synced and not just detected for changes
     sync_vars: HashSet<String>,
     // Fetches LVars every X seconds
     tick: u64,
-    // Queues
-    aircraft_var_queue: AVarMap,
-    local_var_queue: LVarMap,
-    event_queue: EventMap,
+    // Value to hold the current queue
+    current_sync: AllNeedSync,
     
     interpolation_avars: Interpolate,
     interpolation_lvars: Interpolate,
@@ -213,11 +223,10 @@ impl Definitions {
             avarstransfer: AircraftVars::new(1),
             sync_vars: HashSet::new(),
             categories: HashMap::new(),
+            periods: HashMap::new(),
 
             tick: 0,
-            aircraft_var_queue: HashMap::new(),
-            local_var_queue: HashMap::new(),
-            event_queue: HashMap::new(),
+            current_sync: AllNeedSync::new(),
 
             interpolation_avars: Interpolate::new(3),
             interpolation_lvars: Interpolate::new(3),
@@ -438,6 +447,17 @@ impl Definitions {
         Ok(())
     }
 
+    fn check_other_common_fields(&mut self, value: &Value) {
+        // All types except event should have a var_name
+        if let Some(var_name) = value["var_name"].as_str() {
+            let real_var_name = get_real_var_name(var_name);
+            // Period
+            if let Some(period) = value["update_every"].as_f64() {
+                self.periods.insert(real_var_name, period);
+            }
+        }
+    }
+
     // Calls the correct method for the specified "action" type
     fn parse_var(&mut self, category: &str, value: Value) -> Result<(), VarAddError> {
         let type_str = check_and_return_field!("type", value, str);
@@ -504,7 +524,7 @@ impl Definitions {
     pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
         if let Some(lvar) = self.lvarstransfer.process_client_data(data) {
 
-            self.local_var_queue.insert(lvar.var_name.to_string(), lvar.var.floating);
+            self.current_sync.lvars.insert(lvar.var_name.to_string(), lvar.var.floating);
 
         }
     }
@@ -514,7 +534,7 @@ impl Definitions {
         if data.uGroupID != self.events.group_id {return}
 
         let event_name = self.events.match_event_id(data.uEventID);
-        self.event_queue.insert(event_name.clone(), data.dwData);
+        self.current_sync.events.insert(event_name.clone(), data.dwData);
     }
 
     // Process changed aircraft variables and update SyncActions related to it
@@ -530,26 +550,25 @@ impl Definitions {
 
                     for action in actions {
                         match value {
-                            VarReaderTypes::Bool(value) => {
-                                if let ActionType::BoolAction(action) = action {
+                            VarReaderTypes::Bool(value) => match action {
+                                ActionType::BoolAction(action) => {
                                     action.set_current(value);
                                 }
+                                _ => {}
                             }
-                            VarReaderTypes::I32(value) => {
-                                match action {
-                                    ActionType::NumAction(action) | ActionType::FreqSwapAction(action) => {
-                                        action.set_current(value);
-                                    }
-                                    _ => {}
+
+                            VarReaderTypes::I32(value) => match action {
+                                ActionType::NumAction(action) | ActionType::FreqSwapAction(action) => {
+                                    action.set_current(value);
                                 }
+                                _ => {}
                             }
-                            VarReaderTypes::F64(value) => {
-                                match action {
-                                    ActionType::NumFloatAction(action) => {
-                                        action.set_current(value);
-                                    }
-                                    _ => {}
+
+                            VarReaderTypes::F64(value) => match action {
+                                ActionType::NumFloatAction(action) => {
+                                    action.set_current(value);
                                 }
+                                _ => {}
                             }
 
                             _ => {}
@@ -559,7 +578,7 @@ impl Definitions {
                 }
     
                 // Queue data for reading
-                self.aircraft_var_queue.insert(var_name, value);
+                self.current_sync.avars.insert(var_name, value);
             }
 
         }
@@ -593,19 +612,12 @@ impl Definitions {
     }
 
     pub fn get_need_sync(&mut self) -> Option<AllNeedSync> {
-        if self.aircraft_var_queue.len() == 0 && self.local_var_queue.len() == 0 && self.event_queue.len() == 0 {return None}
+        if self.current_sync.is_empty() {return None}
+        let mut return_data = AllNeedSync::new();
+        
+        std::mem::swap(&mut return_data, &mut self.current_sync);
 
-        let data = AllNeedSync {
-            avars: self.aircraft_var_queue.clone(),
-            lvars: self.local_var_queue.clone(),
-            events: self.event_queue.clone()
-        };
-
-        self.aircraft_var_queue.clear();
-        self.local_var_queue.clear();
-        self.event_queue.clear();
-
-        return Some(data);
+        return Some(return_data);
     }
 
     // Skip checking with self.sync_vars and creating a new hashmap - used for interpolation
@@ -640,36 +652,33 @@ impl Definitions {
                 if let Some(actions) = self.action_maps.get_mut(var_name) {
                     for action in actions {
 
-                        match action {
-                            ActionType::BoolAction(action) => {
-                                if let VarReaderTypes::Bool(value) = data {
+                        match data {
+                            VarReaderTypes::Bool(value) => match action {
+                                ActionType::BoolAction(action) => {
                                     action.set_new(*value, conn)
                                 }
+                                _ => {}
                             }
 
-                            ActionType::NumAction(action) => {
-                                if let VarReaderTypes::I32(value) = data {
-                                    action.set_new(*value, conn);
-                                }
-                            }
-
-                            // Due to limitations of dwData, this is a special case where multiply_by is used 
-                            ActionType::FloatAction(action) => {
-                                if let VarReaderTypes::F64(value) = data {
-                                    self.lvarstransfer.set_unchecked(conn, &format!("K:{}", action.event_name), Some(""), &value.to_string());
-                                }
-                            }
-
-                            ActionType::NumFloatAction(action) => {
-                                if let VarReaderTypes::F64(value) = data {
-                                    action.set_new(*value, conn);
-                                }
-                            }
-
-                            ActionType::NumSetWithIndex(action) => {
-                                if let VarReaderTypes::I32(value) = data {
+                            VarReaderTypes::I32(value) => match action {
+                                // Format of VALUE INDEX (>K:2:NAME)
+                                ActionType::NumSetWithIndex(action) => {
                                     self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), Some(""), &format!("{} {}", value, action.index_param));
                                 }
+                                ActionType::NumAction(action) => {
+                                    action.set_new(*value, conn);
+                                }
+                                _ => {}
+                            }
+
+                            VarReaderTypes::F64(value) => match action {
+                                ActionType::FloatAction(action) => {
+                                    self.lvarstransfer.set_unchecked(conn, &format!("K:{}", action.event_name), Some(""), &value.to_string());
+                                }
+                                ActionType::NumFloatAction(action) => {
+                                    action.set_new(*value, conn);
+                                }
+                                _ => {}
                             }
 
                             _ => {}
