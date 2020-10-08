@@ -1,11 +1,11 @@
 var connect_button = document.getElementById('connect-button')
 var server_button = document.getElementById('server-button')
-var control_button = document.getElementById('control-button')
 var alert = document.getElementById("alert")
 var overloaded_alert = document.getElementById("overloaded-alert")
 
 var server_page_button = document.getElementById("server-page")
 var client_page_button = document.getElementById("client-page")
+var connection_list_button = document.getElementById("connection-page")
 
 var port_input = document.getElementById("port-input")
 var server_input = document.getElementById("server-input")
@@ -16,9 +16,12 @@ var ip6radio = document.getElementById("ip6")
 
 var trying_connection = false
 var is_connected = false
+var is_client = false
 var on_client = true
 var has_control = false
 
+// Connection List
+var connectionList = new ConnectionList(document.getElementById("connection-list"))
 // General functions
 function invoke(data) {
     window.external.invoke(JSON.stringify(data))
@@ -53,7 +56,6 @@ function OnDisconnect(text) {
     alert.updatetext("danger", text)
     is_connected = false
     trying_connection = false
-    control_button.hidden = true
     server_input.disabled = false
     port_input.disabled = false
 
@@ -64,12 +66,43 @@ function OnDisconnect(text) {
     ResetForm()
 }
 
-function PageChange(isClient) {
+function ServerClientPageChange(isClient) {
     on_client = isClient
     connect_button.hidden = !isClient
     server_button.hidden = isClient
     server_input.hidden = !isClient
     radios.hidden = isClient
+    port_input.hidden = isClient
+}
+
+function PageChange(pageName) {
+    connectionList.hide()
+    client_page_button.classList.remove("active")
+    server_page_button.classList.remove("active")
+    connection_list_button.classList.remove("active")
+
+    switch (pageName) {
+        case "server":
+            ServerClientPageChange(false)
+            server_page_button.classList.add("active")
+            break;
+        case "client":
+            ServerClientPageChange(true)
+            client_page_button.classList.add("active")
+            break;
+        case "connections":
+            on_client = false
+            connect_button.hidden = true
+            server_button.hidden = true
+            server_input.hidden = true
+            radios.hidden = true
+            port_input.hidden = true
+            connectionList.show()
+            connection_list_button.classList.add("active")
+            break
+    }
+
+    
     ResetForm()
 }
 
@@ -98,6 +131,7 @@ function MessageReceived(data) {
             break;
         case "connected":
             OnConnected()
+            is_client = true
             alert.updatetext("success", "Connected to server.")
             connect_button.updatetext("danger", "Disconnect")
             break;
@@ -112,23 +146,19 @@ function MessageReceived(data) {
             break;
         case "server":
             OnConnected()
+            is_client = false
             alert.updatetext("success", "Server started! " + data["data"] + " clients connected.")
             break;
         case "error":
             alert.updatetext("danger", data["data"])
             break;
-        case "controlavail":
-            control_button.hidden = false
-            control_button.updatetext("primary", "Take Control")
-            break;
         case "control":
             has_control = true
-            control_button.updatetext("primary", "Relieve Control")
-            control_button.hidden = false
+            connectionList.update()
             break;
         case "lostcontrol":
             has_control = false
-            control_button.hidden = true
+            connectionList.update()
             break;
         case "set_ip":
             server_input.value = data["data"]
@@ -141,6 +171,12 @@ function MessageReceived(data) {
             break;
         case "stable":
             overloaded_alert.hidden = true
+            break;
+        case "newconnection":
+            connectionList.add(data["data"])
+            break;
+        case "lostconnection":
+            connectionList.remove(data["data"])
             break;
     }
 }
@@ -159,35 +195,21 @@ server_button.updatetext = function(typeString, text) {
     server_button.innerHTML = text
 }
 
-control_button.updatetext = function(typeString, text) {
-    control_button.className = control_button.className.replace(/btn-\w+/gi, "btn-" + typeString)
-    control_button.innerHTML = text
-}
-
 alert.updatetext = function(typeString, text) {
     alert.className = alert.className.replace(/alert-\w+/gi, "alert-" + typeString)
     alert.innerHTML = text
 }
 
 server_page_button.onclick = function() {
-    server_page_button.classList.add("active")
-    client_page_button.classList.remove("active")
-    PageChange(false)
+    PageChange("server")
 }
 
 client_page_button.onclick = function() {
-    client_page_button.classList.add("active")
-    server_page_button.classList.remove("active")
-    PageChange(true)
+    PageChange("client")
 }
 
-control_button.onclick = function() {
-    if (has_control) {
-        invoke({"type":"relieve"})
-    } else {
-        invoke({"type":"take"})
-    }
-    control_button.updatetext("secondary", "Waiting")
+connection_list_button.onclick = function() {
+    PageChange('connections')
 }
 
 document.getElementById("main-form").onsubmit = function(e) {
