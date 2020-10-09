@@ -125,7 +125,7 @@ impl App {
                     },
 
                     "set_observer" => {
-                        Ok(tx.send(AppMessage::SetObserver(data["target"].as_str().unwrap().to_string(), data["is_observer"].as_bool().unwrap())));
+                        tx.send(AppMessage::SetObserver(data["target"].as_str().unwrap().to_string(), data["is_observer"].as_bool().unwrap())).ok();
                     }
 
                     "startup" => {tx.send(AppMessage::Startup).ok();}

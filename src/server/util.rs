@@ -132,7 +132,7 @@ pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveDat
         }
 
         Some("name") => match value["data"].as_str() {
-            Some(data) => Ok(ReceiveData::Name(sender, data.to_string())),
+            Some(data) => Ok(ReceiveData::Name(data.to_string())),
             None => Err(ParseError::FieldMissing("data"))
         }
 
@@ -145,6 +145,8 @@ pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveDat
             Some(to) => Ok(ReceiveData::SetObserver(to.to_string(), value["is_observer"].as_bool().unwrap_or_default())),
             None => Err(ParseError::FieldMissing("target"))
         }
+        // Disconnect
+        Some("invalid_name") => Ok(ReceiveData::InvalidName),
 
         Some(_) => Err(ParseError::InvalidType),
         _ => Err(ParseError::FieldMissing("type")),
@@ -161,9 +163,9 @@ pub enum ParseError {
 
 // Various types of data to receive
 pub enum ReceiveData {
-    // IpAddr
+    // Name
     NewConnection(String),
-    // IpAddr
+    // Name
     ConnectionLost(String),
     TransferStopped(TransferStoppedReason),
     // Possible types of data to receive
@@ -172,7 +174,8 @@ pub enum ReceiveData {
     TransferControl(String, String),
     // Target, is_observer
     SetObserver(String, bool),
-    Name(String, String)
+    Name(String),
+    InvalidName
 }
 
 pub enum TransferStoppedReason {

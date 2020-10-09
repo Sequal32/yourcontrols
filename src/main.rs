@@ -95,7 +95,6 @@ fn main() {
                 Ok(ReceiveData::Update(sender, sync_data)) => {
                     if clients.is_observer(&sender) {return}
                     // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
-                    println!("{}", sender);
                     definitions.on_receive_data(&conn, &sync_data, clients.client_has_control(&sender), !need_update);
                     need_update = false;
                 }
@@ -118,6 +117,7 @@ fn main() {
                         client.update(definitions.get_all_current());
                     }
                     app_interface.server_started(client.get_connected_count());
+                    app_interface.new_connection(&name);
                     clients.add_client(name);
                 },
                 Ok(ReceiveData::ConnectionLost(name)) => {
@@ -138,16 +138,18 @@ fn main() {
                         }
                     }
                 }
-                Ok(ReceiveData::Name(sender, data)) => {
-                    app_interface.new_connection(&data);
-                    clients.set_client_name(&sender, data);
-                }
                 Ok(ReceiveData::SetObserver(target, is_observer)) => {
                     if target == client.get_server_name() {
                         observing = is_observer;
                     } else {
                         clients.set_observer(&target, is_observer);
                     }
+                }
+                // Never will be reached
+                Ok(ReceiveData::Name(_)) => (),
+                Ok(ReceiveData::InvalidName) => {
+                    client.stop();
+                    app_interface.disconnected();
                 }
                 Err(_) => ()
             }
@@ -242,11 +244,9 @@ fn main() {
                 AppMessage::TransferControl(to) => {
                     if let Some(client) = transfer_client.as_ref() {
                         // Convert from name to ip
-                        if let Some(ip) = clients.lookup_ip_from_name(&to) {
-                            clients.set_client_control(ip.clone());
-                            client.transfer_control(ip);
-                            control.lose_control(&conn);
-                        }
+                        clients.set_client_control(to.clone());
+                        client.transfer_control(to);
+                        control.lose_control(&conn);
                     }
                 }
                 AppMessage::SetObserver(ip, is_observer) => {

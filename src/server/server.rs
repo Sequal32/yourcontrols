@@ -3,7 +3,7 @@ use igd::{search_gateway, PortMappingProtocol};
 use local_ipaddress;
 use serde_json::{Value};
 use thread::sleep;
-use std::{io::{Read, Write}, net::IpAddr, net::TcpStream, thread, time::Duration};
+use std::{collections::HashMap, io::{Read, Write}, net::IpAddr, net::Shutdown, net::TcpStream, thread, time::Duration};
 use std::net::{TcpListener, Ipv4Addr, SocketAddrV4};
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, AtomicU16, Ordering::SeqCst};
@@ -23,7 +23,7 @@ struct Client {
     reader: PartialReader,
     // May not be able to write all data in single loop
     writer: PartialWriter,
-    address: String,
+    address: IpAddr,
     name: String
 }
 
@@ -34,6 +34,17 @@ struct TransferStruct {
     client_rx: Receiver<Value>,
     // Send data to app to receive client data
     server_tx: Sender<ReceiveData>,
+    // Map IPs to names
+    name_map: HashMap<IpAddr, String>
+}
+
+impl TransferStruct {
+    pub fn name_exists(&self, name: &str) -> bool {
+        for mapping in self.name_map.values() {
+            if name == mapping {return true}
+        }
+        return false;
+    }
 }
 
 pub struct Server {
@@ -42,7 +53,7 @@ pub struct Server {
     should_stop: Arc<AtomicBool>,
 
     transfer: Option<Arc<Mutex<TransferStruct>>>,
-
+    
     // Send data to clients
     client_tx: Sender<Value>,
     // Internally receive data to send to clients
@@ -104,7 +115,8 @@ impl Server {
             TransferStruct {
                 clients: Vec::new(),
                 client_rx: self.client_rx.clone(), 
-                server_tx: self.server_tx.clone()
+                server_tx: self.server_tx.clone(),
+                name_map: HashMap::new()
             }
         )));
 
@@ -127,13 +139,12 @@ impl Server {
                             stream,
                             writer: PartialWriter::new(),
                             reader: PartialReader::new(),
-                            address: addr.ip().to_string(),
+                            address: addr.ip(),
                             name: String::new()
                         }
                     );
                     // Increment number of connections and tell app
                     number_connections.fetch_add(1, SeqCst);
-                    transfer.server_tx.send(ReceiveData::NewConnection(addr.ip().to_string())).ok();
                 }
                 // Break the loop if the server's stopped
                 if should_stop.load(SeqCst) {break}
@@ -166,6 +177,9 @@ impl Server {
 
                 
                 // Read incoming stream data
+                // Couldn't bororw this from transfer... need to clone
+                let name_map = transfer.name_map.clone();
+
                 for (index, client) in transfer.clients.iter_mut().enumerate() {
                     // Read buffs
                     let mut buf = [0; 1024];
@@ -177,9 +191,14 @@ impl Server {
                         Ok(n) => {
                             // Append bytes to reader
                             if let Some(data) = client.reader.try_read_string(&buf[0..n]) {
+                                // Determine username of who sent this
+                                let from = match name_map.get(&client.address) {
+                                    Some(from) => from.clone(),
+                                    None => String::new()
+                                };
                                 // Parse payload
-                                if let Ok(data) = process_message(&data, Some(client.address.clone())) {
-                                    to_write.push(data);
+                                if let Ok(data) = process_message(&data, Some(from)) {
+                                    to_write.push((index, data));
                                 }
                             }
                         }
@@ -201,15 +220,33 @@ impl Server {
                 }
     
                 // Send resulting incoming stream data to app
-                for data in to_write {
-                    transfer.server_tx.send(data).ok();
+                for (client_index, data) in to_write {
+                    // Map IP to name
+                    if let ReceiveData::Name(name) = data {
+                        // Check that the name is not already in use
+                        if transfer.name_exists(&name) {
+                            // Tell client that that's an invalid name
+                            let stream = &mut transfer.clients.get_mut(client_index).unwrap().stream;
+                            stream.write_all(br#"{"type":"invalid_name"}"#).ok();
+                        } else {
+                            // Append address
+                            let addr = transfer.clients.get(client_index).unwrap().address;
+                            transfer.name_map.insert(addr, name.clone());
+                            transfer.server_tx.send(ReceiveData::NewConnection(name)).ok();
+                        }
+                        
+                    } else { // Do not process name payload in app
+                        transfer.server_tx.send(data).ok();
+                    }
                 }
     
                 // Remove any connections that got dropped and tell app
                 for dropping in to_drop {
                     let removed_client = transfer.clients.remove(dropping);
                     number_connections.fetch_sub(1, SeqCst);
-                    transfer.server_tx.send(ReceiveData::ConnectionLost(removed_client.address)).ok();
+                    
+                    let name = transfer.name_map.remove(&removed_client.address);
+                    transfer.server_tx.send(ReceiveData::ConnectionLost(name.unwrap())).ok();
                 }
 
                 if should_stop.load(SeqCst) {break}
