@@ -249,6 +249,14 @@ impl App {
         }
     }
 
+    pub fn observing(&self, observing: bool) {
+        if observing {
+            self.invoke("observing", None);
+        } else {
+            self.invoke("stop_observing", None);
+        }
+    }
+
     pub fn set_observing(&self, name: &str, observing: bool) {
         if observing {
             self.invoke("set_observing", Some(name));

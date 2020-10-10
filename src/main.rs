@@ -156,6 +156,7 @@ fn main() {
                 Ok(ReceiveData::SetObserver(target, is_observer)) => {
                     if target == client.get_server_name() {
                         observing = is_observer;
+                        app_interface.observing(is_observer);
                     } else {
                         clients.set_observer(&target, is_observer);
                         app_interface.set_observing(&target, is_observer);
@@ -226,6 +227,7 @@ fn main() {
                                 client.run();
                                 // Display connected message
                                 app_interface.connected();
+                                app_interface.lose_control();
                                 // Assign client as the transfer client
                                 transfer_client = Some(Box::new(client));
                                 // Freeze aircraft

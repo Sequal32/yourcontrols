@@ -14,6 +14,8 @@ var name_input = document.getElementById("name-input")
 var name_div = document.getElementById("name-div")
 var port_div = document.getElementById("port-div")
 var server_div = document.getElementById("server-div")
+
+var rectangle_status = document.getElementById("rectangle-status")
 // Radios
 var radios = document.getElementById("radios")
 var ip4radio = document.getElementById("ip4")
@@ -176,10 +178,12 @@ function MessageReceived(data) {
             has_control = true
             connectionList.update()
             connectionList.hideStatusText()
+            rectangle_status.style.backgroundColor = "cyan"
             break;
         case "lostcontrol":
             has_control = false
             connectionList.update()
+            rectangle_status.style.backgroundColor = "red"
             break;
         case "set_ip":
             server_input.value = data["data"]
@@ -201,6 +205,10 @@ function MessageReceived(data) {
             break;
         // Observing
         case "observing":
+            rectangle_status.style.backgroundColor = "grey"
+            break;
+        case "stop_observing":
+            rectangle_status.style.backgroundColor = "red"
             break;
         // Other client
         case "set_observing":
