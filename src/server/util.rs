@@ -147,11 +147,22 @@ pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveDat
         }
 
         Some("user") => match value["data"].as_str() {
-            Some(name) => Ok(ReceiveData::NewConnection(name.to_string())),
+            Some(name) => {
+                Ok(ReceiveData::NewUser(
+                    name.to_string(),
+                    value["in_control"].as_bool().unwrap_or_default(),
+                    value["is_observer"].as_bool().unwrap_or_default(),
+                ))
+            },
             None => Err(ParseError::FieldMissing("data"))
         }
         // Disconnect
         Some("invalid_name") => Ok(ReceiveData::InvalidName),
+
+        Some("remove_user") => match value["data"].as_str() {
+            Some(name) => Ok(ReceiveData::ConnectionLost(name.to_string())),
+            None => Err(ParseError::FieldMissing("data"))
+        }
 
         Some(_) => Err(ParseError::InvalidType),
         _ => Err(ParseError::FieldMissing("type")),
@@ -170,6 +181,8 @@ pub enum ParseError {
 pub enum ReceiveData {
     // Name
     NewConnection(String),
+    // Name, is_observer, in_control
+    NewUser(String, bool, bool),
     // Name
     ConnectionLost(String),
     TransferStopped(TransferStoppedReason),

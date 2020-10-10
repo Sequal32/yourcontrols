@@ -1,6 +1,6 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
 use serde_json::{Value, json};
-use std::{io::Read, net::{SocketAddr, IpAddr, TcpStream}, sync::Mutex};
+use std::{io::Read, net::{IpAddr, Shutdown, SocketAddr, TcpStream}, sync::Mutex};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::io::Write;
 use std::thread;
@@ -86,13 +86,7 @@ impl Client {
                         if let Some(data) = transfer.reader.try_read_string(&buf[0..n]) {
                             // Deserialize json
                             if let Ok(data) = process_message(&data, None) {
-                                // Server identified itself
-                                if let ReceiveData::Name(name) = data {
-                                    transfer.server_tx.send(ReceiveData::NewConnection(name)).ok();
-                                } else {
-                                    // Don't need to resend name to app
-                                    transfer.server_tx.send(data).ok();
-                                }   
+                                transfer.server_tx.send(data).ok();
                             }
                         }
                     }
@@ -113,7 +107,10 @@ impl Client {
                     };
                 }
 
-                if should_stop.load(SeqCst) {break}
+                if should_stop.load(SeqCst) {
+                    transfer.stream.shutdown(Shutdown::Both).ok();
+                    break;
+                }
             }
         });
     }

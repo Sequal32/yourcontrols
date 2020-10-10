@@ -39,7 +39,7 @@ struct TransferStruct {
     client_tx: Sender<Value>,
     // Server name
     name: String,
-    in_control: Option<String>
+    in_control: String
 }
 
 impl TransferStruct {
@@ -64,6 +64,10 @@ impl TransferStruct {
             client.writer.to_write(bytes);
         }
     }
+}
+
+fn build_user_string(name: &str, is_observer: bool, has_control: bool) -> String {
+    format!(r#"{{"type":"user", "data":"{}", "in_control":{}, "is_observer":{}}}{}"#, name, has_control, is_observer, "\n")
 }
 
 pub struct Server {
@@ -139,7 +143,7 @@ impl Server {
                 server_tx: self.server_tx.clone(),
                 client_tx: self.client_tx.clone(),
                 name: self.username.clone(),
-                in_control: None
+                in_control: self.username.clone()
             }
         )));
 
@@ -169,15 +173,13 @@ impl Server {
 
                     // Identify with name
                     new_client.writer.to_write(format!(r#"{{"type":"name", "data":"{0:}"}}{1:}"#, transfer.name, "\n").as_bytes());
+                    // Send server user state
+                    let client_in_control = transfer.in_control.clone();
+                    new_client.writer.to_write(build_user_string(&transfer.name, false, client_in_control == transfer.name).as_bytes());
                     // Iterate through all connected clients and send names
-                    let client_in_control = match transfer.in_control.as_ref() {
-                        Some(name) => name.clone(),
-                        None => String::new()
-                    };
-
                     for client in transfer.clients.iter_mut() {
                         let in_control = client_in_control == client.name;
-                        new_client.writer.to_write(format!(r#"{{"type":"user", "data":"{}", "in_control":"{}", "is_observer":"{}"}}{}"#, client.name, in_control, client.is_observer, "\n").as_bytes());
+                        new_client.writer.to_write(build_user_string(&client.name, client.is_observer, in_control).as_bytes());
                     }
                     // Append client transfers into vector
                     transfer.clients.push(new_client);
@@ -274,12 +276,14 @@ impl Server {
                                 let client = transfer.clients.get_mut(client_index).unwrap();
                                 client.name = name.clone();
                                 transfer.server_tx.send(ReceiveData::NewConnection(name.clone())).ok();
+                                // Tell everyone else about the new client
+                                transfer.write_to_all_except(name, build_user_string(name, false, false).as_bytes());
                             }
                             rebroadcast = false;
                         },
                         ReceiveData::TransferControl(_, to) => {
                             // Keep track of who's in control for inital state update to new clients
-                            transfer.in_control = Some(to.clone());
+                            transfer.in_control = to.clone();
                             rebroadcast = true;
                         }
                         _ => {rebroadcast = true;}
@@ -312,7 +316,14 @@ impl Server {
                     number_connections.fetch_sub(1, SeqCst);
                     
                     // TransferStopped message will take care of removing clients
-                    if !should_stop {transfer.server_tx.send(ReceiveData::ConnectionLost(removed_client.name)).ok();};
+                    if !should_stop {
+                        transfer.server_tx.send(ReceiveData::ConnectionLost(removed_client.name.clone())).ok();
+                        // Tell everyone else about client disconnect
+                        transfer.client_tx.send(json!({
+                            "type":"remove_user",
+                            "data": removed_client.name
+                        })).ok();
+                    };
                 }
 
                 if should_stop {break}
@@ -359,7 +370,7 @@ impl TransferClient for Server {
     fn transfer_control(&self, target: String) {
         // Read for initial contact with other clients
         if let Some(transfer) = self.transfer.as_ref() {
-            transfer.lock().unwrap().in_control = Some(target.clone());
+            transfer.lock().unwrap().in_control = target.clone();
         }
         
         self.send_value(json!({

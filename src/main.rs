@@ -154,6 +154,11 @@ fn main() {
                     app_interface.new_connection(&name);
                     clients.add_client(name);
                 },
+                Ok(ReceiveData::NewUser(name, in_control, is_observer)) => {
+                    app_interface.new_connection(&name);
+                    app_interface.set_observing(&name, is_observer);
+                    if in_control {app_interface.set_incontrol(&name)}
+                }
                 Ok(ReceiveData::ConnectionLost(name)) => {
                     if client.is_server() {
                         app_interface.server_started(client.get_connected_count());
