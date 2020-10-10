@@ -1,9 +1,9 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
-use igd::{search_gateway, PortMappingProtocol};
+use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
 use serde_json::{Value, json};
 use thread::sleep;
-use std::{collections::HashMap, io::{Read, Write}, net::IpAddr, net::Shutdown, net::TcpStream, thread, time::Duration, time::Instant};
+use std::{io::{Read}, net::IpAddr, net::Shutdown, net::TcpStream, thread, time::Duration, time::Instant};
 use std::net::{TcpListener, Ipv4Addr, SocketAddrV4};
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, AtomicU16, Ordering::SeqCst};
@@ -105,7 +105,11 @@ impl Server {
     }
 
     fn port_forward(&self, port: u16) -> Result<(), PortForwardResult> {
-        let gateway = search_gateway(Default::default());
+        let mut options = SearchOptions::default();
+        options.timeout = Some(Duration::from_secs(2));
+
+        let gateway = search_gateway(options);
+
         if !gateway.is_ok() {return Err(PortForwardResult::GatewayNotFound)}
 
         let local_addr = local_ipaddress::get();
@@ -119,11 +123,11 @@ impl Server {
     }
 
     pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(), std::io::Error> {
-        // // Attempt to port forward
-        // if let Err(e) = self.port_forward(port) {
-        //     self.port_error = Some(e);
-        //     println!("{:?}", e);
-        // }
+        // Attempt to port forward
+        if let Err(e) = self.port_forward(port) {
+            self.port_error = Some(e);
+            println!("{:?}", e);
+        }
 
         // Start listening for connections
         let bind_ip = if is_ipv6 {"::"} else {"0.0.0.0"};
