@@ -17,13 +17,9 @@ impl ClientManager {
             current_control: None
         }
     }
-
-    // App could be the one in control
-    pub fn who_has_control(&self) -> Option<&Client> {
-        if let Some(name) = self.current_control.as_ref() {
-            return self.clients.get(name)
-        }
-        return None
+    
+    pub fn in_control(&self) -> bool {
+        return self.current_control.is_none()
     }
 
     pub fn client_has_control(&self, name: &str) -> bool {

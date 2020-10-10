@@ -15,7 +15,7 @@ mod update;
 
 use app::{App, AppMessage};
 use clientmanager::ClientManager;
-use definitions::Definitions;
+use definitions::{Definitions, SyncPermissions};
 use simconfig::Config;
 use server::{Client, ReceiveData, Server, TransferClient};
 use simconnect::{self, DispatchResult};
@@ -41,7 +41,7 @@ fn main() {
         }
     };
 
-    let conn = simconnect::SimConnector::new();
+    let mut conn = simconnect::SimConnector::new();
 
     let mut definitions = Definitions::new();
     println!("{:?}", definitions.load_config("aircraftdefs/C172.yaml"));
@@ -66,6 +66,21 @@ fn main() {
 
     let mut need_update = false;
     let mut was_overloaded = false;
+
+    let get_sync_permission = |client: &Box<dyn TransferClient>, clients: &ClientManager| -> SyncPermissions {
+        if clients.in_control() {
+            if client.is_server() {
+                SyncPermissions::ServerAndMaster
+            } else {
+                SyncPermissions::Master
+            }
+        } else if client.is_server() {
+            SyncPermissions::Server
+        } else {
+            SyncPermissions::Slave
+        }
+    };
+
     loop {
         if let Some(client) = transfer_client.as_mut() {
             let message = conn.get_next_message();
@@ -93,11 +108,12 @@ fn main() {
                 Ok(ReceiveData::Update(sender, sync_data)) => {
                     if clients.is_observer(&sender) {return}
                     // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
-                    definitions.on_receive_data(&conn, &sync_data, clients.client_has_control(&sender), !need_update);
+                    definitions.on_receive_data(&conn, &sync_data, &get_sync_permission(&client, &clients), !need_update);
                     need_update = false;
                 }
                 Ok(ReceiveData::TransferControl(sender, to)) => {
                     // Someone is transferring controls to us
+                    definitions.clear_sync();
                     if to == client.get_server_name() {
                         control.take_control(&conn);
                         app_interface.gain_control();
@@ -115,7 +131,7 @@ fn main() {
                 }
                 // Increment client counter
                 Ok(ReceiveData::NewConnection(name)) => {
-                    if control.gain_control() {
+                    if clients.in_control() {
                         client.update(definitions.get_all_current());
                     }
                     app_interface.server_started(client.get_connected_count());
@@ -172,7 +188,7 @@ fn main() {
 
             // Handle sync vars
             if !observing && control.gain_control() && update_rate_instant.elapsed().as_secs_f64() > update_rate {
-                if let Some(values) = definitions.get_need_sync() {
+                if let Some(values) = definitions.get_need_sync(&get_sync_permission(&client, &clients)) {
                     client.update(values);
                 }
                 update_rate_instant = Instant::now();
@@ -278,17 +294,16 @@ fn main() {
         } 
         // Try to connect to simconnect if not connected
         if !connected {
-            // connected = conn.connect("Your Control");
-            // if connected {
-            //     // Display not connected to server message
-            //     app_interface.disconnected();
-            //     definitions.on_connected(&conn);
-            //     control.on_connected(&conn);
-            // } else {
-            //     // Display trying to connect message
-            //     app_interface.error("Trying to connect to SimConnect...");
-            // };
-            connected = true;
+            connected = conn.connect("Your Control");
+            if connected {
+                // Display not connected to server message
+                app_interface.disconnected();
+                definitions.on_connected(&conn);
+                control.on_connected(&conn);
+            } else {
+                // Display trying to connect message
+                app_interface.error("Trying to connect to SimConnect...");
+            };
         }
 
         sleep(LOOP_SLEEP_TIME);

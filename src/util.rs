@@ -1,15 +1,10 @@
 use serde::{Serialize, Deserialize};
 
-pub struct LocalVar {
-    pub category: Category,
-    pub units: Option<String>,
-    pub var_type: InDataTypes
-}
-
 #[derive(Eq, PartialEq)]
 pub enum Category {
     Shared,
-    Master
+    Master,
+    Server
 }
 
 #[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq)]

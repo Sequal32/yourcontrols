@@ -21,7 +21,15 @@ pub enum VarAddError {
     InvalidVarType(&'static str),
     InvalidSyncType(String),
     InvalidCategory(String),
-    YamlParseError(serde_yaml::Error)
+    YamlParseError(serde_yaml::Error),
+}
+
+#[derive(PartialEq)]
+pub enum SyncPermissions {
+    Server,
+    Master,
+    Slave,
+    ServerAndMaster
 }
 
 // Checks if a field in a Value exists, otherwise will return an error with the name of the field
@@ -163,6 +171,12 @@ impl AllNeedSync {
     pub fn is_empty(&self) -> bool {
         return self.avars.len() == 0 && self.lvars.len() == 0 && self.events.len() == 0
     }
+
+    pub fn clear(&mut self) {
+        self.avars.clear();
+        self.lvars.clear();
+        self.events.clear();
+    }
 }
 
 enum ActionType {
@@ -177,23 +191,32 @@ enum ActionType {
 
 struct Period {
     time: f64,
-    last_update: Instant
+    last_update: Option<Instant>
 }
 
 impl Period {
     fn new(time: f64) -> Self {
         Self {
             time,
-            last_update: Instant::now()
+            last_update: None
         }
     }
 
     fn do_update(&mut self) -> bool {
-        if self.last_update.elapsed().as_secs_f64() >= self.time {
-            self.last_update = Instant::now();
-            return true;
+        match self.last_update {
+            Some(time) => {
+                if time.elapsed().as_secs_f64() >= self.time {
+                    self.last_update = Some(Instant::now());
+                    true
+                } else {
+                    false
+                }
+            }
+            None => {
+                self.last_update = Some(Instant::now());
+                true
+            }
         }
-        return false
     }
 }
 
@@ -516,7 +539,14 @@ impl Definitions {
         for (key, value) in yaml {
             if key == "include" {
                 for include_file in value {
-                    self.load_config(include_file.as_str().unwrap()).ok();
+                    match self.load_config(include_file.as_str().unwrap()) {
+                        Ok(_) => (),
+                        Err(e) => {
+                            if let ConfigLoadError::ParseError(e) = e {
+                                return Err(e);
+                            };
+                        }
+                    }
                 }
             } else {
                 for var_data in value {
@@ -646,12 +676,31 @@ impl Definitions {
         }
     }
 
-    pub fn get_need_sync(&mut self) -> Option<AllNeedSync> {
+    pub fn get_need_sync(&mut self, sync_permission: &SyncPermissions) -> Option<AllNeedSync> {
         if self.current_sync.is_empty() {return None}
-        let mut return_data = AllNeedSync::new();
-        
-        std::mem::swap(&mut return_data, &mut self.current_sync);
 
+        let mut return_data = AllNeedSync::new();
+
+        for (var_name, data) in self.current_sync.avars.iter() {
+            if self.can_sync(var_name, sync_permission) {
+                return_data.avars.insert(var_name.clone(), data.clone());
+            }
+        }
+
+        for (var_name, data) in self.current_sync.lvars.iter() {
+            if self.can_sync(var_name, sync_permission) {
+                return_data.lvars.insert(var_name.clone(), data.clone());
+            }
+        }
+
+        for (var_name, data) in self.current_sync.events.iter() {
+            if self.can_sync(var_name, sync_permission) {
+                return_data.events.insert(var_name.clone(), data.clone());
+            }
+        }
+
+        self.current_sync.clear();
+        
         return Some(return_data);
     }
 
@@ -661,15 +710,22 @@ impl Definitions {
         self.avarstransfer.set_vars(conn, data);
     }
 
-    fn can_sync(&self, var_name: &str, is_master: bool) -> bool {
+    fn can_sync(&self, var_name: &str, sync_permission: &SyncPermissions) -> bool {
         // Check categories
         if let Some(category) = self.categories.get(var_name) {
-            if *category == Category::Master && !is_master {return false}
+            if *category == Category::Server && (*sync_permission == SyncPermissions::Server || *sync_permission == SyncPermissions::ServerAndMaster) {
+                return true
+            } else if *category == Category::Shared {
+                return true
+            } else if * category == Category::Master && (*sync_permission == SyncPermissions::Master || *sync_permission == SyncPermissions::ServerAndMaster) {
+                return true
+            }
+            return false
         }
         return true
     }
 
-    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap, is_master: bool, interpolate: bool) {
+    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap, sync_permission: &SyncPermissions, interpolate: bool) {
         if data.len() == 0 {return}
 
         let mut to_sync = AVarMap::new();
@@ -678,7 +734,7 @@ impl Definitions {
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             // Check categories
-            if !self.can_sync(var_name, is_master) {continue};
+            if !self.can_sync(var_name, sync_permission) {continue};
             // Can directly be set through SetDataOnSimObject
             if self.sync_vars.contains(var_name) {
 
@@ -740,10 +796,10 @@ impl Definitions {
         self.avarstransfer.set_vars(conn, &to_sync);
     }
 
-    pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap, is_master: bool, interpolate: bool) {
+    pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap, sync_permission: &SyncPermissions, interpolate: bool) {
         for (var_name, value) in data {
             // Check categories
-            if !self.can_sync(var_name, is_master) {continue};
+            if !self.can_sync(var_name, sync_permission) {continue};
 
             if interpolate && self.interpolate_names.contains(var_name) {
                 self.interpolation_lvars.queue_interpolate(var_name, *value);
@@ -753,19 +809,19 @@ impl Definitions {
         }
     }
 
-    pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap, is_master: bool) {
+    pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap, sync_permission: &SyncPermissions) {
         for (event_name, value) in data {
             // Check categories
-            if !self.can_sync(event_name, is_master) {continue};
+            if !self.can_sync(event_name, sync_permission) {continue};
             
             self.events.trigger_event(conn, event_name, *value as u32);        
         }
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: &AllNeedSync, is_master: bool, interpolate: bool) {
-        self.write_aircraft_data(conn, &data.avars, is_master, interpolate);
-        self.write_local_data(conn, &data.lvars, is_master, interpolate);
-        self.write_event_data(conn, &data.events, is_master);
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: &AllNeedSync, sync_permission: &SyncPermissions, interpolate: bool) {
+        self.write_aircraft_data(conn, &data.avars, sync_permission, interpolate);
+        self.write_local_data(conn, &data.lvars, sync_permission, interpolate);
+        self.write_event_data(conn, &data.events, sync_permission);
     }
 
     // To be called when SimConnect connects
@@ -785,5 +841,9 @@ impl Definitions {
             lvars: self.lvarstransfer.get_all_vars(),
             events: EventMap::new(),
         }
+    }
+
+    pub fn clear_sync(&mut self) {
+        self.current_sync.clear();
     }
 }
