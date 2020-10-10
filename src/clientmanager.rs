@@ -68,4 +68,9 @@ impl ClientManager {
             client.observer_mode = is_observer;
         }
     }
+
+    pub fn reset(&mut self) {
+        self.clients.clear();
+        self.current_control = None;
+    }
 }

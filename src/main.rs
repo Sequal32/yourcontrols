@@ -41,7 +41,7 @@ fn main() {
         }
     };
 
-    let mut conn = simconnect::SimConnector::new();
+    let conn = simconnect::SimConnector::new();
 
     let mut definitions = Definitions::new();
     println!("{:?}", definitions.load_config("aircraftdefs/C172.yaml"));
@@ -54,7 +54,7 @@ fn main() {
     let mut connected = false;
     let mut observing = false;
 
-    let mut app_interface = App::setup();
+    let app_interface = App::setup();
 
     // Transfer
     let mut transfer_client: Option<Box<dyn TransferClient>> = None;
@@ -65,10 +65,8 @@ fn main() {
     // Whether to start a client or a server
 
     let mut need_update = false;
-    let mut was_error = false;
     let mut was_overloaded = false;
     loop {
-        let mut was_no_message = true;
         if let Some(client) = transfer_client.as_mut() {
             let message = conn.get_next_message();
             // Simconnect message
@@ -143,6 +141,8 @@ fn main() {
                 Ok(ReceiveData::TransferStopped(reason)) => {
                     // TAKE BACK CONTROL
                     control.take_control(&conn);
+                    clients.reset();
+                    observing = false;
 
                     match reason {
                         server::TransferStoppedReason::Requested(reason) => {
@@ -291,7 +291,7 @@ fn main() {
             connected = true;
         }
 
-        if was_no_message {sleep(LOOP_SLEEP_TIME)}
+        sleep(LOOP_SLEEP_TIME);
         // Attempt Simconnect connection
         if app_interface.exited() {break}
     }
