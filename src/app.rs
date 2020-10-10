@@ -7,8 +7,10 @@ use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
 use serde_json::Value;
 
 pub enum AppMessage {
-    Server(bool, u16),
-    Connect(IpAddr, String, u16),
+    // Name, IsIPV6, port
+    Server(String, bool, u16),
+    // Username, IpAddress, IpString, Port
+    Connect(String, IpAddr, String, u16),
     Disconnect,
     TransferControl(String),
     SetObserver(String, bool),
@@ -98,6 +100,7 @@ impl App {
                             Ok(ip) => {
                                 tx.send(
                                     AppMessage::Connect(
+                                        data["username"].as_str().unwrap().to_string(),
                                         ip, 
                                         if data.get("ip").is_some() {data["ip"].as_str().unwrap().to_string()} else {data["hostname"].as_str().unwrap().to_string()}, 
                                         data["port"].as_u64().unwrap() as u16)
@@ -115,6 +118,7 @@ impl App {
 
                     "server" => {
                         tx.send(AppMessage::Server(
+                            data["username"].as_str().unwrap().to_string(),
                             data["is_v6"].as_bool().unwrap(), 
                             data["port"].as_u64().unwrap() as u16)
                         ).ok();

@@ -17,6 +17,12 @@ class ConnectionList {
         }
     }
 
+    hideStatusText() {
+        for (var key in this.list) {
+            this.list[key].hideStatus()
+        }
+    }
+
     add(name) {
         var listItem = document.createElement("li")
         listItem.className = "list-group-item"
@@ -35,6 +41,7 @@ class ConnectionList {
         var statusText = document.createElement("p")
         statusText.className = "entry-button"
         statusText.innerHTML = "In Control"
+        statusText.hidden = true
         // Add as childs
         listItem.append(controlButton, observeButton, statusText)
         this.object.append(listItem)
@@ -127,5 +134,9 @@ class ConnectionListItem {
     setButtonsVisibility(hasControl, isClient) {
         this.controlButton.hidden = this.is_observer || (!hasControl && !this.is_observer)
         this.observeButton.hidden = isClient || this.controlButton.hidden
+    }
+
+    hideStatus() {
+        this.statusText.hidden = true
     }
 }

@@ -34,7 +34,7 @@
                     Please provide a valid port number.
                 </div>
 
-                <div id="radios" hidden>
+                <div id="radios" class="center" hidden>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="ipRadios" id="ip4" value="4" checked>
                         <label class="form-check-label" for="ip4">IPv4</label>
@@ -43,6 +43,15 @@
                         <input class="form-check-input" type="radio" name="ipRadios" id="ip6" value="6">
                         <label class="form-check-label" for="ip6">IPv6</label>
                     </div>
+                </div>
+            </div>
+            <div class="col-sm-auto" id="name-div">
+                <input type="text" class="form-control" id="name-input" placeholder="Username" aria-describedby="ip-feedback" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback" id="ip-feedback">
+                    Please provide a username.
                 </div>
             </div>
         </div>

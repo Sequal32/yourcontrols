@@ -57,6 +57,13 @@ impl TransferStruct {
             }
         }
     }
+
+    pub fn write_to_all_except(&mut self, name: &str, bytes: &[u8]) {
+        for client in self.clients.iter_mut() {
+            if name == client.name {continue}
+            client.writer.to_write(bytes);
+        }
+    }
 }
 
 pub struct Server {
@@ -75,10 +82,11 @@ pub struct Server {
     server_tx: Sender<ReceiveData>,
     // Recieve data from clients
     server_rx: Receiver<ReceiveData>,
+    username: String,
 }
 
 impl Server {
-    pub fn new() -> Self  {
+    pub fn new(username: String) -> Self  {
         let (client_tx, client_rx) = unbounded();
         let (server_tx, server_rx) = unbounded();
 
@@ -87,7 +95,8 @@ impl Server {
             should_stop: Arc::new(AtomicBool::new(false)),
             port_error: None,
             transfer: None,
-            client_rx, client_tx, server_rx, server_tx
+            client_rx, client_tx, server_rx, server_tx,
+            username: username
         }
     }
 
@@ -129,7 +138,7 @@ impl Server {
                 client_rx: self.client_rx.clone(), 
                 server_tx: self.server_tx.clone(),
                 client_tx: self.client_tx.clone(),
-                name: self.get_server_name().to_string(),
+                name: self.username.clone(),
                 in_control: None
             }
         )));
@@ -142,14 +151,24 @@ impl Server {
         thread::spawn(move || {
             loop {
                 // Accept connection
-                if let Ok((mut stream, addr)) = listener.accept() {
+                if let Ok((stream, addr)) = listener.accept() {
                     // Do not block as we need to iterate over all streams
                     stream.set_nonblocking(true).unwrap();
 
                     let mut transfer = transfer.lock().unwrap();
                     let server_name = transfer.name.clone();
+
+                    let mut new_client = Client {
+                        stream,
+                        writer: PartialWriter::new(),
+                        reader: PartialReader::new(),
+                        address: addr.ip(),
+                        name: server_name,
+                        is_observer: false
+                    };
+
                     // Identify with name
-                    stream.write_all(format!(r#"{{"type":"name", "data":"{0:}", "from":"{0:}"}}{1:}"#, server_name, "\n").as_bytes()).ok();
+                    new_client.writer.to_write(format!(r#"{{"type":"name", "data":"{0:}"}}{1:}"#, transfer.name, "\n").as_bytes());
                     // Iterate through all connected clients and send names
                     let client_in_control = match transfer.in_control.as_ref() {
                         Some(name) => name.clone(),
@@ -158,19 +177,10 @@ impl Server {
 
                     for client in transfer.clients.iter_mut() {
                         let in_control = client_in_control == client.name;
-                        stream.write_all(format!(r#"{{"type":"user", "data":"{}", "from":"{}", "in_control":"{}", "is_observer":"{}"}}{}"#, client.name, server_name, in_control, client.is_observer, "\n").as_bytes()).ok();
+                        new_client.writer.to_write(format!(r#"{{"type":"user", "data":"{}", "in_control":"{}", "is_observer":"{}"}}{}"#, client.name, in_control, client.is_observer, "\n").as_bytes());
                     }
                     // Append client transfers into vector
-                    transfer.clients.push(
-                        Client {
-                            stream,
-                            writer: PartialWriter::new(),
-                            reader: PartialReader::new(),
-                            address: addr.ip(),
-                            name: String::new(),
-                            is_observer: false
-                        }
-                    );
+                    transfer.clients.push(new_client);
                     // Increment number of connections and tell app
                     number_connections.fetch_add(1, SeqCst);
                 }
@@ -251,7 +261,7 @@ impl Server {
                             if transfer.name_exists(&name) || name.as_ref() == transfer.name {
                                 // Tell *single* client that that's an invalid name
                                 let client = transfer.clients.get_mut(client_index).unwrap();
-                                client.stream.write_all(br#"{"type":"invalid_name"}"#).ok();
+                                client.writer.to_write(concat!(r#"{"type":"invalid_name"}"#, "\n").as_bytes());
                             } else {
                                 // Append address
                                 let client = transfer.clients.get_mut(client_index).unwrap();
@@ -276,7 +286,8 @@ impl Server {
                         let mut rebroadcast_data: Value = serde_json::from_str(&data_string).unwrap();
                         rebroadcast_data["from"] = Value::String(client.name.clone());
 
-                        transfer.client_tx.send(rebroadcast_data).ok();
+                        let name = client.name.clone();
+                        transfer.write_to_all_except(&name, rebroadcast_data.to_string().as_bytes());
                     }
                 }
     
@@ -304,8 +315,8 @@ impl TransferClient for Server {
         return self.number_connections.load(SeqCst);
     }
 
-    fn stop(&self) {
-        self.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::Requested)).ok();
+    fn stop(&self, reason: String) {
+        self.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::Requested(reason))).ok();
         self.should_stop.store(true, SeqCst);
     }
 
@@ -326,7 +337,7 @@ impl TransferClient for Server {
     }
 
     fn get_server_name(&self) -> &str {
-        return "SERVER"
+        return &self.username;
     }
 
     fn transfer_control(&self, target: String) {

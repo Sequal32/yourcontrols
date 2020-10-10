@@ -10,6 +10,8 @@ var connection_list_button = document.getElementById("connection-page")
 
 var port_input = document.getElementById("port-input")
 var server_input = document.getElementById("server-input")
+var name_input = document.getElementById("name-input")
+var name_div = document.getElementById("name-div")
 var port_div = document.getElementById("port-div")
 var server_div = document.getElementById("server-div")
 // Radios
@@ -50,6 +52,7 @@ function OnConnected() {
     trying_connection = false
     server_input.disabled = true
     port_input.disabled = true
+    name_input.disabled = true
     ip4radio.disabled = true
     ip6radio.disabled = true
     is_connected = true
@@ -61,6 +64,7 @@ function OnDisconnect(text) {
     trying_connection = false
     server_input.disabled = false
     port_input.disabled = false
+    name_input.disabled = false
 
     ip4radio.disabled = false
     ip6radio.disabled = false
@@ -78,6 +82,7 @@ function ServerClientPageChange(isClient) {
     radios.hidden = isClient
     server_div.hidden = !isClient
     port_div.hidden = false
+    name_div.hidden = false
 }
 
 function PageChange(pageName) {
@@ -101,6 +106,7 @@ function PageChange(pageName) {
             server_button.hidden = true
             server_div.hidden = true
             port_div.hidden = true
+            name_div.hidden = true
             connectionList.show()
             connection_list_button.classList.add("active")
             break
@@ -169,6 +175,7 @@ function MessageReceived(data) {
         case "control":
             has_control = true
             connectionList.update()
+            connectionList.hideStatusText()
             break;
         case "lostcontrol":
             has_control = false
@@ -249,15 +256,17 @@ document.getElementById("main-form").onsubmit = function(e) {
     var validip = ValidateIp(server_input.value)
     var validhostname = ValidateHostname(server_input.value)
     var validport = ValidatePort(port_input.value)
+    let validname = name_input.value.trim() != ""
 
     Validate(port_input, validport)
-    trying_connection = true
+    Validate(name_input, validname)
 
     if (on_client) {
-        if (!validport) {return}
         let data = {type: "connect", port: parseInt(port_input.value)}
 
         Validate(server_input, validip || validhostname || validip6)
+
+        if (!validname || !validport) {return}
         // Match hostname or ip
         if (validhostname) {
             data["hostname"] = server_input.value
@@ -267,9 +276,12 @@ document.getElementById("main-form").onsubmit = function(e) {
         else {
             return
         }
+        data["username"] = name_input.value
+        trying_connection = true
         invoke(data);
     } else {
-        if (!validport) {return}
-        invoke({type: "server", port: parseInt(port_input.value), is_v6: ip6radio.checked})
+        if (!validport || !validname) {return}
+        trying_connection = true
+        invoke({type: "server", port: parseInt(port_input.value), is_v6: ip6radio.checked, username: name_input.value})
     }
 }

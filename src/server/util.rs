@@ -7,7 +7,7 @@ use super::payloads::*;
 
 pub trait TransferClient {
     fn get_connected_count(&self) -> u16;
-    fn stop(&self);
+    fn stop(&self, reason: String);
     fn stopped(&self) -> bool;
     fn is_server(&self) -> bool;
 
@@ -119,7 +119,7 @@ pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveDat
         Some(from) => from,
         None => match value["from"].as_str() {
             Some(from) => from.to_string(),
-            None => return Err(ParseError::FieldMissing("from"))
+            None => String::new()
         }
     };
 
@@ -184,7 +184,7 @@ pub enum ReceiveData {
 }
 
 pub enum TransferStoppedReason {
-    Requested,
+    Requested(String),
     ConnectionLost
 }
 

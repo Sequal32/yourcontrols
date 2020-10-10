@@ -145,8 +145,8 @@ fn main() {
                     control.take_control(&conn);
 
                     match reason {
-                        server::TransferStoppedReason::Requested => {
-                            app_interface.disconnected();
+                        server::TransferStoppedReason::Requested(reason) => {
+                            app_interface.client_fail(&reason);
                         }
                         server::TransferStoppedReason::ConnectionLost => {
                             app_interface.client_fail("Connection Lost.");
@@ -164,8 +164,7 @@ fn main() {
                 // Never will be reached
                 Ok(ReceiveData::Name(_)) => (),
                 Ok(ReceiveData::InvalidName) => {
-                    client.stop();
-                    app_interface.disconnected();
+                    client.stop("Name already in use!".to_string());
                 }
                 Err(_) => ()
             }
@@ -183,26 +182,17 @@ fn main() {
                 // app_interface.update_overloaded(interpolation.overloaded());
                 definitions.step_interpolate(&conn);
             }
-
-            // Server stopped or client disconnected
-            if client.stopped() {
-                control.take_control(&conn);
-                transfer_client = None;
-                // Message already set
-                if !was_error {app_interface.disconnected()}
-                was_error = false;
-            }
         }
 
         // GUI
         match app_interface.get_next_message() {
             Ok(msg) => match msg {
-                AppMessage::Server(is_ipv6, port ) => {
+                AppMessage::Server(username, is_ipv6, port ) => {
                     if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        let mut server = Server::new();
+                        let mut server = Server::new(username);
                         match server.start(is_ipv6, port) {
                             Ok(_) => {
                                 // Start the server loop
@@ -223,12 +213,12 @@ fn main() {
                         }
                     }
                 }
-                AppMessage::Connect(ip, input_string, port) => {
+                AppMessage::Connect(username, ip, input_string, port) => {
                     if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        let mut client = Client::new();
+                        let mut client = Client::new(username);
                         
                         match client.start(ip, port) {
                             Ok(_) => {
@@ -254,16 +244,16 @@ fn main() {
                 }
                 AppMessage::Disconnect => {
                     if let Some(client) = transfer_client.as_ref() {
-                        client.stop();
+                        client.stop("Disconnected.".to_string());
                     }
                 }
                 AppMessage::TransferControl(name) => {
                     if let Some(client) = transfer_client.as_ref() {
+                        // Send server message
+                        client.transfer_control(name.clone());
                         // Frontend who's in control
                         app_interface.set_incontrol(&name);
                         app_interface.lose_control();
-                        // Send server message
-                        client.transfer_control(name.clone());
                         // Log who's in control
                         clients.set_client_control(name);
                         // Freeze aircraft

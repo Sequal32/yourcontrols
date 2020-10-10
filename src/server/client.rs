@@ -30,11 +30,11 @@ pub struct Client {
     // Send data to app to receive client data
     server_tx: Sender<ReceiveData>,
     // IP
-    server_name: String
+    username: String
 }
 
 impl Client {
-    pub fn new() -> Self {
+    pub fn new(username: String) -> Self {
         let (client_tx, client_rx) = unbounded();
         let (server_tx, server_rx) = unbounded();
 
@@ -42,15 +42,13 @@ impl Client {
             should_stop: Arc::new(AtomicBool::new(false)),
             transfer: None,
             client_rx, client_tx, server_rx, server_tx,
-            server_name: String::new()
+            username: username
         }
     }
 
     pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), std::io::Error>  {
         let stream = TcpStream::connect_timeout(&SocketAddr::new(ip, port), std::time::Duration::from_secs(5))?;
         stream.set_nonblocking(true).unwrap();
-
-        self.server_name = stream.local_addr().unwrap().to_string();
 
         // to be used in run()
         self.transfer = Some(Arc::new(Mutex::new(
@@ -126,9 +124,9 @@ impl TransferClient for Client {
         return 1;
     }
 
-    fn stop(&self) {
+    fn stop(&self, reason: String) {
         self.should_stop.store(true, SeqCst);
-        self.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::Requested)).ok();
+        self.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::Requested(reason))).ok();
     }
 
     fn stopped(&self) -> bool {
@@ -148,6 +146,6 @@ impl TransferClient for Client {
     }
 
     fn get_server_name(&self) -> &str {
-        return &self.server_name
+        return &self.username
     }
 }
