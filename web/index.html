@@ -1,4 +1,7 @@
-<div class="alert alert-danger alert-margin" id="alert" role="alert">Not Connected</div>
+<div class="alert alert-danger alert-margin" id="alert" role="alert">
+    Not Connected
+    <div class="rectangle" id="rectangle-status"></div>
+</div>
 <div class="alert alert-warning alert-margin" id="overloaded-alert" role="alert" hidden>The buffer is overloaded! Try reducing the updaterate in config.json.</div>
 
 <ul class="nav nav-tabs" id="nav">
@@ -11,9 +14,10 @@
     <li class="nav-item">
         <button class="nav-link" id="connection-page">Connections</button>
     </li>
+    <li class="nav-item">
+        <button class="nav-link" id="aircraft-page">Aircraft</button>
+    </li>
 </ul>
-
-<div class="rectangle" id="rectangle-status"></div>
 
 <div id="server-client-page", onload="OnLoad">
     <form class="needs-validation form-div" id="main-form" novalidate >
@@ -64,5 +68,5 @@
     </form>
 </div>
 
-<ul class="list-group", id="connection-list" hidden>
-</ul>
+<ul class="list-group", id="connection-list" hidden></ul>
+<ul class="list-group", id="aircraft-list"></ul>

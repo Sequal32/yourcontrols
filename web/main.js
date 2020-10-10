@@ -3,10 +3,12 @@ var server_button = document.getElementById('server-button')
 var alert = document.getElementById("alert")
 var overloaded_alert = document.getElementById("overloaded-alert")
 
-var nav_bar = document.getElementById("nav");
+var nav_bar = document.getElementById("nav")
+var server_client_page = document.getElementById("server-client-page");
 var server_page_button = document.getElementById("server-page")
 var client_page_button = document.getElementById("client-page")
 var connection_list_button = document.getElementById("connection-page")
+var aircraft_list_button = document.getElementById("aircraft-page")
 
 var port_input = document.getElementById("port-input")
 var server_input = document.getElementById("server-input")
@@ -78,6 +80,7 @@ function OnDisconnect(text) {
 }
 
 function ServerClientPageChange(isClient) {
+    server_client_page.hidden = false
     on_client = isClient
     connect_button.hidden = !isClient
     server_button.hidden = isClient
@@ -89,9 +92,12 @@ function ServerClientPageChange(isClient) {
 
 function PageChange(pageName) {
     connectionList.hide()
+    aircraftList.hidden = true
+
     client_page_button.classList.remove("active")
     server_page_button.classList.remove("active")
     connection_list_button.classList.remove("active")
+    aircraft_list_button.classList.remove("active")
 
     switch (pageName) {
         case "server":
@@ -103,14 +109,14 @@ function PageChange(pageName) {
             client_page_button.classList.add("active")
             break;
         case "connections":
-            on_client = false
-            connect_button.hidden = true
-            server_button.hidden = true
-            server_div.hidden = true
-            port_div.hidden = true
-            name_div.hidden = true
+            server_client_page.hidden = true
             connectionList.show()
             connection_list_button.classList.add("active")
+            break
+        case "aircraft":
+            server_client_page.hidden = true
+            aircraftList.hidden = false
+            aircraft_list_button.classList.add("active")
             break
     }
 
@@ -124,12 +130,14 @@ function PagesVisible(visible) {
     if (visible) {
         server_page_button.hidden = false
         client_page_button.hidden = false
+        aircraft_list_button.hidden = false
     } else {
         if (on_client) {
             server_page_button.hidden = true
         } else {
             client_page_button.hidden = true
         }
+        aircraft_list_button.hidden = true
     }
 }
 
@@ -221,6 +229,10 @@ function MessageReceived(data) {
         case "set_incontrol":
             connectionList.setInControl(data["data"])
             break;
+        // Add possible aircraft
+        case "add_aircraft":
+            aircraftList.addAircraft(data["data"])
+            break;
     }
 }
 
@@ -240,7 +252,8 @@ server_button.updatetext = function(typeString, text) {
 
 alert.updatetext = function(typeString, text) {
     alert.className = alert.className.replace(/alert-\w+/gi, "alert-" + typeString)
-    alert.innerHTML = text
+    // Only change text, do not get rid of rectangle
+    alert.childNodes[0].nodeValue = text
 }
 
 server_page_button.onclick = function() {
@@ -252,7 +265,11 @@ client_page_button.onclick = function() {
 }
 
 connection_list_button.onclick = function() {
-    PageChange('connections')
+    PageChange("connections")
+}
+
+aircraft_list_button.onclick = function() {
+    PageChange("aircraft")
 }
 
 document.getElementById("main-form").onsubmit = function(e) {

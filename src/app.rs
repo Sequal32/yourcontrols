@@ -14,6 +14,7 @@ pub enum AppMessage {
     Disconnect,
     TransferControl(String),
     SetObserver(String, bool),
+    LoadAircraft(String),
     Startup,
 }
 
@@ -79,6 +80,7 @@ impl App {
                 </head>
                 <body>{body}</body>
                 <script>
+                {js2}
                 {js1}
                 {js}
                 </script>
@@ -88,6 +90,7 @@ impl App {
             css = include_str!("../web/stylesheet.css"), 
             js = include_str!("../web/main.js"), 
             js1 = include_str!("../web/list.js"),
+            js2 = include_str!("../web/aircraft.js"),
             body = include_str!("../web/index.html"),
             logo = format!("data:image/png;base64,{}", base64::encode(logo.as_slice()))
             )))
@@ -130,6 +133,10 @@ impl App {
 
                     "set_observer" => {
                         tx.send(AppMessage::SetObserver(data["target"].as_str().unwrap().to_string(), data["is_observer"].as_bool().unwrap())).ok();
+                    }
+
+                    "load_aircraft" => {
+                        tx.send(AppMessage::LoadAircraft(data["name"].as_str().unwrap().to_string())).ok();
                     }
 
                     "startup" => {tx.send(AppMessage::Startup).ok();}
@@ -267,5 +274,9 @@ impl App {
 
     pub fn set_incontrol(&self, name: &str) {
         self.invoke("set_incontrol", Some(name));
+    }
+
+    pub fn add_aircraft(&self, name: &str) {
+        self.invoke("add_aircraft", Some(name))
     }
 }

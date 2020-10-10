@@ -19,7 +19,7 @@ use definitions::{Definitions, SyncPermissions};
 use simconfig::Config;
 use server::{Client, ReceiveData, Server, TransferClient};
 use simconnect::{self, DispatchResult};
-use std::{thread, time::Duration, time::Instant};
+use std::{fs, io, thread, time::Duration, time::Instant};
 use spin_sleep::sleep;
 
 use sync::*;
@@ -27,8 +27,20 @@ use control::*;
 
 
 const CONFIG_FILENAME: &str = "config.json";
+const AIRCRAFT_DEFINITIONS_PATH: &str = "definitions/aircraft/";
 const APP_STARTUP_SLEEP_TIME: Duration = Duration::from_millis(100);
 const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
+
+fn get_aircraft_configs() -> io::Result<Vec<String>> {
+    let mut filenames = Vec::new();
+
+    for file in fs::read_dir(AIRCRAFT_DEFINITIONS_PATH)? {
+        let file = file?;
+        filenames.push(file.path().file_name().unwrap().to_str().unwrap().to_string())
+    }
+
+    Ok(filenames)
+}
 
 fn main() {
     // Load configuration file
@@ -44,7 +56,6 @@ fn main() {
     let mut conn = simconnect::SimConnector::new();
 
     let mut definitions = Definitions::new();
-    println!("{:?}", definitions.load_config("aircraftdefs/C172.yaml"));
 
     let mut control = Control::new();
 
@@ -67,8 +78,8 @@ fn main() {
     let mut need_update = false;
     let mut was_overloaded = false;
 
-    let get_sync_permission = |client: &Box<dyn TransferClient>, clients: &ClientManager| -> SyncPermissions {
-        if clients.in_control() {
+    let get_sync_permission = |client: &Box<dyn TransferClient>, control: &Control| -> SyncPermissions {
+        if control.has_control() {
             if client.is_server() {
                 SyncPermissions::ServerAndMaster
             } else {
@@ -82,12 +93,14 @@ fn main() {
     };
 
     loop {
+        let timer = Instant::now();
+
         if let Some(client) = transfer_client.as_mut() {
             let message = conn.get_next_message();
             // Simconnect message
             match message {
                 Ok(DispatchResult::SimobjectData(data)) => {
-                    definitions.process_sim_object_data(data);
+                    definitions.process_sim_object_data(data, &get_sync_permission(&client, &control));
                 },
                 // Exception occured
                 Ok(DispatchResult::Exception(data)) => {
@@ -108,7 +121,7 @@ fn main() {
                 Ok(ReceiveData::Update(sender, sync_data)) => {
                     if clients.is_observer(&sender) {return}
                     // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
-                    definitions.on_receive_data(&conn, &sync_data, &get_sync_permission(&client, &clients), !need_update);
+                    definitions.on_receive_data(&conn, &sync_data, !need_update);
                     need_update = false;
                 }
                 Ok(ReceiveData::TransferControl(sender, to)) => {
@@ -131,10 +144,13 @@ fn main() {
                 }
                 // Increment client counter
                 Ok(ReceiveData::NewConnection(name)) => {
-                    if clients.in_control() {
+                    if control.has_control() {
+                        // Send initial aircraft state
                         client.update(definitions.get_all_current());
                     }
-                    app_interface.server_started(client.get_connected_count());
+                    if client.is_server() {
+                        app_interface.server_started(client.get_connected_count());
+                    }
                     app_interface.new_connection(&name);
                     clients.add_client(name);
                 },
@@ -148,7 +164,7 @@ fn main() {
                         // Transfer control to myself if I'm server
                         if client.is_server() {
                             app_interface.gain_control();
-                            control.gain_control();
+                            control.has_control();
                             
                             client.transfer_control(client.get_server_name().to_string());
                         }
@@ -187,14 +203,14 @@ fn main() {
             }
 
             // Handle sync vars
-            if !observing && control.gain_control() && update_rate_instant.elapsed().as_secs_f64() > update_rate {
-                if let Some(values) = definitions.get_need_sync(&get_sync_permission(&client, &clients)) {
+            if !observing && update_rate_instant.elapsed().as_secs_f64() > update_rate {
+                if let Some(values) = definitions.get_need_sync(&get_sync_permission(&client, &control)) {
                     client.update(values);
                 }
                 update_rate_instant = Instant::now();
             }
 
-            if !control.gain_control() {
+            if !control.has_control() {
                 // Message timeout
                 // app_interface.update_overloaded(interpolation.overloaded());
                 definitions.step_interpolate(&conn);
@@ -284,10 +300,25 @@ fn main() {
                         client.set_observer(name, is_observer);
                     }
                 }
+                AppMessage::LoadAircraft(name) => {
+                    definitions = Definitions::new();
+                    println!("{:?}", definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, name)));
+                    definitions.on_connected(&conn);
+                }
                 AppMessage::Startup => {
                     thread::sleep(APP_STARTUP_SLEEP_TIME);
                     app_interface.set_ip(config.ip.as_str());
                     app_interface.set_port(config.port);
+                    // List aircraft
+                    match get_aircraft_configs() {
+                        Ok(configs) => {
+                            for aircraft_config in configs {
+                                app_interface.add_aircraft(&aircraft_config);
+                            }
+                        }
+                        Err(_) => {}
+                    }
+                    
                 }
             }
             Err(_) => {}
@@ -298,15 +329,15 @@ fn main() {
             if connected {
                 // Display not connected to server message
                 app_interface.disconnected();
-                definitions.on_connected(&conn);
                 control.on_connected(&conn);
             } else {
                 // Display trying to connect message
                 app_interface.error("Trying to connect to SimConnect...");
             };
+            // connected = true
         }
 
-        sleep(LOOP_SLEEP_TIME);
+        if timer.elapsed().as_millis() < 10 {sleep(LOOP_SLEEP_TIME)};
         // Attempt Simconnect connection
         if app_interface.exited() {break}
     }

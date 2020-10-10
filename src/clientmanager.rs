@@ -17,10 +17,6 @@ impl ClientManager {
             current_control: None
         }
     }
-    
-    pub fn in_control(&self) -> bool {
-        return self.current_control.is_none()
-    }
 
     pub fn client_has_control(&self, name: &str) -> bool {
         if let Some(client_name) = self.current_control.as_ref() {

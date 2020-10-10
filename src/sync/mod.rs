@@ -182,6 +182,7 @@ impl AircraftVars {
     }
 
     pub fn on_connected(&self, conn: &SimConnector) {
+        conn.clear_data_definition(self.define_id);
         for (var_name, var_data) in self.vars.iter() {
             match var_data.var_type {
                 InDataTypes::Bool | InDataTypes::I32 => {

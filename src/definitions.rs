@@ -249,6 +249,7 @@ fn get_category_from_string(category: &str) -> Result<Category, VarAddError> {
     match category.to_lowercase().as_str() {
         "shared" => Ok(Category::Shared),
         "master" => Ok(Category::Master),
+        "server" => Ok(Category::Server),
         _ => return Err(VarAddError::InvalidCategory(category.to_string()))
     }
 }
@@ -595,7 +596,7 @@ impl Definitions {
     }
 
     // Process changed aircraft variables and update SyncActions related to it
-    pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
+    pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA, sync_permission: &SyncPermissions) {
         if self.avarstransfer.define_id != data.dwDefineID {return}
         
         // Data might be bad/config files don't line up
@@ -640,7 +641,7 @@ impl Definitions {
                     should_write = period.do_update();
                 }
 
-                if should_write {
+                if should_write && self.can_sync(&var_name, sync_permission) {
                     // Queue data for reading
                     self.current_sync.avars.insert(var_name, value);                    
                 }
@@ -666,7 +667,9 @@ impl Definitions {
     pub fn step_interpolate(&mut self, conn: &SimConnector) {
         // Interpolate AVARS
         let aircraft_interpolation_data = self.interpolation_avars.step();
-        self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
+        if aircraft_interpolation_data.len() > 0 {
+            self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
+        }
 
         // Interpolate LVARS
         for (var_name, value) in self.interpolation_lvars.step() {
@@ -681,25 +684,7 @@ impl Definitions {
 
         let mut return_data = AllNeedSync::new();
 
-        for (var_name, data) in self.current_sync.avars.iter() {
-            if self.can_sync(var_name, sync_permission) {
-                return_data.avars.insert(var_name.clone(), data.clone());
-            }
-        }
-
-        for (var_name, data) in self.current_sync.lvars.iter() {
-            if self.can_sync(var_name, sync_permission) {
-                return_data.lvars.insert(var_name.clone(), data.clone());
-            }
-        }
-
-        for (var_name, data) in self.current_sync.events.iter() {
-            if self.can_sync(var_name, sync_permission) {
-                return_data.events.insert(var_name.clone(), data.clone());
-            }
-        }
-
-        self.current_sync.clear();
+        std::mem::swap(&mut return_data, &mut self.current_sync);
         
         return Some(return_data);
     }
@@ -725,7 +710,7 @@ impl Definitions {
         return true
     }
 
-    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap, sync_permission: &SyncPermissions, interpolate: bool) {
+    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap, interpolate: bool) {
         if data.len() == 0 {return}
 
         let mut to_sync = AVarMap::new();
@@ -733,8 +718,6 @@ impl Definitions {
         
         // Only sync vars that are defined as so
         for (var_name, data) in data {
-            // Check categories
-            if !self.can_sync(var_name, sync_permission) {continue};
             // Can directly be set through SetDataOnSimObject
             if self.sync_vars.contains(var_name) {
 
@@ -796,11 +779,8 @@ impl Definitions {
         self.avarstransfer.set_vars(conn, &to_sync);
     }
 
-    pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap, sync_permission: &SyncPermissions, interpolate: bool) {
+    pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap, interpolate: bool) {
         for (var_name, value) in data {
-            // Check categories
-            if !self.can_sync(var_name, sync_permission) {continue};
-
             if interpolate && self.interpolate_names.contains(var_name) {
                 self.interpolation_lvars.queue_interpolate(var_name, *value);
             } else {
@@ -809,19 +789,16 @@ impl Definitions {
         }
     }
 
-    pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap, sync_permission: &SyncPermissions) {
+    pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap) {
         for (event_name, value) in data {
-            // Check categories
-            if !self.can_sync(event_name, sync_permission) {continue};
-            
             self.events.trigger_event(conn, event_name, *value as u32);        
         }
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: &AllNeedSync, sync_permission: &SyncPermissions, interpolate: bool) {
-        self.write_aircraft_data(conn, &data.avars, sync_permission, interpolate);
-        self.write_local_data(conn, &data.lvars, sync_permission, interpolate);
-        self.write_event_data(conn, &data.events, sync_permission);
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: &AllNeedSync,interpolate: bool) {
+        self.write_aircraft_data(conn, &data.avars, interpolate);
+        self.write_local_data(conn, &data.lvars,  interpolate);
+        self.write_event_data(conn, &data.events);
     }
 
     // To be called when SimConnect connects

@@ -32,7 +32,7 @@ impl Control {
         self.change_control(conn);
     }
 
-    pub fn gain_control(&self) -> bool {
+    pub fn has_control(&self) -> bool {
         return self.has_control;
     }
 

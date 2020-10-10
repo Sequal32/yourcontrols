@@ -100,6 +100,7 @@ impl Interpolate {
                         data.interpolation_time = data.options.time;
                     }
                 }
+                continue
             }
 
             let alpha = data.time.elapsed().as_secs_f64()/data.interpolation_time;
