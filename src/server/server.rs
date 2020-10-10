@@ -3,7 +3,7 @@ use igd::{search_gateway, PortMappingProtocol};
 use local_ipaddress;
 use serde_json::{Value, json};
 use thread::sleep;
-use std::{collections::HashMap, io::{Read, Write}, net::IpAddr, net::Shutdown, net::TcpStream, thread, time::Duration};
+use std::{collections::HashMap, io::{Read, Write}, net::IpAddr, net::Shutdown, net::TcpStream, thread, time::Duration, time::Instant};
 use std::net::{TcpListener, Ipv4Addr, SocketAddrV4};
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, AtomicU16, Ordering::SeqCst};
@@ -200,19 +200,26 @@ impl Server {
         let should_stop = self.should_stop.clone();
 
         thread::spawn(move || {
+            let mut timer = Instant::now();
             loop {
                 let transfer = &mut transfer.lock().unwrap();
                 let mut to_write = Vec::new();
                 // Clients to remove 
                 let mut to_drop = Vec::new();
                 // Read any data from client 
-                let next_send_string: Option<String> = match transfer.client_rx.try_recv() {
+                let mut next_send_string: Option<String> = match transfer.client_rx.try_recv() {
                     Ok(mut data) => {
                         data["from"] = Value::String(transfer.name.clone());
                         Some(data.to_string() + "\n")
                     },
                     Err(_) => None
                 };
+
+                // Heartbeat
+                if timer.elapsed().as_secs() > 2 && next_send_string.is_none() {
+                    next_send_string = Some("\n".to_string());
+                    timer = Instant::now();
+                }
 
                 
                 // Read incoming stream data
@@ -290,16 +297,25 @@ impl Server {
                         transfer.write_to_all_except(&name, rebroadcast_data.to_string().as_bytes());
                     }
                 }
+
+                let should_stop = should_stop.load(SeqCst);
+                // Shutdown all streams
+                if should_stop {
+                    to_drop.clear();
+                    to_drop.extend(0..transfer.clients.len());
+                }
     
                 // Remove any connections that got dropped and tell app
                 for dropping in to_drop {
                     let removed_client = transfer.clients.remove(dropping);
+                    removed_client.stream.shutdown(Shutdown::Both).ok();
                     number_connections.fetch_sub(1, SeqCst);
                     
-                    transfer.server_tx.send(ReceiveData::ConnectionLost(removed_client.name)).ok();
+                    // TransferStopped message will take care of removing clients
+                    if !should_stop {transfer.server_tx.send(ReceiveData::ConnectionLost(removed_client.name)).ok();};
                 }
 
-                if should_stop.load(SeqCst) {break}
+                if should_stop {break}
                 sleep(Duration::from_millis(10));
             }
         });

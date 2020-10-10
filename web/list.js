@@ -66,7 +66,7 @@ class ConnectionList {
 
     remove(name) {
         this.object.removeChild(this.list[name].object)
-        this.list[name] = null    
+        delete this.list[name]
     }
 
     hide() {

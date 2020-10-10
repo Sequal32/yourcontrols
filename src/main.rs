@@ -155,7 +155,9 @@ fn main() {
                     clients.add_client(name);
                 },
                 Ok(ReceiveData::ConnectionLost(name)) => {
-                    app_interface.server_started(client.get_connected_count());
+                    if client.is_server() {
+                        app_interface.server_started(client.get_connected_count());
+                    }
                     app_interface.lost_connection(&name);
                     clients.remove_client(&name);
                     // User may have been in control
