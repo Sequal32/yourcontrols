@@ -69,7 +69,7 @@ impl Client {
         let transfer = self.transfer.as_ref().unwrap().clone();
         let should_stop = self.should_stop.clone();
 
-        self.on_connected();
+        self.send_name();
 
         thread::spawn(move || {
             loop {
@@ -88,7 +88,13 @@ impl Client {
                         if let Some(data) = transfer.reader.try_read_string(&buf[0..n]) {
                             // Deserialize json
                             if let Ok(data) = process_message(&data, None) {
-                                transfer.server_tx.send(data).ok();
+                                // Server identified itself
+                                if let ReceiveData::Name(name) = data {
+                                    transfer.server_tx.send(ReceiveData::NewConnection(name)).ok();
+                                } else {
+                                    // Don't need to resend name to app
+                                    transfer.server_tx.send(data).ok();
+                                }   
                             }
                         }
                     }

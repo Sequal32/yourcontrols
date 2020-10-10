@@ -48,7 +48,7 @@ pub trait TransferClient {
         }));
     }
 
-    fn on_connected(&self) {
+    fn send_name(&self) {
         self.send_value(json!({
             "type": "name",
             "data": self.get_server_name()
@@ -144,6 +144,11 @@ pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveDat
         Some("set_observer") => match value["target"].as_str() {
             Some(to) => Ok(ReceiveData::SetObserver(to.to_string(), value["is_observer"].as_bool().unwrap_or_default())),
             None => Err(ParseError::FieldMissing("target"))
+        }
+
+        Some("user") => match value["data"].as_str() {
+            Some(name) => Ok(ReceiveData::NewConnection(name.to_string())),
+            None => Err(ParseError::FieldMissing("data"))
         }
         // Disconnect
         Some("invalid_name") => Ok(ReceiveData::InvalidName),

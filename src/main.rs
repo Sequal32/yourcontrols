@@ -90,7 +90,7 @@ fn main() {
             };
 
             definitions.step(&conn);
-            // Data from the person in control
+            // Data from server
             match client.get_next_message() {
                 Ok(ReceiveData::Update(sender, sync_data)) => {
                     if clients.is_observer(&sender) {return}
@@ -105,15 +105,19 @@ fn main() {
                         app_interface.gain_control();
                         clients.set_no_control();
                     // Someone else has controls, if we have controls we let go and listen for their messages
-                    } else if control.has_control() {
-                        app_interface.lose_control();
-                        control.lose_control(&conn);
-                        clients.set_client_control(sender);
+                    } else {
+                        if sender == client.get_server_name() {
+                            app_interface.lose_control();
+                            control.lose_control(&conn);
+                        }
+                        
+                        app_interface.set_incontrol(&to);
+                        clients.set_client_control(to);
                     }
                 }
                 // Increment client counter
                 Ok(ReceiveData::NewConnection(name)) => {
-                    if control.has_control() {
+                    if control.gain_control() {
                         client.update(definitions.get_all_current());
                     }
                     app_interface.server_started(client.get_connected_count());
@@ -124,6 +128,17 @@ fn main() {
                     app_interface.server_started(client.get_connected_count());
                     app_interface.lost_connection(&name);
                     clients.remove_client(&name);
+                    // User may have been in control
+                    if clients.client_has_control(&name) {
+                        clients.set_no_control();
+                        // Transfer control to myself if I'm server
+                        if client.is_server() {
+                            app_interface.gain_control();
+                            control.gain_control();
+                            
+                            client.transfer_control(client.get_server_name().to_string());
+                        }
+                    }
                 }
                 Ok(ReceiveData::TransferStopped(reason)) => {
                     // TAKE BACK CONTROL
@@ -143,6 +158,7 @@ fn main() {
                         observing = is_observer;
                     } else {
                         clients.set_observer(&target, is_observer);
+                        app_interface.set_observing(&target, is_observer);
                     }
                 }
                 // Never will be reached
@@ -155,14 +171,14 @@ fn main() {
             }
 
             // Handle sync vars
-            if !observing && control.has_control() && update_rate_instant.elapsed().as_secs_f64() > update_rate {
+            if !observing && control.gain_control() && update_rate_instant.elapsed().as_secs_f64() > update_rate {
                 if let Some(values) = definitions.get_need_sync() {
                     client.update(values);
                 }
                 update_rate_instant = Instant::now();
             }
 
-            if !control.has_control() {
+            if !control.gain_control() {
                 // Message timeout
                 // app_interface.update_overloaded(interpolation.overloaded());
                 definitions.step_interpolate(&conn);
@@ -241,18 +257,23 @@ fn main() {
                         client.stop();
                     }
                 }
-                AppMessage::TransferControl(to) => {
+                AppMessage::TransferControl(name) => {
                     if let Some(client) = transfer_client.as_ref() {
-                        // Convert from name to ip
-                        clients.set_client_control(to.clone());
-                        client.transfer_control(to);
+                        // Frontend who's in control
+                        app_interface.set_incontrol(&name);
+                        app_interface.lose_control();
+                        // Send server message
+                        client.transfer_control(name.clone());
+                        // Log who's in control
+                        clients.set_client_control(name);
+                        // Freeze aircraft
                         control.lose_control(&conn);
                     }
                 }
-                AppMessage::SetObserver(ip, is_observer) => {
-                    clients.set_observer(&ip, is_observer);
+                AppMessage::SetObserver(name, is_observer) => {
+                    clients.set_observer(&name, is_observer);
                     if let Some(client) = transfer_client.as_ref() {
-                        client.set_observer(ip, is_observer);
+                        client.set_observer(name, is_observer);
                     }
                 }
                 AppMessage::Startup => {

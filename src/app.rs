@@ -217,10 +217,6 @@ impl App {
         self.invoke("lostcontrol", None);
     }
 
-    pub fn can_take_control(&self) {
-        self.invoke("controlavail", None);
-    }
-
     pub fn server_started(&self, client_count: u16) {
         self.invoke("server", Some(client_count.to_string().as_str()));
     }
@@ -247,5 +243,17 @@ impl App {
         } else if !is_overloaded && self.was_overloaded {
             self.stable()
         }
+    }
+
+    pub fn set_observing(&self, name: &str, observing: bool) {
+        if observing {
+            self.invoke("set_observing", Some(name));
+        } else {
+            self.invoke("set_not_observing", Some(name));
+        }
+    }
+
+    pub fn set_incontrol(&self, name: &str) {
+        self.invoke("set_incontrol", Some(name));
     }
 }

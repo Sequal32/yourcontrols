@@ -16,7 +16,7 @@
 <div id="server-client-page", onload="OnLoad">
     <form class="needs-validation form-div" id="main-form" novalidate >
         <div class="form-row justify-content-center auto-margin">
-            <div class="col-sm-auto">  
+            <div class="col-sm-auto" id="server-div">  
                 <input type="text" class="form-control" id="server-input" placeholder="Server IP/Hostname" aria-describedby="ip-feedback" required>
                 <div class="valid-feedback">
                     Looks good!
@@ -25,7 +25,7 @@
                     Please provide a valid ip or hostname.
                 </div>
             </div>
-            <div class="col-sm-auto">  
+            <div class="col-sm-auto" id="port-div">  
                 <input type="text" class="form-control" id="port-input" placeholder="Port" aria-describedby="port-feedback" required>
                 <div class="valid-feedback">
                     Looks good!
@@ -53,5 +53,5 @@
     </form>
 </div>
 
-<ul class="list-group", id="connection-list">
+<ul class="list-group", id="connection-list" hidden>
 </ul>

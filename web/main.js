@@ -10,6 +10,8 @@ var connection_list_button = document.getElementById("connection-page")
 
 var port_input = document.getElementById("port-input")
 var server_input = document.getElementById("server-input")
+var port_div = document.getElementById("port-div")
+var server_div = document.getElementById("server-div")
 // Radios
 var radios = document.getElementById("radios")
 var ip4radio = document.getElementById("ip4")
@@ -63,6 +65,8 @@ function OnDisconnect(text) {
     ip4radio.disabled = false
     ip6radio.disabled = false
 
+    connectionList.clear()
+
     PagesVisible(true)
     ResetForm()
 }
@@ -71,9 +75,9 @@ function ServerClientPageChange(isClient) {
     on_client = isClient
     connect_button.hidden = !isClient
     server_button.hidden = isClient
-    server_input.hidden = !isClient
     radios.hidden = isClient
-    port_input.hidden = isClient
+    server_div.hidden = !isClient
+    port_div.hidden = false
 }
 
 function PageChange(pageName) {
@@ -95,9 +99,8 @@ function PageChange(pageName) {
             on_client = false
             connect_button.hidden = true
             server_button.hidden = true
-            server_input.hidden = true
-            radios.hidden = true
-            port_input.hidden = true
+            server_div.hidden = true
+            port_div.hidden = true
             connectionList.show()
             connection_list_button.classList.add("active")
             break
@@ -189,11 +192,19 @@ function MessageReceived(data) {
         case "lostconnection":
             connectionList.remove(data["data"])
             break;
-        // Other client
+        // Observing
         case "observing":
             break;
-        // Us
+        // Other client
         case "set_observing":
+            connectionList.setObserver(data["data"], true)
+            break;
+        case "set_not_observing":
+            connectionList.setObserver(data["data"], false)
+            break;
+        // Other client
+        case "set_incontrol":
+            connectionList.setInControl(data["data"])
             break;
     }
 }

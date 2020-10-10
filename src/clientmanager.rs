@@ -33,10 +33,15 @@ impl ClientManager {
         return false;
     }
 
-    pub fn set_client_control(&mut self, name: String) {
+    pub fn set_client_control(&mut self, name: String) -> Option<String> {
         if self.clients.contains_key(&name) {
+            let previous_name = self.current_control.take();
+
             self.current_control = Some(name);
+
+            return previous_name;
         }
+        return None
     }
 
     pub fn set_no_control(&mut self) {

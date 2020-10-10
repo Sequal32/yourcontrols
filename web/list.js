@@ -6,8 +6,14 @@ class ConnectionList {
 
     update() {
         for (var key in this.list) {
-            console.log(has_control, is_client)
             this.list[key].setButtonsVisibility(has_control, is_client)
+        }
+    }
+
+    clear() {
+        this.lastInControl = null
+        for (var key in this.list) {
+            this.remove(key)
         }
     }
 
@@ -25,14 +31,30 @@ class ConnectionList {
         observeButton.className = "btn btn-outline-secondary btn-sm entry-button"
         observeButton.type = "button"
         observeButton.innerHTML = "Observer"
+
+        var statusText = document.createElement("p")
+        statusText.className = "entry-button"
+        statusText.innerHTML = "In Control"
         // Add as childs
-        listItem.append(controlButton, observeButton)
+        listItem.append(controlButton, observeButton, statusText)
         this.object.append(listItem)
         // listItem as class
         let listItemObject = new ConnectionListItem(listItem, name)
         this.list[name] = listItemObject
 
         listItemObject.setButtonsVisibility(has_control, is_client)
+    }
+
+    setInControl(name) {
+        if (this.lastInControl) {
+            this.list[this.lastInControl].setInControl(false)
+        }
+        this.list[name].setInControl(true)
+        this.lastInControl = name
+    }
+
+    setObserver(name, observing) {
+        this.list[name].setObserver(observing)
     }
 
     remove(name) {
@@ -54,8 +76,10 @@ class ConnectionListItem {
         this.object = htmlObject
         this.controlButton = htmlObject.children[0]
         this.observeButton = htmlObject.children[1]
-        this.is_observer = false
+        this.statusText = htmlObject.children[2]
         this.name = name
+
+        this.is_observer = false
 
         this.controlButton.onclick = this.controlButtonClicked.bind(this)
         this.observeButton.onclick = this.observeButtonClicked.bind(this)
@@ -78,14 +102,30 @@ class ConnectionListItem {
 
     controlButtonClicked() {
         this.controlButton.hidden = true
+        this.observeButton.hidden = true
         invoke({
             type: "transfer_control",
             target: this.name
         })
     }
 
+    setInControl(inControl) {
+        this.statusText.innerHTML = "In Control"
+        this.statusText.classList.toggle("entry-text-observe", !inControl)
+        this.statusText.classList.toggle("entry-text-in-control", inControl)
+        this.statusText.hidden = !inControl
+    }
+
+    setObserver(observing) {
+        this.is_observer = observing
+        this.statusText.innerHTML = "Observing"
+        this.statusText.classList.toggle("entry-text-observe", observing)
+        this.statusText.classList.toggle("entry-text-in-control", !observing)
+        this.statusText.hidden = !observing
+    }
+
     setButtonsVisibility(hasControl, isClient) {
         this.controlButton.hidden = this.is_observer || (!hasControl && !this.is_observer)
-        this.observeButton.hidden = isClient
+        this.observeButton.hidden = isClient || this.controlButton.hidden
     }
 }
