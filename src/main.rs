@@ -188,7 +188,7 @@ fn main() {
                         if client.is_server() {
                             info!("{} had control, taking control back.", name);
                             app_interface.gain_control();
-                            control.has_control();
+                            control.take_control(&conn);
                             
                             client.transfer_control(client.get_server_name().to_string());
                         }
