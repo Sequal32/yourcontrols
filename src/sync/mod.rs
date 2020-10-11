@@ -56,6 +56,10 @@ impl Events {
             }
         }
     }
+
+    pub fn get_number_defined(&self) -> usize {
+        return self.event_map.len()
+    }
 }
 
 struct LocalVarEntry {
@@ -123,6 +127,10 @@ impl LVarSyncer {
         }
 
         return return_map
+    }
+
+    pub fn get_number_defined(&self) -> usize {
+        return self.vars.len()
     }
 }
 
@@ -194,6 +202,10 @@ impl AircraftVars {
                 }
             }
         }
+    }
+
+    pub fn get_number_defined(&self) -> usize {
+        return self.vars.len()
     }
 }
 

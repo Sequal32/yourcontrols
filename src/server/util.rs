@@ -1,6 +1,6 @@
 use crossbeam_channel::{Receiver, Sender};
 use serde_json::{Value, json};
-use std::{io::Write, net::IpAddr};
+use std::{fmt::Display, io::Write, net::IpAddr};
 
 use crate::definitions::AllNeedSync;
 use super::payloads::*;
@@ -199,6 +199,15 @@ pub enum ReceiveData {
 pub enum TransferStoppedReason {
     Requested(String),
     ConnectionLost
+}
+
+impl Display for TransferStoppedReason {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TransferStoppedReason::Requested(reason) => write!(f, "{}", reason),
+            TransferStoppedReason::ConnectionLost => write!(f, "Connection lost/terminated.")
+        }
+    }
 }
 
 #[cfg(test)]

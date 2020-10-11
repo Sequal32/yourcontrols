@@ -19,14 +19,16 @@ use definitions::{Definitions, SyncPermissions};
 use simconfig::Config;
 use server::{Client, ReceiveData, Server, TransferClient};
 use simconnect::{self, DispatchResult};
-use util::{app_need_update};
-use std::{fs, io, thread, time::Duration, time::Instant};
+use util::{app_get_versions};
+use std::{fs::{self, File}, io, thread, time::Duration, time::Instant};
 use spin_sleep::sleep;
+use log::{self, error, info, warn};
+use simplelog;
 
 use sync::*;
 use control::*;
 
-
+const LOG_FILENAME: &str = "log.txt";
 const CONFIG_FILENAME: &str = "config.json";
 const AIRCRAFT_DEFINITIONS_PATH: &str = "definitions/aircraft/";
 const APP_STARTUP_SLEEP_TIME: Duration = Duration::from_millis(100);
@@ -47,12 +49,16 @@ fn main() {
     // Load configuration file
     let mut config = match Config::read_from_file(CONFIG_FILENAME) {
         Ok(config) => config,
-        Err(_) => {
+        Err(e) => {
+            warn!("Could not open config. Using default values. Reason: {}", e);
+
             let config = Config::default();
             config.write_to_file(CONFIG_FILENAME).expect(format!("Could not write to {}!", CONFIG_FILENAME).as_str());
             config
         }
     };
+    // Initialize logging
+    simplelog::WriteLogger::init(simplelog::LevelFilter::Info, simplelog::Config::default(), File::create(LOG_FILENAME).unwrap()).ok();
 
     let mut conn = simconnect::SimConnector::new();
 
@@ -95,7 +101,7 @@ fn main() {
         }
     };
 
-    let (newest_version, app_need_update) = app_need_update();
+    let (app_version, newest_version) = app_get_versions();
 
     loop {
         let timer = Instant::now();
@@ -109,7 +115,7 @@ fn main() {
                 },
                 // Exception occured
                 Ok(DispatchResult::Exception(data)) => {
-                    unsafe{println!("{:?}", data.dwException)};
+                    warn!("SimConnect exception occurred: {}", unsafe{data.dwException});
                 },
                 Ok(DispatchResult::Event(data)) => {
                     definitions.process_event_data(data);
@@ -133,15 +139,18 @@ fn main() {
                     // Someone is transferring controls to us
                     definitions.clear_sync();
                     if to == client.get_server_name() {
+                        info!("Taking control from {}", sender);
                         control.take_control(&conn);
                         app_interface.gain_control();
                         clients.set_no_control();
                     // Someone else has controls, if we have controls we let go and listen for their messages
                     } else {
                         if sender == client.get_server_name() {
+                            info!("Server yanked control from us.");
                             app_interface.lose_control();
                             control.lose_control(&conn);
                         }
+                        info!("{} is now in control.", to);
                         
                         app_interface.set_incontrol(&to);
                         clients.set_client_control(to);
@@ -149,6 +158,7 @@ fn main() {
                 }
                 // Increment client counter
                 Ok(ReceiveData::NewConnection(name)) => {
+                    info!("{} connected.", name);
                     if control.has_control() {
                         // Send initial aircraft state
                         client.update(definitions.get_all_current());
@@ -160,11 +170,13 @@ fn main() {
                     clients.add_client(name);
                 },
                 Ok(ReceiveData::NewUser(name, in_control, is_observer)) => {
+                    info!("{} connected. In control: {}, observing: {}", name, in_control, is_observer);
                     app_interface.new_connection(&name);
                     app_interface.set_observing(&name, is_observer);
                     if in_control {app_interface.set_incontrol(&name)}
                 }
                 Ok(ReceiveData::ConnectionLost(name)) => {
+                    info!("{} lost connection.", name);
                     if client.is_server() {
                         app_interface.server_started(client.get_connected_count());
                     }
@@ -175,6 +187,7 @@ fn main() {
                         clients.set_no_control();
                         // Transfer control to myself if I'm server
                         if client.is_server() {
+                            info!("{} had control, taking control back.", name);
                             app_interface.gain_control();
                             control.has_control();
                             
@@ -183,25 +196,21 @@ fn main() {
                     }
                 }
                 Ok(ReceiveData::TransferStopped(reason)) => {
+                    info!("Server/Client stopped. Reason: {}", reason);
                     // TAKE BACK CONTROL
                     control.take_control(&conn);
                     clients.reset();
                     observing = false;
 
-                    match reason {
-                        server::TransferStoppedReason::Requested(reason) => {
-                            app_interface.client_fail(&reason);
-                        }
-                        server::TransferStoppedReason::ConnectionLost => {
-                            app_interface.client_fail("Connection Lost.");
-                        }
-                    }
+                    app_interface.client_fail(&reason.to_string());
                 }
                 Ok(ReceiveData::SetObserver(target, is_observer)) => {
                     if target == client.get_server_name() {
+                        info!("Server set us to observing.");
                         observing = is_observer;
                         app_interface.observing(is_observer);
                     } else {
+                        info!("{} is observing? {}", target, is_observer);
                         clients.set_observer(&target, is_observer);
                         app_interface.set_observing(&target, is_observer);
                     }
@@ -209,6 +218,7 @@ fn main() {
                 // Never will be reached
                 Ok(ReceiveData::Name(_)) => (),
                 Ok(ReceiveData::InvalidName) => {
+                    info!("{} was already in use, disconnecting.", client.get_server_name());
                     client.stop("Name already in use!".to_string());
                 }
                 Err(_) => ()
@@ -250,10 +260,11 @@ fn main() {
                                 control.take_control(&conn);
                                 app_interface.gain_control();
                                 need_update = true;
+                                info!("Server started and controls taken.");
                             },
                             Err(e) => {
                                 app_interface.server_fail(e.to_string().as_str());
-                                // Was error not nessecary here, stopped does not get fired
+                                info!("Could not start server! Reason: {}", e);
                             }
                         }
                     }
@@ -277,10 +288,12 @@ fn main() {
                                 // Freeze aircraft
                                 control.lose_control(&conn);
                                 need_update = true;
+
+                                info!("Client started and controls lost.");
                             }
                             Err(e) => {
                                 app_interface.client_fail(e.to_string().as_str());
-                                // Was error not nessecary here
+                                error!("Could not start client! Reason: {}", e);
                             }
                         }
                         // Write config with new values
@@ -289,12 +302,14 @@ fn main() {
                     }
                 }
                 AppMessage::Disconnect => {
+                    info!("Request to disconnect.");
                     if let Some(client) = transfer_client.as_ref() {
                         client.stop("Stopped.".to_string());
                     }
                 }
                 AppMessage::TransferControl(name) => {
                     if let Some(client) = transfer_client.as_ref() {
+                        info!("Giving control to {}", name);
                         // Send server message
                         client.transfer_control(name.clone());
                         // Frontend who's in control
@@ -309,10 +324,12 @@ fn main() {
                 AppMessage::SetObserver(name, is_observer) => {
                     clients.set_observer(&name, is_observer);
                     if let Some(client) = transfer_client.as_ref() {
+                        info!("Setting {} as observer.", name);
                         client.set_observer(name, is_observer);
                     }
                 }
                 AppMessage::LoadAircraft(name) => {
+                    info!("{} aircraft config selected.", name);
                     definitions = Definitions::new();
                     config_to_load = name.clone();
                     conn.close();
@@ -328,17 +345,26 @@ fn main() {
                     // List aircraft
                     match get_aircraft_configs() {
                         Ok(configs) => {
+                            info!("Found {} configuration file(s).", configs.len());
+
                             for aircraft_config in configs {
                                 app_interface.add_aircraft(&aircraft_config);
                             }
+
                             app_interface.select_config(&config.last_config);
                         }
                         Err(_) => {}
                     }
                     // Update version
-                    if app_need_update {
-                        app_interface.version(&newest_version.to_string());
+                    if let Some(newest_version) = newest_version.as_ref() {
+                        if *newest_version > app_version {
+                            app_interface.version(&newest_version.to_string());
+                        }
+                        info!("Version {} in use, {} is newest.", app_version, newest_version)
+                    } else {
+                        info!("Version {} in use.", app_version)
                     }
+                    
                 }
             }
             Err(_) => {}
@@ -346,18 +372,25 @@ fn main() {
         // Try to connect to simconnect if not connected
         if !connected {
             connected = conn.connect("Your Control");
+            // connected = true;
             if connected {
                 // Display not connected to server message
                 app_interface.disconnected();
                 control.on_connected(&conn);
 
-                println!("{:?}", definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, config_to_load)));
-                definitions.on_connected(&conn)
+                // Load aircraft configuration
+                info!("Connected to SimConnect.");
+                match definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, config_to_load)) {
+                    Ok(_) => {
+                        info!("Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
+                        definitions.on_connected(&conn)
+                    }
+                    Err(e) => log::error!("Could not load configuration file {}: {}", config_to_load, e)
+                };
             } else {
                 // Display trying to connect message
                 app_interface.error("Trying to connect to SimConnect...");
             };
-            // connected = true
         }
 
         if timer.elapsed().as_millis() < 10 {sleep(LOOP_SLEEP_TIME)};

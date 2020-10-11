@@ -3,25 +3,43 @@ use serde_yaml::{self, Value};
 use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
-use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fs::File, time::Instant};
+use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant};
 use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchSet, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
     FileError,
     YamlError(serde_yaml::Error),
-    ReadError,
     ParseError(VarAddError)
+}
+
+impl Display for ConfigLoadError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ConfigLoadError::FileError => write!(f, "Could not open file."),
+            ConfigLoadError::YamlError(e) => write!(f, "Could not parse file as YAML...{}", e.to_string()),
+            ConfigLoadError::ParseError(e) => write!(f, "Error parsing configuration...{}", e)
+        }
+    }
 }
 
 #[derive(Debug)]
 pub enum VarAddError {
     MissingField(&'static str),
-    MissingEvent(&'static str),
-    InvalidVarType(&'static str),
     InvalidSyncType(String),
     InvalidCategory(String),
     YamlParseError(serde_yaml::Error),
+}
+
+impl Display for VarAddError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            VarAddError::MissingField(s) => write!(f, "Missing field {}", s),
+            VarAddError::InvalidSyncType(s) => write!(f, "Invalid type {}", s),
+            VarAddError::InvalidCategory(s) => write!(f, "Invalid category {}", s),
+            VarAddError::YamlParseError(e) => write!(f, "Error parsing YAML...{}", e.to_string())
+        }
+    }
 }
 
 #[derive(PartialEq)]
@@ -822,5 +840,17 @@ impl Definitions {
 
     pub fn clear_sync(&mut self) {
         self.current_sync.clear();
+    }
+
+    pub fn get_number_avars(&self) -> usize {
+        return self.avarstransfer.get_number_defined()
+    }
+
+    pub fn get_number_lvars(&self) -> usize {
+        return self.lvarstransfer.get_number_defined()
+    }
+
+    pub fn get_number_events(&self) -> usize {
+        return self.events.get_number_defined()
     }
 }

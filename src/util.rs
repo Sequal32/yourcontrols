@@ -49,11 +49,10 @@ fn get_version() -> Version {
     Version::parse(env!("CARGO_PKG_VERSION")).unwrap()
 }
 
-pub fn app_need_update() -> (Version, bool) {
+pub fn app_get_versions() -> (Version, Option<Version>) {
     let app_ver = get_version();
     if let Ok(new_ver) = get_latest_version() {
-        let need_update = new_ver > app_ver;
-        return (new_ver, need_update)
+        return (app_ver, Some(new_ver))
     }
-    return (app_ver, false)
+    return (app_ver, None)
 }

@@ -1,6 +1,7 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
 use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
+use log::warn;
 use serde_json::{Value, json};
 use thread::sleep;
 use std::{io::{Read}, net::IpAddr, net::Shutdown, net::TcpStream, thread, time::Duration, time::Instant};
@@ -126,7 +127,7 @@ impl Server {
         // Attempt to port forward
         if let Err(e) = self.port_forward(port) {
             self.port_error = Some(e);
-            println!("{:?}", e);
+            warn!("Could not port forward! Reason: {:?}", e)
         }
 
         // Start listening for connections
