@@ -1,15 +1,14 @@
 ![https://github.com/Sequal32/yourcontrol](/assets/logo.png)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
-![https://github.com/Sequal32/yourcontrol/releases/latest](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge) ![](https://img.shields.io/github/downloads/Sequal32/yourcontrol/total?style=for-the-badge)
+[![](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge)](https://github.com/Sequal32/yourcontrol/releases/latest) [![](https://img.shields.io/github/downloads/Sequal32/yourcontrol/total?style=for-the-badge)](https://github.com/Sequal32/yourcontrol/releases/latest)
 
 A simple shared cockpit solution for Microsoft Flight Simulator.
-
-## Note
-**The current latest release does not follow the below instructions, due to it still being WIP. The new program will be released soon as version 2.0.0.**
 
 ## Features
 * Frequent and smooth position updates through linear interpolation
 * Transferable controls and fully configurable switches to synchronize
+
+Note: Currently only the C172 G1000 is implemented for this plugin. Documentation for implementing for aircraft is planned and will be provided in the [Data Files](#Data-Files) section.
 
 ## Install
 1. Grab the latest [release](https://github.com/Sequal32/yourcontrol/releases/latest) and unzip to a directory of your choice.
@@ -35,6 +34,10 @@ A simple shared cockpit solution for Microsoft Flight Simulator.
 ### Missing DLL
 Install [Microsoft Visual C++ 2015 Redistributable Update 3 RC](https://www.microsoft.com/en-us/download/details.aspx?id=52685) to resolve this.
 
+### Discord
+I've created a [discord](https://discord.gg/ywb7paY) for anybody seeking support for this program.
+`ywb7paY`
+
 ## Configuring
 Config.json
 ```
@@ -43,12 +46,13 @@ Config.json
   "ip": "", // The last entered ip
   "last_config":"", // The last used aircraft config file
   "buffer_size": 3, // How many packets to buffer. Useful for unstable connections.
-  "update_rate": 30, // The update rate in hz. Setting this above 60hz may be unstable
+  "conn_timeout": 10, // How many seconds to try to establish a connection with the server before timing out.
+  "update_rate": 30, // The update rate that aircraft data is sent in hz. Setting this any higher may be unstable.
 }
 ```
 ## Remarks
 * The code's architecture is loosely defined, so looking at the code may prove challenging.
-
+* Documentation for creating aircraft definition files is planned.
 
 ## Data Files
 If you're looking to create your own aircraft config file, refer to the provided files as examples and the [definitions](https://github.com/Sequal32/yourcontrol/tree/master/definitions) page.
