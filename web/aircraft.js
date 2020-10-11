@@ -9,14 +9,26 @@ aircraftList.addAircraft = function(aircraftName) {
     newButton.onclick = function() {
         invoke({"type":"load_aircraft", "name": aircraftName})
 
-        if (aircraftList.activeSelection) {
-            aircraftList.activeSelection.classList.remove("active")
-        }
-
-        newButton.classList.add("active")
-        
-        aircraftList.activeSelection = newButton
+        aircraftList.selectActive(newButton)
     }
 
     aircraftList.appendChild(newButton)
+}
+
+aircraftList.selectActive = function(button) {
+    if (aircraftList.activeSelection) {
+        aircraftList.activeSelection.classList.remove("active")
+    }
+
+    button.classList.add("active")
+    aircraftList.activeSelection = button
+}
+
+aircraftList.searchSelectActive = function(name) {
+    for (i=0; i < aircraftList.children.length; i++) {
+        const button = aircraftList.children[i]
+        if (button.innerHTML == name) {
+            aircraftList.selectActive(button)
+        }
+    }
 }

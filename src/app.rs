@@ -277,6 +277,10 @@ impl App {
     }
 
     pub fn add_aircraft(&self, name: &str) {
-        self.invoke("add_aircraft", Some(name))
+        self.invoke("add_aircraft", Some(name));
+    }
+
+    pub fn select_config(&self, name: &str) {
+        self.invoke("select_active_config", Some(name));
     }
 }

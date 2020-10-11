@@ -311,6 +311,9 @@ fn main() {
                     definitions = Definitions::new();
                     println!("{:?}", definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, name)));
                     definitions.on_connected(&conn);
+
+                    config.last_config = name;
+                    config.write_to_file(CONFIG_FILENAME).ok();
                 }
                 AppMessage::Startup => {
                     thread::sleep(APP_STARTUP_SLEEP_TIME);
@@ -322,6 +325,7 @@ fn main() {
                             for aircraft_config in configs {
                                 app_interface.add_aircraft(&aircraft_config);
                             }
+                            app_interface.select_config(&config.last_config);
                         }
                         Err(_) => {}
                     }

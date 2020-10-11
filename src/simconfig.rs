@@ -8,8 +8,8 @@ pub struct Config {
     pub port: u16,
     pub update_rate: u16,
     pub buffer_size: usize,
-    pub conn_timeout: f64,
-    pub ip: String
+    pub ip: String,
+    pub last_config: String
 }
 
 impl Default for Config {
@@ -18,8 +18,8 @@ impl Default for Config {
             port: 7777,
             update_rate: 30,
             buffer_size: 3,
-            conn_timeout: 10.0,
-            ip: "".to_string()
+            ip: String::new(),
+            last_config: String::new()
         }
     }
 }

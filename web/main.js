@@ -233,6 +233,9 @@ function MessageReceived(data) {
         case "add_aircraft":
             aircraftList.addAircraft(data["data"])
             break;
+        case "select_active_config":
+            aircraftList.searchSelectActive(data["data"])
+            break;
     }
 }
 

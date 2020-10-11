@@ -35,9 +35,9 @@ Config.json
 {
   "port": 7777, // The default port shown in the app for client & server
   "ip": "", // The last entered ip
+  "last_config":"", // The last used aircraft config file
   "buffer_size": 3, // How many packets to buffer. Useful for unstable connections.
   "update_rate": 30, // The update rate in hz. Setting this above 60hz may be unstable
-  "conn_timeout": 10.0 // When control should be taken back after a packet hasn't been received for X amount of seconds
 }
 ```
 
