@@ -33,34 +33,6 @@ impl Syncable<bool> for ToggleSwitch {
     }
 }
 
-pub struct ToggleSwitchSet {
-    event_id: u32,
-    current: bool
-}
-
-impl ToggleSwitchSet {
-    pub fn new(event_id: u32) -> Self {
-        return Self {
-            event_id: event_id,
-            current: false
-        }
-    }
-}
-
-impl Syncable<bool> for ToggleSwitchSet {
-    fn set_current(&mut self, current: bool) {
-        self.current = current;
-    }
-
-    fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
-        if self.current == new {return}
-        match new {
-            true => conn.transmit_client_event(1, self.event_id, 1, GROUP_ID, 0),
-            false => conn.transmit_client_event(1, self.event_id, 0, GROUP_ID, 0)
-        };
-    }
-}
-
 pub struct ToggleSwitchParam {
     event_id: u32,
     param: u32,

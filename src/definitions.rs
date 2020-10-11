@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchSet, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -239,7 +239,7 @@ impl Period {
 }
 
 pub struct Definitions {
-    // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchSet, ToggleSwitchParam)
+    // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchParam)
     action_maps: HashMap<String, Vec<ActionType>>,
     // Events to listen to
     events: Events,
@@ -386,15 +386,6 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_toggle_switch_set(&mut self, category: &str, var: VarEventEntry) -> Result<(), VarAddError> {
-        let event_id = self.events.get_or_map_event_id(&var.event_name, false);
-
-        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
-        self.add_bool_mapping( &var_string, Box::new(ToggleSwitchSet::new(event_id)));
-
-        Ok(())
-    }
-
     fn add_toggle_switch_two(&mut self, category: &str, var: ToggleSwitchTwoEntry) -> Result<(), VarAddError> {
         let on_event_id = self.events.get_or_map_event_id(&var.on_event_name, false);
         let off_event_id = self.events.get_or_map_event_id(&var.off_event_name, false);
@@ -526,7 +517,6 @@ impl Definitions {
 
         match type_str.to_uppercase().as_str() {
             "TOGGLESWITCH" => self.add_toggle_switch(category, try_cast_yaml!(value))?,
-            "TOGGLESWITCHSET" => self.add_toggle_switch_set(category, try_cast_yaml!(value))?,
             "TOGGLESWITCHPARAM" => self.add_toggle_switch_param(category, try_cast_yaml!(value))?,
             "TOGGLESWITCHTWO" => self.add_toggle_switch_two(category, try_cast_yaml!(value))?,
             "NUMINCREMENTFLOAT" => self.add_num_increment_float(category, try_cast_yaml!(value))?,
