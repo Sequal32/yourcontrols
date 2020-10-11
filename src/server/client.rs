@@ -1,5 +1,5 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
-use serde_json::{Value, json};
+use serde_json::{Value};
 use std::{io::Read, net::{IpAddr, Shutdown, SocketAddr, TcpStream}, sync::Mutex};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::io::Write;
@@ -98,7 +98,7 @@ impl Client {
                     // Broadcast data to all clients
                     match transfer.stream.write_all((data.to_string() + "\n").as_bytes()) {
                         Ok(_) => {}
-                        Err(e) => {
+                        Err(_) => {
                             // Connection dropped
                             should_stop.store(true, SeqCst);
                             transfer.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::ConnectionLost)).ok();

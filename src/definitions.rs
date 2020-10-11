@@ -518,13 +518,6 @@ impl Definitions {
         Ok(())
     }
 
-    fn check_other_common_fields(&mut self, value: &Value) {
-        // All types except event should have a var_name
-        if let Some(var_name) = value["var_name"].as_str() {
-            let real_var_name = get_real_var_name(var_name);
-        }
-    }
-
     // Calls the correct method for the specified "action" type
     fn parse_var(&mut self, category: &str, value: Value) -> Result<(), VarAddError> {
         let type_str = check_and_return_field!("type", value, str);
@@ -697,7 +690,7 @@ impl Definitions {
         }
     }
 
-    pub fn get_need_sync(&mut self, sync_permission: &SyncPermissions) -> Option<AllNeedSync> {
+    pub fn get_need_sync(&mut self, _sync_permission: &SyncPermissions) -> Option<AllNeedSync> {
         if self.current_sync.is_empty() {return None}
 
         let mut return_data = AllNeedSync::new();

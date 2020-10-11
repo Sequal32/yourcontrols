@@ -2,7 +2,7 @@ pub mod memwriter;
 
 use bimap::{self, BiHashMap};
 use simconnect::SimConnector;
-use std::{collections::{HashMap, VecDeque}};
+use std::{collections::{HashMap}};
 use memwriter::MemWriter;
 #[derive(Debug, Copy, Clone)]
 pub struct LVar {

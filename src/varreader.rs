@@ -1,7 +1,7 @@
 use byteorder::{LittleEndian, ReadBytesExt};
 use std::{collections::HashMap, io::{self, Cursor, ErrorKind}};
-use std::ptr;
-use serde::{Serialize, Deserialize};
+
+
 
 use crate::util::{InDataTypes, VarReaderTypes};
 

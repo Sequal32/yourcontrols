@@ -83,7 +83,6 @@ fn main() {
     // Whether to start a client or a server
 
     let mut need_update = false;
-    let mut was_overloaded = false;
 
     let mut config_to_load = config.last_config.clone();
 

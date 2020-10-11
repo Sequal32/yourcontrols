@@ -249,13 +249,13 @@ impl Server {
                             }
                         }
                         
-                        Err(e) => ()
+                        Err(_) => ()
                     }
 
                     match client.writer.write_to(&mut client.stream) {
                         Ok(_) => {}
                         // Write error - connection dropped
-                        Err(e) => {
+                        Err(_) => {
                             to_drop.push(index);
                         }
                     };

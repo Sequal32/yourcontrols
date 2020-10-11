@@ -1,4 +1,4 @@
-use std::{collections::{HashMap, hash_map::Entry}, time::Instant};
+use std::{collections::{HashMap}, time::Instant};
 use serde::Deserialize;
 use std::collections::VecDeque;
 
@@ -107,7 +107,7 @@ impl Interpolate {
             let max_alpha;
             // Determine if we should be interpolating
             let options = self.options.get(key);
-            if let Some(options) = options {
+            if let Some(_options) = options {
                 // TODO: overshoot logic
                 max_alpha = 1.0;
             } else {

@@ -1,9 +1,9 @@
 use crossbeam_channel::{Receiver, Sender};
 use serde_json::{Value, json};
-use std::{fmt::Display, io::Write, net::IpAddr};
+use std::{fmt::Display, io::Write};
 
 use crate::definitions::AllNeedSync;
-use super::payloads::*;
+
 
 pub trait TransferClient {
     fn get_connected_count(&self) -> u16;
