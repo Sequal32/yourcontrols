@@ -19,6 +19,7 @@ use definitions::{Definitions, SyncPermissions};
 use simconfig::Config;
 use server::{Client, ReceiveData, Server, TransferClient};
 use simconnect::{self, DispatchResult};
+use util::{app_need_update};
 use std::{fs, io, thread, time::Duration, time::Instant};
 use spin_sleep::sleep;
 
@@ -91,6 +92,8 @@ fn main() {
             SyncPermissions::Slave
         }
     };
+
+    let (newest_version, app_need_update) = app_need_update();
 
     loop {
         let timer = Instant::now();
@@ -329,7 +332,10 @@ fn main() {
                         }
                         Err(_) => {}
                     }
-                    
+                    // Update version
+                    if app_need_update {
+                        app_interface.version(&newest_version.to_string());
+                    }
                 }
             }
             Err(_) => {}

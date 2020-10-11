@@ -1,6 +1,7 @@
 var connect_button = document.getElementById('connect-button')
 var server_button = document.getElementById('server-button')
 var alert = document.getElementById("alert")
+var version_alert = document.getElementById("version-alert")
 var overloaded_alert = document.getElementById("overloaded-alert")
 
 var nav_bar = document.getElementById("nav")
@@ -60,6 +61,8 @@ function OnConnected() {
     ip4radio.disabled = true
     ip6radio.disabled = true
     is_connected = true
+
+    version_alert.hidden = true
 }
 
 function OnDisconnect(text) {
@@ -235,6 +238,10 @@ function MessageReceived(data) {
             break;
         case "select_active_config":
             aircraftList.searchSelectActive(data["data"])
+            break;
+        case "version":
+            version_alert.hidden = false
+            version_alert.innerHTML = `A new version is available: ${data["data"]}`
             break;
     }
 }

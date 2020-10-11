@@ -283,4 +283,8 @@ impl App {
     pub fn select_config(&self, name: &str) {
         self.invoke("select_active_config", Some(name));
     }
+
+    pub fn version(&self, version: &str) {
+        self.invoke("version", Some(version))
+    }
 }

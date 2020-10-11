@@ -271,7 +271,7 @@ impl Server {
                     match &data {
                         ReceiveData::Name(name) => {
                             // Check that the name is not already in use
-                            if transfer.name_exists(&name) || name.as_ref() == transfer.name {
+                            if transfer.name_exists(&name) || name == &transfer.name {
                                 // Tell *single* client that that's an invalid name
                                 let client = transfer.clients.get_mut(client_index).unwrap();
                                 client.writer.to_write(concat!(r#"{"type":"invalid_name"}"#, "\n").as_bytes());
