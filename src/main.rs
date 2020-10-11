@@ -79,6 +79,8 @@ fn main() {
     let mut need_update = false;
     let mut was_overloaded = false;
 
+    let mut config_to_load = config.last_config.clone();
+
     let get_sync_permission = |client: &Box<dyn TransferClient>, control: &Control| -> SyncPermissions {
         if control.has_control() {
             if client.is_server() {
@@ -288,7 +290,7 @@ fn main() {
                 }
                 AppMessage::Disconnect => {
                     if let Some(client) = transfer_client.as_ref() {
-                        client.stop("Disconnected.".to_string());
+                        client.stop("Stopped.".to_string());
                     }
                 }
                 AppMessage::TransferControl(name) => {
@@ -312,8 +314,9 @@ fn main() {
                 }
                 AppMessage::LoadAircraft(name) => {
                     definitions = Definitions::new();
-                    println!("{:?}", definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, name)));
-                    definitions.on_connected(&conn);
+                    config_to_load = name.clone();
+                    conn.close();
+                    connected = false;
 
                     config.last_config = name;
                     config.write_to_file(CONFIG_FILENAME).ok();
@@ -347,6 +350,9 @@ fn main() {
                 // Display not connected to server message
                 app_interface.disconnected();
                 control.on_connected(&conn);
+
+                println!("{:?}", definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, config_to_load)));
+                definitions.on_connected(&conn)
             } else {
                 // Display trying to connect message
                 app_interface.error("Trying to connect to SimConnect...");
