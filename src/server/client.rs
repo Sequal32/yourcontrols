@@ -46,8 +46,8 @@ impl Client {
         }
     }
 
-    pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), std::io::Error>  {
-        let stream = TcpStream::connect_timeout(&SocketAddr::new(ip, port), std::time::Duration::from_secs(5))?;
+    pub fn start(&mut self, ip: IpAddr, port: u16, timeout: u64) -> Result<(), std::io::Error>  {
+        let stream = TcpStream::connect_timeout(&SocketAddr::new(ip, port), std::time::Duration::from_secs(timeout))?;
         stream.set_nonblocking(true).unwrap();
 
         // to be used in run()

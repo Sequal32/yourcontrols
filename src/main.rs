@@ -263,7 +263,7 @@ fn main() {
 
                         let mut client = Client::new(username);
                         
-                        match client.start(ip, port) {
+                        match client.start(ip, port, config.conn_timeout) {
                             Ok(_) => {
                                 // start the client loop
                                 client.run();
