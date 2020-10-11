@@ -299,9 +299,9 @@ document.getElementById("main-form").onsubmit = function(e) {
     if (on_client) {
         let data = {type: "connect", port: parseInt(port_input.value)}
 
-        Validate(server_input, validip || validhostname || validip6)
+        Validate(server_input, validip || validhostname)
 
-        if (!validname || !validport) {return}
+        if (!validname || !validport || (!validip && !validhostname)) {return}
         // Match hostname or ip
         if (validhostname) {
             data["hostname"] = server_input.value
