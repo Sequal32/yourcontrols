@@ -257,6 +257,7 @@ pub struct Definitions {
     tick: u64,
     // Value to hold the current queue
     current_sync: AllNeedSync,
+    last_written: HashMap<String, Instant>,
     
     interpolation_avars: Interpolate,
     interpolation_lvars: Interpolate,
@@ -290,6 +291,8 @@ impl Definitions {
             sync_vars: HashSet::new(),
             categories: HashMap::new(),
             periods: HashMap::new(),
+
+            last_written: HashMap::new(),
 
             tick: 0,
             current_sync: AllNeedSync::new(),
@@ -642,9 +645,13 @@ impl Definitions {
                     should_write = period.do_update();
                 }
 
+                if let Some(last_time) = self.last_written.get(&var_name) {
+                    should_write = should_write && last_time.elapsed().as_secs() > 1
+                }
+
                 if should_write {
                     // Queue data for reading
-                    self.current_sync.avars.insert(var_name, value);                    
+                    self.current_sync.avars.insert(var_name, value);      
                 }
             }
 
@@ -743,6 +750,7 @@ impl Definitions {
         
         // Only sync vars that are defined as so
         for (var_name, data) in data {
+            self.last_written.insert(var_name.to_string(), Instant::now());
             // Can directly be set through SetDataOnSimObject
             if self.sync_vars.contains(var_name) {
 
@@ -811,12 +819,14 @@ impl Definitions {
             } else {
                 self.lvarstransfer.set(conn, var_name, value.to_string().as_ref())
             }
+            self.last_written.insert(var_name.to_string(), Instant::now());
         }
     }
 
     pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap) {
         for (event_name, value) in data {
-            self.events.trigger_event(conn, event_name, *value as u32);        
+            self.events.trigger_event(conn, event_name, *value as u32);
+            self.last_written.insert(event_name.to_string(), Instant::now());
         }
     }
 
