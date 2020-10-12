@@ -303,7 +303,7 @@ impl Server {
                         rebroadcast_data["from"] = Value::String(client.name.clone());
 
                         let name = client.name.clone();
-                        transfer.write_to_all_except(&name, rebroadcast_data.to_string().as_bytes());
+                        transfer.write_to_all_except(&name, (rebroadcast_data.to_string() + "\n").as_bytes());
                     }
                 }
 
