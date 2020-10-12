@@ -22,5 +22,8 @@ A clear and concise description of what you expected to happen. For example: Nav
 **Additional context**
 Add any other context about the problem here.
 
+**__PLEASE ATTACH EVERYONE'S LOGS__**
+`Log.txt` can be found in the directory of the .exe file`
+
 **Discord**
 Your discord name if you're in the YourControl discord server.
