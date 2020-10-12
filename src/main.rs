@@ -79,7 +79,9 @@ fn main() {
     // Transfer
     let mut transfer_client: Option<Box<dyn TransferClient>> = None;
 
-    //
+    // Periodically send an update for ALL values
+    let mut update_all_instant = Instant::now();
+    // Update rate counter
     let mut update_rate_instant = Instant::now();
     let update_rate = 1.0 / config.update_rate as f64;
     // Whether to start a client or a server
@@ -246,9 +248,12 @@ fn main() {
                 update_rate_instant = Instant::now();
             }
 
-            if !control.has_control() {
-                // Message timeout
-                // app_interface.update_overloaded(interpolation.overloaded());
+            if control.has_control() {
+                if update_all_instant.elapsed().as_secs() >= 10 {
+                    client.update(definitions.get_all_current());
+                    update_all_instant = Instant::now();
+                }
+            } else {
                 definitions.step_interpolate(&conn);
             }
         }
