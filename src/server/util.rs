@@ -1,4 +1,5 @@
 use crossbeam_channel::{Receiver, Sender};
+use log::info;
 use serde_json::{Value, json};
 use std::{fmt::Display, io::Write};
 
@@ -123,6 +124,15 @@ pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveDat
         }
     };
 
+    match value["type"].as_str() {
+        Some("update") => (),
+        None | Some(_) => {
+            if message.trim() != "" {
+                info!("Data: {}", message.trim());
+            }
+        }
+    }
+
     // Determine message type
     match value["type"].as_str() {
         // Parse payload into AllNeedSync
@@ -171,6 +181,7 @@ pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveDat
 }
 
 // Processing message error
+#[derive(Debug)]
 pub enum ParseError {
     InvalidJson(serde_json::Error),
     InvalidPayload(serde_json::Error),
@@ -219,7 +230,7 @@ mod test {
     fn test_partial_reader() {
         let mut pr = PartialReader::new();
         assert_eq!(pr.try_read_string("Hello".as_bytes()), None);
-        assert_eq!(pr.try_read_string("\nYes".as_bytes()).unwrap(), "Hello");
-        assert_eq!(pr.try_read_string("\nYes\n".as_bytes()).unwrap(), "Yes");
+        assert_eq!(pr.try_read_string("\r\nYes".as_bytes()).unwrap(), "Hello");
+        assert_eq!(pr.try_read_string("\r\nYes\r\n".as_bytes()).unwrap(), "Yes");
     }
 }

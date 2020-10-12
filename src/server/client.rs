@@ -1,4 +1,5 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
+use log::info;
 use serde_json::{Value};
 use std::{io::Read, net::{IpAddr, Shutdown, SocketAddr, TcpStream}, sync::Mutex};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
@@ -96,7 +97,7 @@ impl Client {
                 // Send data from app to clients
                 if let Ok(data) = transfer.client_rx.try_recv() {
                     // Broadcast data to all clients
-                    match transfer.stream.write_all((data.to_string() + "\n").as_bytes()) {
+                    match transfer.stream.write_all((data.to_string() + "\r\n").as_bytes()) {
                         Ok(_) => {}
                         Err(_) => {
                             // Connection dropped

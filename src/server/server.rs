@@ -1,9 +1,9 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
 use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
-use log::warn;
+use log::{info, warn};
 use serde_json::{Value, json};
-use thread::sleep;
+use spin_sleep::sleep;
 use std::{io::{Read}, net::IpAddr, net::Shutdown, net::TcpStream, thread, time::Duration, time::Instant};
 use std::net::{TcpListener, Ipv4Addr, SocketAddrV4};
 use std::sync::{Arc, Mutex};
@@ -68,7 +68,7 @@ impl TransferStruct {
 }
 
 fn build_user_string(name: &str, is_observer: bool, has_control: bool, is_server: bool) -> String {
-    format!(r#"{{"type":"user", "data":"{}", "in_control":{}, "is_observer":{}, "is_server":{}}}{}"#, name, has_control, is_observer, is_server, "\n")
+    format!(r#"{{"type":"user", "data":"{}", "in_control":{}, "is_observer":{}, "is_server":{}}}{}"#, name, has_control, is_observer, is_server, "\r\n")
 }
 
 pub struct Server {
@@ -165,19 +165,18 @@ impl Server {
                     stream.set_nonblocking(true).unwrap();
 
                     let mut transfer = transfer.lock().unwrap();
-                    let server_name = transfer.name.clone();
 
                     let mut new_client = Client {
                         stream,
                         writer: PartialWriter::new(),
                         reader: PartialReader::new(),
                         address: addr.ip(),
-                        name: server_name,
+                        name: String::new(),
                         is_observer: false
                     };
 
                     // Identify with name
-                    new_client.writer.to_write(format!(r#"{{"type":"name", "data":"{0:}"}}{1:}"#, transfer.name, "\n").as_bytes());
+                    new_client.writer.to_write(format!(r#"{{"type":"name", "data":"{0:}"}}{1:}"#, transfer.name, "\r\n").as_bytes());
                     // Send server user state
                     let client_in_control = transfer.in_control.clone();
                     new_client.writer.to_write(build_user_string(&transfer.name, false, client_in_control == transfer.name, true).as_bytes());
@@ -217,14 +216,14 @@ impl Server {
                 let mut next_send_string: Option<String> = match transfer.client_rx.try_recv() {
                     Ok(mut data) => {
                         data["from"] = Value::String(transfer.name.clone());
-                        Some(data.to_string() + "\n")
+                        Some(data.to_string() + "\r\n")
                     },
                     Err(_) => None
                 };
 
                 // Heartbeat
                 if timer.elapsed().as_secs() > 2 && next_send_string.is_none() {
-                    next_send_string = Some("\n".to_string());
+                    next_send_string = Some("\r\n".to_string());
                     timer = Instant::now();
                 }
 
@@ -275,7 +274,7 @@ impl Server {
                             if transfer.name_exists(&name) || name == &transfer.name {
                                 // Tell *single* client that that's an invalid name
                                 let client = transfer.clients.get_mut(client_index).unwrap();
-                                client.writer.to_write(concat!(r#"{"type":"invalid_name"}"#, "\n").as_bytes());
+                                client.writer.to_write(concat!(r#"{"type":"invalid_name"}"#, "\r\n").as_bytes());
                             } else {
                                 // Append address
                                 let client = transfer.clients.get_mut(client_index).unwrap();
@@ -303,7 +302,7 @@ impl Server {
                         rebroadcast_data["from"] = Value::String(client.name.clone());
 
                         let name = client.name.clone();
-                        transfer.write_to_all_except(&name, (rebroadcast_data.to_string() + "\n").as_bytes());
+                        transfer.write_to_all_except(&name, (rebroadcast_data.to_string() + "\r\n").as_bytes());
                     }
                 }
 
