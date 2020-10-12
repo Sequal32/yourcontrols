@@ -1,36 +1,46 @@
+1. [Theory](#Theory)
+   1. [YAML Files](#yaml-files)
+   2. [What is a variable?](#what-is-a-variable)
+   3. [What is an event?](#what-is-an-event)
+   4. [Including other modules](#including-other-modules)
+2. [Reference](#reference)
+   1. [Types](#types)
+   2. [Var Types](#var-types)
+   3. [Sync Permissions](#sync-permissions)
+
 # Theory
-*The best way to become familiar with this is to look through the configuration files already provided, and see if you can add more variables/events to synchronize more.*
+*The best way to become familiar with this is to look through the configuration files already provided, and see if you can make a few variables work in a new configuration file.*
 
 *SDK links are substituted for P3D links as they hold basically the same content. If you'd like an updated list of events/variables, download the MSFS SDK through the DevTools in MSFS*
 
-## YAML files
+## YAML Files
 YAML, similar to Python relies of the identation of files in order to parse its contents. Keep this in mind while writing one.
 
 `-` are used to denote lists.
 `somestring:` words followed by a colon denote a dictionary.
 
-In the configuration files case, `master:` or `shared:` are used to denote that the entries following those are restricted to either the person in control, or can be synced both ways respectively.
+In the configuration files case, `master:` or `shared:` are used to denote that the entries inside of those are restricted to either the person in control, or can be synced both ways.
 
 ## What is a variable?
-Take a look through the list of defined variables [here](http://www.prepar3d.com/SDKv2/LearningCenter/utilities/variables/simulation_variables.html) in the SDK. These are known as **aircraft variables**, or `A:` variables. We can get what variable a specific aircraft uses by looking through the source code, or by constantly retrieving it and detecting changes.
+Take a look through the list of defined variables [here](http://www.prepar3d.com/SDKv2/LearningCenter/utilities/variables/simulation_variables.html) in the SDK. These are known as **aircraft variables**, or `A:` variables. We can get what variable a specific aircraft uses by looking through an aircraft's source code, or by constantly retrieving it and detecting changes. *A tool to do this may be planned. However, the SDK also comes with an example called VarWatcher that you can check out.*
 
-There are also variables that are defined aircraft to aircraft, which are also known as **local variables** or `L:` variables. These are commonly found through looking through the source code of an aircraft.
+There are also variables that are defined specific to an aircraft, which are also known as **local variables** or `L:` variables. These are commonly found through looking through the source code of an aircraft.
 
 ## How do we put this into the config file?
 Let's take `PLANE LATITUDE` as an example. In `modules/physics.yaml`, we have the following entry:
 ```yaml
 type: var
-var_name: PLANE LATITUDE
+var_name: A:PLANE LATITUDE
 var_units: Degrees
 var_type: f64
 interpolate:
     overshoot: 10.0
 ```
-`type: var` tells the application to treat this as simply a get/set variable. Once it detects a change in this variable, it'll notify the clients to update it.
+`type: var` tells the application to treat this as simply a get/set variable. Once it detects a change in this variable, it'll notify connected clients to update it.
 
 `var_name: PLANE LATITUDE` should be self-explanatory. This is the variable we want to read.
 
-`var_units: Degrees` tells SimConnect what kind of units to send the variable in. Notice how in the SDK, it displays a possible units as Radians, but SimConnect can also send the latitude in degrees instead.
+`var_units: Degrees` tells SimConnect what kind of units to send the variable in. Notice how in the SDK, it displays a possible units as Radians, but SimConnect can also send the latitude in Degrees instead.
 
 `var_type: f64` tells the application what kind of datatype to store the value as. If your variable should have numbers after the decimal place (I.E 5.02 instead of 5), then this should be set to f64. Otherwise, bool (1 or 0) or i32 (5, -5, 0) should be used.
 
@@ -67,7 +77,7 @@ event_name: PITOT_HEAT_TOGGLE
 ```
 
 ### ToggleSwitchParam
-Used for toggle events that require a *constant* to be passed along with it. This is usually represented by number followed by the event code: `1 (>A:ELECTRICAL MASTER BATTERY:1)`
+Used for switches that require a *constant* to be passed along with the vent. This is usually represented by number followed by the event code: `1 (>A:ELECTRICAL MASTER BATTERY:1)`
 
 ```yaml
 type: ToggleSwitchParam
@@ -80,12 +90,24 @@ event_param: 1
 ### ToggleSwitchTwo
 Used for switches that have an event associated with it's on position, and off position.
 ```yaml
-type: TOGGLESWITCHTWO
+type: ToggleSwitchTwo
 var_name: A:ELT ACTIVATED
 var_units: Bool
 var_type: bool
 off_event_name: ELT_OFF
 on_event_name: ELT_ON
+```
+
+### ToggleSwitchWithIndex
+Used for switches that take in two parameters (usually the 1st parameter is an index) instead of just one. This is usually represented can be found by the following code format: `VALUE INDEX (>K:2:EVENT_NAME)`
+
+```yaml
+type: NumSetWithIndex
+var_name: A:LIGHT PANEL POWER SETTING
+var_units: Percent
+var_type: i32
+index_param: 0
+event_name: PANEL_LIGHTS_POWER_SETTING_SET
 ```
 
 ### SwitchOn
@@ -146,3 +168,11 @@ Holds an integer.
 Holds a floating point.
 ### bool
 Holds a boolean value
+
+## Sync Permissions
+### Master
+The person in control can update the following variables.
+### Server
+The person running the server can update the following variables.
+### Shared
+Anybody (except observers) can update the following variables.
