@@ -1,11 +1,13 @@
 include:
   - definitions/modules/AS1000.yaml
   - definitions/modules/autopilot.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
+  - definitions/modules/magnetowithstarter.yaml
   - definitions/modules/navigation.yaml
+  - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
+  - definitions/modules/singlega.yaml
 
 shared:
   -
@@ -13,6 +15,7 @@ shared:
     var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: bool
     event_name: TOGGLE_MASTER_BATTERY
+    # Will toggle ALL master batteries (including standby) if this is omitted
     event_param: 1
 
   - #ASOBO_ELECTRICAL_Switch_Battery_STBY_Template
@@ -54,30 +57,13 @@ shared:
     type: Var
     var_name: L:XMLVAR_STBYBattery_IsHeld
     var_type: bool
-  -
-    type: Var
-    var_name: A:RECIP ENG LEFT MAGNETO:1
-    var_units: Bool
-    var_type: bool
-  -
-    type: Var
-    var_name: A:RECIP ENG RIGHT MAGNETO:1
-    var_units: Bool
-    var_type: bool
-  -
-    type: ToggleSwitchParam
-    var_name: A:GENERAL ENG STARTER:1
-    var_units: bool
-
-    event_name: SET_STARTER1_HELD
-    event_param: 1
   
   -
     type: Var
     var_name: L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
     var_type: bool
 
-  -
+  - #ASOBO_FUEL_Switch_Cutoff_Template
     type: ToggleSwitch
     var_name: A:GENERAL ENG FUEL VALVE:1
     var_units: Bool
@@ -104,11 +90,20 @@ shared:
     var_type: i32
     index_param: 0
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
-  -
-    type: var
-    var_name: A:LIGHT CABIN ON
-    var_units: Bool
-    var_type: bool
+  - 
+    type: NumSetWithIndex
+    var_name: A:LIGHT CABIN POWER SETTING:1
+    var_units: Percent
+    var_type: i32
+    index_param: 1
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+  - 
+    type: NumSetWithIndex
+    var_name: A:LIGHT CABIN POWER SETTING:2
+    var_units: Percent
+    var_type: i32
+    index_param: 2
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
   - # Avionics lighting ASOBO_LIGHTING_Knob_Avionics_Template
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -165,36 +160,12 @@ shared:
     type: var
     var_name: L:XMLVAR_CabinAir_Position_1
     var_type: f64
-  -
-    type: NumSet
-    var_name: A:FLAPS HANDLE PERCENT
-    var_units: percent
-    var_type: i32
-    event_name: FLAPS_CONTINUOUS_SET
-    multiply_by: 164
 
 
 master:
   -
-    type: Var
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
-    var_units: Number
-    var_type: f64
-  -
-    type: Var
-    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:1
-    var_units: Number
-    var_type: f64
-  -
     type: event
     event_name: ELEVATOR_TRIM_DISABLED_SET
-  -
-    type: NumSet
-    var_name: A:ELEVATOR TRIM PCT
-    var_units: percent
-    var_type: i32
-    event_name: ELEVATOR_TRIM_SET
-    multiply_by: 164
   
 server:
   -
