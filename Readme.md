@@ -8,7 +8,7 @@ A simple shared cockpit solution for Microsoft Flight Simulator.
 * Frequent and smooth position updates through linear interpolation
 * Transferable controls and fully configurable switches to synchronize
 
-Note: Currently only the C172 G1000 is implemented for this plugin. Documentation for implementing for aircraft is planned and will be provided in the [Data Files](#Data-Files) section.
+Note: Currently only the C172 G1000 is implemented for this plugin. Documentation for implementing other aircraft is planned and will be provided in the [Data Files](#Data-Files) section.
 
 ## Install
 1. Grab the latest [release](https://github.com/Sequal32/yourcontrol/releases/latest) and unzip to a directory of your choice.
@@ -18,14 +18,16 @@ Note: Currently only the C172 G1000 is implemented for this plugin. Documentatio
    * Boxed: C:\Users\[YOUR USERNAME]\AppData\Local\MSFSPackages\Community
 
 ## Running
-1. Launch FS2020 and make sure you and your partner(s) spawn in *close* to each other in the **same aircraft state** (all spawn on runway or all spawn on ramp)
+1. Launch FS2020 and make sure you and your partner(s) spawn in *close* to each other in roughly the **same aircraft state** (all spawn on runway or all spawn on ramp)
 2. Start up the included .exe file.
 3. Navigate to the `Aircraft` tab and select the .yaml file associated with the aircraft you're flying.
 4.
     Enter a username, then...
-    * Server:
+    * Server (Designate 1 person to run):
       1. If your router does not support UPNP, [port forward](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/) either `7777` or the specified port in the application. If you don't know if your router supports UPNP, you can attempt to connect without any additional steps, and then port forward if needed.
-      2. Navigate to the server tab, enter port and click start server. You will have initial control of the aircraft.
+      2. Navigate to the server tab, **enter port and click start server**. You will have initial control of the aircraft.
+      3. **Verify that the port was successfully forwarded**, and find your IP through this [website](https://www.yougetsignal.com/tools/open-ports/)
+      
     * Clients: Navigate to the client tab and enter the **server's ip and port** and click connect.
 5. Fly!
 6. To transfer control, navigate to the `Connections` tab, find your partner's name and click `Give Control`.
@@ -33,6 +35,8 @@ Note: Currently only the C172 G1000 is implemented for this plugin. Documentatio
 ## Troubleshooting
 ### Missing DLL
 Install [Microsoft Visual C++ 2015 Redistributable Update 3 RC](https://www.microsoft.com/en-us/download/details.aspx?id=52685) to resolve this.
+### Connection Timed Out
+A connection to the server could not be established. Follow the steps for port forwarding and verifying your IP and forwarded port as described above.
 
 ### Discord
 I've created a [discord](https://discord.gg/ywb7paY) for anybody seeking support for this program.
