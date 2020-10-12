@@ -26,7 +26,7 @@ Take a look through the list of defined variables [here](http://www.prepar3d.com
 
 There are also variables that are defined specific to an aircraft, which are also known as **local variables** or `L:` variables. These are commonly found through looking through the source code of an aircraft.
 
-## How do we put this into the config file?
+### How do we put this into the config file?
 Let's take `PLANE LATITUDE` as an example. In `modules/physics.yaml`, we have the following entry:
 ```yaml
 type: var
@@ -49,7 +49,7 @@ interpolate:
 ## What is an event?
 Notice how `PLANE LATITUDE` settable column has a Y in it compared to `LIGHT NAV`. This means we can only read the value, but not update it. In this case, the simulator uses **events** to update this value. You can find a list of events here [here](http://www.prepar3d.com/SDKv2/LearningCenter/utilities/variables/event_ids.html)
 
-## How do we put this into the config file?
+### How do we put this into the config file?
 Let's take `LIGHT NAV` for example from `modules/lights.yaml`.
 ```yaml
 type: ToggleSwitch

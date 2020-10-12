@@ -84,7 +84,6 @@ fn main() {
     // Update rate counter
     let mut update_rate_instant = Instant::now();
     let update_rate = 1.0 / config.update_rate as f64;
-    // Whether to start a client or a server
 
     let mut need_update = false;
 
@@ -133,6 +132,11 @@ fn main() {
             // Data from server
             match client.get_next_message() {
                 Ok(ReceiveData::Update(sender, sync_data)) => {
+                    // Seamlessly transfer from losing control wihout freezing
+                    if control.has_pending_transfer() {
+                        control.finalize_transfer(&conn)
+                    }
+
                     if !clients.is_observer(&sender) {
                         // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
                         definitions.on_receive_data(&conn, sync_data, &get_sync_permission(clients.client_is_server(&sender), clients.client_has_control(&sender)), !need_update);
@@ -152,7 +156,7 @@ fn main() {
                         if sender == client.get_server_name() {
                             info!("Server yanked control from us.");
                             app_interface.lose_control();
-                            control.lose_control(&conn);
+                            control.lose_control();
                         }
                         info!("{} is now in control.", to);
                         
@@ -201,6 +205,7 @@ fn main() {
                         if client.is_server() {
                             info!("{} had control, taking control back.", name);
                             app_interface.gain_control();
+
                             control.take_control(&conn);
                             
                             client.transfer_control(client.get_server_name().to_string());
@@ -211,6 +216,8 @@ fn main() {
                     info!("Server/Client stopped. Reason: {}", reason);
                     // TAKE BACK CONTROL
                     control.take_control(&conn);
+                    control.finalize_transfer(&conn);
+
                     clients.reset();
                     observing = false;
                     should_set_none_client = true;
@@ -305,7 +312,7 @@ fn main() {
                                 // Assign client as the transfer client
                                 transfer_client = Some(Box::new(client));
                                 // Freeze aircraft
-                                control.lose_control(&conn);
+                                control.lose_control();
                                 need_update = true;
 
                                 info!("Client started and controls lost.");
@@ -337,7 +344,7 @@ fn main() {
                         // Log who's in control
                         clients.set_client_control(name);
                         // Freeze aircraft
-                        control.lose_control(&conn);
+                        control.lose_control();
                         // Clear interpolate
                         definitions.reset_interpolate();
                     }
