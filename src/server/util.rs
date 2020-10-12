@@ -152,6 +152,7 @@ pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveDat
                     name.to_string(),
                     value["in_control"].as_bool().unwrap_or_default(),
                     value["is_observer"].as_bool().unwrap_or_default(),
+                    value["is_server"].as_bool().unwrap_or_default()
                 ))
             },
             None => Err(ParseError::FieldMissing("data"))
@@ -181,8 +182,8 @@ pub enum ParseError {
 pub enum ReceiveData {
     // Name
     NewConnection(String),
-    // Name, is_observer, in_control
-    NewUser(String, bool, bool),
+    // Name, is_observer, in_control, is_server
+    NewUser(String, bool, bool, bool),
     // Name
     ConnectionLost(String),
     TransferStopped(TransferStoppedReason),

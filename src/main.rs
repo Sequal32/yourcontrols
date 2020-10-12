@@ -71,6 +71,8 @@ fn main() {
     // Set up sim connect
     let mut connected = false;
     let mut observing = false;
+    // Client stopped, need to stop transfer client
+    let mut should_set_none_client = false;
 
     let app_interface = App::setup();
 
@@ -86,14 +88,14 @@ fn main() {
 
     let mut config_to_load = config.last_config.clone();
 
-    let get_sync_permission = |client: &Box<dyn TransferClient>, control: &Control| -> SyncPermissions {
-        if control.has_control() {
-            if client.is_server() {
+    let get_sync_permission = |is_server, has_control| -> SyncPermissions {
+        if has_control {
+            if is_server {
                 SyncPermissions::ServerAndMaster
             } else {
                 SyncPermissions::Master
             }
-        } else if client.is_server() {
+        } else if is_server {
             SyncPermissions::Server
         } else {
             SyncPermissions::Slave
@@ -110,7 +112,7 @@ fn main() {
             // Simconnect message
             match message {
                 Ok(DispatchResult::SimobjectData(data)) => {
-                    definitions.process_sim_object_data(data, &get_sync_permission(&client, &control));
+                    definitions.process_sim_object_data(data);
                 },
                 // Exception occured
                 Ok(DispatchResult::Exception(data)) => {
@@ -129,10 +131,11 @@ fn main() {
             // Data from server
             match client.get_next_message() {
                 Ok(ReceiveData::Update(sender, sync_data)) => {
-                    if clients.is_observer(&sender) {return}
-                    // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
-                    definitions.on_receive_data(&conn, &sync_data, !need_update);
-                    need_update = false;
+                    if !clients.is_observer(&sender) {
+                        // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
+                        definitions.on_receive_data(&conn, sync_data, &get_sync_permission(clients.client_is_server(&sender), clients.client_has_control(&sender)), !need_update);
+                        need_update = false;
+                    }
                 }
                 Ok(ReceiveData::TransferControl(sender, to)) => {
                     // Someone is transferring controls to us
@@ -155,7 +158,7 @@ fn main() {
                         clients.set_client_control(to);
                     }
                 }
-                // Increment client counter
+                // Server newconnection
                 Ok(ReceiveData::NewConnection(name)) => {
                     info!("{} connected.", name);
                     if control.has_control() {
@@ -168,11 +171,19 @@ fn main() {
                     app_interface.new_connection(&name);
                     clients.add_client(name);
                 },
-                Ok(ReceiveData::NewUser(name, in_control, is_observer)) => {
+                // Client new connection
+                Ok(ReceiveData::NewUser(name, in_control, is_observer, is_server)) => {
                     info!("{} connected. In control: {}, observing: {}", name, in_control, is_observer);
                     app_interface.new_connection(&name);
                     app_interface.set_observing(&name, is_observer);
-                    if in_control {app_interface.set_incontrol(&name)}
+
+                    clients.add_client(name.clone());
+                    clients.set_server(&name, is_server);
+                    clients.set_observer(&name, is_observer);
+                    if in_control {
+                        app_interface.set_incontrol(&name);
+                        clients.set_client_control(name);
+                    }
                 }
                 Ok(ReceiveData::ConnectionLost(name)) => {
                     info!("{} lost connection.", name);
@@ -200,6 +211,7 @@ fn main() {
                     control.take_control(&conn);
                     clients.reset();
                     observing = false;
+                    should_set_none_client = true;
 
                     app_interface.client_fail(&reason.to_string());
                 }
@@ -225,7 +237,7 @@ fn main() {
 
             // Handle sync vars
             if !observing && update_rate_instant.elapsed().as_secs_f64() > update_rate {
-                if let Some(values) = definitions.get_need_sync(&get_sync_permission(&client, &control)) {
+                if let Some(values) = definitions.get_need_sync(&get_sync_permission(client.is_server(), control.has_control())) {
                     client.update(values);
                 }
                 update_rate_instant = Instant::now();
@@ -318,6 +330,8 @@ fn main() {
                         clients.set_client_control(name);
                         // Freeze aircraft
                         control.lose_control(&conn);
+                        // Clear interpolate
+                        definitions.reset_interpolate();
                     }
                 }
                 AppMessage::SetObserver(name, is_observer) => {
@@ -390,6 +404,12 @@ fn main() {
                 // Display trying to connect message
                 app_interface.error("Trying to connect to SimConnect...");
             };
+        }
+
+        if should_set_none_client {
+            // Prevent sending any more data through this
+            transfer_client = None;
+            should_set_none_client = false
         }
 
         if timer.elapsed().as_millis() < 10 {sleep(LOOP_SLEEP_TIME)};

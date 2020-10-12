@@ -67,8 +67,8 @@ impl TransferStruct {
     }
 }
 
-fn build_user_string(name: &str, is_observer: bool, has_control: bool) -> String {
-    format!(r#"{{"type":"user", "data":"{}", "in_control":{}, "is_observer":{}}}{}"#, name, has_control, is_observer, "\n")
+fn build_user_string(name: &str, is_observer: bool, has_control: bool, is_server: bool) -> String {
+    format!(r#"{{"type":"user", "data":"{}", "in_control":{}, "is_observer":{}, "is_server":{}}}{}"#, name, has_control, is_observer, is_server, "\n")
 }
 
 pub struct Server {
@@ -180,11 +180,11 @@ impl Server {
                     new_client.writer.to_write(format!(r#"{{"type":"name", "data":"{0:}"}}{1:}"#, transfer.name, "\n").as_bytes());
                     // Send server user state
                     let client_in_control = transfer.in_control.clone();
-                    new_client.writer.to_write(build_user_string(&transfer.name, false, client_in_control == transfer.name).as_bytes());
+                    new_client.writer.to_write(build_user_string(&transfer.name, false, client_in_control == transfer.name, true).as_bytes());
                     // Iterate through all connected clients and send names
                     for client in transfer.clients.iter_mut() {
                         let in_control = client_in_control == client.name;
-                        new_client.writer.to_write(build_user_string(&client.name, client.is_observer, in_control).as_bytes());
+                        new_client.writer.to_write(build_user_string(&client.name, client.is_observer, in_control, false).as_bytes());
                     }
                     // Append client transfers into vector
                     transfer.clients.push(new_client);
@@ -282,7 +282,7 @@ impl Server {
                                 client.name = name.clone();
                                 transfer.server_tx.send(ReceiveData::NewConnection(name.clone())).ok();
                                 // Tell everyone else about the new client
-                                transfer.write_to_all_except(name, build_user_string(name, false, false).as_bytes());
+                                transfer.write_to_all_except(name, build_user_string(name, false, false, false).as_bytes());
                             }
                             rebroadcast = false;
                         },

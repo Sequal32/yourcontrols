@@ -3,6 +3,7 @@ use std::{collections::HashMap};
 #[derive(Default)]
 pub struct Client {
     pub observer_mode: bool,
+    pub is_server: bool
 }
 
 pub struct ClientManager {
@@ -59,6 +60,19 @@ impl ClientManager {
         if let Some(client) = self.clients.get_mut(name) {
             client.observer_mode = is_observer;
         }
+    }
+
+    pub fn set_server(&mut self, name: &str, is_server: bool) {
+        if let Some(client) = self.clients.get_mut(name) {
+            client.is_server = is_server;
+        }
+    }
+
+    pub fn client_is_server(&self, name: &str) -> bool {
+        if let Some(client) = self.clients.get(name) {
+            return client.is_server
+        }
+        return false;
     }
 
     pub fn reset(&mut self) {

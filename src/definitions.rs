@@ -597,7 +597,7 @@ impl Definitions {
     }
 
     // Process changed aircraft variables and update SyncActions related to it
-    pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA, sync_permission: &SyncPermissions) {
+    pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
         if self.avarstransfer.define_id != data.dwDefineID {return}
         
         // Data might be bad/config files don't line up
@@ -642,7 +642,7 @@ impl Definitions {
                     should_write = period.do_update();
                 }
 
-                if should_write && self.can_sync(&var_name, sync_permission) {
+                if should_write {
                     // Queue data for reading
                     self.current_sync.avars.insert(var_name, value);                    
                 }
@@ -680,12 +680,15 @@ impl Definitions {
         }
     }
 
-    pub fn get_need_sync(&mut self, _sync_permission: &SyncPermissions) -> Option<AllNeedSync> {
-        if self.current_sync.is_empty() {return None}
+    pub fn get_need_sync(&mut self, sync_permission: &SyncPermissions) -> Option<AllNeedSync> {
+        if self.sync_vars.is_empty() {return None}
 
         let mut return_data = AllNeedSync::new();
 
         std::mem::swap(&mut return_data, &mut self.current_sync);
+        return_data = self.filter_all_sync(return_data, sync_permission);
+
+        if return_data.is_empty() {return None}
         
         return Some(return_data);
     }
@@ -709,6 +712,27 @@ impl Definitions {
             return false
         }
         return true
+    }
+
+    fn filter_all_sync(&self, all_sync: AllNeedSync, sync_permission: &SyncPermissions) -> AllNeedSync {
+        let mut return_data = AllNeedSync::new();
+
+        for (name, data) in all_sync.avars.into_iter() {
+            if !self.can_sync(&name, sync_permission) {continue;}
+            return_data.avars.insert(name, data);
+        }
+
+        for (name, data) in all_sync.lvars.into_iter() {
+            if !self.can_sync(&name, sync_permission) {continue;}
+            return_data.lvars.insert(name, data);
+        }
+
+        for (name, data) in all_sync.events.into_iter() {
+            if !self.can_sync(&name, sync_permission) {continue;}
+            return_data.events.insert(name, data);
+        }
+
+        return_data
     }
 
     pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap, interpolate: bool) {
@@ -796,7 +820,9 @@ impl Definitions {
         }
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: &AllNeedSync,interpolate: bool) {
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, sync_permission: &SyncPermissions, interpolate: bool) {
+        let data = self.filter_all_sync(data, sync_permission);
+
         self.write_aircraft_data(conn, &data.avars, interpolate);
         self.write_local_data(conn, &data.lvars,  interpolate);
         self.write_event_data(conn, &data.events);
@@ -835,5 +861,10 @@ impl Definitions {
 
     pub fn get_number_events(&self) -> usize {
         return self.events.get_number_defined()
+    }
+
+    pub fn reset_interpolate(&mut self) {
+        self.interpolation_avars.reset();
+        self.interpolation_lvars.reset();
     }
 }
