@@ -173,7 +173,7 @@ fn main() {
                 },
                 // Client new connection
                 Ok(ReceiveData::NewUser(name, in_control, is_observer, is_server)) => {
-                    info!("{} connected. In control: {}, observing: {}", name, in_control, is_observer);
+                    info!("{} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
                     app_interface.new_connection(&name);
                     app_interface.set_observing(&name, is_observer);
 
@@ -236,7 +236,10 @@ fn main() {
             }
 
             // Handle sync vars
-            if !observing && update_rate_instant.elapsed().as_secs_f64() > update_rate {
+            let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
+            let delay_passed = (!control.has_control() && control.time_since_control_change() > 5) || control.has_control();
+            
+            if !observing && can_update && delay_passed {
                 if let Some(values) = definitions.get_need_sync(&get_sync_permission(client.is_server(), control.has_control())) {
                     client.update(values);
                 }

@@ -29,6 +29,7 @@ impl Control {
 
     pub fn lose_control(&mut self, conn: &SimConnector) {
         self.has_control = false;
+        self.control_change_time = Instant::now();
         self.change_control(conn);
     }
 
@@ -36,8 +37,8 @@ impl Control {
         return self.has_control;
     }
 
-    pub fn time_since_control_change(&self) -> Duration {
-        return self.control_change_time.elapsed();
+    pub fn time_since_control_change(&self) -> u64 {
+        return self.control_change_time.elapsed().as_secs();
     }
 
     pub fn on_connected(&mut self, conn: &SimConnector) {
