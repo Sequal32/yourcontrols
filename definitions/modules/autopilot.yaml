@@ -12,10 +12,11 @@ shared:
     var_type: bool
     event_name: AP_HDG_HOLD_ON
   -
-    type: var
+    type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR
     var_units: Degrees
     var_type: i32
+    event_name: HEADING_BUG_SET
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT ALTITUDE LOCK
@@ -89,12 +90,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE
-    var_units: Bool
-    var_type: bool
-    event_name: AP_PITCH_REF_SELECT
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM
