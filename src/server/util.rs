@@ -68,9 +68,11 @@ impl PartialReader {
         }
     }
 
-    pub fn try_read_string(&mut self, buf: &[u8]) -> Option<String> {
+    pub fn add_buf(&mut self, buf: &[u8]) {
         self.buffer.extend_from_slice(buf);
-        
+    }
+
+    pub fn try_read_string(&mut self) -> Option<String> {
         if let Some(index) = self.buffer.iter().position(|&x| x == 0x0a) {
             let result_string = String::from_utf8(self.buffer[0..index + 1].to_vec()).unwrap();
             self.buffer.drain(0..index + 1);

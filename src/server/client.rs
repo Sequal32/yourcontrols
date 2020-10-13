@@ -84,7 +84,9 @@ impl Client {
                         break;
                     }
                     Ok(n) => {
-                        if let Some(data) = transfer.reader.try_read_string(&buf[0..n]) {
+                        transfer.reader.add_buf(&buf[0..n]);
+
+                        while let Some(data) = transfer.reader.try_read_string() {
                             // Deserialize json
                             if let Ok(data) = process_message(&data, None) {
                                 transfer.server_tx.send(data).ok();

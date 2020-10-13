@@ -239,9 +239,10 @@ impl Server {
                             to_drop.push(index);
                         }
                         Ok(n) => {
-                            // Append bytes to reader
-                            if let Some(data_string) = client.reader.try_read_string(&buf[0..n]) {
-                                // Parse payload
+                            client.reader.add_buf(&buf[0..n]);
+
+                            while let Some(data_string) = client.reader.try_read_string() {
+                                // Deserialize json
                                 if let Ok(data) = process_message(&data_string, Some(client.name.clone())) {
                                     to_write.push((index, data, data_string));
                                 }
@@ -331,7 +332,7 @@ impl Server {
                 }
 
                 if should_stop {break}
-                sleep(Duration::from_millis(10));
+                sleep(Duration::from_millis(5));
             }
         });
     }
