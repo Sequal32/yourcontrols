@@ -9,16 +9,16 @@ use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::Air
 #[derive(Debug)]
 pub enum ConfigLoadError {
     FileError,
-    YamlError(serde_yaml::Error),
-    ParseError(VarAddError)
+    YamlError(serde_yaml::Error, String),
+    ParseError(VarAddError, String)
 }
 
 impl Display for ConfigLoadError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             ConfigLoadError::FileError => write!(f, "Could not open file."),
-            ConfigLoadError::YamlError(e) => write!(f, "Could not parse file as YAML...{}", e.to_string()),
-            ConfigLoadError::ParseError(e) => write!(f, "Error parsing configuration...{}", e)
+            ConfigLoadError::YamlError(e, file_name) => write!(f, "Could not parse {} as YAML...{}", file_name, e.to_string()),
+            ConfigLoadError::ParseError(e, file_name) => write!(f, "Error parsing configuration in {}...{}", file_name, e)
         }
     }
 }
@@ -34,9 +34,9 @@ pub enum VarAddError {
 impl Display for VarAddError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            VarAddError::MissingField(s) => write!(f, "Missing field {}", s),
-            VarAddError::InvalidSyncType(s) => write!(f, "Invalid type {}", s),
-            VarAddError::InvalidCategory(s) => write!(f, "Invalid category {}", s),
+            VarAddError::MissingField(s) => write!(f, r#"Missing field "{}""#, s),
+            VarAddError::InvalidSyncType(s) => write!(f, r#"Invalid type "{}""#, s),
+            VarAddError::InvalidCategory(s) => write!(f, r#"Invalid category "{}""#, s),
             VarAddError::YamlParseError(e) => write!(f, "Error parsing YAML...{}", e.to_string())
         }
     }
@@ -544,10 +544,12 @@ impl Definitions {
         for (key, value) in yaml {
             if key == "include" {
                 for include_file in value {
-                    match self.load_config(include_file.as_str().unwrap()) {
+                    let file_name = include_file.as_str().unwrap();
+
+                    match self.load_config(file_name) {
                         Ok(_) => (),
                         Err(e) => {
-                            if let ConfigLoadError::ParseError(e) = e {
+                            if let ConfigLoadError::ParseError(e, _) = e {
                                 return Err(e);
                             };
                         }
@@ -573,12 +575,12 @@ impl Definitions {
 
         let yaml = match serde_yaml::from_reader(file) {
             Ok(y) => y,
-            Err(e) => return Err(ConfigLoadError::YamlError(e))
+            Err(e) => return Err(ConfigLoadError::YamlError(e, filename.to_string()))
         };
 
         match self.parse_yaml(yaml) {
             Ok(_) => Ok(()),
-            Err(e) => Err(ConfigLoadError::ParseError(e))
+            Err(e) => Err(ConfigLoadError::ParseError(e, filename.to_string()))
         }
     }
 
