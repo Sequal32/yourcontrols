@@ -35,3 +35,16 @@ shared:
     up_event_name: VOR1_OBI_INC
     down_event_name: VOR2_OBI_DEC
     increment_by: 1
+  -
+    type: NumIncrement
+    var_name: ADF CARD
+    var_units: Degrees
+    var_type: i32
+    up_event_name: ADF_CARD_INC
+    down_event_name: ADF_CARD_DEC
+    increment_by: 1
+  # - # Recommended not to use as this updates constantly, calibrating the heading indicator isn't used often
+  #   type: var
+  #   var_name: A:PLANE HEADING DEGREES GYRO,
+  #   var_units: Degrees,
+  #   var_type: i32
