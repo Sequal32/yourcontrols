@@ -44,7 +44,7 @@ impl Events {
     }
 
     pub fn trigger_event(&self, conn: &SimConnector, event_name: &str, data: u32) {
-        conn.transmit_client_event(0, *self.event_map.get_by_left(&event_name.to_string()).unwrap(), data, 0, 0);
+        conn.transmit_client_event(1, *self.event_map.get_by_left(&event_name.to_string()).unwrap(), data, 0, 0);
     }
 
     pub fn on_connected(&self, conn: &SimConnector) {
