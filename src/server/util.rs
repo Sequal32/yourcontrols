@@ -231,8 +231,13 @@ mod test {
     #[test]
     fn test_partial_reader() {
         let mut pr = PartialReader::new();
-        assert_eq!(pr.try_read_string("Hello".as_bytes()), None);
-        assert_eq!(pr.try_read_string("\r\nYes".as_bytes()).unwrap(), "Hello");
-        assert_eq!(pr.try_read_string("\r\nYes\r\n".as_bytes()).unwrap(), "Yes");
+        pr.add_buf("Hello".as_bytes());
+        assert_eq!(pr.try_read_string(), None);
+
+        pr.add_buf("\r\nYes".as_bytes());
+        assert_eq!(pr.try_read_string().unwrap(), "Hello");
+
+        pr.add_buf("\r\nYes\r\n".as_bytes());
+        assert_eq!(pr.try_read_string().unwrap(), "Yes");
     }
 }

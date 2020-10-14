@@ -1,5 +1,7 @@
 use simconnect;
 
+use crate::util::NumberDigits;
+
 const GROUP_ID: u32 = 5;
 
 pub trait Syncable<T> where T: Default {
@@ -263,3 +265,46 @@ impl Syncable<i32> for NumIncrementSet {
         }
     }
 }
+
+pub struct NumDigitSet {
+    inc_event_ids: Vec<u32>,
+    dec_event_ids: Vec<u32>,
+    current: NumberDigits
+}
+
+impl NumDigitSet {
+    pub fn new(inc_event_ids: Vec<u32>, dec_event_ids: Vec<u32>) -> Self { 
+        Self { 
+            inc_event_ids, 
+            dec_event_ids, 
+            current: NumberDigits::new(0)
+        } 
+    }
+}
+
+impl Syncable<i32> for NumDigitSet {
+    fn set_current(&mut self, current: i32) {
+        self.current = NumberDigits::new(current)
+    }
+
+    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
+        let new = NumberDigits::new(new);
+
+        for index in 0..self.inc_event_ids.len() {
+            let new_value = new.get(index);
+            let mut working_value = self.current.get(index);
+
+            while working_value > new_value {
+                working_value -= 1;
+                conn.transmit_client_event(1, self.dec_event_ids[index], 0, GROUP_ID, 0);
+            }
+    
+            while working_value < new_value {
+                working_value += 1;
+                conn.transmit_client_event(1, self.inc_event_ids[index], 0, GROUP_ID, 0);
+            }
+        }
+    }
+}
+
+

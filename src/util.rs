@@ -56,3 +56,44 @@ pub fn app_get_versions() -> (Version, Option<Version>) {
     }
     return (app_ver, None)
 }
+
+pub struct NumberDigits {
+    digits: Vec<i32>
+}
+
+impl NumberDigits {
+    pub fn new(value: i32) -> Self {
+        let mut digits = Vec::new();
+        let mut value = value;
+
+        while value > 0 {
+            digits.push(value % 10);
+            value /= 10;
+        }
+
+        Self {
+            digits
+        }
+    }
+    // Returns a 0 to simulate padding if the value is missing
+    // Reads left to right
+    pub fn get(&self, index: usize) -> i32 {
+        if index + 1 > self.digits.len() {return 0}
+        return self.digits[index]
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn test_number_digits() {
+        let digits = NumberDigits::new(503);
+        // Get 1s place
+        assert_eq!(digits.get(0), 3);
+        assert_eq!(digits.get(1), 0);
+        assert_eq!(digits.get(2), 5);
+        // Simulate padding in thousands place
+        assert_eq!(digits.get(3), 0);
+    }
+}
