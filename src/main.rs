@@ -125,6 +125,9 @@ fn main() {
                 Ok(DispatchResult::ClientData(data)) => {
                     definitions.process_client_data(data);
                 }
+                Ok(DispatchResult::Quit(_)) => {
+                    client.stop("Sim closed.".to_string());
+                }
                 _ => ()
             };
 
@@ -256,7 +259,7 @@ fn main() {
             }
 
             if control.has_control() {
-                if update_all_instant.elapsed().as_secs() >= 10 {
+                if update_all_instant.elapsed().as_secs() >= 15 {
                     client.update(definitions.get_all_current());
                     update_all_instant = Instant::now();
                 }
