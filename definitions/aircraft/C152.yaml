@@ -2,6 +2,7 @@ include:
   - definitions/modules/lights.yaml
   - definitions/modules/magnetowithstarter.yaml
   - definitions/modules/navigation.yaml
+  - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/singlega.yaml
 
@@ -47,6 +48,11 @@ shared:
     type: var
     var_name: L:XMLVAR_CabinAirSwitch1Status
     var_type: f64
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
   
   
 # master:

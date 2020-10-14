@@ -1,6 +1,5 @@
 include:
   - definitions/modules/AS1000.yaml
-  - definitions/modules/autopilot.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/magnetowithstarter.yaml
@@ -141,17 +140,6 @@ shared:
     var_name: A:ALTERNATE STATIC SOURCE OPEN
     var_units: Bool
     event_name: TOGGLE_ALTERNATE_STATIC
-  -
-    type: TOGGLESWITCHTWO
-    var_name: A:ELT ACTIVATED
-    var_units: Bool
-    var_type: bool
-    off_event_name: ELT_OFF
-    on_event_name: ELT_ON
-  - 
-    type: var
-    var_name: L:XMLVAR_ELT_STATE
-    var_type: i32
   - #ASOBO_PASSENGER_Switch_Cabin_Heat_Template
     type: var
     var_name: L:XMLVAR_CabinHeat_Position_1
@@ -164,6 +152,11 @@ shared:
     type: var
     var_name: L:XMLVAR_BoostFuelPump
     var_type: bool
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
 
 
 master:

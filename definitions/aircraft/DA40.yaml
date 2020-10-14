@@ -1,0 +1,146 @@
+include:
+  - definitions/modules/AS1000.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/physics.yaml
+  - definitions/modules/singlega.yaml
+
+shared:
+  - # ASOBO_ENGINE_Switch_Master_Template
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
+    var_units: Bool
+    var_type: Bool
+    event_name: K:ENGINE_MASTER_1_TOGGLE
+  -
+    type: var
+    var_type: bool
+    var_name: L:XMLVAR_ENGINE_Switch_Master_Cover_Opened
+  - # ASOBO_ENGINE_Switch_AlternateAir_Template
+    type: ToggleSwitch
+    var_name: RECIP ENG ALTERNATE AIR POSITION:1
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  - # ASOBO_DEICE_Switch_Pitot_Template
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT
+    var_units: Bool
+    event_name: PITOT_HEAT_TOGGLE
+
+  - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
+    type: ToggleSwitchParam
+    var_name: A:CIRCUIT SWITCH ON:22
+    var_units: bool
+
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 22
+
+  - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
+    type: ToggleSwitchParam
+    var_name: A:CIRCUIT SWITCH ON:23
+    var_units: bool
+
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 23
+  - #ELECTRICAL_Knob_BatteryStarter ASOBO_GT_Switch_3States
+    type: var
+    var_type: bool
+    var_name: L:XMLVAR_ElecMaster
+  -
+    type: ToggleSwitchParam
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: bool
+    event_name: TOGGLE_MASTER_BATTERY_ALTERNATOR
+    # Will toggle ALL master batteries (including standby) if this is omitted
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    event_name: TOGGLE_MASTER_ALTERNATOR
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    event_name: SET_STARTER1_HELD
+  -
+    type: ToggleSwitchParam
+    var_name: A:ELECTRICAL MASTER BATTERY:2
+    var_units: bool
+    event_name: TOGGLE_MASTER_BATTERY_ALTERNATOR
+    # Will toggle ALL master batteries (including standby) if this is omitted
+    event_param: 2
+  - # ASOBO_FUEL_Switch_Pump_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH:1
+    var_units: Bool
+    event_name: TOGGLE_ELECT_FUEL_PUMP1
+  - # ASOBO_FUEL_Knob_Selector_Template
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:1
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_SET
+  - # ASOBO_FUEL_Switch_Transfer_Template
+    type: var
+    var_type: bool
+    var_name: L:XMLVAR_Transfer_State_1
+  - # ASOBO_LIGHTING_Knob_Panel_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_16_SET
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_6_SET
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_7_SET
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:9
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_9_SET
+  - # Glareshield
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_5_SET
+  - # ASOBO_INSTRUMENT_Knob_AttitudeCage_Template
+    type: ToggleSwitch
+    var_name: A:ATTITUDE CAGE
+    var_units: Bool
+    event_name: ATTITUDE_CAGE_BUTTON
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitchParam
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 1
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitchParam
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 2
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitchParam
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:FUEL TRANSFER PUMP ON:1
+    var_units: Bool
+    event_name: FUEL_TRANSFER_CUSTOM_INDEX_TOGGLE
