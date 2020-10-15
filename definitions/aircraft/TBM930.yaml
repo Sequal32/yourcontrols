@@ -1,0 +1,225 @@
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/singlega.yaml
+
+master:
+  - #ASOBO_HANDLING_Switch_AileronTrim_Template
+    type: NumSet
+    var_name: A:AILERON TRIM PCT
+    var_units: Percent
+    var_type: i32
+    event_name: AILERON_TRIM_SET_EX1
+shared:
+  - #ASOBO_PRESSURIZATION_Switch_Bleed_Template
+    type: NumSet
+    var_name: A:BLEED AIR SOURCE CONTROL
+    var_units: Enum
+    var_type: i32
+    event_name: BLEED_AIR_SOURCE_CONTROL_SET
+  - # ASOBO_PRESSURIZATION_Push_Dump_Cover_Template
+    type: var
+    var_name: L:XMLVAR_Press_DUMP_cover
+    var_type: f64
+  - # ASOBO_PRESSURIZATION_Push_Dump_Template
+    type: NumSet
+    var_name: A:PRESSURIZATION DUMP SWITCH
+    var_units: Bool
+    var_type: i32
+    event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
+  # TODO: change to Lvar (currently animation)
+  # - #ASOBO_PRESSURIZATION_Push_MicroMask_Cover_Template
+  #   type: var
+  #   var_name: L:XMLVAR_MICRO_MASK_cover
+  #   var_type: i32
+  # - # ASOBO_PRESSURIZATION_Switch_Deploy_Template
+  #   type: var
+  #   var_name: L:XMLVAR_Deploy
+  #   var_type: i32
+  # - # ASOBO_PRESSURIZATION_Switch_Oxygen_Template
+  #   type: var
+  #   var_name: L:XMLVAR_Oxygen
+  #   var_type: i32
+  - # secondary altimeter/altitude
+    type: NumSetWithIndex
+    var_name: A:KOHLSMAN SETTING MB:2
+    var_units: Millibars
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    index_param: 2
+    multiply_by: 16
+  - # PUSH_LEVER_THROTTLE
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
+    var_units: Bool
+    event_name: AUTO_THROTTLE_TO_GA
+  - # ASOBO_GT_Interaction_DraggingYAxis_Code ENGINE_Lever_ManOverride
+    type: var
+    var_name: L:LEVER_MAN_OVRD
+    var_type: f64
+  - # ASOBO_ENGINE_Switch_Starter_Template
+    type: var
+    var_name: L:XMLVAR_Starter
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_IsHeld
+    var_type: f64
+  - # ASOBO_ENGINE_Switch_Ignition_Template
+    type: var
+    var_name: L:XMLVAR_Ignition
+    var_type: f64
+  - # ASOBO_FUEL_Knob_Selector_Template
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:1
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_SET
+  - # ASOBO_FUEL_Switch_Pump_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH:1
+    var_units: Bool
+    event_name: TOGGLE_ELECT_FUEL_PUMP1
+  - # ASOBO_FUEL_Switch_Pump_Template
+    type: var
+    var_name: L:XMLVAR_BoostFuelPump
+    var_type: f64
+  - # FUEL_Switch_Selector
+    type: var
+    var_name: L:XMLVAR_FuelSelectorAuto
+    var_type: f64
+  - # LIGHTING_Knob_Panel
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    event_name: TOGGLE_PANEL_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PEDESTRAL
+    var_units: Bool
+    event_name: TOGGLE_PEDESTRAL_LIGHTS
+  # Panel knob
+  - 
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_4_SET
+  - 
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_6_SET
+  - 
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_7_SET
+  - 
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:8
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_8_SET
+  - 
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:9
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_9_SET
+  - # ASOBO_LIGHTING_Switch_Template
+    type: var
+    var_name: L:XMLVAR_LightDimmer
+    var_type: f64
+  - # ASOBO_LIGHTING_Switch_Light_Wing_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT WING
+    var_units: Bool
+    event_name: TOGGLE_WING_LIGHTS
+  - # ELECTRICAL_Switch_Source
+    type: var
+    var_name: L:XMLVAR_CrashLeverPos
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_ElecSource
+    var_type: f64
+  -
+    type: ToggleSwitchParam
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  - # ELECTRICAL_Switch_Generator
+    type: var
+    var_name: L:XMLVAR_ElecGen
+    var_type: f64
+  - #TODO: CHECK PARAM
+    type: ToggleSwitchParam
+    var_name: GENERAL ENG GENERATOR SWITCH:1
+    var_units: Bool
+    event_name: TOGGLE_ALTERNATOR1
+    event_param: 2
+  # ASOBO_AUTOPILOT_Knob_Baro_Template uses KOHLSMAN events/vars
+  - # ASOBO_DEICE_Switch_Pitot_Template
+    type: var
+    var_name: L:XMLVAR_Pitot_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_2
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_InertSep1_Switch
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_LTS_Test
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_PushXFR
+    var_type: f64
+  - # ASOBO_LIGHTING_Switch_Template
+    type: var
+    var_name: L:XMLVAR_LightDimmer
+    var_type: f64
+  - # ASOBO_LIGHTING_Switch_Template
+    type: var
+    var_name: L:XMLVAR_CabinLightOn
+    var_type: f64
+  - # ASOBO_LIGHTING_Switch_Template
+    type: var
+    var_name: L:XMLVAR_AccessLightOn
+    var_type: f64
+  - # ASOBO_GT_Toggle_Variable
+    type: var
+    var_name: L:XMLVAR_PilotLightOn
+    var_type: f64
+  - # ASOBO_GT_Toggle_Variable
+    type: var
+    var_name: L:XMLVAR_CopilotLightOn
+    var_type: f64
+  - # ASOBO_GT_Toggle_Variable
+    type: var
+    var_name: L:XMLVAR_CircuitBreaker_Light_ON
+    var_type: f64
+  - # PARKBRAKE_KNOB_R
+    type: ToggleSwitch
+    var_name: ALTERNATE STATIC SOURCE OPEN
+    var_units: Bool
+    event_name: TOGGLE_ALTERNATE_STATIC
+  -
+    type: ToggleSwitchTwo
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    on_event_name: GEAR_DOWN
+    off_event_name: GEAR_UP
+  # TODO: AC/OXYGEN TO LVARS (only animations right now)

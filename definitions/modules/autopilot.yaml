@@ -111,16 +111,10 @@ shared:
     event_name: AUTO_THROTTLE_TO_GA
   -
     type: ToggleSwitch
-    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE
+    var_name: A:AUTOPILOT NAV1 LOCK
     var_units: Bool
     var_type: bool
     event_name: AP_N1_HOLD
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE
-    var_units: Bool
-    var_type: bool
-    event_name: AP_PITCH_REF_SELECT
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
@@ -139,3 +133,39 @@ shared:
     var_units: Number
     var_type: i32
     event_name: AP_NAV_SELECT_SET
+  -
+    type: NumIncrement
+    var_name: A:AUTOPILOT MAX BANK
+    var_units: degrees
+    var_type: i32
+    up_event_name: AP_MAX_BANK_INC
+    down_event_name: AP_MAX_BANK_DEC
+    increment_by: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT YAW DAMPER
+    var_units: Bool
+    event_name: YAW_DAMPER_TOGGLE
+  -
+    type: var
+    var_name: L:XMLVAR_AirSpeedIsInMach
+    var_type: f64
+
+master:
+  - # HANDLING_Switch_AutopilotTrim ASOBO_GT_Switch_XStates TBM930
+    type: ToggleSwitch
+    var_name: AUTOPILOT DISENGAGED
+    var_units: Bool
+    event_name: AUTOPILOT_DISENGAGE_TOGGLE
+  -
+    type: NumSet
+    var_name: RUDDER TRIM DISABLED
+    var_units: Bool
+    var_type: i32
+    event_name: RUDDER_TRIM_DISABLED_SET
+  -
+    type: NumSet
+    var_name: AILERON TRIM DISABLED
+    var_units: Bool
+    var_type: i32
+    event_name: AILERON_TRIM_DISABLED_SET
