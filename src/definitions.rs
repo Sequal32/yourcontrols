@@ -29,6 +29,7 @@ pub enum VarAddError {
     InvalidSyncType(String),
     InvalidCategory(String),
     YamlParseError(serde_yaml::Error),
+    IncludeError(String, String),
 }
 
 impl Display for VarAddError {
@@ -37,7 +38,8 @@ impl Display for VarAddError {
             VarAddError::MissingField(s) => write!(f, r#"Missing field "{}""#, s),
             VarAddError::InvalidSyncType(s) => write!(f, r#"Invalid type "{}""#, s),
             VarAddError::InvalidCategory(s) => write!(f, r#"Invalid category "{}""#, s),
-            VarAddError::YamlParseError(e) => write!(f, "Error parsing YAML...{}", e.to_string())
+            VarAddError::YamlParseError(e) => write!(f, "Error parsing YAML...{}", e.to_string()),
+            VarAddError::IncludeError(e_str, e) => write!(f, "{} in {}", e_str, e)
         }
     }
 }
@@ -573,7 +575,7 @@ impl Definitions {
                         Ok(_) => (),
                         Err(e) => {
                             if let ConfigLoadError::ParseError(e, _) = e {
-                                return Err(e);
+                                return Err(VarAddError::IncludeError(e.to_string(), file_name.to_string()));
                             };
                         }
                     }
@@ -804,9 +806,9 @@ impl Definitions {
                             }
 
                             VarReaderTypes::I32(value) => match action {
-                                // Format of VALUE INDEX (>K:2:NAME)
+                                // Format of INDEX VALUE (>K:2:NAME)
                                 ActionType::NumSetWithIndex(action) => {
-                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), Some(""), &format!("{} {}", value, action.index_param));
+                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), Some(""), &format!("{} {}", action.index_param, value * action.multiply_by.unwrap_or(1)));
                                 }
                                 ActionType::NumAction(action) => {
                                     action.set_new(*value, conn);
