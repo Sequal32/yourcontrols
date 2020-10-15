@@ -1,42 +1,11 @@
 include:
   - definitions/modules/autopilot.yaml
+  - definitions/modules/ASCommon.yaml
 
 shared:
-  -
-    type: var
-    var_name: L:Glasscockpit_AOA_Mode
-    var_type: i32
-  - 
-    type: var
-    var_name: L:Glasscockpit_Wind_Mode
-    var_type: i32
-  - 
-    type: var
-    var_name: L:AS3000_MFD_Current_WeatherMap 
-    var_type: i32
-  - 
-    type: var
-    var_name: L:PFD_BRG1_Source 
-    var_type: i32
-  - 
-    type: var
-    var_name: L:PFD_BRG2_Source 
-    var_type: i32
-  - 
-    type: var
-    var_name: L:AS3000_MinimalsMode
-    var_type: i32
-  - 
-    type: var
-    var_name: L:AS3000_MinimalsValue 
-    var_type: i32
   - 
     type: var
     var_name: L:PFD_DME_Displayed
-    var_type: i32
-  - 
-    type: var
-    var_name: L:Glasscockpit_DmeSource
     var_type: i32
   - #AS1000 uses index 5 for altimeter
     type: NumSetWithIndex
@@ -46,11 +15,3 @@ shared:
     event_name: KOHLSMAN_SET
     index_param: 5
     multiply_by: 16
-  -
-    type: var
-    var_name: L:Glasscockpit_HSI_Arc
-    var_type: bool
-  -
-    type: var
-    var_name: L:Glasscockpit_MFD_Started
-    var_type: bool

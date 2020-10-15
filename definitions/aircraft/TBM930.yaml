@@ -1,4 +1,5 @@
 include:
+  - definitions/modules/AS3000.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/general.yaml
@@ -102,37 +103,12 @@ shared:
     var_name: A:LIGHT PEDESTRAL
     var_units: Bool
     event_name: TOGGLE_PEDESTRAL_LIGHTS
-  # Panel knob
-  - 
+  - # Panel knob on overhead
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_4_SET
-  - 
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:6
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_6_SET
-  - 
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:7
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_7_SET
-  - 
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:8
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_8_SET
-  - 
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:9
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_9_SET
   - # ASOBO_LIGHTING_Switch_Template
     type: var
     var_name: L:XMLVAR_LightDimmer

@@ -1,11 +1,36 @@
+include:
+  - definitions/modules/ASCommon.yaml
+
 shared:
-  - 
+  -
     type: var
-    var_name: L:AS3000_MFD_Current_Map 
-    var_units: number
-    var_type: i32
-  - 
+    var_name: L:AS1000_AttitudeBackup_State
+    var_type: f64
+  -
     type: var
-    var_name: L:AS3000_MFD_Current_WeatherMap 
-    var_units: number
+    var_name: L:AS1000_SpeedBackup_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_1_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_2_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS3000_PFD_1_State
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:COM SPACING MODE:1
+    var_units: Enum
     var_type: i32
+    event_name: COM_1_SPACING_MODE_SWITCH
+  -
+    type: NumSet
+    var_name: A:COM SPACING MODE:2
+    var_units: Enum
+    var_type: i32
+    event_name: COM_2_SPACING_MODE_SWITCH

@@ -686,8 +686,8 @@ impl Definitions {
     }
 
     pub fn step(&mut self, conn: &SimConnector) {
-        // Fetch all lvars
-        if self.tick % 50 == 0 {
+        // Fetch all lvars 75 milliseconds
+        if self.tick % 75 == 0 {
             self.lvarstransfer.fetch_all(conn);
         }
 
