@@ -9,6 +9,7 @@ pub struct Config {
     pub update_rate: u16,
     pub buffer_size: usize,
     pub conn_timeout: u64,
+    pub name: String,
     pub ip: String,
     pub last_config: String
 }
@@ -21,6 +22,7 @@ impl Default for Config {
             buffer_size: 3,
             conn_timeout: 10,
             ip: String::new(),
+            name: String::new(),
             last_config: String::new()
         }
     }
@@ -53,9 +55,5 @@ impl Config {
             Ok(data) => Ok(data),
             Err(_) => Err("Configuration file corrupted.")
         }
-    }
-
-    pub fn set_ip(&mut self, ip: String) {
-        self.ip = ip;
     }
 }

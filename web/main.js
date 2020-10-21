@@ -202,6 +202,9 @@ function MessageReceived(data) {
         case "set_port":
             port_input.value = data["data"]
             break;
+        case "set_name":
+            name_input.value = data["data"]
+            break;
         case "overloaded":
             overloaded_alert.hidden = false
             break;

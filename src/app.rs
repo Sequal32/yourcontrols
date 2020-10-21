@@ -207,6 +207,10 @@ impl App {
         self.invoke("set_ip", Some(ip));
     }
 
+    pub fn set_name(&self, name: &str) {
+        self.invoke("set_name", Some(name));
+    }
+
     pub fn attempt(&self) {
         self.invoke("attempt", None);
     }

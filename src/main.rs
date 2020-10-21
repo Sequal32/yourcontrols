@@ -275,7 +275,7 @@ fn main() {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        let mut server = Server::new(username);
+                        let mut server = Server::new(username.clone());
                         match server.start(is_ipv6, port) {
                             Ok(_) => {
                                 // Start the server loop
@@ -295,14 +295,18 @@ fn main() {
                                 info!("Could not start server! Reason: {}", e);
                             }
                         }
+
+                        config.port = port;
+                        config.name = username;
+                        config.write_to_file(CONFIG_FILENAME).ok();
                     }
                 }
-                AppMessage::Connect(username, ip, input_string, port) => {
+                AppMessage::Connect(username, ip, ip_input_string, port) => {
                     if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        let mut client = Client::new(username);
+                        let mut client = Client::new(username.clone());
                         
                         match client.start(ip, port, config.conn_timeout) {
                             Ok(_) => {
@@ -325,7 +329,9 @@ fn main() {
                             }
                         }
                         // Write config with new values
-                        config.set_ip(input_string);
+                        config.port = port;
+                        config.ip = ip_input_string;
+                        config.name = username;
                         config.write_to_file(CONFIG_FILENAME).ok();
                     }
                 }
@@ -362,6 +368,7 @@ fn main() {
                     info!("{} aircraft config selected.", name);
                     definitions = Definitions::new();
                     config_to_load = name.clone();
+                    // Clear all definitions/events/etc
                     conn.close();
                     connected = false;
 
@@ -370,7 +377,8 @@ fn main() {
                 }
                 AppMessage::Startup => {
                     thread::sleep(APP_STARTUP_SLEEP_TIME);
-                    app_interface.set_ip(config.ip.as_str());
+                    app_interface.set_ip(&config.ip);
+                    app_interface.set_name(&config.name);
                     app_interface.set_port(config.port);
                     // List aircraft
                     match get_aircraft_configs() {
