@@ -1,6 +1,7 @@
 use base64;
 use crossbeam_channel::{Receiver, TryRecvError, unbounded};
 use dns_lookup::lookup_host;
+use log::{error, info};
 use std::{str::FromStr, net::{Ipv6Addr, Ipv4Addr, IpAddr}, io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
@@ -59,6 +60,8 @@ fn get_ip_from_data(data: &Value) -> Result<IpAddr, String> {
 
 impl App {
     pub fn setup() -> Self {
+        info!("Creating webview...");
+        
         let (tx, rx) = unbounded();
 
         let mut logo = vec![];
@@ -68,6 +71,8 @@ impl App {
         let handle_clone = handle.clone();
         let exited = Arc::new(AtomicBool::new(false));
         let exited_clone = exited.clone();
+
+        info!("Spawning webview thread...");
 
         thread::spawn(move || {
             let webview = web_view::builder()
@@ -154,6 +159,8 @@ impl App {
             let mut handle = handle_clone.lock().unwrap();
             *handle = Some(webview.handle());
             std::mem::drop(handle);
+
+            info!("Running webview thread...");
 
             webview.run().ok();
             exited_clone.store(true, SeqCst);
