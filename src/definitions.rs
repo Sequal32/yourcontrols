@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::LVarResult, sync::AircraftVars, sync::Events, lvars::GetResult, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -264,8 +264,6 @@ pub struct Definitions {
     periods: HashMap<String, Period>,
     // Aircraft variables that should be synced and not just detected for changes
     sync_vars: HashSet<String>,
-    // Fetches LVars every X seconds
-    tick: u64,
     // Value to hold the current queue
     current_sync: AllNeedSync,
     last_written: HashMap<String, Instant>,
@@ -305,7 +303,6 @@ impl Definitions {
 
             last_written: HashMap::new(),
 
-            tick: 0,
             current_sync: AllNeedSync::new(),
 
             interpolation_avars: Interpolate::new(3),
@@ -350,7 +347,12 @@ impl Definitions {
     fn add_local_variable(&mut self, category: &str, var_name: &str, var_units: Option<&str>) -> Result<(), VarAddError> {
         let category = get_category_from_string(category)?;
 
-        self.lvarstransfer.add_var(var_name, var_units);
+        let units = match var_units {
+            Some(s) => Some(s.to_string()),
+            None => None
+        };
+
+        self.lvarstransfer.add_var(var_name.to_string(), units);
         self.categories.insert(var_name.to_string(), category);
 
         Ok(())
@@ -609,12 +611,31 @@ impl Definitions {
         }
     }
 
+    fn process_lvar(&mut self, lvar_data: GetResult) {
+        // Check timer
+        if let Some(timer) = self.last_written.get(&lvar_data.var_name) {
+            if timer.elapsed().as_secs() < 1 {return}
+        };
+
+        self.current_sync.lvars.insert(lvar_data.var_name.to_string(), lvar_data.var.floating);
+    }
+
     // Processes client data and adds to the result queue if it changed
     pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
-        if let Some(lvar) = self.lvarstransfer.process_client_data(data) {
+        // Guard clauses
+        // Get var data
+        let lvar = match self.lvarstransfer.process_client_data(data) {
+            Some(var) => var,
+            None => return
+        };
 
-            self.current_sync.lvars.insert(lvar.var_name.to_string(), lvar.var.floating);
-
+        match lvar {
+            LVarResult::Single(result) => self.process_lvar(result),
+            LVarResult::Multi(results) => {
+                for result in results {
+                    self.process_lvar(result);
+                }
+            }
         }
     }
 
@@ -623,6 +644,12 @@ impl Definitions {
         if data.uGroupID != self.events.group_id {return}
 
         let event_name = self.events.match_event_id(data.uEventID);
+
+        // Check timer
+        if let Some(timer) = self.last_written.get(event_name) {
+            if timer.elapsed().as_secs() < 1 {return}
+        };
+
         self.current_sync.events.insert(event_name.clone(), data.dwData);
     }
 
@@ -685,32 +712,11 @@ impl Definitions {
         }
     }
 
-    pub fn step(&mut self, conn: &SimConnector) {
-        // Fetch all lvars 75 milliseconds
-        if self.tick % 75 == 0 {
-            self.lvarstransfer.fetch_all(conn);
-        }
-
-        // Reset to prevent integer overflow
-        if self.tick == u64::MAX {
-            self.tick = 0;
-        } else {
-            self.tick += 1;
-        }
-    }
-
     pub fn step_interpolate(&mut self, conn: &SimConnector) {
         // Interpolate AVARS
         let aircraft_interpolation_data = self.interpolation_avars.step();
         if aircraft_interpolation_data.len() > 0 {
             self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
-        }
-
-        // Interpolate LVARS
-        for (var_name, value) in self.interpolation_lvars.step() {
-            if let VarReaderTypes::F64(value) = value {
-                self.lvarstransfer.set(conn, &var_name, &value.to_string());
-            }
         }
     }
 
@@ -853,6 +859,8 @@ impl Definitions {
     pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap) {
         for (event_name, value) in data {
             self.events.trigger_event(conn, event_name, *value as u32);
+
+            self.last_written.insert(event_name.clone(), Instant::now());
         }
     }
 

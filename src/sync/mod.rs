@@ -3,7 +3,7 @@ pub mod control;
 use bimap::BiHashMap;
 use std::{collections::{HashMap, HashSet}, io};
 use simconnect::SimConnector;
-use crate::{lvars::{LVar, LVars, DiffChecker, GetResult},util::InDataTypes, varreader::SimValue, varreader::VarReader};
+use crate::{lvars::{LVar, LVars, DiffChecker, GetResult}, util::InDataTypes, lvars::LVarResult, varreader::SimValue, varreader::VarReader};
 
 pub struct Events {
     event_map: BiHashMap<String, u32>,
@@ -63,46 +63,34 @@ impl Events {
 }
 
 struct LocalVarEntry {
+    current_value: f64,
     units: Option<String>,
 }
 
 pub struct LVarSyncer {
     transfer: LVars,
-    tracked: DiffChecker<String, LVar>,
     vars: HashMap<String, LocalVarEntry>,
 }
 
 impl LVarSyncer {
     pub fn new(request_id: u32) -> Self {
         Self {
-            transfer: LVars::new(request_id),
-            tracked: DiffChecker::new(),
+            transfer: LVars::new(),
             vars: HashMap::new(),
         }
     }
 
-    pub fn add_var(&mut self, var_name: &str, var_units: Option<&str>) {
-        if self.vars.contains_key(var_name) {return}
+    pub fn add_var(&mut self, var_name: String, var_units: Option<String>) {
+        if self.vars.contains_key(&var_name) {return}
         
-        self.vars.insert(var_name.to_string(), LocalVarEntry {
-            units: if var_units.is_some() {Some(var_units.unwrap().to_string())} else {None},
-        }); 
+        self.vars.insert(var_name, LocalVarEntry {
+            current_value: 0.0,
+            units: var_units
+        });
     }
 
-    pub fn fetch_all(&mut self, conn: &SimConnector) {
-        for (var_name, var_data) in &self.vars {
-            self.transfer.get(conn, var_name, var_data.units.as_deref());
-        }
-    }
-
-    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<GetResult> {
-        if let Some(data) = self.transfer.process_client_data(data) {
-            // If the data is different...
-            if self.tracked.record_and_is_diff(&data.var_name, data.var.clone()) {
-                return Some(data)
-            }
-        }
-        None
+    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<LVarResult> {
+        return self.transfer.process_client_data(data);
     }
 
     pub fn set(&mut self, conn: &SimConnector, var_name: &str, value: &str) {
@@ -115,15 +103,19 @@ impl LVarSyncer {
         self.transfer.set(conn, var_name, var_units, value);
     }
 
-    pub fn on_connected(&self, conn: &SimConnector) {
+    pub fn on_connected(&mut self, conn: &SimConnector) {
         self.transfer.on_connected(conn);
+
+        for (var_name, var_data) in self.vars.iter() {
+            self.transfer.add_definition(conn, var_name, var_data.units.as_deref());
+        }
     }
 
     pub fn get_all_vars(&self) -> HashMap<String, f64> {
         let mut return_map = HashMap::new();
 
-        for (var_name, value) in self.tracked.get_all() {
-            return_map.insert(var_name.clone(), value.floating);
+        for (var_name, value) in self.vars.iter() {
+            return_map.insert(var_name.clone(), value.current_value);
         }
 
         return return_map

@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 mod app;
 mod clientmanager;
@@ -131,7 +131,6 @@ fn main() {
                 _ => ()
             };
 
-            definitions.step(&conn);
             // Data from server
             match client.get_next_message() {
                 Ok(ReceiveData::Update(sender, sync_data)) => {
