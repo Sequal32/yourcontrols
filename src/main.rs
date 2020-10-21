@@ -62,7 +62,7 @@ fn main() {
 
     let mut conn = simconnect::SimConnector::new();
 
-    let mut definitions = Definitions::new();
+    let mut definitions = Definitions::new(config.buffer_size);
 
     let mut control = Control::new();
 
@@ -371,13 +371,14 @@ fn main() {
                     }
                 }
                 AppMessage::LoadAircraft(name) => {
+                    // Load config
                     info!("{} aircraft config selected.", name);
-                    definitions = Definitions::new();
+                    definitions = Definitions::new(config.buffer_size);
                     config_to_load = name.clone();
                     // Clear all definitions/events/etc
                     conn.close();
                     connected = false;
-
+                    // Save current config
                     config.last_config = name;
                     config.write_to_file(CONFIG_FILENAME).ok();
                 }
@@ -443,7 +444,7 @@ fn main() {
         }
 
         if should_set_none_client {
-            // Prevent sending any more data through this
+            // Prevent sending any more data
             transfer_client = None;
             should_set_none_client = false
         }

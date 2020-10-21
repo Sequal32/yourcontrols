@@ -5,12 +5,12 @@ use std::io::{Write, BufReader};
 
 #[derive(Deserialize, Serialize)]
 pub struct Config {
-    pub port: u16,
     pub update_rate: u16,
-    pub buffer_size: usize,
     pub conn_timeout: u64,
-    pub name: String,
+    pub buffer_size: usize,
+    pub port: u16,
     pub ip: String,
+    pub name: String,
     pub last_config: String
 }
 

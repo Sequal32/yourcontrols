@@ -291,7 +291,7 @@ fn get_real_var_name(var_name: &str) -> String {
 }
 
 impl Definitions {
-    pub fn new() -> Self {
+    pub fn new(buffer_size: usize) -> Self {
         Self {
             action_maps: HashMap::new(),
             events: Events::new(1),
@@ -305,8 +305,8 @@ impl Definitions {
 
             current_sync: AllNeedSync::new(),
 
-            interpolation_avars: Interpolate::new(3),
-            interpolation_lvars: Interpolate::new(3),
+            interpolation_avars: Interpolate::new(buffer_size),
+            interpolation_lvars: Interpolate::new(buffer_size),
             interpolate_names: HashSet::new()
         }
     }

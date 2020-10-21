@@ -95,6 +95,7 @@ impl Interpolate {
                     data.time = Instant::now();
 
                     if queue.len() > self.buffer_size {
+                        // Will make next interpolation faster depending on how many packets over the buffer size it is.
                         data.interpolation_time = data.options.time * (self.buffer_size as f64)/((queue.len() - self.buffer_size) as f64) * 0.5;
                     } else {
                         data.interpolation_time = data.options.time;
