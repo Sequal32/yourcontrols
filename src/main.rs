@@ -271,7 +271,10 @@ fn main() {
         match app_interface.get_next_message() {
             Ok(msg) => match msg {
                 AppMessage::Server(username, is_ipv6, port ) => {
-                    if connected {
+                    if config_to_load == "" {
+                        app_interface.server_fail("Select an aircraft config first!");
+                    } 
+                    else if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
@@ -302,7 +305,10 @@ fn main() {
                     }
                 }
                 AppMessage::Connect(username, ip, ip_input_string, port) => {
-                    if connected {
+                    if config_to_load == "" {
+                        app_interface.client_fail("Select an aircraft config first!");
+                    } 
+                    else if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
@@ -423,7 +429,12 @@ fn main() {
                         info!("Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
                         definitions.on_connected(&conn)
                     }
-                    Err(e) => log::error!("Could not load configuration file {}: {}", config_to_load, e)
+                    Err(e) => {
+                        app_interface.error("Error loading aircraft config. Check the log for more information.");
+                        log::error!("Could not load configuration file {}: {}", config_to_load, e);
+                        // Prevent server/client from starting as config could not be laoded.
+                        config_to_load = String::new();
+                    }
                 };
             } else {
                 // Display trying to connect message
