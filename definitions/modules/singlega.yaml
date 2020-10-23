@@ -30,9 +30,21 @@ master:
     var_units: Number
     var_type: f64
   -
+    type: var
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:1
+    var_units: Number
+    var_type: f64
+  -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
     var_units: percent
     var_type: i32
     event_name: ELEVATOR_TRIM_SET
+    multiply_by: 164
+  -
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: percent
+    var_type: i32
+    event_name: RUDDER_TRIM_SET
     multiply_by: 164
