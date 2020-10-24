@@ -1,0 +1,54 @@
+include:
+  - definitions/modules/radios.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/magnetowithstarter.yaml
+  - definitions/modules/singlega.yaml
+
+shared:
+  - #ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate
+    type: ToggleSwitchParam
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  - # ASOBO_ELECTRICAL_Switch_Avionics_Master_Template
+    type: ToggleSwitch
+    var_name: A:AVIONICS MASTER SWITCH
+    var_units: Bool
+    event_name: TOGGLE_AVIONICS_MASTER
+  - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
+    type: ToggleSwitchParam
+    var_name: A:CIRCUIT SWITCH ON:23
+    var_units: bool
+
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 38
+  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: bool
+
+    event_name: TOGGLE_ALTERNATOR1
+  - # ASOBO_ENGINE_Lever_CowlFlaps_Template
+    type: NumSet
+    var_name: A:RECIP ENG COWL FLAP POSITION:1
+    var_units: Percent
+    var_type: i32
+    event_name: COWLFLAP1_SET
+  - # ASOBO_ENGINE_Switch_AlternateAir_Template default
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ALTERNATE AIR POSITION:1
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:1
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_SET
+  - # ASOBO_FUEL_Switch_Pump_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH:1
+    var_units: Bool
+    event_name: TOGGLE_ELECT_FUEL_PUMP1

@@ -1,0 +1,60 @@
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/magnetowithstarter.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/singlega.yaml
+  - definitions/modules/transponder.yaml
+
+shared:
+  - #ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate
+    type: ToggleSwitchParam
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: bool
+    event_name: TOGGLE_ALTERNATOR1
+  - # ASOBO_FUEL_Switch_Pump_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH:1
+    var_units: Bool
+    event_name: TOGGLE_ELECT_FUEL_PUMP1
+  - #ASOBO_PASSENGER_Switch_Cabin_Heat_Template
+    type: var
+    var_name: L:XMLVAR_CabinHeatSwitch1Status
+    var_type: f64
+  - # ASOBO_DEICE_Lever_Engine_Template
+    type: NumSet
+    var_name: GENERAL ENG ANTI ICE POSITION:1
+    var_units: percent
+    var_type: i32
+    event_name: ANTI_ICE_GRADUAL_SET_ENG:1
+  - # ASOBO_ELECTRICAL_Switch_Avionics_Master_Template
+    type: ToggleSwitch
+    var_name: A:AVIONICS MASTER SWITCH
+    var_units: Bool
+    event_name: TOGGLE_AVIONICS_MASTER
+  - # ASOBO_FUEL_Knob_Selector_Template
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:1
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_2_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_3_SET

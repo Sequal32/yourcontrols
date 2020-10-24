@@ -7,12 +7,12 @@ include:
   - definitions/modules/singlega.yaml
 
 shared:
-  - # ASOBO_ENGINE_Switch_Master_Template
+  - # ASOBO_ENGINE_Switch_Master_Template # TODO: check this
     type: ToggleSwitch
     var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
     var_units: Bool
     var_type: Bool
-    event_name: K:ENGINE_MASTER_1_TOGGLE
+    event_name: ENGINE_MASTER_1_TOGGLE
   -
     type: var
     var_type: bool
@@ -59,7 +59,7 @@ shared:
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
     event_name: TOGGLE_MASTER_ALTERNATOR
-  -
+  - # TODO: test
     type: ToggleSwitch
     var_name: A:GENERAL ENG STARTER:1
     var_units: Bool

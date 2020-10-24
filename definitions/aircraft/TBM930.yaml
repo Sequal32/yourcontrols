@@ -5,7 +5,9 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
+  - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
+  - definitions/modules/transponder.yaml
   - definitions/modules/singlega.yaml
 
 master:
@@ -15,6 +17,7 @@ master:
     var_units: Percent
     var_type: i32
     event_name: AILERON_TRIM_SET_EX1
+    
 shared:
   - #ASOBO_PRESSURIZATION_Switch_Bleed_Template
     type: NumSet
@@ -113,18 +116,9 @@ shared:
     type: var
     var_name: L:XMLVAR_LightDimmer
     var_type: f64
-  - # ASOBO_LIGHTING_Switch_Light_Wing_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT WING
-    var_units: Bool
-    event_name: TOGGLE_WING_LIGHTS
   - # ELECTRICAL_Switch_Source
     type: var
     var_name: L:XMLVAR_CrashLeverPos
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_ElecSource
     var_type: f64
   -
     type: ToggleSwitchParam
@@ -143,6 +137,11 @@ shared:
     event_name: TOGGLE_ALTERNATOR1
     event_param: 2
   # ASOBO_AUTOPILOT_Knob_Baro_Template uses KOHLSMAN events/vars
+  - # This is needed
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT
+    var_units: Bool
+    event_name: PITOT_HEAT_TOGGLE
   - # ASOBO_DEICE_Switch_Pitot_Template
     type: var
     var_name: L:XMLVAR_Pitot_1

@@ -1,0 +1,198 @@
+include:
+  - definitions/modules/AS1000.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/magnetowithstarter.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/singlega.yaml
+
+shared:
+  -
+    type: ToggleSwitchParam
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  -
+    type: ToggleSwitchParam
+    var_name: A:ELECTRICAL MASTER BATTERY:2
+    var_units: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 2
+  - # Two engines, singlega.yaml takes care of the left side
+    type: Var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_units: Number
+    var_type: f64
+  -
+    type: Var
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:2
+    var_units: Number
+    var_type: f64
+  - # Instrument light
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_3_SET
+  - # Panel light
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_5_SET
+  - 
+    type: NumSetWithIndex
+    var_name: A:LIGHT CABIN POWER SETTING:1
+    var_units: Percent
+    var_type: i32
+    index_param: 1
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+  - 
+    type: NumSetWithIndex
+    var_name: A:LIGHT CABIN POWER SETTING:2
+    var_units: Percent
+    var_type: i32
+    index_param: 2
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+  - 
+    type: NumSetWithIndex
+    var_name: A:LIGHT CABIN POWER SETTING:3
+    var_units: Percent
+    var_type: i32
+    index_param: 3
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitchParam
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 1
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitchParam
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 2
+  -
+    type: ToggleSwitchTwo
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    on_event_name: GEAR_DOWN
+    off_event_name: GEAR_UP
+  - # TO CHECK
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:1
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_SET
+  -
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:2
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_SET
+  - # Fuel_Switch_Tranfer_Aux
+    type: NumSet
+    var_name: A:FUEL SELECTED TRANSFER MOD
+    var_units: Enum
+    var_type: i32
+    event_name: SET_FUEL_TRANSFER_CUSTOM
+  - # ASOBO_FUEL_Switch_Pump_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH:1
+    var_units: Bool
+    event_name: TOGGLE_ELECT_FUEL_PUMP1
+  - # ASOBO_FUEL_Switch_Pump_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH:2
+    var_units: Bool
+    event_name: TOGGLE_ELECT_FUEL_PUMP2
+  -
+    type: ToggleSwitchParam
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
+    type: ToggleSwitchParam
+    var_name: A:CIRCUIT SWITCH ON:30
+    var_units: bool
+
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 30
+  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: bool
+
+    event_name: TOGGLE_ALTERNATOR1
+  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: bool
+
+    event_name: TOGGLE_ALTERNATOR2
+  - # ASOBO_ELECTRICAL_Push_Starter_SubTemplate
+    type: SwitchOn
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    event_name: SET_STARTER1_HELD
+  - # ASOBO_ELECTRICAL_Push_Starter_SubTemplate
+    type: SwitchOn
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    event_name: SET_STARTER2_HELD
+  - # ASOBO_DEICE_Switch_Pitot_Template
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT
+    var_units: Bool
+    event_name: PITOT_HEAT_TOGGLE
+  # TODO: Oxygen, XMLVAR_FUEL_Switch_Off_Blocker_1_IsOpen, XMLVAR_Transfer_State_1
+  -
+    type: var
+    var_name: L:XMLVAR_IceLightState
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_IceLightMaxStateEnabled
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_DEICEPump
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_DEICE_Windshield_PumpActive
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_DEICEAlternateDisabled
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_LTS_Test
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_DEICE_AlternateCoverOpened
+    var_type: f64
+  - #ASOBO_PASSENGER_Switch_Cabin_Heat_Template
+    type: var
+    var_name: L:XMLVAR_CabinHeatSwitch1Status
+    var_type: f64
+  - #ASOBO_PASSENGER_Switch_Cabin_Air_Template
+    type: var
+    var_name: L:XMLVAR_CabinAirSwitch1Status
+    var_type: f64
+  - # secondary altimeter/altitude
+    type: NumSetWithIndex
+    var_name: A:KOHLSMAN SETTING MB:2
+    var_units: Millibars
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    index_param: 2
+    multiply_by: 16
