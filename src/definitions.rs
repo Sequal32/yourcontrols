@@ -44,12 +44,10 @@ impl Display for VarAddError {
     }
 }
 
-#[derive(PartialEq)]
-pub enum SyncPermissions {
-    Server,
-    Master,
-    Slave,
-    ServerAndMaster
+pub struct SyncPermission {
+    pub is_server: bool,
+    pub is_master: bool,
+    pub is_init: bool
 }
 
 // Checks if a field in a Value exists, otherwise will return an error with the name of the field
@@ -280,6 +278,7 @@ fn get_category_from_string(category: &str) -> Result<Category, VarAddError> {
         "shared" => Ok(Category::Shared),
         "master" => Ok(Category::Master),
         "server" => Ok(Category::Server),
+        "init" => Ok(Category::Init),
         _ => return Err(VarAddError::InvalidCategory(category.to_string()))
     }
 }
@@ -744,7 +743,7 @@ impl Definitions {
         }
     }
 
-    pub fn get_need_sync(&mut self, sync_permission: &SyncPermissions) -> Option<AllNeedSync> {
+    pub fn get_need_sync(&mut self, sync_permission: &SyncPermission) -> Option<AllNeedSync> {
         if self.sync_vars.is_empty() {return None}
 
         let mut return_data = AllNeedSync::new();
@@ -763,14 +762,16 @@ impl Definitions {
         self.avarstransfer.set_vars(conn, data);
     }
 
-    fn can_sync(&self, var_name: &str, sync_permission: &SyncPermissions) -> bool {
+    fn can_sync(&self, var_name: &str, sync_permission: &SyncPermission) -> bool {
         // Check categories
         if let Some(category) = self.categories.get(var_name) {
-            if *category == Category::Server && (*sync_permission == SyncPermissions::Server || *sync_permission == SyncPermissions::ServerAndMaster) {
+            if *category == Category::Server && sync_permission.is_server {
                 return true
             } else if *category == Category::Shared {
                 return true
-            } else if * category == Category::Master && (*sync_permission == SyncPermissions::Master || *sync_permission == SyncPermissions::ServerAndMaster) {
+            } else if *category == Category::Master && sync_permission.is_master {
+                return true
+            } else if *category == Category::Init && sync_permission.is_init {
                 return true
             }
             return false
@@ -778,7 +779,7 @@ impl Definitions {
         return true
     }
 
-    fn filter_all_sync(&self, all_sync: AllNeedSync, sync_permission: &SyncPermissions) -> AllNeedSync {
+    fn filter_all_sync(&self, all_sync: AllNeedSync, sync_permission: &SyncPermission) -> AllNeedSync {
         let mut return_data = AllNeedSync::new();
 
         for (name, data) in all_sync.avars.into_iter() {
@@ -893,11 +894,11 @@ impl Definitions {
         }
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, sync_permission: &SyncPermissions, interpolate: bool) {
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, sync_permission: &SyncPermission, interpolate: bool) {
         let data = self.filter_all_sync(data, sync_permission);
 
         self.write_aircraft_data(conn, &data.avars, interpolate);
-        self.write_local_data(conn, &data.lvars,  interpolate);
+        self.write_local_data(conn, &data.lvars, interpolate);
         self.write_event_data(conn, &data.events);
     }
 

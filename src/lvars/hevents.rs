@@ -2,8 +2,6 @@ use bimap::BiHashMap;
 use serde_yaml;
 use std::{fmt::Display, fs::File};
 
-use super::LVars;
-
 pub enum LoadError {
     FileError(std::io::Error),
     ParseError(serde_yaml::Error)
@@ -55,7 +53,7 @@ impl HEvents {
 
     pub fn on_connected(&self, conn: &simconnect::SimConnector) {
         conn.map_client_event_to_sim_event(10000, "Custom.Event7777");
-        conn.add_client_event_to_notification_group(self.group_id, 10000, false);
+        conn.add_client_event_to_notification_group(self.group_id, 10000, true);
     }
 
     pub fn get_number_defined(&self) -> usize {

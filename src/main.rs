@@ -15,7 +15,7 @@ mod update;
 
 use app::{App, AppMessage};
 use clientmanager::ClientManager;
-use definitions::{Definitions, SyncPermissions};
+use definitions::{Definitions, SyncPermission};
 use simconfig::Config;
 use server::{Client, ReceiveData, Server, TransferClient};
 use simconnect::{self, DispatchResult, SimConnector};
@@ -44,20 +44,6 @@ fn get_aircraft_configs() -> io::Result<Vec<String>> {
     }
 
     Ok(filenames)
-}
-
-fn get_sync_permission(is_server: bool, has_control: bool) -> SyncPermissions {
-    if has_control {
-        if is_server {
-            SyncPermissions::ServerAndMaster
-        } else {
-            SyncPermissions::Master
-        }
-    } else if is_server {
-        SyncPermissions::Server
-    } else {
-        SyncPermissions::Slave
-    }
 }
 
 fn main() {
@@ -94,8 +80,6 @@ fn main() {
     // Transfer
     let mut transfer_client: Option<Box<dyn TransferClient>> = None;
 
-    // Periodically send an update for ALL values
-    let mut update_all_instant = Instant::now();
     // Update rate counter
     let mut update_rate_instant = Instant::now();
     let update_rate = 1.0 / config.update_rate as f64;
@@ -168,8 +152,12 @@ fn main() {
                     }
 
                     if !clients.is_observer(&sender) {
+                        definitions.on_receive_data(&conn, sync_data, &SyncPermission {
+                            is_server: client.is_server(),
+                            is_master: control.has_control(),
+                            is_init: true
+                        }, !need_update);
                         // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
-                        definitions.on_receive_data(&conn, sync_data, &get_sync_permission(clients.client_is_server(&sender), clients.client_has_control(&sender)), !need_update);
                         need_update = false;
                     }
                 }
@@ -279,9 +267,16 @@ fn main() {
             let delay_passed = (!control.has_control() && control.time_since_control_change() > 5) || control.has_control();
             
             if !observing && can_update && delay_passed {
-                if let Some(values) = definitions.get_need_sync(&get_sync_permission(client.is_server(), control.has_control())) {
+                let permission = SyncPermission {
+                    is_server: client.is_server(),
+                    is_master: control.has_control(),
+                    is_init: false
+                };
+
+                if let Some(values) = definitions.get_need_sync(&permission) {
                     client.update(values);
                 }
+
                 update_rate_instant = Instant::now();
             }
 
@@ -449,7 +444,7 @@ fn main() {
 
                 let definitions_loaded = load_definitions(&conn, &mut definitions, &mut config_to_load);
                 if !definitions_loaded {
-                    app_interface.error("Error loading defintion files. Check the log for more information.");
+                    app_interface.error("Error loading definition files. Check the log for more information.");
                 }
             } else {
                 // Display trying to connect message

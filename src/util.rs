@@ -6,7 +6,8 @@ use semver::Version;
 pub enum Category {
     Shared,
     Master,
-    Server
+    Server,
+    Init
 }
 
 #[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq)]
