@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::LVarResult, sync::AircraftVars, sync::Events, lvars::GetResult, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchTwo}, util::Category, util::InDataTypes, util::VarReaderTypes};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::GetResult, lvars::LVarResult, lvars::hevents::HEvents, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchTwo}, util::Category, util::InDataTypes, lvars::hevents::LoadError, util::VarReaderTypes};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -254,6 +254,8 @@ pub struct Definitions {
     action_maps: HashMap<String, Vec<ActionType>>,
     // Events to listen to
     events: Events,
+    // H Events to listen to
+    hevents: HEvents,
     // Helper struct to retrieve and detect changes in local variables
     lvarstransfer: LVarSyncer,
     // Helper struct to retrieve *changed* aircraft variables using the CHANGED and TAGGED flags in SimConnect
@@ -295,6 +297,7 @@ impl Definitions {
         Self {
             action_maps: HashMap::new(),
             events: Events::new(1),
+            hevents: HEvents::new(2),
             lvarstransfer: LVarSyncer::new(1),
             avarstransfer: AircraftVars::new(1),
             sync_vars: HashSet::new(),
@@ -594,21 +597,25 @@ impl Definitions {
     }
 
     // Load yaml from file
-    pub fn load_config(&mut self, filename: &str) -> Result<(), ConfigLoadError> {
-        let file = match File::open(filename) {
+    pub fn load_config(&mut self, path: &str) -> Result<(), ConfigLoadError> {
+        let file = match File::open(path) {
             Ok(f) => f,
             Err(_) => return Err(ConfigLoadError::FileError)
         };
 
-        let yaml = match serde_yaml::from_reader(file) {
+        let yaml: IndexMap<String, Vec<Value>> = match serde_yaml::from_reader(file) {
             Ok(y) => y,
-            Err(e) => return Err(ConfigLoadError::YamlError(e, filename.to_string()))
+            Err(e) => return Err(ConfigLoadError::YamlError(e, path.to_string()))
         };
 
         match self.parse_yaml(yaml) {
             Ok(_) => Ok(()),
-            Err(e) => Err(ConfigLoadError::ParseError(e, filename.to_string()))
+            Err(e) => Err(ConfigLoadError::ParseError(e, path.to_string()))
         }
+    }
+
+    pub fn load_h_events(&mut self, path: &str) -> Result<(), LoadError> {
+        self.hevents.load_from_config(path)
     }
 
     fn process_lvar(&mut self, lvar_data: GetResult) {
@@ -641,16 +648,33 @@ impl Definitions {
 
     // Processes event data name and the additional dword data
     pub fn process_event_data(&mut self, data: &simconnect::SIMCONNECT_RECV_EVENT) {
-        if data.uGroupID != self.events.group_id {return}
+        let event_name: String;
+        // Regular KEY event
+        if data.uGroupID == self.events.group_id {
 
-        let event_name = self.events.match_event_id(data.uEventID);
+            event_name = match self.events.match_event_id(data.uEventID) {
+                Some(event_name) => event_name.clone(),
+                None => return
+            };
+
+        // H Event
+        } else if data.uGroupID == self.hevents.group_id {
+
+            event_name = match self.hevents.process_event_data(data) {
+                Some(event_name) => format!("H:{}", event_name),
+                None => return
+            };
+
+        } else {
+            return
+        }
 
         // Check timer
-        if let Some(timer) = self.last_written.get(event_name) {
+        if let Some(timer) = self.last_written.get(&event_name) {
             if timer.elapsed().as_secs() < 1 {return}
         };
 
-        self.current_sync.events.insert(event_name.clone(), data.dwData);
+        self.current_sync.events.insert(event_name, data.dwData);
     }
 
     // Process changed aircraft variables and update SyncActions related to it
@@ -858,8 +882,13 @@ impl Definitions {
 
     pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap) {
         for (event_name, value) in data {
-            self.events.trigger_event(conn, event_name, *value as u32);
 
+            if event_name.starts_with("H:") {
+                self.lvarstransfer.set_unchecked(conn, event_name, None, "");
+            } else {
+                self.events.trigger_event(conn, event_name, *value as u32);
+            }
+            
             self.last_written.insert(event_name.clone(), Instant::now());
         }
     }
@@ -878,6 +907,7 @@ impl Definitions {
 
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
+        self.hevents.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
 
         conn.request_data_on_sim_object(0, self.avarstransfer.define_id, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
@@ -905,6 +935,10 @@ impl Definitions {
 
     pub fn get_number_events(&self) -> usize {
         return self.events.get_number_defined()
+    }
+
+    pub fn get_number_hevents(&self) -> usize {
+        return self.hevents.get_number_defined()
     }
 
     pub fn reset_interpolate(&mut self) {

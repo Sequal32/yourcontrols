@@ -18,7 +18,7 @@ use clientmanager::ClientManager;
 use definitions::{Definitions, SyncPermissions};
 use simconfig::Config;
 use server::{Client, ReceiveData, Server, TransferClient};
-use simconnect::{self, DispatchResult};
+use simconnect::{self, DispatchResult, SimConnector};
 use util::{app_get_versions};
 use std::{fs::{self, File}, io, thread, time::Duration, time::Instant};
 use spin_sleep::sleep;
@@ -31,6 +31,7 @@ use control::*;
 const LOG_FILENAME: &str = "log.txt";
 const CONFIG_FILENAME: &str = "config.json";
 const AIRCRAFT_DEFINITIONS_PATH: &str = "definitions/aircraft/";
+const HEVENT_PATH: &str = "definitions/resources/hevents.yaml";
 const APP_STARTUP_SLEEP_TIME: Duration = Duration::from_millis(100);
 const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
 
@@ -43,6 +44,20 @@ fn get_aircraft_configs() -> io::Result<Vec<String>> {
     }
 
     Ok(filenames)
+}
+
+fn get_sync_permission(is_server: bool, has_control: bool) -> SyncPermissions {
+    if has_control {
+        if is_server {
+            SyncPermissions::ServerAndMaster
+        } else {
+            SyncPermissions::Master
+        }
+    } else if is_server {
+        SyncPermissions::Server
+    } else {
+        SyncPermissions::Slave
+    }
 }
 
 fn main() {
@@ -88,19 +103,32 @@ fn main() {
     let mut need_update = false;
 
     let mut config_to_load = config.last_config.clone();
-
-    let get_sync_permission = |is_server, has_control| -> SyncPermissions {
-        if has_control {
-            if is_server {
-                SyncPermissions::ServerAndMaster
-            } else {
-                SyncPermissions::Master
+    // Helper closures
+    // Load defintions
+    let load_definitions = |conn: &SimConnector, definitions: &mut Definitions, config_to_load: &mut String| -> bool {
+        // Load H Events
+        match definitions.load_h_events(HEVENT_PATH) {
+            Ok(_) => info!("Loaded and mapped {} H: events.", definitions.get_number_hevents()),
+            Err(e) => {
+                log::error!("Could not load H: event file {}: {}", HEVENT_PATH, e);
+                return false
             }
-        } else if is_server {
-            SyncPermissions::Server
-        } else {
-            SyncPermissions::Slave
-        }
+        };
+        // Load aircraft configuration
+        match definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, config_to_load)) {
+            Ok(_) => {
+                info!("Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
+                definitions.on_connected(&conn)
+            }
+            Err(e) => {
+                log::error!("Could not load configuration file {}: {}", config_to_load, e);
+                // Prevent server/client from starting as config could not be laoded.
+                *config_to_load = String::new();
+                return false
+            }
+        };
+
+        return true
     };
 
     let (app_version, newest_version) = app_get_versions();
@@ -257,12 +285,7 @@ fn main() {
                 update_rate_instant = Instant::now();
             }
 
-            if control.has_control() {
-                if update_all_instant.elapsed().as_secs() >= 15 {
-                    client.update(definitions.get_all_current());
-                    update_all_instant = Instant::now();
-                }
-            } else {
+            if !control.has_control() {
                 definitions.step_interpolate(&conn);
             }
         }
@@ -422,21 +445,12 @@ fn main() {
                 // Display not connected to server message
                 app_interface.disconnected();
                 control.on_connected(&conn);
-
-                // Load aircraft configuration
                 info!("Connected to SimConnect.");
-                match definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, config_to_load)) {
-                    Ok(_) => {
-                        info!("Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
-                        definitions.on_connected(&conn)
-                    }
-                    Err(e) => {
-                        app_interface.error("Error loading aircraft config. Check the log for more information.");
-                        log::error!("Could not load configuration file {}: {}", config_to_load, e);
-                        // Prevent server/client from starting as config could not be laoded.
-                        config_to_load = String::new();
-                    }
-                };
+
+                let definitions_loaded = load_definitions(&conn, &mut definitions, &mut config_to_load);
+                if !definitions_loaded {
+                    app_interface.error("Error loading defintion files. Check the log for more information.");
+                }
             } else {
                 // Display trying to connect message
                 app_interface.error("Trying to connect to SimConnect...");

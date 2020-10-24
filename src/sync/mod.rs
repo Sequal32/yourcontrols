@@ -39,8 +39,8 @@ impl Events {
         }
     }
 
-    pub fn match_event_id(&self, event_id: u32) -> &String {
-        return self.event_map.get_by_right(&event_id).unwrap();
+    pub fn match_event_id(&self, event_id: u32) -> Option<&String> {
+        return self.event_map.get_by_right(&event_id);
     }
 
     pub fn trigger_event(&self, conn: &SimConnector, event_name: &str, data: u32) {

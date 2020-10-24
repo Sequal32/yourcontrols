@@ -1,4 +1,5 @@
 pub mod memwriter;
+pub mod hevents;
 
 use memwriter::MemWriter;
 use {byteorder::{ReadBytesExt, LittleEndian}};
@@ -6,11 +7,10 @@ use bimap::{self, BiHashMap};
 use simconnect::SimConnector;
 use std::{io::{Cursor, Read}, collections::{HashMap}};
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone)]
 pub struct LVar {
     pub integer: i32,
     pub floating: f64,
-    // pub string: std::ffi::CString
 }
 
 impl PartialEq for LVar {
