@@ -153,8 +153,8 @@ fn main() {
 
                     if !clients.is_observer(&sender) {
                         definitions.on_receive_data(&conn, sync_data, &SyncPermission {
-                            is_server: client.is_server(),
-                            is_master: control.has_control(),
+                            is_server: clients.client_is_server(&sender), 
+                            is_master: clients.client_has_control(&sender),
                             is_init: true
                         }, !need_update);
                         // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate

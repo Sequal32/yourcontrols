@@ -7,7 +7,7 @@ Shared Cockpit for Microsoft Flight Simulator 2020.
 # Table of Contents
 - [Table of Contents](#table-of-contents)
   - [Features](#features)
-  - [Installation](#installation)
+  - [Downloading](#downloading)
   - [Running](#running)
   - [Support Me!](#support-me)
   - [Troubleshooting](#troubleshooting)
@@ -37,16 +37,16 @@ The airliners have 10x the amount of code than the GA aircraft, so they will tak
 
 * Note: For the G1000/FMC/similar systems, only one person should be interacting with a given area at a time. For example, one person flies while the other fills out the flightplan (you should not be filing out the flightplan at the same time), or one person adjusts the transponder while another zooms out the map. This is to avoid desynchronization issues.
 
-## Installation
-1. Grab the latest [release](https://github.com/Sequal32/yourcontrol/releases/latest) and unzip to a directory of your choice.
+## Downloading
+1. Download the latest [release](https://github.com/Sequal32/yourcontrol/releases/latest) and unzip to a directory of your choice. **Do not put into Program Files or any other system protected area.**
 2. Move the `YourControl` folder inside of `PLACE IN COMMUNITY PACKAGES` to...
-   * Steam: C:\Users\[YOUR USERNAME]\AppData\Roaming\Microsoft Flight Simulator\Packages\Community
-   * Microsoft Store: C:\Users\[YOUR USERNAME]\AppData\Local\Packages\Microsoft.FlightSimulator_<RANDOMLETTERS>\LocalCache\Packages\Community
-   * Boxed: C:\Users\[YOUR USERNAME]\AppData\Local\MSFSPackages\Community
+   * **Steam**: C:\Users\[YOUR USERNAME]\AppData\Roaming\Microsoft Flight Simulator\Packages\Community
+   * **Microsoft Store**: C:\Users\[YOUR USERNAME]\AppData\Local\Packages\Microsoft.FlightSimulator_<RANDOMLETTERS>\LocalCache\Packages\Community
+   * **Boxed**: C:\Users\[YOUR USERNAME]\AppData\Local\MSFSPackages\Community
 
 ## Running
-1. Launch FS2020, select the same aircraft, weather, and spawn location. Do NOT enable multiplayer.
-2. Once everyone has spawned in, start up the included .exe file.
+1. Launch FS2020, select the same aircraft, weather, and spawn location. **Do NOT enable multiplayer unless you're on different servers.**
+2. Once everyone has spawned in, start up the included .exe file. **Do NOT run as administrator.**
 3. Navigate to the `Aircraft` tab and select the .yaml file associated with the aircraft you're flying (both server/clients should do this).
 4.
     Enter a username, then...
@@ -59,8 +59,8 @@ The airliners have 10x the amount of code than the GA aircraft, so they will tak
       
     * Clients: Navigate to the client tab and enter the **server's ip and port** and click connect.
 
-1. Fly!
-2. To transfer control, navigate to the `Connections` tab, find your partner's name and click `Give Control`.
+5. Fly!
+6. To transfer control, navigate to the `Connections` tab, find your partner's name and click `Give Control`.
 
 ## Support Me!
 If you enjoy the mod, considering showing your gratitude with a donation! I've put around a hundred hours of my own time into making this program in order for everyone to have an opportunity to fly together in as many aircraft as possible.
@@ -95,7 +95,7 @@ Config.json
 * Documentation/tutorials for creating aircraft definition files is planned.
 
 ## Limitations
-* Some knobs are purely animation, and not represented by a local variable therefor cannot be synced (yet...)
+* Some knobs are purely animation, and not represented by a local variable therefor cannot be synced, such as the TBM830's oxygen (yet...)
 
 ## Data Files
 If you're looking to create your own aircraft config file, refer to the provided files as examples and the [definitions](https://github.com/Sequal32/yourcontrol/tree/master/definitions) page.

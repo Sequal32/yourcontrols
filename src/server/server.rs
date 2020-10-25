@@ -315,8 +315,9 @@ impl Server {
                 }
     
                 // Remove any connections that got dropped and tell app
+                let mut dropped = 0;
                 for dropping in to_drop {
-                    let removed_client = transfer.clients.remove(dropping);
+                    let removed_client = transfer.clients.remove(dropping - dropped);
                     removed_client.stream.shutdown(Shutdown::Both).ok();
                     number_connections.fetch_sub(1, SeqCst);
                     
@@ -329,6 +330,7 @@ impl Server {
                             "data": removed_client.name
                         })).ok();
                     };
+                    dropped += 1;
                 }
 
                 if should_stop {break}
