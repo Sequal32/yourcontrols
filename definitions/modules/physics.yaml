@@ -1,28 +1,28 @@
 master:
   -
     type: var
-    var_name: PLANE LATITUDE
+    var_name: A:PLANE LATITUDE
     var_units: Degrees
     var_type: f64
     interpolate:
       overshoot: 10.0
   -
     type: var
-    var_name: PLANE LONGITUDE
+    var_name: A:PLANE LONGITUDE
     var_units: Degrees
     var_type: f64
     interpolate:
       overshoot: 10.0
   -
     type: var
-    var_name: PLANE ALTITUDE
+    var_name: A:PLANE ALTITUDE
     var_units: Feet
     var_type: f64
     interpolate:
       overshoot: 10.0
   -
     type: var
-    var_name: PLANE PITCH DEGREES
+    var_name: A:PLANE PITCH DEGREES
     var_units: Degrees
     var_type: f64
     interpolate:
@@ -30,7 +30,7 @@ master:
       wrap180: true
   -
     type: var
-    var_name: PLANE BANK DEGREES
+    var_name: A:PLANE BANK DEGREES
     var_units: Degrees
     var_type: f64
     interpolate:
@@ -38,7 +38,7 @@ master:
       wrap90: true
   -
     type: var
-    var_name: PLANE HEADING DEGREES MAGNETIC
+    var_name: A:PLANE HEADING DEGREES MAGNETIC
     var_units: Degrees
     var_type: f64
     interpolate:
@@ -46,35 +46,41 @@ master:
       wrap360: true
   -
     type: var
-    var_name: YOKE X POSITION
+    var_name: A:PLANE HEADING DEGREES GYRO
+    var_units: Degrees
+    var_type: f64
+    update_every: 3
+  -
+    type: var
+    var_name: A:YOKE X POSITION
     var_units: Position
     var_type: f64
     interpolate:
       
   -
     type: var
-    var_name: YOKE Y POSITION
+    var_name: A:YOKE Y POSITION
     var_units: Position
     var_type: f64
     interpolate:
       
   -
     type: var
-    var_name: RUDDER PEDAL POSITION
+    var_name: A:RUDDER PEDAL POSITION
     var_units: Position
     var_type: f64
     interpolate:
       
   -
     type: var
-    var_name: AIRSPEED INDICATED
+    var_name: A:AIRSPEED INDICATED
     var_units: Knots
     var_type: f64
     interpolate:
       overshoot: 2.0
   -
     type: var
-    var_name: DELTA HEADING RATE,
+    var_name: A:DELTA HEADING RATE,
     var_units: Radians per Second
     var_type: f64
     interpolate:
