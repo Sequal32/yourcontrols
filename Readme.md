@@ -4,14 +4,40 @@
 
 Shared Cockpit for Microsoft Flight Simulator 2020.
 
+# Table of Contents
+- [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [Running](#running)
+  - [Support Me!](#support-me)
+  - [Troubleshooting](#troubleshooting)
+    - [Missing DLL](#missing-dll)
+    - [Connection Timed Out](#connection-timed-out)
+    - [Discord](#discord)
+  - [Configuring](#configuring)
+  - [Remarks](#remarks)
+  - [Limitations](#limitations)
+  - [Data Files](#data-files)
+
 ## Features
 * Frequent and smooth position updates through linear interpolation
 * Transferable controls
 * Configurable aircraft files to sync most switches/knobs
 
-Note: Currently only the C172 G1000 is implemented for this plugin. The entire GA fleet of the standard edition will be coming shortly. The airliners have 10x the amount code of the GA aircraft, so they will take a while to fully implemented.
+The following aircraft have config files:
+* Cessna 152
+* Cessna 172 G1000
+* Diamond DA40
+* Diamond DA62
+* Pitts
+* TBM 930
+* XCub
 
-## Install
+The airliners have 10x the amount of code than the GA aircraft, so they will take a while to be fully implemented.
+
+* Note: For the G1000/FMC/similar systems, only one person should be interacting with a given area at a time. For example, one person flies while the other fills out the flightplan (you should not be filing out the flightplan at the same time), or one person adjusts the transponder while another zooms out the map. This is to avoid desynchronization issues.
+
+## Installation
 1. Grab the latest [release](https://github.com/Sequal32/yourcontrol/releases/latest) and unzip to a directory of your choice.
 2. Move the `YourControl` folder inside of `PLACE IN COMMUNITY PACKAGES` to...
    * Steam: C:\Users\[YOUR USERNAME]\AppData\Roaming\Microsoft Flight Simulator\Packages\Community
@@ -29,11 +55,17 @@ Note: Currently only the C172 G1000 is implemented for this plugin. The entire G
       1. If your router does not support UPNP, [port forward](https://www.youtube.com/watch?v=usSpl0yJFnY) either `7777` or the specified port in the application. If you don't know if your router supports UPNP, you can attempt to connect without any additional steps, and then port forward if needed. If port forwarding is not an option, look into using [Hamachi](https://www.youtube.com/watch?v=bWbo0gcFqA8).
       2. Navigate to the server tab, **enter port and click start server**. You will have initial control of the aircraft.
       3. **Verify that the port was successfully forwarded**, and find your IP through this [website](https://www.yougetsignal.com/tools/open-ports/)
+      4. *This program also has IPv6 support, so if your ISP supports it, port forwarding is not required usually.*
       
     * Clients: Navigate to the client tab and enter the **server's ip and port** and click connect.
 
 1. Fly!
 2. To transfer control, navigate to the `Connections` tab, find your partner's name and click `Give Control`.
+
+## Support Me!
+If you enjoy the mod, considering showing your gratitude with a donation! I've put around a hundred hours of my own time into making this program in order for everyone to have an opportunity to fly together in as many aircraft as possible.
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/ctam1207)
 
 ## Troubleshooting
 ### Missing DLL
@@ -60,10 +92,9 @@ Config.json
 ```
 ## Remarks
 * The code's architecture is loosely defined, so looking at the code may prove challenging.
-* Documentation for creating aircraft definition files is planned.
+* Documentation/tutorials for creating aircraft definition files is planned.
 
 ## Limitations
-* G1000/FMC are not currently possible to fully sync (yet...)
 * Some knobs are purely animation, and not represented by a local variable therefor cannot be synced (yet...)
 
 ## Data Files
