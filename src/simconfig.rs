@@ -20,7 +20,7 @@ impl Default for Config {
             port: 7777,
             update_rate: 30,
             buffer_size: 3,
-            conn_timeout: 10,
+            conn_timeout: 5,
             ip: String::new(),
             name: String::new(),
             last_config: String::new()

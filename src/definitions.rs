@@ -77,13 +77,20 @@ macro_rules! try_cast_yaml {
     }
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct EventTriggered {
+    pub event_name: String,
+    pub data: u32,
+}
+
 // Name of aircraft variable and the value of it
 type AVarMap = HashMap<String, VarReaderTypes>;
 // Name of local variable and the value of it
 type LVarMap = HashMap<String, f64>;
-// Name of the event and the DWORD data associated with it
-type EventMap = HashMap<String, u32>;
+// Name of the event the DWORD data associated with it with how many times it got triggered (not a map as the event could've got triggered multiple times before the data could get send)
+type EventData = Vec<EventTriggered>;
 
+#[derive(Debug)]
 enum VarType {
     AircraftVar,
     LocalVar
@@ -187,7 +194,7 @@ struct EventEntry {
 pub struct AllNeedSync {
     pub avars: AVarMap,
     pub lvars: LVarMap,
-    pub events: EventMap
+    pub events: EventData
 }
 
 impl AllNeedSync {
@@ -648,6 +655,7 @@ impl Definitions {
     // Processes event data name and the additional dword data
     pub fn process_event_data(&mut self, data: &simconnect::SIMCONNECT_RECV_EVENT) {
         let event_name: String;
+        
         // Regular KEY event
         if data.uGroupID == self.events.group_id {
 
@@ -658,7 +666,6 @@ impl Definitions {
 
         // H Event
         } else if data.uGroupID == self.hevents.group_id {
-
             event_name = match self.hevents.process_event_data(data) {
                 Some(event_name) => format!("H:{}", event_name),
                 None => return
@@ -673,7 +680,10 @@ impl Definitions {
             if timer.elapsed().as_secs() < 1 {return}
         };
 
-        self.current_sync.events.insert(event_name, data.dwData);
+        self.current_sync.events.push(EventTriggered {
+            event_name: event_name,
+            data: data.dwData,
+        });
     }
 
     // Process changed aircraft variables and update SyncActions related to it
@@ -792,9 +802,9 @@ impl Definitions {
             return_data.lvars.insert(name, data);
         }
 
-        for (name, data) in all_sync.events.into_iter() {
-            if !self.can_sync(&name, sync_permission) {continue;}
-            return_data.events.insert(name, data);
+        for data in all_sync.events.into_iter() {
+            if !self.can_sync(&data.event_name, sync_permission) {continue;}
+            return_data.events.push(data);
         }
 
         return_data
@@ -881,16 +891,16 @@ impl Definitions {
         }
     }
 
-    pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventMap) {
-        for (event_name, value) in data {
+    pub fn write_event_data(&mut self, conn: &SimConnector, data: &EventData) {
+        for event in data {
 
-            if event_name.starts_with("H:") {
-                self.lvarstransfer.set_unchecked(conn, event_name, None, "");
+            if event.event_name.starts_with("H:") {
+                self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
             } else {
-                self.events.trigger_event(conn, event_name, *value as u32);
+                self.events.trigger_event(conn, &event.event_name, event.data as u32);
             }
             
-            self.last_written.insert(event_name.clone(), Instant::now());
+            self.last_written.insert(event.event_name.clone(), Instant::now());
         }
     }
 
@@ -918,7 +928,7 @@ impl Definitions {
         AllNeedSync {
             avars: self.avarstransfer.get_all_vars().clone(),
             lvars: self.lvarstransfer.get_all_vars(),
-            events: EventMap::new(),
+            events: EventData::new(),
         }
     }
 
