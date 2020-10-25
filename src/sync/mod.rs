@@ -65,11 +65,13 @@ impl Events {
 struct LocalVarEntry {
     current_value: f64,
     units: Option<String>,
+    actual_string: Option<String>
 }
 
 pub struct LVarSyncer {
     transfer: LVars,
     vars: HashMap<String, LocalVarEntry>,
+    raw_count: u32
 }
 
 impl LVarSyncer {
@@ -77,6 +79,7 @@ impl LVarSyncer {
         Self {
             transfer: LVars::new(),
             vars: HashMap::new(),
+            raw_count: 0
         }
     }
 
@@ -85,11 +88,27 @@ impl LVarSyncer {
         
         self.vars.insert(var_name, LocalVarEntry {
             current_value: 0.0,
-            units: var_units
+            units: var_units,
+            actual_string: None
         });
     }
 
+    pub fn add_custom_var(&mut self, var_string: String) -> String {
+        let custom_var_name = format!("CustomLVar{}", self.raw_count);
+
+        self.vars.insert(custom_var_name.clone(), LocalVarEntry {
+            current_value: 0.0, 
+            units: None,
+            actual_string: Some(var_string)
+        });
+
+        self.raw_count += 1;
+
+        return custom_var_name
+    }
+
     pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<LVarResult> {
+        // TODO: set custom local vars
         return self.transfer.process_client_data(data);
     }
 
@@ -103,11 +122,19 @@ impl LVarSyncer {
         self.transfer.set(conn, var_name, var_units, value);
     }
 
+    pub fn send_raw(&mut self, conn: &SimConnector, raw_string: &str) {
+        self.transfer.send_raw(conn, raw_string);
+    }
+
     pub fn on_connected(&mut self, conn: &SimConnector) {
         self.transfer.on_connected(conn);
 
         for (var_name, var_data) in self.vars.iter() {
-            self.transfer.add_definition(conn, var_name, var_data.units.as_deref());
+            if let Some(raw_string) = var_data.actual_string.as_ref() {
+                self.transfer.add_definition_raw(conn, raw_string, var_name);
+            } else {
+                self.transfer.add_definition(conn, var_name, var_data.units.as_deref());                
+            }
         }
     }
 

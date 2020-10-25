@@ -1,6 +1,6 @@
 use simconnect;
 
-use crate::util::NumberDigits;
+use crate::{sync::LVarSyncer, util::NumberDigits};
 
 const GROUP_ID: u32 = 5;
 
@@ -11,8 +11,8 @@ pub trait Syncable<T> where T: Default {
 }
 
 pub struct ToggleSwitch {
-    event_id: u32,
-    current: bool
+    pub event_id: u32,
+    pub current: bool
 }
 
 impl ToggleSwitch {
@@ -36,9 +36,9 @@ impl Syncable<bool> for ToggleSwitch {
 }
 
 pub struct ToggleSwitchParam {
-    event_id: u32,
-    param: u32,
-    current: bool
+    pub event_id: u32,
+    pub param: u32,
+    pub current: bool
 }
 
 impl ToggleSwitchParam {
@@ -63,9 +63,9 @@ impl Syncable<bool> for ToggleSwitchParam {
 }
 
 pub struct ToggleSwitchTwo {
-    off_event_id: u32,
-    on_event_id: u32,
-    current: bool
+    pub off_event_id: u32,
+    pub on_event_id: u32,
+    pub current: bool
 }
 
 impl ToggleSwitchTwo {
@@ -91,14 +91,16 @@ impl Syncable<bool> for ToggleSwitchTwo {
 }
 
 pub struct SwitchOn {
-    event_id: u32,
-    current: bool
+    pub event_id: u32,
+    pub event_param: Option<u32>,
+    pub current: bool,
 }
 
 impl SwitchOn {
-    pub fn new(event_id: u32) -> Self { 
+    pub fn new(event_id: u32, event_param: Option<u32>) -> Self { 
         Self { 
             event_id, 
+            event_param,
             current: false
         } 
     }
@@ -111,13 +113,13 @@ impl Syncable<bool> for SwitchOn {
 
     fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
         if new == false {return}
-        conn.transmit_client_event(1, self.event_id, 0, GROUP_ID, 0);
+        conn.transmit_client_event(1, self.event_id, self.event_param.unwrap_or(0), GROUP_ID, 0);
     }
 }
 
 pub struct NumSet {
-    event_id: u32,
-    current: i32
+    pub event_id: u32,
+    pub current: i32
 }
 
 impl NumSet {
@@ -141,9 +143,9 @@ impl Syncable<i32> for NumSet {
 }
 
 pub struct NumSetSwap {
-    event_id: u32,
-    swap_event_id: u32,
-    current: i32,
+    pub event_id: u32,
+    pub swap_event_id: u32,
+    pub current: i32,
 }
 
 impl NumSetSwap {
@@ -169,9 +171,9 @@ impl Syncable<i32> for NumSetSwap {
 }
 
 pub struct NumSetMultiply {
-    event_id: u32,
-    current: i32,
-    multiply_by: i32
+    pub event_id: u32,
+    pub current: i32,
+    pub multiply_by: i32
 }
 
 impl NumSetMultiply {
@@ -198,10 +200,10 @@ impl Syncable<i32> for NumSetMultiply {
 }
 
 pub struct NumIncrement<T> {
-    up_event_id: u32,
-    down_event_id: u32,
-    increment_amount: T,
-    current: T
+    pub up_event_id: u32,
+    pub down_event_id: u32,
+    pub increment_amount: T,
+    pub current: T
 }
 
 impl<T> NumIncrement<T>  where T: Default {
@@ -236,9 +238,9 @@ impl<T> Syncable<T> for NumIncrement<T> where T: Default + std::ops::SubAssign +
 }
 
 pub struct NumIncrementSet {
-    up_event_id: u32,
-    down_event_id: u32,
-    current: i32,
+    pub up_event_id: u32,
+    pub down_event_id: u32,
+    pub current: i32,
 }
 
 impl NumIncrementSet {
@@ -267,9 +269,9 @@ impl Syncable<i32> for NumIncrementSet {
 }
 
 pub struct NumDigitSet {
-    inc_event_ids: Vec<u32>,
-    dec_event_ids: Vec<u32>,
-    current: NumberDigits
+    pub inc_event_ids: Vec<u32>,
+    pub dec_event_ids: Vec<u32>,
+    pub current: NumberDigits
 }
 
 impl NumDigitSet {
@@ -308,3 +310,24 @@ impl Syncable<i32> for NumDigitSet {
 }
 
 
+pub struct CustomCalculator {
+    set_string: String,
+    current: f64
+}
+
+impl CustomCalculator {
+    pub fn new(set_string: String) -> Self { 
+        Self {
+            set_string, current: 0.0
+        }
+    }
+
+    pub fn set_current(&mut self, new: f64) {
+        self.current = new
+    }
+
+    pub fn set_new(&self, new: f64, conn: &simconnect::SimConnector, transfer: &mut LVarSyncer) {
+        if self.current == new {return}
+        transfer.send_raw(conn, &self.set_string);
+    }
+}

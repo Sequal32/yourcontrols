@@ -87,43 +87,47 @@ impl LVars {
         return self.requests.get_by_right(&request_id).unwrap()
     }
 
-    pub fn get(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>) {
-        // Use custom memory writer to write request
-        let mut writer = MemWriter::new(128, 4).unwrap();
-        writer.write_u32(self.map_request(var_name));
-        writer.pad(4);
-
-        writer.write_string(format_get(var_name, var_units));
-
-        // Send the request
-        conn.set_client_data(SEND, SEND, 0, 0, 128, writer.get_data_location() as *mut std::ffi::c_void);
-        writer.deallocate();
-    }
-
-    pub fn set(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>, val: &str) {
-        let mut writer = MemWriter::new(128, 4).unwrap();
-        writer.write_u32(self.map_request(var_name));
-        writer.pad(4);
-
-        if let Some(unit) = var_units {
-            writer.write_string(format!(r#"{} (>{}, {})"#, val.trim(), var_name.trim(), unit.trim()));
-        } else {
-            writer.write_string(format!(r#"{} (>{})"#, val.trim(), var_name.trim()));
-        }
-
-        conn.set_client_data(SEND, SEND, 0, 0, 128, writer.get_data_location() as *mut std::ffi::c_void);
-
-        writer.deallocate();
+    pub fn get(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>) {	
+        self.send_raw(conn, &format_get(var_name, var_units));	
+    }	
+    
+    pub fn set(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>, val: &str) {	
+        let mut writer = MemWriter::new(128, 4).unwrap();	
+        writer.write_u32(self.map_request(var_name));	
+        writer.pad(4);	
+    
+        if let Some(unit) = var_units {	
+            writer.write_string(format!(r#"{} (>{}, {})"#, val.trim(), var_name.trim(), unit.trim()));	
+        } else {	
+            writer.write_string(format!(r#"{} (>{})"#, val.trim(), var_name.trim()));	
+        }	
+    
+        conn.set_client_data(SEND, SEND, 0, 0, 128, writer.get_data_location() as *mut std::ffi::c_void);	
+    
+        writer.deallocate();	
+    }	
+    
+    pub fn send_raw(&self, conn: &SimConnector, string: &str) {	
+        let mut writer = MemWriter::new(128, 4).unwrap();	
+        writer.write_i32(0);	
+        writer.pad(4);	
+        writer.write_str(string);	
+        conn.set_client_data(SEND, SEND, 0, 0, 128, writer.get_data_location() as *mut std::ffi::c_void);	
+        writer.deallocate();	
     }
 
     pub fn add_definition(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>) {
-        let mut writer = MemWriter::new(64, 4).unwrap();
-        writer.write_string(format_get(var_name, var_units));
+        self.add_definition_raw(conn, &format_get(var_name, var_units), var_name);
+    }
 
-        self.datums.push(var_name.to_string());
+    pub fn add_definition_raw(&mut self, conn: &SimConnector, string: &str, name: &str) {
+        let mut writer = MemWriter::new(128, 4).unwrap();
+        writer.write_str(string);
+
+        self.datums.push(name.to_string());
         conn.add_to_client_data_definition(RECEIVE_MULTIPLE, (self.datums.len() * 16) as u32, 16, 0.0, self.datums.len() as u32);
 
-        conn.set_client_data(SEND_MULTIPLE, SEND_MULTIPLE, 0, 0, 64, writer.get_data_location() as *mut std::ffi::c_void);
+        conn.set_client_data(SEND_MULTIPLE, SEND_MULTIPLE, 0, 0, 128, writer.get_data_location() as *mut std::ffi::c_void);
     }
 
     fn read_multiple_data(&mut self, count: u32, pointer: *const u32) -> Result<Vec<GetResult>, std::io::Error> {
@@ -214,14 +218,14 @@ impl LVars {
         conn.add_to_client_data_definition(RECEIVE, 4, 4, 0.0, 1);
         conn.add_to_client_data_definition(RECEIVE, 8, 8, 0.0, 2);
 
-        conn.add_to_client_data_definition(SEND_MULTIPLE, 0, 64, 0.0, 0);
+        conn.add_to_client_data_definition(SEND_MULTIPLE, 0, 128, 0.0, 0);
         conn.add_to_client_data_definition(RECEIVE_MULTIPLE, 0, 16, 0.0, 0);
         // conn.add_to_client_data_definition(LVARRECEIVE, 16, 112, 0.0, 3);
         // Create data area that other clients can read/write
         conn.create_client_data(SEND, 128, simconnect::SIMCONNECT_CREATE_CLIENT_DATA_FLAG_DEFAULT);
         conn.create_client_data(RECEIVE, 128, simconnect::SIMCONNECT_CREATE_CLIENT_DATA_FLAG_DEFAULT);
         conn.create_client_data(SEND_MULTIPLE, 128, 0);
-        conn.create_client_data(RECEIVE_MULTIPLE, 1200, 0);
+        conn.create_client_data(RECEIVE_MULTIPLE, 8096, 0);
         // Listen for data written onto the RECEIVE data area
         conn.request_client_data(RECEIVE, 0, RECEIVE, simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, 0, 0, 0, 0);
         conn.request_client_data(RECEIVE_MULTIPLE, 0, RECEIVE_MULTIPLE, simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);

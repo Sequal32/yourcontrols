@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::GetResult, lvars::LVarResult, lvars::hevents::HEvents, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchTwo}, util::Category, util::InDataTypes, lvars::hevents::LoadError, util::VarReaderTypes};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::GetResult, lvars::LVarResult, lvars::hevents::HEvents, lvars::hevents::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchTwo}, util::Category, syncdefs::CustomCalculator, util::InDataTypes, util::VarReaderTypes};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -105,6 +105,14 @@ struct VarEventEntry {
     event_name: String,
 }
 
+#[derive(Deserialize)]
+struct ToggleSwitchGenericEntry {
+    var_name: String,
+    var_units: Option<String>,
+    event_name: String,
+    event_param: Option<u32>,
+}
+
 // Describes how an aircraft variable can be set using a SimEvent
 #[derive(Deserialize)]
 struct NumSetEntry {
@@ -189,6 +197,20 @@ struct EventEntry {
     event_name: String
 }
 
+#[derive(Deserialize)]
+struct SwitchEqual {
+    var_name: String,
+    var_units: Option<String>,
+    event_name: String,
+    equal_to: u32
+}
+
+#[derive(Deserialize)]
+struct CustomCalculatorEntry {
+    get: String,
+    set: String
+}
+
 // The struct that get_need_sync returns. Holds all the aircraft/local variables and events that have changed since the last call.
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct AllNeedSync {
@@ -215,12 +237,14 @@ impl AllNeedSync {
 
 enum ActionType {
     BoolAction(Box<dyn Syncable<bool>>),
+    CustomBoolAction(ToggleSwitchParam),
     NumAction(Box<dyn Syncable<i32>>),
     FloatAction(NumSetEntry),
     NumSetWithIndex(NumSetWithIndexEntry),
     NumFloatAction(Box<dyn Syncable<f64>>),
     // No BCD
-    FreqSwapAction(Box<dyn Syncable<i32>>)
+    FreqSwapAction(Box<dyn Syncable<i32>>),
+    CustomCalculator(CustomCalculator)
 }
 
 struct Period {
@@ -256,7 +280,7 @@ impl Period {
 
 pub struct Definitions {
     // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchParam)
-    action_maps: HashMap<String, Vec<ActionType>>,
+    action_map: HashMap<String, Vec<ActionType>>,
     // Events to listen to
     events: Events,
     // H Events to listen to
@@ -301,7 +325,7 @@ fn get_real_var_name(var_name: &str) -> String {
 impl Definitions {
     pub fn new(buffer_size: usize) -> Self {
         Self {
-            action_maps: HashMap::new(),
+            action_map: HashMap::new(),
             events: Events::new(1),
             hevents: HEvents::new(2),
             lvarstransfer: LVarSyncer::new(1),
@@ -321,7 +345,7 @@ impl Definitions {
     }
 
     fn add_mapping(&mut self, var_name: String, mapping: ActionType) {
-        match self.action_maps.entry(var_name.to_string()) {
+        match self.action_map.entry(var_name.to_string()) {
             Entry::Occupied(mut o) => { 
                 o.get_mut().push(mapping)
             }
@@ -331,6 +355,11 @@ impl Definitions {
 
     fn add_bool_mapping(&mut self, var_name: String, mapping: Box<dyn Syncable<bool>>) {
         let mapping = ActionType::BoolAction(mapping);
+        self.add_mapping(var_name, mapping);
+    }
+
+    fn add_custom_bool_mapping(&mut self, var_name: String, mapping: ToggleSwitchParam) {
+        let mapping = ActionType::CustomBoolAction(mapping);
         self.add_mapping(var_name, mapping);
     }
 
@@ -406,6 +435,15 @@ impl Definitions {
         Ok(())
     }
 
+    fn add_custom_switch_param(&mut self, category: &str, var: ToggleSwitchParamEntry) -> Result<(), VarAddError> {
+        let event_id = self.events.get_or_map_event_id(&var.event_name, false);
+
+        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
+        self.add_custom_bool_mapping( var_string, ToggleSwitchParam::new(event_id, var.event_param as u32));
+
+        Ok(())
+    }
+
     fn add_toggle_switch_two(&mut self, category: &str, var: ToggleSwitchTwoEntry) -> Result<(), VarAddError> {
         let on_event_id = self.events.get_or_map_event_id(&var.on_event_name, false);
         let off_event_id = self.events.get_or_map_event_id(&var.off_event_name, false);
@@ -416,11 +454,11 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_switch_on(&mut self, category: &str, var: VarEventEntry) -> Result<(), VarAddError> {
+    fn add_switch_on(&mut self, category: &str, var: ToggleSwitchGenericEntry) -> Result<(), VarAddError> {
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
         // Store SyncAction
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
-        self.add_bool_mapping(var_string, Box::new(SwitchOn::new(event_id)));
+        self.add_bool_mapping(var_string, Box::new(SwitchOn::new(event_id, var.event_param)));
 
         Ok(())
     }
@@ -547,6 +585,17 @@ impl Definitions {
         Ok(())
     }
 
+    fn add_custom_calculator(&mut self, category: &str, var: CustomCalculatorEntry) -> Result<(), VarAddError> {
+        let category = get_category_from_string(category)?;
+        
+        let var_name = self.lvarstransfer.add_custom_var(var.get);
+
+        self.categories.insert(var_name.clone(), category);
+        self.add_mapping(var_name, ActionType::CustomCalculator(CustomCalculator::new(var.set)));
+
+        Ok(())
+    }
+
     // Calls the correct method for the specified "action" type
     fn parse_var(&mut self, category: &str, value: Value) -> Result<(), VarAddError> {
         let type_str = check_and_return_field!("type", value, str);
@@ -557,6 +606,7 @@ impl Definitions {
             "TOGGLESWITCH" => self.add_toggle_switch(category, try_cast_yaml!(value))?,
             "TOGGLESWITCHPARAM" => self.add_toggle_switch_param(category, try_cast_yaml!(value))?,
             "TOGGLESWITCHTWO" => self.add_toggle_switch_two(category, try_cast_yaml!(value))?,
+            "CUSTOMSWITCHPARAM" => self.add_custom_switch_param(category, try_cast_yaml!(value))?,
             "NUMINCREMENTFLOAT" => self.add_num_increment_float(category, try_cast_yaml!(value))?,
             "NUMINCREMENT" => self.add_num_increment(category, try_cast_yaml!(value))?,
             "NUMINCREMENTSET" => self.add_num_increment_set(category, try_cast_yaml!(value))?,
@@ -569,6 +619,7 @@ impl Definitions {
             "VAR" => self.add_var(category, try_cast_yaml!(value))?,
             "NUMSET" => self.add_num_set(category, try_cast_yaml!(value))?,
             "EVENT" => self.add_event(category, try_cast_yaml!(value))?,
+            "CUSTOMCALCULATOR" => self.add_custom_calculator(category, try_cast_yaml!(value))?,
             _ => return Err(VarAddError::InvalidSyncType(type_str.to_string()))
         };
 
@@ -630,6 +681,16 @@ impl Definitions {
             if timer.elapsed().as_secs() < 1 {return}
         };
 
+        if let Some(actions) = self.action_map.get_mut(&lvar_data.var_name) {
+            for action in actions {
+                match action {
+                    ActionType::CustomCalculator(action) => {
+                        action.set_current(lvar_data.var.floating)
+                    }
+                    _ => {}
+                }
+            }
+        }
         self.current_sync.lvars.insert(lvar_data.var_name.to_string(), lvar_data.var.floating);
     }
 
@@ -695,12 +756,15 @@ impl Definitions {
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Set current var syncactions
-                if let Some(actions) = self.action_maps.get_mut(&var_name) {
+                if let Some(actions) = self.action_map.get_mut(&var_name) {
 
                     for action in actions {
                         match value {
                             VarReaderTypes::Bool(value) => match action {
                                 ActionType::BoolAction(action) => {
+                                    action.set_current(value);
+                                }
+                                ActionType::CustomBoolAction(action) => {
                                     action.set_current(value);
                                 }
                                 _ => {}
@@ -835,7 +899,7 @@ impl Definitions {
             // Needs to be set using an event
             } else {
                 // Otherwise sync them using defined events
-                if let Some(actions) = self.action_maps.get_mut(var_name) {
+                if let Some(actions) = self.action_map.get_mut(var_name) {
                     for action in actions {
 
                         match data {
@@ -843,13 +907,21 @@ impl Definitions {
                                 ActionType::BoolAction(action) => {
                                     action.set_new(*value, conn)
                                 }
+                                ActionType::CustomBoolAction(action) => {
+                                    if action.current != *value {
+
+                                        let event_name = self.events.match_event_id(action.event_id).unwrap();
+                                        self.lvarstransfer.set_unchecked(conn, &format!("K:{}", event_name), None, &action.param.to_string())
+                                        
+                                    }
+                                }
                                 _ => {}
                             }
 
                             VarReaderTypes::I32(value) => match action {
                                 // Format of INDEX VALUE (>K:2:NAME)
                                 ActionType::NumSetWithIndex(action) => {
-                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), Some(""), &format!("{} {}", action.index_param, value * action.multiply_by.unwrap_or(1)));
+                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), None, &format!("{} {}", action.index_param, value * action.multiply_by.unwrap_or(1)));
                                 }
                                 ActionType::NumAction(action) => {
                                     action.set_new(*value, conn);
@@ -882,12 +954,25 @@ impl Definitions {
 
     pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap, interpolate: bool) {
         for (var_name, value) in data {
-            if interpolate && self.interpolate_names.contains(var_name) {
-                self.interpolation_lvars.queue_interpolate(var_name, *value);
+            if let Some(actions) = self.action_map.get(var_name) {
+                for action in actions {
+                    match action {
+                        ActionType::CustomCalculator(action) => {
+                            action.set_new(*value, conn, &mut self.lvarstransfer);
+                        }
+                        _ => {}
+                    }
+                }
             } else {
-                self.lvarstransfer.set(conn, var_name, value.to_string().as_ref())
+
+                if interpolate && self.interpolate_names.contains(var_name) {
+                    self.interpolation_lvars.queue_interpolate(var_name, *value);
+                } else {
+                    self.lvarstransfer.set(conn, var_name, value.to_string().as_ref())
+                }
+                self.last_written.insert(var_name.to_string(), Instant::now());
+
             }
-            self.last_written.insert(var_name.to_string(), Instant::now());
         }
     }
 
