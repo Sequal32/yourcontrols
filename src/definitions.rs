@@ -131,6 +131,8 @@ struct NumSetWithIndexEntry {
     event_name: String,
     index_param: i32,
     multiply_by: Option<i32>,
+    #[serde(default)]
+    index_reversed: bool
 }
 
 // Describes how an aircraft variable can be set using a "TOGGLE" event
@@ -149,6 +151,7 @@ struct ToggleSwitchTwoEntry {
     var_units: Option<String>,
     on_event_name: String,
     off_event_name: String,
+    event_param: Option<u32>
 }
 
 #[derive(Deserialize)]
@@ -449,7 +452,7 @@ impl Definitions {
         let off_event_id = self.events.get_or_map_event_id(&var.off_event_name, false);
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
-        self.add_bool_mapping( var_string, Box::new(ToggleSwitchTwo::new(off_event_id, on_event_id)));
+        self.add_bool_mapping( var_string, Box::new(ToggleSwitchTwo::new(off_event_id, on_event_id, var.event_param)));
 
         Ok(())
     }
@@ -921,7 +924,15 @@ impl Definitions {
                             VarReaderTypes::I32(value) => match action {
                                 // Format of INDEX VALUE (>K:2:NAME)
                                 ActionType::NumSetWithIndex(action) => {
-                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), None, &format!("{} {}", action.index_param, value * action.multiply_by.unwrap_or(1)));
+                                    let string_value;
+
+                                    if action.index_reversed {
+                                        string_value = format!("{} {}", value * action.multiply_by.unwrap_or(1), action.index_param);
+                                    } else {
+                                        string_value = format!("{} {}", action.index_param, value * action.multiply_by.unwrap_or(1));
+                                    }
+
+                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), None, &string_value);
                                 }
                                 ActionType::NumAction(action) => {
                                     action.set_new(*value, conn);

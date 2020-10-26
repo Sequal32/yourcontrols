@@ -65,15 +65,17 @@ impl Syncable<bool> for ToggleSwitchParam {
 pub struct ToggleSwitchTwo {
     pub off_event_id: u32,
     pub on_event_id: u32,
-    pub current: bool
+    pub current: bool,
+    pub param: Option<u32>
 }
 
 impl ToggleSwitchTwo {
-    pub fn new(off_event_id: u32, on_event_id: u32) -> Self { 
+    pub fn new(off_event_id: u32, on_event_id: u32, param: Option<u32>) -> Self { 
         Self { 
             off_event_id, 
             on_event_id, 
-            current: false
+            current: false,
+            param
         } 
     }
 }
@@ -86,7 +88,7 @@ impl Syncable<bool> for ToggleSwitchTwo {
     fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
         if self.current == new {return}
         let event_id = if new {self.on_event_id} else {self.off_event_id};
-        conn.transmit_client_event(1, event_id, 0, GROUP_ID, 0);
+        conn.transmit_client_event(1, event_id, self.param.unwrap_or(0), GROUP_ID, 0);
     }
 }
 
