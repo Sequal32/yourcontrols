@@ -108,13 +108,22 @@ shared:
     var_name: A:COM TRANSMIT:1
     var_units: Bool
     var_type: bool
-    event_name: COM1_TRANSMIT_SELECT
+    event_name: PILOT_TRANSMITTER_SET
+    event_param: 0
   -
     type: SwitchOn
     var_name: A:COM TRANSMIT:2
     var_units: Bool
     var_type: bool
-    event_name: COM2_TRANSMIT_SELECT
+    event_name: PILOT_TRANSMITTER_SET
+    event_param: 1
+  -
+    type: SwitchOn
+    var_name: A:COM TRANSMIT:3
+    var_units: Bool
+    var_type: bool
+    event_name: PILOT_TRANSMITTER_SET
+    event_param: 2
   -
     type: NumSet
     var_name: A:COM RECIEVE ALL
