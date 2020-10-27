@@ -31,9 +31,12 @@ use control::*;
 const LOG_FILENAME: &str = "log.txt";
 const CONFIG_FILENAME: &str = "config.json";
 const AIRCRAFT_DEFINITIONS_PATH: &str = "definitions/aircraft/";
-const HEVENT_PATH: &str = "definitions/resources/hevents.yaml";
+
 const APP_STARTUP_SLEEP_TIME: Duration = Duration::from_millis(100);
 const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
+
+const KEY_HEVENT_PATH: &str = "definitions/resources/hevents.yaml";
+const BUTTON_HEVENT_PATH: &str = "definitions/resources/touchscreenkeys.yaml";
 
 fn get_aircraft_configs() -> io::Result<Vec<String>> {
     let mut filenames = Vec::new();
@@ -91,10 +94,10 @@ fn main() {
     // Load defintions
     let load_definitions = |conn: &SimConnector, definitions: &mut Definitions, config_to_load: &mut String| -> bool {
         // Load H Events
-        match definitions.load_h_events(HEVENT_PATH) {
+        match definitions.load_h_events(KEY_HEVENT_PATH, BUTTON_HEVENT_PATH) {
             Ok(_) => info!("Loaded and mapped {} H: events.", definitions.get_number_hevents()),
             Err(e) => {
-                log::error!("Could not load H: event file {}: {}", HEVENT_PATH, e);
+                log::error!("Could not load H: event files: {}", e);
                 return false
             }
         };

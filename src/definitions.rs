@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::GetResult, lvars::LVarResult, lvars::hevents::HEvents, lvars::hevents::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchTwo}, util::Category, syncdefs::CustomCalculator, util::InDataTypes, util::VarReaderTypes};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumIncrementSet, NumSet, NumSetMultiply, NumSetSwap, SwitchOn, Syncable, ToggleSwitch, ToggleSwitchParam, ToggleSwitchTwo}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, lvars::lvars::LVarResult, util::VarReaderTypes};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -689,8 +689,8 @@ impl Definitions {
         }
     }
 
-    pub fn load_h_events(&mut self, path: &str) -> Result<(), LoadError> {
-        self.hevents.load_from_config(path)
+    pub fn load_h_events(&mut self, key_path: &str, button_path: &str) -> Result<(), LoadError> {
+        self.hevents.load_from_config(key_path, button_path)
     }
 
     fn process_lvar(&mut self, lvar_data: GetResult) {
@@ -745,6 +745,7 @@ impl Definitions {
 
         // H Event
         } else if data.uGroupID == self.hevents.group_id {
+            
             event_name = match self.hevents.process_event_data(data) {
                 Some(event_name) => format!("H:{}", event_name),
                 None => return
