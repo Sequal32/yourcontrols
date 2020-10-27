@@ -3,7 +3,7 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
+  # - definitions/modules/physics.yaml
   - definitions/modules/singlega.yaml
 
 shared:
@@ -59,11 +59,11 @@ shared:
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
     event_name: TOGGLE_MASTER_ALTERNATOR
-  - # TODO: test
-    type: ToggleSwitch
+  -
+    type: SwitchOn
     var_name: A:GENERAL ENG STARTER:1
     var_units: Bool
-    event_name: SET_STARTER1_HELD
+    event_name: TOGGLE_STARTER1
   -
     type: ToggleSwitchParam
     var_name: A:ELECTRICAL MASTER BATTERY:2

@@ -22,3 +22,11 @@ shared:
   -
     type: event
     event_name: NAV2_VOLUME_INC
+
+init:
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT NAV SELECTED
+    var_units: Number
+    var_type: i32
+    event_name: AP_NAV_SELECT_SET
