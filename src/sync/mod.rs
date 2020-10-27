@@ -1,9 +1,9 @@
 pub mod control;
 
 use bimap::BiHashMap;
-use std::{collections::{HashMap, HashSet}, io};
+use std::{time::Instant, collections::{HashMap, HashSet}, io};
 use simconnect::SimConnector;
-use crate::{lvars::{LVar, LVars, DiffChecker, GetResult}, util::InDataTypes, lvars::LVarResult, varreader::SimValue, varreader::VarReader};
+use crate::{lvars::{LVars, GetResult}, util::InDataTypes, lvars::LVarResult, varreader::SimValue, varreader::VarReader};
 
 pub struct Events {
     event_map: BiHashMap<String, u32>,
@@ -65,13 +65,14 @@ impl Events {
 struct LocalVarEntry {
     current_value: f64,
     units: Option<String>,
-    actual_string: Option<String>
+    actual_string: Option<String>,
 }
 
 pub struct LVarSyncer {
     transfer: LVars,
     vars: HashMap<String, LocalVarEntry>,
-    raw_count: u32
+    raw_count: u32,
+    last_var_received_time: Instant,
 }
 
 impl LVarSyncer {
@@ -79,7 +80,8 @@ impl LVarSyncer {
         Self {
             transfer: LVars::new(),
             vars: HashMap::new(),
-            raw_count: 0
+            raw_count: 0,
+            last_var_received_time: Instant::now()
         }
     }
 
@@ -89,7 +91,7 @@ impl LVarSyncer {
         self.vars.insert(var_name, LocalVarEntry {
             current_value: 0.0,
             units: var_units,
-            actual_string: None
+            actual_string: None,
         });
     }
 
@@ -99,7 +101,7 @@ impl LVarSyncer {
         self.vars.insert(custom_var_name.clone(), LocalVarEntry {
             current_value: 0.0, 
             units: None,
-            actual_string: Some(var_string)
+            actual_string: Some(var_string),
         });
 
         self.raw_count += 1;
@@ -107,9 +109,28 @@ impl LVarSyncer {
         return custom_var_name
     }
 
+    fn process_single_var(&mut self, data: &GetResult) {
+        if let Some(var) = self.vars.get_mut(&data.var_name) {
+            var.current_value = data.var.floating
+        }
+    }
+
     pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<LVarResult> {
-        // TODO: set custom local vars
-        return self.transfer.process_client_data(data);
+        let data = self.transfer.process_client_data(data);
+
+        match data.as_ref() {
+            Some(LVarResult::Single(data)) => {
+                self.process_single_var(data);
+            }
+            Some(LVarResult::Multi(datas)) => {
+                for data in datas {
+                    self.process_single_var(data);
+                }
+            }
+            None => {}
+        }
+
+        return data
     }
 
     pub fn set(&mut self, conn: &SimConnector, var_name: &str, value: &str) {
@@ -128,6 +149,7 @@ impl LVarSyncer {
 
     pub fn on_connected(&mut self, conn: &SimConnector) {
         self.transfer.on_connected(conn);
+        self.last_var_received_time = Instant::now();
 
         for (var_name, var_data) in self.vars.iter() {
             if let Some(raw_string) = var_data.actual_string.as_ref() {
@@ -150,6 +172,10 @@ impl LVarSyncer {
 
     pub fn get_number_defined(&self) -> usize {
         return self.vars.len()
+    }
+
+    pub fn did_init(&self) -> bool {
+        return self.last_var_received_time.elapsed().as_secs() >= 5
     }
 }
 
