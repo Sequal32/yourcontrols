@@ -6,7 +6,7 @@ include:
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
-  - definitions/modules/radios.yaml
+  - definitions/modules/radiosinitonly.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/singlega.yaml
 
@@ -202,7 +202,26 @@ shared:
     var_units: Bool
     on_event_name: GEAR_DOWN
     off_event_name: GEAR_UP
-  # TODO: AC/OXYGEN TO LVARS (only animations right now)
+  -
+    type: var
+    var_name: L:EMERGENCY_PUSH_RAMAIR_SwitchState
+    var_type: f64
+  -
+    type: var
+    var_name: L:HOTAIRFLOW_KNOB
+    var_type: f64
+  -
+    type: var
+    var_name: L:AC_KNOB_TEMP
+    var_type: f64
+  -
+    type: var
+    var_name: L:AC_KNOB_FAN
+    var_type: f64
+  -
+    type: var
+    var_name: L:AC_SwitchState
+    var_type: f64
 
 server:
   -
