@@ -1,7 +1,7 @@
 use base64;
 use crossbeam_channel::{Receiver, TryRecvError, unbounded};
 use dns_lookup::lookup_host;
-use log::{error, info};
+use log::{info};
 use std::{str::FromStr, net::{Ipv6Addr, Ipv4Addr, IpAddr}, io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};

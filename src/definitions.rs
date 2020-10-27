@@ -331,7 +331,7 @@ impl Definitions {
             action_map: HashMap::new(),
             events: Events::new(1),
             hevents: HEvents::new(2),
-            lvarstransfer: LVarSyncer::new(1),
+            lvarstransfer: LVarSyncer::new(),
             avarstransfer: AircraftVars::new(1),
             sync_vars: HashSet::new(),
             categories: HashMap::new(),

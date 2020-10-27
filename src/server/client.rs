@@ -1,5 +1,5 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
-use log::info;
+
 use serde_json::{Value};
 use std::{io::Read, net::{IpAddr, Shutdown, SocketAddr, TcpStream}, sync::Mutex};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};

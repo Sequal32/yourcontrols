@@ -1,7 +1,7 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
 use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
-use log::{info, warn};
+use log::{warn};
 use serde_json::{Value, json};
 use spin_sleep::sleep;
 use std::{io::{Read}, net::IpAddr, net::Shutdown, net::TcpStream, thread, time::Duration, time::Instant};

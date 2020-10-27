@@ -75,7 +75,7 @@ pub struct LVarSyncer {
 }
 
 impl LVarSyncer {
-    pub fn new(request_id: u32) -> Self {
+    pub fn new() -> Self {
         Self {
             transfer: LVars::new(),
             vars: HashMap::new(),
