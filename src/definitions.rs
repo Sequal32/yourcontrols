@@ -120,7 +120,6 @@ struct NumSetEntry {
     var_units: Option<String>,
     event_name: String,
     multiply_by: Option<i32>,
-    #[serde(default)]
     interpolate: Option<InterpolateOptions>
 }
 
@@ -242,6 +241,7 @@ enum ActionType {
     BoolAction(Box<dyn Syncable<bool>>),
     CustomBoolAction(ToggleSwitchParam),
     NumAction(Box<dyn Syncable<i32>>),
+    CustomNumAction(NumSet),
     FloatAction(NumSetEntry),
     NumSetWithIndex(NumSetWithIndexEntry),
     NumFloatAction(Box<dyn Syncable<f64>>),
@@ -366,6 +366,11 @@ impl Definitions {
         self.add_mapping(var_name, mapping);
     }
 
+    fn add_custom_num_mapping(&mut self, var_name: String, mapping: NumSet) {
+        let mapping = ActionType::CustomNumAction(mapping);
+        self.add_mapping(var_name, mapping);
+    }
+
     fn add_num_mapping(&mut self, var_name: String, mapping: Box<dyn Syncable<i32>>) {
         let mapping = ActionType::NumAction(mapping);
         self.add_mapping(var_name, mapping);
@@ -375,7 +380,7 @@ impl Definitions {
         let mapping = ActionType::NumFloatAction(mapping);
         self.add_mapping(var_name, mapping);
     }
-
+    
     fn add_aircraft_variable(&mut self, category: &str, var_name: &str, var_units: &str, var_type: InDataTypes) -> Result<(), VarAddError> {
         let category = get_category_from_string(category)?;
 
@@ -443,6 +448,15 @@ impl Definitions {
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
         self.add_custom_bool_mapping( var_string, ToggleSwitchParam::new(event_id, var.event_param as u32));
+
+        Ok(())
+    }
+
+    fn add_custom_num_set(&mut self, category: &str, var: NumSetEntry) -> Result<(), VarAddError> {
+        let event_id = self.events.get_or_map_event_id(&var.event_name, false);
+
+        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
+        self.add_custom_num_mapping( var_string, NumSet::new(event_id));
 
         Ok(())
     }
@@ -618,6 +632,7 @@ impl Definitions {
             "NUMSETFLOAT" => self.add_float_var(category, try_cast_yaml!(value))?,
             "NUMSETWITHINDEX" => self.add_num_set_with_index(category, try_cast_yaml!(value))?,
             "NUMDIGITSET" => self.add_num_digit_set(category, try_cast_yaml!(value))?,
+            "CUSTOMNUMSET" => self.add_custom_num_set(category, try_cast_yaml!(value))?,
             "NUMSWAP" => self.add_num_swap(category, try_cast_yaml!(value))?,
             "VAR" => self.add_var(category, try_cast_yaml!(value))?,
             "NUMSET" => self.add_num_set(category, try_cast_yaml!(value))?,
@@ -775,6 +790,9 @@ impl Definitions {
 
                             VarReaderTypes::I32(value) => match action {
                                 ActionType::NumAction(action) | ActionType::FreqSwapAction(action) => {
+                                    action.set_current(value);
+                                }
+                                ActionType::CustomNumAction(action) => {
                                     action.set_current(value);
                                 }
                                 _ => {}
@@ -936,6 +954,10 @@ impl Definitions {
                                 }
                                 ActionType::NumAction(action) => {
                                     action.set_new(*value, conn);
+                                }
+                                ActionType::CustomNumAction(action) => {
+                                    let event_name = self.events.match_event_id(action.event_id).unwrap();
+                                    self.lvarstransfer.set_unchecked(conn, &format!("K:{}", event_name), None, &value.to_string())
                                 }
                                 _ => {}
                             }

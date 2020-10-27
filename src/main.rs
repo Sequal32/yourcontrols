@@ -112,6 +112,8 @@ fn main() {
             }
         };
 
+        info!("{} loaded successfully.", config_to_load);
+
         return true
     };
 
