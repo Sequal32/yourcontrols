@@ -8,6 +8,7 @@ pub struct Config {
     pub update_rate: u16,
     pub conn_timeout: u64,
     pub buffer_size: usize,
+    pub check_for_betas: bool,
     pub port: u16,
     pub ip: String,
     pub name: String,
@@ -21,6 +22,7 @@ impl Default for Config {
             update_rate: 30,
             buffer_size: 3,
             conn_timeout: 5,
+            check_for_betas: false,
             ip: String::new(),
             name: String::new(),
             last_config: String::new()

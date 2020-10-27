@@ -425,7 +425,7 @@ fn main() {
                     }
                     // Update version
                     if let Some(newest_version) = newest_version.as_ref() {
-                        if *newest_version > app_version {
+                        if *newest_version > app_version && (!newest_version.is_prerelease() || newest_version.is_prerelease() && config.check_for_betas) {
                             app_interface.version(&newest_version.to_string());
                         }
                         info!("Version {} in use, {} is newest.", app_version, newest_version)
