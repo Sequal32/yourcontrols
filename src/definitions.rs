@@ -897,7 +897,7 @@ impl Definitions {
         return_data
     }
 
-    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &AVarMap, interpolate: bool) {
+    pub fn write_aircraft_data(&mut self, conn: &SimConnector, time: f64, data: &AVarMap, interpolate: bool) {
         if data.len() == 0 {return}
 
         let mut to_sync = AVarMap::new();
@@ -912,7 +912,7 @@ impl Definitions {
                 if interpolate && self.interpolate_names.contains(var_name) {
                     // Queue data for interpolation
                     if let VarReaderTypes::F64(value) = data {
-                        self.interpolation_avars.queue_interpolate(&var_name, *value)
+                        self.interpolation_avars.queue_interpolate(&var_name, time, *value)
                     }
                 } else {
                     // Set data right away
@@ -1000,11 +1000,11 @@ impl Definitions {
                 }
             } else {
 
-                if interpolate && self.interpolate_names.contains(var_name) {
-                    self.interpolation_lvars.queue_interpolate(var_name, *value);
-                } else {
-                    self.lvarstransfer.set(conn, var_name, value.to_string().as_ref())
-                }
+                // if interpolate && self.interpolate_names.contains(var_name) {
+                //     self.interpolation_lvars.queue_interpolate(var_name, *value);
+                // } else {
+                self.lvarstransfer.set(conn, var_name, value.to_string().as_ref());
+                // }
                 self.last_written.insert(var_name.to_string(), Instant::now());
 
             }
@@ -1024,10 +1024,10 @@ impl Definitions {
         }
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, sync_permission: &SyncPermission, interpolate: bool) {
+    pub fn on_receive_data(&mut self, conn: &SimConnector, time: f64, data: AllNeedSync, sync_permission: &SyncPermission, interpolate: bool) {
         let data = self.filter_all_sync(data, sync_permission);
 
-        self.write_aircraft_data(conn, &data.avars, interpolate);
+        self.write_aircraft_data(conn, time, &data.avars, interpolate);
         self.write_local_data(conn, &data.lvars, interpolate);
         self.write_event_data(conn, &data.events);
     }

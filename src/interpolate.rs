@@ -7,16 +7,16 @@ use crate::{util::VarReaderTypes, varreader::SimValue};
 const DEFAULT_INTERPOLATION_TIME: f64 = 0.2;
 
 struct InterpolationData {
-    value: f64,
-    from_value: f64,
-    target_value: f64,
+    current_value: f64,
+    from_packet: Packet,
+    to_packet: Packet,
     time: Instant,
     interpolation_time: f64,
     options: InterpolateOptions,
     done: bool
 }
 
-#[derive(Deserialize, Copy, Clone)]
+#[derive(Deserialize, Clone)]
 #[serde(default)]
 pub struct InterpolateOptions {
     overshoot: f64, // How many seconds to interpolate for after interpolation_time has been reached
@@ -38,9 +38,15 @@ impl Default for InterpolateOptions {
     }
 }
 
+#[derive(Debug, Clone)]
+struct Packet {
+    time: f64,
+    value: f64
+}
+
 pub struct Interpolate {
     current_data: HashMap<String, InterpolationData>,
-    data_queue: HashMap<String, VecDeque<f64>>,
+    data_queue: HashMap<String, VecDeque<Packet>>,
     options: HashMap<String, InterpolateOptions>,
     buffer_size: usize
 }
@@ -55,10 +61,12 @@ impl Interpolate {
         }
     }
 
-    pub fn queue_interpolate(&mut self, key: &str, value: f64) {
+    pub fn queue_interpolate(&mut self, key: &str, time: f64, value: f64) {
+        let packet = Packet {time, value};
+
         if self.current_data.contains_key(key) {
 
-            self.data_queue.get_mut(key).unwrap().push_back(value);
+            self.data_queue.get_mut(key).unwrap().push_back(packet);
 
         } else {
 
@@ -68,9 +76,9 @@ impl Interpolate {
             };
 
             self.current_data.insert(key.to_string(), InterpolationData {
-                from_value: value,
-                value: value,
-                target_value: value,
+                from_packet: packet.clone(),
+                current_value: value,
+                to_packet: packet,
                 time: Instant::now(),
                 interpolation_time: options.time,
                 options: options,
@@ -89,16 +97,20 @@ impl Interpolate {
                 let queue = self.data_queue.get_mut(key).unwrap();
                 // Interpolate to the next position
                 if let Some(next) = queue.pop_front() {
-                    data.from_value = data.target_value;
-                    data.target_value = next;
+                    // From is now to
+                    std::mem::swap(&mut data.from_packet, &mut data.to_packet);
+                    // Calculate time difference between old packet and new packet
+                    let interpolation_time = next.time-data.from_packet.time;
+
+                    data.to_packet = next;
                     data.done = false;
                     data.time = Instant::now();
 
                     if queue.len() > self.buffer_size {
                         // Will make next interpolation faster depending on how many packets over the buffer size it is.
-                        data.interpolation_time = data.options.time * (self.buffer_size as f64)/((queue.len() - self.buffer_size) as f64) * 0.5;
+                        data.interpolation_time = interpolation_time * (self.buffer_size as f64)/((queue.len() - self.buffer_size) as f64) * 0.5;
                     } else {
-                        data.interpolation_time = data.options.time;
+                        data.interpolation_time = interpolation_time;
                     }
                 }
                 continue
@@ -119,25 +131,25 @@ impl Interpolate {
             // If we're done interpolation, do not interpolate anymore until the next request
             if alpha >= max_alpha {
                 data.done = true;
-                data.value = data.target_value;
+                data.current_value = data.to_packet.value;
             } else {
                 // Interpolate according to options
                 if let Some(options) = options {
                     if options.wrap360 {
-                        data.value = interpolate_f64_degrees(data.from_value, data.target_value, alpha);
+                        data.current_value = interpolate_f64_degrees(data.from_packet.value, data.to_packet.value, alpha);
                     } else if options.wrap180 {
-                        data.value = interpolate_f64_degrees_180(data.from_value, data.target_value, alpha);
+                        data.current_value = interpolate_f64_degrees_180(data.from_packet.value, data.to_packet.value, alpha);
                     } else if options.wrap90 {
-                        data.value = interpolate_f64_degrees_90(data.from_value, data.target_value, alpha);
+                        data.current_value = interpolate_f64_degrees_90(data.from_packet.value, data.to_packet.value, alpha);
                     } else {
-                        data.value = interpolate_f64(data.from_value, data.target_value, alpha);
+                        data.current_value = interpolate_f64(data.from_packet.value, data.to_packet.value, alpha);
                     }
                 } else {
-                    data.value = interpolate_f64(data.from_value, data.target_value, alpha);
+                    data.current_value = interpolate_f64(data.from_packet.value, data.to_packet.value, alpha);
                 }
             }
         
-            return_data.insert(key.clone(), VarReaderTypes::F64(data.value));
+            return_data.insert(key.clone(), VarReaderTypes::F64(data.current_value));
         }
 
         return return_data;

@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 mod app;
 mod clientmanager;
@@ -150,14 +150,14 @@ fn main() {
 
             // Data from server
             match client.get_next_message() {
-                Ok(ReceiveData::Update(sender, sync_data)) => {
+                Ok(ReceiveData::Update(sender, time, sync_data)) => {
                     // Seamlessly transfer from losing control wihout freezing
                     if control.has_pending_transfer() {
                         control.finalize_transfer(&conn)
                     }
 
                     if !clients.is_observer(&sender) {
-                        definitions.on_receive_data(&conn, sync_data, &SyncPermission {
+                        definitions.on_receive_data(&conn, time, sync_data, &SyncPermission {
                             is_server: clients.client_is_server(&sender), 
                             is_master: clients.client_has_control(&sender),
                             is_init: true

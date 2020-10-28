@@ -2,9 +2,13 @@ use crossbeam_channel::{Receiver, Sender};
 use log::info;
 use serde_json::{Value, json};
 use std::{fmt::Display, io::Write};
+use std::time::SystemTime;
 
 use crate::definitions::AllNeedSync;
 
+fn get_seconds() -> f64 {
+    return SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64()
+}
 
 pub trait TransferClient {
     fn get_connected_count(&self) -> u16;
@@ -20,6 +24,7 @@ pub trait TransferClient {
     fn send_value(&self, message: Value) {
         let mut message = message;
         message["from"] = Value::String(self.get_server_name().to_string());
+        message["time"] = json!(get_seconds());
         self.get_transmitter().send(message).ok();
     }
 
@@ -139,7 +144,7 @@ pub fn process_message(message: &str, from: Option<String>) -> Result<ReceiveDat
     match value["type"].as_str() {
         // Parse payload into AllNeedSync
         Some("update") => match serde_json::from_value(value["data"].clone()) {
-            Ok(data) => Ok(ReceiveData::Update(sender, data)),
+            Ok(data) => Ok(ReceiveData::Update(sender, value["time"].as_f64().unwrap(), data)),
             Err(e) => Err(ParseError::InvalidPayload(e))
         }
 
@@ -201,7 +206,7 @@ pub enum ReceiveData {
     ConnectionLost(String),
     TransferStopped(TransferStoppedReason),
     // Possible types of data to receive
-    Update(String, AllNeedSync),
+    Update(String, f64, AllNeedSync),
     // From, To
     TransferControl(String, String),
     // Target, is_observer
