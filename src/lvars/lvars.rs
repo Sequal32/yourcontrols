@@ -144,7 +144,7 @@ impl LVars {
                 let datum_id = cursor.read_i32::<LittleEndian>()?;
                 let datum_name = match self.datums.get(datum_id as usize) {
                     Some(s) => s,
-                    None => return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "No datum exists for the ID."))
+                    None => continue
                 };
                 // Skip 4 bytes for padding
                 cursor.read_u32::<LittleEndian>().ok();
@@ -170,7 +170,11 @@ impl LVars {
         conn.set_client_data(SEND, SEND, 0, 0, 128, writer.get_data_location() as *mut std::ffi::c_void);
     }
 
-    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<LVarResult> {
+    pub fn fetch_all(&self, conn: &SimConnector) {
+        conn.request_client_data(RECEIVE_MULTIPLE, 1, RECEIVE_MULTIPLE, simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ONCE, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
+    }
+
+    pub fn process_client_data(&mut self, conn: &simconnect::SimConnector, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<LVarResult> {
         match data._base.dwDefineID {
             RECEIVE => unsafe {
                 let data: ReceiveData = std::mem::transmute_copy(&data._base.dwData);
@@ -188,12 +192,19 @@ impl LVars {
                 );
             }
             RECEIVE_MULTIPLE => {
+                // Was initial fetch done
+                if data._base.dwRequestID == 1 {
+                    conn.request_client_data(RECEIVE_MULTIPLE, 0, RECEIVE_MULTIPLE, simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
+                }
+
                 unsafe {
                     let pointer = &data._base.dwData as *const u32;
                     match self.read_multiple_data(data._base.dwDefineCount as u32, pointer) {
                         Ok(d) => Some(LVarResult::Multi(d)),
                         Err(_) => None
                     }
+
+                    
                 }
             }
             _ => None

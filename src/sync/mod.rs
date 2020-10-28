@@ -111,12 +111,13 @@ impl LVarSyncer {
 
     fn process_single_var(&mut self, data: &GetResult) {
         if let Some(var) = self.vars.get_mut(&data.var_name) {
-            var.current_value = data.var.floating
+            var.current_value = data.var.floating;
+            self.last_var_received_time = Instant::now();
         }
     }
 
-    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<LVarResult> {
-        let data = self.transfer.process_client_data(data);
+    pub fn process_client_data(&mut self, conn: &simconnect::SimConnector, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) -> Option<LVarResult> {
+        let data = self.transfer.process_client_data(conn, data);
 
         match data.as_ref() {
             Some(LVarResult::Single(data)) => {
@@ -149,7 +150,6 @@ impl LVarSyncer {
 
     pub fn on_connected(&mut self, conn: &SimConnector) {
         self.transfer.on_connected(conn);
-        self.last_var_received_time = Instant::now();
 
         for (var_name, var_data) in self.vars.iter() {
             if let Some(raw_string) = var_data.actual_string.as_ref() {
@@ -158,6 +158,8 @@ impl LVarSyncer {
                 self.transfer.add_definition(conn, var_name, var_data.units.as_deref());                
             }
         }
+
+        self.transfer.fetch_all(conn)
     }
 
     pub fn get_all_vars(&self) -> HashMap<String, f64> {
@@ -253,53 +255,3 @@ impl AircraftVars {
         return self.vars.len()
     }
 }
-
-// pub struct AVarSyncer {
-//     cache_vars: Option<SimValue>,
-//     needs_sync: bool,
-//     tracked: DiffChecker<String, VarReaderTypes>,
-//     vars: AircraftVars,
-// }
-
-// impl AVarSyncer {
-//     pub fn new(conn: Rc<SimConnector>, define_id: u32) -> Self {
-//         Self {
-//             needs_sync: false,
-//             cache_vars: None,
-//             vars: AircraftVars::new(conn, define_id),
-//             tracked: DiffChecker::new()
-//         }
-//     }
-
-//     pub fn add_var(&mut self, var_name: &str, var_units: &str, data_type: InDataTypes) {
-//         self.vars.add_var(var_name, var_units, data_type);
-//     }
-
-//     // Returns list of aircraft vars that need syncing
-//     pub fn process_if_need_sync(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) -> Vec<String> {
-//         let vars = self.vars.read_vars(data);
-//         let mut need_sync_vars: Vec<String> = Vec::new();
-
-//         if let Some(prev_vars) = self.cache_vars.as_ref() {
-//             // Check for diff
-//             for (var_name, value) in vars.iter() {
-//                 if prev_vars.get(var_name).unwrap() != value {
-//                     need_sync_vars.push(var_name.clone());
-//                 }
-//             }
-//         }
-        
-//         self.cache_vars = Some(vars);
-
-//         return need_sync_vars;
-//     }
-
-//     pub fn set(&self, data: &SimValue) {
-//         self.vars.set_vars(&data);
-//     }
-
-//     pub fn get_var(&self, var_name: &str) -> Option<&VarReaderTypes> {
-//         let vars = self.cache_vars.as_ref()?;
-//         return vars.get(&var_name.to_string());
-//     }
-// }

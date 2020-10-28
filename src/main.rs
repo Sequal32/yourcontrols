@@ -140,7 +140,7 @@ fn main() {
                     definitions.process_event_data(data);
                 },
                 Ok(DispatchResult::ClientData(data)) => {
-                    definitions.process_client_data(data);
+                    definitions.process_client_data(&conn, data);
                 }
                 Ok(DispatchResult::Quit(_)) => {
                     client.stop("Sim closed.".to_string());

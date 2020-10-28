@@ -714,10 +714,10 @@ impl Definitions {
     }
 
     // Processes client data and adds to the result queue if it changed
-    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
+    pub fn process_client_data(&mut self, conn: &simconnect::SimConnector, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
         // Guard clauses
         // Get var data
-        let lvar = match self.lvarstransfer.process_client_data(data) {
+        let lvar = match self.lvarstransfer.process_client_data(conn ,data) {
             Some(var) => var,
             None => return
         };
@@ -1075,5 +1075,9 @@ impl Definitions {
     pub fn reset_interpolate(&mut self) {
         self.interpolation_avars.reset();
         self.interpolation_lvars.reset();
+    }
+
+    pub fn did_init(&self) -> bool {
+        return self.lvarstransfer.did_init()
     }
 }
