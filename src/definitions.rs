@@ -694,7 +694,6 @@ impl Definitions {
     }
 
     fn process_lvar(&mut self, lvar_data: GetResult) {
-        if !self.lvarstransfer.did_init() {return}
         // Check timer
         if let Some(timer) = self.last_written.get(&lvar_data.var_name) {
             if timer.elapsed().as_secs() < 1 {return}
@@ -1075,9 +1074,5 @@ impl Definitions {
     pub fn reset_interpolate(&mut self) {
         self.interpolation_avars.reset();
         self.interpolation_lvars.reset();
-    }
-
-    pub fn did_init(&self) -> bool {
-        return self.lvarstransfer.did_init()
     }
 }

@@ -72,7 +72,6 @@ pub struct LVarSyncer {
     transfer: LVars,
     vars: HashMap<String, LocalVarEntry>,
     raw_count: u32,
-    last_var_received_time: Instant,
 }
 
 impl LVarSyncer {
@@ -81,7 +80,6 @@ impl LVarSyncer {
             transfer: LVars::new(),
             vars: HashMap::new(),
             raw_count: 0,
-            last_var_received_time: Instant::now()
         }
     }
 
@@ -112,7 +110,6 @@ impl LVarSyncer {
     fn process_single_var(&mut self, data: &GetResult) {
         if let Some(var) = self.vars.get_mut(&data.var_name) {
             var.current_value = data.var.floating;
-            self.last_var_received_time = Instant::now();
         }
     }
 
@@ -174,10 +171,6 @@ impl LVarSyncer {
 
     pub fn get_number_defined(&self) -> usize {
         return self.vars.len()
-    }
-
-    pub fn did_init(&self) -> bool {
-        return self.last_var_received_time.elapsed().as_secs() >= 5
     }
 }
 
