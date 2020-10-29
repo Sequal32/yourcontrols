@@ -7,7 +7,6 @@ include:
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/singlega.yaml
-  - definitions/modules/transponder.yaml
 
 shared:
   -
@@ -140,12 +139,24 @@ shared:
     type: SwitchOn
     var_name: A:GENERAL ENG STARTER:1
     var_units: Bool
-    event_name: SET_STARTER1_HELD
+    event_name: TOGGLE_STARTER1
   - # ASOBO_ELECTRICAL_Push_Starter_SubTemplate
     type: SwitchOn
     var_name: A:GENERAL ENG STARTER:2
     var_units: Bool
-    event_name: SET_STARTER2_HELD
+    event_name: TOGGLE_STARTER2
+  - # ASOBO_ENGINE_Switch_Master_Template
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
+    var_units: Bool
+    var_type: Bool
+    event_name: ENGINE_MASTER_1_TOGGLE
+  - # ASOBO_ENGINE_Switch_Master_Template
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:2
+    var_units: Bool
+    var_type: Bool
+    event_name: ENGINE_MASTER_2_TOGGLE
   - # ASOBO_DEICE_Switch_Pitot_Template
     type: ToggleSwitch
     var_name: A:PITOT HEAT
@@ -182,11 +193,11 @@ shared:
     var_type: f64
   - #ASOBO_PASSENGER_Switch_Cabin_Heat_Template
     type: var
-    var_name: L:XMLVAR_CabinHeatSwitch1Status
+    var_name: L:XMLVAR_CabinHeat_Position_1
     var_type: f64
   - #ASOBO_PASSENGER_Switch_Cabin_Air_Template
     type: var
-    var_name: L:XMLVAR_CabinAirSwitch1Status
+    var_name: L:XMLVAR_CabinAir_Position_1
     var_type: f64
   - # secondary altimeter/altitude
     type: NumSetWithIndex
