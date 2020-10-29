@@ -79,10 +79,10 @@ shared:
     var_type: bool
     event_name: AP_ATT_HOLD
   -
-    type: NumSet
+    type: NumSetFloat
     var_name: A:AUTOPILOT PITCH HOLD REF
-    var_units: Radians
-    var_type: i32
+    var_units: Degrees
+    var_type: f64
     event_name: AP_PITCH_REF_SELECT
   -
     type: ToggleSwitch
@@ -135,18 +135,18 @@ shared:
 master:
   - # HANDLING_Switch_AutopilotTrim ASOBO_GT_Switch_XStates TBM930
     type: ToggleSwitch
-    var_name: AUTOPILOT DISENGAGED
+    var_name: A:AUTOPILOT DISENGAGED
     var_units: Bool
     event_name: AUTOPILOT_DISENGAGE_TOGGLE
   -
     type: NumSet
-    var_name: RUDDER TRIM DISABLED
+    var_name: A:RUDDER TRIM DISABLED
     var_units: Bool
     var_type: i32
     event_name: RUDDER_TRIM_DISABLED_SET
   -
     type: NumSet
-    var_name: AILERON TRIM DISABLED
+    var_name: A:AILERON TRIM DISABLED
     var_units: Bool
     var_type: i32
     event_name: AILERON_TRIM_DISABLED_SET
