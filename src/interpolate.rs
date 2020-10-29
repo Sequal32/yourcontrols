@@ -5,6 +5,7 @@ use std::collections::VecDeque;
 use crate::{util::VarReaderTypes, varreader::SimValue};
 
 const DEFAULT_INTERPOLATION_TIME: f64 = 0.2;
+const SKIP_TIME_THRESHOLD: f64 = 2.0;
 
 struct InterpolationData {
     current_value: f64,
@@ -103,8 +104,9 @@ impl Interpolate {
                     let interpolation_time = next.time-data.from_packet.time;
 
                     data.to_packet = next;
-                    data.done = false;
                     data.time = Instant::now();
+                    // Do not interpolate if time exceeds threshold, as aircraft will just stand still interpolating at a very slow rate
+                    data.done = interpolation_time > SKIP_TIME_THRESHOLD;
 
                     if queue.len() > self.buffer_size {
                         // Will make next interpolation faster depending on how many packets over the buffer size it is.
