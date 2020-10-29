@@ -925,6 +925,20 @@ shared:
     var_units: Bool
     event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
   -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER 
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+    var_type: f64
+  -
     type: event
     event_name: AP_LOC_HOLD
   -
@@ -982,36 +996,10 @@ shared:
     type: var
     var_name: L:XMLVAR_Baro_Selector_HPA_1
     var_type: f64
-  # - # In managed mode, the following knobs don't have simvars
-  #   type: event
-  #   event_name: HEADING_BUG_INC
-  # -
-  #   type: event
-  #   event_name: HEADING_BUG_DEC
-  # -
-  #   type: event
-  #   event_name: AP_ALT_VAR_INC
-  # -
-  #   type: event
-  #   event_name: AP_ALT_VAR_DEC
-  # -
-  #   type: event
-  #   event_name: AP_MACH_VAR_INC
-  # -
-  #   type: event
-  #   event_name: AP_MACH_VAR_DEC
-  # -
-  #   type: event
-  #   event_name: AP_SPD_VAR_INC
-  # -
-  #   type: event
-  #   event_name: AP_SPD_VAR_DEC
-  # -
-  #   type: event
-  #   event_name: AP_VS_VAR_INC
-  # -
-  #   type: event
-  #   event_name: AP_VS_VAR_DEC
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+    var_type: f64
   - # ASOBO_AIRBUS_Push_Metric_Alt_Template
     type: var
     var_name: L:A32NX_METRIC_ALT_TOGGLE
@@ -1311,4 +1299,35 @@ init:
     var_units: Frequency BCD16
     var_type: i32
     event_name: COM3_STBY_RADIO_SET
-  
+
+server:
+  -
+    type: var
+    var_name: FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60
+  -
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60
+  -
+    type: var
+    var_name: FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60
+  -
+    type: var
+    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60

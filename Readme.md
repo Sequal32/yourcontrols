@@ -73,7 +73,7 @@ If you enjoy the mod, considering showing your gratitude with a donation! I've p
 
 ## Troubleshooting
 ### Discord
-If you're seeking help for using this program, or would like to beta test more aircraft/features, join the [discord!](https://discord.gg/ywb7paY).
+If you're seeking help for using this program, or would like to beta test more aircraft/features, join the [discord!](https://discord.gg/SxYqf2n).
 
 ### Missing DLL
 Install [Microsoft Visual C++ 2015 Redistributable Update 3 RC](https://www.microsoft.com/en-us/download/details.aspx?id=52685) to resolve this.
