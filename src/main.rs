@@ -124,30 +124,32 @@ fn main() {
 
     loop {
         let timer = Instant::now();
-
-        if let Some(client) = transfer_client.as_mut() {
-            let message = conn.get_next_message();
+        
+        let message = conn.get_next_message();
             // Simconnect message
-            match message {
-                Ok(DispatchResult::SimobjectData(data)) => {
-                    definitions.process_sim_object_data(data);
-                },
-                // Exception occured
-                Ok(DispatchResult::Exception(data)) => {
-                    warn!("SimConnect exception occurred: {}", unsafe{data.dwException});
-                },
-                Ok(DispatchResult::Event(data)) => {
-                    definitions.process_event_data(data);
-                },
-                Ok(DispatchResult::ClientData(data)) => {
-                    definitions.process_client_data(&conn, data);
-                }
-                Ok(DispatchResult::Quit(_)) => {
+        match message {
+            Ok(DispatchResult::SimobjectData(data)) => {
+                definitions.process_sim_object_data(data);
+            },
+            // Exception occured
+            Ok(DispatchResult::Exception(data)) => {
+                warn!("SimConnect exception occurred: {}", unsafe{data.dwException});
+            },
+            Ok(DispatchResult::Event(data)) => {
+                definitions.process_event_data(data);
+            },
+            Ok(DispatchResult::ClientData(data)) => {
+                definitions.process_client_data(&conn, data);
+            }
+            Ok(DispatchResult::Quit(_)) => {
+                if let Some(client) = transfer_client.as_mut() {
                     client.stop("Sim closed.".to_string());
                 }
-                _ => ()
-            };
+            }
+            _ => ()
+        };
 
+        if let Some(client) = transfer_client.as_mut() {
             // Data from server
             match client.get_next_message() {
                 Ok(ReceiveData::Update(sender, time, sync_data)) => {
