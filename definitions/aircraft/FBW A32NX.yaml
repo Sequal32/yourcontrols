@@ -20,6 +20,12 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
     index_param: 85
+  -
+    type: ToggleSwitchParam
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    event_name: PANEL_LIGHTS_TOGGLE
+    event_param: 1
   - # ASOBO_LIGHTING_Knob_Glareshield_Template
     type: NumSetWithIndex
     var_name: A:LIGHT POTENTIOMETER:81
@@ -28,6 +34,12 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
     index_param: 81
+  -
+    type: ToggleSwitchParam
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    event_name: GLARESHIELD_LIGHTS_TOGGLE
+    event_param: 1
   - # ASOBO_LIGHTING_Knob_Glareshield_Template
     type: NumSetWithIndex
     var_name: A:LIGHT POTENTIOMETER:82
@@ -44,7 +56,13 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
     index_param: 83
-  - # ASOBO_LIGHTING_Knob_Glareshield_Template Autopilot
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT GLARESHIELD:3
+    var_units: Bool
+    event_name: GLARESHIELD_LIGHTS_TOGGLE
+    event_param: 3
+  - # ASOBO_LIGHTING_Knob_Panel_Template Autopilot
     type: NumSetWithIndex
     var_name: A:LIGHT POTENTIOMETER:84
     var_units: Percent
@@ -52,6 +70,12 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
     index_param: 84
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:2
+    var_units: Bool
+    event_name: PANEL_LIGHTS_TOGGLE
+    event_param: 2
   - # ASOBO_LIGHTING_Knob_Glareshield_Template Autopilot
     type: NumSetWithIndex
     var_name: A:LIGHT POTENTIOMETER:87
@@ -417,6 +441,13 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
     index_param: 86
+  -
+    type: ToggleSwitchParam
+    var_name: LIGHT PANEL:4
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_TOGGLE
+    event_param: 4
   - # ASOBO_LIGHTING_Switch_Light_Cabin_Template SWITCH_OVHD_INTLT_DOME
     type: NumSetWithIndex
     var_name: A:LIGHT POTENTIOMETER:7
