@@ -126,6 +126,7 @@ struct NumSetEntry {
 #[derive(Deserialize)]
 struct NumSetWithIndexEntry {
     var_name: String,
+    var_type: String,
     var_units: Option<String>,
     event_name: String,
     index_param: i32,
@@ -242,8 +243,9 @@ enum ActionType {
     CustomBoolAction(ToggleSwitchParam),
     NumAction(Box<dyn Syncable<i32>>),
     CustomNumAction(NumSet),
-    FloatAction(NumSetEntry),
+    NumSetFloat(NumSetEntry),
     NumSetWithIndex(NumSetWithIndexEntry),
+    NumSetWithIndexFloat(NumSetWithIndexEntry),
     NumFloatAction(Box<dyn Syncable<f64>>),
     // No BCD
     FreqSwapAction(Box<dyn Syncable<i32>>),
@@ -496,8 +498,17 @@ impl Definitions {
     }
 
     fn add_num_set_with_index(&mut self, category: &str, var: NumSetWithIndexEntry) -> Result<(), VarAddError> {
-        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
-        self.add_mapping(var_string, ActionType::NumSetWithIndex(var));
+        let var_name = var.var_name.clone();
+        let units = var.var_units.clone();
+
+        let (var_type, mapping) = match var.var_type.as_str() {
+            "i32" => (InDataTypes::I32, ActionType::NumSetWithIndex(var)),
+            "f64" => (InDataTypes::F64, ActionType::NumSetWithIndexFloat(var)),
+            _ => return Err(VarAddError::MissingField("var_type"))
+        };
+        
+        let (var_string, _) = self.add_var_string(category, &var_name, units.as_deref(), var_type)?;
+        self.add_mapping(var_string, mapping);
 
         Ok(())
     }
@@ -562,7 +573,7 @@ impl Definitions {
 
     fn add_float_var(&mut self, category: &str, var: NumSetEntry) -> Result<(), VarAddError> {
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::F64)?;
-        self.add_mapping(var_string, ActionType::FloatAction(var));
+        self.add_mapping(var_string, ActionType::NumSetFloat(var));
         Ok(())
     }
 
@@ -944,11 +955,12 @@ impl Definitions {
                                 // Format of INDEX VALUE (>K:2:NAME)
                                 ActionType::NumSetWithIndex(action) => {
                                     let string_value;
+                                    let value = value * action.multiply_by.unwrap_or(1);
 
                                     if action.index_reversed {
-                                        string_value = format!("{} {}", value * action.multiply_by.unwrap_or(1), action.index_param);
+                                        string_value = format!("{} {}", value, action.index_param);
                                     } else {
-                                        string_value = format!("{} {}", action.index_param, value * action.multiply_by.unwrap_or(1));
+                                        string_value = format!("{} {}", action.index_param, value);
                                     }
 
                                     self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), None, &string_value);
@@ -964,11 +976,15 @@ impl Definitions {
                             }
 
                             VarReaderTypes::F64(value) => match action {
-                                ActionType::FloatAction(action) => {
+                                ActionType::NumSetFloat(action) => {
                                     self.lvarstransfer.set_unchecked(conn, &format!("K:{}", action.event_name), Some(""), &value.to_string());
                                 }
                                 ActionType::NumFloatAction(action) => {
                                     action.set_new(*value, conn);
+                                }
+                                ActionType::NumSetWithIndexFloat(action) => {
+                                    let value = value * (action.multiply_by.unwrap_or(1) as f64);
+                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), None, &value.to_string());
                                 }
                                 _ => {}
                             }
