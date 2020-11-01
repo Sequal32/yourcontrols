@@ -26,7 +26,7 @@ Shared Cockpit for Microsoft Flight Simulator 2020.
 * Synchronzied button presses on FMCs/GXXXXs
 
 The following aircraft have config files:
-* FBW A32NX v0.4.0
+* FBW A32NX v0.4.X
 * Cessna 152
 * Cessna 172 G1000
 * Diamond DA40
