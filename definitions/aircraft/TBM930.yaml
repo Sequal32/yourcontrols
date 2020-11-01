@@ -70,13 +70,20 @@ shared:
     var_name: L:XMLVAR_Starter
     var_type: f64
   -
+    type: SwitchOn
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    event_name: TOGGLE_STARTER1
+  -
     type: var
     var_name: L:XMLVAR_Starter_IsHeld
     var_type: f64
   - # ASOBO_ENGINE_Switch_Ignition_Template
-    type: var
-    var_name: L:XMLVAR_Ignition
-    var_type: f64
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET1
   - # ASOBO_FUEL_Knob_Selector_Template
     type: NumSet
     var_name: A:FUEL TANK SELECTOR:1
