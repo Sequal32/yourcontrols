@@ -984,7 +984,8 @@ impl Definitions {
                                 }
                                 ActionType::NumSetWithIndexFloat(action) => {
                                     let value = value * (action.multiply_by.unwrap_or(1) as f64);
-                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), None, &value.to_string());
+                                    let string_value = format!("{} {}", action.index_param, value);
+                                    self.lvarstransfer.set_unchecked(conn, &format!("K:2:{}", action.event_name), None, &string_value);
                                 }
                                 _ => {}
                             }
