@@ -29,7 +29,7 @@ shared:
     event_name: PITOT_HEAT_TOGGLE
 
   - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:22
     var_units: bool
 
@@ -37,7 +37,7 @@ shared:
     event_param: 22
 
   - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:23
     var_units: bool
 
@@ -48,7 +48,7 @@ shared:
     var_type: bool
     var_name: L:XMLVAR_ElecMaster
   -
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: bool
     event_name: TOGGLE_MASTER_BATTERY_ALTERNATOR
@@ -60,12 +60,13 @@ shared:
     var_units: Bool
     event_name: TOGGLE_MASTER_ALTERNATOR
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:GENERAL ENG STARTER:1
     var_units: Bool
     event_name: TOGGLE_STARTER1
+    switch_on: true
   -
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:2
     var_units: bool
     event_name: TOGGLE_MASTER_BATTERY_ALTERNATOR
@@ -123,19 +124,19 @@ shared:
     var_units: Bool
     event_name: ATTITUDE_CAGE_BUTTON
   - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 1
   - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:LIGHT CABIN:2
     var_units: Bool
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 2
   - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:LIGHT CABIN:3
     var_units: Bool
     event_name: TOGGLE_CABIN_LIGHTS

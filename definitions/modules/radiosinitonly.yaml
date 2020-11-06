@@ -24,7 +24,7 @@ init:
     var_type: i32
     event_name: NAV2_STBY_SET
   -
-    type: NumSwap
+    type: NumSet
     var_name: ADF ACTIVE FREQUENCY:1 
     var_units: Frequency ADF BCD32
     var_type: i32
@@ -104,25 +104,28 @@ init:
     var_type: bool
     event_name: MARKER_SOUND_TOGGLE
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:COM TRANSMIT:1
     var_units: Bool
     var_type: bool
     event_name: PILOT_TRANSMITTER_SET
+    switch_on: true
     event_param: 0
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:COM TRANSMIT:2
     var_units: Bool
     var_type: bool
     event_name: PILOT_TRANSMITTER_SET
+    switch_on: true
     event_param: 1
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:COM TRANSMIT:3
     var_units: Bool
     var_type: bool
     event_name: PILOT_TRANSMITTER_SET
+    switch_on: true
     event_param: 2
   -
     type: NumSet
@@ -131,14 +134,16 @@ init:
     var_type: bool
     event_name: COM_RECEIVE_ALL_SET
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:COM RECEIVE:1
     var_units: Bool
     var_type: bool
     event_name: COM1_RECEIVE_SELECT
+    switch_on: true
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:COM RECEIVE:2
     var_units: Bool
     var_type: bool
+    switch_on: true
     event_name: COM2_RECEIVE_SELECT

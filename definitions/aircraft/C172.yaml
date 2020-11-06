@@ -10,7 +10,7 @@ include:
 
 shared:
   -
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: bool
     event_name: TOGGLE_MASTER_BATTERY
@@ -18,7 +18,7 @@ shared:
     event_param: 1
 
   - #ASOBO_ELECTRICAL_Switch_Battery_STBY_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:2
     var_units: bool
 
@@ -33,7 +33,7 @@ shared:
     event_name: TOGGLE_ALTERNATOR1
   
   - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:24
     var_units: bool
 
@@ -41,7 +41,7 @@ shared:
     event_param: 24
 
   - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:25
     var_units: bool
 
@@ -84,25 +84,25 @@ shared:
   
   # DISPLAY/CABIN BRIGHTNESS
   - # ASOBO_LIGHTING_Knob_SubTemplate
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING
     var_units: Percent
     var_type: i32
-    index_param: 0
+    event_param: 0
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
   - 
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:1
     var_units: Percent
     var_type: i32
-    index_param: 1
+    event_param: 1
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
   - 
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:2
     var_units: Percent
     var_type: i32
-    index_param: 2
+    event_param: 2
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
   - # Avionics lighting ASOBO_LIGHTING_Knob_Avionics_Template
     type: NumSet
@@ -118,11 +118,11 @@ shared:
     event_name: LIGHT_POTENTIOMETER_3_SET
   # ASOBO_LIGHTING_Knob_Pedestal_Template
   -
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT PEDESTRAL POWER SETTING
     var_units: Percent
     var_type: i32
-    index_param: 0
+    event_param: 0
     event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
   # Deice
   - # ASOBO_DEICE_Switch_Pitot_Template

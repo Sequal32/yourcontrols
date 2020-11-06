@@ -1,3 +1,6 @@
+use std::{fmt::Display, cmp::PartialOrd, ops::{AddAssign, Mul, SubAssign}};
+
+use num::{FromPrimitive, ToPrimitive};
 use simconnect;
 
 use crate::{sync::LVarSyncer, util::NumberDigits};
@@ -6,199 +9,164 @@ const GROUP_ID: u32 = 5;
 
 pub trait Syncable<T> where T: Default {
     fn set_current(&mut self, current: T);
-    fn set_new(&mut self, new: T, conn: &simconnect::SimConnector);
-    fn get_multiply_by(&self) -> T {return Default::default()}
+    fn set_new(&self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer);
 }
 
 pub struct ToggleSwitch {
-    pub event_id: u32,
-    pub current: bool
+    event_id: u32,
+    // To be used in the event where two events control this switch
+    off_event_id: Option<u32>,
+    // To be used to select an index to control
+    event_param: Option<u32>,
+    // The presence of event_name determines whether to use the calculator
+    event_name: Option<String>,
+    // Only trigger if the new value is on
+    switch_on: bool,
+    // Current value of the switch
+    current: bool,
 }
 
 impl ToggleSwitch {
     pub fn new(event_id: u32) -> Self {
         return Self {
             event_id: event_id,
-            current: false
-        }
-    }
-}
-
-impl Syncable<bool> for ToggleSwitch {
-    fn set_current(&mut self, current: bool) {
-        self.current = current;
-    }
-
-    fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
-        if self.current == new {return}
-        conn.transmit_client_event(1, self.event_id, 0, GROUP_ID, 0);
-    }
-}
-
-pub struct ToggleSwitchParam {
-    pub event_id: u32,
-    pub param: u32,
-    pub current: bool
-}
-
-impl ToggleSwitchParam {
-    pub fn new(event_id: u32, param: u32) -> Self {
-        return Self {
-            event_id: event_id,
-            param,
-            current: false
-        }
-    }
-}
-
-impl Syncable<bool> for ToggleSwitchParam {
-    fn set_current(&mut self, current: bool) {
-        self.current = current;
-    }
-
-    fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
-        if self.current == new {return}
-        conn.transmit_client_event(1, self.event_id, self.param, GROUP_ID, 0);
-    }
-}
-
-pub struct ToggleSwitchTwo {
-    pub off_event_id: u32,
-    pub on_event_id: u32,
-    pub current: bool,
-    pub param: Option<u32>
-}
-
-impl ToggleSwitchTwo {
-    pub fn new(off_event_id: u32, on_event_id: u32, param: Option<u32>) -> Self { 
-        Self { 
-            off_event_id, 
-            on_event_id, 
+            off_event_id: None,
+            event_param: None,
+            event_name: None,
+            switch_on: false,
             current: false,
-            param
-        } 
+        }
+    }
+
+    pub fn set_off_event(&mut self, off_event_id: u32) {
+        self.off_event_id = Some(off_event_id);
+    }
+
+    pub fn set_calculator_event_name(&mut self, event_name: Option<&str>) {
+        match event_name {
+            Some(event_name) => self.event_name = Some(format!("K:{}", event_name)),
+            None => self.event_name = None
+        }
+    }
+
+    pub fn set_param(&mut self, param: u32) {
+        self.event_param = Some(param);
+    }
+
+    pub fn set_switch_on(&mut self, switch_on: bool) {
+        self.switch_on = switch_on
     }
 }
 
-impl Syncable<bool> for ToggleSwitchTwo {
+impl<'a> Syncable<bool> for ToggleSwitch {
     fn set_current(&mut self, current: bool) {
-        self.current = current
+        self.current = current;
     }
 
-    fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
+    fn set_new(&self, new: bool, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
         if self.current == new {return}
-        let event_id = if new {self.on_event_id} else {self.off_event_id};
-        conn.transmit_client_event(1, event_id, self.param.unwrap_or(0), GROUP_ID, 0);
+        if !new && self.switch_on {return}
+
+        if let Some(event_name) = self.event_name.as_ref() {
+            
+            let value_string = match self.event_param {
+                Some(value) => value.to_string(),
+                None => String::new(),
+            };
+
+            lvar_transfer.set(conn, event_name, &value_string);
+
+        } else {
+            let event_id = match self.off_event_id {
+                Some(off_event_id) => match new {
+                    true => self.event_id,
+                    false => off_event_id
+                }
+                None => self.event_id
+            };
+
+            conn.transmit_client_event(1, event_id, self.event_param.unwrap_or(0), GROUP_ID, 0);
+        }
     }
 }
 
-pub struct SwitchOn {
-    pub event_id: u32,
-    pub event_param: Option<u32>,
-    pub current: bool,
+#[derive(Default)]
+pub struct NumSet<T> {
+    event_id: u32,
+    event_name: Option<String>,
+    event_param: Option<u32>,
+    swap_event_id: Option<u32>,
+    multiply_by: Option<T>,
+    index_reversed: bool,
+    
+    current: T,
 }
 
-impl SwitchOn {
-    pub fn new(event_id: u32, event_param: Option<u32>) -> Self { 
-        Self { 
-            event_id, 
-            event_param,
-            current: false
-        } 
-    }
-}
-
-impl Syncable<bool> for SwitchOn {
-    fn set_current(&mut self, current: bool) {
-        self.current = current
-    }
-
-    fn set_new(&mut self, new: bool, conn: &simconnect::SimConnector) {
-        if new == false {return}
-        conn.transmit_client_event(1, self.event_id, self.event_param.unwrap_or(0), GROUP_ID, 0);
-    }
-}
-
-pub struct NumSet {
-    pub event_id: u32,
-    pub current: i32
-}
-
-impl NumSet {
+impl<T> NumSet<T> where T: Default {
     pub fn new(event_id: u32) -> Self {
         return Self {
             event_id: event_id,
-            current: 0
+            ..Default::default()
         }
+    }
+
+    pub fn set_calculator_event_name(&mut self, event_name: Option<&str>) {
+        match event_name {
+            Some(event_name) => self.event_name = Some(format!("K:2:{}", event_name)),
+            None => self.event_name = None
+        }
+    }
+
+    pub fn set_swap_event(&mut self, event_id: u32) {
+        self.swap_event_id = Some(event_id)
+    }
+
+    pub fn set_multiply_by(&mut self, multiply_by: T) {
+        self.multiply_by = Some(multiply_by)
+    }
+
+    pub fn set_param(&mut self, event_param: u32, index_reversed: bool) {
+        self.event_param = Some(event_param);
+        self.index_reversed = index_reversed;
     }
 }
 
-impl Syncable<i32> for NumSet {
-    fn set_current(&mut self, current: i32) {
+impl<T> Syncable<T> for NumSet<T> where T: Default + PartialEq + Mul<T, Output = T> + FromPrimitive + ToPrimitive + Display + Copy {
+    fn set_current(&mut self, current: T) {
         self.current = current
     }
 
-    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
+    fn set_new(&self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
         if new == self.current {return}
-        conn.transmit_client_event(1, self.event_id, new as u32, GROUP_ID, 0);
-    }
-}
 
-pub struct NumSetSwap {
-    pub event_id: u32,
-    pub swap_event_id: u32,
-    pub current: i32,
-}
+        let value = match self.multiply_by.as_ref() {
+            Some(multiply_by) => new * multiply_by.clone(),
+            None => new
+        };
 
-impl NumSetSwap {
-    pub fn new(event_id: u32, swap_event_id: u32) -> Self {
-        return Self {
-            event_id,
-            swap_event_id,
-            current: 0
+        if let Some(event_name) = self.event_name.as_ref() {
+
+            let value_string = match self.event_param {
+                Some(event_param) => {
+                    if self.index_reversed {
+                        format!("{} {}", value, event_param)
+                    } else {
+                        format!("{} {}", event_param, value)
+                    }
+                }
+                None => value.to_string()
+            };
+
+            lvar_transfer.set_unchecked(conn, event_name, None, &value_string);
+            
+        } else {
+            conn.transmit_client_event(1, self.event_id, new.to_u32().unwrap(), GROUP_ID, 0);
+        }
+
+        if let Some(swap_event_id) = self.swap_event_id {
+            conn.transmit_client_event(1, swap_event_id, 0, GROUP_ID, 0);
         }
     }
-}
-
-impl Syncable<i32> for NumSetSwap {
-    fn set_current(&mut self, current: i32) {
-        self.current = current
-    }
-
-    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
-        if new == self.current {return}
-        conn.transmit_client_event(1, self.event_id, new as u32, GROUP_ID, 0);
-        conn.transmit_client_event(1, self.swap_event_id, 0, GROUP_ID, 0);
-    }
-}
-
-pub struct NumSetMultiply {
-    pub event_id: u32,
-    pub current: i32,
-    pub multiply_by: i32
-}
-
-impl NumSetMultiply {
-    pub fn new(event_id: u32, multiply_by: i32) -> Self {
-        Self {
-            event_id,
-            current: 0,
-            multiply_by
-        }
-    }
-}
-
-impl Syncable<i32> for NumSetMultiply {
-    fn set_current(&mut self, current: i32) {
-        self.current = current
-    }
-
-    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
-        if new == self.current {return}
-        conn.transmit_client_event(1, self.event_id, (new * self.multiply_by) as u32, GROUP_ID, 0);    
-    }
-
-    fn get_multiply_by(&self) -> i32 {return self.multiply_by}
 }
 
 pub struct NumIncrement<T> {
@@ -219,12 +187,12 @@ impl<T> NumIncrement<T>  where T: Default {
     }
 }
 
-impl<T> Syncable<T> for NumIncrement<T> where T: Default + std::ops::SubAssign + std::ops::AddAssign + std::cmp::PartialOrd + Copy {
+impl<T> Syncable<T> for NumIncrement<T> where T: Default + SubAssign + AddAssign + PartialOrd + Copy {
     fn set_current(&mut self, current: T) {
         self.current = current
     }
 
-    fn set_new(&mut self, new: T, conn: &simconnect::SimConnector) {
+    fn set_new(&self, new: T, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
         let mut working = self.current;
 
         while working > new {
@@ -235,37 +203,6 @@ impl<T> Syncable<T> for NumIncrement<T> where T: Default + std::ops::SubAssign +
         while working < new {
             working += self.increment_amount;
             conn.transmit_client_event(1, self.up_event_id, 0, GROUP_ID, 0);
-        }
-    }
-}
-
-pub struct NumIncrementSet {
-    pub up_event_id: u32,
-    pub down_event_id: u32,
-    pub current: i32,
-}
-
-impl NumIncrementSet {
-    pub fn new(up_event_id: u32, down_event_id: u32) -> Self {
-        return Self {
-            up_event_id,
-            down_event_id,
-            current: 0
-        }
-    }
-}
-
-impl Syncable<i32> for NumIncrementSet {
-    fn set_current(&mut self, current: i32) {
-        self.current = current
-    }
-
-    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
-        if new == self.current {return}
-        if new > self.current {
-            conn.transmit_client_event(1, self.up_event_id, (new - self.current) as u32, GROUP_ID, 0);
-        } else if new < self.current {
-            conn.transmit_client_event(1, self.down_event_id,  (self.current - new) as u32, GROUP_ID, 0);
         }
     }
 }
@@ -291,7 +228,7 @@ impl Syncable<i32> for NumDigitSet {
         self.current = NumberDigits::new(current)
     }
 
-    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector) {
+    fn set_new(&self, new: i32, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
         let new = NumberDigits::new(new);
 
         for index in 0..self.inc_event_ids.len() {
@@ -323,12 +260,14 @@ impl CustomCalculator {
             set_string, current: 0.0
         }
     }
+}
 
-    pub fn set_current(&mut self, new: f64) {
+impl Syncable<f64> for CustomCalculator {
+    fn set_current(&mut self, new: f64) {
         self.current = new
     }
 
-    pub fn set_new(&self, new: f64, conn: &simconnect::SimConnector, transfer: &mut LVarSyncer) {
+    fn set_new(&self, new: f64, conn: &simconnect::SimConnector, transfer: &mut LVarSyncer) {
         if self.current == new {return}
         transfer.send_raw(conn, &self.set_string);
     }

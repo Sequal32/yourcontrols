@@ -49,12 +49,12 @@ shared:
   #   var_name: L:XMLVAR_Oxygen
   #   var_type: i32
   - # secondary altimeter/altitude
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:KOHLSMAN SETTING MB:2
     var_units: Millibars
     var_type: f64
     event_name: KOHLSMAN_SET
-    index_param: 2
+    event_param: 2
     multiply_by: 16
   - # PUSH_LEVER_THROTTLE
     type: ToggleSwitch
@@ -70,10 +70,11 @@ shared:
     var_name: L:XMLVAR_Starter
     var_type: f64
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:GENERAL ENG STARTER:1
     var_units: Bool
     event_name: TOGGLE_STARTER1
+    switch_on: true
   -
     type: var
     var_name: L:XMLVAR_Starter_IsHeld
@@ -133,7 +134,7 @@ shared:
     var_name: L:XMLVAR_CrashLeverPos
     var_type: f64
   -
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: bool
     event_name: TOGGLE_MASTER_BATTERY
@@ -143,7 +144,7 @@ shared:
     var_name: L:XMLVAR_ElecGen
     var_type: f64
   - #TODO: CHECK PARAM
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: GENERAL ENG GENERATOR SWITCH:1
     var_units: Bool
     event_name: TOGGLE_ALTERNATOR1
@@ -204,10 +205,10 @@ shared:
     var_units: Bool
     event_name: TOGGLE_ALTERNATE_STATIC
   -
-    type: ToggleSwitchTwo
+    type: ToggleSwitch
     var_name: A:GEAR HANDLE POSITION
     var_units: Bool
-    on_event_name: GEAR_DOWN
+    event_name: GEAR_DOWN
     off_event_name: GEAR_UP
   -
     type: var

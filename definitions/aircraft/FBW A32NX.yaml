@@ -5,57 +5,57 @@ include:
 shared:
   # COCKPIT LIGHTING
   - # ASOBO_LIGHTING_Knob_Pedestal_Template
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:76
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 76
+    event_param: 76
   - # ASOBO_LIGHTING_Knob_Panel_Template
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:85
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 85
+    event_param: 85
   -
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:LIGHT PANEL:1
     var_units: Bool
     event_name: PANEL_LIGHTS_TOGGLE
     event_param: 1
   - # ASOBO_LIGHTING_Knob_Glareshield_Template
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:81
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 81
+    event_param: 81
   -
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
     event_name: GLARESHIELD_LIGHTS_TOGGLE
     event_param: 1
   - # ASOBO_LIGHTING_Knob_Glareshield_Template
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:82
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 82
+    event_param: 82
   - # ASOBO_LIGHTING_Knob_Glareshield_Template
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:83
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 83
+    event_param: 83
   -
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD:3
@@ -63,13 +63,13 @@ shared:
     event_name: GLARESHIELD_LIGHTS_TOGGLE
     event_param: 3
   - # ASOBO_LIGHTING_Knob_Panel_Template Autopilot
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:84
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 84
+    event_param: 84
   -
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:2
@@ -77,13 +77,13 @@ shared:
     event_name: PANEL_LIGHTS_TOGGLE
     event_param: 2
   - # ASOBO_LIGHTING_Knob_Glareshield_Template Autopilot
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:87
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 87
+    event_param: 87
   - # ASOBO_ENGINE_Switch_Master_Template
     type: ToggleSwitch
     var_name: A:GENERAL ENG STARTER:1
@@ -95,17 +95,17 @@ shared:
     var_units: Bool
     event_name: TOGGLE_STARTER2
   -
-    type: ToggleSwitchTwo
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:6
     var_units: Bool
-    on_event_name: FUELSYSTEM_VALVE_OPEN
+    event_name: FUELSYSTEM_VALVE_OPEN
     off_event_name: FUELSYSTEM_VALVE_CLOSE
     event_param: 6
   -
-    type: ToggleSwitchTwo
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:7
     var_units: Bool
-    on_event_name: FUELSYSTEM_VALVE_OPEN
+    event_name: FUELSYSTEM_VALVE_OPEN
     off_event_name: FUELSYSTEM_VALVE_CLOSE
     event_param: 7
   - # A32NX_ENGINE_MODE_SELECTOR_TEMPLATE
@@ -121,10 +121,10 @@ shared:
     var_type: i32
     event_name: TURBINE_IGNITION_SWITCH_SET1
   - 
-    type: ToggleSwitchTwo
+    type: ToggleSwitch
     var_name: A:GEAR HANDLE POSITION
     var_units: Bool
-    on_event_name: GEAR_DOWN
+    event_name: GEAR_DOWN
     off_event_name: GEAR_UP
   - 
     type: NumSet
@@ -141,10 +141,10 @@ shared:
     event_name: SPOILERS_SET
     multiply_by: 164
   - # ASOBO_HANDLING_Lever_Spoilers_Template
-    type: ToggleSwitchTwo
+    type: ToggleSwitch
     var_name: A:SPOILERS ARMED
     var_units: Bool
-    on_event_name: SPOILERS_ARM_ON
+    event_name: SPOILERS_ARM_ON
     off_event_name: SPOILERS_ARM_OFF
   - # ASOBO_AIRBUS_WeatherRadar_Template
     type: var
@@ -160,13 +160,13 @@ shared:
     var_type: f64
   # SCREENS LIGHTING
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template EFIS
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:88
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 88
+    event_param: 88
   - # ASOBO_AIRBUS_Push_TERRONND_SubTemplate
     type: var
     var_name: L:BTN_TERRONND_1_ACTIVE
@@ -176,49 +176,49 @@ shared:
     var_name: L:BTN_TERRONND_2_ACTIVE
     var_type: f64
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template EFIS ND small
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:89
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 89
+    event_param: 89
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template ND WX
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:94
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 94
+    event_param: 94
   - # ASOBO_GT_Component_Emissive_Gauge 
     type: var
     var_name: L:A32NX_PANEL_DCDU_L_BRIGHTNESS
     var_type: f64
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template FO PFD
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:90
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 90
+    event_param: 90
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template FO ND SMALL
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:91
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 91
+    event_param: 91
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template ND WX
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:95
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 95
+    event_param: 95
   - # ASOBO_GT_Component_Emissive_Gauge 
     type: var
     var_name: L:A32NX_PANEL_DCDU_R_BRIGHTNESS
@@ -235,21 +235,21 @@ shared:
   # TODO: A32NX_AIRBUS_Push_EFISGPWS_Template
   # EICAS LIGHTING
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template ECAM UPPER
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:92
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 92
+    event_param: 92
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template ECAM LOWER
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:93
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 93
+    event_param: 93
   # OVERHEAD
   - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate AIRBUS SPECIFIC
     type: CustomCalculator
@@ -275,19 +275,19 @@ shared:
     var_units: Bool
     event_name: APU_GENERATOR_SWITCH_TOGGLE
   - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:EXTERNAL POWER ON:1
     var_units: Bool
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 1
   - # ASOBO_ELECTRICAL_Switch_Engine_Bleed_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:BLEED AIR ENGINE:1
     var_units: Bool
     event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
     event_param: 1
   - # ASOBO_ELECTRICAL_Switch_Engine_Bleed_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:BLEED AIR ENGINE:2
     var_units: Bool
     event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
@@ -338,7 +338,7 @@ shared:
     var_name: L:A32NX_ELEC_IDG2LOCK_TOGGLE
     var_type: f64
   - # ASOBO_AIRBUS_Push_Fuel_Valve_Template TODO: need APU_OFF? lvar apu start?
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:8
     var_units: Bool
     event_name: FUELSYSTEM_VALVE_TOGGLE
@@ -378,7 +378,7 @@ shared:
     var_units: Bool
     event_name: STROBES_TOGGLE
   - # ASOBO_LIGHTING_Switch_Light_Double_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:LIGHT LANDING:1
     var_units: Bool
     event_name: LANDING_LIGHTS_TOGGLE
@@ -399,13 +399,13 @@ shared:
     var_name: L:STROBE_1_AUTO
     var_type: f64
   -
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:LIGHT LANDING:2
     var_units: Bool
     event_name: LANDING_LIGHTS_TOGGLE
     event_param: 2
   -
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:LIGHT LANDING:3
     var_units: Bool
     event_name: LANDING_LIGHTS_TOGGLE
@@ -434,28 +434,28 @@ shared:
     var_units: Bool
     event_name: TOGGLE_NAV_LIGHTS
   - # ASOBO_LIGHTING_Knob_Panel_Template KNOB_OVHD_INTLT_BRT
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:86
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 86
+    event_param: 86
   -
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: LIGHT PANEL:4
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_TOGGLE
     event_param: 4
   - # ASOBO_LIGHTING_Switch_Light_Cabin_Template SWITCH_OVHD_INTLT_DOME
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 7
+    event_param: 7
   -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN
@@ -464,81 +464,81 @@ shared:
   # Overhead_Fuel
   #ASOBO_FUEL_Push_Valve_Template already done above?
   - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_LTKPUMPS1
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:2
     var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 2
   - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_LTKPUMPS2
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:5
     var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 5
   - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_PUMP1
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:1
     var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 1
   - # ASOBO_FUEL_Push_Pump_Template
-    type: ToggleSwitchParam # PUSH_OVHD_FUEL_PUMP2
+    type: ToggleSwitch # PUSH_OVHD_FUEL_PUMP2
     var_name: A:FUELSYSTEM PUMP SWITCH:4
     var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 4
   - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_RTKPUMPS1
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:3
     var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 3
   - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_RTKPUMPS1
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:6
     var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 6
   # OverHead_Flight_Controls
   - # ASOBO_AIRBUS_Push_ELAC_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FLY BY WIRE ELAC SWITCH:1
     var_units: Bool
     event_name: FLY_BY_WIRE_ELAC_TOGGLE
     event_param: 1
   - # ASOBO_AIRBUS_Push_SEC_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FLY BY WIRE SEC SWITCH:1
     var_units: Bool
     event_name: FLY_BY_WIRE_SEC_TOGGLE
     event_param: 1
   - # ASOBO_AIRBUS_Push_FAC_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FLY BY WIRE FAC SWITCH:1
     var_units: Bool
     event_name: FLY_BY_WIRE_FAC_TOGGLE
     event_param: 1
   - # ASOBO_AIRBUS_Push_ELAC_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FLY BY WIRE ELAC SWITCH:2
     var_units: Bool
     event_name: FLY_BY_WIRE_ELAC_TOGGLE
     event_param: 2
   - # ASOBO_AIRBUS_Push_SEC_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FLY BY WIRE SEC SWITCH:2
     var_units: Bool
     event_name: FLY_BY_WIRE_SEC_TOGGLE
     event_param: 2
   
   - # ASOBO_AIRBUS_Push_SEC_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FLY BY WIRE SEC SWITCH:3
     var_units: Bool
     event_name: FLY_BY_WIRE_SEC_TOGGLE
     event_param: 3
   - # ASOBO_AIRBUS_Push_FAC_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:FLY BY WIRE FAC SWITCH:2
     var_units: Bool
     event_name: FLY_BY_WIRE_FAC_TOGGLE
@@ -725,18 +725,18 @@ shared:
     var_type: i32
     event_name: PITOT_HEAT_SET
   - # ASOBO_HANDLING_Switch_Wipers_Template
-    type: ToggleSwitchParam
+    type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:77
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 77
   -
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:CIRCUIT POWER SETTING:77
     var_units: Percent
     var_type: i32
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
-    index_param: 77
+    event_param: 77
     index_reversed: true
   - # ASOBO_AIRLINER_FIRE_TEST
     type: var
@@ -837,21 +837,21 @@ shared:
     var_type: f64
   # Overhead_Reading_Lights
   - # FBW_Lighting_Knob_With_Potentiometer
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:96
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 96
+    event_param: 96
   - # FBW_Lighting_Knob_With_Potentiometer
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:97
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     index_reversed: true
-    index_param: 97
+    event_param: 97
   # Overhead_Back_Panel
   - # FBW_Covered_Push_Toggle
     type: var
@@ -906,33 +906,35 @@ shared:
     var_name: L:A32NX_OVHD_APU_AUTOEXITING_TEST
     var_type: f64
   -
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:KOHLSMAN SETTING MB:1
     var_units: Millibars
     var_type: f64
     event_name: KOHLSMAN_SET
-    index_param: 1
+    event_param: 1
     multiply_by: 16
   - # secondary altimeter/altitude
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:KOHLSMAN SETTING MB:2
     var_units: Millibars
     var_type: f64
     event_name: KOHLSMAN_SET
-    index_param: 2
+    event_param: 2
     multiply_by: 16
   - # ASOBO_AUTOPILOT_Push_FlightDirector_SubTemplate
-    type: CUSTOMSWITCHPARAM
+    type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
     var_units: Bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
     event_param: 1
+    use_calculator: true
   -
-    type: CUSTOMSWITCHPARAM
+    type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
     var_units: Bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
     event_param: 2
+    use_calculator: true
   # LS button and other EICAS buttons has an associated H event to fire with
   - # ASOBO_AIRLINER_Knob_ND_Template
     type: var
@@ -996,32 +998,32 @@ shared:
     var_name: L:XMLVAR_Autopilot_2_Status
     var_type: f64
   -
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
     var_units: Feet
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
-    index_param: 3
+    event_param: 3
   -
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:1
     var_units: Degrees
     var_type: f64
-    index_param: 1
+    event_param: 1
     event_name: HEADING_BUG_SET
   -
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR:2
     var_units: Feet per minute
     var_type: i32
-    index_param: 2
+    event_param: 2
     event_name: AP_VS_VAR_SET_ENGLISH
   -
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
     var_units: Knots
     var_type: f64
-    index_param: 1
+    event_param: 1
     event_name: AP_SPD_VAR_SET
   - # ASOBO_AIRLINER_Switch_Baro_Selector_Template
     type: var
@@ -1182,26 +1184,29 @@ shared:
     var_name: L:XMLVAR_RMP_R_NAV_Active
     var_type: f64
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:COM TRANSMIT:1
     var_units: Bool
     var_type: bool
     event_name: PILOT_TRANSMITTER_SET
-    index_param: 0
+    event_param: 0
+    switch_on: true
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:COM TRANSMIT:2
     var_units: Bool
     var_type: bool
     event_name: PILOT_TRANSMITTER_SET
-    index_param: 1
+    event_param: 1
+    switch_on: true
   -
-    type: SwitchOn
+    type: ToggleSwitch
     var_name: A:COM TRANSMIT:3
     var_units: Bool
     var_type: bool
     event_name: PILOT_TRANSMITTER_SET
-    index_param: 2
+    event_param: 2
+    switch_on: true
   -
     type: var
     var_name: L:XMLVAR_COM_1_Volume_VHF_L

@@ -1,11 +1,11 @@
 shared:
   -
-    type: NumSetWithIndex
+    type: NumSet
     var_name: A:KOHLSMAN SETTING MB:1
     var_units: Millibars
     var_type: f64
     event_name: KOHLSMAN_SET
-    index_param: 1
+    event_param: 1
     multiply_by: 16
   -
     type: var
@@ -13,10 +13,10 @@ shared:
     var_units: Degrees
     var_type: i32
   -
-    type: NumIncrementFloat
+    type: NumIncrement
     var_name: A:ATTITUDE BARS POSITION
     var_units: Percent Over 100
-    var_type: f64,
+    var_type: f64
     up_event_name: ATTITUDE_BARS_POSITION_UP
     down_event_name: ATTITUDE_BARS_POSITION_DOWN
     increment_by: 0.05
