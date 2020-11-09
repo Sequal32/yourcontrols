@@ -2,6 +2,7 @@ var connect_button = document.getElementById('connect-button')
 var server_button = document.getElementById('server-button')
 var alert = document.getElementById("alert")
 var version_alert = document.getElementById("version-alert")
+var version_alert_text = document.getElementById("version-alert-text")
 var overloaded_alert = document.getElementById("overloaded-alert")
 
 var nav_bar = document.getElementById("nav")
@@ -244,7 +245,7 @@ function MessageReceived(data) {
             break;
         case "version":
             version_alert.hidden = false
-            version_alert.innerHTML = `A new version is available: ${data["data"]}`
+            version_alert_text.innerHTML = `A new version is available: ${data["data"]}`
             break;
     }
 }
@@ -322,4 +323,8 @@ document.getElementById("main-form").onsubmit = function(e) {
         trying_connection = true
         invoke({type: "server", port: parseInt(port_input.value), is_v6: ip6radio.checked, username: name_input.value})
     }
+}
+
+function update() {
+    
 }
