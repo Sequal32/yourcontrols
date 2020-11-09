@@ -160,7 +160,7 @@ impl<T> Syncable<T> for NumSet<T> where T: Default + PartialEq + Mul<T, Output =
             lvar_transfer.set_unchecked(conn, event_name, None, &value_string);
             
         } else {
-            conn.transmit_client_event(1, self.event_id, new.to_u32().unwrap(), GROUP_ID, 0);
+            conn.transmit_client_event(1, self.event_id, new.to_i32().unwrap() as u32, GROUP_ID, 0);
         }
 
         if let Some(swap_event_id) = self.swap_event_id {

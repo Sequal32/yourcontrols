@@ -105,7 +105,7 @@ impl VarReader {
 
             match data {
                 VarReaderTypes::Bool(n) => buf.extend((*n as i64).to_le_bytes().iter()),
-                VarReaderTypes::I32(n) => buf.extend(n.to_le_bytes().iter()),
+                VarReaderTypes::I32(n) => buf.extend((*n as i64).to_le_bytes().iter()),
                 VarReaderTypes::I64(n) => buf.extend(n.to_le_bytes().iter()),
                 VarReaderTypes::F64(n) => buf.extend(n.to_le_bytes().iter()),
             };
