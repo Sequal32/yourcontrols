@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 mod app;
 mod clientmanager;
@@ -9,24 +9,30 @@ mod server;
 mod simconfig;
 mod sync;
 mod syncdefs;
-mod varreader;
-mod util;
 mod update;
+mod util;
+mod varreader;
 
 use app::{App, AppMessage};
 use clientmanager::ClientManager;
 use definitions::{Definitions, SyncPermission};
-use simconfig::Config;
-use server::{Client, ReceiveData, Server, TransferClient};
-use simconnect::{self, DispatchResult, SimConnector};
-use util::{app_get_versions};
-use std::{fs::{self, File}, io, thread, time::Duration, time::Instant};
-use spin_sleep::sleep;
 use log::{self, error, info, warn};
+use server::{Client, ReceiveData, Server, TransferClient};
+use simconfig::Config;
+use simconnect::{self, DispatchResult, SimConnector};
 use simplelog;
+use spin_sleep::sleep;
+use std::{
+    fs::{self, File},
+    io, thread,
+    time::Duration,
+    time::Instant,
+};
+use update::run_installer;
+use self::util::app_get_versions;
 
-use sync::*;
 use control::*;
+use sync::*;
 
 const LOG_FILENAME: &str = "log.txt";
 const CONFIG_FILENAME: &str = "config.json";
@@ -43,7 +49,14 @@ fn get_aircraft_configs() -> io::Result<Vec<String>> {
 
     for file in fs::read_dir(AIRCRAFT_DEFINITIONS_PATH)? {
         let file = file?;
-        filenames.push(file.path().file_name().unwrap().to_str().unwrap().to_string())
+        filenames.push(
+            file.path()
+                .file_name()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string(),
+        )
     }
 
     Ok(filenames)
@@ -57,12 +70,19 @@ fn main() {
             warn!("Could not open config. Using default values. Reason: {}", e);
 
             let config = Config::default();
-            config.write_to_file(CONFIG_FILENAME).expect(format!("Could not write to {}!", CONFIG_FILENAME).as_str());
+            config
+                .write_to_file(CONFIG_FILENAME)
+                .expect(format!("Could not write to {}!", CONFIG_FILENAME).as_str());
             config
         }
     };
     // Initialize logging
-    simplelog::WriteLogger::init(simplelog::LevelFilter::Info, simplelog::Config::default(), File::create(LOG_FILENAME).unwrap()).ok();
+    simplelog::WriteLogger::init(
+        simplelog::LevelFilter::Info,
+        simplelog::Config::default(),
+        File::create(LOG_FILENAME).unwrap(),
+    )
+    .ok();
 
     let mut conn = simconnect::SimConnector::new();
 
@@ -92,52 +112,69 @@ fn main() {
     let mut config_to_load = config.last_config.clone();
     // Helper closures
     // Load defintions
-    let load_definitions = |conn: &SimConnector, definitions: &mut Definitions, config_to_load: &mut String| -> bool {
+    let load_definitions = |conn: &SimConnector,
+                            definitions: &mut Definitions,
+                            config_to_load: &mut String|
+     -> bool {
         // Load H Events
         match definitions.load_h_events(KEY_HEVENT_PATH, BUTTON_HEVENT_PATH) {
-            Ok(_) => info!("Loaded and mapped {} H: events.", definitions.get_number_hevents()),
+            Ok(_) => info!(
+                "Loaded and mapped {} H: events.",
+                definitions.get_number_hevents()
+            ),
             Err(e) => {
                 log::error!("Could not load H: event files: {}", e);
-                return false
+                return false;
             }
         };
         // Load aircraft configuration
         match definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, config_to_load)) {
             Ok(_) => {
-                info!("Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
+                info!(
+                    "Loaded and mapped {} aircraft vars, {} local vars, and {} events",
+                    definitions.get_number_avars(),
+                    definitions.get_number_lvars(),
+                    definitions.get_number_events()
+                );
                 definitions.on_connected(&conn)
             }
             Err(e) => {
-                log::error!("Could not load configuration file {}: {}", config_to_load, e);
+                log::error!(
+                    "Could not load configuration file {}: {}",
+                    config_to_load,
+                    e
+                );
                 // Prevent server/client from starting as config could not be laoded.
                 *config_to_load = String::new();
-                return false
+                return false;
             }
         };
 
         info!("{} loaded successfully.", config_to_load);
 
-        return true
+        return true;
     };
 
     let (app_version, newest_version) = app_get_versions();
 
     loop {
         let timer = Instant::now();
-        
+
         let message = conn.get_next_message();
-            // Simconnect message
+        // Simconnect message
         match message {
             Ok(DispatchResult::SimobjectData(data)) => {
                 definitions.process_sim_object_data(data);
-            },
+            }
             // Exception occured
             Ok(DispatchResult::Exception(data)) => {
-                warn!("SimConnect exception occurred: {}", unsafe{data.dwException});
-            },
+                warn!("SimConnect exception occurred: {}", unsafe {
+                    data.dwException
+                });
+            }
             Ok(DispatchResult::Event(data)) => {
                 definitions.process_event_data(data);
-            },
+            }
             Ok(DispatchResult::ClientData(data)) => {
                 definitions.process_client_data(&conn, data);
             }
@@ -146,7 +183,7 @@ fn main() {
                     client.stop("Sim closed.".to_string());
                 }
             }
-            _ => ()
+            _ => (),
         };
 
         if let Some(client) = transfer_client.as_mut() {
@@ -159,11 +196,17 @@ fn main() {
                     }
 
                     if !clients.is_observer(&sender) {
-                        definitions.on_receive_data(&conn, time, sync_data, &SyncPermission {
-                            is_server: clients.client_is_server(&sender), 
-                            is_master: clients.client_has_control(&sender),
-                            is_init: true
-                        }, !need_update);
+                        definitions.on_receive_data(
+                            &conn,
+                            time,
+                            sync_data,
+                            &SyncPermission {
+                                is_server: clients.client_is_server(&sender),
+                                is_master: clients.client_has_control(&sender),
+                                is_init: true,
+                            },
+                            !need_update,
+                        );
                         // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
                         need_update = false;
                     }
@@ -184,7 +227,7 @@ fn main() {
                             control.lose_control();
                         }
                         info!("{} is now in control.", to);
-                        
+
                         app_interface.set_incontrol(&to);
                         clients.set_client_control(to);
                     }
@@ -201,10 +244,13 @@ fn main() {
                     }
                     app_interface.new_connection(&name);
                     clients.add_client(name);
-                },
+                }
                 // Client new connection
                 Ok(ReceiveData::NewUser(name, in_control, is_observer, is_server)) => {
-                    info!("{} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
+                    info!(
+                        "{} connected. In control: {}, observing: {}, server: {}",
+                        name, in_control, is_observer, is_server
+                    );
                     app_interface.new_connection(&name);
                     app_interface.set_observing(&name, is_observer);
 
@@ -232,7 +278,7 @@ fn main() {
                             app_interface.gain_control();
 
                             control.take_control(&conn);
-                            
+
                             client.transfer_control(client.get_server_name().to_string());
                         }
                     }
@@ -263,21 +309,25 @@ fn main() {
                 // Never will be reached
                 Ok(ReceiveData::Name(_)) => (),
                 Ok(ReceiveData::InvalidName) => {
-                    info!("{} was already in use, disconnecting.", client.get_server_name());
+                    info!(
+                        "{} was already in use, disconnecting.",
+                        client.get_server_name()
+                    );
                     client.stop("Name already in use!".to_string());
                 }
-                Err(_) => ()
+                Err(_) => (),
             }
 
             // Handle sync vars
             let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
-            let delay_passed = (!control.has_control() && control.time_since_control_change() > 5) || control.has_control();
-            
+            let delay_passed = (!control.has_control() && control.time_since_control_change() > 5)
+                || control.has_control();
+
             if !observing && can_update && delay_passed {
                 let permission = SyncPermission {
                     is_server: client.is_server(),
                     is_master: control.has_control(),
-                    is_init: false
+                    is_init: false,
                 };
 
                 if let Some(values) = definitions.get_need_sync(&permission) {
@@ -295,11 +345,10 @@ fn main() {
         // GUI
         match app_interface.get_next_message() {
             Ok(msg) => match msg {
-                AppMessage::Server(username, is_ipv6, port ) => {
+                AppMessage::Server(username, is_ipv6, port) => {
                     if config_to_load == "" {
                         app_interface.server_fail("Select an aircraft config first!");
-                    } 
-                    else if connected {
+                    } else if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
@@ -317,7 +366,7 @@ fn main() {
                                 app_interface.gain_control();
                                 need_update = true;
                                 info!("Server started and controls taken.");
-                            },
+                            }
                             Err(e) => {
                                 app_interface.server_fail(e.to_string().as_str());
                                 info!("Could not start server! Reason: {}", e);
@@ -332,13 +381,12 @@ fn main() {
                 AppMessage::Connect(username, ip, ip_input_string, port) => {
                     if config_to_load == "" {
                         app_interface.client_fail("Select an aircraft config first!");
-                    } 
-                    else if connected {
+                    } else if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
                         let mut client = Client::new(username.clone());
-                        
+
                         match client.start(ip, port, config.conn_timeout) {
                             Ok(_) => {
                                 // start the client loop
@@ -427,18 +475,26 @@ fn main() {
                     }
                     // Update version
                     if let Some(newest_version) = newest_version.as_ref() {
-                        if *newest_version > app_version && (!newest_version.is_prerelease() || newest_version.is_prerelease() && config.check_for_betas) {
+                        if *newest_version > app_version
+                            && (!newest_version.is_prerelease()
+                                || newest_version.is_prerelease() && config.check_for_betas)
+                        {
                             app_interface.version(&newest_version.to_string());
                         }
-                        info!("Version {} in use, {} is newest.", app_version, newest_version)
+                        info!(
+                            "Version {} in use, {} is newest.",
+                            app_version, newest_version
+                        )
                     } else {
                         info!("Version {} in use.", app_version)
                     }
-                    
                 }
-            }
+                AppMessage::Update => {
+                    run_installer()
+                }
+            },
             Err(_) => {}
-        } 
+        }
         // Try to connect to simconnect if not connected
         if !connected {
             connected = conn.connect("Your Control");
@@ -449,9 +505,12 @@ fn main() {
                 control.on_connected(&conn);
                 info!("Connected to SimConnect.");
 
-                let definitions_loaded = load_definitions(&conn, &mut definitions, &mut config_to_load);
+                let definitions_loaded =
+                    load_definitions(&conn, &mut definitions, &mut config_to_load);
                 if !definitions_loaded {
-                    app_interface.error("Error loading definition files. Check the log for more information.");
+                    app_interface.error(
+                        "Error loading definition files. Check the log for more information.",
+                    );
                 }
             } else {
                 // Display trying to connect message
@@ -465,8 +524,12 @@ fn main() {
             should_set_none_client = false
         }
 
-        if timer.elapsed().as_millis() < 10 {sleep(LOOP_SLEEP_TIME)};
+        if timer.elapsed().as_millis() < 10 {
+            sleep(LOOP_SLEEP_TIME)
+        };
         // Attempt Simconnect connection
-        if app_interface.exited() {break}
+        if app_interface.exited() {
+            break;
+        }
     }
 }

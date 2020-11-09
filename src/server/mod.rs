@@ -6,4 +6,4 @@ mod util;
 pub use client::Client;
 pub use server::Server;
 pub use payloads::*;
-pub use util::*;
+pub use self::util::*;

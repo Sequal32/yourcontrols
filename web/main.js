@@ -3,6 +3,7 @@ var server_button = document.getElementById('server-button')
 var alert = document.getElementById("alert")
 var version_alert = document.getElementById("version-alert")
 var version_alert_text = document.getElementById("version-alert-text")
+var version_alert_button = document.getElementById("version-alert-button")
 var overloaded_alert = document.getElementById("overloaded-alert")
 
 var nav_bar = document.getElementById("nav")
@@ -326,5 +327,7 @@ document.getElementById("main-form").onsubmit = function(e) {
 }
 
 function update() {
-    
+    invoke({type:"update"})
+    version_alert_button.innerHTML = "Downloading....";
+    version_alert_button.setAttribute("disabled")
 }
