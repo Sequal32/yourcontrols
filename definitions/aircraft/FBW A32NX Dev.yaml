@@ -1,0 +1,1417 @@
+include:
+  - definitions/modules/general.yaml
+  - definitions/modules/physics.yaml
+
+shared:
+  # COCKPIT LIGHTING
+  - # ASOBO_LIGHTING_Knob_Pedestal_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:76
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 76
+  - # ASOBO_LIGHTING_Knob_Panel_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:85
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 85
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    event_name: PANEL_LIGHTS_TOGGLE
+    event_param: 1
+  - # ASOBO_LIGHTING_Knob_Glareshield_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:81
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 81
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    event_name: GLARESHIELD_LIGHTS_TOGGLE
+    event_param: 1
+  - # ASOBO_LIGHTING_Knob_Glareshield_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:82
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 82
+  - # ASOBO_LIGHTING_Knob_Glareshield_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:83
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 83
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT GLARESHIELD:3
+    var_units: Bool
+    event_name: GLARESHIELD_LIGHTS_TOGGLE
+    event_param: 3
+  - # ASOBO_LIGHTING_Knob_Panel_Template Autopilot
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:84
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 84
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:2
+    var_units: Bool
+    event_name: PANEL_LIGHTS_TOGGLE
+    event_param: 2
+  - # ASOBO_LIGHTING_Knob_Glareshield_Template Autopilot
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:87
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 87
+  - # ASOBO_ENGINE_Switch_Master_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    event_name: TOGGLE_STARTER1
+  - # ASOBO_ENGINE_Switch_Master_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    event_name: TOGGLE_STARTER2
+  - # Engine 1
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 1
+  - # Engine 2
+    type: ToggleSwitch 
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 2
+  - # ASOBO_AIRBUS_Push_Fuel_Valve_Template Crossfeed
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:3
+    var_units: Bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 8
+  - # A32NX_ENGINE_MODE_SELECTOR_TEMPLATE
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET2
+  - # A32NX_ENGINE_MODE_SELECTOR_TEMPLATE
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET1
+  - 
+    type: ToggleSwitch
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    event_name: GEAR_DOWN
+    off_event_name: GEAR_UP
+  - 
+    type: NumSet
+    var_name: A:FLAPS HANDLE PERCENT
+    var_units: percent
+    var_type: i32
+    event_name: FLAPS_CONTINUOUS_SET
+    multiply_by: 164
+  - # ASOBO_HANDLING_Lever_Spoilers_Template
+    type: NumSet
+    var_name: A:SPOILERS HANDLE POSITION
+    var_units: Percent
+    var_type: i32
+    event_name: SPOILERS_SET
+    multiply_by: 164
+  - # ASOBO_HANDLING_Lever_Spoilers_Template
+    type: ToggleSwitch
+    var_name: A:SPOILERS ARMED
+    var_units: Bool
+    event_name: SPOILERS_ARM_ON
+    off_event_name: SPOILERS_ARM_OFF
+  - # ASOBO_AIRBUS_WeatherRadar_Template
+    type: var
+    var_name: L:XMLVAR_A320_WeatherRadar_Sys
+    var_type: f64
+  - # ASOBO_AIRBUS_WeatherRadar_Template
+    type: var
+    var_name: L:XMLVAR_A320_WeatherRadar_Mode
+    var_type: f64
+  - # WeatherRadar
+    type: var
+    var_name: L:A32NX_SWITCH_RADAR_PWS_Position
+    var_type: f64
+  # SCREENS LIGHTING
+  - # ASOBO_LIGHTING_Knob_Potentiometer_Template EFIS
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:88
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 88
+  - # ASOBO_AIRBUS_Push_TERRONND_SubTemplate
+    type: var
+    var_name: L:BTN_TERRONND_1_ACTIVE
+    var_type: f64
+  - # ASOBO_AIRBUS_Push_TERRONND_SubTemplate
+    type: var
+    var_name: L:BTN_TERRONND_2_ACTIVE
+    var_type: f64
+  - # ASOBO_LIGHTING_Knob_Potentiometer_Template EFIS ND small
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:89
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 89
+  - # ASOBO_LIGHTING_Knob_Potentiometer_Template ND WX
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:94
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 94
+  - # ASOBO_GT_Component_Emissive_Gauge 
+    type: var
+    var_name: L:A32NX_PANEL_DCDU_L_BRIGHTNESS
+    var_type: f64
+  - # ASOBO_LIGHTING_Knob_Potentiometer_Template FO PFD
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:90
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 90
+  - # ASOBO_LIGHTING_Knob_Potentiometer_Template FO ND SMALL
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:91
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 91
+  - # ASOBO_LIGHTING_Knob_Potentiometer_Template ND WX
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:95
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 95
+  - # ASOBO_GT_Component_Emissive_Gauge 
+    type: var
+    var_name: L:A32NX_PANEL_DCDU_R_BRIGHTNESS
+    var_type: f64
+  - # ASOBO_HANDLING_Push_Autobrakes_Template
+    type: var
+    var_name: L:XMLVAR_Autobrakes_Level
+    var_type: f64
+  -
+    type: ToggleSwitch
+    var_name: A:ANTISKID BRAKES ACTIVE
+    var_units: Bool
+    event_name: ANTISKID_BRAKES_TOGGLE
+  - # FBW_Airbus_HANDLING_Push_Autobrakes_Template Autobrake
+    type: NumSet
+    var_name: A:AUTO BRAKE SWITCH CB
+    var_units: Enum
+    var_type: i32
+    event_name: SET_AUTOBRAKE_CONTROL
+  # TODO: A32NX_AIRBUS_Push_EFISGPWS_Template
+  # EICAS LIGHTING
+  - # ASOBO_LIGHTING_Knob_Potentiometer_Template ECAM UPPER
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:92
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 92
+  - # ASOBO_LIGHTING_Knob_Potentiometer_Template ECAM LOWER
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:93
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 93
+  # OVERHEAD
+  - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate AIRBUS SPECIFIC
+    type: CustomCalculator
+    get: 10 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
+    set: 6 10 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate AIRBUS SPECIFIC
+    type: CustomCalculator
+    get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
+    set: 6 11 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: bool
+    event_name: TOGGLE_ALTERNATOR1
+  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: bool
+    event_name: TOGGLE_ALTERNATOR2
+  - # ASOBO_ELECTRICAL_Switch_APU_Generator_Template
+    type: ToggleSwitch
+    var_name: A:APU GENERATOR SWITCH:1
+    var_units: Bool
+    event_name: APU_GENERATOR_SWITCH_TOGGLE
+  - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 1
+  - # ASOBO_ELECTRICAL_Switch_Engine_Bleed_Template
+    type: ToggleSwitch
+    var_name: A:BLEED AIR ENGINE:1
+    var_units: Bool
+    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    event_param: 1
+  - # ASOBO_ELECTRICAL_Switch_Engine_Bleed_Template
+    type: ToggleSwitch
+    var_name: A:BLEED AIR ENGINE:2
+    var_units: Bool
+    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    event_param: 2
+  - # ASOBO_ELECTRICAL_Switch_APU_Bleed_Template
+    type: ToggleSwitch
+    var_name: A:BLEED AIR APU
+    var_units: Bool
+    event_name: APU_BLEED_AIR_SOURCE_TOGGLE
+  - # A32NX_AIRBUS_PACK_SELECTOR_TEMPLATE
+    type: var
+    var_name: L:A32NX_KNOB_OVHD_AIRCOND_XBLEED_Position
+    var_type: f64
+  - # A32NX_AIRBUS_PACK_SELECTOR_TEMPLATE
+    type: var
+    var_name: L:A32NX_KNOB_OVHD_AIRCOND_PACKFLOW_Position
+    var_type: f64
+  - # PUSH_OVHD_ELEC_COMMERCIAL
+    type: var
+    var_name: L:A32NX_ELEC_COMMERCIAL_TOGGLE
+    var_type: f64
+  - # PUSH_OVHD_ELEC_GALYCAB
+    type: var
+    var_name: L:A32NX_ELEC_GALYCAB_TOGGLE
+    var_type: f64
+  - # PUSH_OVHD_ELEC_IDG1
+    type: var
+    var_name: L:A32NX_ELEC_IDG1_FAULT
+    var_type: f64
+  - # PUSH_OVHD_ELEC_IDG2
+    type: var
+    var_name: L:A32NX_ELEC_IDG2_FAULT
+    var_type: f64
+  - # PUSH_OVHD_ELEC_BUSTIE
+    type: var
+    var_name: L:A32NX_ELEC_BUSTIE_TOGGLE
+    var_type: f64
+  - # PUSH_OVHD_ELEC_ACESSFEED
+    type: var
+    var_name: L:A32NX_ELEC_ACESSFEED_TOGGLE
+    var_type: f64
+  - # LOCK_OVHD_ELEC_IDG1
+    type: var
+    var_name: L:A32NX_ELEC_IDG1LOCK_TOGGLE
+    var_type: f64
+  - # LOCK_OVHD_ELEC_IDG2
+    type: var
+    var_name: L:A32NX_ELEC_IDG2LOCK_TOGGLE
+    var_type: f64
+  - # ASOBO_AIRBUS_Push_Fuel_Valve_Template APU
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:8
+    var_units: Bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 8
+  - # ASOBO_AIRBUS_Push_Fuel_Valve_Template
+    type: var
+    var_name: L:A32NX_APU_START_ACTIVATED
+    var_type: f64
+  - # SWITCH_OVHD_INTLT_SEATBELT
+    type: var
+    var_name: L:XMLVAR_SWITCH_OVHD_INTLT_SEATBELT_Position
+    var_type: f64
+  - # SWITCH_OVHD_INTLT_NOSMOKING
+    type: var
+    var_name: L:XMLVAR_SWITCH_OVHD_INTLT_NOSMOKING_Position
+    var_type: f64
+  - # SWITCH_OVHD_INTLT_EMEREXIT
+    type: var
+    var_name: L:XMLVAR_SWITCH_OVHD_INTLT_EMEREXIT_Position
+    var_type: f64
+  - # SWITCH_OVHD_INTLT_ANNLT
+    type: var
+    var_name: L:XMLVAR_SWITCH_OVHD_INTLT_ANNLT_Position
+    var_type: f64
+  - # SWITCH_OVHD_INTLT_STBYCOMPAS
+    type: var
+    var_name: L:A32NX_STBY_COMPASS_LIGHT_TOGGLE
+    var_type: f64
+  - # ASOBO_LIGHTING_Switch_Light_Beacon_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT BEACON
+    var_units: Bool
+    event_name: TOGGLE_BEACON_LIGHTS
+  - # ASOBO_LIGHTING_Switch_Light_Strobe_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT STROBE
+    var_units: Bool
+    event_name: STROBES_TOGGLE
+  - # ASOBO_LIGHTING_Switch_Light_Double_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 1
+  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template runway turn off
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI:3
+    var_units: Bool
+    event_name: TOGGLE_TAXI_LIGHTS
+  # - # ASOBO_LIGHTING_Switch_Light_Strobe_Template
+  #   type: NumSet
+  #   var_name: A:LIGHT POTENTIOMETER:24
+  #   var_units: Percent
+  #   var_type: i32
+  #   event_name: LIGHT_POTENTIOMETER_24_SET
+  -
+    type: var
+    var_name: L:STROBE_1_AUTO
+    var_type: f64
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:3
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 3
+  -
+    type: var
+    var_name: L:LANDING_1_Retracted
+    var_type: f64
+  -
+    type: var
+    var_name: L:LANDING_2_Retracted
+    var_type: f64
+  - # ASOBO_LIGHTING_Switch_Light_Wing_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT WING
+    var_units: Bool
+    event_name: TOGGLE_WING_LIGHTS
+  - # ASOBO_LIGHTING_Switch_Light_Double_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT LOGO
+    var_units: Bool
+    event_name: TOGGLE_LOGO_LIGHTS
+  - 
+    type: ToggleSwitch
+    var_name: A:LIGHT NAV
+    var_units: Bool
+    event_name: TOGGLE_NAV_LIGHTS
+  - # ASOBO_LIGHTING_Knob_Panel_Template KNOB_OVHD_INTLT_BRT
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:86
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 86
+  -
+    type: ToggleSwitch
+    var_name: LIGHT PANEL:4
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_TOGGLE
+    event_param: 4
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template SWITCH_OVHD_INTLT_DOME
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 7
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+  # Overhead_Fuel
+  #ASOBO_FUEL_Push_Valve_Template already done above?
+  - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_LTKPUMPS1
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:2
+    var_units: Bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 2
+  - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_LTKPUMPS2
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:5
+    var_units: Bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 5
+  - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_PUMP1
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 1
+  - # ASOBO_FUEL_Push_Pump_Template
+    type: ToggleSwitch # PUSH_OVHD_FUEL_PUMP2
+    var_name: A:FUELSYSTEM PUMP SWITCH:4
+    var_units: Bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 4
+  - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_RTKPUMPS1
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:3
+    var_units: Bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 3
+  - # ASOBO_FUEL_Push_Pump_Template PUSH_OVHD_FUEL_RTKPUMPS1
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:6
+    var_units: Bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 6
+  # OverHead_Flight_Controls
+  - # ASOBO_AIRBUS_Push_ELAC_Template
+    type: ToggleSwitch
+    var_name: A:FLY BY WIRE ELAC SWITCH:1
+    var_units: Bool
+    event_name: FLY_BY_WIRE_ELAC_TOGGLE
+    event_param: 1
+  - # ASOBO_AIRBUS_Push_SEC_Template
+    type: ToggleSwitch
+    var_name: A:FLY BY WIRE SEC SWITCH:1
+    var_units: Bool
+    event_name: FLY_BY_WIRE_SEC_TOGGLE
+    event_param: 1
+  - # ASOBO_AIRBUS_Push_FAC_Template
+    type: ToggleSwitch
+    var_name: A:FLY BY WIRE FAC SWITCH:1
+    var_units: Bool
+    event_name: FLY_BY_WIRE_FAC_TOGGLE
+    event_param: 1
+  - # ASOBO_AIRBUS_Push_ELAC_Template
+    type: ToggleSwitch
+    var_name: A:FLY BY WIRE ELAC SWITCH:2
+    var_units: Bool
+    event_name: FLY_BY_WIRE_ELAC_TOGGLE
+    event_param: 2
+  - # ASOBO_AIRBUS_Push_SEC_Template
+    type: ToggleSwitch
+    var_name: A:FLY BY WIRE SEC SWITCH:2
+    var_units: Bool
+    event_name: FLY_BY_WIRE_SEC_TOGGLE
+    event_param: 2
+  
+  - # ASOBO_AIRBUS_Push_SEC_Template
+    type: ToggleSwitch
+    var_name: A:FLY BY WIRE SEC SWITCH:3
+    var_units: Bool
+    event_name: FLY_BY_WIRE_SEC_TOGGLE
+    event_param: 3
+  - # ASOBO_AIRBUS_Push_FAC_Template
+    type: ToggleSwitch
+    var_name: A:FLY BY WIRE FAC SWITCH:2
+    var_units: Bool
+    event_name: FLY_BY_WIRE_FAC_TOGGLE
+    event_param: 2
+  # OVERHEAD DUMMIES
+  - # ASOBO_GT_Push_Button_Airliner PUSH_OVHD_COCKPITDOORVIDEO
+    type: var
+    var_name: L:A32NX_OVHD_COCKPITDOORVIDEO_TOGGLE
+    var_type: f64
+  - # ASOBO_AIRLINER_CALLS_Template
+    type: var
+    var_name: L:PUSH_DOORPANEL_VIDEO
+    var_type: f64
+  - # ASOBO_AIRLINER_ADIRS_Knob_Template
+    type: var
+    var_name: L:A32NX_ADIRS_KNOB_1
+    var_type: f64
+  - # ASOBO_AIRLINER_ADIRS_Knob_Template
+    type: var
+    var_name: L:A32NX_ADIRS_KNOB_2
+    var_type: f64
+  - # ASOBO_AIRLINER_ADIRS_Knob_Template
+    type: var
+    var_name: L:A32NX_ADIRS_KNOB_3
+    var_type: f64
+  - # LOCK_OVHD_EVAC_COMMAND
+    type: var
+    var_name: L:A32NX_EVAC_COMMANDLOCK_TOGGLE
+    var_type: f64
+  - # ASOBO_GT_Push_Button_Airliner
+    type: var
+    var_name: L:A32NX_EVAC_COMMAND_TOGGLE
+    var_type: f64
+  - # ASOBO_AIRLINER_CALLS_Template PUSH_OVHD_EVAC_HORN
+    type: var
+    var_name: L:PUSH_OVHD_EVAC_HORN
+    var_type: f64
+  - # SWITCH_OVHD_EVAC_CAPT
+    type: var
+    var_name: L:A32NX_EVAC_CAPT_TOGGLE
+    var_type: f64
+  - # LOCK_OVHD_EMERELECPWR_EMERTEST
+    type: var
+    var_name: L:A32NX_EMERELECPWR_EMERTESTLOCK_TOGGLE
+    var_type: f64
+  - # PUSH_OVHD_EMERELECPWR_GEN1
+    type: var
+    var_name: L:A32NX_EMERELECPWR_GEN1_TOGGLE
+    var_type: f64
+  # missing leftsinglecode for A32NX_EMERELECPWR_RAT_FAULT
+  - # ASOBO_GT_Switch_Dummy LOCK_OVHD_EMERELECPWR_MANON
+    type: var
+    var_name: L:A32NX_EMERELECPWR_MANONLOCK_TOGGLE
+    var_type: f64
+  - # ASOBO_GT_Switch_Dummy LOCK_OVHD_CALLS_EMER
+    type: var
+    var_name: L:A32NX_CALLS_EMER_ON_LOCK
+    var_type: f64
+  - # ASOBO_GT_Push_Button_Airliner PUSH_OVHD_CALLS_EMER
+    type: var
+    var_name: L:A32NX_CALLS_EMER_ON
+    var_type: f64
+  - # ASOBO_GT_Push_Button_Airliner PUSH_OVHD_HYD_ENG1PUMP
+    type: var
+    var_name: L:A32NX_HYD_ENG1PUMP_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_HYD_ENG2PUMP_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_HYD_RATMANONLOCK_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_HYD_ELECPUMP_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_HYD_ELECPUMPLOCK_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_HYD_PTU_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_HYD_ELECPUMPY_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AIRCOND_PACK1_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AIRCOND_PACK2_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AIRCOND_HOTAIR_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AIRCOND_RAMAIR_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AIRCOND_RAMAIRLOCK_TOGGLE
+    var_type: f64
+  - # ASOBO_AIRLINER_Aircond_Knob_Template
+    type: var
+    var_name: L:A320_Neo_AIRCOND_LVL_1
+    var_type: f64
+  - # ASOBO_AIRLINER_Aircond_Knob_Template
+    type: var
+    var_name: L:A320_Neo_AIRCOND_LVL_2
+    var_type: f64
+  - # ASOBO_AIRLINER_Aircond_Knob_Template
+    type: var
+    var_name: L:A320_Neo_AIRCOND_LVL_3
+    var_type: f64
+  # Right column is all ASOBO_AIRBUS_Push_Dummy_Template
+  - # ASOBO_GT_Push_Button_Airliner
+    type: var
+    var_name: L:A32NX_VENTILATION_BLOWER_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_VENTILATION_EXTRACT_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_VENTILATION_CABFANS_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_ENGMANSTART1_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_ENGMANSTART1LOCK_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_ENGMANSTART2_TOGGLE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_ENGMANSTART2LOCK_TOGGLE
+    var_type: f64
+  # Overhead_Audio_Panel
+  # all ASOBO_AIRBUS_Push_Dummy_Template
+  # OverHead_AntiIce
+  - # A32NX_DEICE_Switch_Engine_Template
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  - # A32NX_DEICE_Switch_Engine_Template
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+  - # A32NX_DEICE_Switch_Airframe_Template
+    type: ToggleSwitch
+    var_name: A:STRUCTURAL DEICE SWITCH
+    var_units: Bool
+    var_type: i32
+    event_name: TOGGLE_STRUCTURAL_DEICE
+  # ASOBO_DEICE_Switch_Windshield_Template has some weird logic... TODO: check
+  -
+    type: var
+    var_name: L:A32NX_PITOT_HEAT_AUTO
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:PITOT HEAT
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+  - # ASOBO_HANDLING_Switch_Wipers_Template
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:77
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 77
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:77
+    var_units: Percent
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 77
+    index_reversed: true
+  # Fire subtemplates
+  - # FBW_Airbus_FIRE_TEST_BUTTON
+    type: var
+    var_name: L:A32NX_FIRE_TEST_ENG1_IsDown
+    var_type: f64
+  - # FBW_Airbus_FIRE_AGENT
+    type: var
+    var_name: L:A32NX_Fire_ENG1_Agent1_Discharge
+    var_type: f64
+  - # FBW_Airbus_FIRE_AGENT
+    type: var
+    var_name: L:A32NX_Fire_ENG1_Agent2_Discharge
+    var_type: f64
+  - # FBW_Airbus_FIRE_GUARD
+    type: var
+    var_name: L:A32NX_FIRE_GUARD_STATE_ENG1_IsDown
+    var_type: f64
+  - # FBW_Airbus_FIRE_BUTTON
+    type: var
+    var_name: L:A32NX_FIRE_BUTTON_STATE_ENG1_IsDown
+    var_type: f64
+  - # FBW_Airbus_FIRE_TEST_BUTTON
+    type: var
+    var_name: L:A32NX_FIRE_TEST_ENG2_IsDown
+    var_type: f64
+  - # FBW_Airbus_FIRE_AGENT
+    type: var
+    var_name: L:A32NX_Fire_ENG2_Agent1_Discharge
+    var_type: f64
+  - # FBW_Airbus_FIRE_AGENT
+    type: var
+    var_name: L:A32NX_Fire_ENG2_Agent2_Discharge
+    var_type: f64
+  - # FBW_Airbus_FIRE_GUARD
+    type: var
+    var_name: L:A32NX_FIRE_GUARD_STATE_ENG2_IsDown
+    var_type: f64
+  - # FBW_Airbus_FIRE_BUTTON
+    type: var
+    var_name: L:A32NX_FIRE_BUTTON_STATE_ENG2_IsDown
+    var_type: f64
+  # APU
+  - # FBW_Airbus_FIRE_TEST_BUTTON
+    type: var
+    var_name: L:A32NX_FIRE_TEST_APU_IsDown
+    var_type: f64
+  - # FBW_Airbus_FIRE_AGENT
+    type: var
+    var_name: L:A32NX_Fire_APU_Agent1_Discharge
+    var_type: f64
+  - # FBW_Airbus_FIRE_BUTTON
+    type: var
+    var_name: L:A32NX_FIRE_BUTTON_STATE_APU_IsDown
+    var_type: f64
+  - # FBW_Airbus_FIRE_GUARD
+    type: var
+    var_name: L:A32NX_FIRE_GUARD_STATE_APU_IsDown
+    var_type: f64
+  # CARGO_SMOKE
+  - # FBW_Airbus_FIRE_TEST_BUTTON
+    type: var
+    var_name: L:A32NX_FIRE_TEST_CARGO_IsDown
+    var_type: f64
+  - # ASOBO_GT_Switch_Dummy
+    type: var
+    var_name: L:A32NX_CARGOSMOKE_DISCH1LOCK_TOGGLE
+    var_type: f64
+  - # ASOBO_GT_Switch_Dummy
+    type: var
+    var_name: L:A32NX_CARGOSMOKE_DISCH2LOCK_TOGGLE
+    var_type: f64
+  # Overhead_Misc
+  -
+    type: var
+    var_name: L:PUSH_OVHD_GPWS_TERR
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_OVHD_GPWS_SYS
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_OVHD_GPWS_GSMODE
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_OVHD_GPWS_FLAP
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_OVHD_GPWS_LDG
+    var_type: f64
+  - # ASOBO_AIRLINER_OXYGEN_Template
+    type: var
+    var_name: L:PUSH_OVHD_OXYGEN_CREW
+    var_type: f64
+  - # ASOBO_AIRLINER_CALLS_Template
+    type: var
+    var_name: L:PUSH_OVHD_CALLS_MECH
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_OVHD_CALLS_ALL
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_OVHD_CALLS_FWD
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_OVHD_CALLS_AFT
+    var_type: f64
+  # Overhead_Reading_Lights
+  - # FBW_Lighting_Knob_With_Potentiometer
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:96
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 96
+  - # FBW_Lighting_Knob_With_Potentiometer
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:97
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 97
+  # Overhead_Back_Panel
+  - # FBW_Covered_Push_Toggle
+    type: var
+    var_name: L:A32NX_OVHD_HYD_BLUEPUMP_OVRD_LOCK
+    var_type: f64
+  - # FBW_Covered_Push_Toggle
+    type: var
+    var_name: L:A32NX_OVHD_HYD_BLUEPUMP_OVRD
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_LEAK_MEASUREMENT_G_LOCK
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_LEAK_MEASUREMENT_G
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_LEAK_MEASUREMENT_B_LOCK
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_LEAK_MEASUREMENT_B
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_LEAK_MEASUREMENT_Y_LOCK
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_LEAK_MEASUREMENT_Y
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_FADEC_1_LOCK
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_FADEC_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_FADEC_2_LOCK
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_OVHD_FADEC_2
+    var_type: f64
+  - # FBW_Push_Toggle
+    type: var
+    var_name: L:A32NX_OVHD_APU_AUTOEXITING_TEST
+    var_type: f64
+  # Cabin pressure
+  -
+    type: var
+    var_name: L:A32NX_MAN_VS_CONTROL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_KNOB_OVHD_CABINPRESS_LDGELEV
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_CAB_PRESS_MODE_MAN
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_DITCHING
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_DITCHING_LOCK
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:1
+    var_units: Millibars
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 1
+    multiply_by: 16
+  - # secondary altimeter/altitude
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:2
+    var_units: Millibars
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 2
+    multiply_by: 16
+  - # ASOBO_AUTOPILOT_Push_FlightDirector_SubTemplate
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calcluator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
+    use_calcluator: true
+  # LS button and other EICAS buttons has an associated H event to fire with
+  - # ASOBO_AIRLINER_Knob_ND_Template
+    type: var
+    var_name: L:A320_Neo_MFD_NAV_MODE_1
+    var_type: f64
+  - # ASOBO_AIRLINER_Knob_ND_Range_Template
+    type: var
+    var_name: L:A320_Neo_MFD_Range_1
+    var_type: f64
+  - # ASOBO_AIRLINER_Knob_ND_Template
+    type: var
+    var_name: L:A320_Neo_MFD_NAV_MODE_2
+    var_type: f64
+  - # ASOBO_AIRLINER_Knob_ND_Range_Template
+    type: var
+    var_name: L:A320_Neo_MFD_Range_2
+    var_type: f64
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER 
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+    var_type: f64
+  -
+    type: event
+    event_name: AP_LOC_HOLD
+  -
+    type: event
+    event_name: AP_APR_HOLD
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT THROTTLE ARM
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_ARM
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_TO_GA
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_param: 1
+    event_name: HEADING_BUG_SET
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:2
+    var_units: Feet per minute
+    var_type: i32
+    event_param: 2
+    event_name: AP_VS_VAR_SET_ENGLISH
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: f64
+    event_param: 1
+    event_name: AP_SPD_VAR_SET
+  - # ASOBO_AIRLINER_Switch_Baro_Selector_Template
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_Mode
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+    var_type: f64
+  - # ASOBO_AIRBUS_Push_Metric_Alt_Template
+    type: var
+    var_name: L:A32NX_METRIC_ALT_TOGGLE
+    var_type: f64
+  - # ASOBO_AIRBUS_NAV_AID_SWITCH_Template
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R1_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R2_State
+    var_type: f64
+  # Transponder
+  # Number buttons are H events
+  - # A32NX_ATC_Panel_TARA
+    type: var
+    var_name: L:A32NX_SWITCH_TCAS_Position
+    var_type: f64
+  -
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: number
+    var_type: i32
+
+  # Pedestal switching panel ECAM
+  - # A32NX_AIRBUS_DATA_SWITCHING_TEMPLATE
+    type: var
+    var_name: L:A32NX_KNOB_SWITCHING_1_Position
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_KNOB_SWITCHING_2_Position
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_KNOB_SWITCHING_3_Position
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_KNOB_SWITCHING_4_Position
+    var_type: f64
+  # Ecam buttons
+  -
+    type: var
+    var_name: L:A32NX_BTN_TOCONFIG
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_BTN_RCL
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_BTN_CLR
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_BTN_CLR2
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_BTN_ALL
+    var_type: f64
+  # Safety
+  -
+    type: var
+    var_name: L:A32NX_MASTER_WARNING
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_MASTER_CAUTION
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_LTS_Test
+    var_type: f64
+  # Chronometer
+  -
+    type: var
+    var_name: L:PUSH_AUTOPILOT_CHRONO_L
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_AUTOPILOT_CHRONO_R
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_CHRONO_RST
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_CHRONO_CHR
+    var_type: f64
+  -
+    type: var
+    var_name: L:PUSH_CHRONO_SET
+    var_type: f64
+  # ECAM has Hevents
+  # Radios
+  - # ASOBO_RMP_DISPLAY_Template with hevents
+    type: var
+    var_name: L:XMLVAR_RMP_L_NavLockOff
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_On
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_AM_Active
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_BFO_Active
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_NAV_Active
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_NavLockOff
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_On
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_AM_Active
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_BFO_Active
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_NAV_Active
+    var_type: f64
+  -
+    type: ToggleSwitch
+    var_name: A:COM TRANSMIT:1
+    var_units: Bool
+    var_type: bool
+    event_name: PILOT_TRANSMITTER_SET
+    event_param: 0
+    switch_on: true
+  -
+    type: ToggleSwitch
+    var_name: A:COM TRANSMIT:2
+    var_units: Bool
+    var_type: bool
+    event_name: PILOT_TRANSMITTER_SET
+    event_param: 1
+    switch_on: true
+  -
+    type: ToggleSwitch
+    var_name: A:COM TRANSMIT:3
+    var_units: Bool
+    var_type: bool
+    event_name: PILOT_TRANSMITTER_SET
+    event_param: 2
+    switch_on: true
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_C
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_R
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_L
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_R
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_VHF_L_Switch_Down
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_VHF_C_Switch_Down
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_VHF_R_Switch_Down
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_VHF_L_Switch_Down
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_VHF_C_Switch_Down
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_VHF_R_Switch_Down
+    var_type: f64
+  # Door lock
+  -
+    type: var
+    var_name: L:A32NX_COCKPIT_DOOR_LOCKED
+    var_type: f64
+
+master:
+  - 
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: percent
+    var_type: i32
+    event_name: RUDDER_TRIM_SET
+    multiply_by: 164
+  - # ASOBO_HANDLING_Wheel_ElevatorTrim_Template
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: percent
+    var_type: i32
+    event_name: ELEVATOR_TRIM_SET
+    multiply_by: 164
+  -
+    type: Var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Number
+    var_type: f64
+  -
+    type: Var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_units: Number
+    var_type: f64
+
+init:
+  -
+    type: NumDigitSet
+    var_name: A:TRANSPONDER CODE:1
+    var_units: Number
+    var_type: i32
+    up_event_names:
+      - XPNDR_1_INC
+      - XPNDR_10_INC
+      - XPNDR_100_INC
+      - XPNDR_1000_INC
+    down_event_names:
+      - XPNDR_1_DEC
+      - XPNDR_10_DEC
+      - XPNDR_100_DEC
+      - XPNDR_1000_DEC
+  -
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:1
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:2
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM2_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:3
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM3_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:1
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM_STBY_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:2
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM2_STBY_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:3
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM3_STBY_RADIO_SET
+
+server:
+  -
+    type: var
+    var_name: FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60
+  -
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60
+  -
+    type: var
+    var_name: FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60
+  -
+    type: var
+    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    update_every: 60
