@@ -301,4 +301,8 @@ impl App {
     pub fn version(&self, version: &str) {
         self.invoke("version", Some(version))
     }
+
+    pub fn update_failed(&self) {
+        self.invoke("update_failed", None);
+    }
 }

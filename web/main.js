@@ -248,6 +248,9 @@ function MessageReceived(data) {
             version_alert.hidden = false
             version_alert_text.innerHTML = `A new version is available: ${data["data"]}`
             break;
+        case "update_failed":
+            updateFailed()
+            break;
     }
 }
 
@@ -328,6 +331,15 @@ document.getElementById("main-form").onsubmit = function(e) {
 
 function update() {
     invoke({type:"update"})
+    version_alert_button.classList.add("btn-primary")
+    version_alert_button.classList.remove("btn-danger")
     version_alert_button.innerHTML = "Downloading....";
     version_alert_button.setAttribute("disabled")
+}
+
+function updateFailed() {
+    version_alert_button.classList.remove("btn-primary")
+    version_alert_button.classList.add("btn-danger")
+    version_alert_button.innerHTML = "Failed. Retry?";
+    version_alert_button.removeAttribute("disabled")
 }

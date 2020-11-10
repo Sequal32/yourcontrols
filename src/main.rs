@@ -1,4 +1,4 @@
-// #![windows_subsystem = "windows"]
+#![windows_subsystem = "windows"]
 
 mod app;
 mod clientmanager;
@@ -68,10 +68,11 @@ fn main() {
     let mut conn = simconnect::SimConnector::new();
 
     let mut definitions = Definitions::new(config.buffer_size);
-
     let mut control = Control::new();
-
     let mut clients = ClientManager::new();
+
+    let updater = Updater::new();
+    let mut installer_spawned = false;
 
     // Set up sim connect
     let mut connected = false;
@@ -437,7 +438,16 @@ fn main() {
                     }
                 }
                 AppMessage::Update => {
-                    updater.run_installer();
+                    match updater.download_and_run_installer() {
+                        Ok(_) => {
+                            // Terminate self
+                            installer_spawned = true
+                        }
+                        Err(e) => {
+                            error!("Downloading installer failed. Reason: {}", e);
+                            app_interface.update_failed();
+                        }
+                    };
                 }
             }
             Err(_) => {}
@@ -470,6 +480,6 @@ fn main() {
 
         if timer.elapsed().as_millis() < 10 {sleep(LOOP_SLEEP_TIME)};
         // Attempt Simconnect connection
-        if app_interface.exited() {break}
+        if app_interface.exited() || installer_spawned {break}
     }
 }
