@@ -9,24 +9,25 @@ mod server;
 mod simconfig;
 mod sync;
 mod syncdefs;
-mod varreader;
-mod util;
 mod update;
+mod util;
+mod varreader;
 
 use app::{App, AppMessage};
 use clientmanager::ClientManager;
 use definitions::{Definitions, SyncPermission};
-use simconfig::Config;
+use log::{error, info, warn};
 use server::{Client, ReceiveData, Server, TransferClient};
-use simconnect::{self, DispatchResult, SimConnector};
-use util::{app_get_versions};
-use std::{fs::{self, File}, io, thread, time::Duration, time::Instant};
-use spin_sleep::sleep;
-use log::{self, error, info, warn};
+use simconfig::Config;
+use simconnect::{DispatchResult, SimConnector};
 use simplelog;
+use spin_sleep::sleep;
+use self::util::app_get_versions;
+use std::{fs::{File, read_dir}, io, thread,time::Duration,time::Instant,};
+use update::Updater;
 
-use sync::*;
 use control::*;
+use sync::*;
 
 const LOG_FILENAME: &str = "log.txt";
 const CONFIG_FILENAME: &str = "config.json";
@@ -41,7 +42,7 @@ const BUTTON_HEVENT_PATH: &str = "definitions/resources/touchscreenkeys.yaml";
 fn get_aircraft_configs() -> io::Result<Vec<String>> {
     let mut filenames = Vec::new();
 
-    for file in fs::read_dir(AIRCRAFT_DEFINITIONS_PATH)? {
+    for file in read_dir(AIRCRAFT_DEFINITIONS_PATH)? {
         let file = file?;
         filenames.push(file.path().file_name().unwrap().to_str().unwrap().to_string())
     }
@@ -67,10 +68,11 @@ fn main() {
     let mut conn = simconnect::SimConnector::new();
 
     let mut definitions = Definitions::new(config.buffer_size);
-
     let mut control = Control::new();
-
     let mut clients = ClientManager::new();
+
+    let updater = Updater::new();
+    let mut installer_spawned = false;
 
     // Set up sim connect
     let mut connected = false;
@@ -434,7 +436,18 @@ fn main() {
                     } else {
                         info!("Version {} in use.", app_version)
                     }
-                    
+                }
+                AppMessage::Update => {
+                    match updater.download_and_run_installer() {
+                        Ok(_) => {
+                            // Terminate self
+                            installer_spawned = true
+                        }
+                        Err(e) => {
+                            error!("Downloading installer failed. Reason: {}", e);
+                            app_interface.update_failed();
+                        }
+                    };
                 }
             }
             Err(_) => {}
@@ -467,6 +480,6 @@ fn main() {
 
         if timer.elapsed().as_millis() < 10 {sleep(LOOP_SLEEP_TIME)};
         // Attempt Simconnect connection
-        if app_interface.exited() {break}
+        if app_interface.exited() || installer_spawned {break}
     }
 }

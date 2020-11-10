@@ -17,6 +17,7 @@ pub enum AppMessage {
     SetObserver(String, bool),
     LoadAircraft(String),
     Startup,
+    Update,
 }
 
 fn get_message_str(type_string: &str, data: &str) -> String {
@@ -145,6 +146,8 @@ impl App {
                     }
 
                     "startup" => {tx.send(AppMessage::Startup).ok();}
+
+                    "update" => {tx.send(AppMessage::Update).ok();}
                     _ => ()
                 };
 
@@ -152,7 +155,7 @@ impl App {
             })
             .user_data(0)
             .resizable(false)
-            .size(600, 400)
+            .size(600, 450)
             .build()
             .unwrap();
             
@@ -297,5 +300,9 @@ impl App {
 
     pub fn version(&self, version: &str) {
         self.invoke("version", Some(version))
+    }
+
+    pub fn update_failed(&self) {
+        self.invoke("update_failed", None);
     }
 }

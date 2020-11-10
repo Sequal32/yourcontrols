@@ -2,6 +2,8 @@ var connect_button = document.getElementById('connect-button')
 var server_button = document.getElementById('server-button')
 var alert = document.getElementById("alert")
 var version_alert = document.getElementById("version-alert")
+var version_alert_text = document.getElementById("version-alert-text")
+var version_alert_button = document.getElementById("version-alert-button")
 var overloaded_alert = document.getElementById("overloaded-alert")
 
 var nav_bar = document.getElementById("nav")
@@ -244,7 +246,10 @@ function MessageReceived(data) {
             break;
         case "version":
             version_alert.hidden = false
-            version_alert.innerHTML = `A new version is available: ${data["data"]}`
+            version_alert_text.innerHTML = `A new version is available: ${data["data"]}`
+            break;
+        case "update_failed":
+            updateFailed()
             break;
     }
 }
@@ -322,4 +327,19 @@ document.getElementById("main-form").onsubmit = function(e) {
         trying_connection = true
         invoke({type: "server", port: parseInt(port_input.value), is_v6: ip6radio.checked, username: name_input.value})
     }
+}
+
+function update() {
+    invoke({type:"update"})
+    version_alert_button.classList.add("btn-primary")
+    version_alert_button.classList.remove("btn-danger")
+    version_alert_button.innerHTML = "Downloading....";
+    version_alert_button.setAttribute("disabled")
+}
+
+function updateFailed() {
+    version_alert_button.classList.remove("btn-primary")
+    version_alert_button.classList.add("btn-danger")
+    version_alert_button.innerHTML = "Failed. Retry?";
+    version_alert_button.removeAttribute("disabled")
 }
