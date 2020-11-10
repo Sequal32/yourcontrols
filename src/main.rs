@@ -70,7 +70,7 @@ fn main() {
     let mut control = Control::new();
     let mut clients = ClientManager::new();
 
-    let updater = Updater::new();
+    let mut updater = Updater::new();
     let mut installer_spawned = false;
 
     // Set up sim connect
@@ -120,8 +120,6 @@ fn main() {
 
         return true
     };
-
-    let (app_version, newest_version) = updater.get_versions();
 
     loop {
         let timer = Instant::now();
@@ -427,7 +425,8 @@ fn main() {
                         Err(_) => {}
                     }
                     // Update version
-                    if let Some(newest_version) = newest_version.as_ref() {
+                    let app_version = updater.get_version();
+                    if let Ok(newest_version) = updater.get_latest_version() {
                         if *newest_version > app_version && (!newest_version.is_prerelease() || newest_version.is_prerelease() && config.check_for_betas) {
                             app_interface.version(&newest_version.to_string());
                         }
@@ -437,7 +436,7 @@ fn main() {
                     }
                 }
                 AppMessage::Update => {
-                    match updater.download_and_run_installer() {
+                    match updater.run_installer() {
                         Ok(_) => {
                             // Terminate self
                             installer_spawned = true
