@@ -232,7 +232,12 @@ shared:
     var_name: A:ANTISKID BRAKES ACTIVE
     var_units: Bool
     event_name: ANTISKID_BRAKES_TOGGLE
-  # TODO: A32NX_AIRBUS_Push_EFISGPWS_Template
+  - # FBW_Airbus_HANDLING_Push_Autobrakes_Template Autobrake
+    type: NumSet
+    var_name: A:AUTO BRAKE SWITCH CB
+    var_units: Enum
+    var_type: i32
+    event_name: SET_AUTOBRAKE_CONTROL
   # EICAS LIGHTING
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template ECAM UPPER
     type: NumSet
