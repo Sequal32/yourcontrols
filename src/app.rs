@@ -155,7 +155,7 @@ impl App {
             })
             .user_data(0)
             .resizable(false)
-            .size(600, 450)
+            .size(600, 400)
             .build()
             .unwrap();
             

@@ -22,7 +22,6 @@ use simconfig::Config;
 use simconnect::{DispatchResult, SimConnector};
 use simplelog;
 use spin_sleep::sleep;
-use self::util::app_get_versions;
 use std::{fs::{File, read_dir}, io, thread,time::Duration,time::Instant,};
 use update::Updater;
 
@@ -122,7 +121,7 @@ fn main() {
         return true
     };
 
-    let (app_version, newest_version) = app_get_versions();
+    let (app_version, newest_version) = updater.get_versions();
 
     loop {
         let timer = Instant::now();

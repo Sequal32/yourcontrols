@@ -1,15 +1,18 @@
 use log::warn;
 use {reqwest::{blocking::{ClientBuilder, Client}, header::{HeaderMap, HeaderValue}}};
+use semver::Version;
 use serde_json::Value;
 use std::{io::copy, fs};
 use std::env;
 
-const INSTALLER_RELEASE_URL: &str = "https://api.github.com/repositories/311204382/releases/latest";
+const INSTALLER_RELEASE_URL: &str = "https://api.github.com/repos/sequal32/yourcontrolsinstaller/releases/latest";
+const PROGRAM_RELEASE_URL: &str = "https://api.github.com/repos/sequal32/yourcontrols/releases/latest";
 
 pub enum DownloadInstallerError {
     RequestFailed(reqwest::Error),
     MissingFieldJSON,
-    IOError(std::io::Error)
+    IOError(std::io::Error),
+    InvalidVersion(semver::SemVerError)
 }
 
 impl std::fmt::Display for DownloadInstallerError {
@@ -17,7 +20,8 @@ impl std::fmt::Display for DownloadInstallerError {
         match self {
             DownloadInstallerError::RequestFailed(e) => write!(f, "HTTP request failed: {}", e),
             DownloadInstallerError::MissingFieldJSON => write!(f, "Missing field in JSON"),
-            DownloadInstallerError::IOError(e) => write!(f, "IO Error: {}", e)
+            DownloadInstallerError::IOError(e) => write!(f, "IO Error: {}", e),
+            DownloadInstallerError::InvalidVersion(e) => write!(f, "Version Error: {}", e)
         }
     }
 }
@@ -48,22 +52,26 @@ impl Updater {
         }
     }
 
-    fn get_release_url(&self) -> Result<String, DownloadInstallerError> {
+    fn get_json_from_url(&self, url: &str) -> Result<Value, DownloadInstallerError> {
         // Download installer release info
-        let response = match self.client.get(INSTALLER_RELEASE_URL).send() {
+        let response = match self.client.get(url).send() {
             Ok(response) => response,
             Err(e) => return Err(DownloadInstallerError::RequestFailed(e))
         };
         
-        let json_data: Value = match response.json() {
-            Ok(data) => data,
+        match response.json() {
+            Ok(data) => Ok(data),
             Err(e) => return Err(DownloadInstallerError::RequestFailed(e))
-        };
+        }
+    }
 
-        match get_url_from_json(&json_data) {
+    fn get_release_url(&self) -> Result<String, DownloadInstallerError> {
+        let json = self.get_json_from_url(INSTALLER_RELEASE_URL)?;
+
+        match get_url_from_json(&json) {
             Some(url) => Ok(url),
             None => {
-                warn!("Missing field in JSON: {}", json_data);
+                warn!("Missing field in JSON: {}", json);
                 return Err(DownloadInstallerError::MissingFieldJSON)
             }
         }
@@ -108,5 +116,29 @@ impl Updater {
             Ok(_) => Ok(()),
             Err(e) => return Err(DownloadInstallerError::IOError(e))
         }
+    }
+
+    pub fn get_latest_version(&self) -> Result<Version, DownloadInstallerError> {
+        let json = self.get_json_from_url(PROGRAM_RELEASE_URL)?;
+    
+        return match json["tag_name"].as_str() {
+            Some(v) => match Version::parse(v) {
+                Ok(v) => Ok(v),
+                Err(e) => Err(DownloadInstallerError::InvalidVersion(e))
+            },
+            None => Err(DownloadInstallerError::MissingFieldJSON)
+        };
+    }
+    
+    pub fn get_version(&self) -> Version {
+        Version::parse(env!("CARGO_PKG_VERSION")).unwrap()
+    }
+
+    pub fn get_versions(&self) -> (Version, Option<Version>) {
+        let app_ver = self.get_version();
+        if let Ok(new_ver) = self.get_latest_version() {
+            return (app_ver, Some(new_ver))
+        }
+        return (app_ver, None)
     }
 }
