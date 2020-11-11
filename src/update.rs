@@ -1,19 +1,22 @@
-use bytes::Bytes;
+use attohttpc;
 use log::warn;
-use {reqwest::{blocking::{ClientBuilder, Client}, header::{HeaderMap, HeaderValue}}};
 use semver::Version;
 use serde_json::Value;
-use std::{io::copy, fs};
+use std::{fs, io::{Cursor, copy}};
 use std::env;
+use zip;
 
 const INSTALLER_RELEASE_URL: &str = "https://api.github.com/repos/sequal32/yourcontrolsinstaller/releases/latest";
 const PROGRAM_RELEASE_URL: &str = "https://api.github.com/repos/sequal32/yourcontrols/releases/latest";
 
+const USER_AGENT: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:53.0) Gecko/20100101 Firefox/53.0";
+
 pub enum DownloadInstallerError {
-    RequestFailed(reqwest::Error),
+    RequestFailed(attohttpc::Error),
     MissingFieldJSON,
     IOError(std::io::Error),
-    InvalidVersion(semver::SemVerError)
+    InvalidVersion(semver::SemVerError),
+    ZipError(zip::result::ZipError)
 }
 
 impl std::fmt::Display for DownloadInstallerError {
@@ -22,7 +25,8 @@ impl std::fmt::Display for DownloadInstallerError {
             DownloadInstallerError::RequestFailed(e) => write!(f, "HTTP request failed: {}", e),
             DownloadInstallerError::MissingFieldJSON => write!(f, "Missing field in JSON"),
             DownloadInstallerError::IOError(e) => write!(f, "IO Error: {}", e),
-            DownloadInstallerError::InvalidVersion(e) => write!(f, "Version Error: {}", e)
+            DownloadInstallerError::InvalidVersion(e) => write!(f, "Version Error: {}", e),
+            DownloadInstallerError::ZipError(e) => write!(f, "Zip Error: {}", e),
         }
     }
 }
@@ -40,26 +44,25 @@ fn get_url_from_json(data: &Value) -> Option<String> {
 }
 
 pub struct Updater {
-    client: Client,
     latest_version: Option<Version>,
-    latest_installer_bytes: Option<Bytes>
+    latest_installer_bytes: Option<Vec<u8>>
 }
 
 impl Updater {
     pub fn new() -> Self {
-        let mut headers = HeaderMap::new();
-        headers.insert("User-Agent", HeaderValue::from_str("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:53.0) Gecko/20100101 Firefox/53.0").unwrap());
-
         Self {
-            client: ClientBuilder::new().default_headers(headers).build().unwrap(),
             latest_version: None,
             latest_installer_bytes: None
         }
     }
 
+    fn get_url(&self, url: &str) -> Result<attohttpc::Response, attohttpc::Error> {
+        attohttpc::get(url).header("User-Agent", USER_AGENT).send()
+    }
+
     fn get_json_from_url(&self, url: &str) -> Result<Value, DownloadInstallerError> {
         // Download installer release info
-        let response = match self.client.get(url).send() {
+        let response = match self.get_url(url) {
             Ok(response) => response,
             Err(e) => return Err(DownloadInstallerError::RequestFailed(e))
         };
@@ -82,9 +85,9 @@ impl Updater {
         }
     }
 
-    fn download_installer(&mut self) -> Result<&Bytes, DownloadInstallerError> {
+    fn download_installer(&mut self) -> Result<&Vec<u8>, DownloadInstallerError> {
         // Download exe
-        let response = match self.client.get(self.get_release_url()?.as_str()).send() {
+        let response = match self.get_url(self.get_release_url()?.as_str()) {
             Ok(response) => response,
             Err(e) => return Err(DownloadInstallerError::RequestFailed(e))
         };
@@ -105,24 +108,27 @@ impl Updater {
             None => self.download_installer()?
         };
         
-        // Write exe
+        let mut zip = match zip::ZipArchive::new(Cursor::new(installer_bytes)) {
+            Ok(zip) => zip,
+            Err(e) => return Err(DownloadInstallerError::ZipError(e))
+        };
+        // Write files
         let mut dir = env::temp_dir();
-        dir.push("YourControlsInstaller.exe");
+        dir.push("YourControlsInstaller");
+        let path = dir.to_str().unwrap();
 
-        let mut out = match fs::File::create(dir.clone()) {
-            Ok(file) => file,
-            Err(e) => return Err(DownloadInstallerError::IOError(e))
-        };
+        for file_index in 0..zip.len() {
+            let mut file = zip.by_index(file_index).unwrap();
 
-        match copy(&mut installer_bytes.as_ref(), &mut out) {
-            Ok(_) => {},
-            Err(e) => return Err(DownloadInstallerError::IOError(e))
-        };
-
-        // Can't run file with an active file handle
-        std::mem::drop(out);
+            match fs::File::create(format!("{}\\{}", path, file.name())) {
+                Ok(mut file_handle) => copy(&mut file, &mut file_handle).ok(),
+                Err(e) => return Err(DownloadInstallerError::IOError(e))
+            };
+        }
 
         // Run exe
+        dir.push("installer.exe");
+
         let mut process = std::process::Command::new(dir.as_os_str());
         process
             .stderr(std::process::Stdio::null())
