@@ -481,7 +481,10 @@ impl Definitions {
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
 
-        Ok((Box::new(NumIncrement::new(up_event_id, down_event_id, var.increment_by)), var_string))
+        let mut mapping = NumIncrement::new(up_event_id, down_event_id, var.increment_by);
+        mapping.set_pass_difference(var.pass_difference);
+
+        Ok((Box::new(mapping), var_string))
     }
 
     fn add_num_increment(&mut self, category: &str, var: Value) -> Result<(), VarAddError> {
