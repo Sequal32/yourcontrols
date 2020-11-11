@@ -115,17 +115,25 @@ struct EventEntry {
     event_name: String
 }
 
+#[derive(Deserialize)]
+struct Condition {
+    var_name: String,
+    var_units: Option<String>,
+    var_type: InDataTypes,
+    equals: Option<f32>,
+    greater_than: Option<f32>,
+    less_than: Option<f32>
+}
+
 // Describes an aircraft variable to listen for changes
 #[derive(Deserialize)]
 struct VarEntry {
     var_name: String,
-    #[serde(default)]
     var_units: Option<String>,
     var_type: InDataTypes,
-    #[serde(default)]
     interpolate: Option<InterpolateOptions>,
-    #[serde(default)]
-    update_every: Option<f64>
+    update_every: Option<f64>,
+    condition: Option<Condition>
 }
 
 #[derive(Deserialize)]
@@ -139,6 +147,7 @@ struct ToggleSwitchGenericEntry {
     switch_on: bool,
     #[serde(default)]
     use_calculator: bool,
+    condition: Option<Condition>
 }
 
 #[derive(Deserialize)]
@@ -154,8 +163,7 @@ struct NumSetGenericEntry<T> {
     index_reversed: bool,
     // The event to call after the number is set
     swap_event_name: Option<String>,
-    // Conditionals
-    equal_to: Option<VarEntry>
+    condition: Option<Condition>
 }
 
 #[derive(Deserialize)]
@@ -168,6 +176,7 @@ struct NumIncrementEntry<T> {
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
     pass_difference: bool,
+    condition: Option<Condition>
 }
 
 
@@ -177,6 +186,7 @@ struct NumDigitSetEntry {
     var_units: Option<String>,
     up_event_names: Vec<String>,
     down_event_names: Vec<String>,
+    condition: Option<Condition>
 }
 
 #[derive(Deserialize)]
@@ -246,6 +256,19 @@ impl Period {
     }
 }
 
+#[derive(Default)]
+struct VarOptions {
+    should_sync: bool,
+    should_interpolate: bool,
+    condition: Option<Condition>,
+    period: Option<Period>
+}
+
+struct Mapping {
+    action: ActionType,
+    condition: Condition
+}
+
 pub struct Definitions {
     // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchParam)
     action_map: HashMap<String, Vec<ActionType>>,
@@ -257,19 +280,16 @@ pub struct Definitions {
     lvarstransfer: LVarSyncer,
     // Helper struct to retrieve *changed* aircraft variables using the CHANGED and TAGGED flags in SimConnect
     avarstransfer: AircraftVars,
-    // Maps variable names to categories to determine when to sync
+    // Options for each aircraft variable
+    var_options: HashMap<String, VarOptions>,
+    // Categories for every mapping
     categories: HashMap<String, Category>,
-    // Maps variable names to periodical sync times
-    periods: HashMap<String, Period>,
-    // Aircraft variables that should be synced and not just detected for changes
-    sync_vars: HashSet<String>,
     // Value to hold the current queue
     current_sync: AllNeedSync,
     last_written: HashMap<String, Instant>,
     
     interpolation_avars: Interpolate,
     interpolation_lvars: Interpolate,
-    interpolate_names: HashSet<String>
 }
 
 fn get_category_from_string(category: &str) -> Result<Category, VarAddError> {
@@ -298,9 +318,6 @@ impl Definitions {
             hevents: HEvents::new(2),
             lvarstransfer: LVarSyncer::new(),
             avarstransfer: AircraftVars::new(1),
-            sync_vars: HashSet::new(),
-            categories: HashMap::new(),
-            periods: HashMap::new(),
 
             last_written: HashMap::new(),
 
@@ -308,16 +325,27 @@ impl Definitions {
 
             interpolation_avars: Interpolate::new(buffer_size),
             interpolation_lvars: Interpolate::new(buffer_size),
-            interpolate_names: HashSet::new()
+            
+            var_options: HashMap::new(),
+            categories: HashMap::new(),
+        }
+    }
+
+    fn get_var_options(&mut self, var_name: String) -> &mut VarOptions {
+        match self.var_options.entry(var_name) {
+            Entry::Occupied(o) => o.into_mut(),
+            Entry::Vacant(v) => {
+                v.insert(Default::default())
+            }
         }
     }
 
     fn add_var(&mut self, category: &str, var: VarEntry) -> Result<(), VarAddError> {
         let (var_name, var_type) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
         // Tell definitions to sync this variable
-        self.sync_vars.insert(var_name.clone());
 
         // Handle interpolation for this variable
+        let should_interpolate = var.interpolate.is_some();
         if let Some(options) = var.interpolate {
             match var_type {
                 VarType::AircraftVar => {
@@ -327,13 +355,14 @@ impl Definitions {
                     self.interpolation_lvars.set_key_options(&var_name, options);
                 }
             }
-            
-            self.interpolate_names.insert(var_name.clone());
         }
 
+        let var_options = self.get_var_options(var.var_name.clone());
+        var_options.should_sync = true;
+        var_options.should_interpolate = should_interpolate;
         // Handle custom periods
         if let Some(period) = var.update_every {
-            self.periods.insert(var_name.clone(), Period::new(period));
+            var_options.period = Some(Period::new(period))
         }
 
         Ok(())
@@ -709,8 +738,10 @@ impl Definitions {
                 }
     
                 // Determine if this variable should be updated
+                let var_options = self.get_var_options(var_name.clone());
                 let mut should_write = true;
-                if let Some(period) = self.periods.get_mut(&var_name) {
+
+                if let Some(period) = var_options.period.as_mut() {
                     should_write = period.do_update();
                 }
 
@@ -736,7 +767,7 @@ impl Definitions {
     }
 
     pub fn get_need_sync(&mut self, sync_permission: &SyncPermission) -> Option<AllNeedSync> {
-        if self.sync_vars.is_empty() {return None}
+        if self.current_sync.is_empty() {return None}
 
         let mut return_data = AllNeedSync::new();
 
@@ -801,10 +832,12 @@ impl Definitions {
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             self.last_written.insert(var_name.to_string(), Instant::now());
-            // Can directly be set through SetDataOnSimObject
-            if self.sync_vars.contains(var_name) {
 
-                if interpolate && self.interpolate_names.contains(var_name) {
+            let var_options = self.get_var_options(var_name.clone());
+            // Can directly be set through SetDataOnSimObject
+            if var_options.should_sync {
+
+                if interpolate && var_options.should_interpolate {
                     // Queue data for interpolation
                     if let VarReaderTypes::F64(value) = data {
                         self.interpolation_avars.queue_interpolate(&var_name, time, *value)
