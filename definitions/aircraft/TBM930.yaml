@@ -5,7 +5,7 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
+  # - definitions/modules/physics.yaml
   - definitions/modules/radiosinitonly.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/singlega.yaml
@@ -229,6 +229,10 @@ shared:
   -
     type: var
     var_name: L:AC_SwitchState
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_VNAVButtonValue
     var_type: f64
 
 server:
