@@ -1,3 +1,6 @@
+include:
+  - definitions/modules/trim.yaml
+
 shared:
   -
     type: NumSet
@@ -13,7 +16,7 @@ shared:
     var_type: bool
     off_event_name: ELT_OFF
     event_name: ELT_ON
-  - 
+  -  
     type: var
     var_name: L:XMLVAR_ELT_STATE
     var_type: i32
@@ -34,17 +37,3 @@ master:
     var_name: A:GENERAL ENG PROPELLER LEVER POSITION:1
     var_units: Number
     var_type: f64
-  -
-    type: NumSet
-    var_name: A:ELEVATOR TRIM PCT
-    var_units: percent
-    var_type: i32
-    event_name: ELEVATOR_TRIM_SET
-    multiply_by: 164
-  -
-    type: NumSet
-    var_name: A:RUDDER TRIM PCT
-    var_units: percent
-    var_type: i32
-    event_name: RUDDER_TRIM_SET
-    multiply_by: 164

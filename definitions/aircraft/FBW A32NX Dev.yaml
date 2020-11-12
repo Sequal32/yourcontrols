@@ -1,6 +1,7 @@
 include:
   - definitions/modules/general.yaml
   - definitions/modules/physics.yaml
+  - definitions/modules/trim.yaml
 
 shared:
   # COCKPIT LIGHTING
@@ -244,7 +245,6 @@ shared:
     var_units: Enum
     var_type: i32
     event_name: SET_AUTOBRAKE_CONTROL
-  # TODO: A32NX_AIRBUS_Push_EFISGPWS_Template
   # EICAS LIGHTING
   - # ASOBO_LIGHTING_Knob_Potentiometer_Template ECAM UPPER
     type: NumSet
@@ -721,7 +721,6 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: TOGGLE_STRUCTURAL_DEICE
-  # ASOBO_DEICE_Switch_Windshield_Template has some weird logic... TODO: check
   -
     type: var
     var_name: L:A32NX_PITOT_HEAT_AUTO
@@ -1135,21 +1134,33 @@ shared:
     type: var
     var_name: L:A32NX_BTN_TOCONFIG
     var_type: f64
+    condition:
+      equals: 
+        F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_RCL
     var_type: f64
+    condition:
+      equals: 
+        F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_CLR
     var_type: f64
+    condition:
+      equals: 
+        F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_CLR2
     var_type: f64
+    condition:
+      equals: 
+        F64: 1
   -
     type: var
-    var_name: L:A32NX_BTN_ALL
+    var_name: L:A32NX_ECAM_ALL_Push_IsDown
     var_type: f64
   # Safety
   -
@@ -1306,20 +1317,6 @@ shared:
     var_type: f64
 
 master:
-  - 
-    type: NumSet
-    var_name: A:RUDDER TRIM PCT
-    var_units: percent
-    var_type: i32
-    event_name: RUDDER_TRIM_SET
-    multiply_by: 164
-  - # ASOBO_HANDLING_Wheel_ElevatorTrim_Template
-    type: NumSet
-    var_name: A:ELEVATOR TRIM PCT
-    var_units: percent
-    var_type: i32
-    event_name: ELEVATOR_TRIM_SET
-    multiply_by: 164
   -
     type: Var
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
