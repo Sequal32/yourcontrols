@@ -3,7 +3,7 @@ var aircraftList = document.getElementById("aircraft-list")
 aircraftList.addAircraft = function(aircraftName) {
     const newButton = document.createElement("button")
     newButton.type = "button"
-    newButton.className = "list-group-item list-group-item-action aircraft-list-entry"
+    newButton.className = "list-group-item list-group-item-action aircraft-list-entry bg-dark text-white"
     newButton.innerHTML = aircraftName
 
     newButton.onclick = function() {

@@ -72,27 +72,31 @@ impl App {
         let handle_clone = handle.clone();
         let exited = Arc::new(AtomicBool::new(false));
         let exited_clone = exited.clone();
+        let dark_theme_class = "bg-dark";
 
         info!("Spawning webview thread...");
 
         thread::spawn(move || {
             let webview = web_view::builder()
             .title("Shared Cockpit")
-            .content(web_view::Content::Html(format!(r#"<!DOCTYPE html>
+            .content(web_view::Content::Html(format!(r##"<!DOCTYPE html>
                 <html>
                 <head>
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
                     <style>{css}</style>
                 </head>
-                <body>{body}</body>
+                <body class="{class}">
+                <img src="{logo}" class="logo-image"/>
+                {body}
+                </body>
                 <script>
                 {js2}
                 {js1}
                 {js}
                 </script>
-                <img src="{logo}", class="logo-image"/>
                 </html>
-            "#, 
+            "##, 
+            class = dark_theme_class,
             css = include_str!("../web/stylesheet.css"), 
             js = include_str!("../web/main.js"), 
             js1 = include_str!("../web/list.js"),
@@ -154,8 +158,8 @@ impl App {
                 Ok(())
             })
             .user_data(0)
-            .resizable(false)
-            .size(600, 400)
+            .resizable(true)
+            .size(800, 600)
             .build()
             .unwrap();
             

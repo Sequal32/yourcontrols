@@ -13,9 +13,12 @@ var client_page_button = document.getElementById("client-page")
 var connection_list_button = document.getElementById("connection-page")
 var aircraft_list_button = document.getElementById("aircraft-page")
 
-var port_input = document.getElementById("port-input")
-var server_input = document.getElementById("server-input")
-var name_input = document.getElementById("name-input")
+var port_input_host = document.getElementById("port-input-host")
+var name_input_host = document.getElementById("name-input-host")
+
+var port_input_join = document.getElementById("port-input-join")
+var server_input_join = document.getElementById("server-input-join")
+var name_input_join = document.getElementById("name-input-join")
 var name_div = document.getElementById("name-div")
 var port_div = document.getElementById("port-div")
 var server_div = document.getElementById("server-div")
@@ -96,7 +99,6 @@ function ServerClientPageChange(isClient) {
 }
 
 function PageChange(pageName) {
-    connectionList.hide()
     aircraftList.hidden = true
 
     client_page_button.classList.remove("active")
@@ -183,6 +185,7 @@ function MessageReceived(data) {
             OnConnected()
             is_client = false
             alert.updatetext("success", "Server started! " + data["data"] + " clients connected.")
+            connectionList.noPlayers();
             break;
         case "error":
             alert.updatetext("danger", data["data"])
@@ -255,6 +258,7 @@ function MessageReceived(data) {
 }
 
 invoke({"type":"startup"})
+connectionList.notRunning();
 
 // Buttons functions
 
@@ -290,7 +294,7 @@ aircraft_list_button.onclick = function() {
     PageChange("aircraft")
 }
 
-document.getElementById("main-form").onsubmit = function(e) {
+document.getElementById("main-form-host").onsubmit = function(e) {
     e.preventDefault()
 
     if (trying_connection) {return}
@@ -329,17 +333,56 @@ document.getElementById("main-form").onsubmit = function(e) {
     }
 }
 
+document.getElementById("main-form-join").onsubmit = function(e) {
+    e.preventDefault()
+
+    if (trying_connection) {return}
+    if (is_connected) {invoke({type: "disconnect"}); return}
+
+    var validip = ValidateIp(server_input_join.value)
+    var validhostname = ValidateHostname(server_input_join.value)
+    var validport = ValidatePort(port_input_join.value)
+    let validname = name_input.value.trim() != ""
+
+    Validate(port_input_join, validport)
+    Validate(server_input_join, validname)
+
+    if (on_client) {
+        let data = {type: "connect", port: parseInt(port_input.value)}
+
+        Validate(server_input, validip || validhostname)
+
+        if (!validname || !validport || (!validip && !validhostname)) {return}
+        // Match hostname or ip
+        if (validhostname) {
+            data["hostname"] = server_input.value
+        } else if (validip) {
+            data["ip"] = server_input.value
+        }
+        else {
+            return
+        }
+        data["username"] = name_input.value
+        trying_connection = true
+        invoke(data);
+    } else {
+        if (!validport || !validname) {return}
+        trying_connection = true
+        invoke({type: "server", port: parseInt(port_input_join.value), is_v6: ip6radio.checked, username: name_input.value})
+    }
+}
+
 function update() {
     invoke({type:"update"})
     version_alert_button.classList.add("btn-primary")
     version_alert_button.classList.remove("btn-danger")
     version_alert_button.innerHTML = "Downloading....";
-    version_alert_button.setAttribute("disabled")
+    version_alert_button.disabled = true;
 }
 
 function updateFailed() {
     version_alert_button.classList.remove("btn-primary")
     version_alert_button.classList.add("btn-danger")
     version_alert_button.innerHTML = "Failed. Retry?";
-    version_alert_button.removeAttribute("disabled")
+    version_alert_button.disabled = false;
 }
