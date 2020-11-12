@@ -96,7 +96,6 @@ function ServerClientPageChange(isClient) {
 }
 
 function PageChange(pageName) {
-    connectionList.hide()
     aircraftList.hidden = true
 
     client_page_button.classList.remove("active")
@@ -183,6 +182,7 @@ function MessageReceived(data) {
             OnConnected()
             is_client = false
             alert.updatetext("success", "Server started! " + data["data"] + " clients connected.")
+            connectionList.noPlayers();
             break;
         case "error":
             alert.updatetext("danger", data["data"])
@@ -255,6 +255,7 @@ function MessageReceived(data) {
 }
 
 invoke({"type":"startup"})
+connectionList.notRunning();
 
 // Buttons functions
 
@@ -334,12 +335,12 @@ function update() {
     version_alert_button.classList.add("btn-primary")
     version_alert_button.classList.remove("btn-danger")
     version_alert_button.innerHTML = "Downloading....";
-    version_alert_button.setAttribute("disabled")
+    version_alert_button.disabled = true;
 }
 
 function updateFailed() {
     version_alert_button.classList.remove("btn-primary")
     version_alert_button.classList.add("btn-danger")
     version_alert_button.innerHTML = "Failed. Retry?";
-    version_alert_button.removeAttribute("disabled")
+    version_alert_button.disabled = false;
 }

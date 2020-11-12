@@ -17,6 +17,27 @@ class ConnectionList {
         }
     }
 
+    noPlayers(){
+        this.lastInControl = null
+        for (var key in this.list) {
+            this.remove(key)
+        }
+        var listItem = document.createElement("li")
+        listItem.className = "list-group-item"
+        listItem.innerText = "Server is running, but there is nobody connected"
+        this.object.append(listItem)
+    }
+
+    notRunning(){
+        this.lastInControl = null
+        for (var key in this.list) {
+            this.remove(key)
+        }
+        var listItem = document.createElement("div")
+        listItem.innerText = "Server is not running"
+        this.object.append(listItem)
+    }
+
     hideStatusText() {
         for (var key in this.list) {
             this.list[key].hideStatus()
