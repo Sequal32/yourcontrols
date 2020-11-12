@@ -155,6 +155,8 @@ impl App {
                     "startup" => {tx.send(AppMessage::Startup).ok();}
 
                     "update" => {tx.send(AppMessage::Update).ok();}
+
+                    "SaveConfig" => {tx.send(AppMessage::UpdateConfig(serde_json::from_value(data["config"].clone()).unwrap())).ok();}
                     _ => ()
                 };
 

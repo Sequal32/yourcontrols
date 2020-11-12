@@ -407,7 +407,7 @@ fn main() {
                         config.port = port;
                         config.ip = ip_input_string;
                         config.name = username;
-                        config.write_to_file(CONFIG_FILENAME).ok();
+                        config.write_to_file(CONFIG_FILENAME);
                     }
                 }
                 AppMessage::Disconnect => {
@@ -504,7 +504,9 @@ fn main() {
                         }
                     };
                 }
-                AppMessage::UpdateConfig(_) => {}
+                AppMessage::UpdateConfig(_config) => {
+                    _config.write_to_file(CONFIG_FILENAME);
+                }
             },
             Err(_) => {}
         }

@@ -17,6 +17,7 @@ var username = document.getElementById("username-input")
 var port_input_join = document.getElementById("port-input-join")
 var server_input_join = document.getElementById("server-input-join")
 var name_input_join = document.getElementById("name-input-join")
+var theme_selector = document.getElementById("theme-select")
 
 var update_rate_input = document.getElementById("update-rate-input")
 var timeout_input = document.getElementById("timeout-input")
@@ -76,9 +77,9 @@ function OnConnected() {
     server_button.updatetext("danger", "Stop Server")
     
     trying_connection = false
-    server_input.disabled = true
-    port_input.disabled = true
-    name_input.disabled = true
+    server_input_join.disabled = true
+    port_input_join.disabled = true
+    port_input_host.disabled = true
     ip4radio.disabled = true
     ip6radio.disabled = true
     is_connected = true
@@ -263,6 +264,7 @@ function MessageReceived(data) {
             buffer_input.value = json.buffer_size
             timeout_input.value = json.conn_timeout
             update_rate_input.value = json.update_rate
+            theme_selector.value = json.theme_selector
             break;
     }
 }
@@ -288,8 +290,7 @@ alert.updatetext = function(typeString, text) {
     alert.childNodes[0].nodeValue = text
 }
 
-
-document.getElementById("settings-form").onsubmit = function(e) {
+$("#settings-form").submit(e => {
     e.preventDefault()
 
     var settings = {}
@@ -300,23 +301,29 @@ document.getElementById("settings-form").onsubmit = function(e) {
     settings.buffer_size = buffer_input.value
     settings.conn_timeout = timeout_input.value
     settings.update_rate = update_rate_input.value
+    settings.theme_selector = theme_selector.value
 
     $('#restartModal').modal()
 
-    invoke({"type": "SaveConfig", "Config": settings})
+    invoke({"type": "SaveConfig", "config": JSON.stringify(settings)})
 
-}
+})
 
-document.getElementById("main-form-host").onsubmit = function(e) {
+$("#main-form-host").submit(e => {
+
+    console.log("Host")
     e.preventDefault()
+
+    var validport = ValidatePort(port_input_host.value)
+    let validname = username.value.trim() != ""
 
     if (!validport || !validname) {return}
     trying_connection = true
-    invoke({type: "server", port: parseInt(port_input_join.value), is_v6: ip6radio.checked, username: username.value})
+    invoke({type: "server", port: parseInt(port_input_host.value), is_v6: ip6radio.checked, username: username.value})
 
-}
+})
 
-document.getElementById("main-form-join").onsubmit = function(e) {
+$("#main-form-join").submit(e => {
     e.preventDefault()
 
     if (trying_connection) {return}
@@ -325,29 +332,29 @@ document.getElementById("main-form-join").onsubmit = function(e) {
     var validip = ValidateIp(server_input_join.value)
     var validhostname = ValidateHostname(server_input_join.value)
     var validport = ValidatePort(port_input_join.value)
-    let validname = name_input.value.trim() != ""
+    let validname = username.value.trim() != ""
 
     Validate(port_input_join, validport)
     Validate(server_input_join, validname)
 
-    let data = {type: "connect", port: parseInt(port_input.value)}
+    let data = {type: "connect", port: parseInt(server_input_join.value)}
 
     Validate(server_input, validip || validhostname)
 
     if (!validname || !validport || (!validip && !validhostname)) {return}
     // Match hostname or ip
     if (validhostname) {
-        data["hostname"] = server_input.value
+        data["hostname"] = server_input_join.value
     } else if (validip) {
-        data["ip"] = server_input.value
+        data["ip"] = server_input_join.value
     }
     else {
         return
     }
-    data["username"] = name_input.value
+    data["username"] = username.value
     trying_connection = true
     invoke(data);
-}
+})
 
 function update() {
     invoke({type:"update"})
