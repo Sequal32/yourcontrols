@@ -6,6 +6,8 @@ use std::{str::FromStr, net::{Ipv6Addr, Ipv4Addr, IpAddr}, io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
 use serde_json::Value;
+use crate::simconfig;
+// use update::Updater;
 
 pub enum AppMessage {
     // Name, IsIPV6, port
@@ -18,6 +20,7 @@ pub enum AppMessage {
     LoadAircraft(String),
     Startup,
     Update,
+    UpdateConfig(simconfig::Config)
 }
 
 fn get_message_str(type_string: &str, data: &str) -> String {
@@ -60,7 +63,7 @@ fn get_ip_from_data(data: &Value) -> Result<IpAddr, String> {
 }
 
 impl App {
-    pub fn setup() -> Self {
+    pub fn setup(title: String) -> Self {
         info!("Creating webview...");
         
         let (tx, rx) = unbounded();
@@ -72,31 +75,31 @@ impl App {
         let handle_clone = handle.clone();
         let exited = Arc::new(AtomicBool::new(false));
         let exited_clone = exited.clone();
-        let dark_theme_class = "bg-dark";
 
         info!("Spawning webview thread...");
 
         thread::spawn(move || {
             let webview = web_view::builder()
-            .title("Shared Cockpit")
+            .title(&title)
             .content(web_view::Content::Html(format!(r##"<!DOCTYPE html>
                 <html>
                 <head>
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
                     <style>{css}</style>
                 </head>
-                <body class="{class}">
+                <body class="themed">
                 <img src="{logo}" class="logo-image"/>
                 {body}
                 </body>
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
                 <script>
                 {js2}
                 {js1}
                 {js}
                 </script>
                 </html>
-            "##, 
-            class = dark_theme_class,
+            "##,
             css = include_str!("../web/stylesheet.css"), 
             js = include_str!("../web/main.js"), 
             js1 = include_str!("../web/list.js"),
@@ -159,7 +162,7 @@ impl App {
             })
             .user_data(0)
             .resizable(true)
-            .size(800, 600)
+            .size(1000, 800)
             .build()
             .unwrap();
             
@@ -308,5 +311,13 @@ impl App {
 
     pub fn update_failed(&self) {
         self.invoke("update_failed", None);
+    }
+
+    pub fn update_theme(&self, value: &str) {
+        self.invoke("theme_update", Some(value));
+    }
+
+    pub fn send_config(&self, value: &str){
+        self.invoke("config_msg", Some(value));
     }
 }

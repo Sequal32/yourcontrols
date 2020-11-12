@@ -1,26 +1,20 @@
 var aircraftList = document.getElementById("aircraft-list")
 
 aircraftList.addAircraft = function(aircraftName) {
-    const newButton = document.createElement("button")
-    newButton.type = "button"
+    const newButton = document.createElement("option")
     newButton.className = "list-group-item list-group-item-action aircraft-list-entry bg-dark text-white"
     newButton.innerHTML = aircraftName
-
-    newButton.onclick = function() {
-        invoke({"type":"load_aircraft", "name": aircraftName})
-
-        aircraftList.selectActive(newButton)
-    }
+    newButton.value = aircraftName
 
     aircraftList.appendChild(newButton)
 }
 
 aircraftList.selectActive = function(button) {
     if (aircraftList.activeSelection) {
-        aircraftList.activeSelection.classList.remove("active")
+        aircraftList.activeSelection.selected = false
     }
 
-    button.classList.add("active")
+    button.selected = true
     aircraftList.activeSelection = button
 }
 

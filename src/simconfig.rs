@@ -64,4 +64,8 @@ impl Config {
             Err(_) => Err("Configuration file corrupted."),
         }
     }
+
+    pub fn get_json_string(&self) -> String {
+        serde_json::to_value(self).unwrap().to_string()
+    }
 }

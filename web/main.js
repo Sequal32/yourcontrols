@@ -1,9 +1,7 @@
 var connect_button = document.getElementById('connect-button')
 var server_button = document.getElementById('server-button')
 var alert = document.getElementById("alert")
-var version_alert = document.getElementById("version-alert")
 var version_alert_text = document.getElementById("version-alert-text")
-var version_alert_button = document.getElementById("version-alert-button")
 var overloaded_alert = document.getElementById("overloaded-alert")
 
 var nav_bar = document.getElementById("nav")
@@ -14,11 +12,16 @@ var connection_list_button = document.getElementById("connection-page")
 var aircraft_list_button = document.getElementById("aircraft-page")
 
 var port_input_host = document.getElementById("port-input-host")
-var name_input_host = document.getElementById("name-input-host")
 
+var username = document.getElementById("username-input")
 var port_input_join = document.getElementById("port-input-join")
 var server_input_join = document.getElementById("server-input-join")
 var name_input_join = document.getElementById("name-input-join")
+
+var update_rate_input = document.getElementById("update-rate-input")
+var timeout_input = document.getElementById("timeout-input")
+var buffer_input = document.getElementById("buffer-input")
+
 var name_div = document.getElementById("name-div")
 var port_div = document.getElementById("port-div")
 var server_div = document.getElementById("server-div")
@@ -34,6 +37,19 @@ var is_connected = false
 var is_client = false
 var on_client = true
 var has_control = false
+
+var mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+
+function themeChange (event) {
+    if (event.matches) {
+        document.body.classList.add(["bg-dark","text-white"])
+        document.body.classList.remove(["bg-white","text-dark"])
+    } else {
+        document.body.classList.remove(["bg-dark","text-white"])
+        document.body.classList.add(["bg-white","text-dark"])
+    }
+};
+mediaQueryList.addListener(themeChange)
 
 // Connection List
 var connectionList = new ConnectionList(document.getElementById("connection-list"))
@@ -90,46 +106,8 @@ function OnDisconnect(text) {
 function ServerClientPageChange(isClient) {
     server_client_page.hidden = false
     on_client = isClient
-    connect_button.hidden = !isClient
-    server_button.hidden = isClient
-    radios.hidden = isClient
-    server_div.hidden = !isClient
-    port_div.hidden = false
-    name_div.hidden = false
-}
-
-function PageChange(pageName) {
-    aircraftList.hidden = true
-
-    client_page_button.classList.remove("active")
-    server_page_button.classList.remove("active")
-    connection_list_button.classList.remove("active")
-    aircraft_list_button.classList.remove("active")
-
-    switch (pageName) {
-        case "server":
-            ServerClientPageChange(false)
-            server_page_button.classList.add("active")
-            break;
-        case "client":
-            ServerClientPageChange(true)
-            client_page_button.classList.add("active")
-            break;
-        case "connections":
-            server_client_page.hidden = true
-            connectionList.show()
-            connection_list_button.classList.add("active")
-            break
-        case "aircraft":
-            server_client_page.hidden = true
-            aircraftList.hidden = false
-            aircraft_list_button.classList.add("active")
-            break
-    }
-
-    if (!is_connected) {
-        ResetForm()
-    }
+    connect_button.disabled = !isClient
+    server_button.disabled = isClient
 }
 
 
@@ -202,13 +180,14 @@ function MessageReceived(data) {
             rectangle_status.style.backgroundColor = "red"
             break;
         case "set_ip":
-            server_input.value = data["data"]
+            server_input_join.value = data["data"]
             break;
         case "set_port":
-            port_input.value = data["data"]
+            port_input_host.value = data["data"]
+            port_input_join.value = data["data"]
             break;
         case "set_name":
-            name_input.value = data["data"]
+            username.value = data["data"]
             break;
         case "overloaded":
             overloaded_alert.hidden = false
@@ -248,11 +227,42 @@ function MessageReceived(data) {
             aircraftList.searchSelectActive(data["data"])
             break;
         case "version":
-            version_alert.hidden = false
-            version_alert_text.innerHTML = `A new version is available: ${data["data"]}`
+            $('#updateModal').modal()
+            version_alert_text.innerHTML = `New Version is available ${data["data"]}`
             break;
         case "update_failed":
             updateFailed()
+            break;
+        case "theme_update":
+            if (data["data"] == "true") {
+                var elements = document.getElementsByClassName("themed")
+                for (const element of elements) {
+                    element.classList.add("bg-dark")
+                    element.classList.add("text-white")
+                    element.classList.remove("bg-white")
+                    element.classList.remove("text-black")
+                }
+            } else if (data["data"] == "false") {
+                var elements = document.getElementsByClassName("themed")
+                for (const element of elements) {
+                    element.classList.remove("bg-dark")
+                    element.classList.remove("text-white")
+                    element.classList.add("bg-white")
+                    element.classList.add("text-black")
+                }
+            }
+            break;
+        case "config_msg":
+            var json = JSON.parse(data["data"])
+            server_input_join.value = json.ip
+            port_input_join.value = json.ip
+            port_input_host.value = json.port
+            port_input_join.value = json.port
+            username.value = json.name
+            aircraftList.value = json.last_config
+            buffer_input.value = json.buffer_size
+            timeout_input.value = json.conn_timeout
+            update_rate_input.value = json.update_rate
             break;
     }
 }
@@ -278,59 +288,32 @@ alert.updatetext = function(typeString, text) {
     alert.childNodes[0].nodeValue = text
 }
 
-server_page_button.onclick = function() {
-    PageChange("server")
-}
 
-client_page_button.onclick = function() {
-    PageChange("client")
-}
+document.getElementById("settings-form").onsubmit = function(e) {
+    e.preventDefault()
 
-connection_list_button.onclick = function() {
-    PageChange("connections")
-}
+    var settings = {}
 
-aircraft_list_button.onclick = function() {
-    PageChange("aircraft")
+    settings.ip = server_input_join.value
+    settings.name = username.value
+    settings.last_config = aircraftList.value
+    settings.buffer_size = buffer_input.value
+    settings.conn_timeout = timeout_input.value
+    settings.update_rate = update_rate_input.value
+
+    $('#restartModal').modal()
+
+    invoke({"type": "SaveConfig", "Config": settings})
+
 }
 
 document.getElementById("main-form-host").onsubmit = function(e) {
     e.preventDefault()
 
-    if (trying_connection) {return}
-    if (is_connected) {invoke({type: "disconnect"}); return}
+    if (!validport || !validname) {return}
+    trying_connection = true
+    invoke({type: "server", port: parseInt(port_input_join.value), is_v6: ip6radio.checked, username: username.value})
 
-    var validip = ValidateIp(server_input.value)
-    var validhostname = ValidateHostname(server_input.value)
-    var validport = ValidatePort(port_input.value)
-    let validname = name_input.value.trim() != ""
-
-    Validate(port_input, validport)
-    Validate(name_input, validname)
-
-    if (on_client) {
-        let data = {type: "connect", port: parseInt(port_input.value)}
-
-        Validate(server_input, validip || validhostname)
-
-        if (!validname || !validport || (!validip && !validhostname)) {return}
-        // Match hostname or ip
-        if (validhostname) {
-            data["hostname"] = server_input.value
-        } else if (validip) {
-            data["ip"] = server_input.value
-        }
-        else {
-            return
-        }
-        data["username"] = name_input.value
-        trying_connection = true
-        invoke(data);
-    } else {
-        if (!validport || !validname) {return}
-        trying_connection = true
-        invoke({type: "server", port: parseInt(port_input.value), is_v6: ip6radio.checked, username: name_input.value})
-    }
 }
 
 document.getElementById("main-form-join").onsubmit = function(e) {
@@ -347,29 +330,23 @@ document.getElementById("main-form-join").onsubmit = function(e) {
     Validate(port_input_join, validport)
     Validate(server_input_join, validname)
 
-    if (on_client) {
-        let data = {type: "connect", port: parseInt(port_input.value)}
+    let data = {type: "connect", port: parseInt(port_input.value)}
 
-        Validate(server_input, validip || validhostname)
+    Validate(server_input, validip || validhostname)
 
-        if (!validname || !validport || (!validip && !validhostname)) {return}
-        // Match hostname or ip
-        if (validhostname) {
-            data["hostname"] = server_input.value
-        } else if (validip) {
-            data["ip"] = server_input.value
-        }
-        else {
-            return
-        }
-        data["username"] = name_input.value
-        trying_connection = true
-        invoke(data);
-    } else {
-        if (!validport || !validname) {return}
-        trying_connection = true
-        invoke({type: "server", port: parseInt(port_input_join.value), is_v6: ip6radio.checked, username: name_input.value})
+    if (!validname || !validport || (!validip && !validhostname)) {return}
+    // Match hostname or ip
+    if (validhostname) {
+        data["hostname"] = server_input.value
+    } else if (validip) {
+        data["ip"] = server_input.value
     }
+    else {
+        return
+    }
+    data["username"] = name_input.value
+    trying_connection = true
+    invoke(data);
 }
 
 function update() {
