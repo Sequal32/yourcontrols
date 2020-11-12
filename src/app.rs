@@ -34,7 +34,6 @@ pub struct App {
     app_handle: Arc<Mutex<Option<web_view::Handle<i32>>>>,
     exited: Arc<AtomicBool>,
     rx: Receiver<AppMessage>,
-    was_overloaded: bool
 }
 
 fn get_ip_from_data(data: &Value) -> Result<IpAddr, String> {
@@ -184,7 +183,6 @@ impl App {
             app_handle: handle,
             exited: exited,
             rx,
-            was_overloaded: false
         }
     }
 

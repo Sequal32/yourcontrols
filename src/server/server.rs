@@ -73,7 +73,6 @@ fn build_user_string(name: &str, is_observer: bool, has_control: bool, is_server
 
 pub struct Server {
     number_connections: Arc<AtomicU16>,
-    port_error: Option<PortForwardResult>,
     should_stop: Arc<AtomicBool>,
 
     transfer: Option<Arc<Mutex<TransferStruct>>>,
@@ -98,7 +97,6 @@ impl Server {
         return Self {
             number_connections: Arc::new(AtomicU16::new(0)),
             should_stop: Arc::new(AtomicBool::new(false)),
-            port_error: None,
             transfer: None,
             client_rx, client_tx, server_rx, server_tx,
             username: username
@@ -126,7 +124,6 @@ impl Server {
     pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(), std::io::Error> {
         // Attempt to port forward
         if let Err(e) = self.port_forward(port) {
-            self.port_error = Some(e);
             warn!("Could not port forward! Reason: {:?}", e)
         }
 
@@ -337,10 +334,6 @@ impl Server {
                 sleep(Duration::from_millis(5));
             }
         });
-    }
-
-    pub fn get_last_port_forward_error(&self) -> &Option<PortForwardResult> {
-        return &self.port_error
     }
 }
 

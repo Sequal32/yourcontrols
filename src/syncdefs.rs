@@ -242,7 +242,7 @@ impl Syncable<i32> for NumDigitSet {
         self.current = NumberDigits::new(current)
     }
 
-    fn set_new(&self, new: i32, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
+    fn set_new(&self, new: i32, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
         let new = NumberDigits::new(new);
 
         for index in 0..self.inc_event_ids.len() {

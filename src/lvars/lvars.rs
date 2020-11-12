@@ -2,7 +2,7 @@ use super::memwriter::MemWriter;
 use {byteorder::{ReadBytesExt, LittleEndian}};
 use bimap::{self, BiHashMap};
 use simconnect::SimConnector;
-use std::{io::{Cursor, Read}, collections::{HashMap}};
+use std::{io::{Cursor}};
 
 #[derive(Debug, Clone)]
 pub struct LVar {
@@ -239,39 +239,5 @@ impl LVars {
         conn.request_client_data(RECEIVE_MULTIPLE, 0, RECEIVE_MULTIPLE, simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
         // Clear gauge definitions
         self.clear_definitions(conn);
-    }
-}
-
-pub struct DiffChecker<A, B> {
-    indexes: HashMap<A, B>
-}
-
-impl<A, B> DiffChecker<A, B> where 
-    A: std::cmp::Eq + std::hash::Hash + std::clone::Clone, 
-    B: std::cmp::PartialEq
-    {
-    pub fn new() -> Self {
-        Self {
-            indexes: HashMap::new(),
-        }
-    }
-
-    pub fn record(&mut self, index: &A, value: B) {
-        self.indexes.insert(index.clone(), value);
-    }
-
-    pub fn record_and_is_diff(&mut self, index: &A, value: B) -> bool {
-        let was_diff = self.is_diff(index, &value);
-        self.record(index, value);
-        return !was_diff.unwrap_or(false);
-    }
-
-    pub fn is_diff(&self, index: &A, value: &B) -> Option<bool> {
-        let v =  self.indexes.get(index)?;
-        return Some(*v == *value);
-    } 
-
-    pub fn get_all(&self) -> &HashMap<A,B> {
-        return &self.indexes;
     }
 }

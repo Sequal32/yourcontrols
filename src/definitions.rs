@@ -232,7 +232,6 @@ struct NumSetGenericEntry<T> {
     index_reversed: bool,
     // The event to call after the number is set
     swap_event_name: Option<String>,
-    condition: Option<Condition>
 }
 
 #[derive(Deserialize)]
@@ -245,7 +244,6 @@ struct NumIncrementEntry<T> {
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
     pass_difference: bool,
-    condition: Option<Condition>
 }
 
 
@@ -702,9 +700,7 @@ impl Definitions {
 
     fn process_lvar(&mut self, lvar_data: GetResult) {
         // Check timer
-        if let Some(timer) = self.last_written.get(&lvar_data.var_name) {
-            if timer.elapsed().as_secs() < 1 {return}
-        };
+        if self.did_write_recently(&lvar_data.var_name) {return;}
 
         for mapping in self.mappings.get_mut(&lvar_data.var_name).unwrap() {
             let value = VarReaderTypes::F64(lvar_data.var.floating);
@@ -760,9 +756,7 @@ impl Definitions {
         }
 
         // Check timer
-        if let Some(timer) = self.last_written.get(&event_name) {
-            if timer.elapsed().as_secs() < 1 {return}
-        };
+        if self.did_write_recently(&event_name) {return;}
 
         self.current_sync.events.push(EventTriggered {
             event_name: event_name,
@@ -786,14 +780,10 @@ impl Definitions {
                 }
 
                 // Determine if this variable should be updated
-                let mut should_write = true;
+                let mut should_write = !self.did_write_recently(&var_name);
 
                 if let Some(period) = self.periods.get_mut(&var_name) {
-                    should_write = period.do_update();
-                }
-
-                if let Some(last_time) = self.last_written.get(&var_name) {
-                    should_write = should_write && last_time.elapsed().as_secs() > 1
+                    should_write = should_write && period.do_update();
                 }
 
                 if should_write {
@@ -823,6 +813,10 @@ impl Definitions {
         if return_data.is_empty() {return None}
         
         return Some(return_data);
+    }
+
+    pub fn clear_need_sync(&mut self) {
+        self.current_sync.clear()
     }
 
     // Skip checking with self.sync_vars and creating a new hashmap - used for interpolation
@@ -869,6 +863,14 @@ impl Definitions {
         return_data
     }
 
+    fn did_write_recently(&self, data_name: &str) -> bool {
+        if let Some(timer) = self.last_written.get(data_name) {
+            return timer.elapsed().as_secs() < 1
+        } else {
+            return false
+        }
+    }
+
     pub fn write_aircraft_data(&mut self, conn: &SimConnector, time: f64, data: &AVarMap, interpolate: bool) {
         if data.len() == 0 {return}
 
@@ -913,8 +915,8 @@ impl Definitions {
                     action.set_new(new_value, conn, &mut self.lvarstransfer)
                 }, {
                     self.lvarstransfer.set(conn, var_name, value.to_string().as_ref());
-                    self.last_written.insert(var_name.to_string(), Instant::now());
                 });
+                self.last_written.insert(var_name.to_string(), Instant::now());
             }
         }
     }

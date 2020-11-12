@@ -119,27 +119,6 @@ impl VarReader {
     }
 }
 
-pub fn data_type_as_f64(data: VarReaderTypes) -> Option<f64> {
-    if let VarReaderTypes::F64(v) = data {
-        return Some(v)
-    }
-    return None
-}
-
-pub fn data_type_as_i64(data: VarReaderTypes) -> Option<i64> {
-    if let VarReaderTypes::I64(v) = data {
-        return Some(v)
-    }
-    return None
-}
-
-pub fn data_type_as_bool(data: VarReaderTypes) -> Option<bool> {
-    if let VarReaderTypes::Bool(v) = data {
-        return Some(v)
-    }
-    return None
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
