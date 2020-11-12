@@ -42,12 +42,22 @@ shared:
     var_type: i32
     event_name: AP_SPD_VAR_SET
   # Do we need AUTOPILOT MACH HOLD?
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    event_name: AP_PANEL_VS_HOLD
   - # Doesn't need a toggleswitch, implicitly climbs aircraft to set altitude
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR
     var_units: Feet/minute
     var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
+    var_units: Bool
+    event_name: FLIGHT_LEVEL_CHANGE
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT WING LEVELER
@@ -79,12 +89,6 @@ shared:
     var_type: bool
     event_name: AP_ATT_HOLD
   -
-    type: NumSet
-    var_name: A:AUTOPILOT PITCH HOLD REF
-    var_units: Degrees
-    var_type: f64
-    event_name: AP_PITCH_REF_SELECT
-  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE
     var_units: Bool
@@ -108,12 +112,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_N1_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
-    var_units: Bool
-    var_type: bool
-    event_name: FLIGHT_LEVEL_CHANGE
   -
     type: NumIncrement
     var_name: A:AUTOPILOT MAX BANK

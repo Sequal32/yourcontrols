@@ -153,6 +153,8 @@ fn main() {
             }
         };
 
+        definitions.reset_interpolate();
+
         info!("{} loaded successfully.", config_to_load);
 
         return true;
@@ -345,6 +347,11 @@ fn main() {
                 AppMessage::Server(username, is_ipv6, port) => {
                     if config_to_load == "" {
                         app_interface.server_fail("Select an aircraft config first!");
+                        
+                    } else if !load_definitions(&conn, &mut definitions, &mut config_to_load) {
+
+                        app_interface.error("Error loading definition files. Check the log for more information.");
+                        
                     } else if connected {
                         // Display attempting to start server
                         app_interface.attempt();
@@ -378,6 +385,11 @@ fn main() {
                 AppMessage::Connect(username, ip, ip_input_string, port) => {
                     if config_to_load == "" {
                         app_interface.client_fail("Select an aircraft config first!");
+
+                    } else if !load_definitions(&conn, &mut definitions, &mut config_to_load) {
+
+                        app_interface.error("Error loading definition files. Check the log for more information.");
+                        
                     } else if connected {
                         // Display attempting to start server
                         app_interface.attempt();
@@ -519,14 +531,6 @@ fn main() {
                 app_interface.disconnected();
                 control.on_connected(&conn);
                 info!("Connected to SimConnect.");
-
-                let definitions_loaded =
-                    load_definitions(&conn, &mut definitions, &mut config_to_load);
-                if !definitions_loaded {
-                    app_interface.error(
-                        "Error loading definition files. Check the log for more information.",
-                    );
-                }
             } else {
                 // Display trying to connect message
                 app_interface.error("Trying to connect to SimConnect...");

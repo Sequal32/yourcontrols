@@ -75,6 +75,7 @@ impl App {
         let handle_clone = handle.clone();
         let exited = Arc::new(AtomicBool::new(false));
         let exited_clone = exited.clone();
+        let dark_theme_class = "bg-dark";
 
         info!("Spawning webview thread...");
 

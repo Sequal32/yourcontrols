@@ -6,7 +6,7 @@ use std::{fs, io::{Cursor, copy}};
 use std::env;
 use zip;
 
-const INSTALLER_RELEASE_URL: &str = "https://api.github.com/repos/sequal32/yourcontrolsinstaller/releases/latest";
+const RELEASE_DIRECT_URL: &str = "https://github.com/sequal32/yourcontrolsinstaller/releases/download/latest/installer.zip";
 const PROGRAM_RELEASE_URL: &str = "https://api.github.com/repos/sequal32/yourcontrols/releases/latest";
 
 const USER_AGENT: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:53.0) Gecko/20100101 Firefox/53.0";
@@ -73,21 +73,9 @@ impl Updater {
         }
     }
 
-    fn get_release_url(&self) -> Result<String, DownloadInstallerError> {
-        let json = self.get_json_from_url(INSTALLER_RELEASE_URL)?;
-
-        match get_url_from_json(&json) {
-            Some(url) => Ok(url),
-            None => {
-                warn!("Missing field in JSON: {}", json);
-                return Err(DownloadInstallerError::MissingFieldJSON)
-            }
-        }
-    }
-
     fn download_installer(&mut self) -> Result<&Vec<u8>, DownloadInstallerError> {
         // Download exe
-        let response = match self.get_url(self.get_release_url()?.as_str()) {
+        let response = match self.get_url(RELEASE_DIRECT_URL) {
             Ok(response) => response,
             Err(e) => return Err(DownloadInstallerError::RequestFailed(e))
         };

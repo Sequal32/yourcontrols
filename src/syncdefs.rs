@@ -1,4 +1,4 @@
-use std::{fmt::Display, cmp::PartialOrd, ops::{AddAssign, Mul, SubAssign}};
+use std::{cmp::PartialOrd, fmt::Display, ops::{AddAssign, Mul, Sub, SubAssign}};
 
 use num::{FromPrimitive, ToPrimitive};
 use simconnect;
@@ -173,7 +173,8 @@ pub struct NumIncrement<T> {
     pub up_event_id: u32,
     pub down_event_id: u32,
     pub increment_amount: T,
-    pub current: T
+    pub current: T,
+    pub pass_difference: bool
 }
 
 impl<T> NumIncrement<T>  where T: Default {
@@ -182,12 +183,17 @@ impl<T> NumIncrement<T>  where T: Default {
             up_event_id, 
             down_event_id, 
             increment_amount,
-            current: Default::default()
+            current: Default::default(),
+            pass_difference: false
         } 
+    }
+
+    pub fn set_pass_difference(&mut self, pass_difference: bool) {
+        self.pass_difference = pass_difference
     }
 }
 
-impl<T> Syncable<T> for NumIncrement<T> where T: Default + SubAssign + AddAssign + PartialOrd + Copy {
+impl<T> Syncable<T> for NumIncrement<T> where T: Default + Sub<T, Output = T> + AddAssign + SubAssign + PartialOrd + Copy + ToPrimitive {
     fn set_current(&mut self, current: T) {
         self.current = current
     }
@@ -195,14 +201,22 @@ impl<T> Syncable<T> for NumIncrement<T> where T: Default + SubAssign + AddAssign
     fn set_new(&self, new: T, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
         let mut working = self.current;
 
-        while working > new {
-            working -= self.increment_amount;
-            conn.transmit_client_event(1, self.down_event_id, 0, GROUP_ID, 0);
-        }
-
-        while working < new {
-            working += self.increment_amount;
-            conn.transmit_client_event(1, self.up_event_id, 0, GROUP_ID, 0);
+        if self.pass_difference {
+            if new > self.current {
+                conn.transmit_client_event(1, self.up_event_id, (new - self.current).to_i32().unwrap() as u32, GROUP_ID, 0);
+            } else if new < self.current {
+                conn.transmit_client_event(1, self.down_event_id,  (self.current - new).to_i32().unwrap() as u32, GROUP_ID, 0);
+            }   
+        } else {
+            while working > new {
+                working -= self.increment_amount;
+                conn.transmit_client_event(1, self.down_event_id, 0, GROUP_ID, 0);
+            }
+    
+            while working < new {
+                working += self.increment_amount;
+                conn.transmit_client_event(1, self.up_event_id, 0, GROUP_ID, 0);
+            }
         }
     }
 }

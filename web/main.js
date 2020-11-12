@@ -356,6 +356,45 @@ $("#main-form-join").submit(e => {
     invoke(data);
 })
 
+document.getElementById("main-form-join").onsubmit = function(e) {
+    e.preventDefault()
+
+    if (trying_connection) {return}
+    if (is_connected) {invoke({type: "disconnect"}); return}
+
+    var validip = ValidateIp(server_input_join.value)
+    var validhostname = ValidateHostname(server_input_join.value)
+    var validport = ValidatePort(port_input_join.value)
+    let validname = name_input.value.trim() != ""
+
+    Validate(port_input_join, validport)
+    Validate(server_input_join, validname)
+
+    if (on_client) {
+        let data = {type: "connect", port: parseInt(port_input.value)}
+
+        Validate(server_input, validip || validhostname)
+
+        if (!validname || !validport || (!validip && !validhostname)) {return}
+        // Match hostname or ip
+        if (validhostname) {
+            data["hostname"] = server_input.value
+        } else if (validip) {
+            data["ip"] = server_input.value
+        }
+        else {
+            return
+        }
+        data["username"] = name_input.value
+        trying_connection = true
+        invoke(data);
+    } else {
+        if (!validport || !validname) {return}
+        trying_connection = true
+        invoke({type: "server", port: parseInt(port_input_join.value), is_v6: ip6radio.checked, username: name_input.value})
+    }
+}
+
 function update() {
     invoke({type:"update"})
     version_alert_button.classList.add("btn-primary")
