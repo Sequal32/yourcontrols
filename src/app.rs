@@ -72,6 +72,7 @@ impl App {
         let handle_clone = handle.clone();
         let exited = Arc::new(AtomicBool::new(false));
         let exited_clone = exited.clone();
+        let dark_theme_class = "bg-dark";
 
         info!("Spawning webview thread...");
 
@@ -84,7 +85,7 @@ impl App {
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
                     <style>{css}</style>
                 </head>
-                <body>
+                <body class="{class}">
                 <img src="{logo}" class="logo-image"/>
                 {body}
                 </body>
@@ -95,6 +96,7 @@ impl App {
                 </script>
                 </html>
             "##, 
+            class = dark_theme_class,
             css = include_str!("../web/stylesheet.css"), 
             js = include_str!("../web/main.js"), 
             js1 = include_str!("../web/list.js"),

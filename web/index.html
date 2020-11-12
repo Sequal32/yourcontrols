@@ -13,13 +13,13 @@
     <div class="col-12">
         <div class="row">
             <div class="col-6">
-                <div class="card w-100">
+                <div class="card w-100 bg-dark text-white">
                     <div class="card-body">
                         <h5 class="card-title">Join</h5>
                         <form class="needs-validation form-div" id="main-form" novalidate >
                             <div class="form-row justify-content-center auto-margin">
                                 <div class="col-sm-auto bottom-margin" id="server-div">  
-                                    <input type="text" class="form-control" id="server-input" placeholder="Server IP/Hostname" aria-describedby="ip-feedback" required>
+                                    <input type="text" class="form-control bg-dark text-white border-none" id="server-input" placeholder="Server IP/Hostname" aria-describedby="ip-feedback" required>
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
@@ -28,27 +28,16 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-auto bottom-margin" id="port-div">  
-                                    <input type="text" class="form-control" id="port-input" placeholder="Port" aria-describedby="port-feedback" required>
+                                    <input type="text" class="form-control bg-dark text-white" id="port-input" placeholder="Port" aria-describedby="port-feedback" required>
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
                                     <div class="invalid-feedback" id="port-feedback">
                                         Please provide a valid port number.
                                     </div>
-
-                                    <div id="radios" class="radios" hidden>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="ipRadios" id="ip4" value="4" checked>
-                                            <label class="form-check-label" for="ip4">IPv4</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="ipRadios" id="ip6" value="6">
-                                            <label class="form-check-label" for="ip6">IPv6</label>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="col-sm-auto bottom-margin" id="name-div">
-                                    <input type="text" class="form-control" id="name-input" placeholder="Username" aria-describedby="ip-feedback" required>
+                                    <input type="text" class="form-control bg-dark text-white" id="name-input" placeholder="Username" aria-describedby="ip-feedback" required>
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
@@ -66,33 +55,32 @@
                 </div>
             </div>
             <div class="col-6">
-                <div class="card w-100">
+                <div class="card w-100 bg-dark text-white">
                     <div class="card-body">
                         <h5 class="card-title">Host</h5>
                         <form class="needs-validation form-div" id="main-form" novalidate >
                             <div class="form-row justify-content-center auto-margin">
                                 <div class="col-sm-auto bottom-margin" id="port-div">  
-                                    <input type="text" class="form-control" id="port-input" placeholder="Port" aria-describedby="port-feedback" required>
+                                    <input type="text" class="form-control bg-dark text-white" id="port-input" placeholder="Port" aria-describedby="port-feedback" required>
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
                                     <div class="invalid-feedback" id="port-feedback">
                                         Please provide a valid port number.
                                     </div>
-
-                                    <div id="radios" class="radios" hidden>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="ipRadios" id="ip4" value="4" checked>
-                                            <label class="form-check-label" for="ip4">IPv4</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="ipRadios" id="ip6" value="6">
-                                            <label class="form-check-label" for="ip6">IPv6</label>
-                                        </div>
+                                </div>
+                                <div id="radios" class="form-check">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="ipRadios" id="ip4" value="4" checked>
+                                        <label class="form-check-label" for="ip4">IPv4</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="ipRadios" id="ip6" value="6">
+                                        <label class="form-check-label" for="ip6">IPv6</label>
                                     </div>
                                 </div>
                                 <div class="col-sm-auto bottom-margin" id="name-div">
-                                    <input type="text" class="form-control" id="name-input" placeholder="Username" aria-describedby="ip-feedback" required>
+                                    <input type="text" class="form-control bg-dark text-white" id="name-input" placeholder="Username" aria-describedby="ip-feedback" required>
                                     <div class="valid-feedback">
                                         Looks good!
                                     </div>
@@ -114,8 +102,8 @@
     <div class="col-12">
         <div class="row">
             <div class="col-6">
-                <div class="card">
-                    <div class="card-body">
+                <div class="card bg-dark text-white">
+                    <div class="card-body ">
                         <h5 class="card-title">Aircraft List</h5>
                         <ul class="list-group", id="aircraft-list">
                             <div class="filler"></div>
@@ -124,10 +112,10 @@
                 </div>
             </div>
             <div class="col-6">
-                <div class="card">
+                <div class="card bg-dark text-white">
                     <div class="card-body">
                         <h5 class="card-title">Client List</h5>
-                        <ul class="list-group", id="connection-list"></ul>
+                        <ul class="list-group bg-dark text-white", id="connection-list"></ul>
                     </div>
                 </div>
             </div>
