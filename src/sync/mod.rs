@@ -1,9 +1,9 @@
 pub mod control;
 
 use bimap::BiHashMap;
-use std::{time::Instant, collections::{HashMap, HashSet}, io};
+use std::{collections::{HashMap, HashSet}, io};
 use simconnect::SimConnector;
-use crate::{lvars::{LVars, GetResult}, util::InDataTypes, lvars::LVarResult, varreader::SimValue, varreader::VarReader};
+use crate::{lvars::{LVars, GetResult}, lvars::LVarResult, util::InDataTypes, varreader::SimValue, varreader::VarReader, util::VarReaderTypes};
 
 pub struct Events {
     event_map: BiHashMap<String, u32>,
@@ -159,6 +159,13 @@ impl LVarSyncer {
         self.transfer.fetch_all(conn)
     }
 
+    pub fn get_var(&self, var_name: &str) -> Option<f64> {
+        match self.vars.get(var_name) {
+            Some(v) => Some(v.current_value),
+            None => None
+        }
+    }
+
     pub fn get_all_vars(&self) -> HashMap<String, f64> {
         let mut return_map = HashMap::new();
 
@@ -208,7 +215,7 @@ impl AircraftVars {
     }
 
     pub fn read_vars(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) -> Result<SimValue, io::Error> {
-        let vars = match self.reader.read_from_bytes(data.dwDefineCount, &data.dwData as *const u32) {
+        let vars = match self.reader.read_from_bytes(data.dwDefineCount, unsafe{ &data.dwData as *const u32 }) {
             Ok(v) => v,
             Err(e) => return Err(e)
         };
@@ -227,6 +234,10 @@ impl AircraftVars {
     pub fn set_vars(&self, conn: &SimConnector, data: &SimValue) {
         let mut bytes = self.reader.write_to_data(data);
         conn.set_data_on_sim_object(self.define_id, 0, simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED, data.len() as u32, bytes.len() as u32, bytes.as_mut_ptr() as *mut std::ffi::c_void);
+    }
+
+    pub fn get_var(&self, var_name: &str) -> Option<&VarReaderTypes> {
+        self.current_values.get(var_name)
     }
 
     pub fn on_connected(&self, conn: &SimConnector) {

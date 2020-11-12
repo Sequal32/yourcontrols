@@ -402,8 +402,8 @@ impl Definitions {
         let (var_name, var_type) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
 
         // Handle interpolation for this variable
-        let should_interpolate = var.interpolate.is_some();
         if let Some(options) = var.interpolate {
+            self.interpolate_vars.insert(var_name.clone());
             match var_type {
                 VarType::AircraftVar => {
                     self.interpolation_avars.set_key_options(&var_name, options);
@@ -413,9 +413,6 @@ impl Definitions {
                 }
             }
         }
-
-        // Mark the variable as interpolatable
-        self.interpolate_vars.insert(var_name.clone());
         
         // Handle custom periods
         if let Some(period) = var.update_every {
