@@ -8,7 +8,7 @@ pub enum Category {
     Init
 }
 
-#[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq, PartialOrd)]
 pub enum VarReaderTypes {
     Bool(bool),
     I32(i32),

@@ -3,7 +3,7 @@ use serde_yaml::{self, Value};
 use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
-use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant};
+use std::{collections::HashMap, collections::hash_map::Entry, fmt::Display, fs::File, collections::HashSet, time::Instant};
 use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, lvars::lvars::LVarResult, util::VarReaderTypes};
 
 #[derive(Debug)]
@@ -63,10 +63,35 @@ macro_rules! check_and_return_field {
 
 // Tries to cast the value into a Yaml object, returns an error if failed
 macro_rules! try_cast_yaml {
-    ($value: ident) => {
+    ($value: expr) => {
         match serde_yaml::from_value($value) {
             Ok(y) => y,
             Err(e) => return Err(VarAddError::YamlParseError(e))
+        }
+    }
+}
+
+macro_rules! execute_mapping {
+    ($new_value_name: ident, $action_name: ident, $new_value: expr, $mapping: expr, $action: block, $var_only_action: block) => {
+        match $new_value {
+            VarReaderTypes::Bool($new_value_name) => match &mut $mapping.action {
+                ActionType::Bool($action_name) => $action
+                ActionType::VarOnly => $var_only_action
+                _ => {}
+            }
+
+            VarReaderTypes::I32($new_value_name) => match &mut $mapping.action {
+                ActionType::I32($action_name) => $action
+                ActionType::VarOnly => $var_only_action
+                _ => {}
+            }
+
+            VarReaderTypes::F64($new_value_name) => match &mut $mapping.action {
+                ActionType::F64($action_name) => $action
+                ActionType::VarOnly => $var_only_action
+                _ => {}
+            }
+            _ => {}
         }
     }
 }
@@ -80,6 +105,45 @@ fn get_data_type_from_string(string: &str) -> Result<InDataTypes, VarAddError> {
             _ => return Err(VarAddError::MissingField("var_type"))
         }
     )
+}
+
+fn evalute_condition_values(condition: &Condition, value: &VarReaderTypes) -> bool {
+    if let Some(data) = condition.equals {
+        return data == *value
+    }
+
+    if let Some(data) = condition.greater_than {
+        return data > *value
+    }
+
+    if let Some(data) = condition.less_than {
+        return data < *value
+    }
+
+    return false
+}
+
+fn evalute_condition(lvarstransfer: &LVarSyncer, avarstransfer: &AircraftVars, condition: Option<&Condition>, incoming_value: &VarReaderTypes) -> bool {
+    let condition = match condition {
+        Some(condition) => condition,
+        None => return true
+    };
+
+    if let Some(var_data) = condition.var.as_ref() {
+        if var_data.var_name.starts_with("L:") {
+            if let Some(value) = lvarstransfer.get_var(&var_data.var_name) {
+                return evalute_condition_values(condition, &VarReaderTypes::F64(value))
+            }
+        } else {
+            if let Some(value) = avarstransfer.get_var(&var_data.var_name) {
+                return evalute_condition_values(condition, value)
+            }
+        }
+    } else {
+        return evalute_condition_values(condition, incoming_value)
+    }
+    
+    false
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -116,13 +180,18 @@ struct EventEntry {
 }
 
 #[derive(Deserialize)]
-struct Condition {
+struct VarData {
     var_name: String,
     var_units: Option<String>,
     var_type: InDataTypes,
-    equals: Option<f32>,
-    greater_than: Option<f32>,
-    less_than: Option<f32>
+}
+
+#[derive(Deserialize)]
+struct Condition {
+    var: Option<VarData>,
+    equals: Option<VarReaderTypes>,
+    greater_than: Option<VarReaderTypes>,
+    less_than: Option<VarReaderTypes>
 }
 
 // Describes an aircraft variable to listen for changes
@@ -192,7 +261,8 @@ struct NumDigitSetEntry {
 #[derive(Deserialize)]
 struct CustomCalculatorEntry {
     get: String,
-    set: String
+    set: String,
+    condition: Option<Condition>
 }
 
 // The struct that get_need_sync returns. Holds all the aircraft/local variables and events that have changed since the last call.
@@ -222,7 +292,8 @@ impl AllNeedSync {
 enum ActionType {
     F64(Box<dyn Syncable<f64>>),
     I32(Box<dyn Syncable<i32>>),
-    Bool(Box<dyn Syncable<bool>>)
+    Bool(Box<dyn Syncable<bool>>),
+    VarOnly
 }
 
 struct Period {
@@ -256,22 +327,14 @@ impl Period {
     }
 }
 
-#[derive(Default)]
-struct VarOptions {
-    should_sync: bool,
-    should_interpolate: bool,
-    condition: Option<Condition>,
-    period: Option<Period>
-}
-
 struct Mapping {
     action: ActionType,
-    condition: Condition
+    condition: Option<Condition>
 }
 
 pub struct Definitions {
     // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchParam)
-    action_map: HashMap<String, Vec<ActionType>>,
+    mappings: HashMap<String, Vec<Mapping>>,
     // Events to listen to
     events: Events,
     // H Events to listen to
@@ -280,16 +343,18 @@ pub struct Definitions {
     lvarstransfer: LVarSyncer,
     // Helper struct to retrieve *changed* aircraft variables using the CHANGED and TAGGED flags in SimConnect
     avarstransfer: AircraftVars,
-    // Options for each aircraft variable
-    var_options: HashMap<String, VarOptions>,
     // Categories for every mapping
     categories: HashMap<String, Category>,
+    // Vars that shouldn't update every tick
+    periods: HashMap<String, Period>,
     // Value to hold the current queue
     current_sync: AllNeedSync,
     last_written: HashMap<String, Instant>,
     
     interpolation_avars: Interpolate,
     interpolation_lvars: Interpolate,
+    // Vars that have interpolation
+    interpolate_vars: HashSet<String>,
 }
 
 fn get_category_from_string(category: &str) -> Result<Category, VarAddError> {
@@ -313,7 +378,7 @@ fn get_real_var_name(var_name: &str) -> String {
 impl Definitions {
     pub fn new(buffer_size: usize) -> Self {
         Self {
-            action_map: HashMap::new(),
+            mappings: HashMap::new(),
             events: Events::new(1),
             hevents: HEvents::new(2),
             lvarstransfer: LVarSyncer::new(),
@@ -326,23 +391,15 @@ impl Definitions {
             interpolation_avars: Interpolate::new(buffer_size),
             interpolation_lvars: Interpolate::new(buffer_size),
             
-            var_options: HashMap::new(),
+            
             categories: HashMap::new(),
-        }
-    }
-
-    fn get_var_options(&mut self, var_name: String) -> &mut VarOptions {
-        match self.var_options.entry(var_name) {
-            Entry::Occupied(o) => o.into_mut(),
-            Entry::Vacant(v) => {
-                v.insert(Default::default())
-            }
+            periods: HashMap::new(),
+            interpolate_vars: HashSet::new(),
         }
     }
 
     fn add_var(&mut self, category: &str, var: VarEntry) -> Result<(), VarAddError> {
         let (var_name, var_type) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
-        // Tell definitions to sync this variable
 
         // Handle interpolation for this variable
         let should_interpolate = var.interpolate.is_some();
@@ -357,13 +414,15 @@ impl Definitions {
             }
         }
 
-        let var_options = self.get_var_options(var.var_name.clone());
-        var_options.should_sync = true;
-        var_options.should_interpolate = should_interpolate;
+        // Mark the variable as interpolatable
+        self.interpolate_vars.insert(var_name.clone());
+        
         // Handle custom periods
         if let Some(period) = var.update_every {
-            var_options.period = Some(Period::new(period))
+            self.periods.insert(var_name.clone(), Period::new(period));
         }
+
+        self.add_mapping(var_name.clone(), ActionType::VarOnly, var.condition);
 
         Ok(())
     }
@@ -402,15 +461,15 @@ impl Definitions {
 
     // Determines whether to add an aircraft variable or local variable based off the variable name
     fn add_var_string(&mut self, category: &str, var_name: &str, var_units: Option<&str>, var_type: InDataTypes) -> Result<(String, VarType), VarAddError> {
-        let actual_var_name = get_real_var_name(var_name);
-
         if var_name.starts_with("L:") {
             // Keep var_name with L: in it to pass to execute_calculator code
             self.add_local_variable(category, var_name, var_units)?;
 
-            return Ok((actual_var_name, VarType::LocalVar))
+            return Ok((var_name.to_string(), VarType::LocalVar))
 
         } else {
+            let actual_var_name = get_real_var_name(var_name);
+
             if let Some(var_units) = var_units {
                 self.add_aircraft_variable(category, &actual_var_name, var_units, var_type)?;
             } else {
@@ -421,8 +480,15 @@ impl Definitions {
         }
     }
 
-    fn add_mapping(&mut self, var_name: String, mapping: ActionType) {
-        match self.action_map.entry(var_name.to_string()) {
+    fn add_mapping(&mut self, var_name: String, mapping: ActionType, condition: Option<Condition>) {
+        let mapping = Mapping {
+            action: mapping,
+            condition: condition,
+        };
+
+        // TODO: add var in condition
+
+        match self.mappings.entry(var_name.to_string()) {
             Entry::Occupied(mut o) => { 
                 o.get_mut().push(mapping)
             }
@@ -453,7 +519,7 @@ impl Definitions {
 
         action.set_switch_on(var.switch_on);
 
-        self.add_mapping(var_string, ActionType::Bool(Box::new(action)));
+        self.add_mapping(var_string, ActionType::Bool(Box::new(action)), var.condition);
 
         Ok(())
     }
@@ -488,15 +554,17 @@ impl Definitions {
     fn add_num_set(&mut self, category: &str, var: Value) -> Result<(), VarAddError> {
         let data_type_string: &str = check_and_return_field!("var_type", var, str);
         let data_type = get_data_type_from_string(data_type_string)?;
+
+        let condition = try_cast_yaml!(var["condition"].clone());
         
         match data_type {
             InDataTypes::I32 => {
                 let (mapping, var_string) = self.add_num_set_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::I32(mapping))
+                self.add_mapping(var_string, ActionType::I32(mapping), condition)
             }
             InDataTypes::F64 => {
                 let (mapping, var_string) = self.add_num_set_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::F64(mapping))
+                self.add_mapping(var_string, ActionType::F64(mapping), condition)
             }
             _ => {}
         };
@@ -520,14 +588,16 @@ impl Definitions {
         let data_type_string: &str = check_and_return_field!("var_type", var, str);
         let data_type = get_data_type_from_string(data_type_string)?;
 
+        let condition = try_cast_yaml!(var["condition"].clone());
+
         match data_type {
             InDataTypes::I32 => {
                 let (mapping, var_string) = self.add_num_increment_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::I32(mapping))
+                self.add_mapping(var_string, ActionType::I32(mapping), condition);
             }
             InDataTypes::F64 => {
                 let (mapping, var_string) = self.add_num_increment_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::F64(mapping))
+                self.add_mapping(var_string, ActionType::F64(mapping), condition);
             }
             _ => {}
         };
@@ -548,7 +618,7 @@ impl Definitions {
         }
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
-        self.add_mapping(var_string, ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))));
+        self.add_mapping(var_string, ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))), var.condition);
 
         Ok(())
     }
@@ -559,7 +629,7 @@ impl Definitions {
         let var_name = self.lvarstransfer.add_custom_var(var.get);
 
         self.categories.insert(var_name.clone(), category);
-        self.add_mapping(var_name, ActionType::F64(Box::new(CustomCalculator::new(var.set))));
+        self.add_mapping(var_name, ActionType::F64(Box::new(CustomCalculator::new(var.set))), var.condition);
 
         Ok(())
     }
@@ -639,14 +709,13 @@ impl Definitions {
             if timer.elapsed().as_secs() < 1 {return}
         };
 
-        if let Some(actions) = self.action_map.get_mut(&lvar_data.var_name) {
-            for action in actions {
-                match action {
-                    ActionType::F64(action) => action.set_current(lvar_data.var.floating),
-                    _ => {}
-                }
-            }
+        for mapping in self.mappings.get_mut(&lvar_data.var_name).unwrap() {
+            let value = VarReaderTypes::F64(lvar_data.var.floating);
+            execute_mapping!(new_value, action, value, mapping, {
+                action.set_current(new_value)
+            }, {});
         }
+
         self.current_sync.lvars.insert(lvar_data.var_name.to_string(), lvar_data.var.floating);
     }
 
@@ -713,35 +782,16 @@ impl Definitions {
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Set current var syncactions
-                if let Some(actions) = self.action_map.get_mut(&var_name) {
-
-                    for action in actions {
-                        match value {
-                            VarReaderTypes::Bool(value) => match action {
-                                ActionType::Bool(action) => action.set_current(value),
-                                _ => {}
-                            }
-
-                            VarReaderTypes::I32(value) => match action {
-                                ActionType::I32(action) => action.set_current(value),
-                                _ => {}
-                            }
-
-                            VarReaderTypes::F64(value) => match action {
-                                ActionType::F64(action) => action.set_current(value),
-                                _ => {}
-                            }
-                            _ => {}
-                        }
-                    }
-                    
+                for mapping in self.mappings.get_mut(&var_name).unwrap() {
+                    execute_mapping!(new_value, action, value, mapping, {
+                        action.set_current(new_value)
+                    }, {});
                 }
-    
+
                 // Determine if this variable should be updated
-                let var_options = self.get_var_options(var_name.clone());
                 let mut should_write = true;
 
-                if let Some(period) = var_options.period.as_mut() {
+                if let Some(period) = self.periods.get_mut(&var_name) {
                     should_write = period.do_update();
                 }
 
@@ -751,10 +801,9 @@ impl Definitions {
 
                 if should_write {
                     // Queue data for reading
-                    self.current_sync.avars.insert(var_name, value);      
+                    self.current_sync.avars.insert(var_name.clone(), value);
                 }
             }
-
         }
     }
 
@@ -833,53 +882,23 @@ impl Definitions {
         for (var_name, data) in data {
             self.last_written.insert(var_name.to_string(), Instant::now());
 
-            let var_options = self.get_var_options(var_name.clone());
-            // Can directly be set through SetDataOnSimObject
-            if var_options.should_sync {
+            // Otherwise sync them using defined events
+            for mapping in self.mappings.get_mut(var_name).unwrap() {
+                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), data) {continue}
 
-                if interpolate && var_options.should_interpolate {
-                    // Queue data for interpolation
-                    if let VarReaderTypes::F64(value) = data {
-                        self.interpolation_avars.queue_interpolate(&var_name, time, *value)
-                    }
-                } else {
-                    // Set data right away
-                    to_sync.insert(var_name.clone(), data.clone());
-                }
-                
-            // Needs to be set using an event
-            } else {
-                // Otherwise sync them using defined events
-                if let Some(actions) = self.action_map.get_mut(var_name) {
-                    for action in actions {
-
-                        match data {
-                            VarReaderTypes::Bool(value) => match action {
-                                ActionType::Bool(action) => {
-                                    action.set_new(*value, conn, &mut self.lvarstransfer)
-                                }
-                                _ => {}
-                            }
-
-                            VarReaderTypes::I32(value) => match action {
-                                ActionType::I32(action) => {
-                                    action.set_new(*value, conn, &mut self.lvarstransfer)
-                                }
-                                _ => {}
-                            }
-
-                            VarReaderTypes::F64(value) => match action {
-                                ActionType::F64(action) => {
-                                    action.set_new(*value, conn, &mut self.lvarstransfer)
-                                }
-                                _ => {}
-                            }
-
-                            _ => {}
+                execute_mapping!(new_value, action, *data, mapping, {
+                    action.set_new(new_value, conn, &mut self.lvarstransfer)
+                }, {
+                    if interpolate && self.interpolate_vars.contains(var_name) {
+                        // Queue data for interpolation
+                        if let VarReaderTypes::F64(value) = data {
+                            self.interpolation_avars.queue_interpolate(&var_name, time, *value)
                         }
-                        
+                    } else {
+                        // Set data right away
+                        to_sync.insert(var_name.clone(), data.clone());
                     }
-                }
+                });
             }
         }
 
@@ -890,24 +909,15 @@ impl Definitions {
 
     pub fn write_local_data(&mut self, conn: &SimConnector, data: &LVarMap, interpolate: bool) {
         for (var_name, value) in data {
-            if let Some(actions) = self.action_map.get(var_name) {
-                for action in actions {
-                    match action {
-                        ActionType::F64(action) => {
-                            action.set_new(*value, conn, &mut self.lvarstransfer);
-                        }
-                        _ => {}
-                    }
-                }
-            } else {
+            for mapping in self.mappings.get_mut(var_name).unwrap() {
+                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(*value)) {continue}
 
-                // if interpolate && self.interpolate_names.contains(var_name) {
-                //     self.interpolation_lvars.queue_interpolate(var_name, *value);
-                // } else {
-                self.lvarstransfer.set(conn, var_name, value.to_string().as_ref());
-                // }
-                self.last_written.insert(var_name.to_string(), Instant::now());
-
+                execute_mapping!(new_value, action, VarReaderTypes::F64(*value), mapping, {
+                    action.set_new(new_value, conn, &mut self.lvarstransfer)
+                }, {
+                    self.lvarstransfer.set(conn, var_name, value.to_string().as_ref());
+                    self.last_written.insert(var_name.to_string(), Instant::now());
+                });
             }
         }
     }
