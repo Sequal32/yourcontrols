@@ -1,13 +1,12 @@
 ![https://github.com/Sequal32/yourcontrol](/assets/logo.png)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
-[![](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge)](https://github.com/Sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip) [![](https://img.shields.io/github/downloads/Sequal32/yourcontrol/total?style=for-the-badge)](https://github.com/Sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip)
-
+[![](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge)](https://github.com/Sequal32/yourcontrolsinstaller/releases/download/1.1.0/installer.zip) [![](https://img.shields.io/github/downloads/Sequal32/yourcontrol/total?style=for-the-badge)](https://github.com/Sequal32/yourcontrolsinstaller/releases/download/1.1.0/installer.zip)
 Shared Cockpit for Microsoft Flight Simulator 2020.
 
 # Table of Contents
 - [Table of Contents](#table-of-contents)
   - [Features](#features)
-  - [Installing](#installing)
+  - [Downloading](#downloading)
   - [Running](#running)
   - [Support Me!](#support-me)
   - [Troubleshooting](#troubleshooting)
@@ -36,10 +35,19 @@ The following aircraft have config files:
 
 The airliners have 10x the amount of code than the GA aircraft, so they will take a while to be fully implemented.
 
-## Installing
-1. Download the installer from [here](https://github.com/Sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip), unzip, and run the exe file.
-   1. Don't click the Download Code button in the home page of the repository.
-   2. Don't unzip/install into Program Files or any other system protected area, neither the installer or the program can run under elevated privilages.
+## Downloading
+**Option 1** (Recommended):
+
+Download and run the [installer](https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip).
+
+**Option 2** (Includes all compatibilties with other mods, which may break the mod as they get updates):
+  1. Download the latest release from [here](https://github.com/Sequal32/yourcontrol/releases/latest) and unzip to a directory of your choice. 
+     1. Don't click the Download Code button in the home page of the repository.
+     2. Don't unzip into Program Files or any other system protected area.
+  2. Move the `YourControl` folder inside of `PLACE IN COMMUNITY PACKAGES` to the Community folder where you install addons. If you haven't changed the location in the installer, common locations are...
+     * **Steam**: C:\Users\[YOUR USERNAME]\AppData\Roaming\Microsoft Flight Simulator\Packages\Community
+     * **Microsoft Store**: C:\Users\[YOUR USERNAME]\AppData\Local\Packages\Microsoft.FlightSimulator_<RANDOMLETTERS>\LocalCache\Packages\Community
+     * **Boxed**: C:\Users\[YOUR USERNAME]\AppData\Local\MSFSPackages\Community
 
 ## Running
 1. Launch FS2020, select the same aircraft, weather, and spawn location. **Do NOT enable multiplayer unless you're on different servers.**
