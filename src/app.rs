@@ -6,6 +6,8 @@ use std::{str::FromStr, net::{Ipv6Addr, Ipv4Addr, IpAddr}, io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
 use serde_json::Value;
+use crate::simconfig;
+// use update::Updater;
 
 pub enum AppMessage {
     // Name, IsIPV6, port
@@ -18,6 +20,7 @@ pub enum AppMessage {
     LoadAircraft(String),
     Startup,
     Update,
+    UpdateConfig(simconfig::Config)
 }
 
 fn get_message_str(type_string: &str, data: &str) -> String {
@@ -60,7 +63,7 @@ fn get_ip_from_data(data: &Value) -> Result<IpAddr, String> {
 }
 
 impl App {
-    pub fn setup() -> Self {
+    pub fn setup(title: String) -> Self {
         info!("Creating webview...");
         
         let (tx, rx) = unbounded();
@@ -78,29 +81,28 @@ impl App {
 
         thread::spawn(move || {
             let webview = web_view::builder()
-            .title("Shared Cockpit")
+            .title(&title)
             .content(web_view::Content::Html(format!(r##"<!DOCTYPE html>
                 <html>
                 <head>
                     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
                     <style>{css}</style>
                 </head>
-                <body class="{class}">
+                <body class="themed">
                 <img src="{logo}" class="logo-image"/>
                 {body}
                 </body>
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
                 <script>
-                {js2}
                 {js1}
                 {js}
                 </script>
                 </html>
-            "##, 
-            class = dark_theme_class,
+            "##,
             css = include_str!("../web/stylesheet.css"), 
             js = include_str!("../web/main.js"), 
             js1 = include_str!("../web/list.js"),
-            js2 = include_str!("../web/aircraft.js"),
             body = include_str!("../web/index.html"),
             logo = format!("data:image/png;base64,{}", base64::encode(logo.as_slice()))
             )))
@@ -146,12 +148,16 @@ impl App {
                     }
 
                     "load_aircraft" => {
-                        tx.send(AppMessage::LoadAircraft(data["name"].as_str().unwrap().to_string())).ok();
+                        tx.send(AppMessage::LoadAircraft(data["filename"].as_str().unwrap().to_string())).ok();
                     }
 
                     "startup" => {tx.send(AppMessage::Startup).ok();}
 
                     "update" => {tx.send(AppMessage::Update).ok();}
+
+                    "SaveConfig" => {
+                        tx.send(AppMessage::UpdateConfig(serde_json::from_value(data["config"].clone()).unwrap())).ok();
+                    }
                     _ => ()
                 };
 
@@ -159,7 +165,7 @@ impl App {
             })
             .user_data(0)
             .resizable(true)
-            .size(800, 600)
+            .size(1000, 800)
             .build()
             .unwrap();
             
@@ -206,18 +212,6 @@ impl App {
         self.invoke("error", Some(msg));
     }
 
-    pub fn set_port(&self, port: u16) {
-        self.invoke("set_port", Some(port.to_string().as_str()));
-    }
-
-    pub fn set_ip(&self, ip: &str) {
-        self.invoke("set_ip", Some(ip));
-    }
-
-    pub fn set_name(&self, name: &str) {
-        self.invoke("set_name", Some(name));
-    }
-
     pub fn attempt(&self) {
         self.invoke("attempt", None);
     }
@@ -258,22 +252,6 @@ impl App {
         self.invoke("lostconnection", Some(name));
     }
 
-    pub fn overloaded(&self) {
-        self.invoke("overloaded", None);
-    }
-
-    pub fn stable(&self) {
-        self.invoke("stable", None);
-    }
-
-    pub fn update_overloaded(&self, is_overloaded: bool) {
-        if is_overloaded && !self.was_overloaded {
-            self.overloaded()
-        } else if !is_overloaded && self.was_overloaded {
-            self.stable()
-        }
-    }
-
     pub fn observing(&self, observing: bool) {
         if observing {
             self.invoke("observing", None);
@@ -298,15 +276,15 @@ impl App {
         self.invoke("add_aircraft", Some(name));
     }
 
-    pub fn select_config(&self, name: &str) {
-        self.invoke("select_active_config", Some(name));
-    }
-
     pub fn version(&self, version: &str) {
         self.invoke("version", Some(version))
     }
 
     pub fn update_failed(&self) {
         self.invoke("update_failed", None);
+    }
+
+    pub fn send_config(&self, value: &str){
+        self.invoke("config_msg", Some(value));
     }
 }
