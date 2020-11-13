@@ -3,7 +3,7 @@ use serde_json;
 use std::fs::File;
 use std::io::{BufReader, Write};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Config {
     pub update_rate: u16,
     pub conn_timeout: u64,

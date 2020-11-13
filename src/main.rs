@@ -61,6 +61,15 @@ fn get_aircraft_configs() -> io::Result<Vec<String>> {
     Ok(filenames)
 }
 
+fn write_configuration(config: &Config) {
+    match config.write_to_file(CONFIG_FILENAME) {
+        Ok(_) => {},
+        Err(e) => error!("Could not write configuration file! Reason: {}", e)
+    };
+}
+
+fn calculate_update_rate(update_rate: u16) -> f64 {1.0 / update_rate as f64}
+
 fn main() {
     // Load configuration file
     let mut config = match Config::read_from_file(CONFIG_FILENAME) {
@@ -69,9 +78,7 @@ fn main() {
             warn!("Could not open config. Using default values. Reason: {}", e);
 
             let config = Config::default();
-            config
-                .write_to_file(CONFIG_FILENAME)
-                .expect(format!("Could not write to {}!", CONFIG_FILENAME).as_str());
+            write_configuration(&config);
             config
         }
     };
@@ -99,8 +106,7 @@ fn main() {
     let mut should_set_none_client = false;
 
     let app_interface = App::setup(format!(
-        "Shared Cockpit v{}",
-        updater.get_version().to_string().as_str() as &str
+        "Shared Cockpit v{}", updater.get_version()
     ));
 
     // Transfer
@@ -108,9 +114,11 @@ fn main() {
 
     // Update rate counter
     let mut update_rate_instant = Instant::now();
-    let update_rate = 1.0 / config.update_rate as f64;
+    let mut update_rate = calculate_update_rate(config.update_rate);
 
     let mut need_update = false;
+
+    let mut did_delay_pass = false;
 
     let mut config_to_load = config.last_config.clone();
     // Helper closures
@@ -322,18 +330,27 @@ fn main() {
             let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
             let delay_passed = (!control.has_control() && control.time_since_control_change() > 5)
                 || control.has_control();
-            if !observing && can_update && delay_passed {
-                let permission = SyncPermission {
-                    is_server: client.is_server(),
-                    is_master: control.has_control(),
-                    is_init: false,
-                };
+            let init_delay_passed = control.time_since_control_change() > 3;
 
-                if let Some(values) = definitions.get_need_sync(&permission) {
-                    client.update(values);
+            if !observing && can_update && delay_passed && init_delay_passed {
+                if did_delay_pass {
+
+                    let permission = SyncPermission {
+                        is_server: client.is_server(),
+                        is_master: control.has_control(),
+                        is_init: false,
+                    };
+    
+                    if let Some(values) = definitions.get_need_sync(&permission) {
+                        client.update(values);
+                    }
+    
+                    update_rate_instant = Instant::now();
+
+                } else {
+                    did_delay_pass = true;
+                    definitions.clear_need_sync();
                 }
-
-                update_rate_instant = Instant::now();
             }
 
             if !control.has_control() {
@@ -369,6 +386,7 @@ fn main() {
                                 control.take_control(&conn);
                                 app_interface.gain_control();
                                 need_update = true;
+                                did_delay_pass = false;
                                 info!("Server started and controls taken.");
                             }
                             Err(e) => {
@@ -379,7 +397,7 @@ fn main() {
 
                         config.port = port;
                         config.name = username;
-                        config.write_to_file(CONFIG_FILENAME).ok();
+                        write_configuration(&config);
                     }
                 }
                 AppMessage::Connect(username, ip, ip_input_string, port) => {
@@ -407,6 +425,7 @@ fn main() {
                                 // Freeze aircraft
                                 control.lose_control();
                                 need_update = true;
+                                did_delay_pass = false;
 
                                 info!("Client started and controls lost.");
                             }
@@ -419,7 +438,7 @@ fn main() {
                         config.port = port;
                         config.ip = ip_input_string;
                         config.name = username;
-                        config.write_to_file(CONFIG_FILENAME);
+                        write_configuration(&config);
                     }
                 }
                 AppMessage::Disconnect => {
@@ -464,15 +483,7 @@ fn main() {
                     config.write_to_file(CONFIG_FILENAME).ok();
                 }
                 AppMessage::Startup => {
-                    if config.ui_dark_theme == true {
-                        app_interface.update_theme("true");
-                    } else {
-                        app_interface.update_theme("false");
-                    }
                     thread::sleep(APP_STARTUP_SLEEP_TIME);
-                    app_interface.set_ip(&config.ip);
-                    app_interface.set_name(&config.name);
-                    app_interface.set_port(config.port);
                     // List aircraft
                     match get_aircraft_configs() {
                         Ok(configs) => {
@@ -481,8 +492,6 @@ fn main() {
                             for aircraft_config in configs {
                                 app_interface.add_aircraft(&aircraft_config);
                             }
-
-                            app_interface.select_config(&config.last_config);
                         }
                         Err(_) => {}
                     }
@@ -502,7 +511,8 @@ fn main() {
                     } else {
                         info!("Version {} in use.", app_version)
                     }
-                    app_interface.send_config(&config.get_json_string() as &str);
+                    
+                    app_interface.send_config(&config.get_json_string());
                 }
                 AppMessage::Update => {
                     match updater.run_installer() {
@@ -516,8 +526,10 @@ fn main() {
                         }
                     };
                 }
-                AppMessage::UpdateConfig(_config) => {
-                    _config.write_to_file(CONFIG_FILENAME);
+                AppMessage::UpdateConfig(new_config) => {
+                    config = new_config;
+                    update_rate = calculate_update_rate(config.update_rate);
+                    write_configuration(&config);
                 }
             },
             Err(_) => {}

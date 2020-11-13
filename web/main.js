@@ -3,6 +3,7 @@ var server_button = document.getElementById('server-button')
 var alert = document.getElementById("alert")
 var version_alert_text = document.getElementById("version-alert-text")
 var overloaded_alert = document.getElementById("overloaded-alert")
+var aircraftList = document.getElementById("aircraft-list")
 
 var nav_bar = document.getElementById("nav")
 var server_client_page = document.getElementById("server-client-page");
@@ -18,6 +19,7 @@ var port_input_join = document.getElementById("port-input-join")
 var server_input_join = document.getElementById("server-input-join")
 var name_input_join = document.getElementById("name-input-join")
 var theme_selector = document.getElementById("theme-select")
+var beta_selector = document.getElementById("beta-select")
 
 var update_rate_input = document.getElementById("update-rate-input")
 var timeout_input = document.getElementById("timeout-input")
@@ -39,18 +41,9 @@ var is_client = false
 var on_client = true
 var has_control = false
 
-var mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+var settings = {}
 
-function themeChange (event) {
-    if (event.matches) {
-        document.body.classList.add(["bg-dark","text-white"])
-        document.body.classList.remove(["bg-white","text-dark"])
-    } else {
-        document.body.classList.remove(["bg-dark","text-white"])
-        document.body.classList.add(["bg-white","text-dark"])
-    }
-};
-mediaQueryList.addListener(themeChange)
+var mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
 
 // Connection List
 var connectionList = new ConnectionList(document.getElementById("connection-list"))
@@ -59,20 +52,24 @@ function invoke(data) {
     window.external.invoke(JSON.stringify(data))
 }
 
+function SetStuffVisible(visible) {
+    if (is_client) {
+        document.getElementById("not_user_client").hidden = visible;
+        document.getElementById("is_user_client").hidden = !visible;
+    } else {
+        document.getElementById("not_server_running").hidden = visible;
+        document.getElementById("is_server_running").hidden = !visible;
+    }
+    document.getElementById("is_client_server_running").hidden = visible;
+    document.getElementById("not_client_server_running").hidden = !visible;
+}
+
 function ResetForm() {
-    server_input.classList.remove(["is-valid", "is-invalid"])
-    port_input.classList.remove(["is-valid", "is-invalid"])
     connect_button.updatetext("success", "Connect")
     server_button.updatetext("primary", "Start Server")
 }
 
-function Validate(e, isValid) {
-    e.classList.add(isValid ? "is-valid" : "is-invalid")
-    e.classList.remove(isValid ? "is-invalid" : "is-valid")
-}
-
 function OnConnected() {
-    PagesVisible(false)
     connect_button.updatetext("danger", "Disconnect")
     server_button.updatetext("danger", "Stop Server")
     
@@ -84,24 +81,24 @@ function OnConnected() {
     ip6radio.disabled = true
     is_connected = true
 
-    version_alert.hidden = true
+    SetStuffVisible(true)
 }
 
 function OnDisconnect(text) {
     alert.updatetext("danger", text)
     is_connected = false
     trying_connection = false
-    server_input.disabled = false
-    port_input.disabled = false
-    name_input.disabled = false
+    server_input_join.disabled = false
+    port_input_join.disabled = false
+    port_input_host.disabled = false
 
     ip4radio.disabled = false
     ip6radio.disabled = false
 
     connectionList.clear()
 
-    PagesVisible(true)
     ResetForm()
+    SetStuffVisible(false)
 }
 
 function ServerClientPageChange(isClient) {
@@ -112,31 +109,44 @@ function ServerClientPageChange(isClient) {
 }
 
 
-function PagesVisible(visible) {
-    if (visible) {
-        server_page_button.hidden = false
-        client_page_button.hidden = false
-        aircraft_list_button.hidden = false
-    } else {
-        if (on_client) {
-            server_page_button.hidden = true
-        } else {
-            client_page_button.hidden = true
-        }
-        aircraft_list_button.hidden = true
-    }
+function Validate(e, isValid) {
+    e.classList.add(isValid ? "is-valid" : "is-invalid")
+    e.classList.remove(isValid ? "is-invalid" : "is-valid")
+    return isValid
 }
 
-function ValidatePort(str) {
-    return str.match(/\d+/gi)
+function ValidateInt(e) {
+    return Validate(e, e.value.match(/\d+/gi))
 }
 
-function ValidateIp(str) {
-    return str.match(/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi) || str.match(/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/gi)
+function ValidateIp(e) {
+    return Validate(e, e.value.match(/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi) || e.value.match(/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/gi))
 }
 
-function ValidateHostname(str) {
-    return str.match(/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/gi)
+function ValidateHostname(e) {
+    return Validate(e, e.value.match(/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/gi))
+}
+
+function ValidateName(e) {
+    return Validate(e, e.value.trim() != "")
+}
+
+function LoadSettings(newSettings) {
+    server_input_join.value = newSettings.ip
+    port_input_join.value = newSettings.ip
+    port_input_host.value = newSettings.port
+    port_input_join.value = newSettings.port
+    username.value = newSettings.name
+    aircraftList.value = newSettings.last_config
+    buffer_input.value = newSettings.buffer_size
+    timeout_input.value = newSettings.conn_timeout
+    update_rate_input.value = newSettings.update_rate
+    theme_selector.checked = newSettings.ui_dark_theme
+    beta_selector.checked = newSettings.check_for_betas
+
+    setTheme(newSettings.ui_dark_theme)
+
+    settings = newSettings
 }
 
 // Handle server messages
@@ -146,10 +156,12 @@ function MessageReceived(data) {
             alert.updatetext("warning", "Attempting connection...")
             break;
         case "connected":
-            OnConnected()
             is_client = true
             alert.updatetext("success", "Connected to server.")
             connect_button.updatetext("danger", "Disconnect")
+            document.getElementById("not_user_client").hidden = true;
+            document.getElementById("is_user_client").hidden = false;
+            OnConnected()
             break;
         case "server_fail":
             OnDisconnect("Server failed to start. Reason: " + data["data"])
@@ -161,13 +173,13 @@ function MessageReceived(data) {
             OnDisconnect("Not Connected.")
             break;
         case "server":
-            OnConnected()
             is_client = false
             alert.updatetext("success", "Server started! " + data["data"] + " clients connected.")
-            connectionList.noPlayers();
+            OnConnected()
             break;
         case "error":
             alert.updatetext("danger", data["data"])
+            ResetForm()
             break;
         case "control":
             has_control = true
@@ -180,16 +192,6 @@ function MessageReceived(data) {
             connectionList.update()
             rectangle_status.style.backgroundColor = "red"
             break;
-        case "set_ip":
-            server_input_join.value = data["data"]
-            break;
-        case "set_port":
-            port_input_host.value = data["data"]
-            port_input_join.value = data["data"]
-            break;
-        case "set_name":
-            username.value = data["data"]
-            break;
         case "overloaded":
             overloaded_alert.hidden = false
             break;
@@ -198,6 +200,7 @@ function MessageReceived(data) {
             break;
         case "newconnection":
             connectionList.add(data["data"])
+            setTheme(settings.ui_dark_theme)
             break;
         case "lostconnection":
             connectionList.remove(data["data"])
@@ -224,9 +227,6 @@ function MessageReceived(data) {
         case "add_aircraft":
             aircraftList.addAircraft(data["data"])
             break;
-        case "select_active_config":
-            aircraftList.searchSelectActive(data["data"])
-            break;
         case "version":
             $('#updateModal').modal()
             version_alert_text.innerHTML = `New Version is available ${data["data"]}`
@@ -234,43 +234,38 @@ function MessageReceived(data) {
         case "update_failed":
             updateFailed()
             break;
-        case "theme_update":
-            if (data["data"] == "true") {
-                var elements = document.getElementsByClassName("themed")
-                for (const element of elements) {
-                    element.classList.add("bg-dark")
-                    element.classList.add("text-white")
-                    element.classList.remove("bg-white")
-                    element.classList.remove("text-black")
-                }
-            } else if (data["data"] == "false") {
-                var elements = document.getElementsByClassName("themed")
-                for (const element of elements) {
-                    element.classList.remove("bg-dark")
-                    element.classList.remove("text-white")
-                    element.classList.add("bg-white")
-                    element.classList.add("text-black")
-                }
-            }
-            break;
         case "config_msg":
-            var json = JSON.parse(data["data"])
-            server_input_join.value = json.ip
-            port_input_join.value = json.ip
-            port_input_host.value = json.port
-            port_input_join.value = json.port
-            username.value = json.name
-            aircraftList.value = json.last_config
-            buffer_input.value = json.buffer_size
-            timeout_input.value = json.conn_timeout
-            update_rate_input.value = json.update_rate
-            theme_selector.value = json.theme_selector
+            LoadSettings(JSON.parse(data["data"]))
             break;
     }
 }
 
+// Init
 invoke({"type":"startup"})
-connectionList.notRunning();
+
+var setTheme = (isDarkTheme) =>{
+    if (isDarkTheme) {
+        var elements = document.getElementsByClassName("themed")
+        for (const element of elements) {
+            element.classList.add("bg-dark")
+            element.classList.add("text-white")
+            element.classList.remove("bg-white")
+            element.classList.remove("text-black")
+        }
+    } else {
+        var elements = document.getElementsByClassName("themed")
+        for (const element of elements) {
+            element.classList.remove("bg-dark")
+            element.classList.remove("text-white")
+            element.classList.add("bg-white")
+            element.classList.add("text-black")
+        }
+    }
+}
+
+function UpdateAircraft(filename) {
+    invoke({"type": "load_aircraft", "filename": filename})
+}
 
 // Buttons functions
 
@@ -293,33 +288,42 @@ alert.updatetext = function(typeString, text) {
 $("#settings-form").submit(e => {
     e.preventDefault()
 
-    var settings = {}
+    var newSettings = {}
 
-    settings.ip = server_input_join.value
-    settings.name = username.value
-    settings.last_config = aircraftList.value
-    settings.buffer_size = buffer_input.value
-    settings.conn_timeout = timeout_input.value
-    settings.update_rate = update_rate_input.value
-    settings.theme_selector = theme_selector.value
+    newSettings.name = username.value
+    newSettings.last_config = aircraftList.value
+    newSettings.buffer_size = ValidateInt(buffer_input) ? parseInt(buffer_input.value) : null
+    newSettings.conn_timeout = ValidateInt(timeout_input) ? parseInt(timeout_input.value) : null
+    newSettings.update_rate = ValidateInt(update_rate_input) ? parseInt(update_rate_input.value) : null
+    newSettings.ui_dark_theme = theme_selector.checked// == "true"? true : false
+    newSettings.check_for_betas = beta_selector.checked // == "true"? true : false
 
-    $('#restartModal').modal()
+    for (key in newSettings) {
+        if (newSettings[key] === null) {return}
+        settings[key] = newSettings[key]
+    }
 
-    invoke({"type": "SaveConfig", "config": JSON.stringify(settings)})
-
+    LoadSettings(settings)
+    invoke({"type": "SaveConfig", "config": settings})
 })
 
 $("#main-form-host").submit(e => {
-
-    console.log("Host")
     e.preventDefault()
 
-    var validport = ValidatePort(port_input_host.value)
-    let validname = username.value.trim() != ""
+    if (trying_connection) {return}
+    if (is_connected) {invoke({type: "disconnect"}); return}
 
-    if (!validport || !validname) {return}
+
+    if (!ValidateInt(port_input_host) || !ValidateName(username)) {return}
+
     trying_connection = true
-    invoke({type: "server", port: parseInt(port_input_host.value), is_v6: ip6radio.checked, username: username.value})
+    UpdateAircraft(aircraftList.value)
+    invoke({
+        type: "server",
+        port: parseInt(port_input_host.value),
+        is_v6: ip6radio.checked,
+        username: username.value
+    })
 
 })
 
@@ -329,17 +333,13 @@ $("#main-form-join").submit(e => {
     if (trying_connection) {return}
     if (is_connected) {invoke({type: "disconnect"}); return}
 
-    var validip = ValidateIp(server_input_join.value)
-    var validhostname = ValidateHostname(server_input_join.value)
-    var validport = ValidatePort(port_input_join.value)
-    let validname = username.value.trim() != ""
 
-    Validate(port_input_join, validport)
-    Validate(server_input_join, validname)
+    var validip = ValidateIp(server_input_join)
+    var validhostname = ValidateHostname(server_input_join)
+    var validport = ValidateInt(port_input_join)
+    let validname = ValidateName(username)
 
-    let data = {type: "connect", port: parseInt(server_input_join.value)}
-
-    Validate(server_input, validip || validhostname)
+    let data = {type: "connect", port: parseInt(port_input_join.value)}
 
     if (!validname || !validport || (!validip && !validhostname)) {return}
     // Match hostname or ip
@@ -348,52 +348,13 @@ $("#main-form-join").submit(e => {
     } else if (validip) {
         data["ip"] = server_input_join.value
     }
-    else {
-        return
-    }
+
     data["username"] = username.value
     trying_connection = true
+
+    UpdateAircraft(aircraftList.value)
     invoke(data);
 })
-
-document.getElementById("main-form-join").onsubmit = function(e) {
-    e.preventDefault()
-
-    if (trying_connection) {return}
-    if (is_connected) {invoke({type: "disconnect"}); return}
-
-    var validip = ValidateIp(server_input_join.value)
-    var validhostname = ValidateHostname(server_input_join.value)
-    var validport = ValidatePort(port_input_join.value)
-    let validname = name_input.value.trim() != ""
-
-    Validate(port_input_join, validport)
-    Validate(server_input_join, validname)
-
-    if (on_client) {
-        let data = {type: "connect", port: parseInt(port_input.value)}
-
-        Validate(server_input, validip || validhostname)
-
-        if (!validname || !validport || (!validip && !validhostname)) {return}
-        // Match hostname or ip
-        if (validhostname) {
-            data["hostname"] = server_input.value
-        } else if (validip) {
-            data["ip"] = server_input.value
-        }
-        else {
-            return
-        }
-        data["username"] = name_input.value
-        trying_connection = true
-        invoke(data);
-    } else {
-        if (!validport || !validname) {return}
-        trying_connection = true
-        invoke({type: "server", port: parseInt(port_input_join.value), is_v6: ip6radio.checked, username: name_input.value})
-    }
-}
 
 function update() {
     invoke({type:"update"})
@@ -408,4 +369,15 @@ function updateFailed() {
     version_alert_button.classList.add("btn-danger")
     version_alert_button.innerHTML = "Failed. Retry?";
     version_alert_button.disabled = false;
+}
+
+version_alert_button.onclick = update
+
+aircraftList.addAircraft = function (aircraftName) {
+    const newButton = document.createElement("option")
+    newButton.className = "list-group-item list-group-item-action aircraft-list-entry themed"
+    newButton.innerHTML = aircraftName
+    newButton.value = aircraftName
+
+    aircraftList.appendChild(newButton)
 }
