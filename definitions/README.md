@@ -8,6 +8,8 @@
    2. [Var Types](#var-types)
    3. [Sync Permissions](#sync-permissions)
 
+## Currently the information on this page is out of date as of the latest refactor.
+
 # Theory
 *The best way to become familiar with this is to look through the configuration files already provided, and see if you can make a few variables work in a new configuration file.*
 
