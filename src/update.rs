@@ -91,6 +91,8 @@ impl Updater {
         // Write files
         let mut dir = env::temp_dir();
         dir.push("YourControlsInstaller");
+        fs::create_dir_all(dir.clone()).ok();
+
         let path = dir.to_str().unwrap();
 
         for file_index in 0..zip.len() {
