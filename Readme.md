@@ -1,6 +1,7 @@
 ![https://github.com/Sequal32/yourcontrol](/assets/logo.png)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
-[![](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge)](https://github.com/Sequal32/yourcontrolsinstaller/releases/download/1.1.0/installer.zip) [![](https://img.shields.io/github/downloads/Sequal32/yourcontrol/total?style=for-the-badge)](https://github.com/Sequal32/yourcontrolsinstaller/releases/download/1.1.0/installer.zip)
+[![](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge)](https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip) [![](https://img.shields.io/github/downloads/Sequal32/yourcontrol/total?style=for-the-badge)](https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip)
+
 Shared Cockpit for Microsoft Flight Simulator 2020.
 
 # Table of Contents
@@ -24,7 +25,7 @@ Shared Cockpit for Microsoft Flight Simulator 2020.
 * Synchronzied button presses on FMCs/GXXXXs
 
 The following aircraft have config files:
-* FBW A32NX v0.4.X
+* FBW A32NX Stable + Dev
 * Cessna 152
 * Cessna 172 G1000
 * Diamond DA40
