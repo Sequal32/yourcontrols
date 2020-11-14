@@ -395,11 +395,18 @@ shared:
     var_units: Bool
     event_name: LANDING_LIGHTS_TOGGLE
     event_param: 1
-  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template runway turn off
+  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
     type: ToggleSwitch
-    var_name: A:LIGHT TAXI:3
+    var_name: A:LIGHT TAXI:1
     var_units: Bool
     event_name: TOGGLE_TAXI_LIGHTS
+    event_param: 1
+  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI:2
+    var_units: Bool
+    event_name: TOGGLE_TAXI_LIGHTS
+    event_param: 2
   # - # ASOBO_LIGHTING_Switch_Light_Strobe_Template
   #   type: NumSet
   #   var_name: A:LIGHT POTENTIOMETER:24
@@ -969,14 +976,14 @@ shared:
     var_units: Bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
     event_param: 1
-    use_calcluator: true
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
     var_units: Bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
     event_param: 2
-    use_calcluator: true
+    use_calculator: true
   # LS button and other EICAS buttons has an associated H event to fire with
   - # ASOBO_AIRLINER_Knob_ND_Template
     type: var

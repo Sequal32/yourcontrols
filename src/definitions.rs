@@ -500,7 +500,7 @@ impl Definitions {
 
         // Set optional features
         if var.use_calculator {
-            action.set_calculator_event_name(Some(var_string.as_ref()));
+            action.set_calculator_event_name(Some(&var.event_name));
         }
 
         if let Some(off_event) = var.off_event_name.as_ref() {

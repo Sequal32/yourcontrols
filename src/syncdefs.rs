@@ -74,7 +74,7 @@ impl<'a> Syncable<bool> for ToggleSwitch {
                 None => String::new(),
             };
 
-            lvar_transfer.set(conn, event_name, &value_string);
+            lvar_transfer.set_unchecked(conn, event_name, None, &value_string);
 
         } else {
             let event_id = match self.off_event_id {
