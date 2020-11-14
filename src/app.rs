@@ -84,18 +84,20 @@ impl App {
             .content(web_view::Content::Html(format!(r##"<!DOCTYPE html>
                 <html>
                 <head>
-                    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-                    <style>{css}</style>
+                    <style>
+                        {bootstrapcss}
+                        {css}
+                    </style>
                 </head>
-                <body class="themed">
-                <img src="{logo}" class="logo-image"/>
-                {body}
+                    <body class="themed">
+                    <img src="{logo}" class="logo-image"/>
+                    {body}
                 </body>
-                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
                 <script>
-                {js1}
-                {js}
+                    {jquery}
+                    {bootstrapjs}
+                    {js1}
+                    {js}
                 </script>
                 </html>
             "##,
@@ -103,6 +105,9 @@ impl App {
             js = include_str!("../web/main.js"), 
             js1 = include_str!("../web/list.js"),
             body = include_str!("../web/index.html"),
+            jquery = include_str!("../web/jquery.min.js"),
+            bootstrapjs = include_str!("../web/bootstrap.bundle.min.js"),
+            bootstrapcss = include_str!("../web/bootstrap.min.css"),
             logo = format!("data:image/png;base64,{}", base64::encode(logo.as_slice()))
             )))
 
