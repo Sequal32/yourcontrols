@@ -61,7 +61,7 @@ fn handle_hole_punch(transfer: &mut TransferStruct) {
     // Send a message every second
         if session.timer.is_some() && session.timer.as_ref().unwrap().elapsed().as_secs() < 1 {return true}
 
-        messages::send_message(Payloads::Handshake {is_initial: true, session_id: String::new()}, session.addr.clone(), sender);
+        messages::send_message(Payloads::Handshake {is_initial: true, session_id: String::new()}, session.addr.clone(), sender).ok();
         // Over retry limit, stop connection
         if session.retries > MAX_PUNCH_RETRIES {
             return false
@@ -79,7 +79,7 @@ fn send_to_all(except: Option<&SocketAddr>, payload: Payloads, transfer: &mut Tr
             if client.addr == *except {continue}
         }
 
-        messages::send_message(payload, client.addr.clone(), &mut transfer.sender);
+        messages::send_message(payload.clone(), client.addr.clone(), &mut transfer.sender).ok();
     }
 }
 
@@ -88,20 +88,20 @@ fn handle_message(addr: SocketAddr, payload: Payloads, transfer: &mut TransferSt
 
     let mut should_relay = true;
 
-    match payload {
+    match &payload {
         // Unused for server
         Payloads::InvalidName {  } => {}
-        Payloads::PlayerJoined { name, in_control, is_server, is_observer } => {}
-        Payloads::PlayerLeft { name } => {}
-        Payloads::SetObserver { from, to, is_observer } => {} 
-        Payloads::PeerEstablished { peer } => {}
+        Payloads::PlayerJoined { .. } => {}
+        Payloads::PlayerLeft { .. } => {}
+        Payloads::SetObserver { .. } => {} 
+        Payloads::PeerEstablished { .. } => {}
         // No processing needed
-        Payloads::Update { data, time, from } => {}
+        Payloads::Update { .. } => {}
         // Used
         Payloads::Name { name } => {
             // Name already in use
-            if transfer.clients.contains_key(&name) {
-                messages::send_message(Payloads::InvalidName{}, addr, sender);
+            if transfer.clients.contains_key(name) {
+                messages::send_message(Payloads::InvalidName{}, addr, sender).ok();
                 return
             }
 
@@ -110,19 +110,19 @@ fn handle_message(addr: SocketAddr, payload: Payloads, transfer: &mut TransferSt
                 is_observer: false,
             });
 
-            messages::send_message(Payloads::PlayerJoined { name: name, in_control: false, is_server: false, is_observer: false}, addr, sender).ok();
+            messages::send_message(Payloads::PlayerJoined { name: name.clone(), in_control: false, is_server: false, is_observer: false}, addr, sender).ok();
 
             should_relay = false;
         }
         
-        Payloads::TransferControl { from, to } => {
+        Payloads::TransferControl { from: _, to } => {
             transfer.in_control = to.clone();
         }
         
-        Payloads::Handshake { is_initial, session_id } => {
+        Payloads::Handshake { is_initial: _, session_id } => {
                 // Incoming UDP packet from peer
             if let Some(verify_session_id) = transfer.session_id.as_ref() {
-                if session_id == *verify_session_id {
+                if *session_id == *verify_session_id {
                     // TODO: add client
                     messages::send_message(Payloads::PeerEstablished {peer: addr}, transfer.rendevous_server.as_ref().unwrap().clone(), sender).ok();
                 }
@@ -130,21 +130,21 @@ fn handle_message(addr: SocketAddr, payload: Payloads, transfer: &mut TransferSt
             should_relay = false;
         }
         Payloads::HostingReceived { session_id } => {
-            transfer.session_id = Some(session_id);
+            transfer.session_id = Some(session_id.clone());
             should_relay = false;
         }
         Payloads::AttemptConnection { peer } => {
-            transfer.clients_to_holepunch.push(HolePunchSession::new(peer));
+            transfer.clients_to_holepunch.push(HolePunchSession::new(peer.clone()));
             should_relay = false;
         }
         
     }
 
     if should_relay {
-        send_to_all(Some(&addr), payload, transfer);
+        send_to_all(Some(&addr), payload.clone(), transfer);
     }
 
-    transfer.server_tx.send(payload);
+    transfer.server_tx.send(payload).ok();
 }
 
 fn handle_app_message(transfer: &mut TransferStruct) {
@@ -309,7 +309,7 @@ impl TransferClient for Server {
         self.client_tx.send(Payloads::TransferControl {
             from: self.get_server_name().to_string(),
             to: target,
-        });
+        }).ok();
     }
 
     fn set_observer(&self, target: String, is_observer: bool) {

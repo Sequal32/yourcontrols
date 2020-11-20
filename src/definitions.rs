@@ -146,7 +146,7 @@ fn evalute_condition(lvarstransfer: &LVarSyncer, avarstransfer: &AircraftVars, c
     false
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct EventTriggered {
     pub event_name: String,
     pub data: u32,
@@ -264,7 +264,7 @@ struct CustomCalculatorEntry {
 }
 
 // The struct that get_need_sync returns. Holds all the aircraft/local variables and events that have changed since the last call.
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, Clone)]
 pub struct AllNeedSync {
     pub avars: AVarMap,
     pub lvars: LVarMap,

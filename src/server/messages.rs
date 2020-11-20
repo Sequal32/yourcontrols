@@ -1,13 +1,13 @@
 use std::net::SocketAddr;
 
 use crossbeam_channel::{Receiver, Sender};
-use laminar::{Packet, Socket, SocketEvent};
+use laminar::{Packet, SocketEvent};
 use serde::{Serialize, Deserialize};
 use serde_json::Value;
 
 use crate::definitions::AllNeedSync;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum Payloads {
     Name {name: String},

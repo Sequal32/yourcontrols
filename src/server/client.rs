@@ -1,11 +1,8 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
 
 use laminar::{Packet, Socket, SocketEvent};
-use serde_json::{Value};
-use spin_sleep::sleep;
-use std::{time::Instant, io::Read, net::{IpAddr, Shutdown, SocketAddr, TcpStream}, sync::Mutex};
+use std::{time::Instant, net::{SocketAddr}, sync::Mutex};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
-use std::io::Write;
 use std::thread;
 
 use super::{Error, MAX_PUNCH_RETRIES, Payloads, get_bind_address, get_rendezvous_server, messages, util::{TransferClient}};
@@ -34,35 +31,36 @@ impl TransferStruct {
     }
 }
 
-fn handle_message(addr: SocketAddr, payload: Payloads, transfer: &mut TransferStruct) {
-    let sender = transfer.get_sender();
-
-    match payload {
+// Should stop client
+fn handle_message(addr: SocketAddr, payload: Payloads, transfer: &mut TransferStruct) -> bool {
+    match &payload {
         // Unused by client
-        Payloads::HostingReceived { session_id } => {}
-        Payloads::Name { name } => {}
-        Payloads::PeerEstablished { peer } => {}
+        Payloads::HostingReceived { .. } => {}
+        Payloads::Name { .. } => {}
+        Payloads::PeerEstablished { .. } => {}
         // No futher handling required
-        Payloads::TransferControl { from, to } => {}
-        Payloads::SetObserver { from, to, is_observer } => {}
-        Payloads::InvalidName {  } => {}
-        Payloads::PlayerJoined { name, in_control, is_server, is_observer } => {}
-        Payloads::PlayerLeft { name } => {}
-        Payloads::Update { data, time, from } => {}
+        Payloads::TransferControl { ..} => {}
+        Payloads::SetObserver { .. } => {}
+        Payloads::InvalidName { .. } => {}
+        Payloads::PlayerJoined { .. } => {}
+        Payloads::PlayerLeft { .. } => {}
+        Payloads::Update { .. } => {}
         // Used
         Payloads::Handshake { is_initial, session_id } => {
+            if *session_id != transfer.session_id {return false}
             // Established connection with server
             transfer.connected = true;
 
-            messages::send_message(Payloads::Name {name: transfer.name}, addr, sender);
+            messages::send_message(Payloads::Name {name: transfer.name.clone()}, addr, transfer.get_sender());
         }
         Payloads::AttemptConnection { peer } => {
-            transfer.received_address = Some(peer)
+            transfer.received_address = Some(peer.clone())
         }
         
     }
 
     transfer.server_tx.send(payload);
+    return true
 }
 
 fn handle_app_message(transfer: &mut TransferStruct) {
@@ -151,7 +149,7 @@ impl Client {
         thread::spawn(move || socket.start_polling());
         thread::spawn(move || {
             loop {
-                let transfer = &mut transfer.lock().unwrap();
+                let mut transfer = &mut transfer_thread_clone.lock().unwrap();
                 
                 let (addr, payload) = match messages::get_next_message(&mut transfer.receiver) {
                     Ok(a) => a,
