@@ -148,4 +148,8 @@ impl TransferClient for Client {
     fn get_server_name(&self) -> &str {
         return &self.username
     }
+
+    fn get_session_id(&self) -> Option<String> {
+        return None
+    }
 }

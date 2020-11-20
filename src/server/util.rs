@@ -19,6 +19,7 @@ pub trait TransferClient {
     fn get_transmitter(&self) -> &Sender<Value>;
     fn get_receiver(&self) -> &Receiver<ReceiveData>;
     fn get_server_name(&self) -> &str;
+    fn get_session_id(&self) -> Option<String>;
     // Application specific functions
 
     fn send_value(&self, message: Value) {
@@ -84,34 +85,6 @@ impl PartialReader {
             return Some(result_string);
         } else {
             return None
-        }
-    }
-}
-
-pub struct PartialWriter {
-    buffer: Vec<u8>,
-}
-
-impl PartialWriter {
-    pub fn new() -> Self {
-        Self {
-            buffer: Vec::new(),
-        }
-    }
-
-    pub fn to_write(&mut self, data: &[u8]) {
-        self.buffer.extend_from_slice(data);
-    }
-
-    pub fn write_to(&mut self, writer: &mut impl Write) -> Result<(), std::io::Error> {
-        if self.buffer.len() == 0 {return Ok(())}
-
-        match writer.write(self.buffer.as_slice()) {
-            Ok(bytes_written) => {
-                self.buffer.drain(0..bytes_written);
-                Ok(())
-            }
-            Err(e) => Err(e)
         }
     }
 }

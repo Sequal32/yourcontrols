@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 mod app;
 mod clientmanager;
@@ -82,6 +82,8 @@ fn main() {
             config
         }
     };
+    // Load enviornmental variables
+    dotenv::dotenv().ok();
     // Initialize logging
     simplelog::WriteLogger::init(
         simplelog::LevelFilter::Info,
@@ -373,15 +375,13 @@ fn main() {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        let mut server = Server::new(username.clone());
-                        match server.start(is_ipv6, port) {
+                        let mut server = Box::new(Server::new(username.clone()));
+                        match server.start_with_hole_punching(is_ipv6) {
                             Ok(_) => {
-                                // Start the server loop
-                                server.run();
                                 // Display server started message
                                 app_interface.server_started(0);
                                 // Assign server as transfer client
-                                transfer_client = Some(Box::new(server));
+                                transfer_client = Some(server);
                                 // Unfreeze aircraft
                                 control.take_control(&conn);
                                 app_interface.gain_control();
@@ -536,8 +536,8 @@ fn main() {
         }
         // Try to connect to simconnect if not connected
         if !connected {
-            connected = conn.connect("Your Control");
-            // connected = true;
+            // connected = conn.connect("Your Control");
+            connected = true;
             if connected {
                 // Display not connected to server message
                 app_interface.disconnected();

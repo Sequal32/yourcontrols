@@ -2,14 +2,18 @@ use crossbeam_channel::{Receiver, Sender, unbounded};
 use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
 use log::{warn};
+use retain_mut::RetainMut;
 use serde_json::{Value, json};
 use spin_sleep::sleep;
-use std::{io::{Read}, net::IpAddr, net::Shutdown, net::TcpStream, thread, time::Duration, time::Instant};
+use std::{collections::HashMap, io::{Read}, net::IpAddr, net::Shutdown, net::SocketAddrV6, net::TcpStream, net::{SocketAddr, UdpSocket}, thread, time::Duration, time::Instant};
 use std::net::{TcpListener, Ipv4Addr, SocketAddrV4};
+use laminar::{Packet, Socket, SocketEvent};
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, AtomicU16, Ordering::SeqCst};
 use std::{str::FromStr};
-use super::{PartialReader, PartialWriter, TransferStoppedReason, process_message, util::{ReceiveData, TransferClient}};
+use super::{Payloads, TransferStoppedReason, messages, process_message, util::{ReceiveData, TransferClient}};
+
+const MAX_PUNCH_RETRIES: u8 = 5;
 
 #[derive(Debug, Copy, Clone)]
 pub enum PortForwardResult {
@@ -20,55 +24,90 @@ pub enum PortForwardResult {
 
 struct Client {
     stream: TcpStream,
-    // May not be able to read all data in single loop
-    reader: PartialReader,
-    // May not be able to write all data in single loop
-    writer: PartialWriter,
-    address: IpAddr,
     name: String,
     is_observer: bool
 }
 
 struct TransferStruct {
-    // Internal array of receivers to send receive data from clients
-    clients: Vec<Client>,
-    // Internally receive data to send to clients
-    client_rx: Receiver<Value>,
-    // Send data to app to receive client data
-    server_tx: Sender<ReceiveData>,
-    // Send data to other clients
-    client_tx: Sender<Value>,
-    // Server name
-    name: String,
-    in_control: String
+    session_id: Option<String>,
+    clients: HashMap<SocketAddr, Option<Client>>,
+    // Reading/writing to UDP stream
+    receiver: Receiver<SocketEvent>,
+    sender: Sender<Packet>,
+    // Holepunching
+    rendevous_server: Option<SocketAddr>,
+    clients_to_holepunch: Vec<HolePunchSession>,
 }
 
-impl TransferStruct {
-    pub fn name_exists(&self, name: &str) -> bool {
-        for client in self.clients.iter() {
-            if name == client.name {return true}
-        }
-        return false;
-    }
+struct HolePunchSession {
+    addr: SocketAddr,
+    timer: Option<Instant>,
+    retries: u8
+}
 
-    pub fn set_observer(&mut self, name: &str, is_observer: bool) {
-        for client in self.clients.iter_mut() {
-            if name == client.name {
-                client.is_observer = is_observer;
+impl HolePunchSession {
+    pub fn new(addr: SocketAddr) -> Self {
+        Self {
+            addr: addr,
+            timer: None,
+            retries: 0,
+        }
+    }
+}
+
+fn handle_hole_punch(transfer: &mut TransferStruct) {
+    let sender = &mut transfer.sender;
+    let sessions = &mut transfer.clients_to_holepunch;
+
+    sessions.retain_mut(|session| {
+    // Send a message every second
+        if session.timer.is_some() && session.timer.as_ref().unwrap().elapsed().as_secs() < 1 {return true}
+
+        messages::send_message(Payloads::Handshake {is_initial: true, session_id: String::new()}, session.addr.clone(), sender);
+        // Over retry limit, stop connection
+        if session.retries > MAX_PUNCH_RETRIES {
+            return false
+        }
+        // Reset second timer
+        session.timer = Some(Instant::now());
+
+        return true;
+    });
+}
+
+fn handle_message(addr: SocketAddr, payload: Payloads, transfer: &mut TransferStruct) {
+    let sender = &mut transfer.sender;
+    match payload {
+        Payloads::Name { name } => {}
+        Payloads::InvalidName {  } => {}
+        Payloads::PlayerJoined { name, in_control, is_server, is_observer } => {}
+        Payloads::PlayerLeft { name } => {}
+        Payloads::Update { data, time, from } => {}
+        Payloads::TransferControl { from, to } => {}
+        Payloads::SetObserver { from, to } => {}
+        Payloads::Handshake { is_initial, session_id } => {
+                // Incoming UDP packet from peer
+            if let Some(verify_session_id) = transfer.session_id.as_ref() {
+                if session_id == *verify_session_id {
+                    // TODO: add client
+                    transfer.clients.insert(addr.clone(), None);
+                    messages::send_message(Payloads::PeerEstablished {peer: addr}, transfer.rendevous_server.as_ref().unwrap().clone(), sender).ok();
+                }
             }
         }
-    }
-
-    pub fn write_to_all_except(&mut self, name: &str, bytes: &[u8]) {
-        for client in self.clients.iter_mut() {
-            if name == client.name {continue}
-            client.writer.to_write(bytes);
+        Payloads::HostingReceived { session_id } => {
+            transfer.session_id = Some(session_id)
         }
+        Payloads::AttemptConnection { peer } => {
+            transfer.clients_to_holepunch.push(HolePunchSession::new(peer));
+        }
+        
+        Payloads::PeerEstablished { peer } => {}
     }
 }
 
-fn build_user_string(name: &str, is_observer: bool, has_control: bool, is_server: bool) -> String {
-    format!(r#"{{"type":"user", "data":"{}", "in_control":{}, "is_observer":{}, "is_server":{}}}{}"#, name, has_control, is_observer, is_server, "\r\n")
+fn get_rendezvous_server(is_ipv6: bool) -> SocketAddr {
+    if is_ipv6 {dotenv::var("RENDEZVOUS_SERVER_V6").unwrap().parse().unwrap()} else {dotenv::var("RENDEZVOUS_SERVER_V4").unwrap().parse().unwrap()}
 }
 
 pub struct Server {
@@ -97,8 +136,8 @@ impl Server {
         return Self {
             number_connections: Arc::new(AtomicU16::new(0)),
             should_stop: Arc::new(AtomicBool::new(false)),
-            transfer: None,
             client_rx, client_tx, server_rx, server_tx,
+            transfer: None,
             username: username
         }
     }
@@ -115,225 +154,71 @@ impl Server {
         if !local_addr.is_some() {return Err(PortForwardResult::LocalAddrNotFound)}
         let local_addr = Ipv4Addr::from_str(local_addr.unwrap().as_str()).unwrap();
 
-        let result = gateway.unwrap().add_port(PortMappingProtocol::TCP, port, SocketAddrV4::new(local_addr, port), 86400, "YourControl");
+        let result = gateway.unwrap().add_port(PortMappingProtocol::UDP, port, SocketAddrV4::new(local_addr, port), 86400, "YourControls");
         if result.is_err() {return Err(PortForwardResult::AddPortError)}
 
         Ok(())
     }
 
-    pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(), std::io::Error> {
+    pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(), laminar::ErrorKind> {
         // Attempt to port forward
         if let Err(e) = self.port_forward(port) {
             warn!("Could not port forward! Reason: {:?}", e)
         }
-
-        // Start listening for connections
-        let bind_ip = if is_ipv6 {"::"} else {"0.0.0.0"};
-        let listener = match TcpListener::bind(format!("{}:{}", bind_ip, port)) {
-            Ok(listener) => listener,
-            Err(n) => {return Err(n)}
-        };
-
-        // Needed to stop the server
-        listener.set_nonblocking(true).ok();
-
-        // to be used in run()
-        self.transfer = Some(Arc::new(Mutex::new(
-            TransferStruct {
-                clients: Vec::new(),
-                client_rx: self.client_rx.clone(), 
-                server_tx: self.server_tx.clone(),
-                client_tx: self.client_tx.clone(),
-                name: self.username.clone(),
-                in_control: self.username.clone()
-            }
-        )));
-
-        let transfer = self.transfer.as_ref().unwrap().clone();
-        let number_connections = self.number_connections.clone();
-        let should_stop = self.should_stop.clone();
-
-        // Listen for new connections
-        thread::spawn(move || {
-            loop {
-                // Accept connection
-                if let Ok((stream, addr)) = listener.accept() {
-                    // Do not block as we need to iterate over all streams
-                    stream.set_nonblocking(true).unwrap();
-
-                    let mut transfer = transfer.lock().unwrap();
-
-                    let mut new_client = Client {
-                        stream,
-                        writer: PartialWriter::new(),
-                        reader: PartialReader::new(),
-                        address: addr.ip(),
-                        name: String::new(),
-                        is_observer: false
-                    };
-
-                    // Identify with name
-                    new_client.writer.to_write(format!(r#"{{"type":"name", "data":"{0:}"}}{1:}"#, transfer.name, "\r\n").as_bytes());
-                    // Send server user state
-                    let client_in_control = transfer.in_control.clone();
-                    new_client.writer.to_write(build_user_string(&transfer.name, false, client_in_control == transfer.name, true).as_bytes());
-                    // Iterate through all connected clients and send names
-                    for client in transfer.clients.iter_mut() {
-                        let in_control = client_in_control == client.name;
-                        new_client.writer.to_write(build_user_string(&client.name, client.is_observer, in_control, false).as_bytes());
-                    }
-                    // Append client transfers into vector
-                    transfer.clients.push(new_client);
-                    // Increment number of connections and tell app
-                    number_connections.fetch_add(1, SeqCst);
-                }
-                // Break the loop if the server's stopped
-                if should_stop.load(SeqCst) {break}
-                sleep(Duration::from_millis(100));
-            }
-        });
         
+        let bind_addr = format!("{}:{}", if is_ipv6 {"::"} else {"0.0.0.0"}, port);
+        let socket = Socket::bind(bind_addr)?;
 
-        return Ok(());
+        self.run(socket, None)
     }
 
-    pub fn run(&mut self) {
-        let transfer = self.transfer.as_ref().unwrap().clone();
-        let number_connections = self.number_connections.clone();
-        let should_stop = self.should_stop.clone();
+    pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(), laminar::ErrorKind> {
+        let socket = Socket::bind(if is_ipv6 {":::0"} else {"0.0.0.0:0"})?;
+        let addr: SocketAddr = get_rendezvous_server(is_ipv6);
 
+        // Send message to external server to obtain session ID
+        messages::send_message(Payloads::Handshake {is_initial: true, session_id: String::new()}, addr.clone(), &mut socket.get_packet_sender()).ok();
+
+        self.run(socket, Some(addr))
+    }
+
+    fn run(&mut self, socket: Socket, rendevous: Option<SocketAddr>) -> Result<(), laminar::ErrorKind> {
+        let mut socket = socket;
+
+        let transfer = Arc::new(Mutex::new(TransferStruct {
+            session_id: None,
+            rendevous_server: rendevous,
+            receiver: socket.get_event_receiver(), 
+            sender: socket.get_packet_sender(),
+            clients: HashMap::new(),
+            clients_to_holepunch: Vec::new(),
+        }));
+        let transfer_thread_clone = transfer.clone();
+
+        self.transfer = Some(transfer);
+
+        
+        thread::spawn(move || socket.start_polling());
         thread::spawn(move || {
-            let mut timer = Instant::now();
             loop {
-                let transfer = &mut transfer.lock().unwrap();
-                let mut to_write = Vec::new();
-                // Clients to remove 
-                let mut to_drop = Vec::new();
-                // Read any data from client 
-                let mut next_send_string: Option<String> = match transfer.client_rx.try_recv() {
-                    Ok(mut data) => {
-                        data["from"] = Value::String(transfer.name.clone());
-                        Some(data.to_string() + "\r\n")
-                    },
-                    Err(_) => None
+                let mut transfer = transfer_thread_clone.lock().unwrap();
+
+                let (addr, payload) = match messages::get_next_message(&mut transfer.receiver) {
+                    Ok(a) => a,
+                    Err(_) => {
+                        // TODO: handle break
+                        continue;
+                    }
                 };
 
-                // Heartbeat
-                if timer.elapsed().as_secs() > 2 && next_send_string.is_none() {
-                    next_send_string = Some("\r\n".to_string());
-                    timer = Instant::now();
-                }
+                handle_hole_punch(&mut transfer);
+                handle_message(addr, payload, &mut transfer);
 
-                
-                // Read incoming stream data
-
-                for (index, client) in transfer.clients.iter_mut().enumerate() {
-                    // Read buffs
-                    let mut buf = [0; 1024];
-                    match client.stream.read(&mut buf) {
-                        // Read nothing - conenction dropped
-                        Ok(0) => {
-                            to_drop.push(index);
-                        }
-                        Ok(n) => {
-                            client.reader.add_buf(&buf[0..n]);
-
-                            while let Some(data_string) = client.reader.try_read_string() {
-                                // Deserialize json
-                                if let Ok(data) = process_message(&data_string, Some(client.name.clone())) {
-                                    to_write.push((index, data, data_string));
-                                }
-                            }
-                        }
-                        
-                        Err(_) => ()
-                    }
-
-                    match client.writer.write_to(&mut client.stream) {
-                        Ok(_) => {}
-                        // Write error - connection dropped
-                        Err(_) => {
-                            to_drop.push(index);
-                        }
-                    };
-                    // Send data from app to clients
-                    if let Some(data) = next_send_string.as_ref() {
-                        client.writer.to_write(data.as_bytes());
-                    }
-                }
-    
-                // Send resulting incoming stream data to app
-                for (client_index, data, data_string) in to_write {
-                    let rebroadcast;
-
-                    match &data {
-                        ReceiveData::Name(name) => {
-                            // Check that the name is not already in use
-                            if transfer.name_exists(&name) || name == &transfer.name {
-                                // Tell *single* client that that's an invalid name
-                                let client = transfer.clients.get_mut(client_index).unwrap();
-                                client.writer.to_write(concat!(r#"{"type":"invalid_name"}"#, "\r\n").as_bytes());
-                            } else {
-                                // Append address
-                                let client = transfer.clients.get_mut(client_index).unwrap();
-                                client.name = name.clone();
-                                transfer.server_tx.send(ReceiveData::NewConnection(name.clone())).ok();
-                                // Tell everyone else about the new client
-                                transfer.write_to_all_except(name, build_user_string(name, false, false, false).as_bytes());
-                            }
-                            rebroadcast = false;
-                        },
-                        ReceiveData::TransferControl(_, to) => {
-                            // Keep track of who's in control for inital state update to new clients
-                            transfer.in_control = to.clone();
-                            rebroadcast = true;
-                        }
-                        _ => {rebroadcast = true;}
-                    }
-
-                    if rebroadcast {
-                        // Do not process name payload in app
-                        let client = transfer.clients.get(client_index).unwrap();
-                        transfer.server_tx.send(data).ok();
-                        // Rebroadcast
-                        let mut rebroadcast_data: Value = serde_json::from_str(&data_string).unwrap();
-                        rebroadcast_data["from"] = Value::String(client.name.clone());
-
-                        let name = client.name.clone();
-                        transfer.write_to_all_except(&name, (rebroadcast_data.to_string() + "\r\n").as_bytes());
-                    }
-                }
-
-                let should_stop = should_stop.load(SeqCst);
-                // Shutdown all streams
-                if should_stop {
-                    to_drop.clear();
-                    to_drop.extend(0..transfer.clients.len());
-                }
-    
-                // Remove any connections that got dropped and tell app
-                let mut dropped = 0;
-                for dropping in to_drop {
-                    let removed_client = transfer.clients.remove(dropping - dropped);
-                    removed_client.stream.shutdown(Shutdown::Both).ok();
-                    number_connections.fetch_sub(1, SeqCst);
-                    
-                    // TransferStopped message will take care of removing clients
-                    if !should_stop {
-                        transfer.server_tx.send(ReceiveData::ConnectionLost(removed_client.name.clone())).ok();
-                        // Tell everyone else about client disconnect
-                        transfer.client_tx.send(json!({
-                            "type":"remove_user",
-                            "data": removed_client.name
-                        })).ok();
-                    };
-                    dropped += 1;
-                }
-
-                if should_stop {break}
-                sleep(Duration::from_millis(5));
+                sleep(Duration::from_millis(10))
             }
         });
+
+        Ok(())
     }
 }
 
@@ -369,26 +254,33 @@ impl TransferClient for Server {
 
     fn transfer_control(&self, target: String) {
         // Read for initial contact with other clients
-        if let Some(transfer) = self.transfer.as_ref() {
-            transfer.lock().unwrap().in_control = target.clone();
-        }
+        // if let Some(transfer) = self.transfer.as_ref() {
+        //     transfer.lock().unwrap().in_control = target.clone();
+        // }
         
-        self.send_value(json!({
-            "type": "transfer_control",
-            "target": target
-        }));
+        // self.send_value(json!({
+        //     "type": "transfer_control",
+        //     "target": target
+        // }));
     }
 
     fn set_observer(&self, target: String, is_observer: bool) {
         // Read for initial contact with other clients
-        if let Some(transfer) = self.transfer.as_ref() {
-            transfer.lock().unwrap().set_observer(&target, is_observer);
-        }
+        // if let Some(transfer) = self.transfer.as_ref() {
+        //     transfer.lock().unwrap().set_observer(&target, is_observer);
+        // }
 
-        self.send_value(json!({
-            "type": "set_observer",
-            "target": target,
-            "is_observer": is_observer
-        }));
+        // self.send_value(json!({
+        //     "type": "set_observer",
+        //     "target": target,
+        //     "is_observer": is_observer
+        // }));
+    }
+
+    fn get_session_id(&self) -> Option<String> {
+        if let Some(transfer) = self.transfer.as_ref() {
+            return transfer.lock().unwrap().session_id.clone()
+        }
+        return None
     }
 }
