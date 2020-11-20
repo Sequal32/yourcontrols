@@ -3,17 +3,17 @@ use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
 use log::warn;
 use retain_mut::RetainMut;
-use std::{time::Duration, collections::HashMap, time::Instant, net::{Ipv4Addr, SocketAddr, SocketAddrV4}, thread};
+use std::{collections::HashMap, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
 use laminar::{Packet, Socket, SocketEvent};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
 use std::str::FromStr;
 use super::{Error, MAX_PUNCH_RETRIES, Payloads, get_bind_address, get_rendezvous_server, messages, util::{TransferClient}};
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub enum PortForwardResult {
-    GatewayNotFound,
+    GatewayNotFound(igd::SearchError),
     LocalAddrNotFound,
-    AddPortError
+    AddPortError(igd::AddPortError)
 }
 
 struct Client {
@@ -187,19 +187,24 @@ impl Server {
     }
 
     fn port_forward(&self, port: u16) -> Result<(), PortForwardResult> {
-        let mut options = SearchOptions::default();
-        options.timeout = Some(Duration::from_secs(2));
+        let local_addr = match local_ipaddress::get() {
+            Some(addr) => Ipv4Addr::from_str(addr.as_str()).unwrap(),
+            None => return Err(PortForwardResult::LocalAddrNotFound)
+        };
 
-        let gateway = search_gateway(options);
+        let gateway = match search_gateway(igd::SearchOptions {
+                bind_addr: SocketAddr::new(IpAddr::V4(local_addr), 0), 
+                timeout: Some(Duration::from_secs(3)),
+                ..Default::default()}) 
+        {
+            Ok(g) => g,
+            Err(e) => return Err(PortForwardResult::GatewayNotFound(e))
+        };
 
-        if !gateway.is_ok() {return Err(PortForwardResult::GatewayNotFound)}
-
-        let local_addr = local_ipaddress::get();
-        if !local_addr.is_some() {return Err(PortForwardResult::LocalAddrNotFound)}
-        let local_addr = Ipv4Addr::from_str(local_addr.unwrap().as_str()).unwrap();
-
-        let result = gateway.unwrap().add_port(PortMappingProtocol::UDP, port, SocketAddrV4::new(local_addr, port), 86400, "YourControls");
-        if result.is_err() {return Err(PortForwardResult::AddPortError)}
+        match gateway.add_port(PortMappingProtocol::UDP, port, SocketAddrV4::new(local_addr, port), 86400, "YourControls") {
+            Ok(()) => {},
+            Err(e) => return Err(PortForwardResult::AddPortError(e))
+        };
 
         Ok(())
     }
@@ -324,7 +329,7 @@ impl TransferClient for Server {
             from: self.get_server_name().to_string(),
             to: target,
             is_observer: is_observer
-        });
+        }).ok();
     }
 
     fn get_session_id(&self) -> Option<String> {
