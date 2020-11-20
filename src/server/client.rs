@@ -1,35 +1,105 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
 
+use laminar::{Packet, Socket, SocketEvent};
 use serde_json::{Value};
-use std::{io::Read, net::{IpAddr, Shutdown, SocketAddr, TcpStream}, sync::Mutex};
+use spin_sleep::sleep;
+use std::{time::Instant, io::Read, net::{IpAddr, Shutdown, SocketAddr, TcpStream}, sync::Mutex};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::io::Write;
 use std::thread;
 
-use super::{PartialReader, TransferStoppedReason, process_message, util::{ReceiveData, TransferClient}};
+use super::{Error, MAX_PUNCH_RETRIES, Payloads, get_bind_address, get_rendezvous_server, messages, util::{TransferClient}};
 
 struct TransferStruct {
-    stream: TcpStream,
-    
-    reader: PartialReader,
+    name: String,
     // Internally receive data to send to clients
-    client_rx: Receiver<Value>,
+    client_rx: Receiver<Payloads>,
     // Send data to app to receive client data
-    server_tx: Sender<ReceiveData>,
-    
+    server_tx: Sender<Payloads>,
+    // Reading/writing to UDP stream
+    receiver: Receiver<SocketEvent>,
+    sender: Sender<Packet>,
+    // Hole punching
+    connected: bool,
+    server_address: SocketAddr,
+    received_address: Option<SocketAddr>,
+    retry_timer: Option<Instant>,
+    session_id: String,
+    retries: u8
+}
+
+impl TransferStruct {
+    pub fn get_sender(&mut self) -> &mut Sender<Packet> {
+        &mut self.sender
+    }
+}
+
+fn handle_message(addr: SocketAddr, payload: Payloads, transfer: &mut TransferStruct) {
+    let sender = transfer.get_sender();
+
+    match payload {
+        // Unused by client
+        Payloads::HostingReceived { session_id } => {}
+        Payloads::Name { name } => {}
+        Payloads::PeerEstablished { peer } => {}
+        // No futher handling required
+        Payloads::TransferControl { from, to } => {}
+        Payloads::SetObserver { from, to, is_observer } => {}
+        Payloads::InvalidName {  } => {}
+        Payloads::PlayerJoined { name, in_control, is_server, is_observer } => {}
+        Payloads::PlayerLeft { name } => {}
+        Payloads::Update { data, time, from } => {}
+        // Used
+        Payloads::Handshake { is_initial, session_id } => {
+            // Established connection with server
+            transfer.connected = true;
+
+            messages::send_message(Payloads::Name {name: transfer.name}, addr, sender);
+        }
+        Payloads::AttemptConnection { peer } => {
+            transfer.received_address = Some(peer)
+        }
+        
+    }
+
+    transfer.server_tx.send(payload);
+}
+
+fn handle_app_message(transfer: &mut TransferStruct) {
+    if let Ok(payload) = transfer.client_rx.try_recv() {
+        messages::send_message(payload, transfer.received_address.unwrap(), transfer.get_sender());
+    }
+}
+
+// Returns whether to stop client (can't establish connection)
+fn handle_hole_punch(transfer: &mut TransferStruct) -> bool {
+    let sender = &mut transfer.sender;
+
+    // Send a message every second
+    if transfer.retry_timer.is_some() && transfer.retry_timer.as_ref().unwrap().elapsed().as_secs() < 1 {return false}
+
+    messages::send_message(Payloads::Handshake {is_initial: true, session_id: transfer.session_id.clone()}, transfer.server_address.clone(), sender);
+    // Over retry limit, stop connection
+    if transfer.retries > MAX_PUNCH_RETRIES {
+        return false
+    }
+    // Reset second timer
+    transfer.retry_timer = Some(Instant::now());
+
+    return true
 }
 
 pub struct Client {
     should_stop: Arc<AtomicBool>,
     transfer: Option<Arc<Mutex<TransferStruct>>>,
     // Recieve data from clients
-    server_rx: Receiver<ReceiveData>,
+    server_rx: Receiver<Payloads>,
     // Send data to clients
-    client_tx: Sender<Value>,
+    client_tx: Sender<Payloads>,
     // Internally receive data to send to clients
-    client_rx: Receiver<Value>,
+    client_rx: Receiver<Payloads>,
     // Send data to app to receive client data
-    server_tx: Sender<ReceiveData>,
+    server_tx: Sender<Payloads>,
     // IP
     username: String
 }
@@ -47,75 +117,58 @@ impl Client {
         }
     }
 
-    pub fn start(&mut self, ip: IpAddr, port: u16, timeout: u64) -> Result<(), std::io::Error>  {
-        let stream = TcpStream::connect_timeout(&SocketAddr::new(ip, port), std::time::Duration::from_secs(timeout))?;
-        stream.set_nonblocking(true).unwrap();
+    pub fn start(&mut self, session_id: String, is_ipv6: bool) -> Result<(), laminar::ErrorKind> {
+        let mut socket = Socket::bind(get_bind_address(is_ipv6))?;
 
-        // to be used in run()
-        self.transfer = Some(Arc::new(Mutex::new(
+        let transfer = Arc::new(Mutex::new(
             TransferStruct {
-                stream: stream,
-                reader: PartialReader::new(),
+                // Transfer
                 client_rx: self.client_rx.clone(),
                 server_tx: self.server_tx.clone(),
+                receiver: socket.get_event_receiver(), 
+                sender: socket.get_packet_sender(),
+                // Holepunching
+                retries: 0,
+                connected: false,
+                server_address: get_rendezvous_server(is_ipv6),
+                received_address: None,
+                retry_timer: None,
+                session_id: session_id.clone(),
+                // State
+                name: self.get_server_name().to_string(),
             }
-        )));
+        ));
+        let transfer_thread_clone = transfer.clone();
 
-        return Ok(());
-    }
+        self.transfer = Some(transfer);
 
-    pub fn run(&self) {
-        let transfer = self.transfer.as_ref().unwrap().clone();
-        let should_stop = self.should_stop.clone();
+        // Init connection
+        messages::send_message(Payloads::Handshake {
+            is_initial: false,
+            session_id,
+        }, get_rendezvous_server(is_ipv6), &mut socket.get_packet_sender());
 
-        self.send_name();
-
+        thread::spawn(move || socket.start_polling());
         thread::spawn(move || {
             loop {
                 let transfer = &mut transfer.lock().unwrap();
-    
-                // Read data from server
-                let mut buf = [0; 1024];
-                match transfer.stream.read(&mut buf) {
-                    // No data read, connection dropped
-                    Ok(0) => {
-                        transfer.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::ConnectionLost)).ok();
-                        should_stop.store(true, SeqCst);
-                        break;
+                
+                let (addr, payload) = match messages::get_next_message(&mut transfer.receiver) {
+                    Ok(a) => a,
+                    Err(e) => match e {
+                        Error::SerdeError(_) => {continue}
+                        Error::ConnectionClosed(_) => {continue}
+                        Error::Dummy => {continue}
                     }
-                    Ok(n) => {
-                        transfer.reader.add_buf(&buf[0..n]);
-
-                        while let Some(data) = transfer.reader.try_read_string() {
-                            // Deserialize json
-                            if let Ok(data) = process_message(&data, None) {
-                                transfer.server_tx.send(data).ok();
-                            }
-                        }
-                    }
-                    Err(_) => {}
                 };
-    
-                // Send data from app to clients
-                if let Ok(data) = transfer.client_rx.try_recv() {
-                    // Broadcast data to all clients
-                    match transfer.stream.write_all((data.to_string() + "\r\n").as_bytes()) {
-                        Ok(_) => {}
-                        Err(_) => {
-                            // Connection dropped
-                            should_stop.store(true, SeqCst);
-                            transfer.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::ConnectionLost)).ok();
-                            break
-                        }
-                    };
-                }
 
-                if should_stop.load(SeqCst) {
-                    transfer.stream.shutdown(Shutdown::Both).ok();
-                    break;
-                }
+                if !transfer.connected {handle_hole_punch(&mut transfer);};
+                handle_message(addr, payload, transfer);
+                handle_app_message(transfer);
             }
         });
+
+        Ok(())
     }
 }
 
@@ -126,7 +179,6 @@ impl TransferClient for Client {
 
     fn stop(&self, reason: String) {
         self.should_stop.store(true, SeqCst);
-        self.server_tx.send(ReceiveData::TransferStopped(TransferStoppedReason::Requested(reason))).ok();
     }
 
     fn stopped(&self) -> bool {
@@ -137,11 +189,11 @@ impl TransferClient for Client {
         false
     }
 
-    fn get_transmitter(&self) -> &Sender<Value> {
+    fn get_transmitter(&self) -> &Sender<Payloads> {
         return &self.client_tx
     }
 
-    fn get_receiver(&self) -> &Receiver<ReceiveData> {
+    fn get_receiver(&self) -> &Receiver<Payloads> {
         return &self.server_rx
     }
 

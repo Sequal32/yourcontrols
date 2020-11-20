@@ -16,7 +16,7 @@ pub enum Payloads {
     PlayerLeft {name: String},
     Update {data: AllNeedSync, time: f64, from: String},
     TransferControl {from: String, to: String},
-    SetObserver {from: String, to: String},
+    SetObserver {from: String, to: String, is_observer: bool},
     // Hole punching payloads
     Handshake {is_initial: bool, session_id: String},
     HostingReceived {session_id: String},
@@ -27,7 +27,7 @@ pub enum Payloads {
 #[derive(Debug)]
 pub enum Error {
     SerdeError(serde_json::Error),
-    ConnectionClosed(std::io::Error),
+    ConnectionClosed(SocketAddr),
     Dummy
 }
 
@@ -41,10 +41,10 @@ fn read_value(receiver: &mut Receiver<SocketEvent>) -> Result<(SocketAddr, Value
 
     let packet = match receiver.recv() {
         Ok(event) => match event {
-            laminar::SocketEvent::Packet(packet) => packet,
-            laminar::SocketEvent::Connect(_) => {return Err(Error::Dummy)}
-            laminar::SocketEvent::Timeout(_) => {return Err(Error::Dummy)}
-            laminar::SocketEvent::Disconnect(_) => {return Err(Error::Dummy)}
+            SocketEvent::Packet(packet) => packet,
+            SocketEvent::Connect(_) => {return Err(Error::Dummy)}
+            SocketEvent::Timeout(addr) | 
+            SocketEvent::Disconnect(addr) => {return Err(Error::ConnectionClosed(addr))}
         }
         Err(_) => {return Err(Error::Dummy)}
     };
