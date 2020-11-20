@@ -29,63 +29,65 @@ impl TransferStruct {
     pub fn get_sender(&mut self) -> &mut Sender<Packet> {
         &mut self.sender
     }
-}
 
-// Should stop client
-fn handle_message(addr: SocketAddr, payload: Payloads, transfer: &mut TransferStruct) -> bool {
-    match &payload {
-        // Unused by client
-        Payloads::HostingReceived { .. } => {}
-        Payloads::Name { .. } => {}
-        Payloads::PeerEstablished { .. } => {}
-        // No futher handling required
-        Payloads::TransferControl { ..} => {}
-        Payloads::SetObserver { .. } => {}
-        Payloads::InvalidName { .. } => {}
-        Payloads::PlayerJoined { .. } => {}
-        Payloads::PlayerLeft { .. } => {}
-        Payloads::Update { .. } => {}
-        // Used
-        Payloads::Handshake { is_initial, session_id } => {
-            if *session_id != transfer.session_id {return false}
-            // Established connection with server
-            transfer.connected = true;
+    // Should stop client
+    fn handle_message(&mut self, addr: SocketAddr, payload: Payloads) -> bool {
+        match &payload {
+            // Unused by client
+            Payloads::HostingReceived { .. } => {}
+            Payloads::Name { .. } => {}
+            Payloads::PeerEstablished { .. } => {}
+            // No futher handling required
+            Payloads::TransferControl { ..} => {}
+            Payloads::SetObserver { .. } => {}
+            Payloads::InvalidName { .. } => {}
+            Payloads::PlayerJoined { .. } => {}
+            Payloads::PlayerLeft { .. } => {}
+            Payloads::Update { .. } => {}
+            // Used
+            Payloads::Handshake { is_initial: _, session_id } => {
+                if *session_id != self.session_id {return false}
+                // Established connection with server
+                self.connected = true;
 
-            messages::send_message(Payloads::Name {name: transfer.name.clone()}, addr, transfer.get_sender());
+                messages::send_message(Payloads::Name {name: self.name.clone()}, addr, self.get_sender()).ok();
+            }
+            Payloads::AttemptConnection { peer } => {
+                self.received_address = Some(peer.clone())
+            }
+            
         }
-        Payloads::AttemptConnection { peer } => {
-            transfer.received_address = Some(peer.clone())
+
+        self.server_tx.send(payload).ok();
+        return true
+    }
+
+    fn handle_app_message(&mut self) {
+        if let Ok(payload) = self.client_rx.try_recv() {
+            messages::send_message(payload, self.received_address.unwrap(), self.get_sender()).ok();
         }
-        
     }
 
-    transfer.server_tx.send(payload);
-    return true
-}
+    // Returns whether to stop client (can't establish connection)
+    fn handle_hole_punch(&mut self) -> bool {
+        let sender = &mut self.sender;
 
-fn handle_app_message(transfer: &mut TransferStruct) {
-    if let Ok(payload) = transfer.client_rx.try_recv() {
-        messages::send_message(payload, transfer.received_address.unwrap(), transfer.get_sender());
+        // Send a message every second
+        if self.retry_timer.is_some() && self.retry_timer.as_ref().unwrap().elapsed().as_secs() < 1 {return false}
+
+        messages::send_message(Payloads::Handshake {is_initial: true, session_id: self.session_id.clone()}, self.server_address.clone(), sender).ok();
+        // Over retry limit, stop connection
+        if self.retries > MAX_PUNCH_RETRIES {
+            return false
+        }
+        // Reset second timer
+        self.retry_timer = Some(Instant::now());
+
+        return true
     }
 }
 
-// Returns whether to stop client (can't establish connection)
-fn handle_hole_punch(transfer: &mut TransferStruct) -> bool {
-    let sender = &mut transfer.sender;
 
-    // Send a message every second
-    if transfer.retry_timer.is_some() && transfer.retry_timer.as_ref().unwrap().elapsed().as_secs() < 1 {return false}
-
-    messages::send_message(Payloads::Handshake {is_initial: true, session_id: transfer.session_id.clone()}, transfer.server_address.clone(), sender);
-    // Over retry limit, stop connection
-    if transfer.retries > MAX_PUNCH_RETRIES {
-        return false
-    }
-    // Reset second timer
-    transfer.retry_timer = Some(Instant::now());
-
-    return true
-}
 
 pub struct Client {
     should_stop: Arc<AtomicBool>,
@@ -144,25 +146,27 @@ impl Client {
         messages::send_message(Payloads::Handshake {
             is_initial: false,
             session_id,
-        }, get_rendezvous_server(is_ipv6), &mut socket.get_packet_sender());
+        }, get_rendezvous_server(is_ipv6), &mut socket.get_packet_sender()).ok();
 
         thread::spawn(move || socket.start_polling());
         thread::spawn(move || {
             loop {
-                let mut transfer = &mut transfer_thread_clone.lock().unwrap();
+                let mut transfer = transfer_thread_clone.lock().unwrap();
                 
-                let (addr, payload) = match messages::get_next_message(&mut transfer.receiver) {
-                    Ok(a) => a,
+                match messages::get_next_message(&mut transfer.receiver) {
+                    Ok((addr, payload)) => {
+                        transfer.handle_message(addr, payload);
+                    },
                     Err(e) => match e {
-                        Error::SerdeError(_) => {continue}
-                        Error::ConnectionClosed(_) => {continue}
-                        Error::Dummy => {continue}
+                        Error::SerdeError(_) => {continue;}
+                        Error::ConnectionClosed(_) => {continue;}
+                        Error::Dummy => {continue;}
+                        Error::ReadTimeout => {}
                     }
                 };
 
-                if !transfer.connected {handle_hole_punch(&mut transfer);};
-                handle_message(addr, payload, transfer);
-                handle_app_message(transfer);
+                if !transfer.connected {transfer.handle_hole_punch();};
+                transfer.handle_app_message();
             }
         });
 
