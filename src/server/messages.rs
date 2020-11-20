@@ -7,7 +7,7 @@ use serde_json::Value;
 
 use crate::definitions::AllNeedSync;
 
-const READ_TIMEOUT_MILLIS: u64 = 50;
+const READ_TIMEOUT_MILLIS: u64 = 200;
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(tag = "type", rename_all = "camelCase")]

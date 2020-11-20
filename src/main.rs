@@ -295,18 +295,6 @@ fn main() {
                             }
                         }
                     }
-                    // Payloads::TransferStopped(reason) => {
-                    //     info!("Server/Client stopped. Reason: {}", reason);
-                    //     // TAKE BACK CONTROL
-                    //     control.take_control(&conn);
-                    //     control.finalize_transfer(&conn);
-
-                    //     clients.reset();
-                    //     observing = false;
-                    //     should_set_none_client = true;
-
-                    //     app_interface.client_fail(&reason.to_string());
-                    // }
                     Payloads::SetObserver{from, to, is_observer} => {
                         if from == client.get_server_name() {
                             info!("Server set us to observing.");
@@ -329,6 +317,22 @@ fn main() {
                 }
             }
             
+            let (client_stopped, reason) = client.stopped();
+            if client_stopped {
+                // info!("Server/Client stopped. Reason: {}", reason);
+                // TAKE BACK CONTROL
+                control.take_control(&conn);
+
+                clients.reset();
+                observing = false;
+                should_set_none_client = true;
+
+                if let Some(reason) = reason {
+                    app_interface.client_fail(reason);
+                } else {
+                    app_interface.client_fail("Disconnected.");
+                }
+            }
 
             // Handle sync vars
             let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
@@ -454,7 +458,7 @@ fn main() {
                 }
                 AppMessage::Disconnect => {
                     info!("Request to disconnect.");
-                    if let Some(client) = transfer_client.as_ref() {
+                    if let Some(client) = transfer_client.as_mut() {
                         client.stop("Stopped.".to_string());
                     }
                 }

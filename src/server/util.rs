@@ -1,6 +1,6 @@
 use crossbeam_channel::{Receiver, Sender};
 use log::info;
-use std::{fmt::Display, net::SocketAddr};
+use std::{fmt::Display, net::SocketAddr, sync::Arc, sync::atomic::{AtomicBool, Ordering::SeqCst}};
 use std::time::SystemTime;
 
 use crate::definitions::AllNeedSync;
@@ -24,8 +24,8 @@ fn get_seconds() -> f64 {
 
 pub trait TransferClient {
     fn get_connected_count(&self) -> u16;
-    fn stop(&self, reason: String);
-    fn stopped(&self) -> bool;
+    fn get_stop_atomic(&self) -> &Arc<AtomicBool>;
+    fn get_last_stop_reason(&mut self) -> &mut Option<String>;
     fn is_server(&self) -> bool;
 
     fn get_transmitter(&self) -> &Sender<Payloads>;
@@ -33,13 +33,25 @@ pub trait TransferClient {
     fn get_server_name(&self) -> &str;
     fn get_session_id(&self) -> Option<String>;
     // Application specific functions
+    fn stop(&mut self, reason: String) {
+        self.get_stop_atomic().store(true, SeqCst);
+        *self.get_last_stop_reason() = Some(reason)
+    }
+
+    fn stopped(&mut self) -> (bool, Option<&String>) {
+        if self.get_stop_atomic().load(SeqCst) {
+            (true, self.get_last_stop_reason().as_ref())
+        } else {
+            (false, None)
+        }
+    }
 
     fn update(&self, data: AllNeedSync) {
         self.get_transmitter().send(Payloads::Update {
             data,
             time: get_seconds(),
             from: self.get_server_name().to_string()
-        });
+        }).ok();
     }
 
     fn get_next_message(&self) -> Result<Payloads, crossbeam_channel::TryRecvError> {
@@ -50,7 +62,7 @@ pub trait TransferClient {
         self.get_transmitter().send(Payloads::TransferControl {
             from: self.get_server_name().to_string(),
             to: target,
-        });
+        }).ok();
     }
 
     fn set_observer(&self, target: String, is_observer: bool) {
@@ -58,29 +70,6 @@ pub trait TransferClient {
             from: self.get_server_name().to_string(),
             to: target,
             is_observer: is_observer
-        });
-    }
-}
-
-// Processing message error
-#[derive(Debug)]
-pub enum ParseError {
-    InvalidJson(serde_json::Error),
-    InvalidPayload(serde_json::Error),
-    FieldMissing(&'static str),
-    InvalidType
-}
-
-pub enum TransferStoppedReason {
-    Requested(String),
-    ConnectionLost
-}
-
-impl Display for TransferStoppedReason {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TransferStoppedReason::Requested(reason) => write!(f, "{}", reason),
-            TransferStoppedReason::ConnectionLost => write!(f, "Connection lost/terminated.")
-        }
+        }).ok();
     }
 }

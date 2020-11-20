@@ -22,12 +22,18 @@ struct TransferStruct {
     received_address: Option<SocketAddr>,
     retry_timer: Option<Instant>,
     session_id: String,
-    retries: u8
+    retries: u8,
+    // State
+    should_stop: Arc<AtomicBool>,
 }
 
 impl TransferStruct {
     pub fn get_sender(&mut self) -> &mut Sender<Packet> {
         &mut self.sender
+    }
+
+    pub fn should_stop(&self) -> bool {
+        self.should_stop.load(SeqCst)
     }
 
     // Should stop client
@@ -91,6 +97,7 @@ impl TransferStruct {
 
 pub struct Client {
     should_stop: Arc<AtomicBool>,
+    last_stop_reason: Option<String>,
     transfer: Option<Arc<Mutex<TransferStruct>>>,
     // Recieve data from clients
     server_rx: Receiver<Payloads>,
@@ -111,6 +118,7 @@ impl Client {
 
         Self {
             should_stop: Arc::new(AtomicBool::new(false)),
+            last_stop_reason: None,
             transfer: None,
             client_rx, client_tx, server_rx, server_tx,
             username: username
@@ -136,6 +144,7 @@ impl Client {
                 session_id: session_id.clone(),
                 // State
                 name: self.get_server_name().to_string(),
+                should_stop: self.should_stop.clone(),
             }
         ));
         let transfer_thread_clone = transfer.clone();
@@ -148,7 +157,13 @@ impl Client {
             session_id,
         }, get_rendezvous_server(is_ipv6), &mut socket.get_packet_sender()).ok();
 
-        thread::spawn(move || socket.start_polling());
+        // Run socket
+        let should_stop_clone = self.should_stop.clone();
+        thread::spawn(move || loop {
+            socket.manual_poll(Instant::now());
+            if should_stop_clone.load(SeqCst) {break}
+        });
+        // Run main loop
         thread::spawn(move || {
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
@@ -167,6 +182,8 @@ impl Client {
 
                 if !transfer.connected {transfer.handle_hole_punch();};
                 transfer.handle_app_message();
+
+                if transfer.should_stop() {break}
             }
         });
 
@@ -177,14 +194,6 @@ impl Client {
 impl TransferClient for Client {
     fn get_connected_count(&self) -> u16 {
         return 1;
-    }
-
-    fn stop(&self, reason: String) {
-        self.should_stop.store(true, SeqCst);
-    }
-
-    fn stopped(&self) -> bool {
-        self.should_stop.load(SeqCst)
     }
 
     fn is_server(&self) -> bool {
@@ -205,5 +214,13 @@ impl TransferClient for Client {
 
     fn get_session_id(&self) -> Option<String> {
         return None
+    }
+
+    fn get_stop_atomic(&self) -> &Arc<AtomicBool> {
+        &self.should_stop
+    }
+
+    fn get_last_stop_reason(&mut self) -> &mut Option<String> {
+        &mut self.last_stop_reason
     }
 }
