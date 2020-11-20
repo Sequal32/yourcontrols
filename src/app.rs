@@ -1,26 +1,33 @@
 use base64;
 use crossbeam_channel::{Receiver, TryRecvError, unbounded};
-use dns_lookup::lookup_host;
 use log::{info};
-use std::{str::FromStr, net::{Ipv6Addr, Ipv4Addr, IpAddr}, io::Read};
+use std::{io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
-use serde_json::Value;
+use serde::{Serialize, Deserialize};
 use crate::simconfig;
-// use update::Updater;
 
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum ConnectionMethod {
+    Direct,
+    UPnP,
+    CloudServer
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(tag = "type", rename_all = "camelCase")]
 pub enum AppMessage {
     // Name, IsIPV6, port
-    Server(String, bool, u16),
-    // Username, IpAddress, IpString, Port
-    Connect(String, IpAddr, String, u16),
+    StartServer {username: String, isipv6: bool, port: u16, method: ConnectionMethod},
+    Connect {username: String, session_id: String, isipv6: bool},
+    TransferControl {target: String},
+    SetObserver {target: String, is_observer: bool},
+    LoadAircraft {config_file_name: String},
     Disconnect,
-    TransferControl(String),
-    SetObserver(String, bool),
-    LoadAircraft(String),
     Startup,
-    Update,
-    UpdateConfig(simconfig::Config)
+    RunUpdater,
+    UpdateConfig {new_config: simconfig::Config}
 }
 
 fn get_message_str(type_string: &str, data: &str) -> String {
@@ -34,31 +41,6 @@ pub struct App {
     app_handle: Arc<Mutex<Option<web_view::Handle<i32>>>>,
     exited: Arc<AtomicBool>,
     rx: Receiver<AppMessage>,
-}
-
-fn get_ip_from_data(data: &Value) -> Result<IpAddr, String> {
-    match data.get("ip") {
-        // Parse ip string as Ipv4Addr
-        Some(ip_str) => match Ipv4Addr::from_str(ip_str.as_str().unwrap()) {
-            Ok(ip) => Ok(IpAddr::V4(ip)),
-            Err(_) => match Ipv6Addr::from_str(ip_str.as_str().unwrap()) {
-                Ok(ip) => Ok(IpAddr::V6(ip)),
-                Err(_) => Err("Invalid IP.".to_string())
-            }
-        }
-        None => match data.get("hostname") {
-            // Resolve hostname
-            Some(hostname_str) => match lookup_host(hostname_str.as_str().unwrap()) {
-                Ok(hostnames) => match hostnames.iter().nth(0) {
-                    // Only accept ipv4
-                    Some(ip) => Ok(ip.clone()),
-                    _ => Err("No valid IP addresses resolved to the specified hostname.".to_string())
-                }
-                Err(e) => Err(e.to_string())
-            }
-            None => Err("Invalid hostname.".to_string())
-        }
-    }
 }
 
 impl App {
@@ -112,58 +94,8 @@ impl App {
             )))
 
             .invoke_handler(move |web_view, arg| {
-                let data: serde_json::Value = serde_json::from_str(arg).unwrap();
-                match data["type"].as_str().unwrap() {
-                    "connect" => {
-                        match get_ip_from_data(&data) {
-                            Ok(ip) => {
-                                tx.send(
-                                    AppMessage::Connect(
-                                        data["username"].as_str().unwrap().to_string(),
-                                        ip, 
-                                        if data.get("ip").is_some() {data["ip"].as_str().unwrap().to_string()} else {data["hostname"].as_str().unwrap().to_string()}, 
-                                        data["port"].as_u64().unwrap() as u16)
-                                    ).ok();
-                                },
-                            Err(e) => {
-                                web_view.eval(
-                                    get_message_str("client_fail", e.as_str()).as_str()
-                                ).ok();
-                            }
-                        };
-                    },
-
-                    "disconnect" => {tx.send(AppMessage::Disconnect).ok();},
-
-                    "server" => {
-                        tx.send(AppMessage::Server(
-                            data["username"].as_str().unwrap().to_string(),
-                            data["is_v6"].as_bool().unwrap(), 
-                            data["port"].as_u64().unwrap() as u16)
-                        ).ok();
-                    },
-
-                    "transfer_control" => {
-                        tx.send(AppMessage::TransferControl(data["target"].as_str().unwrap().to_string())).ok();
-                    },
-
-                    "set_observer" => {
-                        tx.send(AppMessage::SetObserver(data["target"].as_str().unwrap().to_string(), data["is_observer"].as_bool().unwrap())).ok();
-                    }
-
-                    "load_aircraft" => {
-                        tx.send(AppMessage::LoadAircraft(data["filename"].as_str().unwrap().to_string())).ok();
-                    }
-
-                    "startup" => {tx.send(AppMessage::Startup).ok();}
-
-                    "update" => {tx.send(AppMessage::Update).ok();}
-
-                    "SaveConfig" => {
-                        tx.send(AppMessage::UpdateConfig(serde_json::from_value(data["config"].clone()).unwrap())).ok();
-                    }
-                    _ => ()
-                };
+                println!("{}", arg);
+                tx.send(serde_json::from_str(arg).unwrap());
 
                 Ok(())
             })

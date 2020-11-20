@@ -15,8 +15,7 @@ var aircraft_list_button = document.getElementById("aircraft-page")
 var port_input_host = document.getElementById("port-input-host")
 
 var username = document.getElementById("username-input")
-var port_input_join = document.getElementById("port-input-join")
-var server_input_join = document.getElementById("server-input-join")
+var session_input = document.getElementById("session-input")
 var name_input_join = document.getElementById("name-input-join")
 var theme_selector = document.getElementById("theme-select")
 var beta_selector = document.getElementById("beta-select")
@@ -31,9 +30,13 @@ var server_div = document.getElementById("server-div")
 
 var rectangle_status = document.getElementById("rectangle-status")
 // Radios
-var radios = document.getElementById("radios")
-var ip4radio = document.getElementById("ip4")
-var ip6radio = document.getElementById("ip6")
+var session_ip4radio = document.getElementById("session-ip4")
+var server_ip4radio = document.getElementById("server-ip4")
+var session_ip6radio = document.getElementById("session-ip6")
+var server_ip6radio = document.getElementById("server-ip6")
+var cloudMethod = document.getElementById("punchthrough-radio")
+var directMethod = document.getElementById("direct-radio")
+var upnpMethod = document.getElementById("upnp-radio")
 
 var trying_connection = false
 var is_connected = false
@@ -74,12 +77,17 @@ function OnConnected() {
     server_button.updatetext("danger", "Stop Server")
     
     trying_connection = false
-    server_input_join.disabled = true
-    port_input_join.disabled = true
-    port_input_host.disabled = true
-    ip4radio.disabled = true
-    ip6radio.disabled = true
     is_connected = true
+
+    port_input_host.disabled = true
+    session_input.disabled = true
+    session_ip4radio.disabled = true
+    server_ip4radio.disabled = true
+    session_ip6radio.disabled = true
+    server_ip6radio.disabled = true
+    cloudMethod.disabled = true
+    directMethod.disabled = true
+    upnpMethod.disabled = true
 
     SetStuffVisible(true)
 }
@@ -88,12 +96,16 @@ function OnDisconnect(text) {
     alert.updatetext("danger", text)
     is_connected = false
     trying_connection = false
-    server_input_join.disabled = false
-    port_input_join.disabled = false
     port_input_host.disabled = false
 
-    ip4radio.disabled = false
-    ip6radio.disabled = false
+    session_ip4radio.disabled = false
+    session_input.disabled = false
+    server_ip4radio.disabled = false
+    session_ip6radio.disabled = false
+    server_ip6radio.disabled = false
+    cloudMethod.disabled = false
+    directMethod.disabled = false
+    upnpMethod.disabled = false
 
     connectionList.clear()
 
@@ -119,23 +131,11 @@ function ValidateInt(e) {
     return Validate(e, e.value.match(/\d+/gi))
 }
 
-function ValidateIp(e) {
-    return Validate(e, e.value.match(/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi) || e.value.match(/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/gi))
-}
-
-function ValidateHostname(e) {
-    return Validate(e, e.value.match(/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/gi))
-}
-
 function ValidateName(e) {
     return Validate(e, e.value.trim() != "")
 }
 
 function LoadSettings(newSettings) {
-    server_input_join.value = newSettings.ip
-    port_input_join.value = newSettings.ip
-    port_input_host.value = newSettings.port
-    port_input_join.value = newSettings.port
     username.value = newSettings.name
     aircraftList.value = newSettings.last_config
     buffer_input.value = newSettings.buffer_size
@@ -264,7 +264,7 @@ var setTheme = (isDarkTheme) =>{
 }
 
 function UpdateAircraft(filename) {
-    invoke({"type": "load_aircraft", "filename": filename})
+    invoke({"type": "loadAircraft", "config_file_name": filename})
 }
 
 // Buttons functions
@@ -285,6 +285,18 @@ alert.updatetext = function(typeString, text) {
     alert.childNodes[0].nodeValue = text
 }
 
+cloudMethod.addEventListener("change", (e) => {
+    port_input_host.hidden = true
+})
+
+directMethod.addEventListener("change", (e) => {
+    port_input_host.hidden = false
+})
+
+upnpMethod.addEventListener("change", (e) => {
+    port_input_host.hidden = false
+})
+
 $("#settings-form").submit(e => {
     e.preventDefault()
 
@@ -304,7 +316,7 @@ $("#settings-form").submit(e => {
     }
 
     LoadSettings(settings)
-    invoke({"type": "SaveConfig", "config": settings})
+    invoke({"type": "saveConfig", "newConfig": settings})
 })
 
 $("#main-form-host").submit(e => {
@@ -313,16 +325,21 @@ $("#main-form-host").submit(e => {
     if (trying_connection) {return}
     if (is_connected) {invoke({type: "disconnect"}); return}
 
+    // Get radio button
+    const method = cloudMethod.checked ? cloudMethod.value : directMethod.checked ? directMethod.value : upnpMethod.checked ? upnpMethod.value : "";
+    const port_ok = method == "cloudServer" ? true : ValidateInt(port_input_host);
 
-    if (!ValidateInt(port_input_host) || !ValidateName(username)) {return}
+    if (!port_ok || !ValidateName(username)) {return}
 
     trying_connection = true
+
     UpdateAircraft(aircraftList.value)
     invoke({
-        type: "server",
-        port: parseInt(port_input_host.value),
-        is_v6: ip6radio.checked,
-        username: username.value
+        type: "startServer",
+        port: parseInt(port_input_host.value) || 0,
+        isipv6: server_ip6radio.checked,
+        username: username.value,
+        method: method
     })
 
 })
@@ -333,23 +350,17 @@ $("#main-form-join").submit(e => {
     if (trying_connection) {return}
     if (is_connected) {invoke({type: "disconnect"}); return}
 
-
-    var validip = ValidateIp(server_input_join)
-    var validhostname = ValidateHostname(server_input_join)
-    var validport = ValidateInt(port_input_join)
     let validname = ValidateName(username)
 
-    let data = {type: "connect", port: parseInt(port_input_join.value)}
-
-    if (!validname || !validport || (!validip && !validhostname)) {return}
-    // Match hostname or ip
-    if (validhostname) {
-        data["hostname"] = server_input_join.value
-    } else if (validip) {
-        data["ip"] = server_input_join.value
+    let data = {
+        type: "connect", 
+        isipv6: session_ip6radio.checked, 
+        session_id: session_input.value,
+        username: username.value
     }
 
-    data["username"] = username.value
+    if (!validname) {return}
+
     trying_connection = true
 
     UpdateAircraft(aircraftList.value)

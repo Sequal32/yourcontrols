@@ -210,12 +210,12 @@ impl Server {
             warn!("Could not port forward! Reason: {:?}", e)
         }
         
-        let socket = Socket::bind(get_bind_address(is_ipv6))?;
+        let socket = Socket::bind(get_bind_address(is_ipv6, Some(port)))?;
         self.run(socket, None)
     }
 
     pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(Sender<Payloads>, Receiver<Payloads>), laminar::ErrorKind> {
-        let socket = Socket::bind(get_bind_address(is_ipv6))?;
+        let socket = Socket::bind(get_bind_address(is_ipv6, None))?;
         let addr: SocketAddr = get_rendezvous_server(is_ipv6);
 
         // Send message to external server to obtain session ID

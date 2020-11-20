@@ -9,8 +9,8 @@ use super::Payloads;
 
 pub const MAX_PUNCH_RETRIES: u8 = 5;
 
-pub fn get_bind_address(is_ipv6: bool) -> SocketAddr {
-    let bind_string = if is_ipv6 {":::0"} else {"0.0.0.0:0"};
+pub fn get_bind_address(is_ipv6: bool, port: Option<u16>) -> SocketAddr {
+    let bind_string = format!("{}:{}", if is_ipv6 {"::"} else {"0.0.0.0"}, port.unwrap_or(0));
     bind_string.parse().unwrap()
 }
 

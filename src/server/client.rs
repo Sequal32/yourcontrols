@@ -116,7 +116,7 @@ impl Client {
     }
 
     pub fn start(&mut self, session_id: String, is_ipv6: bool) -> Result<(), laminar::ErrorKind> {
-        let mut socket = Socket::bind(get_bind_address(is_ipv6))?;
+        let mut socket = Socket::bind(get_bind_address(is_ipv6, None))?;
 
         let transfer = Arc::new(Mutex::new(
             TransferStruct {
