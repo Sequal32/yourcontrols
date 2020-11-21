@@ -164,6 +164,11 @@ function ValidateHostname(e) {
 }
 
 function LoadSettings(newSettings) {
+    joinPortInput.value = newSettings.port
+    port_input_host.value = newSettings.port
+    
+    joinIpInput.value = newSettings.ip
+    
     username.value = newSettings.name
     aircraftList.value = newSettings.last_config
     buffer_input.value = newSettings.buffer_size
@@ -339,6 +344,14 @@ joinConnectDirect.addEventListener("change", () => {
     sessionIpRadios.hidden = true
 })
 
+joinPortInput.addEventListener("change", () => {
+    port_input_host.value = joinPortInput.value
+})
+
+port_input_host.addEventListener("change", () => {
+    joinPortInput.value = port_input_host.value
+})
+
 $("#settings-form").submit(e => {
     e.preventDefault()
 
@@ -358,7 +371,7 @@ $("#settings-form").submit(e => {
     }
 
     LoadSettings(settings)
-    invoke({"type": "saveConfig", "newConfig": settings})
+    invoke({"type": "updateConfig", "new_config": settings})
 })
 
 $("#main-form-host").submit(e => {
@@ -451,3 +464,7 @@ aircraftList.addAircraft = function (aircraftName) {
 
     aircraftList.appendChild(newButton)
 }
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})

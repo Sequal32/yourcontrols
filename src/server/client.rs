@@ -112,16 +112,18 @@ pub struct Client {
     // Send data to app to receive client data
     server_tx: Sender<ReceiveMessage>,
     // IP
-    username: String
+    username: String,
+    timeout: u64
 }
 
 impl Client {
-    pub fn new(username: String) -> Self {
+    pub fn new(username: String, timeout: u64) -> Self {
         let (client_tx, client_rx) = unbounded();
         let (server_tx, server_rx) = unbounded();
 
         Self {
             should_stop: Arc::new(AtomicBool::new(false)),
+            timeout,
             transfer: None,
             client_rx, client_tx, server_rx, server_tx,
             username: username
@@ -129,7 +131,7 @@ impl Client {
     }
 
     fn get_socket(&self, is_ipv6: bool) -> Result<Socket, laminar::ErrorKind> {
-        Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config())
+        Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(self.timeout))
     }
 
     pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), laminar::ErrorKind> {

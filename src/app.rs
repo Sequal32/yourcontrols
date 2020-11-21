@@ -7,7 +7,7 @@ use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
 use serde::{Serialize, Deserialize};
 use crate::simconfig;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub enum ConnectionMethod {
     Direct,
@@ -15,7 +15,7 @@ pub enum ConnectionMethod {
     CloudServer
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum AppMessage {
     // Name, IsIPV6, port
@@ -151,10 +151,6 @@ impl App {
 
     pub fn connected(&self) {
         self.invoke("connected", None);
-    }
-
-    pub fn disconnected(&self) {
-        self.invoke("disconnected", None);
     }
 
     pub fn server_fail(&self, reason: &str) {

@@ -55,11 +55,11 @@
                                 </div>
                             </div>
                             <div id="radios" class="form-row form-check">
-                                <div class="form-check form-check-inline">
+                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Select this if the Host selected Cloud Server.">
                                     <input class="form-check-input" type="radio" value="cloudServer" name="joinRadios" id="join-connect-cloud" checked>
                                     <label class="form-check-label" for="join-connect-cloud">Cloud Server</label>
                                 </div>
-                                <div class="form-check form-check-inline">
+                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Select this if the Host selected Direct.">
                                     <input class="form-check-input" type="radio" value="direct" name="joinRadios" id="join-connect-direct">
                                     <label class="form-check-label" for="join-connect-direct">Direct</label>
                                 </div>
@@ -105,17 +105,17 @@
                                 </div>
                             </div>
                             <div class="form-check" id="connection-radios">
-                                <div class="form-check form-check-inline">
+                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Host using UDP Hole Punching, depending on router this may not work.">
                                     <input class="form-check-input" type="radio" name="connectionRadios" value="cloudServer" id="punchthrough-radio" checked>
                                     <label class="form-check-label" for="punchthrough-radio">Cloud Server</label>
                                 </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="connectionRadios" value="direct" id="direct-radio">
-                                    <label class="form-check-label" for="direct-radio">Direct</label>
-                                </div>
-                                <div class="form-check form-check-inline">
+                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Port forward using UPnP, which needs to be enabled in your router.">
                                     <input class="form-check-input" type="radio" name="connectionRadios" value="uPnP" id="upnp-radio">
                                     <label class="form-check-label" for="upnp-radio">UPnP</label>
+                                </div>
+                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Host without doing anything special. The port should be forwarded manually.">
+                                    <input class="form-check-input" type="radio" name="connectionRadios" value="direct" id="direct-radio">
+                                    <label class="form-check-label" for="direct-radio">Direct</label>
                                 </div>
                             </div>
                             <div class="form-group form-row justify-content-center small-margin align-bottom">
@@ -177,7 +177,7 @@
                                 <input type="number" class="form-control themed " id="timeout-input" aria-describedby="ip-feedback" required>
                                 <small id="timeout-input-help" class="form-text text-muted">How many seconds to try to establish a connection with the server before timing out.</small>
                             </div>
-                            <div class="form-group col-sm-auto bottom-margin" id="buffer-div">
+                            <div class="form-group col-sm-auto bottom-margin" id="buffer-div" hidden>
                                 <label for="timeout-input">Buffer Size</label>
                                 <input type="number" class="form-control themed " id="buffer-input" aria-describedby="ip-feedback" required>
                                 <small id="timeout-input-help" class="form-text text-muted">How many packets to buffer. Useful for unstable connections but increases latency.</small>

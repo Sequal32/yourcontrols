@@ -314,7 +314,7 @@ impl Server {
     }
 
     pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartServerError> {
-        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config())?;
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(5))?;
         // Attempt to port forward
         if let Err(e) = self.port_forward(port) {
             return Err(StartServerError::PortForwardError(e))
@@ -324,7 +324,7 @@ impl Server {
     }
 
     pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartServerError> {
-        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config())?;
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(5))?;
         let addr: SocketAddr = get_rendezvous_server(is_ipv6).unwrap();
 
         // Send message to external server to obtain session ID
