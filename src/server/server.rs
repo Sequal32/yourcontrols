@@ -376,7 +376,7 @@ impl Server {
                     Err(e) => match e {
                         Error::ConnectionClosed(addr) => {
                                 // Could not reach rendezvous
-                            if rendezvous.is_some() && rendezvous.unwrap() == addr {
+                            if transfer.session_id != "" && rendezvous.is_some() && rendezvous.unwrap() == addr {
 
                                 transfer.server_tx.send(ReceiveMessage::Event(Event::SessionIdFetchFailed)).ok();
                                 transfer.should_stop.store(true, SeqCst);

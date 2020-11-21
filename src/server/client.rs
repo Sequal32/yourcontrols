@@ -99,8 +99,6 @@ impl TransferStruct {
     }
 }
 
-
-
 pub struct Client {
     should_stop: Arc<AtomicBool>,
     transfer: Option<Arc<Mutex<TransferStruct>>>,
@@ -143,7 +141,7 @@ impl Client {
             session_id: blank_session_id.clone()
         }, match_ip_address_to_socket_addr(ip, port), &mut socket.get_packet_sender()).ok();
 
-        self.run(socket, blank_session_id)
+        self.run(socket, blank_session_id, None)
     }
 
     pub fn start_with_hole_punch(&mut self, session_id: String, is_ipv6: bool) -> Result<(), laminar::ErrorKind> {
@@ -154,10 +152,10 @@ impl Client {
             session_id: session_id.clone()
         }, server_address, &mut socket.get_packet_sender()).ok();
 
-        self.run(socket, session_id)
+        self.run(socket, session_id, Some(server_address))
     }
 
-    pub fn run(&mut self, socket: Socket, session_id: String) -> Result<(), laminar::ErrorKind> {
+    pub fn run(&mut self, socket: Socket, session_id: String, rendezvous: Option<SocketAddr>) -> Result<(), laminar::ErrorKind> {
         let mut socket = socket;
 
         let transfer = Arc::new(Mutex::new(
@@ -200,9 +198,11 @@ impl Client {
                         transfer.handle_message(addr, payload);
                     },
                     Err(e) => match e {
-                        Error::ConnectionClosed(_) => {
-                            transfer.server_tx.send(ReceiveMessage::Event(Event::ConnectionLost("No message received from server."))).ok();
-                            transfer.should_stop.store(true, SeqCst);
+                        Error::ConnectionClosed(addr) => {
+                            if rendezvous.is_none() || (rendezvous.is_some() && rendezvous.unwrap() != addr) {
+                                transfer.server_tx.send(ReceiveMessage::Event(Event::ConnectionLost("No message received from server."))).ok();
+                                transfer.should_stop.store(true, SeqCst);
+                            }
                         }
                         _ => {}
                     }
