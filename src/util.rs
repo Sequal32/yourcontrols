@@ -1,4 +1,29 @@
+use std::{fmt::Display, net::IpAddr};
 use serde::{Serialize, Deserialize};
+
+pub enum HostnameError {
+    UnresolvedHostname(std::io::Error),
+    WrongIpVType
+}
+
+impl Display for HostnameError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            HostnameError::UnresolvedHostname(e) => write!(f, "Could not lookup hostname! Reason: {}", e),
+            HostnameError::WrongIpVType => write!(f, "No hostname ips matched the requested IP version.")
+        }
+    }
+}
+
+pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, HostnameError> {
+    match dns_lookup::lookup_host(&hostname) {
+        Ok(results) => match results.into_iter().find(|&x| x.is_ipv6() && isipv6 || x.is_ipv4() && !isipv6) {
+            Some(ip) => Ok(ip),
+            None => Err(HostnameError::WrongIpVType)
+        }
+        Err(e) => Err(HostnameError::UnresolvedHostname(e))
+    }
+}
 
 #[derive(Eq, PartialEq)]
 pub enum Category {

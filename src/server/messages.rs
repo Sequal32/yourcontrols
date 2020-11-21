@@ -45,11 +45,11 @@ fn read_value(receiver: &mut Receiver<SocketEvent>) -> Result<(SocketAddr, Value
     let packet = match receiver.recv_timeout(Duration::from_millis(READ_TIMEOUT_MILLIS)) {
         Ok(event) => match event {
             SocketEvent::Packet(packet) => packet,
-            SocketEvent::Connect(_) => {return Err(Error::Dummy)}
-            SocketEvent::Timeout(addr) | 
-            SocketEvent::Disconnect(addr) => {return Err(Error::ConnectionClosed(addr))}
+            SocketEvent::Disconnect(addr) |
+            SocketEvent::Timeout(addr) => {return Err(Error::ConnectionClosed(addr))}
+            _ => {return Err(Error::Dummy)}
         }
-        Err(e) => return Err(Error::ReadTimeout)
+        Err(_) => return Err(Error::ReadTimeout)
     };
 
     match serde_json::from_slice(packet.payload()) {

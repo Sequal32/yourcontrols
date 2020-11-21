@@ -1,7 +1,7 @@
 use base64;
 use crossbeam_channel::{Receiver, TryRecvError, unbounded};
 use log::{info};
-use std::{io::Read};
+use std::{net::IpAddr, io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
 use serde::{Serialize, Deserialize};
@@ -20,7 +20,7 @@ pub enum ConnectionMethod {
 pub enum AppMessage {
     // Name, IsIPV6, port
     StartServer {username: String, isipv6: bool, port: u16, method: ConnectionMethod},
-    Connect {username: String, session_id: String, isipv6: bool},
+    Connect {username: String, session_id: String, isipv6: bool, ip: Option<IpAddr>, hostname: Option<String>, port: Option<u16>, method: ConnectionMethod},
     TransferControl {target: String},
     SetObserver {target: String, is_observer: bool},
     LoadAircraft {config_file_name: String},
@@ -56,7 +56,6 @@ impl App {
         let handle_clone = handle.clone();
         let exited = Arc::new(AtomicBool::new(false));
         let exited_clone = exited.clone();
-        let dark_theme_class = "bg-dark";
 
         info!("Spawning webview thread...");
 
@@ -93,9 +92,8 @@ impl App {
             logo = format!("data:image/png;base64,{}", base64::encode(logo.as_slice()))
             )))
 
-            .invoke_handler(move |web_view, arg| {
-                println!("{}", arg);
-                tx.send(serde_json::from_str(arg).unwrap());
+            .invoke_handler(move |_, arg| {
+                tx.send(serde_json::from_str(arg).unwrap()).ok();
 
                 Ok(())
             })
@@ -175,8 +173,8 @@ impl App {
         self.invoke("lostcontrol", None);
     }
 
-    pub fn server_started(&self, client_count: u16) {
-        self.invoke("server", Some(client_count.to_string().as_str()));
+    pub fn server_started(&self, client_count: u16, session_id: Option<&str>) {
+        self.invoke("server", Some(&format!("{} clients connected. Session ID: {}", client_count, session_id.unwrap_or(""))));
     }
 
     pub fn new_connection(&self, name: &str) {

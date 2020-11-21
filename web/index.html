@@ -23,14 +23,45 @@
                                     Please provide a valid session code.
                                 </div>
                             </div>
-                            <div id="radios" class="form-row form-check">
+                            <div class="col-sm-auto bottom-margin" id="join-ip-div" hidden>
+                                <label for="join-ip-input">Server Hostname or IP</label>
+                                <input type="text" class="form-control themed  border-none" id="join-ip-input" aria-describedby="ip-feedback" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please provide a valid ip or hostname.
+                                </div>
+                            </div>
+                            <div class="col-sm-auto bottom-margin" id="join-port-div" hidden>
+                                <label for="join-port-input">Port</label>
+                                <input type="text" class="form-control themed " id="join-port-input" aria-describedby="port-feedback" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div class="invalid-feedback" id="port-feedback">
+                                    Please provide a valid port number.
+                                </div>
+                            </div>
+
+                            <div id="session-ip-radios" class="form-row form-check" hidden>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="ipRadios" id="server-ip4" checked>
-                                    <label class="form-check-label" for="ip4">IPv4</label>
+                                    <label class="form-check-label" for="server-ip4">IPv4</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="ipRadios" id="server-ip6">
-                                    <label class="form-check-label" for="ip6">IPv6</label>
+                                    <label class="form-check-label" for="server-ip6">IPv6</label>
+                                </div>
+                            </div>
+                            <div id="radios" class="form-row form-check">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" value="cloudServer" name="joinRadios" id="join-connect-cloud" checked>
+                                    <label class="form-check-label" for="join-connect-cloud">Cloud Server</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" value="direct" name="joinRadios" id="join-connect-direct">
+                                    <label class="form-check-label" for="join-connect-direct">Direct</label>
                                 </div>
                             </div>
                             <div class="form-row justify-content-center small-margin">
@@ -53,9 +84,9 @@
                     <div class="card-body">
                         <h5 class="card-title">Host</h5>
                         <form class="needs-validation form-div" id="main-form-host" novalidate>
-                            <div class="form-group col-sm-auto bottom-margin" id="port-div">
+                            <div class="form-group col-sm-auto bottom-margin" id="port-div" hidden>
                                 <label for="port-input">Port</label>
-                                <input type="text" class="form-control themed " id="port-input-host" placeholder="Port" aria-describedby="port-feedback" required>
+                                <input type="text" class="form-control themed " id="port-input-host" aria-describedby="port-feedback" required>
                                 <div class="valid-feedback">
                                     Looks good!
                                 </div>
@@ -75,16 +106,16 @@
                             </div>
                             <div class="form-check" id="connection-radios">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="connectionRadios" value="direct" id="direct-radio" checked>
-                                    <label class="form-check-label" for="direct-radio">Direct</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="connectionRadios" value="cloudServer" id="punchthrough-radio">
+                                    <input class="form-check-input" type="radio" name="connectionRadios" value="cloudServer" id="punchthrough-radio" checked>
                                     <label class="form-check-label" for="punchthrough-radio">Cloud Server</label>
                                 </div>
                                 <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="connectionRadios" value="direct" id="direct-radio">
+                                    <label class="form-check-label" for="direct-radio">Direct</label>
+                                </div>
+                                <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="connectionRadios" value="uPnP" id="upnp-radio">
-                                    <label class="form-check-label" for="upnp-radio">UPNP</label>
+                                    <label class="form-check-label" for="upnp-radio">UPnP</label>
                                 </div>
                             </div>
                             <div class="form-group form-row justify-content-center small-margin align-bottom">

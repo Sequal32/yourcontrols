@@ -13,6 +13,7 @@ var connection_list_button = document.getElementById("connection-page")
 var aircraft_list_button = document.getElementById("aircraft-page")
 
 var port_input_host = document.getElementById("port-input-host")
+var port_div = document.getElementById("port-div")
 
 var username = document.getElementById("username-input")
 var session_input = document.getElementById("session-input")
@@ -37,6 +38,15 @@ var server_ip6radio = document.getElementById("server-ip6")
 var cloudMethod = document.getElementById("punchthrough-radio")
 var directMethod = document.getElementById("direct-radio")
 var upnpMethod = document.getElementById("upnp-radio")
+
+var sessionDiv = document.getElementById("session-div")
+var sessionIpRadios = document.getElementById("session-ip-radios")
+var joinIpDiv = document.getElementById("join-ip-div")
+var joinPortDiv = document.getElementById("join-port-div")
+var joinConnectDirect = document.getElementById("join-connect-direct")
+var joinConnectCloud = document.getElementById("join-connect-cloud")
+var joinIpInput = document.getElementById("join-ip-input")
+var joinPortInput = document.getElementById("join-port-input")
 
 var trying_connection = false
 var is_connected = false
@@ -89,6 +99,11 @@ function OnConnected() {
     directMethod.disabled = true
     upnpMethod.disabled = true
 
+    joinConnectCloud.disabled = true
+    joinConnectDirect.disabled = true
+    joinIpInput.disabled = true
+    joinPortInput.disabled = true
+
     SetStuffVisible(true)
 }
 
@@ -106,6 +121,11 @@ function OnDisconnect(text) {
     cloudMethod.disabled = false
     directMethod.disabled = false
     upnpMethod.disabled = false
+
+    joinConnectCloud.disabled = false
+    joinConnectDirect.disabled = false
+    joinIpInput.disabled = false
+    joinPortInput.disabled = false
 
     connectionList.clear()
 
@@ -133,6 +153,14 @@ function ValidateInt(e) {
 
 function ValidateName(e) {
     return Validate(e, e.value.trim() != "")
+}
+
+function ValidateIp(e) {
+    return Validate(e, e.value.match(/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi) || e.value.match(/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/gi))
+}
+
+function ValidateHostname(e) {
+    return Validate(e, e.value.match(/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/gi))
 }
 
 function LoadSettings(newSettings) {
@@ -174,7 +202,7 @@ function MessageReceived(data) {
             break;
         case "server":
             is_client = false
-            alert.updatetext("success", "Server started! " + data["data"] + " clients connected.")
+            alert.updatetext("success", "Server started! " + data["data"])
             OnConnected()
             break;
         case "error":
@@ -285,16 +313,30 @@ alert.updatetext = function(typeString, text) {
     alert.childNodes[0].nodeValue = text
 }
 
-cloudMethod.addEventListener("change", (e) => {
-    port_input_host.hidden = true
+cloudMethod.addEventListener("change", () => {
+    port_div.hidden = true
 })
 
-directMethod.addEventListener("change", (e) => {
-    port_input_host.hidden = false
+directMethod.addEventListener("change", () => {
+    port_div.hidden = false
 })
 
-upnpMethod.addEventListener("change", (e) => {
-    port_input_host.hidden = false
+upnpMethod.addEventListener("change", () => {
+    port_div.hidden = false
+})
+
+joinConnectCloud.addEventListener("change", () => {
+    sessionDiv.hidden = false
+    joinPortDiv.hidden = true
+    joinIpDiv.hidden = true
+    sessionIpRadios.hidden = false
+})
+
+joinConnectDirect.addEventListener("change", () => {
+    sessionDiv.hidden = true
+    joinPortDiv.hidden = false
+    joinIpDiv.hidden = false
+    sessionIpRadios.hidden = true
 })
 
 $("#settings-form").submit(e => {
@@ -352,14 +394,31 @@ $("#main-form-join").submit(e => {
 
     let validname = ValidateName(username)
 
+    if (!validname) {return}
+
+    let method = joinConnectCloud.checked ? joinConnectCloud.value : joinConnectDirect.checked ? joinConnectDirect.value : "";
+
     let data = {
         type: "connect", 
-        isipv6: session_ip6radio.checked, 
         session_id: session_input.value,
-        username: username.value
+        username: username.value,
+        method: method,
+        isipv6: session_ip6radio.checked
     }
 
-    if (!validname) {return}
+    if (joinConnectDirect.checked) {
+        if (ValidateIp(joinIpInput)) {
+            data["ip"] = joinIpInput.value
+        } else if (ValidateHostname(joinIpInput)) {
+            data["hostname"] = joinIpInput.value
+        } else {
+            return
+        }
+
+        if (!ValidateInt(joinPortInput)) {return}
+        
+        data["port"] = parseInt(joinPortInput.value)
+    } 
 
     trying_connection = true
 

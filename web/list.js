@@ -101,7 +101,7 @@ class ConnectionListItem {
         this.controlButton.hidden = this.is_observer
 
         invoke({
-            type: "set_observer",
+            type: "setObserver",
             is_observer: removing,
             target: this.name
         })
@@ -111,7 +111,7 @@ class ConnectionListItem {
         this.controlButton.hidden = true
         this.observeButton.hidden = true
         invoke({
-            type: "transfer_control",
+            type: "transferControl",
             target: this.name
         })
     }
