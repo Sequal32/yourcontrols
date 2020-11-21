@@ -578,8 +578,8 @@ fn main() {
         }
         // Try to connect to simconnect if not connected
         if !connected {
-            // connected = conn.connect("Your Control");
-            connected = true;
+            connected = conn.connect("Your Control");
+            // connected = true;
             if connected {
                 // Display not connected to server message
                 app_interface.disconnected();

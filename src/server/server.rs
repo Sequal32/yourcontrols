@@ -105,8 +105,6 @@ impl TransferStruct {
         // Send a message every second
             if session.timer.is_some() && session.timer.as_ref().unwrap().elapsed().as_secs() < 1 {return true}
             
-            info!("Sending handshake packet to {}", session.addr);
-
             messages::send_message(Payloads::Handshake {
                 session_id: session_id.clone()
             }, session.addr.clone(), &mut sender).ok();
@@ -115,7 +113,10 @@ impl TransferStruct {
                 return false
             }
             // Reset second timer
+            session.retries += 1;
             session.timer = Some(Instant::now());
+
+            info!("Sent handshake packet to {}. Retry #{}", session.addr, session.retries);
 
             return true;
         });
@@ -178,6 +179,11 @@ impl TransferStruct {
                 if *session_id == self.session_id {
                     messages::send_message(Payloads::PeerEstablished {peer: addr}, self.rendevous_server.as_ref().unwrap().clone(), self.get_sender()).ok();
                 }
+                
+                self.clients_to_holepunch.retain(|x| {
+                    x.addr != addr
+                });
+
                 should_relay = false;
             }
             Payloads::HostingReceived { session_id } => {

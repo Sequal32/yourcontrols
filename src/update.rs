@@ -1,5 +1,4 @@
 use attohttpc;
-use log::warn;
 use semver::Version;
 use serde_json::Value;
 use std::{fs, io::{Cursor, copy}};

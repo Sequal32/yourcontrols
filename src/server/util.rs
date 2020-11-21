@@ -40,6 +40,7 @@ pub fn get_socket_config() -> laminar::Config {
     laminar::Config {
         heartbeat_interval: Some(Duration::from_secs(HEARTBEAT_INTERVAL)),
         idle_connection_timeout: Duration::from_secs(5),
+        receive_buffer_max_size: 65536,
         ..Default::default()
     }
 }

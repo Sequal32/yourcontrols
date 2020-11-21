@@ -94,7 +94,8 @@ impl TransferStruct {
             }
             // Reset second timer
             self.retry_timer = Some(Instant::now());
-            info!("Sent packet to {}", addr);
+            self.retries += 1;
+            info!("Sent packet to {}. Retry #{}", addr, self.retries);
         }
     }
 }
