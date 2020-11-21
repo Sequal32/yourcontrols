@@ -82,8 +82,6 @@ fn main() {
             config
         }
     };
-    // Load enviornmental variables
-    dotenv::dotenv().ok();
     // Initialize logging
     simplelog::WriteLogger::init(
         simplelog::LevelFilter::Info,

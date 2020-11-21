@@ -3,11 +3,12 @@ use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
 use log::warn;
 use retain_mut::RetainMut;
+use spin_sleep::sleep;
 use std::{collections::HashMap, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
 use laminar::{Packet, Socket, SocketEvent};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
 use std::str::FromStr;
-use super::{Error, MAX_PUNCH_RETRIES, Payloads, get_bind_address, get_rendezvous_server, messages, util::{TransferClient}};
+use super::{Error, MAX_PUNCH_RETRIES, Payloads, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
 
 #[derive(Debug)]
 pub enum PortForwardResult {
@@ -58,14 +59,14 @@ impl TransferStruct {
 
     fn handle_hole_punch(&mut self) {
         let mut sender = self.get_sender().clone();
+        let session_id = self.session_id.as_ref().unwrap();
 
         self.clients_to_holepunch.retain_mut(|session| {
         // Send a message every second
             if session.timer.is_some() && session.timer.as_ref().unwrap().elapsed().as_secs() < 1 {return true}
 
             messages::send_message(Payloads::Handshake {
-                is_initial: true, 
-                session_id: String::new()
+                session_id: session_id.clone()
             }, session.addr.clone(), &mut sender).ok();
             // Over retry limit, stop connection
             if session.retries > MAX_PUNCH_RETRIES {
@@ -112,7 +113,7 @@ impl TransferStruct {
                 self.in_control = to.clone();
             }
             
-            Payloads::Handshake { is_initial: _, session_id } => {
+            Payloads::Handshake { session_id, ..} => {
                     // Incoming UDP packet from peer
                 if let Some(verify_session_id) = self.session_id.as_ref() {
                     if *session_id == *verify_session_id {
@@ -226,21 +227,23 @@ impl Server {
     }
 
     pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(Sender<Payloads>, Receiver<Payloads>), laminar::ErrorKind> {
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config())?;
         // Attempt to port forward
         if let Err(e) = self.port_forward(port) {
             warn!("Could not port forward! Reason: {:?}", e)
         }
+
+        messages::send_message(Payloads::Handshake {session_id: String::new()}, get_rendezvous_server(is_ipv6).unwrap(), &mut socket.get_packet_sender()).ok();
         
-        let socket = Socket::bind(get_bind_address(is_ipv6, Some(port)))?;
         self.run(socket, None)
     }
 
     pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(Sender<Payloads>, Receiver<Payloads>), laminar::ErrorKind> {
-        let socket = Socket::bind(get_bind_address(is_ipv6, None))?;
-        let addr: SocketAddr = get_rendezvous_server(is_ipv6);
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config())?;
+        let addr: SocketAddr = get_rendezvous_server(is_ipv6).unwrap();
 
         // Send message to external server to obtain session ID
-        messages::send_message(Payloads::Handshake {is_initial: true, session_id: String::new()}, addr.clone(), &mut socket.get_packet_sender()).ok();
+        messages::send_message(Payloads::Handshake {session_id: String::new()}, addr.clone(), &mut socket.get_packet_sender()).ok();
 
         self.run(socket, Some(addr))
     }
@@ -272,6 +275,7 @@ impl Server {
         thread::spawn(move || loop {
             socket.manual_poll(Instant::now());
             if should_stop_clone.load(SeqCst) {break}
+            sleep(Duration::from_millis(1));
         });
 
         // Run main loop

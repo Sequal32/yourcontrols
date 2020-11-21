@@ -1,11 +1,12 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
 
 use laminar::{Packet, Socket, SocketEvent};
-use std::{time::Instant, net::{SocketAddr}, sync::Mutex};
+use spin_sleep::sleep;
+use std::{time::Duration, net::{SocketAddr}, sync::Mutex, time::Instant};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::thread;
 
-use super::{Error, MAX_PUNCH_RETRIES, Payloads, get_bind_address, get_rendezvous_server, messages, util::{TransferClient}};
+use super::{Error, MAX_PUNCH_RETRIES, Payloads, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
 
 struct TransferStruct {
     name: String,
@@ -43,6 +44,7 @@ impl TransferStruct {
             Payloads::HostingReceived { .. } => {}
             Payloads::Name { .. } => {}
             Payloads::PeerEstablished { .. } => {}
+            Payloads::Handshake { .. } => {}
             // No futher handling required
             Payloads::TransferControl { ..} => {}
             Payloads::SetObserver { .. } => {}
@@ -51,7 +53,7 @@ impl TransferStruct {
             Payloads::PlayerLeft { .. } => {}
             Payloads::Update { .. } => {}
             // Used
-            Payloads::Handshake { is_initial: _, session_id } => {
+            Payloads::Handshake { session_id } => {
                 if *session_id != self.session_id {return false}
                 // Established connection with server
                 self.connected = true;
@@ -81,13 +83,15 @@ impl TransferStruct {
         // Send a message every second
         if self.retry_timer.is_some() && self.retry_timer.as_ref().unwrap().elapsed().as_secs() < 1 {return false}
 
-        messages::send_message(Payloads::Handshake {is_initial: true, session_id: self.session_id.clone()}, self.server_address.clone(), sender).ok();
-        // Over retry limit, stop connection
-        if self.retries > MAX_PUNCH_RETRIES {
-            return false
+        if let Some(addr) = self.received_address {
+            messages::send_message(Payloads::Handshake {session_id: self.session_id.clone()}, addr, sender).ok();
+            // Over retry limit, stop connection
+            if self.retries > MAX_PUNCH_RETRIES {
+                return false
+            }
+            // Reset second timer
+            self.retry_timer = Some(Instant::now());
         }
-        // Reset second timer
-        self.retry_timer = Some(Instant::now());
 
         return true
     }
@@ -126,7 +130,8 @@ impl Client {
     }
 
     pub fn start(&mut self, session_id: String, is_ipv6: bool) -> Result<(), laminar::ErrorKind> {
-        let mut socket = Socket::bind(get_bind_address(is_ipv6, None))?;
+        let mut socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config())?;
+        let server_address = get_rendezvous_server(is_ipv6).unwrap();
 
         let transfer = Arc::new(Mutex::new(
             TransferStruct {
@@ -138,7 +143,7 @@ impl Client {
                 // Holepunching
                 retries: 0,
                 connected: false,
-                server_address: get_rendezvous_server(is_ipv6),
+                server_address,
                 received_address: None,
                 retry_timer: None,
                 session_id: session_id.clone(),
@@ -153,15 +158,15 @@ impl Client {
 
         // Init connection
         messages::send_message(Payloads::Handshake {
-            is_initial: false,
-            session_id,
-        }, get_rendezvous_server(is_ipv6), &mut socket.get_packet_sender()).ok();
+            session_id
+        }, server_address, &mut socket.get_packet_sender()).ok();
 
         // Run socket
         let should_stop_clone = self.should_stop.clone();
         thread::spawn(move || loop {
             socket.manual_poll(Instant::now());
             if should_stop_clone.load(SeqCst) {break}
+            sleep(Duration::from_millis(1));
         });
         // Run main loop
         thread::spawn(move || {
@@ -180,7 +185,11 @@ impl Client {
                     }
                 };
 
-                if !transfer.connected {transfer.handle_hole_punch();};
+                if !transfer.connected {
+                    if !transfer.handle_hole_punch() {
+                        transfer.should_stop.store(true, SeqCst);
+                    }
+                };
                 transfer.handle_app_message();
 
                 if transfer.should_stop() {break}

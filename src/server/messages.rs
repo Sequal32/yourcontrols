@@ -20,7 +20,7 @@ pub enum Payloads {
     TransferControl {from: String, to: String},
     SetObserver {from: String, to: String, is_observer: bool},
     // Hole punching payloads
-    Handshake {is_initial: bool, session_id: String},
+    Handshake {session_id: String}, // With hoster
     HostingReceived {session_id: String},
     AttemptConnection {peer: SocketAddr},
     PeerEstablished {peer: SocketAddr},
@@ -72,11 +72,11 @@ pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<P
         Payloads::PlayerJoined {..} | 
         Payloads::PlayerLeft {..} | 
         Payloads::SetObserver {..} |
-        Payloads::Handshake {..} |
         Payloads::HostingReceived {..} |
         Payloads::AttemptConnection {..} |
         Payloads::PeerEstablished {..} |
         Payloads::TransferControl {..} => Packet::reliable_unordered(target, payload),
+        Payloads::Handshake {..} |
         Payloads::Update {..} => Packet::unreliable(target, payload)
     };
 

@@ -1,6 +1,7 @@
 use crossbeam_channel::{Receiver, Sender};
 use log::info;
-use std::{fmt::Display, net::SocketAddr, sync::Arc, sync::atomic::{AtomicBool, Ordering::SeqCst}};
+use dns_lookup::lookup_host;
+use std::{fmt::Display, net::SocketAddr, net::SocketAddrV4, net::SocketAddrV6, sync::Arc, net::IpAddr, sync::atomic::{AtomicBool, Ordering::SeqCst}, time::Duration};
 use std::time::SystemTime;
 
 use crate::definitions::AllNeedSync;
@@ -8,14 +9,42 @@ use crate::definitions::AllNeedSync;
 use super::Payloads;
 
 pub const MAX_PUNCH_RETRIES: u8 = 5;
+const HEARTBEAT_INTERVAL: u64 = 1;
+
+const RENDEZVOUS_SERVER_HOSTNAME: &str = "holepunch.yourcontrols.xyz";
 
 pub fn get_bind_address(is_ipv6: bool, port: Option<u16>) -> SocketAddr {
     let bind_string = format!("{}:{}", if is_ipv6 {"::"} else {"0.0.0.0"}, port.unwrap_or(0));
     bind_string.parse().unwrap()
 }
 
-pub fn get_rendezvous_server(is_ipv6: bool) -> SocketAddr {
-    if is_ipv6 {dotenv::var("RENDEZVOUS_SERVER_V6").unwrap().parse().unwrap()} else {dotenv::var("RENDEZVOUS_SERVER_V4").unwrap().parse().unwrap()}
+pub fn get_rendezvous_server(is_ipv6: bool) -> Result<SocketAddr, ()> {
+    for ip in lookup_host(RENDEZVOUS_SERVER_HOSTNAME).unwrap() {
+         match ip {
+            IpAddr::V4(ip) => if !is_ipv6 {
+                return Ok(
+                    SocketAddr::V4(
+                        SocketAddrV4::new(ip, 5555)
+                    )
+                )
+            }
+            IpAddr::V6(ip) => if is_ipv6 {
+                return Ok(
+                    SocketAddr::V6(
+                        SocketAddrV6::new(ip, 5555, 0, 0)
+                    )
+                )
+            }
+        }
+    }
+    Err(())
+}
+
+pub fn get_socket_config() -> laminar::Config {
+    laminar::Config {
+        heartbeat_interval: Some(Duration::from_secs(HEARTBEAT_INTERVAL)),
+        ..Default::default()
+    }
 }
 
 fn get_seconds() -> f64 {
