@@ -6,7 +6,7 @@ use std::{net::{SocketAddr}, sync::Mutex, time::Duration, time::Instant, net::Ip
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::thread;
 
-use super::{Error, Event, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
+use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
 
 struct TransferStruct {
     name: String,
@@ -37,7 +37,7 @@ impl TransferStruct {
     }
 
     // Should stop client
-    fn handle_message(&mut self, addr: SocketAddr, payload: Payloads) -> bool {
+    fn handle_message(&mut self, addr: SocketAddr, payload: Payloads) {
         match &payload {
             // Unused by client
             Payloads::HostingReceived { .. } => {}
@@ -46,13 +46,22 @@ impl TransferStruct {
             // No futher handling required
             Payloads::TransferControl { ..} => {}
             Payloads::SetObserver { .. } => {}
-            Payloads::InvalidName { .. } => {}
             Payloads::PlayerJoined { .. } => {}
             Payloads::PlayerLeft { .. } => {}
             Payloads::Update { .. } => {}
             // Used
+            Payloads::InvalidName { .. } => {
+                info!("{} was already in use, disconnecting.", self.name);
+                self.stop("Name already in use!".to_string());
+            }
             Payloads::Handshake { session_id } => {
-                if *session_id != *self.session_id {return false}
+                // Already established connection
+                if self.connected {return}
+                // Why doesn't the other peer have the same session ID? 
+                if *session_id != *self.session_id {
+                    self.stop(format!("Handshake verification failed! Expected {}, got {}", self.session_id, session_id));
+                    return;
+                }
                 // Established connection with host
                 self.connected = true;
                 
@@ -67,7 +76,6 @@ impl TransferStruct {
         }
 
         self.server_tx.send(ReceiveMessage::Payload(payload)).ok();
-        return true
     }
 
     fn handle_app_message(&mut self) {
@@ -99,6 +107,11 @@ impl TransferStruct {
             self.retries += 1;
             info!("Sent packet to {}. Retry #{}", addr, self.retries);
         }
+    }
+
+    fn stop(&mut self, reason: String) {
+        self.server_tx.send(ReceiveMessage::Event(Event::ConnectionLost(reason))).ok();
+        self.should_stop.store(true, SeqCst);
     }
 }
 
@@ -190,7 +203,7 @@ impl Client {
         let should_stop_clone = self.should_stop.clone();
 
         thread::spawn(move || {
-            let sleep_duration = Duration::from_millis(1);
+            let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
 
             loop {
                 if should_stop_clone.load(SeqCst) {break}
@@ -202,7 +215,7 @@ impl Client {
         });
         // Run main loop
         thread::spawn(move || {
-            let sleep_duration = Duration::from_millis(1);
+            let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
 
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
@@ -213,9 +226,9 @@ impl Client {
                     },
                     Err(e) => match e {
                         Error::ConnectionClosed(addr) => {
+                            // Can't connect to rendezvous to obtain session key
                             if rendezvous.is_none() || (rendezvous.is_some() && rendezvous.unwrap() != addr) {
-                                transfer.server_tx.send(ReceiveMessage::Event(Event::ConnectionLost("No message received from server."))).ok();
-                                transfer.should_stop.store(true, SeqCst);
+                                transfer.stop("No message received from server.".to_string())
                             }
                         }
                         _ => {}
@@ -263,7 +276,7 @@ impl TransferClient for Client {
         None
     }
 
-    fn stop(&mut self, reason: &'static str) {
+    fn stop(&mut self, reason: String) {
         self.should_stop.store(true, SeqCst);
         self.server_tx.send(ReceiveMessage::Event(Event::ConnectionLost(reason))).ok();
     }

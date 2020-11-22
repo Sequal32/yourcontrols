@@ -216,7 +216,7 @@ fn main() {
             }
             Ok(DispatchResult::Quit(_)) => {
                 if let Some(client) = transfer_client.as_mut() {
-                    client.stop("Sim closed.");
+                    client.stop("Sim closed.".to_string());
                 }
             }
             _ => (),
@@ -232,6 +232,7 @@ fn main() {
                         Payloads::AttemptConnection { .. } => {}
                         Payloads::PeerEstablished { .. } => {}
                         Payloads::Name{..} => {},
+                        Payloads::InvalidName {..} => {}
                         // Used
                         Payloads::Update{data, time, from} => {
                             if time > last_received_update_time {
@@ -323,7 +324,7 @@ fn main() {
                             }
                         }
                         Payloads::SetObserver{from, to, is_observer} => {
-                            if from == client.get_server_name() {
+                            if to == client.get_server_name() {
                                 info!("Server set us to observing.");
                                 observing = is_observer;
                                 app_interface.observing(is_observer);
@@ -332,14 +333,6 @@ fn main() {
                                 clients.set_observer(&from, is_observer);
                                 app_interface.set_observing(&from, is_observer);
                             }
-                        }
-                        
-                        Payloads::InvalidName{} => {
-                            info!(
-                                "{} was already in use, disconnecting.",
-                                client.get_server_name()
-                            );
-                            client.stop("Name already in use!");
                         }
                     }
                     ReceiveMessage::Event(e) => match e {
@@ -496,7 +489,7 @@ fn main() {
                 AppMessage::Disconnect => {
                     info!("Request to disconnect.");
                     if let Some(client) = transfer_client.as_mut() {
-                        client.stop("Stopped.");
+                        client.stop("Stopped.".to_string());
                     }
                 }
                 AppMessage::TransferControl {target} => {

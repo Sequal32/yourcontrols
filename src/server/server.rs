@@ -8,7 +8,7 @@ use std::{fmt::Display, collections::HashMap, net::{IpAddr, Ipv4Addr, SocketAddr
 use laminar::{Packet, Socket, SocketEvent};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
 use std::str::FromStr;
-use super::{Error, Event, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
+use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
 
 #[derive(Debug)]
 pub enum PortForwardResult {
@@ -139,8 +139,11 @@ impl TransferStruct {
                 info!("Client requests name {}", name);
                 // Name already in use by another client
                 let mut invalid_name = *name == self.username;
+                // Lookup name if it exists already
                 if let Some(client) = self.clients.get(name) {
-                    invalid_name = invalid_name || client.addr != addr;
+                    // Same client might've send packet twice
+                    if client.addr == addr {return}
+                    invalid_name = true;
                 }
 
                 if invalid_name {
@@ -327,7 +330,7 @@ impl Server {
     }
 
     pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartServerError> {
-        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(1))?;
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(3))?;
         // Attempt to port forward
         if let Err(e) = self.port_forward(port) {
             return Err(StartServerError::PortForwardError(e))
@@ -337,7 +340,7 @@ impl Server {
     }
 
     pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartServerError> {
-        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(1))?;
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(3))?;
         let addr: SocketAddr = get_rendezvous_server(is_ipv6).unwrap();
 
         // Send message to external server to obtain session ID
@@ -372,15 +375,15 @@ impl Server {
 
         // Run socket
         let should_stop_clone = self.should_stop.clone();
-        let sleep_duration = Duration::from_millis(1);
+        let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
 
-        loop {
-            if should_stop_clone.load(SeqCst) {break}
-
-            socket.manual_poll(Instant::now());
-            
-            sleep(sleep_duration);
-        }
+        thread::spawn(move || {
+            loop {
+                if should_stop_clone.load(SeqCst) {break}
+                socket.manual_poll(Instant::now());
+                sleep(sleep_duration);
+            }
+        });
 
         // If not hole punching, then tell the application that the server is immediately ready
         if rendezvous.is_none() {
@@ -389,18 +392,19 @@ impl Server {
 
         // Run main loop
         thread::spawn(move || {
-            let sleep_duration = Duration::from_millis(1);
+            let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
 
-                match messages::get_next_message(&mut transfer.receiver) {
+                let message = messages::get_next_message(&mut transfer.receiver);
+                match message {
                     Ok((addr, payload)) => {
                         transfer.handle_message(addr, payload);
                     },
                     Err(e) => match e {
                         Error::ConnectionClosed(addr) => {
                                 // Could not reach rendezvous
-                            if transfer.session_id != "" && rendezvous.is_some() && rendezvous.unwrap() == addr {
+                            if transfer.session_id == "" && rendezvous.is_some() && rendezvous.unwrap() == addr {
 
                                 transfer.server_tx.send(ReceiveMessage::Event(Event::SessionIdFetchFailed)).ok();
                                 transfer.should_stop.store(true, SeqCst);
@@ -483,7 +487,7 @@ impl TransferClient for Server {
         return None
     }
 
-    fn stop(&mut self, reason: &'static str) {
+    fn stop(&mut self, reason: String) {
         self.should_stop.store(true, SeqCst);
         self.server_tx.send(ReceiveMessage::Event(Event::ConnectionLost(reason))).ok();
     }
