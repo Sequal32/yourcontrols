@@ -77,9 +77,10 @@ fn start_client(timeout: u64, username: String, session_id: String, isipv6: bool
                     Ok(ip) => ip,
                     Err(e) => return Err(e.to_string())
                 },
+                // If no hostname was passed, an IP must've been passed
                 None => ip.unwrap(),
             };
-
+            // A port must've been passed with direct connect
             client.start(actual_ip, port.unwrap())
         }
         ConnectionMethod::CloudServer => {
@@ -142,9 +143,6 @@ fn main() {
     let mut last_received_update_time = 0.0;
 
     let mut need_update = false;
-
-    let mut did_delay_pass = false;
-    let mut init_delay_timer = Instant::now();
 
     let mut config_to_load = config.last_config.clone();
     // Helper closures
@@ -290,10 +288,12 @@ fn main() {
                             }
                             if client.is_server() {
                                 app_interface.server_started(client.get_connected_count(), client.get_session_id().as_deref());
+                            } else {
+                                // Show as observing on client side, server shouldn't show the message, only the controls
+                                app_interface.set_observing(&name, is_observer);
                             }
 
                             app_interface.new_connection(&name);
-                            app_interface.set_observing(&name, is_observer);
 
                             clients.add_client(name.clone());
                             clients.set_server(&name, is_server);
@@ -325,13 +325,15 @@ fn main() {
                         }
                         Payloads::SetObserver{from, to, is_observer} => {
                             if to == client.get_server_name() {
-                                info!("Server set us to observing.");
+                                info!("Server set us to observing? {}", observing);
                                 observing = is_observer;
                                 app_interface.observing(is_observer);
+                                
+                                if !observing {definitions.clear_sync();}
                             } else {
-                                info!("{} is observing? {}", from, is_observer);
-                                clients.set_observer(&from, is_observer);
-                                app_interface.set_observing(&from, is_observer);
+                                info!("{} is observing? {}", to, is_observer);
+                                clients.set_observer(&to, is_observer);
+                                app_interface.set_observing(&to, is_observer);
                             }
                         }
                     }
@@ -349,11 +351,12 @@ fn main() {
                                 app_interface.lose_control();
                                     // Freeze aircraft
                                 control.lose_control();
+                                    // Intiailly observer
+                                observing = true;
                             }
                             
                             last_received_update_time = 0.0;
                             need_update = true;
-                            did_delay_pass = false;
                         }
                         Event::ConnectionLost(reason) => {
                             info!("Server/Client stopped. Reason: {}", reason);
@@ -379,28 +382,19 @@ fn main() {
 
             // Handle sync vars
             let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
-            // Give time for all lvars to load in
-            let init_delay_passed = init_delay_timer.elapsed().as_secs() >= 3;
 
-            if !observing && can_update && init_delay_passed {
-                if did_delay_pass {
+            if !observing && can_update {
+                let permission = SyncPermission {
+                    is_server: client.is_server(),
+                    is_master: control.has_control(),
+                    is_init: false,
+                };
 
-                    let permission = SyncPermission {
-                        is_server: client.is_server(),
-                        is_master: control.has_control(),
-                        is_init: false,
-                    };
-    
-                    if let Some(values) = definitions.get_need_sync(&permission) {
-                        client.update(values);
-                    }
-    
-                    update_rate_instant = Instant::now();
-
-                } else {
-                    did_delay_pass = true;
-                    definitions.clear_need_sync();
+                if let Some(values) = definitions.get_need_sync(&permission) {
+                    client.update(values);
                 }
+
+                update_rate_instant = Instant::now();
             }
 
             if !control.has_control() {
@@ -427,10 +421,10 @@ fn main() {
 
                         let result = match method {
                             ConnectionMethod::Direct => {
-                                server.start(isipv6, port)
+                                server.start(isipv6, port, false)
                             }
                             ConnectionMethod::UPnP => {
-                                server.start(isipv6, port)
+                                server.start(isipv6, port, true)
                             }
                             ConnectionMethod::CloudServer => {
                                 server.start_with_hole_punching(isipv6)
@@ -448,8 +442,6 @@ fn main() {
                                 info!("Could not start server! Reason: {}", e);
                             }
                         }
-
-                        init_delay_timer = Instant::now();
 
                         config.port = port;
                         config.name = username;
@@ -479,10 +471,9 @@ fn main() {
                             }
                         }
 
-                        init_delay_timer = Instant::now();
                         // Write config with new values
                         config.name = username;
-                        config.ip = if ip.is_some() {ip.unwrap().to_string()} else {String::new()};
+                        config.ip = if let Some(ip) = ip {ip.to_string()} else {String::new()};
                         write_configuration(&config);
                     }
                 }

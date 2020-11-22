@@ -6,7 +6,7 @@ use std::{net::{SocketAddr}, sync::Mutex, time::Duration, time::Instant, net::Ip
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::thread;
 
-use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
+use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
 
 struct TransferStruct {
     name: String,
@@ -93,7 +93,7 @@ impl TransferStruct {
         let sender = &mut self.sender;
 
         // Send a message every second
-        if self.retry_timer.is_some() && self.retry_timer.as_ref().unwrap().elapsed().as_secs() < 1 {return}
+        if let Some(timer) = self.retry_timer.as_ref() {if timer.elapsed().as_secs() < 1 {return}}
 
         if let Some(addr) = self.received_address {
             messages::send_message(Payloads::Handshake {session_id: self.session_id.clone()}, addr, sender).ok();
@@ -149,7 +149,7 @@ impl Client {
         Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(self.timeout))
     }
 
-    pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), laminar::ErrorKind> {
+    pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), StartClientError> {
         let socket = self.get_socket(ip.is_ipv6())?;
 
         // Signifies no hole punching
@@ -163,9 +163,9 @@ impl Client {
         self.run(socket, blank_session_id, None, Some(addr))
     }
 
-    pub fn start_with_hole_punch(&mut self, session_id: String, is_ipv6: bool) -> Result<(), laminar::ErrorKind> {
+    pub fn start_with_hole_punch(&mut self, session_id: String, is_ipv6: bool) -> Result<(), StartClientError> {
         let socket = self.get_socket(is_ipv6)?;
-        let server_address = get_rendezvous_server(is_ipv6).unwrap();
+        let server_address = get_rendezvous_server(is_ipv6)?;
         // Request session ip
         messages::send_message(Payloads::Handshake {
             session_id: session_id.clone()
@@ -174,7 +174,7 @@ impl Client {
         self.run(socket, session_id, Some(server_address), None)
     }
 
-    pub fn run(&mut self, socket: Socket, session_id: String, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), laminar::ErrorKind> {
+    pub fn run(&mut self, socket: Socket, session_id: String, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), StartClientError> {
         let mut socket = socket;
 
         let transfer = Arc::new(Mutex::new(

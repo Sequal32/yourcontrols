@@ -816,10 +816,6 @@ impl Definitions {
         return Some(return_data);
     }
 
-    pub fn clear_need_sync(&mut self) {
-        self.current_sync.clear()
-    }
-
     // Skip checking with self.sync_vars and creating a new hashmap - used for interpolation
     fn write_aircraft_data_unchecked(&mut self, conn: &SimConnector, data: &AVarMap) {
         if data.len() == 0 {return}

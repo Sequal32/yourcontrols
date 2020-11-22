@@ -1,9 +1,9 @@
 use crossbeam_channel::{Receiver, Sender};
 use dns_lookup::lookup_host;
-use std::{net::SocketAddr, net::SocketAddrV4, net::SocketAddrV6, net::IpAddr, time::Duration};
+use std::{fmt::Display, io, net::IpAddr, net::SocketAddr, net::SocketAddrV4, net::SocketAddrV6, time::Duration};
 use std::time::SystemTime;
 
-use crate::definitions::AllNeedSync;
+use crate::{definitions::AllNeedSync, util::HostnameLookupError};
 
 use super::Payloads;
 
@@ -30,12 +30,12 @@ pub fn match_ip_address_to_socket_addr(ip: IpAddr, port: u16) -> SocketAddr {
     }
 }
 
-pub fn get_rendezvous_server(is_ipv6: bool) -> Result<SocketAddr, ()> {
-    for ip in lookup_host(RENDEZVOUS_SERVER_HOSTNAME).unwrap() {
+pub fn get_rendezvous_server(is_ipv6: bool) -> Result<SocketAddr, HostnameLookupError> {
+    for ip in lookup_host(RENDEZVOUS_SERVER_HOSTNAME)? {
         if (ip.is_ipv6() && !is_ipv6) || (ip.is_ipv4() && is_ipv6) {continue;}
         return Ok(match_ip_address_to_socket_addr(ip, RENDEZVOUS_PORT))
     }
-    Err(())
+    Err(HostnameLookupError::WrongIpVersion)
 }
 
 pub fn get_socket_config(timeout: u64) -> laminar::Config {
@@ -63,6 +63,62 @@ pub enum Event {
 pub enum ReceiveMessage {
     Payload(Payloads),
     Event(Event)
+}
+
+// Errors
+#[derive(Debug)]
+pub enum StartClientError {
+    FetchRendezvousError(HostnameLookupError),
+    SocketError(laminar::ErrorKind),
+    PortForwardError(PortForwardResult)
+}
+
+impl Display for StartClientError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            StartClientError::FetchRendezvousError(e) => write!(f, "{}", e),
+            StartClientError::SocketError(e) => write!(f, "Could not initialize socket! Reason: {}", e),
+            StartClientError::PortForwardError(e) => write!(f, "Could not automatically port forward! Reason: {}", e)
+        }
+    }
+}
+
+impl From<HostnameLookupError> for StartClientError {
+    fn from(e: HostnameLookupError) -> Self {
+        StartClientError::FetchRendezvousError(e)
+    }
+}
+
+impl From<PortForwardResult> for StartClientError {
+    fn from(e: PortForwardResult) -> Self {
+        StartClientError::PortForwardError(e)
+    }
+}
+
+impl From<laminar::ErrorKind> for StartClientError {
+    fn from(e: laminar::ErrorKind) -> Self {
+        StartClientError::SocketError(e)
+    }
+}
+
+
+#[derive(Debug)]
+pub enum PortForwardResult {
+    GatewayNotFound(igd::SearchError),
+    LocalAddrNotFound,
+    LocalAddrNotIPv4(String),
+    AddPortError(igd::AddPortError)
+}
+
+impl Display for PortForwardResult {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PortForwardResult::GatewayNotFound(e) => write!(f, "Gateway not found: {}", e),
+            PortForwardResult::LocalAddrNotFound => write!(f, "Could not get local address."),
+            PortForwardResult::AddPortError(e) => write!(f, "Could not add port: {}", e),
+            PortForwardResult::LocalAddrNotIPv4(parse_string) => write!(f, "{} is not IPv4", parse_string)
+        }
+    }
 }
 
 pub trait TransferClient {

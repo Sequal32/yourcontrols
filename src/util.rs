@@ -1,27 +1,31 @@
-use std::{fmt::Display, net::IpAddr};
+use std::{fmt::Display, net::IpAddr, io};
 use serde::{Serialize, Deserialize};
 
-pub enum HostnameError {
-    UnresolvedHostname(std::io::Error),
-    WrongIpVType
+#[derive(Debug)]
+pub enum HostnameLookupError {
+    UnresolvedHostname(io::Error),
+    WrongIpVersion
 }
 
-impl Display for HostnameError {
+impl Display for HostnameLookupError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            HostnameError::UnresolvedHostname(e) => write!(f, "Could not lookup hostname! Reason: {}", e),
-            HostnameError::WrongIpVType => write!(f, "No hostname ips matched the requested IP version.")
+            HostnameLookupError::UnresolvedHostname(e) => write!(f, "Could not lookup hostname! Reason: {}", e),
+            HostnameLookupError::WrongIpVersion => write!(f, "No hostname ips matched the requested IP version.")
         }
     }
 }
 
-pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, HostnameError> {
-    match dns_lookup::lookup_host(&hostname) {
-        Ok(results) => match results.into_iter().find(|&x| x.is_ipv6() && isipv6 || x.is_ipv4() && !isipv6) {
-            Some(ip) => Ok(ip),
-            None => Err(HostnameError::WrongIpVType)
-        }
-        Err(e) => Err(HostnameError::UnresolvedHostname(e))
+impl From<io::Error> for HostnameLookupError {
+    fn from(e: io::Error) -> Self {
+        HostnameLookupError::UnresolvedHostname(e)
+    }
+}
+
+pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, HostnameLookupError> {
+    match dns_lookup::lookup_host(&hostname)?.into_iter().find(|&x| x.is_ipv6() && isipv6 || x.is_ipv4() && !isipv6) {
+        Some(ip) => Ok(ip),
+        None => Err(HostnameLookupError::WrongIpVersion)
     }
 }
 
@@ -39,6 +43,13 @@ pub enum VarReaderTypes {
     I32(i32),
     I64(i64),
     F64(f64)
+}
+
+impl VarReaderTypes {
+    pub fn get_as_f64(&self) -> Option<&f64> {
+        if let VarReaderTypes::F64(data) = self {return Some(data)}
+        None
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Copy, Clone)]

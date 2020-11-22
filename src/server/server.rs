@@ -4,54 +4,10 @@ use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
 use retain_mut::RetainMut;
 use spin_sleep::sleep;
-use std::{fmt::Display, collections::HashMap, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
+use std::{collections::HashMap, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
 use laminar::{Packet, Socket, SocketEvent};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
-use std::str::FromStr;
-use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
-
-#[derive(Debug)]
-pub enum PortForwardResult {
-    GatewayNotFound(igd::SearchError),
-    LocalAddrNotFound,
-    AddPortError(igd::AddPortError)
-}
-
-impl Display for PortForwardResult {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PortForwardResult::GatewayNotFound(e) => write!(f, "{}", e),
-            PortForwardResult::LocalAddrNotFound => write!(f, "Could not get local address."),
-            PortForwardResult::AddPortError(e) => write!(f, "{}", e),
-        }
-    }
-}
-
-pub enum StartServerError {
-    SocketError(laminar::ErrorKind),
-    PortForwardError(PortForwardResult)
-}
-
-impl From<laminar::ErrorKind> for StartServerError {
-    fn from(e: laminar::ErrorKind) -> Self {
-        StartServerError::SocketError(e)
-    }
-}
-
-impl From<PortForwardResult> for StartServerError {
-    fn from(e: PortForwardResult) -> Self {
-        StartServerError::PortForwardError(e)
-    }
-}
-
-impl Display for StartServerError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            StartServerError::SocketError(e) => write!(f, "Could not start server! Reason: {}", e),
-            StartServerError::PortForwardError(e) => write!(f, "Could not automatically port forward! Reason: {}", e)
-        }
-    }
-}
+use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
 
 struct Client {
     addr: SocketAddr,
@@ -103,8 +59,8 @@ impl TransferStruct {
 
         self.clients_to_holepunch.retain_mut(|session| {
         // Send a message every second
-            if session.timer.is_some() && session.timer.as_ref().unwrap().elapsed().as_secs() < 1 {return true}
-            
+            if let Some(timer) = session.timer.as_ref() {if timer.elapsed().as_secs() < 1 {return true;}}            
+        
             messages::send_message(Payloads::Handshake {
                 session_id: session_id.clone()
             }, session.addr.clone(), &mut sender).ok();
@@ -165,10 +121,9 @@ impl TransferStruct {
 
                 self.number_connections.fetch_add(1, SeqCst);
 
-                let empty_new_player = Payloads::PlayerJoined { name: name.clone(), in_control: false, is_server: false, is_observer: false};
+                let empty_new_player = Payloads::PlayerJoined { name: name.clone(), in_control: false, is_server: false, is_observer: true};
 
                 self.send_to_all(Some(&addr), empty_new_player.clone());
-
                 self.server_tx.send(ReceiveMessage::Payload(empty_new_player)).ok();
                 // Early return to prevent relaying/sending payload
                 return
@@ -308,9 +263,14 @@ impl Server {
 
     fn port_forward(&self, port: u16) -> Result<(), PortForwardResult> {
         let local_addr = match local_ipaddress::get() {
-            Some(addr) => Ipv4Addr::from_str(addr.as_str()).unwrap(),
+            Some(addr) => match addr.parse::<Ipv4Addr>() {
+                Ok(addr) => addr,
+                Err(_) => return Err(PortForwardResult::LocalAddrNotIPv4(addr))
+            },
             None => return Err(PortForwardResult::LocalAddrNotFound)
         };
+
+        info!("Found local address: {}", local_addr);
 
         let gateway = match search_gateway(SearchOptions {
                 bind_addr: SocketAddr::new(IpAddr::V4(local_addr), 0), 
@@ -321,27 +281,31 @@ impl Server {
             Err(e) => return Err(PortForwardResult::GatewayNotFound(e))
         };
 
+        info!("Found gateway at {}", gateway.root_url);
+
         match gateway.add_port(PortMappingProtocol::UDP, port, SocketAddrV4::new(local_addr, port), 86400, "YourControls") {
             Ok(()) => {},
             Err(e) => return Err(PortForwardResult::AddPortError(e))
         };
 
+        info!("Port forwarded port {}", port);
+
         Ok(())
     }
 
-    pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartServerError> {
+    pub fn start(&mut self, is_ipv6: bool, port: u16, upnp: bool) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartClientError> {
         let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(3))?;
         // Attempt to port forward
-        if let Err(e) = self.port_forward(port) {
-            return Err(StartServerError::PortForwardError(e))
+        if upnp {
+            self.port_forward(port)?;
         }
         
         self.run(socket, None)
     }
 
-    pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartServerError> {
+    pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartClientError> {
         let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(3))?;
-        let addr: SocketAddr = get_rendezvous_server(is_ipv6).unwrap();
+        let addr: SocketAddr = get_rendezvous_server(is_ipv6)?;
 
         // Send message to external server to obtain session ID
         messages::send_message(Payloads::Handshake {session_id: String::new()}, addr.clone(), &mut socket.get_packet_sender()).ok();
@@ -349,7 +313,7 @@ impl Server {
         self.run(socket, Some(addr))
     }
 
-    fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartServerError> {
+    fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartClientError> {
         let mut socket = socket;
 
         let transfer = Arc::new(Mutex::new(TransferStruct {

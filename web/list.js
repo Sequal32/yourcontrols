@@ -50,6 +50,7 @@ class ConnectionList {
         this.list[name] = listItemObject
 
         listItemObject.setButtonsVisibility(has_control, is_client)
+        listItemObject.observeButtonClicked()
     }
 
     setInControl(name) {
