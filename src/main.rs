@@ -144,6 +144,7 @@ fn main() {
     let mut need_update = false;
 
     let mut did_delay_pass = false;
+    let mut init_delay_timer = Instant::now();
 
     let mut config_to_load = config.last_config.clone();
     // Helper closures
@@ -385,11 +386,10 @@ fn main() {
 
             // Handle sync vars
             let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
-            let delay_passed = (!control.has_control() && control.time_since_control_change() > 5)
-                || control.has_control();
-            let init_delay_passed = control.time_since_control_change() > 3;
+            // Give time for all lvars to load in
+            let init_delay_passed = init_delay_timer.elapsed().as_secs() >= 3;
 
-            if !observing && can_update && delay_passed && init_delay_passed {
+            if !observing && can_update && init_delay_passed {
                 if did_delay_pass {
 
                     let permission = SyncPermission {
@@ -456,6 +456,8 @@ fn main() {
                             }
                         }
 
+                        init_delay_timer = Instant::now();
+
                         config.port = port;
                         config.name = username;
                         write_configuration(&config);
@@ -483,6 +485,8 @@ fn main() {
                                 error!("Could not start client! Reason: {}", e);
                             }
                         }
+
+                        init_delay_timer = Instant::now();
                         // Write config with new values
                         config.name = username;
                         config.ip = if ip.is_some() {ip.unwrap().to_string()} else {String::new()};

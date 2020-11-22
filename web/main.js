@@ -465,3 +465,8 @@ aircraftList.addAircraft = function (aircraftName) {
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 })
+
+// External IP fetch
+fetch("https://api.ipify.org/")
+    .then((r) => r.text())
+    .then((text) => $("#external-ip").text("Your IP: " + text))
