@@ -65,7 +65,7 @@ struct TransferStruct {
     receiver: Receiver<SocketEvent>,
     sender: Sender<Packet>,
     // Holepunching
-    rendevous_server: Option<SocketAddr>,
+    rendezvous_server: Option<SocketAddr>,
     clients_to_holepunch: Vec<HolePunchSession>,
     // Sending/writing to app
     server_tx: Sender<ReceiveMessage>,
@@ -153,6 +153,8 @@ impl TransferStruct {
                 for (name, client) in self.clients.iter() {
                     messages::send_message(Payloads::PlayerJoined { name: name.clone(), in_control: self.in_control == *name, is_server: false, is_observer: client.is_observer}, addr, &mut sender).ok();
                 }
+                // Send self
+                messages::send_message(Payloads::PlayerJoined { name: self.username.clone(), in_control: self.in_control == self.username, is_server: true, is_observer: false}, addr, &mut sender).ok();
                 // Add client
                 self.clients.insert(name.clone(), Client {addr: addr.clone(),
                     is_observer: false,
@@ -177,12 +179,16 @@ impl TransferStruct {
                 info!("Handshake received from {} on {}", addr, session_id);
                     // Incoming UDP packet from peer
                 if *session_id == self.session_id {
-                    messages::send_message(Payloads::PeerEstablished {peer: addr}, self.rendevous_server.as_ref().unwrap().clone(), self.get_sender()).ok();
+                    messages::send_message(Payloads::Handshake{session_id: session_id.clone()}, addr.clone(), self.get_sender()).ok();
+                    
+                    if let Some(rendezvous) = self.rendezvous_server.as_ref() {
+                        messages::send_message(Payloads::PeerEstablished {peer: addr}, rendezvous.clone(), self.get_sender()).ok();
+
+                        self.clients_to_holepunch.retain(|x| {
+                            x.addr != addr
+                        });
+                    }
                 }
-                
-                self.clients_to_holepunch.retain(|x| {
-                    x.addr != addr
-                });
 
                 should_relay = false;
             }
@@ -210,6 +216,13 @@ impl TransferStruct {
 
     fn handle_app_message(&mut self) {
         if let Ok(payload) = self.client_rx.try_recv() {
+            match &payload {
+                Payloads::TransferControl { from: _, to } => {
+                    self.in_control = to.clone();
+                }
+                _ => {}
+            }
+
             self.send_to_all(None, payload);
         }
     }
@@ -314,7 +327,7 @@ impl Server {
     }
 
     pub fn start(&mut self, is_ipv6: bool, port: u16) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartServerError> {
-        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(5))?;
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(1))?;
         // Attempt to port forward
         if let Err(e) = self.port_forward(port) {
             return Err(StartServerError::PortForwardError(e))
@@ -324,7 +337,7 @@ impl Server {
     }
 
     pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartServerError> {
-        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(5))?;
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(1))?;
         let addr: SocketAddr = get_rendezvous_server(is_ipv6).unwrap();
 
         // Send message to external server to obtain session ID
@@ -339,7 +352,7 @@ impl Server {
         let transfer = Arc::new(Mutex::new(TransferStruct {
             // Holepunching
             session_id: String::new(),
-            rendevous_server: rendezvous,
+            rendezvous_server: rendezvous,
             clients_to_holepunch: Vec::new(),
             // Transfer
             server_tx: self.server_tx.clone(),
@@ -347,7 +360,7 @@ impl Server {
             receiver: socket.get_event_receiver(), 
             sender: socket.get_packet_sender(),
             // State
-            in_control: String::new(),
+            in_control: self.username.clone(),
             clients: HashMap::new(),
             should_stop: self.should_stop.clone(),
             number_connections: self.number_connections.clone(),
@@ -359,11 +372,15 @@ impl Server {
 
         // Run socket
         let should_stop_clone = self.should_stop.clone();
-        thread::spawn(move || loop {
-            socket.manual_poll(Instant::now());
+        let sleep_duration = Duration::from_millis(1);
+
+        loop {
             if should_stop_clone.load(SeqCst) {break}
-            sleep(Duration::from_millis(1));
-        });
+
+            socket.manual_poll(Instant::now());
+            
+            sleep(sleep_duration);
+        }
 
         // If not hole punching, then tell the application that the server is immediately ready
         if rendezvous.is_none() {
@@ -372,6 +389,7 @@ impl Server {
 
         // Run main loop
         thread::spawn(move || {
+            let sleep_duration = Duration::from_millis(1);
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
 
@@ -401,6 +419,8 @@ impl Server {
                 transfer.handle_app_message();
 
                 if transfer.should_stop() {break}
+
+                sleep(sleep_duration);
             }
         });
 

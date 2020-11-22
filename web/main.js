@@ -202,9 +202,6 @@ function MessageReceived(data) {
         case "client_fail":
             OnDisconnect("Client disconnected. Reason: " + data["data"])
             break;
-        case "disconnected":
-            OnDisconnect("Not Connected.")
-            break;
         case "server":
             is_client = false
             alert.updatetext("success", "Server started! " + data["data"])

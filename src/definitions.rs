@@ -165,6 +165,7 @@ enum VarType {
     LocalVar
 }
 
+#[derive(Debug)]
 pub struct SyncPermission {
     pub is_server: bool,
     pub is_master: bool,

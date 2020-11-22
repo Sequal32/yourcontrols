@@ -1,4 +1,4 @@
-use std::{time::Duration, net::SocketAddr};
+use std::{net::SocketAddr};
 
 use crossbeam_channel::{Receiver, Sender};
 use laminar::{Packet, SocketEvent};
@@ -7,9 +7,7 @@ use serde_json::Value;
 
 use crate::definitions::AllNeedSync;
 
-const READ_TIMEOUT_MILLIS: u64 = 200;
-
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum Payloads {
     Name {name: String},
@@ -41,8 +39,7 @@ impl From<serde_json::Error> for Error {
 }
 //
 fn read_value(receiver: &mut Receiver<SocketEvent>) -> Result<(SocketAddr, Value), Error>  {
-
-    let packet = match receiver.recv_timeout(Duration::from_millis(READ_TIMEOUT_MILLIS)) {
+    let packet = match receiver.try_recv() {
         Ok(event) => match event {
             SocketEvent::Packet(packet) => packet,
             SocketEvent::Disconnect(addr) |

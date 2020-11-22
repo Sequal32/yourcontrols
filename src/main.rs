@@ -66,8 +66,8 @@ fn write_configuration(config: &Config) {
 
 fn calculate_update_rate(update_rate: u16) -> f64 {1.0 / update_rate as f64}
 
-fn start_client(username: String, session_id: String, isipv6: bool, ip: Option<IpAddr>, hostname: Option<String>, port: Option<u16>, method: ConnectionMethod) -> Result<Client, String> {
-    let mut client = Client::new(username);
+fn start_client(timeout: u64, username: String, session_id: String, isipv6: bool, ip: Option<IpAddr>, hostname: Option<String>, port: Option<u16>, method: ConnectionMethod) -> Result<Client, String> {
+    let mut client = Client::new(username, timeout);
 
     let client_result = match method {
         ConnectionMethod::Direct => {
@@ -139,6 +139,7 @@ fn main() {
     // Update rate counter
     let mut update_rate_instant = Instant::now();
     let mut update_rate = calculate_update_rate(config.update_rate);
+    let mut last_received_update_time = 0.0;
 
     let mut need_update = false;
 
@@ -232,25 +233,27 @@ fn main() {
                         Payloads::Name{..} => {},
                         // Used
                         Payloads::Update{data, time, from} => {
-                            // Seamlessly transfer from losing control wihout freezing
-                            if control.has_pending_transfer() {
-                                control.finalize_transfer(&conn)
-                            }
+                            if time > last_received_update_time {
+                                    // Seamlessly transfer from losing control wihout freezing
+                                if control.has_pending_transfer() {
+                                    control.finalize_transfer(&conn)
+                                }
 
-                            if !clients.is_observer(&from) {
-                                definitions.on_receive_data(
-                                    &conn,
-                                    time,
-                                    data,
-                                    &SyncPermission {
-                                        is_server: clients.client_is_server(&from),
-                                        is_master: clients.client_has_control(&from),
-                                        is_init: true,
-                                    },
-                                    !need_update,
-                                );
-                                // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
-                                need_update = false;
+                                if !clients.is_observer(&from) {
+                                    definitions.on_receive_data(
+                                        &conn,
+                                        time,
+                                        data,
+                                        &SyncPermission {
+                                            is_server: clients.client_is_server(&from),
+                                            is_master: clients.client_has_control(&from),
+                                            is_init: true,
+                                        },
+                                        !need_update,
+                                    );
+                                    // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
+                                    need_update = false;
+                                }
                             }
                         }
                         Payloads::TransferControl{from, to} => {
@@ -272,6 +275,7 @@ fn main() {
                                 app_interface.set_incontrol(&to);
                                 clients.set_client_control(to);
                             }
+                            last_received_update_time = 0.0;
                         }
                         Payloads::PlayerJoined{name, in_control, is_observer, is_server} => {
                             info!(
@@ -352,7 +356,8 @@ fn main() {
                                     // Freeze aircraft
                                 control.lose_control();
                             }
-                                
+                            
+                            last_received_update_time = 0.0;
                             need_update = true;
                             did_delay_pass = false;
                         }
@@ -468,7 +473,7 @@ fn main() {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        match start_client(username.clone(), session_id, isipv6, ip, hostname, port, method) {
+                        match start_client(config.conn_timeout, username.clone(), session_id, isipv6, ip, hostname, port, method) {
                             Ok(client) => {
                                 info!("Client started.");
                                 transfer_client = Some(Box::new(client));
@@ -480,6 +485,7 @@ fn main() {
                         }
                         // Write config with new values
                         config.name = username;
+                        config.ip = if ip.is_some() {ip.unwrap().to_string()} else {String::new()};
                         write_configuration(&config);
                     }
                 }
@@ -582,7 +588,6 @@ fn main() {
             // connected = true;
             if connected {
                 // Display not connected to server message
-                app_interface.disconnected();
                 control.on_connected(&conn);
                 info!("Connected to SimConnect.");
             } else {

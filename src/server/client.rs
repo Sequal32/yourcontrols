@@ -72,7 +72,9 @@ impl TransferStruct {
 
     fn handle_app_message(&mut self) {
         if let Ok(payload) = self.client_rx.try_recv() {
-            messages::send_message(payload, self.received_address.unwrap(), self.get_sender()).ok();
+            if let Some(address) = self.received_address {
+                messages::send_message(payload, address, self.get_sender()).ok();
+            }
         }
     }
 
@@ -139,12 +141,13 @@ impl Client {
 
         // Signifies no hole punching
         let blank_session_id = String::new();
+        let addr = match_ip_address_to_socket_addr(ip, port);
 
         messages::send_message(Payloads::Handshake {
             session_id: blank_session_id.clone()
-        }, match_ip_address_to_socket_addr(ip, port), &mut socket.get_packet_sender()).ok();
+        }, addr.clone(), &mut socket.get_packet_sender()).ok();
 
-        self.run(socket, blank_session_id, None)
+        self.run(socket, blank_session_id, None, Some(addr))
     }
 
     pub fn start_with_hole_punch(&mut self, session_id: String, is_ipv6: bool) -> Result<(), laminar::ErrorKind> {
@@ -155,10 +158,10 @@ impl Client {
             session_id: session_id.clone()
         }, server_address, &mut socket.get_packet_sender()).ok();
 
-        self.run(socket, session_id, Some(server_address))
+        self.run(socket, session_id, Some(server_address), None)
     }
 
-    pub fn run(&mut self, socket: Socket, session_id: String, rendezvous: Option<SocketAddr>) -> Result<(), laminar::ErrorKind> {
+    pub fn run(&mut self, socket: Socket, session_id: String, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), laminar::ErrorKind> {
         let mut socket = socket;
 
         let transfer = Arc::new(Mutex::new(
@@ -171,7 +174,7 @@ impl Client {
                 // Holepunching
                 retries: 0,
                 connected: false,
-                received_address: None,
+                received_address: target_address,
                 retry_timer: None,
                 session_id: session_id,
                 // State
@@ -186,13 +189,21 @@ impl Client {
         // Run socket
         let should_stop_clone = self.should_stop.clone();
 
-        thread::spawn(move || loop {
-            socket.manual_poll(Instant::now());
-            if should_stop_clone.load(SeqCst) {break}
-            sleep(Duration::from_millis(1));
+        thread::spawn(move || {
+            let sleep_duration = Duration::from_millis(1);
+
+            loop {
+                if should_stop_clone.load(SeqCst) {break}
+
+                socket.manual_poll(Instant::now());
+                
+                sleep(sleep_duration);
+            }
         });
         // Run main loop
         thread::spawn(move || {
+            let sleep_duration = Duration::from_millis(1);
+
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
                 
@@ -215,6 +226,8 @@ impl Client {
                 transfer.handle_app_message();
 
                 if transfer.should_stop() {break}
+
+                sleep(sleep_duration);
             }
         });
 

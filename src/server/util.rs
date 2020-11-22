@@ -49,6 +49,7 @@ fn get_seconds() -> f64 {
     return SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64()
 }
 
+#[derive(Debug)]
 pub enum Event {
     ConnectionEstablished,
     UnablePunchthrough,
@@ -56,6 +57,7 @@ pub enum Event {
     ConnectionLost(&'static str)
 }
 
+#[derive(Debug)]
 pub enum ReceiveMessage {
     Payload(Payloads),
     Event(Event)
