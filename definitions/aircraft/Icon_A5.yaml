@@ -5,66 +5,75 @@ include:
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/singlega.yaml
+  - definitions/modules/trim.yaml
   - definitions/modules/transponder.yaml
 
 shared:
-  - # ASOBO_DEICE_Lever_Engine_Template
-    type: NumSet
-    var_name: GENERAL ENG ANTI ICE POSITION:1
-    var_units: percent
-    var_type: i32
-    event_name: ANTI_ICE_GRADUAL_SET_ENG:1
-  # Deice
-  - # ASOBO_DEICE_Switch_Pitot_Template
-    type: ToggleSwitch
-    var_name: A:PITOT HEAT
-    var_units: Bool
-    event_name: PITOT_HEAT_TOGGLE
-  - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate
+  -
     type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: bool
     event_name: TOGGLE_MASTER_BATTERY
     event_param: 1
-
   - # ASOBO_ELECTRICAL_Switch_Alternator_Template
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: bool
     event_name: TOGGLE_ALTERNATOR1
-  - # ASOBO_ENGINE_Lever_Primer_SubTemplate
-    type: event # Use as event as primer just turns off right away anyway
-    event_name: TOGGLE_PRIMER1
   - #ASOBO_FUEL_Switch_Cutoff_Template
     type: ToggleSwitch
     var_name: A:GENERAL ENG FUEL VALVE:1
     var_units: Bool
     event_name: TOGGLE_FUEL_VALVE_ENG1
-  - #ASOBO_PASSENGER_Switch_Cabin_Heat_Template
+  -
+    type: ToggleSwitch
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    event_name: GEAR_DOWN
+    off_event_name: GEAR_UP
+  -
     type: var
-    var_name: L:XMLVAR_CabinHeatSwitch1Status
-    var_type: f64
-  - #ASOBO_PASSENGER_Switch_Cabin_Air_Template
-    type: var
-    var_name: L:XMLVAR_CabinAirSwitch1Status
-    var_type: f64
+    var_name: A:WATER RUDDER HANDLE POSITION
+    var_units: Percent
+    var_type: i32
+  - # ASOBO_LIGHTING_Knob_SubTemplate
+    type: NumSet
+    var_name: A:LIGHT PANEL POWER SETTING
+    var_units: Percent
+    var_type: i32
+    event_param: 0
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
+  - 
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:1
+    var_units: Percent
+    var_type: i32
+    event_param: 1
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    event_name: PANEL_LIGHTS_TOGGLE
   - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
     type: ToggleSwitch
     var_name: A:LIGHT CABIN
     var_units: Bool
     event_name: TOGGLE_CABIN_LIGHTS
-  
-  
+  -
+    type: var
+    var_name: L:XMLVAR_LTS_TEST
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AttitudeDisplay_Luminosity
+    var_type: f64
+    
 # master:
 server:
   -
     type: var
     var_name: FUEL TANK LEFT MAIN LEVEL
-    var_units: percent scaler 16k
-    var_type: i32
-  -
-    type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
     var_units: percent scaler 16k
     var_type: i32
   -
@@ -75,5 +84,10 @@ server:
   -
     type: var
     var_name: PAYLOAD STATION WEIGHT:2
+    var_units: lbs
+    var_type: i32
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
     var_units: lbs
     var_type: i32

@@ -6,6 +6,7 @@ include:
   - definitions/modules/magnetowithstarter.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
+  - definitions/modules/physics.yaml
   - definitions/modules/singlega.yaml
   - definitions/modules/transponder.yaml
 
@@ -66,10 +67,23 @@ server:
     var_name: FUEL TANK LEFT MAIN LEVEL
     var_units: percent scaler 16k
     var_type: i32
-    update_every: 60
   -
     type: var
     var_name: FUEL TANK RIGHT MAIN LEVEL
     var_units: percent scaler 16k
     var_type: i32
-    update_every: 60
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: lbs
+    var_type: i32
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: lbs
+    var_type: i32
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: lbs
+    var_type: i32
