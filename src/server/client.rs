@@ -202,6 +202,9 @@ impl Client {
         // Run socket
         let should_stop_clone = self.should_stop.clone();
 
+        let rendezvous_timer = Instant::now();
+        let timeout = self.timeout;
+
         thread::spawn(move || {
             let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
 
@@ -234,6 +237,11 @@ impl Client {
                         _ => {}
                     }
                 };
+
+                // Check rendezvous timer
+                if transfer.received_address.is_none() && rendezvous.is_some() && rendezvous_timer.elapsed().as_secs() >= timeout {
+                    transfer.stop("Could not connect to session.".to_string())
+                }
 
                 transfer.handle_handshake();
                 transfer.handle_app_message();
