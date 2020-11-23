@@ -126,6 +126,7 @@ pub trait TransferClient {
     fn is_server(&self) -> bool;
 
     fn get_transmitter(&self) -> &Sender<Payloads>;
+    fn get_server_transmitter(&self) -> &Sender<ReceiveMessage>;
     fn get_receiver(&self) -> &Receiver<ReceiveMessage>;
     fn get_server_name(&self) -> &str;
     fn get_session_id(&self) -> Option<String>;
@@ -133,7 +134,7 @@ pub trait TransferClient {
     fn stop(&mut self, reason: String);
 
     fn update(&self, data: AllNeedSync) {
-        self.get_transmitter().send(Payloads::Update {
+        self.get_transmitter().try_send(Payloads::Update {
             data,
             time: get_seconds(),
             from: self.get_server_name().to_string()
@@ -145,14 +146,26 @@ pub trait TransferClient {
     }
 
     fn transfer_control(&self, target: String) {
-        self.get_transmitter().send(Payloads::TransferControl {
+        let message = Payloads::TransferControl {
             from: self.get_server_name().to_string(),
-            to: target,
-        }).ok();
+            to: target
+        };
+        self.get_transmitter().try_send(message.clone()).ok();
+        self.get_server_transmitter().try_send(ReceiveMessage::Payload(message)).ok();
+    }
+
+    fn take_control(&self, from: String) {
+        let message = Payloads::TransferControl {
+            from,
+            to: self.get_server_name().to_string(),
+        };
+
+        self.get_transmitter().try_send(message.clone()).ok();
+        self.get_server_transmitter().try_send(ReceiveMessage::Payload(message)).ok();
     }
 
     fn set_observer(&self, target: String, is_observer: bool) {
-        self.get_transmitter().send(Payloads::SetObserver {
+        self.get_transmitter().try_send(Payloads::SetObserver {
             from: self.get_server_name().to_string(),
             to: target,
             is_observer: is_observer

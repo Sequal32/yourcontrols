@@ -4,7 +4,7 @@ use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
 use retain_mut::RetainMut;
 use spin_sleep::sleep;
-use std::{collections::HashMap, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
+use std::{collections::HashMap, mem, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
 use laminar::{Packet, Socket, SocketEvent};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
 use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
@@ -124,7 +124,7 @@ impl TransferStruct {
                 let empty_new_player = Payloads::PlayerJoined { name: name.clone(), in_control: false, is_server: false, is_observer: true};
 
                 self.send_to_all(Some(&addr), empty_new_player.clone());
-                self.server_tx.send(ReceiveMessage::Payload(empty_new_player)).ok();
+                self.server_tx.try_send(ReceiveMessage::Payload(empty_new_player)).ok();
                 // Early return to prevent relaying/sending payload
                 return
             }
@@ -155,7 +155,7 @@ impl TransferStruct {
                 self.session_id = session_id.clone();
                 should_relay = false;
 
-                self.server_tx.send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
+                self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
             }
             Payloads::AttemptConnection { peer } => {
                 info!("{} attempting connection.", peer);
@@ -169,7 +169,7 @@ impl TransferStruct {
             self.send_to_all(Some(&addr), payload.clone());
         }
 
-        self.server_tx.send(ReceiveMessage::Payload(payload)).ok();
+        self.server_tx.try_send(ReceiveMessage::Payload(payload)).ok();
     }
 
     fn handle_app_message(&mut self) {
@@ -203,7 +203,7 @@ impl TransferStruct {
 
             self.send_to_all(None, player_left_payload.clone());
             self.number_connections.fetch_sub(1, SeqCst);
-            self.server_tx.send(ReceiveMessage::Payload(player_left_payload)).ok();
+            self.server_tx.try_send(ReceiveMessage::Payload(player_left_payload)).ok();
         }
     }
 
@@ -351,7 +351,7 @@ impl Server {
 
         // If not hole punching, then tell the application that the server is immediately ready
         if rendezvous.is_none() {
-            self.server_tx.send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
+            self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
         }
 
         // Run main loop
@@ -370,7 +370,7 @@ impl Server {
                                 // Could not reach rendezvous
                             if transfer.session_id == "" && rendezvous.is_some() && rendezvous.unwrap() == addr {
 
-                                transfer.server_tx.send(ReceiveMessage::Event(Event::SessionIdFetchFailed)).ok();
+                                transfer.server_tx.try_send(ReceiveMessage::Event(Event::SessionIdFetchFailed)).ok();
                                 transfer.should_stop.store(true, SeqCst);
 
                             } else {
@@ -388,6 +388,7 @@ impl Server {
 
                 if transfer.should_stop() {break}
 
+                mem::drop(transfer);
                 sleep(sleep_duration);
             }
         });
@@ -409,6 +410,10 @@ impl TransferClient for Server {
         return &self.client_tx;
     }
 
+    fn get_server_transmitter(&self) -> &Sender<ReceiveMessage> {
+        return &self.server_tx
+    }
+
     fn get_receiver(&self) -> &Receiver<ReceiveMessage> {
         return &self.server_rx;
     }
@@ -423,10 +428,12 @@ impl TransferClient for Server {
             transfer.lock().unwrap().in_control = target.clone();
         }
         
-        self.client_tx.send(Payloads::TransferControl {
+        let message = Payloads::TransferControl {
             from: self.get_server_name().to_string(),
-            to: target,
-        }).ok();
+            to: target
+        };
+        self.get_transmitter().try_send(message.clone()).ok();
+        self.get_server_transmitter().try_send(ReceiveMessage::Payload(message)).ok();
     }
 
     fn set_observer(&self, target: String, is_observer: bool) {
@@ -437,7 +444,7 @@ impl TransferClient for Server {
             }
         }
 
-        self.client_tx.send(Payloads::SetObserver {
+        self.client_tx.try_send(Payloads::SetObserver {
             from: self.get_server_name().to_string(),
             to: target,
             is_observer: is_observer
@@ -453,6 +460,6 @@ impl TransferClient for Server {
 
     fn stop(&mut self, reason: String) {
         self.should_stop.store(true, SeqCst);
-        self.server_tx.send(ReceiveMessage::Event(Event::ConnectionLost(reason))).ok();
+        self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionLost(reason))).ok();
     }
 }

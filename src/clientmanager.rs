@@ -37,6 +37,10 @@ impl ClientManager {
         return None
     }
 
+    pub fn get_client_in_control(&self) -> Option<&String> {
+        self.current_control.as_ref()
+    }
+
     pub fn set_no_control(&mut self) {
         self.current_control = None;
     }

@@ -78,7 +78,7 @@ pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<P
     };
 
     
-    match sender.send(packet) {
+    match sender.try_send(packet) {
         Ok(_) => Ok(()),
         Err(e) => {
             println!("{:?}", e);

@@ -2,7 +2,7 @@ use crossbeam_channel::{Receiver, Sender, unbounded};
 use log::info;
 use laminar::{Packet, Socket, SocketEvent};
 use spin_sleep::sleep;
-use std::{net::{SocketAddr}, sync::Mutex, time::Duration, time::Instant, net::IpAddr};
+use std::{net::{SocketAddr}, net::IpAddr, sync::Mutex, time::Duration, time::Instant, mem};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::thread;
 
@@ -68,14 +68,14 @@ impl TransferStruct {
                 info!("Established connection with {} on {}!", addr, session_id);
 
                 messages::send_message(Payloads::Name {name: self.name.clone()}, addr, self.get_sender()).ok();
-                self.server_tx.send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
+                self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
             }
             Payloads::AttemptConnection { peer } => {
                 self.received_address = Some(peer.clone())
             }
         }
 
-        self.server_tx.send(ReceiveMessage::Payload(payload)).ok();
+        self.server_tx.try_send(ReceiveMessage::Payload(payload)).ok();
     }
 
     fn handle_app_message(&mut self) {
@@ -100,7 +100,7 @@ impl TransferStruct {
             // Over retry limit, stop connection
             if self.retries > MAX_PUNCH_RETRIES {
                 self.should_stop.store(true, SeqCst);
-                self.server_tx.send(ReceiveMessage::Event(Event::UnablePunchthrough)).ok();
+                self.server_tx.try_send(ReceiveMessage::Event(Event::UnablePunchthrough)).ok();
             }
             // Reset second timer
             self.retry_timer = Some(Instant::now());
@@ -110,7 +110,7 @@ impl TransferStruct {
     }
 
     fn stop(&mut self, reason: String) {
-        self.server_tx.send(ReceiveMessage::Event(Event::ConnectionLost(reason))).ok();
+        self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionLost(reason))).ok();
         self.should_stop.store(true, SeqCst);
     }
 }
@@ -240,6 +240,7 @@ impl Client {
 
                 if transfer.should_stop() {break}
 
+                mem::drop(transfer);
                 sleep(sleep_duration);
             }
         });
@@ -261,6 +262,10 @@ impl TransferClient for Client {
         return &self.client_tx
     }
 
+    fn get_server_transmitter(&self) -> &Sender<ReceiveMessage> {
+        return &self.server_tx
+    }
+
     fn get_receiver(&self) -> &Receiver<ReceiveMessage> {
         return &self.server_rx
     }
@@ -278,6 +283,6 @@ impl TransferClient for Client {
 
     fn stop(&mut self, reason: String) {
         self.should_stop.store(true, SeqCst);
-        self.server_tx.send(ReceiveMessage::Event(Event::ConnectionLost(reason))).ok();
+        self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionLost(reason))).ok();
     }
 }

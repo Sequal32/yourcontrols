@@ -27,6 +27,7 @@ pub enum AppMessage {
     Disconnect,
     Startup,
     RunUpdater,
+    ForceTakeControl,
     UpdateConfig {new_config: simconfig::Config}
 }
 
@@ -93,7 +94,7 @@ impl App {
             )))
 
             .invoke_handler(move |_, arg| {
-                tx.send(serde_json::from_str(arg).unwrap()).ok();
+                tx.try_send(serde_json::from_str(arg).unwrap()).ok();
 
                 Ok(())
             })

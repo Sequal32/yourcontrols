@@ -48,6 +48,8 @@ var joinConnectCloud = document.getElementById("join-connect-cloud")
 var joinIpInput = document.getElementById("join-ip-input")
 var joinPortInput = document.getElementById("join-port-input")
 
+var forceButton = document.getElementById("force-button")
+
 var trying_connection = false
 var is_connected = false
 var is_client = false
@@ -216,11 +218,13 @@ function MessageReceived(data) {
             connectionList.update()
             connectionList.hideStatusText()
             rectangle_status.style.backgroundColor = "cyan"
+            if (!is_client) {forceButton.hidden = true}
             break;
         case "lostcontrol":
             has_control = false
             connectionList.update()
             rectangle_status.style.backgroundColor = "red"
+            if (!is_client) {forceButton.hidden = false}
             break;
         case "overloaded":
             overloaded_alert.hidden = false
@@ -347,6 +351,11 @@ joinPortInput.addEventListener("change", () => {
 
 port_input_host.addEventListener("change", () => {
     joinPortInput.value = port_input_host.value
+})
+
+forceButton.addEventListener("click", () => {
+    invoke({"type": "forceTakeControl"})
+    forceButton.hidden = true
 })
 
 $("#settings-form").submit(e => {

@@ -270,6 +270,7 @@ fn main() {
                                     info!("Server yanked control from us.");
                                     app_interface.lose_control();
                                     control.lose_control();
+                                    definitions.reset_interpolate();
                                 }
                                 info!("{} is now in control.", to);
                                 app_interface.set_incontrol(&to);
@@ -286,14 +287,15 @@ fn main() {
                             if control.has_control() {
                                 client.update(definitions.get_all_current());
                             }
+
+                            app_interface.new_connection(&name);
+
                             if client.is_server() {
                                 app_interface.server_started(client.get_connected_count(), client.get_session_id().as_deref());
                             } else {
                                 // Show as observing on client side, server shouldn't show the message, only the controls
                                 app_interface.set_observing(&name, is_observer);
                             }
-
-                            app_interface.new_connection(&name);
 
                             clients.add_client(name.clone());
                             clients.set_server(&name, is_server);
@@ -486,17 +488,8 @@ fn main() {
                 AppMessage::TransferControl {target} => {
                     if let Some(client) = transfer_client.as_ref() {
                         info!("Giving control to {}", target);
-                        // Send server message
+                        // Send server message, will send a loopback Payloads::TransferControl
                         client.transfer_control(target.clone());
-                        // Frontend who's in control
-                        app_interface.set_incontrol(&target);
-                        app_interface.lose_control();
-                        // Log who's in control
-                        clients.set_client_control(target);
-                        // Freeze aircraft
-                        control.lose_control();
-                        // Clear interpolate
-                        definitions.reset_interpolate();
                     }
                 }
                 AppMessage::SetObserver {target, is_observer} => {
@@ -566,6 +559,14 @@ fn main() {
                     config = new_config;
                     update_rate = calculate_update_rate(config.update_rate);
                     write_configuration(&config);
+                }
+                AppMessage::ForceTakeControl => {
+                    if let Some(client) = transfer_client.as_ref() {
+                        if let Some(client_name) = clients.get_client_in_control() {
+                            //Will send a loopback Payloads::TransferControl
+                            client.take_control(client_name.clone())
+                        }
+                    }
                 }
             },
             Err(_) => {}
