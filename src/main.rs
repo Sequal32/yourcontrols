@@ -391,7 +391,7 @@ fn main() {
                     is_master: control.has_control(),
                     is_init: false,
                 };
-
+                
                 if let Some(values) = definitions.get_need_sync(&permission) {
                     client.update(values);
                 }
@@ -573,7 +573,7 @@ fn main() {
         }
         // Try to connect to simconnect if not connected
         if !connected {
-            connected = conn.connect("Your Control");
+            connected = conn.connect("Your Controls");
             // connected = true;
             if connected {
                 // Display not connected to server message
