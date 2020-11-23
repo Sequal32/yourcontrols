@@ -171,7 +171,15 @@ impl App {
     }
 
     pub fn server_started(&self, client_count: u16, session_id: Option<&str>) {
-        self.invoke("server", Some(&format!("{} clients connected. Session ID: {}", client_count, session_id.unwrap_or(""))));
+        let session_id = session_id.unwrap_or("");
+
+        let connected_string = if session_id == "" {
+            format!("{} clients connected.", client_count)
+        } else {
+            format!("{} clients connected. Session ID: {}", client_count, session_id)
+        };
+
+        self.invoke("server", Some(&connected_string));
     }
 
     pub fn new_connection(&self, name: &str) {
