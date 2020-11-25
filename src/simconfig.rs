@@ -12,7 +12,6 @@ pub struct Config {
     pub port: u16,
     pub ip: String,
     pub name: String,
-    pub last_config: String,
     pub ui_dark_theme: bool,
 }
 
@@ -26,7 +25,6 @@ impl Default for Config {
             check_for_betas: false,
             ip: String::new(),
             name: String::new(),
-            last_config: String::new(),
             ui_dark_theme: true,
         }
     }

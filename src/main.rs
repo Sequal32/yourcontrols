@@ -143,7 +143,7 @@ fn main() {
 
     let mut need_update = false;
 
-    let mut config_to_load = config.last_config.clone();
+    let mut config_to_load = String::new();
     // Helper closures
     // Load defintions
     let load_definitions = |conn: &SimConnector,
@@ -507,9 +507,6 @@ fn main() {
                     // Clear all definitions/events/etc
                     conn.close();
                     connected = false;
-                    // Save current config
-                    config.last_config = config_file_name;
-                    config.write_to_file(CONFIG_FILENAME).ok();
                 }
                 AppMessage::Startup => {
                     // List aircraft
@@ -572,8 +569,8 @@ fn main() {
         }
         // Try to connect to simconnect if not connected
         if !connected {
-            // connected = conn.connect("Your Controls");
-            connected = true;
+            connected = conn.connect("Your Controls");
+            // connected = true;
             if connected {
                 // Display not connected to server message
                 control.on_connected(&conn);
