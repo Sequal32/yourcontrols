@@ -23,7 +23,7 @@ use simconnect::{DispatchResult, SimConnector};
 use simplelog;
 use spin_sleep::sleep;
 use crate::util::get_hostname_ip;
-use std::{net::IpAddr, fs::{read_dir, File}, io, thread, time::Duration, time::Instant};
+use std::{net::IpAddr, fs::{read_dir, File}, io, time::Duration, time::Instant};
 use update::Updater;
 
 use control::*;
@@ -33,7 +33,6 @@ const LOG_FILENAME: &str = "log.txt";
 const CONFIG_FILENAME: &str = "config.json";
 const AIRCRAFT_DEFINITIONS_PATH: &str = "definitions/aircraft/";
 
-const APP_STARTUP_SLEEP_TIME: Duration = Duration::from_millis(150);
 const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
 
 const KEY_HEVENT_PATH: &str = "definitions/resources/hevents.yaml";
@@ -512,7 +511,6 @@ fn main() {
                     config.write_to_file(CONFIG_FILENAME).ok();
                 }
                 AppMessage::Startup => {
-                    thread::sleep(APP_STARTUP_SLEEP_TIME);
                     // List aircraft
                     match get_aircraft_configs() {
                         Ok(configs) => {

@@ -97,14 +97,16 @@ impl TransferStruct {
 
         if let Some(addr) = self.received_address {
             messages::send_message(Payloads::Handshake {session_id: self.session_id.clone()}, addr, sender).ok();
-            // Over retry limit, stop connection
-            if self.retries > MAX_PUNCH_RETRIES {
-                self.should_stop.store(true, SeqCst);
-                self.server_tx.try_send(ReceiveMessage::Event(Event::UnablePunchthrough)).ok();
-            }
             // Reset second timer
             self.retry_timer = Some(Instant::now());
             self.retries += 1;
+
+            // Over retry limit, stop connection
+            if self.retries == MAX_PUNCH_RETRIES {
+                self.should_stop.store(true, SeqCst);
+                self.server_tx.try_send(ReceiveMessage::Event(Event::UnablePunchthrough)).ok();
+            }
+
             info!("Sent packet to {}. Retry #{}", addr, self.retries);
         }
     }

@@ -64,13 +64,14 @@ impl TransferStruct {
             messages::send_message(Payloads::Handshake {
                 session_id: session_id.clone()
             }, session.addr.clone(), &mut sender).ok();
-            // Over retry limit, stop connection
-            if session.retries > MAX_PUNCH_RETRIES {
-                return false
-            }
             // Reset second timer
             session.retries += 1;
             session.timer = Some(Instant::now());
+
+            // Over retry limit, stop connection
+            if session.retries == MAX_PUNCH_RETRIES {
+                return false
+            }
 
             info!("Sent handshake packet to {}. Retry #{}", session.addr, session.retries);
 
