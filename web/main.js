@@ -1,5 +1,6 @@
 var connect_button = document.getElementById('connect-button')
 var server_button = document.getElementById('server-button')
+var settings_button = document.getElementById('settings-button')
 var alert = document.getElementById("alert")
 var version_alert_text = document.getElementById("version-alert-text")
 var overloaded_alert = document.getElementById("overloaded-alert")
@@ -50,7 +51,6 @@ var joinPortInput = document.getElementById("join-port-input")
 
 var forceButton = document.getElementById("force-button")
 
-var trying_connection = false
 var is_connected = false
 var is_client = false
 var on_client = true
@@ -84,11 +84,17 @@ function ResetForm() {
     server_button.updatetext("primary", "Start Server")
 }
 
+function FormButtonsDisabled(disabled) {
+    connect_button.disabled = disabled
+    server_button.disabled = disabled
+    settings_button.disabled = disabled
+}
+
 function OnConnected() {
     connect_button.updatetext("danger", "Disconnect")
     server_button.updatetext("danger", "Stop Server")
     
-    trying_connection = false
+    FormButtonsDisabled(false)
     is_connected = true
 
     port_input_host.disabled = true
@@ -112,7 +118,7 @@ function OnConnected() {
 function OnDisconnect(text) {
     alert.updatetext("danger", text)
     is_connected = false
-    trying_connection = false
+    FormButtonsDisabled(false)
     port_input_host.disabled = false
 
     session_ip4radio.disabled = false
@@ -211,6 +217,7 @@ function MessageReceived(data) {
             break;
         case "error":
             alert.updatetext("danger", data["data"])
+            FormButtonsDisabled(false)
             ResetForm()
             break;
         case "control":
@@ -263,7 +270,7 @@ function MessageReceived(data) {
             break;
         case "version":
             $('#updateModal').modal()
-            version_alert_text.innerHTML = `New Version is available ${data["data"]}`
+            version_alert_text.innerHTML = "New Version is available " + data["data"]
             break;
         case "update_failed":
             updateFailed()
@@ -275,24 +282,26 @@ function MessageReceived(data) {
 }
 
 // Init
-invoke({"type":"startup"})
+window.addEventListener("load", function() {
+    invoke({"type":"startup"})
+})
 
-var setTheme = (isDarkTheme) =>{
+function setTheme(isDarkTheme) {
     if (isDarkTheme) {
         var elements = document.getElementsByClassName("themed")
-        for (const element of elements) {
-            element.classList.add("bg-dark")
-            element.classList.add("text-white")
-            element.classList.remove("bg-white")
-            element.classList.remove("text-black")
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.add("bg-dark")
+            elements[i].classList.add("text-white")
+            elements[i].classList.remove("bg-white")
+            elements[i].classList.remove("text-black")
         }
     } else {
         var elements = document.getElementsByClassName("themed")
-        for (const element of elements) {
-            element.classList.remove("bg-dark")
-            element.classList.remove("text-white")
-            element.classList.add("bg-white")
-            element.classList.add("text-black")
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.remove("bg-dark")
+            elements[i].classList.remove("text-white")
+            elements[i].classList.add("bg-white")
+            elements[i].classList.add("text-black")
         }
     }
 }
@@ -319,46 +328,46 @@ alert.updatetext = function(typeString, text) {
     alert.childNodes[0].nodeValue = text
 }
 
-cloudMethod.addEventListener("change", () => {
+cloudMethod.addEventListener("change", function() {
     port_div.hidden = true
 })
 
-directMethod.addEventListener("change", () => {
+directMethod.addEventListener("change", function() {
     port_div.hidden = false
 })
 
-upnpMethod.addEventListener("change", () => {
+upnpMethod.addEventListener("change", function() {
     port_div.hidden = false
 })
 
-joinConnectCloud.addEventListener("change", () => {
+joinConnectCloud.addEventListener("change", function() {
     sessionDiv.hidden = false
     joinPortDiv.hidden = true
     joinIpDiv.hidden = true
     sessionIpRadios.hidden = false
 })
 
-joinConnectDirect.addEventListener("change", () => {
+joinConnectDirect.addEventListener("change", function() {
     sessionDiv.hidden = true
     joinPortDiv.hidden = false
     joinIpDiv.hidden = false
     sessionIpRadios.hidden = true
 })
 
-joinPortInput.addEventListener("change", () => {
+joinPortInput.addEventListener("change", function() {
     port_input_host.value = joinPortInput.value
 })
 
-port_input_host.addEventListener("change", () => {
+port_input_host.addEventListener("change", function() {
     joinPortInput.value = port_input_host.value
 })
 
-forceButton.addEventListener("click", () => {
+forceButton.addEventListener("click", function() {
     invoke({"type": "forceTakeControl"})
     forceButton.hidden = true
 })
 
-$("#settings-form").submit(e => {
+$("#settings-form").submit(function(e) {
     e.preventDefault()
 
     var newSettings = {}
@@ -368,8 +377,8 @@ $("#settings-form").submit(e => {
     newSettings.buffer_size = ValidateInt(buffer_input) ? parseInt(buffer_input.value) : null
     newSettings.conn_timeout = ValidateInt(timeout_input) ? parseInt(timeout_input.value) : null
     newSettings.update_rate = ValidateInt(update_rate_input) ? parseInt(update_rate_input.value) : null
-    newSettings.ui_dark_theme = theme_selector.checked// == "true"? true : false
-    newSettings.check_for_betas = beta_selector.checked // == "true"? true : false
+    newSettings.ui_dark_theme = theme_selector.checked
+    newSettings.check_for_betas = beta_selector.checked 
 
     for (key in newSettings) {
         if (newSettings[key] === null) {return}
@@ -380,10 +389,9 @@ $("#settings-form").submit(e => {
     invoke({"type": "updateConfig", "new_config": settings})
 })
 
-$("#main-form-host").submit(e => {
+$("#main-form-host").submit(function(e) {
     e.preventDefault()
 
-    if (trying_connection) {return}
     if (is_connected) {invoke({type: "disconnect"}); return}
 
     // Get radio button
@@ -392,7 +400,7 @@ $("#main-form-host").submit(e => {
 
     if (!port_ok || !ValidateName(username)) {return}
 
-    trying_connection = true
+    FormButtonsDisabled(true)
 
     UpdateAircraft(aircraftList.value)
     invoke({
@@ -405,10 +413,9 @@ $("#main-form-host").submit(e => {
 
 })
 
-$("#main-form-join").submit(e => {
+$("#main-form-join").submit(function(e) {
     e.preventDefault()
 
-    if (trying_connection) {return}
     if (is_connected) {invoke({type: "disconnect"}); return}
 
     let validname = ValidateName(username)
@@ -439,7 +446,7 @@ $("#main-form-join").submit(e => {
         data["port"] = parseInt(joinPortInput.value)
     } 
 
-    trying_connection = true
+    FormButtonsDisabled(true)
 
     UpdateAircraft(aircraftList.value)
     invoke(data);
@@ -475,7 +482,13 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 })
 
+function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
 // External IP fetch
-fetch("https://api.ipify.org/")
-    .then((r) => r.text())
-    .then((text) => $("#external-ip").text("Your IP: " + text))
+$("#external-ip").text("Your IP: " + httpGet("https://api.ipify.org/"))
