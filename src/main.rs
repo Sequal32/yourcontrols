@@ -253,6 +253,8 @@ fn main() {
                                     // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
                                     need_update = false;
                                 }
+
+                                last_received_update_time = time;
                             }
                         }
                         Payloads::TransferControl{from, to} => {
@@ -266,7 +268,6 @@ fn main() {
                             // Someone else has controls, if we have controls we let go and listen for their messages
                             } else {
                                 if from == client.get_server_name() {
-                                    info!("Server yanked control from us.");
                                     app_interface.lose_control();
                                     control.lose_control();
                                     definitions.reset_interpolate();
@@ -324,9 +325,9 @@ fn main() {
                                 }
                             }
                         }
-                        Payloads::SetObserver{from, to, is_observer} => {
+                        Payloads::SetObserver{from: _, to, is_observer} => {
                             if to == client.get_server_name() {
-                                info!("Server set us to observing? {}", observing);
+                                info!("Server set us to observing? {}", is_observer);
                                 observing = is_observer;
                                 app_interface.observing(is_observer);
                                 
@@ -494,7 +495,7 @@ fn main() {
                 AppMessage::SetObserver {target, is_observer} => {
                     clients.set_observer(&target, is_observer);
                     if let Some(client) = transfer_client.as_ref() {
-                        info!("Setting {} as observer.", target);
+                        info!("Setting {} as observer. {}", target, is_observer);
                         client.set_observer(target, is_observer);
                     }
                 }
@@ -571,8 +572,8 @@ fn main() {
         }
         // Try to connect to simconnect if not connected
         if !connected {
-            connected = conn.connect("Your Controls");
-            // connected = true;
+            // connected = conn.connect("Your Controls");
+            connected = true;
             if connected {
                 // Display not connected to server message
                 control.on_connected(&conn);

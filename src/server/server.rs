@@ -84,11 +84,11 @@ impl TransferStruct {
 
         match &payload {
             // Unused for server
-            Payloads::InvalidName {  } => {}
-            Payloads::PlayerJoined { .. } => {}
-            Payloads::PlayerLeft { .. } => {}
-            Payloads::SetObserver { .. } => {} 
-            Payloads::PeerEstablished { .. } => {}
+            Payloads::InvalidName {  } |
+            Payloads::PlayerJoined { .. } |
+            Payloads::PlayerLeft { .. } |
+            Payloads::SetObserver { .. } |
+            Payloads::PeerEstablished { .. } => {return}  // No client should be able to send this
             // No processing needed
             Payloads::Update { .. } => {}
             // Used

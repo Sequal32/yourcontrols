@@ -51,7 +51,7 @@ ConnectionList.prototype.add = function(name) {
     this.list[name] = listItemObject
 
     listItemObject.setButtonsVisibility(has_control, is_client)
-    listItemObject.observeButtonClicked()
+    if (!is_client) {listItemObject.observeButtonClicked()}
 }
 
 ConnectionList.prototype.setInControl = function(name) {
