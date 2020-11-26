@@ -133,11 +133,12 @@ pub trait TransferClient {
     // Application specific functions
     fn stop(&mut self, reason: String);
 
-    fn update(&self, data: AllNeedSync) {
+    fn update(&self, data: AllNeedSync, is_unreliable: bool) {
         self.get_transmitter().try_send(Payloads::Update {
             data,
             time: get_seconds(),
-            from: self.get_server_name().to_string()
+            from: self.get_server_name().to_string(),
+            is_unreliable
         }).ok();
     }
 

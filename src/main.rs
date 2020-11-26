@@ -94,6 +94,18 @@ fn start_client(timeout: u64, username: String, session_id: String, isipv6: bool
     }
 }
 
+fn write_update_data(definitions: &mut Definitions, client: &mut Box<dyn TransferClient>, permission: &SyncPermission) {
+    let (unreliable, reliable) = definitions.get_need_sync(permission);
+                
+    if let Some(data) = unreliable {
+        client.update(data, true);
+    }
+
+    if let Some(data) = reliable {
+        client.update(data, false);
+    }
+}
+
 fn main() {
     // Load configuration file
     let mut config = match Config::read_from_file(CONFIG_FILENAME) {
@@ -228,10 +240,10 @@ fn main() {
                         Payloads::HostingReceived { .. } => {}
                         Payloads::AttemptConnection { .. } => {}
                         Payloads::PeerEstablished { .. } => {}
-                        Payloads::Name{..} => {},
+                        Payloads::Name {..} => {},
                         Payloads::InvalidName {..} => {}
                         // Used
-                        Payloads::Update{data, time, from} => {
+                        Payloads::Update {data, time, from, ..} => {
                             if time > last_received_update_time {
                                     // Seamlessly transfer from losing control wihout freezing
                                 if control.has_pending_transfer() {
@@ -285,7 +297,7 @@ fn main() {
                             );
                                 // Send initial aircraft state
                             if control.has_control() {
-                                client.update(definitions.get_all_current());
+                                client.update(definitions.get_all_current(), false);
                             }
 
                             app_interface.new_connection(&name);
@@ -391,10 +403,8 @@ fn main() {
                     is_master: control.has_control(),
                     is_init: false,
                 };
-                
-                if let Some(values) = definitions.get_need_sync(&permission) {
-                    client.update(values);
-                }
+
+                write_update_data(&mut definitions, client, &permission);
 
                 update_rate_instant = Instant::now();
             }

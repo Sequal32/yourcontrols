@@ -286,6 +286,33 @@ impl AllNeedSync {
         self.lvars.clear();
         self.events.clear();
     }
+
+    // Filter the variables
+    pub fn filter<F>(&mut self, filter_fn: F) where F: Fn(&str) -> bool {
+        self.filter_keep(filter_fn);
+    }
+
+    // Filters the variables into a new AllNeedSync, but keeps the ones not filtered in
+    pub fn filter_keep<F>(&mut self, filter_fn: F) -> AllNeedSync where F: Fn(&str) -> bool {
+        let mut filtered = AllNeedSync::new();
+
+        self.avars.retain(|name, var| {
+            if filter_fn(&name) {filtered.avars.insert(name.clone(), var.clone()); return false;}
+            return true;
+        });
+
+        self.lvars.retain(|name, var| {
+            if filter_fn(&name) {filtered.lvars.insert(name.clone(), var.clone()); return false;}
+            return true;
+        });
+
+        self.events.retain(|event| {
+            if filter_fn(&event.event_name) {filtered.events.push(event.clone()); return false;}
+            return true;
+        });
+
+        return filtered;
+    }
 }
 
 enum ActionType {
@@ -803,17 +830,25 @@ impl Definitions {
         }
     }
 
-    pub fn get_need_sync(&mut self, sync_permission: &SyncPermission) -> Option<AllNeedSync> {
-        if self.current_sync.is_empty() {return None}
+    fn filter_all_sync(&self, data: &mut AllNeedSync, sync_permission: &SyncPermission) {
+        data.filter(|name| self.can_sync(name, sync_permission));
+    }
 
-        let mut return_data = AllNeedSync::new();
+    fn split_interpolate(&self, data: &mut AllNeedSync) -> AllNeedSync {
+        data.filter_keep(|name| self.interpolate_vars.contains(name))
+    }
 
-        std::mem::swap(&mut return_data, &mut self.current_sync);
-        return_data = self.filter_all_sync(return_data, sync_permission);
+    pub fn get_need_sync(&mut self, sync_permission: &SyncPermission) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
+        let mut regular = AllNeedSync::new();
+        std::mem::swap(&mut regular, &mut self.current_sync);
 
-        if return_data.is_empty() {return None}
+        self.filter_all_sync(&mut regular, sync_permission);
+        let interpolated = self.split_interpolate(&mut regular);
         
-        return Some(return_data);
+        let interpolated = if interpolated.is_empty() {None} else {Some(interpolated)};
+        let regular = if regular.is_empty() {None} else {Some(regular)};
+
+        return (interpolated, regular);
     }
 
     // Skip checking with self.sync_vars and creating a new hashmap - used for interpolation
@@ -837,27 +872,6 @@ impl Definitions {
             return false
         }
         return true
-    }
-
-    fn filter_all_sync(&self, all_sync: AllNeedSync, sync_permission: &SyncPermission) -> AllNeedSync {
-        let mut return_data = AllNeedSync::new();
-
-        for (name, data) in all_sync.avars.into_iter() {
-            if !self.can_sync(&name, sync_permission) {continue;}
-            return_data.avars.insert(name, data);
-        }
-
-        for (name, data) in all_sync.lvars.into_iter() {
-            if !self.can_sync(&name, sync_permission) {continue;}
-            return_data.lvars.insert(name, data);
-        }
-
-        for data in all_sync.events.into_iter() {
-            if !self.can_sync(&data.event_name, sync_permission) {continue;}
-            return_data.events.push(data);
-        }
-
-        return_data
     }
 
     fn did_write_recently(&self, data_name: &str) -> bool {
@@ -932,7 +946,8 @@ impl Definitions {
     }
 
     pub fn on_receive_data(&mut self, conn: &SimConnector, time: f64, data: AllNeedSync, sync_permission: &SyncPermission, interpolate: bool) {
-        let data = self.filter_all_sync(data, sync_permission);
+        let mut data = data;
+        self.filter_all_sync(&mut data, sync_permission);
 
         self.write_aircraft_data(conn, time, &data.avars, interpolate);
         self.write_local_data(conn, &data.lvars, interpolate);

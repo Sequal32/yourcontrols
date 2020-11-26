@@ -14,7 +14,7 @@ pub enum Payloads {
     InvalidName {},
     PlayerJoined {name: String, in_control: bool, is_server: bool, is_observer: bool},
     PlayerLeft {name: String},
-    Update {data: AllNeedSync, time: f64, from: String},
+    Update {data: AllNeedSync, time: f64, from: String, is_unreliable: bool},
     TransferControl {from: String, to: String},
     SetObserver {from: String, to: String, is_observer: bool},
     // Hole punching payloads
@@ -73,8 +73,8 @@ pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<P
         Payloads::AttemptConnection {..} |
         Payloads::PeerEstablished {..} |
         Payloads::TransferControl {..} => Packet::reliable_unordered(target, payload),
-        Payloads::Handshake {..} |
-        Payloads::Update {..} => Packet::unreliable(target, payload)
+        Payloads::Handshake {..} => Packet::unreliable(target, payload),
+        Payloads::Update {is_unreliable, ..} => if is_unreliable {Packet::unreliable(target, payload)} else {Packet::reliable_sequenced(target, payload, None)}
     };
 
     
