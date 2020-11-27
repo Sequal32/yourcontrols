@@ -1,4 +1,4 @@
-use std::{fmt::Display, net::IpAddr, io};
+use std::{ops::Add, fmt::Display, io, net::IpAddr, ops::Sub};
 use serde::{Serialize, Deserialize};
 
 #[derive(Debug)]
@@ -84,6 +84,43 @@ impl NumberDigits {
     pub fn get(&self, index: usize) -> i32 {
         if index + 1 > self.digits.len() {return 0}
         return self.digits[index]
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+pub struct Vector3 {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64
+}
+
+impl Sub for Vector3 {
+    type Output = Vector3;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Vector3 {
+            x: self.x-rhs.x,
+            y: self.y-rhs.y,
+            z: self.z-rhs.z,
+        }
+    }
+}
+
+impl Add for Vector3 {
+    type Output = Vector3;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Vector3 {
+            x: self.x+rhs.x,
+            y: self.y+rhs.y,
+            z: self.z+rhs.z,
+        }
+    }
+}
+
+impl Default for Vector3 {
+    fn default() -> Self {
+        Vector3 {x: 0.0, y: 0.0, z: 0.0}
     }
 }
 

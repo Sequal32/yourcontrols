@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::hash_map::Entry, fmt::Display, fs::File, collections::HashSet, time::Instant};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, lvars::lvars::LVarResult, util::VarReaderTypes};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::lvars::LVarResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -153,11 +153,11 @@ pub struct EventTriggered {
 }
 
 // Name of aircraft variable and the value of it
-type AVarMap = HashMap<String, VarReaderTypes>;
+pub type AVarMap = HashMap<String, VarReaderTypes>;
 // Name of local variable and the value of it
-type LVarMap = HashMap<String, f64>;
+pub type LVarMap = HashMap<String, f64>;
 // Name of the event the DWORD data associated with it with how many times it got triggered (not a map as the event could've got triggered multiple times before the data could get send)
-type EventData = Vec<EventTriggered>;
+pub type EventData = Vec<EventTriggered>;
 
 #[derive(Debug)]
 enum VarType {
@@ -292,23 +292,27 @@ impl AllNeedSync {
         self.filter_keep(filter_fn);
     }
 
-    // Filters the variables into a new AllNeedSync, but keeps the ones not filtered in
+    // Keeps variables that matches the filter, returns the variables that don't
     pub fn filter_keep<F>(&mut self, filter_fn: F) -> AllNeedSync where F: Fn(&str) -> bool {
         let mut filtered = AllNeedSync::new();
 
         self.avars.retain(|name, var| {
-            if filter_fn(&name) {filtered.avars.insert(name.clone(), var.clone()); return false;}
-            return true;
+            if filter_fn(&name) {return true;}
+            filtered.avars.insert(name.clone(), var.clone());
+            return false;
         });
 
         self.lvars.retain(|name, var| {
-            if filter_fn(&name) {filtered.lvars.insert(name.clone(), var.clone()); return false;}
-            return true;
+            if filter_fn(&name) {return true;}
+            filtered.lvars.insert(name.clone(), var.clone()); 
+            return false;
         });
 
         self.events.retain(|event| {
-            if filter_fn(&event.event_name) {filtered.events.push(event.clone()); return false;}
-            return true;
+            if filter_fn(&event.event_name) {return true;}
+            filtered.events.push(event.clone()); 
+            return false;
+            
         });
 
         return filtered;
@@ -376,10 +380,12 @@ pub struct Definitions {
     // Value to hold the current queue
     current_sync: AllNeedSync,
     last_written: HashMap<String, Instant>,
-    
+    // Correct velocity to local weather
+    velocity_corrector: VelocityCorrector,
+    // Structs that actually do the interpolation
     interpolation_avars: Interpolate,
     interpolation_lvars: Interpolate,
-    // Vars that have interpolation
+    // Vars that need interpolation
     interpolate_vars: HashSet<String>,
 }
 
@@ -417,6 +423,7 @@ impl Definitions {
             interpolation_avars: Interpolate::new(buffer_size),
             interpolation_lvars: Interpolate::new(buffer_size),
             
+            velocity_corrector: VelocityCorrector::new(2),
             
             categories: HashMap::new(),
             periods: HashMap::new(),
@@ -794,6 +801,8 @@ impl Definitions {
 
     // Process changed aircraft variables and update SyncActions related to it
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
+        self.velocity_corrector.process_sim_object_data(data);
+
         if self.avarstransfer.define_id != data.dwDefineID {return}
         
         // Data might be bad/config files don't line up
@@ -839,13 +848,17 @@ impl Definitions {
     }
 
     pub fn get_need_sync(&mut self, sync_permission: &SyncPermission) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
-        let mut regular = AllNeedSync::new();
-        std::mem::swap(&mut regular, &mut self.current_sync);
-
-        self.filter_all_sync(&mut regular, sync_permission);
-        let interpolated = self.split_interpolate(&mut regular);
-        
-        let interpolated = if interpolated.is_empty() {None} else {Some(interpolated)};
+        let mut data = AllNeedSync::new();
+        // Swap queued vars into local var
+        std::mem::swap(&mut data, &mut self.current_sync);
+        // Remove wind componenet from velocity
+        self.velocity_corrector.remove_wind_component(&mut data.avars);
+        // Filter out based on what the client's current permissions are
+        self.filter_all_sync(&mut data, sync_permission);
+        // Split into interpolated vs non interpolated values - used for reliable/unreliable transmissions
+        let regular = self.split_interpolate(&mut data);
+        // Convert into options
+        let interpolated = if data.is_empty() {None} else {Some(data)};
         let regular = if regular.is_empty() {None} else {Some(regular)};
 
         return (interpolated, regular);
@@ -882,11 +895,14 @@ impl Definitions {
         }
     }
 
-    pub fn write_aircraft_data(&mut self, conn: &SimConnector, time: f64, data: &AVarMap, interpolate: bool) {
+    pub fn write_aircraft_data(&mut self, conn: &SimConnector, time: f64, data: &mut AVarMap, interpolate: bool) {
         if data.len() == 0 {return}
 
         let mut to_sync = AVarMap::new();
         to_sync.reserve(data.len());
+
+        // Add wind componenent to velocity
+        self.velocity_corrector.add_wind_component(data);
         
         // Only sync vars that are defined as so
         for (var_name, data) in data {
@@ -949,7 +965,7 @@ impl Definitions {
         let mut data = data;
         self.filter_all_sync(&mut data, sync_permission);
 
-        self.write_aircraft_data(conn, time, &data.avars, interpolate);
+        self.write_aircraft_data(conn, time, &mut data.avars, interpolate);
         self.write_local_data(conn, &data.lvars, interpolate);
         self.write_event_data(conn, &data.events);
     }
@@ -958,6 +974,7 @@ impl Definitions {
     pub fn on_connected(&mut self, conn: &SimConnector) {
         self.interpolation_avars.reset();
 
+        self.velocity_corrector.on_connected(conn);
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.hevents.on_connected(conn);

@@ -12,6 +12,7 @@ mod syncdefs;
 mod update;
 mod util;
 mod varreader;
+mod velocity;
 
 use app::{App, AppMessage, ConnectionMethod};
 use clientmanager::ClientManager;
@@ -205,31 +206,34 @@ fn main() {
 
     loop {
         let timer = Instant::now();
-        let message = conn.get_next_message();
-        // Simconnect message
-        match message {
-            Ok(DispatchResult::SimobjectData(data)) => {
-                definitions.process_sim_object_data(data);
-            }
-            // Exception occured
-            Ok(DispatchResult::Exception(data)) => {
-                warn!("SimConnect exception occurred: {}", unsafe {
-                    data.dwException
-                });
-            }
-            Ok(DispatchResult::Event(data)) => {
-                definitions.process_event_data(data);
-            }
-            Ok(DispatchResult::ClientData(data)) => {
-                definitions.process_client_data(&conn, data);
-            }
-            Ok(DispatchResult::Quit(_)) => {
-                if let Some(client) = transfer_client.as_mut() {
-                    client.stop("Sim closed.".to_string());
+
+        if connected {
+            let message = conn.get_next_message();
+            // Simconnect message
+            match message {
+                Ok(DispatchResult::SimobjectData(data)) => {
+                    definitions.process_sim_object_data(data);
                 }
-            }
-            _ => (),
-        };
+                // Exception occured
+                Ok(DispatchResult::Exception(data)) => {
+                    warn!("SimConnect exception occurred: {}", unsafe {
+                        data.dwException
+                    });
+                }
+                Ok(DispatchResult::Event(data)) => {
+                    definitions.process_event_data(data);
+                }
+                Ok(DispatchResult::ClientData(data)) => {
+                    definitions.process_client_data(&conn, data);
+                }
+                Ok(DispatchResult::Quit(_)) => {
+                    if let Some(client) = transfer_client.as_mut() {
+                        client.stop("Sim closed.".to_string());
+                    }
+                }
+                _ => (),
+            };
+        }
 
         if let Some(client) = transfer_client.as_mut() {
             if let Ok(message) = client.get_next_message() {
@@ -243,8 +247,8 @@ fn main() {
                         Payloads::Name {..} => {},
                         Payloads::InvalidName {..} => {}
                         // Used
-                        Payloads::Update {data, time, from, ..} => {
-                            if time > last_received_update_time {
+                        Payloads::Update {data, time, from, is_unreliable} => {
+                            if !is_unreliable || (is_unreliable && time > last_received_update_time) {
                                     // Seamlessly transfer from losing control wihout freezing
                                 if control.has_pending_transfer() {
                                     control.finalize_transfer(&conn)
@@ -382,6 +386,12 @@ fn main() {
                             should_set_none_client = true;
 
                             app_interface.client_fail(&reason);
+
+                            if connected {
+                                    // Close simconnect connection
+                                conn.close();
+                                connected = false;
+                            }
                         }
                         Event::UnablePunchthrough => {
                             app_interface.client_fail("Could not connect to host! Port forwarding or hamachi is required.")
@@ -514,9 +524,19 @@ fn main() {
                     info!("{} aircraft config selected.", config_file_name);
                     definitions = Definitions::new(config.buffer_size);
                     config_to_load = config_file_name.clone();
-                    // Clear all definitions/events/etc
-                    conn.close();
-                    connected = false;
+
+                    // Connect to simconnect
+
+                    connected = conn.connect("Your Controls");
+                    // connected = true;
+                    if connected {
+                        // Display not connected to server message
+                        control.on_connected(&conn);
+                        info!("Connected to SimConnect.");
+                    } else {
+                        // Display trying to connect message
+                        app_interface.error("Could not connect to SimConnect!");
+                    };
                 }
                 AppMessage::Startup => {
                     // List aircraft
@@ -577,24 +597,11 @@ fn main() {
             },
             Err(_) => {}
         }
-        // Try to connect to simconnect if not connected
-        if !connected {
-            connected = conn.connect("Your Controls");
-            // connected = true;
-            if connected {
-                // Display not connected to server message
-                control.on_connected(&conn);
-                info!("Connected to SimConnect.");
-            } else {
-                // Display trying to connect message
-                app_interface.error("Trying to connect to SimConnect...");
-            };
-        }
 
         if should_set_none_client {
             // Prevent sending any more data
             transfer_client = None;
-            should_set_none_client = false
+            should_set_none_client = false;
         }
 
         if timer.elapsed().as_millis() < 10 {
