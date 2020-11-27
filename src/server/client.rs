@@ -178,6 +178,8 @@ impl Client {
     pub fn run(&mut self, socket: Socket, session_id: String, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), StartClientError> {
         let mut socket = socket;
 
+        info!("Listening on {:?}", socket.local_addr());
+
         let transfer = Arc::new(Mutex::new(
             TransferStruct {
                 // Transfer

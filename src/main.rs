@@ -408,20 +408,6 @@ fn main() {
                 }
             }
 
-            // Handle sync vars
-            let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
-
-            if !observing && can_update {
-                let permission = SyncPermission {
-                    is_server: client.is_server(),
-                    is_master: control.has_control(),
-                    is_init: false,
-                };
-
-                write_update_data(&mut definitions, client, &permission);
-
-                update_rate_instant = Instant::now();
-            }
 
             if !control.has_control() {
                 definitions.step_interpolate(&conn);
@@ -429,9 +415,24 @@ fn main() {
 
             // Handle initial connection delay, allows lvars to be processed
             if let Some(connection_time) = connection_time {
-                if !did_send_name && connection_time.elapsed().as_secs() >= 3 && !client.is_server() {
+                if !did_send_name && !client.is_server() && connection_time.elapsed().as_secs() >= 3 {
                     client.send_name();
                     did_send_name = true;
+                } else {
+                        // Update
+                    let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
+                    
+                    if !observing && can_update {
+                        let permission = SyncPermission {
+                            is_server: client.is_server(),
+                            is_master: control.has_control(),
+                            is_init: false,
+                        };
+        
+                        write_update_data(&mut definitions, client, &permission);
+        
+                        update_rate_instant = Instant::now();
+                    }
                 }
             }
         }
@@ -614,6 +615,7 @@ fn main() {
             transfer_client = None;
             should_set_none_client = false;
             did_send_name = false;
+            connection_time = None;
         }
 
         if timer.elapsed().as_millis() < 10 {

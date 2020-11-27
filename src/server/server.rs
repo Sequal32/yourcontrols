@@ -317,6 +317,8 @@ impl Server {
     fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartClientError> {
         let mut socket = socket;
 
+        info!("Listening on {:?}", socket.local_addr());
+
         let transfer = Arc::new(Mutex::new(TransferStruct {
             // Holepunching
             session_id: String::new(),
