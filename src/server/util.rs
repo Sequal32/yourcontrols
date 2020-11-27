@@ -172,4 +172,10 @@ pub trait TransferClient {
             is_observer: is_observer
         }).ok();
     }
+
+    fn send_name(&self) {
+        self.get_transmitter().try_send(Payloads::Name {
+            name: self.get_server_name().to_string()
+        }).ok();
+    }
 }

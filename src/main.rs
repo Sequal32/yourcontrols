@@ -155,6 +155,9 @@ fn main() {
     let mut last_received_update_time = 0.0;
 
     let mut need_update = false;
+    let mut did_send_name = false;
+
+    let mut connection_time = None;
 
     let mut config_to_load = String::new();
     // Helper closures
@@ -375,6 +378,7 @@ fn main() {
                             
                             last_received_update_time = 0.0;
                             need_update = true;
+                            connection_time = Some(Instant::now());
                         }
                         Event::ConnectionLost(reason) => {
                             info!("Server/Client stopped. Reason: {}", reason);
@@ -421,6 +425,14 @@ fn main() {
 
             if !control.has_control() {
                 definitions.step_interpolate(&conn);
+            }
+
+            // Handle initial connection delay, allows lvars to be processed
+            if let Some(connection_time) = connection_time {
+                if !did_send_name && connection_time.elapsed().as_secs() >= 3 && !client.is_server() {
+                    client.send_name();
+                    did_send_name = true;
+                }
             }
         }
 
@@ -526,7 +538,6 @@ fn main() {
                     config_to_load = config_file_name.clone();
 
                     // Connect to simconnect
-
                     connected = conn.connect("Your Controls");
                     // connected = true;
                     if connected {
@@ -602,6 +613,7 @@ fn main() {
             // Prevent sending any more data
             transfer_client = None;
             should_set_none_client = false;
+            did_send_name = false;
         }
 
         if timer.elapsed().as_millis() < 10 {

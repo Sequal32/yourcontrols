@@ -67,7 +67,6 @@ impl TransferStruct {
                 
                 info!("Established connection with {} on {}!", addr, session_id);
 
-                messages::send_message(Payloads::Name {name: self.name.clone()}, addr, self.get_sender()).ok();
                 self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
             }
             Payloads::AttemptConnection { peer } => {
