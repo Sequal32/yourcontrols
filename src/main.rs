@@ -247,8 +247,9 @@ fn main() {
                         Payloads::HostingReceived { .. } => {}
                         Payloads::AttemptConnection { .. } => {}
                         Payloads::PeerEstablished { .. } => {}
-                        Payloads::Name {..} => {},
+                        Payloads::InvalidVersion {..} => {}
                         Payloads::InvalidName {..} => {}
+                        Payloads::InitHandshake {..} => {}
                         // Used
                         Payloads::Update {data, time, from, is_unreliable} => {
                             if !is_unreliable || (is_unreliable && time > last_received_update_time) {
@@ -416,7 +417,7 @@ fn main() {
             // Handle initial connection delay, allows lvars to be processed
             if let Some(connection_time) = connection_time {
                 if !did_send_name && !client.is_server() && connection_time.elapsed().as_secs() >= 3 {
-                    client.send_name();
+                    client.send_init(updater.get_version().to_string());
                     did_send_name = true;
                 } else {
                         // Update
@@ -452,7 +453,7 @@ fn main() {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        let mut server = Box::new(Server::new(username.clone()));
+                        let mut server = Box::new(Server::new(username.clone(), updater.get_version().to_string()));
 
                         let result = match method {
                             ConnectionMethod::Direct => {

@@ -10,11 +10,12 @@ use crate::definitions::AllNeedSync;
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum Payloads {
-    Name {name: String},
     InvalidName {},
+    InvalidVersion {server_version: String},
     PlayerJoined {name: String, in_control: bool, is_server: bool, is_observer: bool},
     PlayerLeft {name: String},
     Update {data: AllNeedSync, time: f64, from: String, is_unreliable: bool},
+    InitHandshake {name: String, version: String},
     TransferControl {from: String, to: String},
     SetObserver {from: String, to: String, is_observer: bool},
     // Hole punching payloads
@@ -64,8 +65,9 @@ pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<P
     let payload = serde_json::to_string(&message)?.as_bytes().to_vec();
 
     let packet = match message {
-        Payloads::Name {..} | 
+        Payloads::InvalidVersion {..} | 
         Payloads::InvalidName {..} | 
+        Payloads::InitHandshake {..} | 
         Payloads::PlayerJoined {..} | 
         Payloads::PlayerLeft {..} | 
         Payloads::SetObserver {..} |

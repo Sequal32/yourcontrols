@@ -41,7 +41,7 @@ impl TransferStruct {
         match &payload {
             // Unused by client
             Payloads::HostingReceived { .. } => {}
-            Payloads::Name { .. } => {}
+            Payloads::InitHandshake { .. } => {}
             Payloads::PeerEstablished { .. } => {}
             // No futher handling required
             Payloads::TransferControl { ..} => {}
@@ -50,9 +50,11 @@ impl TransferStruct {
             Payloads::PlayerLeft { .. } => {}
             Payloads::Update { .. } => {}
             // Used
+            Payloads::InvalidVersion { server_version } => {
+                self.stop(format!("Server has mismatching version {}", server_version));
+            }
             Payloads::InvalidName { .. } => {
-                info!("{} was already in use, disconnecting.", self.name);
-                self.stop("Name already in use!".to_string());
+                self.stop(format!("{} already in use!", self.name));
             }
             Payloads::Handshake { session_id } => {
                 // Already established connection

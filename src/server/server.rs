@@ -31,6 +31,7 @@ struct TransferStruct {
     should_stop: Arc<AtomicBool>,
     number_connections: Arc<AtomicU16>,
     username: String,
+    version: String,
 }
 
 impl TransferStruct {
@@ -84,7 +85,8 @@ impl TransferStruct {
 
         match &payload {
             // Unused for server
-            Payloads::InvalidName {  } |
+            Payloads::InvalidName { .. } |
+            Payloads::InvalidVersion { .. } |
             Payloads::PlayerJoined { .. } |
             Payloads::PlayerLeft { .. } |
             Payloads::SetObserver { .. } |
@@ -92,7 +94,14 @@ impl TransferStruct {
             // No processing needed
             Payloads::Update { .. } => {}
             // Used
-            Payloads::Name { name } => {
+            Payloads::InitHandshake { name, version } => {
+                // Version check
+                if *version != self.version {
+                    messages::send_message(Payloads::InvalidVersion {
+                        server_version: self.version.clone(),
+                    }, addr, self.get_sender());
+                }
+
                 info!("Client requests name {}", name);
                 // Name already in use by another client
                 let mut invalid_name = *name == self.username;
@@ -246,10 +255,11 @@ pub struct Server {
     server_rx: Receiver<ReceiveMessage>,
 
     username: String,
+    version: String
 }
 
 impl Server {
-    pub fn new(username: String) -> Self  {
+    pub fn new(username: String, version: String) -> Self  {
         let (client_tx, client_rx) = unbounded();
         let (server_tx, server_rx) = unbounded();
 
@@ -258,7 +268,8 @@ impl Server {
             should_stop: Arc::new(AtomicBool::new(false)),
             client_rx, client_tx, server_rx, server_tx,
             transfer: None,
-            username: username
+            username: username,
+            version
         }
     }
 
@@ -334,7 +345,8 @@ impl Server {
             clients: HashMap::new(),
             should_stop: self.should_stop.clone(),
             number_connections: self.number_connections.clone(),
-            username: self.username.clone()
+            username: self.username.clone(),
+            version: self.version.clone()
         }));
         let transfer_thread_clone = transfer.clone();
 
