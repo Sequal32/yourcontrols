@@ -24,7 +24,6 @@ var beta_selector = document.getElementById("beta-select")
 
 var update_rate_input = document.getElementById("update-rate-input")
 var timeout_input = document.getElementById("timeout-input")
-var buffer_input = document.getElementById("buffer-input")
 
 var name_div = document.getElementById("name-div")
 var port_div = document.getElementById("port-div")
@@ -178,7 +177,6 @@ function LoadSettings(newSettings) {
     joinIpInput.value = newSettings.ip
     
     username.value = newSettings.name
-    buffer_input.value = newSettings.buffer_size
     timeout_input.value = newSettings.conn_timeout
     update_rate_input.value = newSettings.update_rate
     theme_selector.checked = newSettings.ui_dark_theme
@@ -372,7 +370,6 @@ $("#settings-form").submit(function(e) {
     var newSettings = {}
 
     newSettings.name = username.value
-    newSettings.buffer_size = ValidateInt(buffer_input) ? parseInt(buffer_input.value) : null
     newSettings.conn_timeout = ValidateInt(timeout_input) ? parseInt(timeout_input.value) : null
     newSettings.update_rate = ValidateInt(update_rate_input) ? parseInt(update_rate_input.value) : null
     newSettings.ui_dark_theme = theme_selector.checked

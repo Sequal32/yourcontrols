@@ -408,7 +408,7 @@ fn get_real_var_name(var_name: &str) -> String {
 }
 
 impl Definitions {
-    pub fn new(buffer_size: usize) -> Self {
+    pub fn new() -> Self {
         Self {
             mappings: HashMap::new(),
             events: Events::new(1),
@@ -420,8 +420,8 @@ impl Definitions {
 
             current_sync: AllNeedSync::new(),
 
-            interpolation_avars: Interpolate::new(buffer_size),
-            interpolation_lvars: Interpolate::new(buffer_size),
+            interpolation_avars: Interpolate::new(),
+            interpolation_lvars: Interpolate::new(),
             
             velocity_corrector: VelocityCorrector::new(2),
             

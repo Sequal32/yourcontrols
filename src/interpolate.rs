@@ -7,21 +7,23 @@ use crate::{util::VarReaderTypes, varreader::SimValue};
 const DEFAULT_INTERPOLATION_TIME: f64 = 0.2;
 const SKIP_TIME_THRESHOLD: f64 = 2.0;
 
+const SPEED_UP_AT_BUFFER_SIZE_OF: usize = 3;
+
 struct InterpolationData {
+    overshoot: f64,
     current_value: f64,
     from_packet: Packet,
     to_packet: Packet,
     time: Instant,
     interpolation_time: f64,
-    options: InterpolateOptions,
     done: bool
 }
 
 #[derive(Deserialize, Clone)]
 #[serde(default)]
 pub struct InterpolateOptions {
-    overshoot: f64, // How many seconds to interpolate for after interpolation_time has been reached
     time: f64,
+    to_buffer: usize,
     wrap360: bool,
     wrap180: bool,
     wrap90: bool
@@ -30,7 +32,7 @@ pub struct InterpolateOptions {
 impl Default for InterpolateOptions {
     fn default() -> Self {
         Self {
-            overshoot: 0.0,
+            to_buffer: 0,
             time: DEFAULT_INTERPOLATION_TIME,
             wrap360: false,
             wrap180: false,
@@ -49,16 +51,14 @@ pub struct Interpolate {
     current_data: HashMap<String, InterpolationData>,
     data_queue: HashMap<String, VecDeque<Packet>>,
     options: HashMap<String, InterpolateOptions>,
-    buffer_size: usize
 }
 
 impl Interpolate {
-    pub fn new(buffer_size: usize) -> Self {
+    pub fn new() -> Self {
         Self {
             current_data: HashMap::new(),
             data_queue: HashMap::new(),
             options: HashMap::new(),
-            buffer_size
         }
     }
 
@@ -71,9 +71,9 @@ impl Interpolate {
 
         } else {
 
-            let options = match self.options.get(key) {
-                Some(o) => o.clone(),
-                None => {InterpolateOptions::default()}
+            let interpolation_time = match self.options.get(key) {
+                Some(o) => o.time,
+                None => DEFAULT_INTERPOLATION_TIME
             };
 
             self.current_data.insert(key.to_string(), InterpolationData {
@@ -81,9 +81,9 @@ impl Interpolate {
                 current_value: value,
                 to_packet: packet,
                 time: Instant::now(),
-                interpolation_time: options.time,
-                options: options,
-                done: false
+                interpolation_time,
+                done: false,
+                overshoot: 0.0,
             });
 
             self.data_queue.insert(key.to_string(), VecDeque::new());
@@ -107,10 +107,19 @@ impl Interpolate {
                     data.time = Instant::now();
                     // Do not interpolate if time exceeds threshold, as aircraft will just stand still interpolating at a very slow rate
                     data.done = interpolation_time > SKIP_TIME_THRESHOLD;
+                    //
+                    let buffer_size;
 
-                    if queue.len() > self.buffer_size {
+                    if let Some(options) = self.options.get(key) {
+                        if queue.len() < options.to_buffer {continue}
+                        buffer_size = options.to_buffer;
+                    } else {
+                        buffer_size = 0;
+                    }
+                    //
+                    if queue.len() > buffer_size && buffer_size > 0 {
                         // Will make next interpolation faster depending on how many packets over the buffer size it is.
-                        data.interpolation_time = interpolation_time * (self.buffer_size as f64)/((queue.len() - self.buffer_size) as f64) * 0.5;
+                        data.interpolation_time = interpolation_time * (buffer_size as f64)/((queue.len() - buffer_size) as f64) * 0.5;
                     } else {
                         data.interpolation_time = interpolation_time;
                     }
@@ -118,25 +127,16 @@ impl Interpolate {
                 continue
             }
 
-            let alpha = data.time.elapsed().as_secs_f64()/data.interpolation_time;
-            let max_alpha;
-            // Determine if we should be interpolating
-            let options = self.options.get(key);
-            if let Some(_options) = options {
-                // TODO: overshoot logic
-                max_alpha = 1.0;
-            } else {
-                max_alpha = 1.0;
-            }
-
+            let alpha = data.time.elapsed().as_secs_f64()/data.interpolation_time + data.overshoot;
             
             // If we're done interpolation, do not interpolate anymore until the next request
-            if alpha >= max_alpha {
+            if alpha >= 1.0 {
                 data.done = true;
                 data.current_value = data.to_packet.value;
+                data.overshoot = alpha - 1.0;
             } else {
                 // Interpolate according to options
-                if let Some(options) = options {
+                if let Some(options) = self.options.get(key) {
                     if options.wrap360 {
                         data.current_value = interpolate_f64_degrees(data.from_packet.value, data.to_packet.value, alpha);
                     } else if options.wrap180 {

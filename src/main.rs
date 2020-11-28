@@ -129,7 +129,7 @@ fn main() {
 
     let mut conn = simconnect::SimConnector::new();
 
-    let mut definitions = Definitions::new(config.buffer_size);
+    let mut definitions = Definitions::new();
     let mut control = Control::new();
     let mut clients = ClientManager::new();
 
@@ -536,7 +536,7 @@ fn main() {
                 AppMessage::LoadAircraft {config_file_name} => {
                     // Load config
                     info!("{} aircraft config selected.", config_file_name);
-                    definitions = Definitions::new(config.buffer_size);
+                    definitions = Definitions::new();
                     config_to_load = config_file_name.clone();
 
                     // Connect to simconnect
