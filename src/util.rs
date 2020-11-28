@@ -1,4 +1,4 @@
-use std::{ops::Add, fmt::Display, io, net::IpAddr, ops::Sub};
+use std::{fmt::Display, io, net::IpAddr, ops::Add, path::PathBuf, ops::Sub};
 use serde::{Serialize, Deserialize};
 
 #[derive(Debug)]
@@ -27,6 +27,15 @@ pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, HostnameL
         Some(ip) => Ok(ip),
         None => Err(HostnameLookupError::WrongIpVersion)
     }
+}
+
+pub fn resolve_relative_path(relative_path: &str) -> PathBuf {
+    let mut path = std::env::current_exe().unwrap();
+    // Don't need exe path
+    path.pop();
+    // Push further path
+    path.push(relative_path);
+    return path;
 }
 
 #[derive(Eq, PartialEq)]

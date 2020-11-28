@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::{fs::File, path::PathBuf};
 
 use super::util::{LoadError};
 use bimap::BiHashMap;
@@ -6,7 +6,7 @@ use bimap::BiHashMap;
 const INTERACTION_EVENT_ID: u32 = 10000;
 const BUTTON_EVENT_ID: u32 = 10001;
 
-pub fn load_mapping_config(path: &str) -> Result<BiHashMap<String, u32>, LoadError> {
+pub fn load_mapping_config(path: &PathBuf) -> Result<BiHashMap<String, u32>, LoadError> {
     let file = match File::open(path) {
         Ok(f) => f,
         Err(e) => return Err(LoadError::FileError(e))
@@ -35,7 +35,7 @@ impl HEvents {
         }
     }
 
-    pub fn load_from_config(&mut self, key_path: &str, button_path: &str) -> Result<(), LoadError> {
+    pub fn load_from_config(&mut self, key_path: &PathBuf, button_path: &PathBuf) -> Result<(), LoadError> {
         self.key_mapping = load_mapping_config(key_path)?;
         self.button_mapping = load_mapping_config(button_path)?;
 

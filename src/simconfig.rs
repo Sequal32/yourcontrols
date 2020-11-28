@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json;
-use std::fs::File;
+use std::{fs::File, path::PathBuf};
 use std::io::{BufReader, Write};
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -29,8 +29,8 @@ impl Default for Config {
 }
 
 impl Config {
-    pub fn write_to_file(&self, filename: &str) -> Result<(), &str> {
-        let mut file = match File::create(filename) {
+    pub fn write_to_file(&self, path: &PathBuf) -> Result<(), &str> {
+        let mut file = match File::create(path) {
             Ok(file) => file,
             Err(_) => {
                 return Err("Could not open configuration file.");
@@ -46,7 +46,7 @@ impl Config {
         }
     }
 
-    pub fn read_from_file(filename: &str) -> Result<Self, &str> {
+    pub fn read_from_file(filename: &PathBuf) -> Result<Self, &str> {
         let file = match File::open(filename) {
             Ok(file) => file,
             Err(_) => {

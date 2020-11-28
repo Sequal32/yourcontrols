@@ -23,7 +23,7 @@ use simconfig::Config;
 use simconnect::{DispatchResult, SimConnector};
 use simplelog;
 use spin_sleep::sleep;
-use crate::util::get_hostname_ip;
+use crate::util::{get_hostname_ip, resolve_relative_path};
 use std::{net::IpAddr, fs::{read_dir, File}, io, time::Duration, time::Instant};
 use update::Updater;
 
@@ -42,7 +42,7 @@ const BUTTON_HEVENT_PATH: &str = "definitions/resources/touchscreenkeys.yaml";
 fn get_aircraft_configs() -> io::Result<Vec<String>> {
     let mut filenames = Vec::new();
 
-    for file in read_dir(AIRCRAFT_DEFINITIONS_PATH)? {
+    for file in read_dir(&resolve_relative_path(AIRCRAFT_DEFINITIONS_PATH))? {
         let file = file?;
         filenames.push(
             file.path()
@@ -58,7 +58,7 @@ fn get_aircraft_configs() -> io::Result<Vec<String>> {
 }
 
 fn write_configuration(config: &Config) {
-    match config.write_to_file(CONFIG_FILENAME) {
+    match config.write_to_file(&resolve_relative_path(CONFIG_FILENAME)) {
         Ok(_) => {},
         Err(e) => error!("Could not write configuration file! Reason: {}", e)
     };
@@ -109,7 +109,7 @@ fn write_update_data(definitions: &mut Definitions, client: &mut Box<dyn Transfe
 
 fn main() {
     // Load configuration file
-    let mut config = match Config::read_from_file(CONFIG_FILENAME) {
+    let mut config = match Config::read_from_file(&resolve_relative_path(CONFIG_FILENAME)) {
         Ok(config) => config,
         Err(e) => {
             warn!("Could not open config. Using default values. Reason: {}", e);
@@ -123,7 +123,7 @@ fn main() {
     simplelog::WriteLogger::init(
         simplelog::LevelFilter::Info,
         simplelog::Config::default(),
-        File::create(LOG_FILENAME).unwrap(),
+        File::create(resolve_relative_path(LOG_FILENAME)).unwrap(),
     )
     .ok();
 
@@ -167,7 +167,7 @@ fn main() {
                             config_to_load: &mut String|
      -> bool {
         // Load H Events
-        match definitions.load_h_events(KEY_HEVENT_PATH, BUTTON_HEVENT_PATH) {
+        match definitions.load_h_events(&resolve_relative_path(KEY_HEVENT_PATH), &resolve_relative_path(BUTTON_HEVENT_PATH)) {
             Ok(_) => info!(
                 "Loaded and mapped {} H: events.",
                 definitions.get_number_hevents()
@@ -178,7 +178,10 @@ fn main() {
             }
         };
         // Load aircraft configuration
-        match definitions.load_config(&format!("{}{}", AIRCRAFT_DEFINITIONS_PATH, config_to_load)) {
+        let mut path = resolve_relative_path(AIRCRAFT_DEFINITIONS_PATH);
+        path.push(config_to_load.clone());
+
+        match definitions.load_config(&path) {
             Ok(_) => {
                 info!(
                     "Loaded and mapped {} aircraft vars, {} local vars, and {} events",
@@ -548,7 +551,7 @@ fn main() {
                         info!("Connected to SimConnect.");
                     } else {
                         // Display trying to connect message
-                        app_interface.error("Could not connect to SimConnect!");
+                        app_interface.error("Could not connect to SimConnect! Is the sim running?");
                     };
                 }
                 AppMessage::Startup => {

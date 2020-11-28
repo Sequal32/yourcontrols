@@ -3,8 +3,8 @@ use serde_yaml::{self, Value};
 use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
-use std::{collections::HashMap, collections::hash_map::Entry, fmt::Display, fs::File, collections::HashSet, time::Instant};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::lvars::LVarResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector};
+use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant, path::PathBuf};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::lvars::LVarResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector, util::resolve_relative_path};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -691,7 +691,7 @@ impl Definitions {
                 for include_file in value {
                     let file_name = include_file.as_str().unwrap();
 
-                    match self.load_config(file_name) {
+                    match self.load_config(&resolve_relative_path(file_name)) {
                         Ok(_) => (),
                         Err(e) => {
                             if let ConfigLoadError::ParseError(e, _) = e {
@@ -712,7 +712,7 @@ impl Definitions {
     }
 
     // Load yaml from file
-    pub fn load_config(&mut self, path: &str) -> Result<(), ConfigLoadError> {
+    pub fn load_config(&mut self, path: &PathBuf) -> Result<(), ConfigLoadError> {
         let file = match File::open(path) {
             Ok(f) => f,
             Err(_) => return Err(ConfigLoadError::FileError)
@@ -720,16 +720,16 @@ impl Definitions {
 
         let yaml: IndexMap<String, Vec<Value>> = match serde_yaml::from_reader(file) {
             Ok(y) => y,
-            Err(e) => return Err(ConfigLoadError::YamlError(e, path.to_string()))
+            Err(e) => return Err(ConfigLoadError::YamlError(e, path.to_string_lossy().into_owned()))
         };
 
         match self.parse_yaml(yaml) {
             Ok(_) => Ok(()),
-            Err(e) => Err(ConfigLoadError::ParseError(e, path.to_string()))
+            Err(e) => Err(ConfigLoadError::ParseError(e, path.to_string_lossy().into_owned()))
         }
     }
 
-    pub fn load_h_events(&mut self, key_path: &str, button_path: &str) -> Result<(), LoadError> {
+    pub fn load_h_events(&mut self, key_path: &PathBuf, button_path: &PathBuf) -> Result<(), LoadError> {
         self.hevents.load_from_config(key_path, button_path)
     }
 
