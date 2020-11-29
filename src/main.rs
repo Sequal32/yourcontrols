@@ -60,7 +60,7 @@ fn get_aircraft_configs() -> io::Result<Vec<String>> {
 fn write_configuration(config: &Config) {
     match config.write_to_file(&resolve_relative_path(CONFIG_FILENAME)) {
         Ok(_) => {},
-        Err(e) => error!("Could not write configuration file! Reason: {}", e)
+        Err(e) => error!("[PROGRAM] Could not write configuration file! Reason: {}", e)
     };
 }
 
@@ -112,7 +112,7 @@ fn main() {
     let mut config = match Config::read_from_file(&resolve_relative_path(CONFIG_FILENAME)) {
         Ok(config) => config,
         Err(e) => {
-            warn!("Could not open config. Using default values. Reason: {}", e);
+            warn!("[PROGRAM] Could not open config. Using default values. Reason: {}", e);
 
             let config = Config::default();
             write_configuration(&config);
@@ -168,12 +168,9 @@ fn main() {
      -> bool {
         // Load H Events
         match definitions.load_h_events(&resolve_relative_path(KEY_HEVENT_PATH), &resolve_relative_path(BUTTON_HEVENT_PATH)) {
-            Ok(_) => info!(
-                "Loaded and mapped {} H: events.",
-                definitions.get_number_hevents()
-            ),
+            Ok(_) => info!("[DEFINITIONS] Loaded and mapped {} H: events.",definitions.get_number_hevents()),
             Err(e) => {
-                log::error!("Could not load H: event files: {}", e);
+                log::error!("[DEFINITIONS] Could not load H: event files: {}", e);
                 return false;
             }
         };
@@ -183,20 +180,11 @@ fn main() {
 
         match definitions.load_config(&path) {
             Ok(_) => {
-                info!(
-                    "Loaded and mapped {} aircraft vars, {} local vars, and {} events",
-                    definitions.get_number_avars(),
-                    definitions.get_number_lvars(),
-                    definitions.get_number_events()
-                );
+                info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
                 definitions.on_connected(&conn)
             }
             Err(e) => {
-                log::error!(
-                    "Could not load configuration file {}: {}",
-                    config_to_load,
-                    e
-                );
+                log::error!("[PROGRAM] Could not load configuration file {}: {}", config_to_load,e);
                 // Prevent server/client from starting as config could not be laoded.
                 *config_to_load = String::new();
                 return false;
@@ -205,7 +193,7 @@ fn main() {
 
         definitions.reset_interpolate();
 
-        info!("{} loaded successfully.", config_to_load);
+        info!("[DEFINITIONS] {} loaded successfully.", config_to_load);
 
         return true;
     };
@@ -222,7 +210,7 @@ fn main() {
                 }
                 // Exception occured
                 Ok(DispatchResult::Exception(data)) => {
-                    warn!("SimConnect exception occurred: {}", unsafe {
+                    warn!("[SIM] SimConnect exception occurred: {}", unsafe {
                         data.dwException
                     });
                 }
@@ -255,6 +243,9 @@ fn main() {
                         Payloads::InitHandshake {..} => {}
                         // Used
                         Payloads::Update {data, time, from, is_unreliable} => {
+                            // Not non high updating packets for debugging
+                            if !is_unreliable {info!("[PACKET] {:?}", data)}
+
                             if !is_unreliable || (is_unreliable && time > last_received_update_time) {
                                     // Seamlessly transfer from losing control wihout freezing
                                 if control.has_pending_transfer() {
@@ -284,7 +275,7 @@ fn main() {
                             // Someone is transferring controls to us
                             definitions.clear_sync();
                             if to == client.get_server_name() {
-                                info!("Taking control from {}", from);
+                                info!("[CONTROL] Taking control from {}", from);
                                 control.take_control(&conn);
                                 app_interface.gain_control();
                                 clients.set_no_control();
@@ -295,17 +286,14 @@ fn main() {
                                     control.lose_control();
                                     definitions.reset_interpolate();
                                 }
-                                info!("{} is now in control.", to);
+                                info!("[CONTROL] {} is now in control.", to);
                                 app_interface.set_incontrol(&to);
                                 clients.set_client_control(to);
                             }
                             last_received_update_time = 0.0;
                         }
                         Payloads::PlayerJoined{name, in_control, is_observer, is_server} => {
-                            info!(
-                                "{} connected. In control: {}, observing: {}, server: {}",
-                                name, in_control, is_observer, is_server
-                            );
+                            info!("[NETWORK] {} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
                                 // Send initial aircraft state
                             if control.has_control() {
                                 client.update(definitions.get_all_current(), false);
@@ -329,7 +317,7 @@ fn main() {
                             }
                         }
                         Payloads::PlayerLeft{name} => {
-                            info!("{} lost connection.", name);
+                            info!("[NETWORK] {} lost connection.", name);
                             if client.is_server() {
                                 app_interface.server_started(client.get_connected_count(), client.get_session_id().as_deref());
                             }
@@ -340,7 +328,7 @@ fn main() {
                                 clients.set_no_control();
                                 // Transfer control to myself if I'm server
                                 if client.is_server() {
-                                    info!("{} had control, taking control back.", name);
+                                    info!("[CONTROL] {} had control, taking control back.", name);
                                     app_interface.gain_control();
 
                                     control.take_control(&conn);
@@ -350,13 +338,13 @@ fn main() {
                         }
                         Payloads::SetObserver{from: _, to, is_observer} => {
                             if to == client.get_server_name() {
-                                info!("Server set us to observing? {}", is_observer);
+                                info!("[CONTROL] Server set us to observing? {}", is_observer);
                                 observing = is_observer;
                                 app_interface.observing(is_observer);
                                 
                                 if !observing {definitions.clear_sync();}
                             } else {
-                                info!("{} is observing? {}", to, is_observer);
+                                info!("[CONTROL] {} is observing? {}", to, is_observer);
                                 clients.set_observer(&to, is_observer);
                                 app_interface.set_observing(&to, is_observer);
                             }
@@ -385,7 +373,7 @@ fn main() {
                             connection_time = Some(Instant::now());
                         }
                         Event::ConnectionLost(reason) => {
-                            info!("Server/Client stopped. Reason: {}", reason);
+                            info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
                                 // TAKE BACK CONTROL
                             control.take_control(&conn);
 
@@ -474,11 +462,11 @@ fn main() {
                             Ok(_) => {
                                 // Assign server as transfer client
                                 transfer_client = Some(server);
-                                info!("Server started");
+                                info!("[NETWORK] Server started");
                             }
                             Err(e) => {
                                 app_interface.server_fail(e.to_string().as_str());
-                                info!("Could not start server! Reason: {}", e);
+                                info!("[NETWORK] Could not start server! Reason: {}", e);
                             }
                         }
 
@@ -501,12 +489,12 @@ fn main() {
 
                         match start_client(config.conn_timeout, username.clone(), session_id, isipv6, ip, hostname, port, method) {
                             Ok(client) => {
-                                info!("Client started.");
+                                info!("[NETWORK] Client started.");
                                 transfer_client = Some(Box::new(client));
                             }
                             Err(e) => {
                                 app_interface.client_fail(e.to_string().as_str());
-                                error!("Could not start client! Reason: {}", e);
+                                error!("[NETWORK] Could not start client! Reason: {}", e);
                             }
                         }
 
@@ -517,14 +505,14 @@ fn main() {
                     }
                 }
                 AppMessage::Disconnect => {
-                    info!("Request to disconnect.");
+                    info!("[NETWORK] Request to disconnect.");
                     if let Some(client) = transfer_client.as_mut() {
                         client.stop("Stopped.".to_string());
                     }
                 }
                 AppMessage::TransferControl {target} => {
                     if let Some(client) = transfer_client.as_ref() {
-                        info!("Giving control to {}", target);
+                        info!("[CONTROL] Giving control to {}", target);
                         // Send server message, will send a loopback Payloads::TransferControl
                         client.transfer_control(target.clone());
                     }
@@ -532,13 +520,13 @@ fn main() {
                 AppMessage::SetObserver {target, is_observer} => {
                     clients.set_observer(&target, is_observer);
                     if let Some(client) = transfer_client.as_ref() {
-                        info!("Setting {} as observer. {}", target, is_observer);
+                        info!("[CONTROL] Setting {} as observer. {}", target, is_observer);
                         client.set_observer(target, is_observer);
                     }
                 }
                 AppMessage::LoadAircraft {config_file_name} => {
                     // Load config
-                    info!("{} aircraft config selected.", config_file_name);
+                    info!("[DEFINITIONS] {} aircraft config selected.", config_file_name);
                     definitions = Definitions::new();
                     config_to_load = config_file_name.clone();
 
@@ -548,7 +536,7 @@ fn main() {
                     if connected {
                         // Display not connected to server message
                         control.on_connected(&conn);
-                        info!("Connected to SimConnect.");
+                        info!("[SIM] Connected to SimConnect.");
                     } else {
                         // Display trying to connect message
                         app_interface.error("Could not connect to SimConnect! Is the sim running?");
@@ -558,7 +546,7 @@ fn main() {
                     // List aircraft
                     match get_aircraft_configs() {
                         Ok(configs) => {
-                            info!("Found {} configuration file(s).", configs.len());
+                            info!("[DEFINITIONS] Found {} configuration file(s).", configs.len());
 
                             for aircraft_config in configs {
                                 app_interface.add_aircraft(&aircraft_config);
@@ -575,12 +563,9 @@ fn main() {
                         {
                             app_interface.version(&newest_version.to_string());
                         }
-                        info!(
-                            "Version {} in use, {} is newest.",
-                            app_version, newest_version
-                        )
+                        info!("[UPDATER] Version {} in use, {} is newest.", app_version, newest_version)
                     } else {
-                        info!("Version {} in use.", app_version)
+                        info!("[UPDATER] Version {} in use.", app_version)
                     }
                     
                     app_interface.send_config(&config.get_json_string());
@@ -592,7 +577,7 @@ fn main() {
                             installer_spawned = true
                         }
                         Err(e) => {
-                            error!("Downloading installer failed. Reason: {}", e);
+                            error!("[UPDATER] Downloading installer failed. Reason: {}", e);
                             app_interface.update_failed();
                         }
                     };

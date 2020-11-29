@@ -67,7 +67,7 @@ impl TransferStruct {
                 // Established connection with host
                 self.connected = true;
                 
-                info!("Established connection with {} on {}!", addr, session_id);
+                info!("[NETWORK] Established connection with {} on {}!", addr, session_id);
 
                 self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
             }
@@ -108,7 +108,7 @@ impl TransferStruct {
                 self.server_tx.try_send(ReceiveMessage::Event(Event::UnablePunchthrough)).ok();
             }
 
-            info!("Sent packet to {}. Retry #{}", addr, self.retries);
+            info!("[NETWORK] Sent packet to {}. Retry #{}", addr, self.retries);
         }
     }
 
@@ -180,7 +180,7 @@ impl Client {
     pub fn run(&mut self, socket: Socket, session_id: String, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), StartClientError> {
         let mut socket = socket;
 
-        info!("Listening on {:?}", socket.local_addr());
+        info!("[NETWORK] Listening on {:?}", socket.local_addr());
 
         let transfer = Arc::new(Mutex::new(
             TransferStruct {

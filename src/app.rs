@@ -46,8 +46,6 @@ pub struct App {
 
 impl App {
     pub fn setup(title: String) -> Self {
-        info!("Creating webview...");
-        
         let (tx, rx) = unbounded();
 
         let mut logo = vec![];
@@ -57,8 +55,6 @@ impl App {
         let handle_clone = handle.clone();
         let exited = Arc::new(AtomicBool::new(false));
         let exited_clone = exited.clone();
-
-        info!("Spawning webview thread...");
 
         thread::spawn(move || {
             let webview = web_view::builder()
@@ -107,8 +103,6 @@ impl App {
             let mut handle = handle_clone.lock().unwrap();
             *handle = Some(webview.handle());
             std::mem::drop(handle);
-
-            info!("Running webview thread...");
 
             webview.run().ok();
             exited_clone.store(true, SeqCst);

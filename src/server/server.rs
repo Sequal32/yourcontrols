@@ -39,6 +39,9 @@ impl TransferStruct {
         &mut self.sender
     }
 
+    fn send_message(&mut self, payload: Payloads, target: SocketAddr) {
+        messages::send_message(payload, target, self.get_sender()).ok();
+    }
     
     fn send_to_all(&mut self, except: Option<&SocketAddr>, payload: Payloads) {
         let mut sender = self.get_sender().clone();
@@ -74,7 +77,7 @@ impl TransferStruct {
                 return false
             }
 
-            info!("Sent handshake packet to {}. Retry #{}", session.addr, session.retries);
+            info!("[NETWORK] Sent handshake packet to {}. Retry #{}", session.addr, session.retries);
 
             return true;
         });
@@ -97,12 +100,12 @@ impl TransferStruct {
             Payloads::InitHandshake { name, version } => {
                 // Version check
                 if *version != self.version {
-                    messages::send_message(Payloads::InvalidVersion {
+                    self.send_message(Payloads::InvalidVersion {
                         server_version: self.version.clone(),
-                    }, addr, self.get_sender());
+                    }, addr);
                 }
 
-                info!("Client requests name {}", name);
+                info!("[NETWORK] Client requests name {}", name);
                 // Name already in use by another client
                 let mut invalid_name = *name == self.username;
                 // Lookup name if it exists already
@@ -113,17 +116,22 @@ impl TransferStruct {
                 }
 
                 if invalid_name {
-                    messages::send_message(Payloads::InvalidName{}, addr, self.get_sender()).ok();
+                    self.send_message(Payloads::InvalidName{}, addr);
                     return;
                 }
 
                 // Send all connected clients to new player
                 let mut sender = self.get_sender().clone();
                 for (name, client) in self.clients.iter() {
-                    messages::send_message(Payloads::PlayerJoined { name: name.clone(), in_control: self.in_control == *name, is_server: false, is_observer: client.is_observer}, addr, &mut sender).ok();
+                    messages::send_message(Payloads::PlayerJoined { 
+                        name: name.clone(), 
+                        in_control: self.in_control == *name, 
+                        is_server: false, 
+                        is_observer: client.is_observer
+                    }, addr, &mut sender).ok();
                 }
                 // Send self
-                messages::send_message(Payloads::PlayerJoined { name: self.username.clone(), in_control: self.in_control == self.username, is_server: true, is_observer: false}, addr, &mut sender).ok();
+                self.send_message(Payloads::PlayerJoined { name: self.username.clone(), in_control: self.in_control == self.username, is_server: true, is_observer: false}, addr);
                 // Add client
                 self.clients.insert(name.clone(), Client {addr: addr.clone(),
                     is_observer: false,
@@ -144,10 +152,10 @@ impl TransferStruct {
             }
             
             Payloads::Handshake { session_id, ..} => {
-                info!("Handshake received from {} on {}", addr, session_id);
+                info!("[NETWORK] Handshake received from {} on {}", addr, session_id);
                     // Incoming UDP packet from peer
                 if *session_id == self.session_id {
-                    messages::send_message(Payloads::Handshake{session_id: session_id.clone()}, addr.clone(), self.get_sender()).ok();
+                    self.send_message(Payloads::Handshake{session_id: session_id.clone()}, addr.clone());
                     
                     if let Some(rendezvous) = self.rendezvous_server.as_ref() {
                         messages::send_message(Payloads::PeerEstablished {peer: addr}, rendezvous.clone(), self.get_sender()).ok();
@@ -161,14 +169,14 @@ impl TransferStruct {
                 should_relay = false;
             }
             Payloads::HostingReceived { session_id } => {
-                info!("Obtained session ID: {}", session_id);
+                info!("[NETWORK] Obtained session ID: {}", session_id);
                 self.session_id = session_id.clone();
                 should_relay = false;
 
                 self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
             }
             Payloads::AttemptConnection { peer } => {
-                info!("{} attempting connection.", peer);
+                info!("[NETWORK] {} attempting connection.", peer);
                 self.clients_to_holepunch.push(HolePunchSession::new(peer.clone()));
                 should_relay = false;
             }
@@ -206,7 +214,7 @@ impl TransferStruct {
             return true
         });
 
-        info!("Removing client {} who has name {:?}", addr, removed_client_name);
+        info!("[NETWORK] Removing client {} who has name {:?}", addr, removed_client_name);
 
         if let Some(name) = removed_client_name {
             let player_left_payload = Payloads::PlayerLeft {name: name.clone()};
@@ -282,7 +290,7 @@ impl Server {
             None => return Err(PortForwardResult::LocalAddrNotFound)
         };
 
-        info!("Found local address: {}", local_addr);
+        info!("[NETWORK] Found local address: {}", local_addr);
 
         let gateway = match search_gateway(SearchOptions {
                 bind_addr: SocketAddr::new(IpAddr::V4(local_addr), 0), 
@@ -293,14 +301,14 @@ impl Server {
             Err(e) => return Err(PortForwardResult::GatewayNotFound(e))
         };
 
-        info!("Found gateway at {}", gateway.root_url);
+        info!("[NETWORK] Found gateway at {}", gateway.root_url);
 
         match gateway.add_port(PortMappingProtocol::UDP, port, SocketAddrV4::new(local_addr, port), 86400, "YourControls") {
             Ok(()) => {},
             Err(e) => return Err(PortForwardResult::AddPortError(e))
         };
 
-        info!("Port forwarded port {}", port);
+        info!("[NETWORK] Port forwarded port {}", port);
 
         Ok(())
     }
@@ -328,7 +336,7 @@ impl Server {
     fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartClientError> {
         let mut socket = socket;
 
-        info!("Listening on {:?}", socket.local_addr());
+        info!("[NETWORK] Listening on {:?}", socket.local_addr());
 
         let transfer = Arc::new(Mutex::new(TransferStruct {
             // Holepunching
