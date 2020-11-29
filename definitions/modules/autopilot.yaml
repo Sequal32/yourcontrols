@@ -10,7 +10,7 @@ shared:
     var_name: A:AUTOPILOT HEADING LOCK
     var_units: Bool
     var_type: bool
-    event_name: AP_HDG_HOLD_ON
+    event_name: AP_PANEL_HEADING_HOLD
   -
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR
@@ -22,7 +22,7 @@ shared:
     var_name: A:AUTOPILOT ALTITUDE LOCK
     var_units: Bool
     var_type: bool
-    event_name: AP_ALT_HOLD_ON
+    event_name: AP_ALT_HOLD
   -
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR
@@ -30,11 +30,10 @@ shared:
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:AUTOPILOT AIRSPEED HOLD
     var_units: Bool
-    var_type: i32
-    event_name: AP_AIRSPEED_SET
+    event_name: AP_PANEL_SPEED_HOLD
   -
     type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR
@@ -64,18 +63,13 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_WING_LEVELER_ON
+    off_event_name: AP_WING_LEVELER_OFF
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT NAV1 LOCK
     var_units: Bool
     var_type: bool
     event_name: AP_NAV1_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT APPROACH HOLD
-    var_units: Bool
-    var_type: bool
-    event_name: AP_APR_HOLD
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT BACKCOURSE HOLD
@@ -87,7 +81,8 @@ shared:
     var_name: A:AUTOPILOT PITCH HOLD
     var_units: Bool
     var_type: bool
-    event_name: AP_ATT_HOLD
+    event_name: AP_ATT_HOLD_ON
+    off_event_name: AP_ATT_HOLD_OFF
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE
@@ -147,7 +142,19 @@ shared:
     var_type: i32
     event_name: AILERON_TRIM_DISABLED_SET
   -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT WING LEVELER
+    type: NumSet
+    var_name: A:AUTOPILOT DISENGAGED
     var_units: Bool
-    event_name: AP_WING_LEVELER
+    var_type: i32
+    event_name: AUTOPILOT_DISENGAGE_SET
+  -
+    type: event
+    event_name: AP_APR_HOLD
+
+init:
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT APPROACH HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_APR_HOLD

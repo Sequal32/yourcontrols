@@ -65,16 +65,18 @@ pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<P
     let payload = serde_json::to_string(&message)?.as_bytes().to_vec();
 
     let packet = match message {
-        Payloads::InvalidVersion {..} | 
-        Payloads::InvalidName {..} | 
+        // Unused
+        Payloads::AttemptConnection {..} |
+        Payloads::HostingReceived {..} |
+        // Used
         Payloads::InitHandshake {..} | 
         Payloads::PlayerJoined {..} | 
         Payloads::PlayerLeft {..} | 
         Payloads::SetObserver {..} |
-        Payloads::HostingReceived {..} |
-        Payloads::AttemptConnection {..} |
+        Payloads::TransferControl {..} => Packet::reliable_sequenced(target, payload, None),
+        Payloads::InvalidVersion {..} | 
+        Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload),
         Payloads::PeerEstablished {..} |
-        Payloads::TransferControl {..} => Packet::reliable_unordered(target, payload),
         Payloads::Handshake {..} => Packet::unreliable(target, payload),
         Payloads::Update {is_unreliable, ..} => if is_unreliable {Packet::unreliable(target, payload)} else {Packet::reliable_sequenced(target, payload, None)}
     };
