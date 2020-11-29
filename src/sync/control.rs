@@ -20,7 +20,7 @@ impl Control {
 
     pub fn finalize_transfer(&mut self, conn: &SimConnector) {
         conn.transmit_client_event(1, 1000, !self.has_control as u32, 5, 0);
-        conn.transmit_client_event(1, 1001, !self.has_control as u32, 5, 0);
+        // conn.transmit_client_event(1, 1001, !self.has_control as u32, 5, 0);
         conn.transmit_client_event(1, 1002, !self.has_control as u32, 5, 0);
         self.transferring_control = false;
     }

@@ -7,7 +7,7 @@ use crate::{util::VarReaderTypes, varreader::SimValue};
 const DEFAULT_INTERPOLATION_TIME: f64 = 0.2;
 const SKIP_TIME_THRESHOLD: f64 = 2.0;
 
-const SPEED_UP_AT_BUFFER_SIZE_OF: usize = 3;
+const SPEED_UP_AT_BUFFER_SIZE_OF: usize = 1;
 
 struct InterpolationData {
     overshoot: f64,
@@ -77,13 +77,13 @@ impl Interpolate {
             };
 
             self.current_data.insert(key.to_string(), InterpolationData {
+                overshoot: 0.0,
                 from_packet: packet.clone(),
                 current_value: value,
                 to_packet: packet,
                 time: Instant::now(),
                 interpolation_time,
                 done: false,
-                overshoot: 0.0,
             });
 
             self.data_queue.insert(key.to_string(), VecDeque::new());
@@ -101,28 +101,19 @@ impl Interpolate {
                     // From is now to
                     std::mem::swap(&mut data.from_packet, &mut data.to_packet);
                     // Calculate time difference between old packet and new packet
-                    let interpolation_time = next.time-data.from_packet.time;
+                    let mut interpolation_time = next.time-data.from_packet.time;
 
                     data.to_packet = next;
                     data.time = Instant::now();
                     // Do not interpolate if time exceeds threshold, as aircraft will just stand still interpolating at a very slow rate
                     data.done = interpolation_time > SKIP_TIME_THRESHOLD;
-                    //
-                    let buffer_size;
 
-                    if let Some(options) = self.options.get(key) {
-                        if queue.len() < options.to_buffer {continue}
-                        buffer_size = options.to_buffer;
-                    } else {
-                        buffer_size = 0;
-                    }
                     //
-                    if queue.len() > buffer_size && buffer_size > 0 {
+                    if queue.len() > SPEED_UP_AT_BUFFER_SIZE_OF {
                         // Will make next interpolation faster depending on how many packets over the buffer size it is.
-                        data.interpolation_time = interpolation_time * (buffer_size as f64)/((queue.len() - buffer_size) as f64) * 0.5;
-                    } else {
-                        data.interpolation_time = interpolation_time;
+                        interpolation_time = interpolation_time * (SPEED_UP_AT_BUFFER_SIZE_OF as f64)/((queue.len() - SPEED_UP_AT_BUFFER_SIZE_OF) as f64) * 0.5;
                     }
+                    data.interpolation_time = interpolation_time;
                 }
                 continue
             }
@@ -134,21 +125,20 @@ impl Interpolate {
                 data.done = true;
                 data.current_value = data.to_packet.value;
                 data.overshoot = alpha - 1.0;
-            } else {
-                // Interpolate according to options
-                if let Some(options) = self.options.get(key) {
-                    if options.wrap360 {
-                        data.current_value = interpolate_f64_degrees(data.from_packet.value, data.to_packet.value, alpha);
-                    } else if options.wrap180 {
-                        data.current_value = interpolate_f64_degrees_180(data.from_packet.value, data.to_packet.value, alpha);
-                    } else if options.wrap90 {
-                        data.current_value = interpolate_f64_degrees_90(data.from_packet.value, data.to_packet.value, alpha);
-                    } else {
-                        data.current_value = interpolate_f64(data.from_packet.value, data.to_packet.value, alpha);
-                    }
+            } 
+            // Interpolate according to options
+            if let Some(options) = self.options.get(key) {
+                if options.wrap360 {
+                    data.current_value = interpolate_f64_degrees(data.from_packet.value, data.to_packet.value, alpha);
+                } else if options.wrap180 {
+                    data.current_value = interpolate_f64_degrees_180(data.from_packet.value, data.to_packet.value, alpha);
+                } else if options.wrap90 {
+                    data.current_value = interpolate_f64_degrees_90(data.from_packet.value, data.to_packet.value, alpha);
                 } else {
                     data.current_value = interpolate_f64(data.from_packet.value, data.to_packet.value, alpha);
                 }
+            } else {
+                data.current_value = interpolate_f64(data.from_packet.value, data.to_packet.value, alpha);
             }
         
             return_data.insert(key.clone(), VarReaderTypes::F64(data.current_value));
