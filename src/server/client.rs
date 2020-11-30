@@ -1,12 +1,12 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
 use log::info;
-use laminar::{Packet, Socket, SocketEvent};
+use laminar::{Socket};
 use spin_sleep::sleep;
 use std::{net::{SocketAddr}, net::IpAddr, sync::Mutex, time::Duration, time::Instant, mem};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::thread;
 
-use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
+use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
 
 struct TransferStruct {
     name: String,
@@ -15,8 +15,7 @@ struct TransferStruct {
     // Send data to app to receive client data
     server_tx: Sender<ReceiveMessage>,
     // Reading/writing to UDP stream
-    receiver: Receiver<SocketEvent>,
-    sender: Sender<Packet>,
+    net_transfer: SenderReceiver,
     // Hole punching
     connected: bool,
     received_address: Option<SocketAddr>,
@@ -28,10 +27,6 @@ struct TransferStruct {
 }
 
 impl TransferStruct {
-    pub fn get_sender(&mut self) -> &mut Sender<Packet> {
-        &mut self.sender
-    }
-
     pub fn should_stop(&self) -> bool {
         self.should_stop.load(SeqCst)
     }
@@ -82,7 +77,7 @@ impl TransferStruct {
     fn handle_app_message(&mut self) {
         if let Ok(payload) = self.client_rx.try_recv() {
             if let Some(address) = self.received_address {
-                messages::send_message(payload, address, self.get_sender()).ok();
+                messages::send_message(payload, address, self.net_transfer.get_sender()).ok();
             }
         }
     }
@@ -91,13 +86,11 @@ impl TransferStruct {
     fn handle_handshake(&mut self) {
         if self.connected {return}
 
-        let sender = &mut self.sender;
-
         // Send a message every second
         if let Some(timer) = self.retry_timer.as_ref() {if timer.elapsed().as_secs() < 1 {return}}
 
         if let Some(addr) = self.received_address {
-            messages::send_message(Payloads::Handshake {session_id: self.session_id.clone()}, addr, sender).ok();
+            messages::send_message(Payloads::Handshake {session_id: self.session_id.clone()}, addr, self.net_transfer.get_sender()).ok();
             // Reset second timer
             self.retry_timer = Some(Instant::now());
             self.retries += 1;
@@ -187,8 +180,10 @@ impl Client {
                 // Transfer
                 client_rx: self.client_rx.clone(),
                 server_tx: self.server_tx.clone(),
-                receiver: socket.get_event_receiver(), 
-                sender: socket.get_packet_sender(),
+                net_transfer: SenderReceiver::new(
+                    socket.get_packet_sender(),
+                    socket.get_event_receiver(), 
+                ),
                 // Holepunching
                 retries: 0,
                 connected: false,
@@ -228,7 +223,7 @@ impl Client {
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
                 
-                match messages::get_next_message(&mut transfer.receiver) {
+                match messages::get_next_message(&mut transfer.net_transfer) {
                     Ok((addr, payload)) => {
                         transfer.handle_message(addr, payload);
                     },

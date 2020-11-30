@@ -5,9 +5,9 @@ use local_ipaddress;
 use retain_mut::RetainMut;
 use spin_sleep::sleep;
 use std::{collections::HashMap, mem, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
-use laminar::{Packet, Socket, SocketEvent};
+use laminar::{Socket};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
-use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
+use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
 
 struct Client {
     addr: SocketAddr,
@@ -18,8 +18,7 @@ struct TransferStruct {
     session_id: String,
     clients: HashMap<String, Client>,
     // Reading/writing to UDP stream
-    receiver: Receiver<SocketEvent>,
-    sender: Sender<Packet>,
+    net_transfer: SenderReceiver,
     // Holepunching
     rendezvous_server: Option<SocketAddr>,
     clients_to_holepunch: Vec<HolePunchSession>,
@@ -35,16 +34,12 @@ struct TransferStruct {
 }
 
 impl TransferStruct {
-    fn get_sender(&mut self) -> &mut Sender<Packet> {
-        &mut self.sender
-    }
-
     fn send_message(&mut self, payload: Payloads, target: SocketAddr) {
-        messages::send_message(payload, target, self.get_sender()).ok();
+        messages::send_message(payload, target, self.net_transfer.get_sender()).ok();
     }
     
     fn send_to_all(&mut self, except: Option<&SocketAddr>, payload: Payloads) {
-        let mut sender = self.get_sender().clone();
+        let mut sender = self.net_transfer.get_sender().clone();
 
         for (_, client) in self.clients.iter() {
             if let Some(except) = except {
@@ -58,7 +53,7 @@ impl TransferStruct {
     fn handle_handshake(&mut self) {
         if self.clients_to_holepunch.len() == 0 {return;}
 
-        let mut sender = self.get_sender().clone();
+        let mut sender = self.net_transfer.get_sender().clone();
         let session_id = self.session_id.clone();
 
         self.clients_to_holepunch.retain_mut(|session| {
@@ -121,7 +116,7 @@ impl TransferStruct {
                 }
 
                 // Send all connected clients to new player
-                let mut sender = self.get_sender().clone();
+                let mut sender = self.net_transfer.get_sender().clone();
                 for (name, client) in self.clients.iter() {
                     messages::send_message(Payloads::PlayerJoined { 
                         name: name.clone(), 
@@ -158,7 +153,7 @@ impl TransferStruct {
                     self.send_message(Payloads::Handshake{session_id: session_id.clone()}, addr.clone());
                     
                     if let Some(rendezvous) = self.rendezvous_server.as_ref() {
-                        messages::send_message(Payloads::PeerEstablished {peer: addr}, rendezvous.clone(), self.get_sender()).ok();
+                        messages::send_message(Payloads::PeerEstablished {peer: addr}, rendezvous.clone(), self.net_transfer.get_sender()).ok();
 
                         self.clients_to_holepunch.retain(|x| {
                             x.addr != addr
@@ -346,8 +341,10 @@ impl Server {
             // Transfer
             server_tx: self.server_tx.clone(),
             client_rx: self.client_rx.clone(),
-            receiver: socket.get_event_receiver(), 
-            sender: socket.get_packet_sender(),
+            net_transfer: SenderReceiver::new(
+                socket.get_packet_sender(),
+                socket.get_event_receiver(), 
+            ),
             // State
             in_control: self.username.clone(),
             clients: HashMap::new(),
@@ -383,7 +380,7 @@ impl Server {
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
 
-                let message = messages::get_next_message(&mut transfer.receiver);
+                let message = messages::get_next_message(&mut transfer.net_transfer);
                 match message {
                     Ok((addr, payload)) => {
                         transfer.handle_message(addr, payload);

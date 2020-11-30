@@ -1,11 +1,15 @@
 use std::{net::SocketAddr};
 
-use crossbeam_channel::{Receiver, Sender};
+use crossbeam_channel::{Sender};
 use laminar::{Packet, SocketEvent};
 use serde::{Serialize, Deserialize};
 use serde_json::Value;
 
 use crate::definitions::AllNeedSync;
+
+use super::SenderReceiver;
+
+const ACK_BYTES: &[u8] = &[0x41, 0x43, 0x4b];
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(tag = "type", rename_all = "camelCase")]
@@ -38,11 +42,25 @@ impl From<serde_json::Error> for Error {
         Error::SerdeError(e)
     }
 }
+
+// Need to manually acknowledge since most of the time we don't send packets back
+fn handle_packet(sender: &mut Sender<Packet>, packet: &Packet) {
+    if let laminar::DeliveryGuarantee::Reliable = packet.delivery_guarantee() {
+        match packet.order_guarantee() {
+            laminar::OrderingGuarantee::None => {}
+            laminar::OrderingGuarantee::Sequenced(stream) => {sender.send(Packet::reliable_sequenced(packet.addr(), ACK_BYTES.to_vec(), stream)).ok();},
+            laminar::OrderingGuarantee::Ordered(stream) => {sender.send(Packet::reliable_ordered(packet.addr(), ACK_BYTES.to_vec(), stream)).ok();}
+        };
+    }
+}
 //
-fn read_value(receiver: &mut Receiver<SocketEvent>) -> Result<(SocketAddr, Value), Error>  {
-    let packet = match receiver.try_recv() {
+fn read_value(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Value), Error>  {
+    let packet = match transfer.get_receiver().try_recv() {
         Ok(event) => match event {
-            SocketEvent::Packet(packet) => packet,
+            SocketEvent::Packet(packet) => {
+                handle_packet(transfer.get_sender(), &packet);
+                packet
+            },
             SocketEvent::Disconnect(addr) |
             SocketEvent::Timeout(addr) => {return Err(Error::ConnectionClosed(addr))}
             _ => {return Err(Error::Dummy)}
@@ -56,8 +74,8 @@ fn read_value(receiver: &mut Receiver<SocketEvent>) -> Result<(SocketAddr, Value
     }
 }
 
-pub fn get_next_message(receiver: &mut Receiver<SocketEvent>) -> Result<(SocketAddr, Payloads), Error> {
-    let (addr, json) = read_value(receiver)?;
+pub fn get_next_message(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Payloads), Error> {
+    let (addr, json) = read_value(transfer)?;
     Ok((addr, serde_json::from_value(json)?))
 }
 
@@ -73,12 +91,12 @@ pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<P
         Payloads::PlayerJoined {..} | 
         Payloads::PlayerLeft {..} | 
         Payloads::SetObserver {..} |
-        Payloads::TransferControl {..} => Packet::reliable_sequenced(target, payload, None),
+        Payloads::TransferControl {..} => Packet::reliable_sequenced(target, payload, Some(3)),
         Payloads::InvalidVersion {..} | 
         Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload),
         Payloads::PeerEstablished {..} |
         Payloads::Handshake {..} => Packet::unreliable(target, payload),
-        Payloads::Update {is_unreliable, ..} => if is_unreliable {Packet::unreliable(target, payload)} else {Packet::reliable_sequenced(target, payload, None)}
+        Payloads::Update {is_unreliable, ..} => if is_unreliable {Packet::unreliable_sequenced(target, payload, Some(1))} else {Packet::reliable_ordered(target, payload, Some(2))}
     };
 
     

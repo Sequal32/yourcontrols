@@ -1,5 +1,6 @@
 use crossbeam_channel::{Receiver, Sender};
 use dns_lookup::lookup_host;
+use laminar::{Packet, SocketEvent};
 use std::{fmt::Display, net::IpAddr, net::SocketAddr, net::SocketAddrV4, net::SocketAddrV6, time::Duration};
 use std::time::SystemTime;
 
@@ -178,5 +179,24 @@ pub trait TransferClient {
             name: self.get_server_name().to_string(),
             version
         }).ok();
+    }
+}
+
+pub struct SenderReceiver {
+    sender: Sender<Packet>,
+    receiver: Receiver<SocketEvent>
+}
+
+impl SenderReceiver {
+    pub fn new(sender: Sender<Packet>, receiver: Receiver<SocketEvent>) -> Self {
+        Self { sender, receiver }
+    }
+
+    pub fn get_sender(&mut self) -> &mut Sender<Packet> {
+        &mut self.sender
+    }
+    
+    pub fn get_receiver(&mut self) -> &mut Receiver<SocketEvent> {
+        &mut self.receiver
     }
 }
