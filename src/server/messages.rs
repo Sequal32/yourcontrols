@@ -18,7 +18,7 @@ pub enum Payloads {
     InvalidVersion {server_version: String},
     PlayerJoined {name: String, in_control: bool, is_server: bool, is_observer: bool},
     PlayerLeft {name: String},
-    Update {data: AllNeedSync, time: f64, from: String, is_unreliable: bool},
+    Update {data: AllNeedSync, from: String, is_unreliable: bool},
     InitHandshake {name: String, version: String},
     TransferControl {from: String, to: String},
     SetObserver {from: String, to: String, is_observer: bool},

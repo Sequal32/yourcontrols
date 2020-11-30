@@ -1,8 +1,5 @@
 use byteorder::{LittleEndian, ReadBytesExt};
 use std::{collections::HashMap, io::{self, Cursor, ErrorKind}};
-
-
-
 use crate::util::{InDataTypes, VarReaderTypes};
 
 struct DefinitionEntry {

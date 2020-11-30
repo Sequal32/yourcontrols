@@ -1,6 +1,5 @@
 use base64;
 use crossbeam_channel::{Receiver, TryRecvError, unbounded};
-use log::{info};
 use std::{net::IpAddr, io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};

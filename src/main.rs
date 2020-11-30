@@ -152,7 +152,6 @@ fn main() {
     // Update rate counter
     let mut update_rate_instant = Instant::now();
     let mut update_rate = calculate_update_rate(config.update_rate);
-    let mut last_received_update_time = 0.0;
 
     let mut need_update = false;
     let mut did_send_name = false;
@@ -242,33 +241,28 @@ fn main() {
                         Payloads::InvalidName {..} => {}
                         Payloads::InitHandshake {..} => {}
                         // Used
-                        Payloads::Update {data, time, from, is_unreliable} => {
+                        Payloads::Update {data, from, is_unreliable} => {
                             // Not non high updating packets for debugging
                             if !is_unreliable {info!("[PACKET] {:?}", data)}
 
-                            if !is_unreliable || (is_unreliable && time > last_received_update_time) {
-                                    // Seamlessly transfer from losing control wihout freezing
-                                if control.has_pending_transfer() {
-                                    control.finalize_transfer(&conn)
-                                }
+                                // Seamlessly transfer from losing control wihout freezing
+                            if control.has_pending_transfer() {
+                                control.finalize_transfer(&conn)
+                            }
 
-                                if !clients.is_observer(&from) {
-                                    definitions.on_receive_data(
-                                        &conn,
-                                        time,
-                                        data,
-                                        &SyncPermission {
-                                            is_server: clients.client_is_server(&from),
-                                            is_master: clients.client_has_control(&from),
-                                            is_init: true,
-                                        },
-                                        !need_update,
-                                    );
-                                    // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
-                                    need_update = false;
-                                }
-
-                                last_received_update_time = time;
+                            if !clients.is_observer(&from) {
+                                definitions.on_receive_data(
+                                    &conn,
+                                    data,
+                                    &SyncPermission {
+                                        is_server: clients.client_is_server(&from),
+                                        is_master: clients.client_has_control(&from),
+                                        is_init: true,
+                                    },
+                                    !need_update,
+                                );
+                                // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
+                                need_update = false;
                             }
                         }
                         Payloads::TransferControl{from, to} => {
@@ -290,7 +284,6 @@ fn main() {
                                 app_interface.set_incontrol(&to);
                                 clients.set_client_control(to);
                             }
-                            last_received_update_time = 0.0;
                         }
                         Payloads::PlayerJoined{name, in_control, is_observer, is_server} => {
                             info!("[NETWORK] {} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
@@ -368,7 +361,6 @@ fn main() {
                                 observing = true;
                             }
                             
-                            last_received_update_time = 0.0;
                             need_update = true;
                             connection_time = Some(Instant::now());
                         }

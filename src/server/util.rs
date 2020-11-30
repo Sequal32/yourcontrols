@@ -48,10 +48,6 @@ pub fn get_socket_config(timeout: u64) -> laminar::Config {
     }
 }
 
-fn get_seconds() -> f64 {
-    return SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64()
-}
-
 #[derive(Debug)]
 pub enum Event {
     ConnectionEstablished,
@@ -137,7 +133,6 @@ pub trait TransferClient {
     fn update(&self, data: AllNeedSync, is_unreliable: bool) {
         self.get_transmitter().try_send(Payloads::Update {
             data,
-            time: get_seconds(),
             from: self.get_server_name().to_string(),
             is_unreliable
         }).ok();

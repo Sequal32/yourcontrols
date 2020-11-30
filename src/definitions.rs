@@ -895,7 +895,7 @@ impl Definitions {
         }
     }
 
-    pub fn write_aircraft_data(&mut self, conn: &SimConnector, time: f64, data: &mut AVarMap, interpolate: bool) {
+    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &mut AVarMap, interpolate: bool) {
         if data.len() == 0 {return}
 
         let mut to_sync = AVarMap::new();
@@ -918,7 +918,7 @@ impl Definitions {
                     if interpolate && self.interpolate_vars.contains(var_name) {
                         // Queue data for interpolation
                         if let VarReaderTypes::F64(value) = data {
-                            self.interpolation_avars.queue_interpolate(&var_name, time, *value)
+                            self.interpolation_avars.queue_interpolate(&var_name, *value)
                         }
                     } else {
                         // Set data right away
@@ -961,11 +961,11 @@ impl Definitions {
         }
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, time: f64, data: AllNeedSync, sync_permission: &SyncPermission, interpolate: bool) {
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, sync_permission: &SyncPermission, interpolate: bool) {
         let mut data = data;
         self.filter_all_sync(&mut data, sync_permission);
 
-        self.write_aircraft_data(conn, time, &mut data.avars, interpolate);
+        self.write_aircraft_data(conn, &mut data.avars, interpolate);
         self.write_local_data(conn, &data.lvars, interpolate);
         self.write_event_data(conn, &data.events);
     }
