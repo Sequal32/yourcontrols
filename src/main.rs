@@ -128,8 +128,6 @@ fn main() {
     .ok();
 
     let mut conn = simconnect::SimConnector::new();
-
-    let mut definitions = Definitions::new();
     let mut control = Control::new();
     let mut clients = ClientManager::new();
 
@@ -152,6 +150,8 @@ fn main() {
     // Update rate counter
     let mut update_rate_instant = Instant::now();
     let mut update_rate = calculate_update_rate(config.update_rate);
+
+    let mut definitions = Definitions::new(update_rate);
 
     let mut need_update = false;
     let mut did_send_name = false;
@@ -519,7 +519,7 @@ fn main() {
                 AppMessage::LoadAircraft {config_file_name} => {
                     // Load config
                     info!("[DEFINITIONS] {} aircraft config selected.", config_file_name);
-                    definitions = Definitions::new();
+                    definitions = Definitions::new(update_rate);
                     config_to_load = config_file_name.clone();
 
                     // Connect to simconnect

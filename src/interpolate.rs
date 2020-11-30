@@ -3,8 +3,6 @@ use serde::Deserialize;
 
 use crate::{util::VarReaderTypes, varreader::SimValue};
 
-const DEFAULT_INTERPOLATION_TIME: f64 = 1.0;
-
 struct InterpolationData {
     current_value: f64,
     from_value: f64,
@@ -16,7 +14,6 @@ struct InterpolationData {
 #[derive(Deserialize, Clone)]
 #[serde(default)]
 pub struct InterpolateOptions {
-    time: f64,
     to_buffer: usize,
     wrap360: bool,
     wrap180: bool,
@@ -27,7 +24,6 @@ impl Default for InterpolateOptions {
     fn default() -> Self {
         Self {
             to_buffer: 0,
-            time: DEFAULT_INTERPOLATION_TIME,
             wrap360: false,
             wrap180: false,
             wrap90: false,
@@ -38,13 +34,15 @@ impl Default for InterpolateOptions {
 pub struct Interpolate {
     current_data: HashMap<String, InterpolationData>,
     options: HashMap<String, InterpolateOptions>,
+    interpolation_time: f64
 }
 
 impl Interpolate {
-    pub fn new() -> Self {
+    pub fn new(update_rate: f64) -> Self {
         Self {
             current_data: HashMap::new(),
             options: HashMap::new(),
+            interpolation_time: update_rate * 2.0
         }
     }
 
@@ -75,9 +73,9 @@ impl Interpolate {
         for (key, data) in self.current_data.iter_mut() {
             if data.done {continue}
 
-            let alpha = data.time.elapsed().as_secs_f64()/DEFAULT_INTERPOLATION_TIME;
+            let alpha = data.time.elapsed().as_secs_f64()/self.interpolation_time;
             // If we're done interpolation, do not interpolate anymore until the next request
-            data.done = alpha > 1.0;
+            data.done = alpha > 2.0;
             // Interpolate according to options
             if let Some(options) = self.options.get(key) {
                 if options.wrap360 {
