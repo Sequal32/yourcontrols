@@ -203,7 +203,9 @@ struct VarEntry {
     var_type: InDataTypes,
     interpolate: Option<InterpolateOptions>,
     update_every: Option<f64>,
-    condition: Option<Condition>
+    condition: Option<Condition>,
+    #[serde(default)]
+    constant: bool
 }
 
 #[derive(Deserialize)]
@@ -380,6 +382,8 @@ pub struct Definitions {
     // Value to hold the current queue
     current_sync: AllNeedSync,
     last_written: HashMap<String, Instant>,
+    // Values to constantly keep updating, even if no data was received
+    constant_avars: HashMap<String, Option<VarReaderTypes>>,
     // Correct velocity to local weather
     velocity_corrector: VelocityCorrector,
     // Structs that actually do the interpolation
@@ -408,7 +412,7 @@ fn get_real_var_name(var_name: &str) -> String {
 }
 
 impl Definitions {
-    pub fn new() -> Self {
+    pub fn new(update_rate: f64) -> Self {
         Self {
             mappings: HashMap::new(),
             events: Events::new(1),
@@ -420,8 +424,10 @@ impl Definitions {
 
             current_sync: AllNeedSync::new(),
 
-            interpolation_avars: Interpolate::new(),
-            interpolation_lvars: Interpolate::new(),
+            interpolation_avars: Interpolate::new(update_rate),
+            interpolation_lvars: Interpolate::new(update_rate),
+            
+            constant_avars: HashMap::new(),
             
             velocity_corrector: VelocityCorrector::new(2),
             
@@ -452,7 +458,11 @@ impl Definitions {
             self.periods.insert(var_name.clone(), Period::new(period));
         }
 
-        self.add_mapping(var_name.clone(), ActionType::VarOnly, var.condition);
+        if var.constant {
+            self.constant_avars.insert(var_name.clone(), None);
+        }
+
+        self.add_mapping(var_name, ActionType::VarOnly, var.condition);
 
         Ok(())
     }
@@ -833,7 +843,8 @@ impl Definitions {
 
     pub fn step_interpolate(&mut self, conn: &SimConnector) {
         // Interpolate AVARS
-        let aircraft_interpolation_data = self.interpolation_avars.step();
+        let mut aircraft_interpolation_data = self.interpolation_avars.step();
+        
         if aircraft_interpolation_data.len() > 0 {
             self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
         }
@@ -903,10 +914,24 @@ impl Definitions {
 
         // Add wind componenent to velocity
         self.velocity_corrector.add_wind_component(data);
+
+        // Add constants
+        for (var_name, value) in self.constant_avars.iter() {
+            if !data.contains_key(var_name) {
+                if let Some(value) = value {
+                    data.insert(var_name.clone(), value.clone());
+                }
+            }
+        }
         
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             self.last_written.insert(var_name.to_string(), Instant::now());
+
+            // Log constant
+            if let Some(value) = self.constant_avars.get_mut(var_name) {
+                *value = Some(data.clone());
+            }
 
             // Otherwise sync them using defined events
             for mapping in self.mappings.get_mut(var_name).unwrap() {

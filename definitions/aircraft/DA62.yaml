@@ -21,11 +21,6 @@ shared:
     var_units: bool
     event_name: TOGGLE_MASTER_BATTERY
     event_param: 2
-  - # Two engines, singlega.yaml takes care of the left side
-    type: Var
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
-    var_units: Number
-    var_type: f64
   -
     type: Var
     var_name: A:GENERAL ENG MIXTURE LEVER POSITION:2
@@ -203,6 +198,14 @@ shared:
     event_name: KOHLSMAN_SET
     event_param: 2
     multiply_by: 16
+
+master:
+  - # Two engines, singlega.yaml takes care of the left side
+    type: Var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_units: Number
+    var_type: f64
+    constant: true
   
 server:
   -
