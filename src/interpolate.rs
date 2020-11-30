@@ -111,8 +111,10 @@ impl Interpolate {
                     //
                     if queue.len() > SPEED_UP_AT_BUFFER_SIZE_OF {
                         // Will make next interpolation faster depending on how many packets over the buffer size it is.
-                        interpolation_time = interpolation_time * (SPEED_UP_AT_BUFFER_SIZE_OF as f64)/((queue.len() - SPEED_UP_AT_BUFFER_SIZE_OF) as f64) * 0.5;
+                        let diff = (queue.len() - SPEED_UP_AT_BUFFER_SIZE_OF) as f64;
+                        interpolation_time = (interpolation_time - diff * 0.0025).max(0.0);
                     }
+                    
                     data.interpolation_time = interpolation_time;
                 }
                 continue
@@ -124,7 +126,7 @@ impl Interpolate {
             if alpha >= 1.0 {
                 data.done = true;
                 data.current_value = data.to_packet.value;
-                data.overshoot = alpha - 1.0;
+                data.overshoot = (alpha - 1.0).min(1.0);
             } 
             // Interpolate according to options
             if let Some(options) = self.options.get(key) {
