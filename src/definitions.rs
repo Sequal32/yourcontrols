@@ -426,8 +426,8 @@ impl Definitions {
 
             current_sync: AllNeedSync::new(),
 
-            interpolation_avars: Interpolate::new(update_rate),
-            interpolation_lvars: Interpolate::new(update_rate),
+            interpolation_avars: Interpolate::new(),
+            interpolation_lvars: Interpolate::new(),
             
             constant_avars: HashMap::new(),
             do_not_sync: HashSet::new(),
@@ -921,7 +921,7 @@ impl Definitions {
         }
     }
 
-    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &mut AVarMap, interpolate: bool) {
+    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &mut AVarMap, time: f64, interpolate: bool) {
         if data.len() == 0 {return}
 
         let mut to_sync = AVarMap::new();
@@ -959,7 +959,7 @@ impl Definitions {
                         if interpolate && self.interpolate_vars.contains(var_name) {
                             // Queue data for interpolation
                             if let VarReaderTypes::F64(value) = data {
-                                self.interpolation_avars.queue_interpolate(&var_name, *value)
+                                self.interpolation_avars.queue_interpolate(&var_name, time, *value)
                             }
                         } else {
                             // Set data right away
@@ -1003,11 +1003,11 @@ impl Definitions {
         }
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, sync_permission: &SyncPermission, interpolate: bool) {
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, time: f64, sync_permission: &SyncPermission, interpolate: bool) {
         let mut data = data;
         self.filter_all_sync(&mut data, sync_permission);
 
-        self.write_aircraft_data(conn, &mut data.avars, interpolate);
+        self.write_aircraft_data(conn, &mut data.avars, time, interpolate);
         self.write_local_data(conn, &data.lvars, interpolate);
         self.write_event_data(conn, &data.events);
     }
