@@ -42,7 +42,7 @@ impl Interpolate {
         Self {
             current_data: HashMap::new(),
             options: HashMap::new(),
-            interpolation_time: update_rate * 2.0
+            interpolation_time: update_rate * 3.0
         }
     }
 
@@ -55,8 +55,6 @@ impl Interpolate {
             data.done = false;
 
         } else {
-
-
             self.current_data.insert(key.to_string(), InterpolationData {
                 current_value: value,
                 from_value: value,
@@ -75,20 +73,27 @@ impl Interpolate {
 
             let alpha = data.time.elapsed().as_secs_f64()/self.interpolation_time;
             // If we're done interpolation, do not interpolate anymore until the next request
-            data.done = alpha > 2.0;
-            // Interpolate according to options
-            if let Some(options) = self.options.get(key) {
-                if options.wrap360 {
-                    data.current_value = interpolate_f64_degrees(data.from_value, data.to_value, alpha);
-                } else if options.wrap180 {
-                    data.current_value = interpolate_f64_degrees_180(data.from_value, data.to_value, alpha);
-                } else if options.wrap90 {
-                    data.current_value = interpolate_f64_degrees_90(data.from_value, data.to_value, alpha);
+            if alpha > 2.0 {
+                
+                data.done = true;
+                data.current_value = data.to_value;
+
+            } else {
+
+                // Interpolate according to options
+                if let Some(options) = self.options.get(key) {
+                    if options.wrap360 {
+                        data.current_value = interpolate_f64_degrees(data.from_value, data.to_value, alpha);
+                    } else if options.wrap180 {
+                        data.current_value = interpolate_f64_degrees_180(data.from_value, data.to_value, alpha);
+                    } else if options.wrap90 {
+                        data.current_value = interpolate_f64_degrees_90(data.from_value, data.to_value, alpha);
+                    } else {
+                        data.current_value = interpolate_f64(data.from_value, data.to_value, alpha);
+                    }
                 } else {
                     data.current_value = interpolate_f64(data.from_value, data.to_value, alpha);
                 }
-            } else {
-                data.current_value = interpolate_f64(data.from_value, data.to_value, alpha);
             }
         
             return_data.insert(key.clone(), VarReaderTypes::F64(data.current_value));
