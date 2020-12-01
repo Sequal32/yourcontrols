@@ -384,6 +384,8 @@ pub struct Definitions {
     last_written: HashMap<String, Instant>,
     // Values to constantly keep updating, even if no data was received
     constant_avars: HashMap<String, Option<VarReaderTypes>>,
+    // Vars that should not be sent over the network
+    do_not_sync: HashSet<String>,
     // Correct velocity to local weather
     velocity_corrector: VelocityCorrector,
     // Structs that actually do the interpolation
@@ -428,6 +430,7 @@ impl Definitions {
             interpolation_lvars: Interpolate::new(update_rate),
             
             constant_avars: HashMap::new(),
+            do_not_sync: HashSet::new(),
             
             velocity_corrector: VelocityCorrector::new(2),
             
@@ -462,7 +465,7 @@ impl Definitions {
             self.constant_avars.insert(var_name.clone(), None);
         }
 
-        self.add_mapping(var_name, ActionType::VarOnly, var.condition);
+        self.add_mapping(var_name, ActionType::VarOnly, var.condition)?;
 
         Ok(())
     }
@@ -520,13 +523,21 @@ impl Definitions {
         }
     }
 
-    fn add_mapping(&mut self, var_name: String, mapping: ActionType, condition: Option<Condition>) {
+    fn add_mapping(&mut self, var_name: String, mapping: ActionType, condition: Option<Condition>) -> Result<(), VarAddError> {
+        let mut condition = condition;
+
+        if let Some(condition) = condition.as_mut() {
+            if let Some(var_data) = condition.var.as_mut() {
+                let (var_string, _) = self.add_var_string("shared", &var_data.var_name, var_data.var_units.as_deref(), var_data.var_type)?;
+                var_data.var_name = var_string.clone();
+                self.do_not_sync.insert(var_string);
+            }
+        }
+        
         let mapping = Mapping {
             action: mapping,
             condition: condition,
         };
-
-        // TODO: add var in condition
 
         match self.mappings.entry(var_name.to_string()) {
             Entry::Occupied(mut o) => { 
@@ -534,6 +545,8 @@ impl Definitions {
             }
             Entry::Vacant(v) => { v.insert(vec![mapping]); }
         };
+
+        Ok(())
     }
 
     fn add_toggle_switch(&mut self, category: &str, var: ToggleSwitchGenericEntry) -> Result<(), VarAddError> { 
@@ -559,7 +572,7 @@ impl Definitions {
 
         action.set_switch_on(var.switch_on);
 
-        self.add_mapping(var_string, ActionType::Bool(Box::new(action)), var.condition);
+        self.add_mapping(var_string, ActionType::Bool(Box::new(action)), var.condition)?;
 
         Ok(())
     }
@@ -600,11 +613,11 @@ impl Definitions {
         match data_type {
             InDataTypes::I32 => {
                 let (mapping, var_string) = self.add_num_set_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::I32(mapping), condition)
+                self.add_mapping(var_string, ActionType::I32(mapping), condition)?
             }
             InDataTypes::F64 => {
                 let (mapping, var_string) = self.add_num_set_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::F64(mapping), condition)
+                self.add_mapping(var_string, ActionType::F64(mapping), condition)?
             }
             _ => {}
         };
@@ -633,11 +646,11 @@ impl Definitions {
         match data_type {
             InDataTypes::I32 => {
                 let (mapping, var_string) = self.add_num_increment_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::I32(mapping), condition);
+                self.add_mapping(var_string, ActionType::I32(mapping), condition)?;
             }
             InDataTypes::F64 => {
                 let (mapping, var_string) = self.add_num_increment_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::F64(mapping), condition);
+                self.add_mapping(var_string, ActionType::F64(mapping), condition)?;
             }
             _ => {}
         };
@@ -658,7 +671,7 @@ impl Definitions {
         }
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
-        self.add_mapping(var_string, ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))), var.condition);
+        self.add_mapping(var_string, ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))), var.condition)?;
 
         Ok(())
     }
@@ -669,7 +682,7 @@ impl Definitions {
         let var_name = self.lvarstransfer.add_custom_var(var.get);
 
         self.categories.insert(var_name.clone(), category);
-        self.add_mapping(var_name, ActionType::F64(Box::new(CustomCalculator::new(var.set))), var.condition);
+        self.add_mapping(var_name, ActionType::F64(Box::new(CustomCalculator::new(var.set))), var.condition)?;
 
         Ok(())
     }
@@ -820,14 +833,16 @@ impl Definitions {
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Set current var syncactions
-                for mapping in self.mappings.get_mut(&var_name).unwrap() {
-                    execute_mapping!(new_value, action, value, mapping, {
-                        action.set_current(new_value)
-                    }, {});
+                if let Some(mappings) = self.mappings.get_mut(&var_name) {
+                    for mapping in mappings {
+                        execute_mapping!(new_value, action, value, mapping, {
+                            action.set_current(new_value)
+                        }, {});
+                    }
                 }
 
                 // Determine if this variable should be updated
-                let mut should_write = !self.did_write_recently(&var_name);
+                let mut should_write = !self.did_write_recently(&var_name) && !self.do_not_sync.contains(&var_name);
 
                 if let Some(period) = self.periods.get_mut(&var_name) {
                     should_write = should_write && period.do_update();
@@ -843,7 +858,7 @@ impl Definitions {
 
     pub fn step_interpolate(&mut self, conn: &SimConnector) {
         // Interpolate AVARS
-        let mut aircraft_interpolation_data = self.interpolation_avars.step();
+        let aircraft_interpolation_data = self.interpolation_avars.step();
         
         if aircraft_interpolation_data.len() > 0 {
             self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
@@ -934,22 +949,24 @@ impl Definitions {
             }
 
             // Otherwise sync them using defined events
-            for mapping in self.mappings.get_mut(var_name).unwrap() {
-                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), data) {continue}
+            if let Some(mappings) = self.mappings.get_mut(var_name) {
+                for mapping in mappings {
+                    if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), data) {continue}
 
-                execute_mapping!(new_value, action, *data, mapping, {
-                    action.set_new(new_value, conn, &mut self.lvarstransfer)
-                }, {
-                    if interpolate && self.interpolate_vars.contains(var_name) {
-                        // Queue data for interpolation
-                        if let VarReaderTypes::F64(value) = data {
-                            self.interpolation_avars.queue_interpolate(&var_name, *value)
+                    execute_mapping!(new_value, action, *data, mapping, {
+                        action.set_new(new_value, conn, &mut self.lvarstransfer)
+                    }, {
+                        if interpolate && self.interpolate_vars.contains(var_name) {
+                            // Queue data for interpolation
+                            if let VarReaderTypes::F64(value) = data {
+                                self.interpolation_avars.queue_interpolate(&var_name, *value)
+                            }
+                        } else {
+                            // Set data right away
+                            to_sync.insert(var_name.clone(), data.clone());
                         }
-                    } else {
-                        // Set data right away
-                        to_sync.insert(var_name.clone(), data.clone());
-                    }
-                });
+                    });
+                }
             }
         }
 
