@@ -1,28 +1,16 @@
 use std::{collections::{HashMap}, time::Instant};
 use serde::Deserialize;
-use std::collections::VecDeque;
 
 use crate::{util::VarReaderTypes, varreader::SimValue};
 
-const DEFAULT_INTERPOLATION_TIME: f64 = 0.2;
 const SKIP_TIME_THRESHOLD: f64 = 2.0;
 
-const DEFAULT_BUFFER_SIZE: usize = 3;
-
-struct InterpolationData {
-    current_value: f64,
-    from_packet: Packet,
-    to_packet: Packet,
-    time: Instant,
-    interpolation_time: f64,
-    done: bool
-}
+const DELAY_TIME: f64 = 0.1;
 
 #[derive(Deserialize, Clone)]
 #[serde(default)]
 pub struct InterpolateOptions {
     overshoot: f64, // How many seconds to interpolate for after interpolation_time has been reached
-    time: f64,
     wrap360: bool,
     wrap180: bool,
     wrap90: bool
@@ -32,7 +20,6 @@ impl Default for InterpolateOptions {
     fn default() -> Self {
         Self {
             overshoot: 0.0,
-            time: DEFAULT_INTERPOLATION_TIME,
             wrap360: false,
             wrap180: false,
             wrap90: false,
@@ -46,10 +33,63 @@ struct Packet {
     value: f64
 }
 
+fn interpolate_value(from: f64, to: f64, alpha: f64, options: Option<&InterpolateOptions>) -> f64 {
+    if let Some(options) = options {
+        if options.wrap360 {
+            return interpolate_f64_degrees(from, to, alpha);
+        } else if options.wrap180 {
+            return interpolate_f64_degrees_180(from, to, alpha);
+        } else if options.wrap90 {
+            return interpolate_f64_degrees_90(from, to, alpha);
+        } else {
+            return interpolate_f64(from, to, alpha);
+        }
+    } else {
+        return interpolate_f64(from, to, alpha);
+    }
+}
+
+// Returns if set
+fn set_next_value(current: &mut Packet, current_time: f64, queue: &mut Vec<Packet>, options: Option<&InterpolateOptions>, key: &str) -> Option<f64> {
+    if queue.len() == 0 {return None;}
+
+    for i in 0..queue.len() {
+        let packet = queue.get(i).unwrap();
+        
+
+        if packet.time-current_time > 0.0 {
+            let mut alpha = (current_time-current.time)/(packet.time-current.time);
+
+            if alpha <= 1.0 {
+                let to_value = packet.value;
+
+                let time = packet.time;
+
+                if i > 0 {
+                    // Set time to previous packet to interpolate from
+                    *current = queue.get(i-1).unwrap().clone();
+                    // Remove all packets before index
+                    queue.drain(0..i);
+                    alpha = (current_time-current.time)/(time-current.time);
+                }
+
+                return Some(interpolate_value(current.value, to_value, alpha, options));
+            }
+        }
+
+    }
+
+    None
+}
+
 pub struct Interpolate {
-    current_data: HashMap<String, InterpolationData>,
-    data_queue: HashMap<String, VecDeque<Packet>>,
+    current_data: HashMap<String, Packet>,
+    data_queue: HashMap<String, Vec<Packet>>,
     options: HashMap<String, InterpolateOptions>,
+    step_last_called: Instant,
+
+    current_time: f64,
+    newest_data_time: f64
 }
 
 impl Interpolate {
@@ -58,6 +98,10 @@ impl Interpolate {
             current_data: HashMap::new(),
             data_queue: HashMap::new(),
             options: HashMap::new(),
+            step_last_called: Instant::now(),
+
+            current_time: 0.0,
+            newest_data_time: 0.0
         }
     }
 
@@ -66,80 +110,43 @@ impl Interpolate {
 
         if self.current_data.contains_key(key) {
 
-            self.data_queue.get_mut(key).unwrap().push_back(packet);
+            self.data_queue.get_mut(key).unwrap().push(packet);
 
         } else {
 
-            self.current_data.insert(key.to_string(), InterpolationData {
-                from_packet: packet.clone(),
-                current_value: value,
-                to_packet: packet,
-                time: Instant::now(),
-                interpolation_time: 0.0,
-                done: false
-            });
+            self.current_data.insert(key.to_string(), packet);
 
-            self.data_queue.insert(key.to_string(), VecDeque::new());
+            self.data_queue.insert(key.to_string(), Vec::new());
         }
+
+        if self.newest_data_time == 0.0 {
+            self.current_time = time;
+        }
+        self.newest_data_time = time;
     }
 
-    pub fn step(&mut self) -> SimValue {
+    pub fn step(&mut self) -> Option<SimValue> {
+        // No packet received yet
+        if self.current_time == 0.0 {return None}
+
+        let delta = self.step_last_called.elapsed().as_secs_f64();
+        self.step_last_called = Instant::now();
+        // Should we delay?
+        if self.newest_data_time-self.current_time < DELAY_TIME {return None}
+        self.current_time += delta;
+
         let mut return_data = HashMap::new();
 
-        for (key, data) in self.current_data.iter_mut() {
-            if data.done {
-                let queue = self.data_queue.get_mut(key).unwrap();
-                // Interpolate to the next position
-                if let Some(next) = queue.pop_front() {
-                    // From is now to
-                    std::mem::swap(&mut data.from_packet, &mut data.to_packet);
-                    // Calculate time difference between old packet and new packet
-                    let interpolation_time = next.time-data.from_packet.time;
-
-                    data.to_packet = next;
-                    data.time = Instant::now();
-                    // Do not interpolate if time exceeds threshold, as aircraft will just stand still interpolating at a very slow rate
-                    data.done = interpolation_time > SKIP_TIME_THRESHOLD;
-
-                    if queue.len() > DEFAULT_BUFFER_SIZE {
-                        // Will make next interpolation faster depending on how many packets over the buffer size it is.
-                        data.interpolation_time = interpolation_time * (DEFAULT_BUFFER_SIZE as f64)/((queue.len() - DEFAULT_BUFFER_SIZE) as f64) * 0.5;
-                    } else {
-                        data.interpolation_time = interpolation_time;
-                    }
-                }
-                continue
-            }
-
-            let alpha = data.time.elapsed().as_secs_f64()/data.interpolation_time;
-            // Determine if we should be interpolating
+        for (key, current) in self.current_data.iter_mut() {
+            let queue = self.data_queue.get_mut(key).unwrap();
             let options = self.options.get(key);
-            
-            // If we're done interpolation, do not interpolate anymore until the next request
-            if alpha >= 1.0 {
-                data.done = true;
-                data.current_value = data.to_packet.value;
-            } else {
-                // Interpolate according to options
-                if let Some(options) = options {
-                    if options.wrap360 {
-                        data.current_value = interpolate_f64_degrees(data.from_packet.value, data.to_packet.value, alpha);
-                    } else if options.wrap180 {
-                        data.current_value = interpolate_f64_degrees_180(data.from_packet.value, data.to_packet.value, alpha);
-                    } else if options.wrap90 {
-                        data.current_value = interpolate_f64_degrees_90(data.from_packet.value, data.to_packet.value, alpha);
-                    } else {
-                        data.current_value = interpolate_f64(data.from_packet.value, data.to_packet.value, alpha);
-                    }
-                } else {
-                    data.current_value = interpolate_f64(data.from_packet.value, data.to_packet.value, alpha);
-                }
+
+            if let Some(value) = set_next_value(current, self.current_time, queue, options, key) {
+                return_data.insert(key.clone(), VarReaderTypes::F64(value));
             }
-        
-            return_data.insert(key.clone(), VarReaderTypes::F64(data.current_value));
         }
 
-        return return_data;
+        return Some(return_data);
     }
 
     pub fn set_key_options(&mut self, key: &str, options: InterpolateOptions) {
@@ -148,6 +155,9 @@ impl Interpolate {
 
     pub fn reset(&mut self) {
         self.current_data.clear();
+        self.step_last_called = Instant::now();
+        self.newest_data_time = 0.0;
+        self.current_time = 0.0;
     }
 }
 

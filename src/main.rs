@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 mod app;
 mod clientmanager;
@@ -201,35 +201,36 @@ fn main() {
         let timer = Instant::now();
 
         if connected {
-            let message = conn.get_next_message();
             // Simconnect message
-            match message {
-                Ok(DispatchResult::SimobjectData(data)) => {
-                    definitions.process_sim_object_data(data);
-                }
-                // Exception occured
-                Ok(DispatchResult::Exception(data)) => {
-                    warn!("[SIM] SimConnect exception occurred: {}", unsafe {
-                        data.dwException
-                    });
-                }
-                Ok(DispatchResult::Event(data)) => {
-                    definitions.process_event_data(data);
-                }
-                Ok(DispatchResult::ClientData(data)) => {
-                    definitions.process_client_data(&conn, data);
-                }
-                Ok(DispatchResult::Quit(_)) => {
-                    if let Some(client) = transfer_client.as_mut() {
-                        client.stop("Sim closed.".to_string());
+            while let Ok(message) = conn.get_next_message() {
+                match message {
+                    DispatchResult::SimobjectData(data) => {
+                        definitions.process_sim_object_data(data);
                     }
+                    // Exception occured
+                    DispatchResult::Exception(data) => {
+                        warn!("[SIM] SimConnect exception occurred: {}", unsafe {
+                            data.dwException
+                        });
+                    }
+                    DispatchResult::Event(data) => {
+                        definitions.process_event_data(data);
+                    }
+                    DispatchResult::ClientData(data) => {
+                        definitions.process_client_data(&conn, data);
+                    }
+                    DispatchResult::Quit(_) => {
+                        if let Some(client) = transfer_client.as_mut() {
+                            client.stop("Sim closed.".to_string());
+                        }
+                    }
+                    _ => {}
                 }
-                _ => (),
             };
         }
 
         if let Some(client) = transfer_client.as_mut() {
-            if let Ok(message) = client.get_next_message() {
+            while let Ok(message) = client.get_next_message() {
                 match message {
                     ReceiveMessage::Payload(payload) => match payload {
                         // Unused
@@ -241,7 +242,7 @@ fn main() {
                         Payloads::InvalidName {..} => {}
                         Payloads::InitHandshake {..} => {}
                         // Used
-                        Payloads::Update {data, from, is_unreliable} => {
+                        Payloads::Update {data, from, is_unreliable, time} => {
                             // Not non high updating packets for debugging
                             if !is_unreliable {info!("[PACKET] {:?}", data)}
 
@@ -254,6 +255,7 @@ fn main() {
                                 definitions.on_receive_data(
                                     &conn,
                                     data,
+                                    time,
                                     &SyncPermission {
                                         is_server: clients.client_is_server(&from),
                                         is_master: clients.client_has_control(&from),

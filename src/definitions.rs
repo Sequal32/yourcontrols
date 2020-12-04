@@ -857,10 +857,8 @@ impl Definitions {
     }
 
     pub fn step_interpolate(&mut self, conn: &SimConnector) {
-        // Interpolate AVARS
-        let aircraft_interpolation_data = self.interpolation_avars.step();
-        
-        if aircraft_interpolation_data.len() > 0 {
+        // Interpolate AVARS        
+        if let Some(aircraft_interpolation_data) = self.interpolation_avars.step() {
             self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
         }
     }
