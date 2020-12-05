@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant, path::PathBuf};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::lvars::LVarResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector, util::resolve_relative_path};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::lvars::LVarResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -386,8 +386,6 @@ pub struct Definitions {
     constant_avars: HashMap<String, Option<VarReaderTypes>>,
     // Vars that should not be sent over the network
     do_not_sync: HashSet<String>,
-    // Correct velocity to local weather
-    velocity_corrector: VelocityCorrector,
     // Structs that actually do the interpolation
     interpolation_avars: Interpolate,
     interpolation_lvars: Interpolate,
@@ -431,8 +429,6 @@ impl Definitions {
             
             constant_avars: HashMap::new(),
             do_not_sync: HashSet::new(),
-            
-            velocity_corrector: VelocityCorrector::new(2),
             
             categories: HashMap::new(),
             periods: HashMap::new(),
@@ -824,8 +820,6 @@ impl Definitions {
 
     // Process changed aircraft variables and update SyncActions related to it
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
-        self.velocity_corrector.process_sim_object_data(data);
-
         if self.avarstransfer.define_id != data.dwDefineID {return}
         
         // Data might be bad/config files don't line up
@@ -875,8 +869,6 @@ impl Definitions {
         let mut data = AllNeedSync::new();
         // Swap queued vars into local var
         std::mem::swap(&mut data, &mut self.current_sync);
-        // Remove wind componenet from velocity
-        self.velocity_corrector.remove_wind_component(&mut data.avars);
         // Filter out based on what the client's current permissions are
         self.filter_all_sync(&mut data, sync_permission);
         // Split into interpolated vs non interpolated values - used for reliable/unreliable transmissions
@@ -925,17 +917,16 @@ impl Definitions {
         let mut to_sync = AVarMap::new();
         to_sync.reserve(data.len());
 
-        // Add wind componenent to velocity
-        self.velocity_corrector.add_wind_component(data);
-
         // Add constants
-        for (var_name, value) in self.constant_avars.iter() {
-            if !data.contains_key(var_name) {
-                if let Some(value) = value {
-                    data.insert(var_name.clone(), value.clone());
-                }
-            }
-        }
+        // if should_override {
+        //     for (var_name, value) in self.constant_avars.iter() {
+        //         if !data.contains_key(var_name) {
+        //             if let Some(value) = value {
+        //                 data.insert(var_name.clone(), value.clone());
+        //             }
+        //         }
+        //     }
+        // }
         
         // Only sync vars that are defined as so
         for (var_name, data) in data {
@@ -1014,7 +1005,6 @@ impl Definitions {
     pub fn on_connected(&mut self, conn: &SimConnector) {
         self.interpolation_avars.reset();
 
-        self.velocity_corrector.on_connected(conn);
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.hevents.on_connected(conn);

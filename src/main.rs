@@ -12,7 +12,6 @@ mod syncdefs;
 mod update;
 mod util;
 mod varreader;
-mod velocity;
 
 use app::{App, AppMessage, ConnectionMethod};
 use clientmanager::ClientManager;
@@ -34,7 +33,7 @@ const LOG_FILENAME: &str = "log.txt";
 const CONFIG_FILENAME: &str = "config.json";
 const AIRCRAFT_DEFINITIONS_PATH: &str = "definitions/aircraft/";
 
-const LOOP_SLEEP_TIME: Duration = Duration::from_millis(5);
+const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
 
 const KEY_HEVENT_PATH: &str = "definitions/resources/hevents.yaml";
 const BUTTON_HEVENT_PATH: &str = "definitions/resources/touchscreenkeys.yaml";
@@ -601,7 +600,7 @@ fn main() {
             connection_time = None;
         }
 
-        if timer.elapsed().as_millis() < 5 {
+        if timer.elapsed().as_millis() < 10 {
             sleep(LOOP_SLEEP_TIME)
         };
         // Attempt Simconnect connection

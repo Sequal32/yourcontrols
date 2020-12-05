@@ -3,8 +3,6 @@ use serde::Deserialize;
 
 use crate::{util::VarReaderTypes, varreader::SimValue};
 
-const SKIP_TIME_THRESHOLD: f64 = 2.0;
-
 const DELAY_TIME: f64 = 0.1;
 
 #[derive(Deserialize, Clone)]
@@ -62,7 +60,6 @@ fn set_next_value(current: &mut Packet, current_time: f64, queue: &mut Vec<Packe
 
             if alpha <= 1.0 {
                 let to_value = packet.value;
-
                 let time = packet.time;
 
                 if i > 0 {
