@@ -9,7 +9,7 @@ use crate::{definitions::AllNeedSync, util::HostnameLookupError};
 use super::Payloads;
 
 pub const MAX_PUNCH_RETRIES: u8 = 5;
-pub const LOOP_SLEEP_TIME_MS: u64 = 10;
+pub const LOOP_SLEEP_TIME_MS: u64 = 5;
 
 const HEARTBEAT_INTERVAL_MS: u64 = 1000;
 const RENDEZVOUS_SERVER_HOSTNAME: &str = "cloudserver.yourcontrols.xyz";
@@ -44,6 +44,7 @@ pub fn get_socket_config(timeout: u64) -> laminar::Config {
         heartbeat_interval: Some(Duration::from_millis(HEARTBEAT_INTERVAL_MS)),
         idle_connection_timeout: Duration::from_secs(timeout),
         receive_buffer_max_size: 65536,
+        max_packets_in_flight: u16::MAX,
         ..Default::default()
     }
 }

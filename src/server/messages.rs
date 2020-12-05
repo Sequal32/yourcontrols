@@ -9,8 +9,6 @@ use crate::definitions::AllNeedSync;
 
 use super::SenderReceiver;
 
-const ACK_BYTES: &[u8] = &[0x41, 0x43, 0x4b];
-
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum Payloads {
@@ -43,24 +41,11 @@ impl From<serde_json::Error> for Error {
     }
 }
 
-// Need to manually acknowledge since most of the time we don't send packets back
-fn handle_packet(sender: &mut Sender<Packet>, packet: &Packet) {
-    if let laminar::DeliveryGuarantee::Reliable = packet.delivery_guarantee() {
-        match packet.order_guarantee() {
-            laminar::OrderingGuarantee::None => {}
-            laminar::OrderingGuarantee::Sequenced(stream) => {sender.send(Packet::reliable_sequenced(packet.addr(), ACK_BYTES.to_vec(), stream)).ok();},
-            laminar::OrderingGuarantee::Ordered(stream) => {sender.send(Packet::reliable_ordered(packet.addr(), ACK_BYTES.to_vec(), stream)).ok();}
-        };
-    }
-}
 //
 fn read_value(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Value), Error>  {
     let packet = match transfer.get_receiver().try_recv() {
         Ok(event) => match event {
-            SocketEvent::Packet(packet) => {
-                handle_packet(transfer.get_sender(), &packet);
-                packet
-            },
+            SocketEvent::Packet(packet) => packet,
             SocketEvent::Disconnect(addr) |
             SocketEvent::Timeout(addr) => {return Err(Error::ConnectionClosed(addr))}
             _ => {return Err(Error::Dummy)}

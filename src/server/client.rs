@@ -199,44 +199,36 @@ impl Client {
 
         self.transfer = Some(transfer);
 
-        // Run socket
-        let should_stop_clone = self.should_stop.clone();
-
         let rendezvous_timer = Instant::now();
         let timeout = self.timeout;
-
-        thread::spawn(move || {
-            let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
-
-            loop {
-                if should_stop_clone.load(SeqCst) {break}
-
-                socket.manual_poll(Instant::now());
-                
-                sleep(sleep_duration);
-            }
-        });
         // Run main loop
         thread::spawn(move || {
             let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
 
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
+
+                socket.manual_poll(Instant::now());
                 
-                match messages::get_next_message(&mut transfer.net_transfer) {
-                    Ok((addr, payload)) => {
-                        transfer.handle_message(addr, payload);
-                    },
-                    Err(e) => match e {
-                        Error::ConnectionClosed(addr) => {
-                            // Can't connect to rendezvous to obtain session key
-                            if rendezvous.is_none() || (rendezvous.is_some() && rendezvous.unwrap() != addr) {
-                                transfer.stop("No message received from server.".to_string())
+                loop {
+                    match messages::get_next_message(&mut transfer.net_transfer) {
+                        Ok((addr, payload)) => {
+                            transfer.handle_message(addr, payload);
+                        },
+                        Err(e) => match e {
+                            Error::ConnectionClosed(addr) => {
+                                // Can't connect to rendezvous to obtain session key
+                                if rendezvous.is_none() || (rendezvous.is_some() && rendezvous.unwrap() != addr) {
+                                    transfer.stop("No message received from server.".to_string())
+                                }
                             }
+                            Error::ReadTimeout => {
+                                break
+                            }
+                            _ => {}
                         }
-                        _ => {}
-                    }
-                };
+                    };
+                }
 
                 // Check rendezvous timer
                 if transfer.received_address.is_none() && rendezvous.is_some() && rendezvous_timer.elapsed().as_secs() >= timeout {
@@ -249,6 +241,7 @@ impl Client {
                 if transfer.should_stop() {break}
 
                 mem::drop(transfer);
+
                 sleep(sleep_duration);
             }
         });

@@ -357,18 +357,6 @@ impl Server {
 
         self.transfer = Some(transfer);
 
-        // Run socket
-        let should_stop_clone = self.should_stop.clone();
-        let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
-
-        thread::spawn(move || {
-            loop {
-                if should_stop_clone.load(SeqCst) {break}
-                socket.manual_poll(Instant::now());
-                sleep(sleep_duration);
-            }
-        });
-
         // If not hole punching, then tell the application that the server is immediately ready
         if rendezvous.is_none() {
             self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
@@ -380,28 +368,35 @@ impl Server {
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
 
-                let message = messages::get_next_message(&mut transfer.net_transfer);
-                match message {
-                    Ok((addr, payload)) => {
-                        transfer.handle_message(addr, payload);
-                    },
-                    Err(e) => match e {
-                        Error::ConnectionClosed(addr) => {
-                                // Could not reach rendezvous
-                            if transfer.session_id == "" && rendezvous.is_some() && rendezvous.unwrap() == addr {
+                socket.manual_poll(Instant::now());
 
-                                transfer.server_tx.try_send(ReceiveMessage::Event(Event::SessionIdFetchFailed)).ok();
-                                transfer.should_stop.store(true, SeqCst);
+                loop {
+                    let message = messages::get_next_message(&mut transfer.net_transfer);
+                    match message {
+                        Ok((addr, payload)) => {
+                            transfer.handle_message(addr, payload);
+                        },
+                        Err(e) => match e {
+                            Error::ConnectionClosed(addr) => {
+                                    // Could not reach rendezvous
+                                if transfer.session_id == "" && rendezvous.is_some() && rendezvous.unwrap() == addr {
 
-                            } else {
-                                    // Client disconnected
-                                transfer.remove_client(addr);
+                                    transfer.server_tx.try_send(ReceiveMessage::Event(Event::SessionIdFetchFailed)).ok();
+                                    transfer.should_stop.store(true, SeqCst);
 
+                                } else {
+                                        // Client disconnected
+                                    transfer.remove_client(addr);
+
+                                }
                             }
+                            Error::ReadTimeout => {
+                                break
+                            }
+                            _ => {}
                         }
-                        _ => {}
-                    }
-                };
+                    };
+                }
 
                 transfer.handle_handshake();
                 transfer.handle_app_message();
@@ -409,6 +404,7 @@ impl Server {
                 if transfer.should_stop() {break}
 
                 mem::drop(transfer);
+                
                 sleep(sleep_duration);
             }
         });
