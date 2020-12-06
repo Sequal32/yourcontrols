@@ -125,11 +125,19 @@ impl Interpolate {
     pub fn step(&mut self) -> Option<SimValue> {
         // No packet received yet
         if self.current_time == 0.0 {return None}
+        
+        let mut delta = self.step_last_called.elapsed().as_secs_f64();
 
-        let delta = self.step_last_called.elapsed().as_secs_f64();
         self.step_last_called = Instant::now();
         // Should we delay?
-        if self.newest_data_time-self.current_time < DELAY_TIME {return None}
+        let diff = self.newest_data_time-self.current_time;
+        if diff > 1.0 {
+            delta += diff - 1.0
+        }
+    
+        // Should delay to let packet queue fill up a bit
+        if diff < DELAY_TIME {return None}
+
         self.current_time += delta;
 
         let mut return_data = HashMap::new();
@@ -143,7 +151,7 @@ impl Interpolate {
             }
         }
 
-        return Some(return_data);
+        return if return_data.len() == 0 {None} else {Some(return_data)};
     }
 
     pub fn set_key_options(&mut self, key: &str, options: InterpolateOptions) {
