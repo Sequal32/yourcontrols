@@ -98,6 +98,7 @@ impl TransferStruct {
                     self.send_message(Payloads::InvalidVersion {
                         server_version: self.version.clone(),
                     }, addr);
+                    return;
                 }
 
                 info!("[NETWORK] Client requests name {}", name);
