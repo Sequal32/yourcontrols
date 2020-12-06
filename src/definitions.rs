@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant, path::PathBuf};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::lvars::LVarResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, lvars::hevents::HEvents, lvars::lvars::GetResult, lvars::lvars::LVarResult, lvars::util::LoadError, sync::AircraftVars, sync::Events, sync::LVarSyncer, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, syncdefs::CustomCalculator, util::Category, util::InDataTypes, varreader::SimValue, util::VarReaderTypes, util::resolve_relative_path};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -850,9 +850,19 @@ impl Definitions {
         }
     }
 
+    fn add_constants_to_data(&mut self, data: &mut SimValue) {
+        // Add constants
+        for (var_name, value) in self.constant_avars.iter() {
+            if let Some(value) = value {
+                data.insert(var_name.clone(), value.clone());
+            }
+        }
+    }
+
     pub fn step_interpolate(&mut self, conn: &SimConnector) {
         // Interpolate AVARS        
-        if let Some(aircraft_interpolation_data) = self.interpolation_avars.step() {
+        if let Some(mut aircraft_interpolation_data) = self.interpolation_avars.step() {
+            self.add_constants_to_data(&mut aircraft_interpolation_data);
             self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
         }
     }
@@ -917,17 +927,6 @@ impl Definitions {
         let mut to_sync = AVarMap::new();
         to_sync.reserve(data.len());
 
-        // Add constants
-        // if should_override {
-        //     for (var_name, value) in self.constant_avars.iter() {
-        //         if !data.contains_key(var_name) {
-        //             if let Some(value) = value {
-        //                 data.insert(var_name.clone(), value.clone());
-        //             }
-        //         }
-        //     }
-        // }
-        
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             self.last_written.insert(var_name.to_string(), Instant::now());

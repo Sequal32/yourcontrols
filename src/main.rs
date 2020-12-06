@@ -1,4 +1,4 @@
-// #![windows_subsystem = "windows"]
+#![windows_subsystem = "windows"]
 
 mod app;
 mod clientmanager;
@@ -260,7 +260,7 @@ fn main() {
                                         is_master: clients.client_has_control(&from),
                                         is_init: true,
                                     },
-                                    !need_update,
+                                    !need_update
                                 );
                                 // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
                                 need_update = false;

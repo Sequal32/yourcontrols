@@ -151,7 +151,7 @@ impl Interpolate {
             }
         }
 
-        return if return_data.len() == 0 {None} else {Some(return_data)};
+        return Some(return_data);
     }
 
     pub fn set_key_options(&mut self, key: &str, options: InterpolateOptions) {
