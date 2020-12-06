@@ -4,7 +4,7 @@ use std::{net::IpAddr, io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
 use serde::{Serialize, Deserialize};
-use crate::simconfig;
+use crate::{simconfig, util::resolve_relative_path};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -48,7 +48,7 @@ impl App {
         let (tx, rx) = unbounded();
 
         let mut logo = vec![];
-        File::open("assets/logo.png").unwrap().read_to_end(&mut logo).ok();
+        File::open(resolve_relative_path("assets/logo.png")).unwrap().read_to_end(&mut logo).ok();
 
         let handle = Arc::new(Mutex::new(None));
         let handle_clone = handle.clone();
