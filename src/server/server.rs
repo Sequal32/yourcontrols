@@ -187,7 +187,7 @@ impl TransferStruct {
     }
 
     fn handle_app_message(&mut self) {
-        if let Ok(payload) = self.client_rx.try_recv() {
+        while let Ok(payload) = self.client_rx.try_recv() {
             match &payload {
                 Payloads::TransferControl { from: _, to } => {
                     self.in_control = to.clone();

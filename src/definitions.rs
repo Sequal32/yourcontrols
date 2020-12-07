@@ -921,6 +921,12 @@ impl Definitions {
         }
     }
 
+    fn reset_constants(&mut self) {
+        for value in self.constant_avars.values_mut() {
+            *value = None;
+        }
+    }
+
     pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: &mut AVarMap, time: f64, interpolate: bool) {
         if data.len() == 0 {return}
 
@@ -1043,5 +1049,6 @@ impl Definitions {
     pub fn reset_interpolate(&mut self) {
         self.interpolation_avars.reset();
         self.interpolation_lvars.reset();
+        self.reset_constants();
     }
 }
