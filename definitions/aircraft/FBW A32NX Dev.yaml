@@ -1,7 +1,6 @@
 include:
   - definitions/modules/general.yaml
   - definitions/modules/physics.yaml
-  - definitions/modules/trim.yaml
 
 shared:
   # COCKPIT LIGHTING
@@ -429,14 +428,6 @@ shared:
     var_units: Bool
     event_name: LANDING_LIGHTS_TOGGLE
     event_param: 3
-  -
-    type: var
-    var_name: L:LANDING_1_Retracted
-    var_type: f64
-  -
-    type: var
-    var_name: L:LANDING_2_Retracted
-    var_type: f64
   - # ASOBO_LIGHTING_Switch_Light_Wing_Template
     type: ToggleSwitch
     var_name: A:LIGHT WING
@@ -746,68 +737,82 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 77
     index_reversed: true
+  - # ASOBO_HANDLING_Switch_Wipers_Template
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:81
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 81
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:81
+    var_units: Percent
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 81
+    index_reversed: true
   # Fire subtemplates
   - # FBW_Airbus_FIRE_TEST_BUTTON
     type: var
-    var_name: L:A32NX_FIRE_TEST_ENG1_IsDown
+    var_name: L:A32NX_FIRE_TEST_ENG1
     var_type: f64
   - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:A32NX_Fire_ENG1_Agent1_Discharge
+    var_name: L:A32NX_FIRE_ENG1_AGENT1_Discharge
     var_type: f64
   - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:A32NX_Fire_ENG1_Agent2_Discharge
+    var_name: L:A32NX_FIRE_ENG1_AGENT2_Discharge
     var_type: f64
   - # FBW_Airbus_FIRE_GUARD
     type: var
-    var_name: L:A32NX_FIRE_GUARD_STATE_ENG1_IsDown
+    var_name: L:A32NX_FIRE_GUARD_ENG1
     var_type: f64
   - # FBW_Airbus_FIRE_BUTTON
     type: var
-    var_name: L:A32NX_FIRE_BUTTON_STATE_ENG1_IsDown
+    var_name: L:A32NX_FIRE_BUTTON_ENG1
     var_type: f64
   - # FBW_Airbus_FIRE_TEST_BUTTON
     type: var
-    var_name: L:A32NX_FIRE_TEST_ENG2_IsDown
+    var_name: L:A32NX_FIRE_TEST_ENG2
     var_type: f64
   - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:A32NX_Fire_ENG2_Agent1_Discharge
+    var_name: L:A32NX_FIRE_ENG2_AGENT1_Discharge
     var_type: f64
   - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:A32NX_Fire_ENG2_Agent2_Discharge
+    var_name: L:A32NX_FIRE_ENG2_AGENT2_Discharge
     var_type: f64
   - # FBW_Airbus_FIRE_GUARD
     type: var
-    var_name: L:A32NX_FIRE_GUARD_STATE_ENG2_IsDown
+    var_name: L:A32NX_FIRE_GUARD_ENG2
     var_type: f64
   - # FBW_Airbus_FIRE_BUTTON
     type: var
-    var_name: L:A32NX_FIRE_BUTTON_STATE_ENG2_IsDown
+    var_name: L:A32NX_FIRE_BUTTON_ENG2
     var_type: f64
   # APU
   - # FBW_Airbus_FIRE_TEST_BUTTON
     type: var
-    var_name: L:A32NX_FIRE_TEST_APU_IsDown
+    var_name: L:A32NX_FIRE_TEST_APU
     var_type: f64
   - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:A32NX_Fire_APU_Agent1_Discharge
+    var_name: L:A32NX_FIRE_APU_AGENT1_Discharge
     var_type: f64
   - # FBW_Airbus_FIRE_BUTTON
     type: var
-    var_name: L:A32NX_FIRE_BUTTON_STATE_APU_IsDown
+    var_name: L:A32NX_FIRE_BUTTON_APU
     var_type: f64
   - # FBW_Airbus_FIRE_GUARD
     type: var
-    var_name: L:A32NX_FIRE_GUARD_STATE_APU_IsDown
+    var_name: L:A32NX_FIRE_GUARD_APU
     var_type: f64
   # CARGO_SMOKE
   - # FBW_Airbus_FIRE_TEST_BUTTON
     type: var
-    var_name: L:A32NX_FIRE_TEST_CARGO_IsDown
+    var_name: L:A32NX_FIRE_TEST_CARGO
     var_type: f64
   - # ASOBO_GT_Switch_Dummy
     type: var
@@ -1021,11 +1026,28 @@ shared:
     var_name: L:XMLVAR_Autopilot_2_Status
     var_type: f64
   -
+    type: var
+    var_name: L:A32NX_AUTOPILOT_APPR_MODE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AUTOPILOT_LOC_MODE
+    var_type: f64
+  -
     type: event
     event_name: AP_LOC_HOLD
   -
     type: event
     event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_LOC_HOLD_ON
+  -
+    type: event
+    event_name: AP_LOC_HOLD_OFF
+  -
+    type: event
+    event_name: AP_APR_HOLD_ON
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM
