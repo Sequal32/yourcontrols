@@ -1,10 +1,9 @@
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 mod app;
 mod clientmanager;
 mod definitions;
 mod interpolate;
-mod lvars;
 mod server;
 mod simconfig;
 mod sync;
@@ -34,9 +33,6 @@ const CONFIG_FILENAME: &str = "config.json";
 const AIRCRAFT_DEFINITIONS_PATH: &str = "definitions/aircraft/";
 
 const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
-
-const KEY_HEVENT_PATH: &str = "definitions/resources/hevents.yaml";
-const BUTTON_HEVENT_PATH: &str = "definitions/resources/touchscreenkeys.yaml";
 
 fn get_aircraft_configs() -> io::Result<Vec<String>> {
     let mut filenames = Vec::new();
@@ -150,7 +146,7 @@ fn main() {
     let mut update_rate_instant = Instant::now();
     let mut update_rate = calculate_update_rate(config.update_rate);
 
-    let mut definitions = Definitions::new(update_rate);
+    let mut definitions = Definitions::new();
 
     let mut need_update = false;
     let mut did_send_name = false;
@@ -164,14 +160,6 @@ fn main() {
                             definitions: &mut Definitions,
                             config_to_load: &mut String|
      -> bool {
-        // Load H Events
-        match definitions.load_h_events(&resolve_relative_path(KEY_HEVENT_PATH), &resolve_relative_path(BUTTON_HEVENT_PATH)) {
-            Ok(_) => info!("[DEFINITIONS] Loaded and mapped {} H: events.",definitions.get_number_hevents()),
-            Err(e) => {
-                log::error!("[DEFINITIONS] Could not load H: event files: {}", e);
-                return false;
-            }
-        };
         // Load aircraft configuration
         let mut path = resolve_relative_path(AIRCRAFT_DEFINITIONS_PATH);
         path.push(config_to_load.clone());
@@ -214,9 +202,6 @@ fn main() {
                     }
                     DispatchResult::Event(data) => {
                         definitions.process_event_data(data);
-                    }
-                    DispatchResult::ClientData(data) => {
-                        definitions.process_client_data(&conn, data);
                     }
                     DispatchResult::Quit(_) => {
                         if let Some(client) = transfer_client.as_mut() {
@@ -394,9 +379,7 @@ fn main() {
             }
 
 
-            if !control.has_control() {
-                definitions.step_interpolate(&conn);
-            }
+            definitions.step(&conn, !control.has_control());
 
             // Handle initial connection delay, allows lvars to be processed
             if let Some(connection_time) = connection_time {
@@ -520,7 +503,7 @@ fn main() {
                 AppMessage::LoadAircraft {config_file_name} => {
                     // Load config
                     info!("[DEFINITIONS] {} aircraft config selected.", config_file_name);
-                    definitions = Definitions::new(update_rate);
+                    definitions = Definitions::new();
                     config_to_load = config_file_name.clone();
 
                     // Connect to simconnect

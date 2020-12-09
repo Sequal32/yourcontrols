@@ -119,7 +119,7 @@ impl VarReader {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::lvars::memwriter::MemWriter;
+    use crate::sync::memwriter::MemWriter;
 
     #[test]
     fn test_read() {

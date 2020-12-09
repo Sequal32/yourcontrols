@@ -3,13 +3,13 @@ use std::{cmp::PartialOrd, fmt::Display, ops::{AddAssign, Mul, Sub, SubAssign}};
 use num::{FromPrimitive, ToPrimitive};
 use simconnect;
 
-use crate::{sync::LVarSyncer, util::NumberDigits};
+use crate::{sync::{gaugecommunicator::GaugeCommunicator, jscommunicator::JSCommunicator}, util::NumberDigits};
 
 const GROUP_ID: u32 = 5;
 
 pub trait Syncable<T> where T: Default {
     fn set_current(&mut self, current: T);
-    fn set_new(&self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer);
+    fn set_new(&self, new: T, conn: &simconnect::SimConnector, js_communicator: &mut JSCommunicator, gauge_communicator: &mut GaugeCommunicator);
 }
 
 pub struct ToggleSwitch {
@@ -63,18 +63,13 @@ impl<'a> Syncable<bool> for ToggleSwitch {
         self.current = current;
     }
 
-    fn set_new(&self, new: bool, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
+    fn set_new(&self, new: bool, conn: &simconnect::SimConnector, js_communicator: &mut JSCommunicator, gauge_communicator: &mut GaugeCommunicator) {
         if self.current == new {return}
         if !new && self.switch_on {return}
 
         if let Some(event_name) = self.event_name.as_ref() {
             
-            let value_string = match self.event_param {
-                Some(value) => value.to_string(),
-                None => String::new(),
-            };
-
-            lvar_transfer.set_unchecked(conn, event_name, None, &value_string);
+            js_communicator.set(event_name.clone(), None, self.event_param.map(|x| x.to_f64().unwrap()));
 
         } else {
             let event_id = match self.off_event_id {
@@ -136,7 +131,7 @@ impl<T> Syncable<T> for NumSet<T> where T: Default + PartialEq + Mul<T, Output =
         self.current = current
     }
 
-    fn set_new(&self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
+    fn set_new(&self, new: T, conn: &simconnect::SimConnector, js_communicator: &mut JSCommunicator, gauge_communicator: &mut GaugeCommunicator) {
         if new == self.current {return}
 
         let value = match self.multiply_by.as_ref() {
@@ -157,7 +152,7 @@ impl<T> Syncable<T> for NumSet<T> where T: Default + PartialEq + Mul<T, Output =
                 None => value.to_string()
             };
 
-            lvar_transfer.set_unchecked(conn, event_name, None, &value_string);
+            gauge_communicator.set(conn, event_name, None, &value_string);
             
         } else {
             conn.transmit_client_event(1, self.event_id, value.to_i32().unwrap() as u32, GROUP_ID, 0);
@@ -198,7 +193,7 @@ impl<T> Syncable<T> for NumIncrement<T> where T: Default + Sub<T, Output = T> + 
         self.current = current
     }
 
-    fn set_new(&self, new: T, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
+    fn set_new(&self, new: T, conn: &simconnect::SimConnector, _: &mut JSCommunicator, _: &mut GaugeCommunicator) {
         let mut working = self.current;
 
         if self.pass_difference {
@@ -242,7 +237,7 @@ impl Syncable<i32> for NumDigitSet {
         self.current = NumberDigits::new(current)
     }
 
-    fn set_new(&self, new: i32, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
+    fn set_new(&self, new: i32, conn: &simconnect::SimConnector, _: &mut JSCommunicator, _: &mut GaugeCommunicator) {
         let new = NumberDigits::new(new);
 
         for index in 0..self.inc_event_ids.len() {
@@ -263,26 +258,28 @@ impl Syncable<i32> for NumDigitSet {
 }
 
 
-pub struct CustomCalculator {
-    set_string: String,
-    current: f64
+pub struct BusToggle {
+    bus_index: u16,
+    connection_index: u16,
+    current: bool
 }
 
-impl CustomCalculator {
-    pub fn new(set_string: String) -> Self { 
+impl BusToggle {
+    pub fn new(bus_index: u16, connection_index: u16) -> Self { 
         Self {
-            set_string, current: 0.0
+            bus_index, connection_index,
+            current: false
         }
     }
 }
 
-impl Syncable<f64> for CustomCalculator {
-    fn set_current(&mut self, new: f64) {
+impl Syncable<bool> for BusToggle {
+    fn set_current(&mut self, new: bool) {
         self.current = new
     }
 
-    fn set_new(&self, new: f64, conn: &simconnect::SimConnector, transfer: &mut LVarSyncer) {
+    fn set_new(&self, new: bool, _: &simconnect::SimConnector, js_communicator: &mut JSCommunicator, _: &mut GaugeCommunicator) {
         if self.current == new {return}
-        transfer.send_raw(conn, &self.set_string);
+        js_communicator.toggle_bus(self.bus_index, self.connection_index, String::new());
     }
 }

@@ -1,5 +1,5 @@
 use crossbeam_channel::{Receiver, Sender, unbounded};
-use log::info;
+use log::{error, info};
 use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
 use retain_mut::RetainMut;
@@ -390,6 +390,9 @@ impl Server {
                                     transfer.remove_client(addr);
 
                                 }
+                            }
+                            Error::SerdeError(e) => {
+                                error!("Error deserializing data: {}", e)
                             }
                             Error::ReadTimeout => {
                                 break
