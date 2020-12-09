@@ -89,6 +89,7 @@ shared:
     var_units: Percent
     var_type: i32
     event_param: 0
+    index_reversed: true
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
   - 
     type: NumSet
@@ -96,6 +97,7 @@ shared:
     var_units: Percent
     var_type: i32
     event_param: 1
+    index_reversed: true
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
   - 
     type: NumSet
@@ -103,7 +105,17 @@ shared:
     var_units: Percent
     var_type: i32
     event_param: 2
+    index_reversed: true
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
+  # ASOBO_LIGHTING_Knob_Pedestal_Template
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL POWER SETTING:1
+    var_units: Percent
+    var_type: i32
+    event_param: 1
+    index_reversed: true
+    event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
   - # Avionics lighting ASOBO_LIGHTING_Knob_Avionics_Template
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -116,14 +128,6 @@ shared:
     var_units: Percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_3_SET
-  # ASOBO_LIGHTING_Knob_Pedestal_Template
-  -
-    type: NumSet
-    var_name: A:LIGHT PEDESTRAL POWER SETTING
-    var_units: Percent
-    var_type: i32
-    event_param: 0
-    event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
   # Deice
   - # ASOBO_DEICE_Switch_Pitot_Template
     type: ToggleSwitch
@@ -151,9 +155,26 @@ shared:
     var_type: f64
   - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
     type: ToggleSwitch
-    var_name: A:LIGHT CABIN
+    var_name: A:LIGHT CABIN:1
     var_units: Bool
     event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 1
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 2
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT PEDESTRAL
+    var_units: Bool
+    event_name: PEDESTRAL_LIGHTS_TOGGLE
+  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    event_name: PANEL_LIGHTS_TOGGLE
 
 server:
   -

@@ -263,13 +263,13 @@ shared:
     event_param: 93
   # OVERHEAD
   - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate AIRBUS SPECIFIC
-    type: CustomCalculator
-    get: 10 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
-    set: 6 10 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+    type: BusToggle
+    connection_index: 6
+    bus_index: 10
   - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate AIRBUS SPECIFIC
-    type: CustomCalculator
-    get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
-    set: 6 11 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+    type: BusToggle
+    connection_index: 6
+    bus_index: 11
   - # ASOBO_ELECTRICAL_Switch_Alternator_Template
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
@@ -744,11 +744,11 @@ shared:
     var_type: f64
   - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:A32NX_Fire_ENG1_Agent1_Discharge
+    var_name: L:A32NX_FIRE_ENG1_AGENT1_Discharge
     var_type: f64
   - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:A32NX_Fire_ENG1_Agent2_Discharge
+    var_name: L:A32NX_FIRE_ENG1_AGENT2_Discharge
     var_type: f64
   - # FBW_Airbus_FIRE_GUARD
     type: var
@@ -785,7 +785,7 @@ shared:
     var_type: f64
   - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:A32NX_Fire_APU_Agent1_Discharge
+    var_name: L:A32NX_FIRE_APU_AGENT1_Discharge
     var_type: f64
   - # FBW_Airbus_FIRE_BUTTON
     type: var
@@ -1012,11 +1012,28 @@ shared:
     var_name: L:XMLVAR_Autopilot_2_Status
     var_type: f64
   -
+    type: var
+    var_name: L:A32NX_AUTOPILOT_APPR_MODE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AUTOPILOT_LOC_MODE
+    var_type: f64
+  -
     type: event
     event_name: AP_LOC_HOLD
   -
     type: event
     event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_LOC_HOLD_ON
+  -
+    type: event
+    event_name: AP_LOC_HOLD_OFF
+  -
+    type: event
+    event_name: AP_APR_HOLD_ON
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM

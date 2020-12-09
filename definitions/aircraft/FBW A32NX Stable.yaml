@@ -257,13 +257,13 @@ shared:
     event_param: 93
   # OVERHEAD
   - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate AIRBUS SPECIFIC
-    type: CustomCalculator
-    get: 10 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
-    set: 6 10 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+    type: BusToggle
+    connection_index: 6
+    bus_index: 10
   - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate AIRBUS SPECIFIC
-    type: CustomCalculator
-    get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
-    set: 6 11 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+    type: BusToggle
+    connection_index: 6
+    bus_index: 11
   - # ASOBO_ELECTRICAL_Switch_Alternator_Template
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
