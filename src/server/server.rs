@@ -460,7 +460,7 @@ impl TransferClient for Server {
         // Read for initial contact with other clients
         if let Some(transfer) = self.transfer.as_ref() {
             if let Some(client) = transfer.lock().unwrap().clients.get_mut(&target) {
-                client.is_observer = true;
+                client.is_observer = is_observer;
             }
         }
 

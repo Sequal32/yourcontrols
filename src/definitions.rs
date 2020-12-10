@@ -812,6 +812,7 @@ impl Definitions {
     fn add_constants_to_data(&mut self, data: &mut SimValue) {
         // Add constants
         for (var_name, value) in self.constant_avars.iter() {
+            if data.contains_key(var_name) {continue}
             if let Some(value) = value {
                 data.insert(var_name.clone(), value.clone());
             }
