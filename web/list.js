@@ -42,8 +42,10 @@ ConnectionList.prototype.add = function(name) {
     statusText.innerHTML = "In Control"
     statusText.hidden = true
     // Add as childs
-    listItem.append(controlButton, observeButton, statusText)
-    this.object.append(listItem)
+    listItem.appendChild(controlButton)
+    listItem.appendChild(observeButton)
+    listItem.appendChild(statusText)
+    this.object.appendChild(listItem)
     // listItem as class
     let listItemObject = new ConnectionListItem(listItem, name)
     this.list[name] = listItemObject
