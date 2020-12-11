@@ -229,7 +229,7 @@ function MessageReceived(data) {
             break;
         case "version":
             $('#updateModal').modal()
-            version_alert_text.innerHTML = `New Version is available ${data["data"]}`
+            version_alert_text.innerHTML = "New Version is available " + data["data"]
             break;
         case "update_failed":
             updateFailed()
@@ -243,22 +243,22 @@ function MessageReceived(data) {
 // Init
 invoke({"type":"startup"})
 
-var setTheme = (isDarkTheme) =>{
+function setTheme(isDarkTheme) {
     if (isDarkTheme) {
         var elements = document.getElementsByClassName("themed")
-        for (const element of elements) {
-            element.classList.add("bg-dark")
-            element.classList.add("text-white")
-            element.classList.remove("bg-white")
-            element.classList.remove("text-black")
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.add("bg-dark")
+            elements[i].classList.add("text-white")
+            elements[i].classList.remove("bg-white")
+            elements[i].classList.remove("text-black")
         }
     } else {
         var elements = document.getElementsByClassName("themed")
-        for (const element of elements) {
-            element.classList.remove("bg-dark")
-            element.classList.remove("text-white")
-            element.classList.add("bg-white")
-            element.classList.add("text-black")
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.remove("bg-dark")
+            elements[i].classList.remove("text-white")
+            elements[i].classList.add("bg-white")
+            elements[i].classList.add("text-black")
         }
     }
 }
@@ -285,7 +285,7 @@ alert.updatetext = function(typeString, text) {
     alert.childNodes[0].nodeValue = text
 }
 
-$("#settings-form").submit(e => {
+$("#settings-form").submit(function(e) {
     e.preventDefault()
 
     var newSettings = {}
@@ -307,7 +307,7 @@ $("#settings-form").submit(e => {
     invoke({"type": "SaveConfig", "config": settings})
 })
 
-$("#main-form-host").submit(e => {
+$("#main-form-host").submit(function(e) {
     e.preventDefault()
 
     if (trying_connection) {return}
@@ -327,7 +327,7 @@ $("#main-form-host").submit(e => {
 
 })
 
-$("#main-form-join").submit(e => {
+$("#main-form-join").submit(function(e) {
     e.preventDefault()
 
     if (trying_connection) {return}
@@ -374,7 +374,7 @@ function updateFailed() {
 version_alert_button.onclick = update
 
 aircraftList.addAircraft = function (aircraftName) {
-    const newButton = document.createElement("option")
+    let newButton = document.createElement("option")
     newButton.className = "list-group-item list-group-item-action aircraft-list-entry themed"
     newButton.innerHTML = aircraftName
     newButton.value = aircraftName
