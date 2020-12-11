@@ -383,10 +383,7 @@ fn main() {
 
             // Handle initial connection delay, allows lvars to be processed
             if let Some(connection_time) = connection_time {
-                if !did_send_name && !client.is_server() && connection_time.elapsed().as_secs() >= 3 {
-                    client.send_init(updater.get_version().to_string());
-                    did_send_name = true;
-                } else {
+                if connection_time.elapsed().as_secs() >= 3 {
                         // Update
                     let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
                     
@@ -466,6 +463,7 @@ fn main() {
                         match start_client(config.conn_timeout, username.clone(), session_id, isipv6, ip, hostname, port, method) {
                             Ok(client) => {
                                 info!("[NETWORK] Client started.");
+                                client.send_init(updater.get_version().to_string());
                                 transfer_client = Some(Box::new(client));
                             }
                             Err(e) => {
@@ -566,7 +564,7 @@ fn main() {
                 AppMessage::ForceTakeControl => {
                     if let Some(client) = transfer_client.as_ref() {
                         if let Some(client_name) = clients.get_client_in_control() {
-                            //Will send a loopback Payloads::TransferControl
+                                //Will send a loopback Payloads::TransferControl
                             client.take_control(client_name.clone())
                         }
                     }

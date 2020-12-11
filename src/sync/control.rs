@@ -45,10 +45,6 @@ impl Control {
         return self.has_control;
     }
 
-    pub fn time_since_control_change(&self) -> u64 {
-        return self.control_change_time.elapsed().as_secs();
-    }
-
     pub fn on_connected(&mut self, conn: &SimConnector) {
         conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
         conn.map_client_event_to_sim_event(1001, "FREEZE_ALTITUDE_SET");
