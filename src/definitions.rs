@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant, path::PathBuf};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::{gaugecommunicator::{GaugeCommunicator, GetResult, LVarResult}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path, varreader::SimValue};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::{gaugecommunicator::{GaugeCommunicator, GetResult, LVarResult}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path, varreader::SimValue, velocity::VelocityCorrector};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -384,6 +384,8 @@ pub struct Definitions {
     last_written: HashMap<String, Instant>,
     // Values to constantly keep updating, even if no data was received
     constant_avars: HashMap<String, Option<VarReaderTypes>>,
+    // Helper struct to correct aircraft velocity
+    velocity_corrector: VelocityCorrector,
     // Vars that should not be sent over the network
     do_not_sync: HashSet<String>,
     // Structs that actually do the interpolation
@@ -426,6 +428,7 @@ impl Definitions {
             interpolation_avars: Interpolate::new(),
             
             constant_avars: HashMap::new(),
+            velocity_corrector: VelocityCorrector::new(2),
             do_not_sync: HashSet::new(),
             
             categories: HashMap::new(),
@@ -793,10 +796,14 @@ impl Definitions {
 
     // Process changed aircraft variables and update SyncActions related to it
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
+        self.velocity_corrector.process_sim_object_data(data);
+
         if self.avarstransfer.define_id != data.dwDefineID {return}
         
         // Data might be bad/config files don't line up
-        if let Ok(data) = self.avarstransfer.read_vars(data) {
+        if let Ok(mut data) = self.avarstransfer.read_vars(data) {
+            // Remove wind
+            self.velocity_corrector.remove_wind_component(&mut data);
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Set current var syncactions
@@ -914,6 +921,10 @@ impl Definitions {
         let mut to_sync = AVarMap::new();
         to_sync.reserve(data.len());
 
+        // Correct velocity
+        let mut data = data;
+        self.velocity_corrector.add_wind_component(&mut data);
+
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             self.last_written.insert(var_name.to_string(), Instant::now());
@@ -970,7 +981,7 @@ impl Definitions {
         for event in data {
 
             if event.event_name.starts_with("H:") {
-                self.lvarstransfer.send_raw(conn, &event.event_name);
+                self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
             } else {
                 self.events.trigger_event(conn, &event.event_name, event.data as u32);
             }
@@ -983,9 +994,11 @@ impl Definitions {
         let mut data = data;
         self.filter_all_sync(&mut data, sync_permission);
 
+        // In this specific order
+        // Aircraft var data should overwrite any event data
+        self.write_event_data(conn, data.events);
         self.write_aircraft_data(conn, data.avars, time, interpolate);
         self.write_local_data(conn, data.lvars, interpolate);
-        self.write_event_data(conn, data.events);
     }
 
     // To be called when SimConnect connects
@@ -995,6 +1008,7 @@ impl Definitions {
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
+        self.velocity_corrector.on_connected(conn);
 
         self.jstransfer.start();
 
