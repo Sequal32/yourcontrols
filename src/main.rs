@@ -200,6 +200,9 @@ fn main() {
                             data.dwException
                         });
                     }
+                    DispatchResult::ClientData(data) => {
+                        definitions.process_client_data(&conn, data);
+                    }
                     DispatchResult::Event(data) => {
                         definitions.process_event_data(data);
                     }

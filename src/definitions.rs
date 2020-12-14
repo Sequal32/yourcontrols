@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant, path::PathBuf};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::{gaugecommunicator::GaugeCommunicator, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events}}, syncdefs::{NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch, BusToggle}, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path, varreader::SimValue};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::{gaugecommunicator::{GaugeCommunicator, GetResult, LVarResult}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path, varreader::SimValue};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -123,7 +123,7 @@ fn evalute_condition_values(condition: &Condition, value: &VarReaderTypes) -> bo
     return false
 }
 
-fn evalute_condition(jscommunicator: &JSCommunicator, avarstransfer: &AircraftVars, condition: Option<&Condition>, incoming_value: &VarReaderTypes) -> bool {
+fn evalute_condition(lvarstransfer: &LVarSyncer, avarstransfer: &AircraftVars, condition: Option<&Condition>, incoming_value: &VarReaderTypes) -> bool {
     let condition = match condition {
         Some(condition) => condition,
         None => return true
@@ -131,8 +131,8 @@ fn evalute_condition(jscommunicator: &JSCommunicator, avarstransfer: &AircraftVa
 
     if let Some(var_data) = condition.var.as_ref() {
         if var_data.var_name.starts_with("L:") {
-            if let Some(value) = jscommunicator.get_cached_var(&var_data.var_name) {
-                return evalute_condition_values(condition, &VarReaderTypes::F64(*value))
+            if let Some(value) = lvarstransfer.get_var(&var_data.var_name) {
+                return evalute_condition_values(condition, &VarReaderTypes::F64(value))
             }
         } else {
             if let Some(value) = avarstransfer.get_var(&var_data.var_name) {
@@ -260,9 +260,9 @@ struct NumDigitSetEntry {
 }
 
 #[derive(Deserialize)]
-struct BusEntry {
-    connection_index: u16,
-    bus_index: u16,
+struct CustomCalculatorEntry {
+    get: String,
+    set: String,
     condition: Option<Condition>
 }
 
@@ -370,7 +370,7 @@ pub struct Definitions {
     // Events to listen to
     events: Events,
     // Helper struct to execute calculator events
-    gaugetransfer: GaugeCommunicator,
+    lvarstransfer: LVarSyncer,
     // Helper struct to retrieve/set vars not settable in SimConnect
     jstransfer: JSCommunicator,
     // Helper struct to retrieve *changed* aircraft variables using the CHANGED and TAGGED flags in SimConnect
@@ -415,7 +415,7 @@ impl Definitions {
         Self {
             mappings: HashMap::new(),
             events: Events::new(1),
-            gaugetransfer: GaugeCommunicator::new(),
+            lvarstransfer: LVarSyncer::new(),
             jstransfer: JSCommunicator::new(),
             avarstransfer: AircraftVars::new(1),
 
@@ -481,7 +481,7 @@ impl Definitions {
     fn add_local_variable(&mut self, category: &str, var_name: &str, var_units: Option<&str>) -> Result<(), VarAddError> {
         let category = get_category_from_string(category)?;
 
-        self.jstransfer.add_local_var(var_name.to_string(), var_units.map(String::from));
+        self.lvarstransfer.add_var(var_name.to_string(), var_units.map(String::from));
         self.categories.insert(var_name.to_string(), category);
 
         Ok(())
@@ -661,13 +661,13 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_bus_entry(&mut self, category: &str, var: BusEntry) -> Result<(), VarAddError> {
+    fn add_custom_calculator(&mut self, category: &str, var: CustomCalculatorEntry) -> Result<(), VarAddError> {
         let category = get_category_from_string(category)?;
         
-        let var_name = self.jstransfer.add_bus(var.connection_index, var.bus_index);
+        let var_name = self.lvarstransfer.add_custom_var(var.get);
 
         self.categories.insert(var_name.clone(), category);
-        self.add_mapping(var_name, ActionType::Bool(Box::new(BusToggle::new(var.bus_index, var.connection_index))), var.condition)?;
+        self.add_mapping(var_name, ActionType::F64(Box::new(CustomCalculator::new(var.set))), var.condition)?;
 
         Ok(())
     }
@@ -685,7 +685,7 @@ impl Definitions {
             "NUMSET" => self.add_num_set(category, try_cast_yaml!(value))?,
             "NUMINCREMENT" => self.add_num_increment(category, try_cast_yaml!(value))?,
             "NUMDIGITSET" => self.add_num_digit_set(category, try_cast_yaml!(value))?,
-            "BUSTOGGLE" => self.add_bus_entry(category, try_cast_yaml!(value))?,
+            "CUSTOMCALCULATOR" => self.add_custom_calculator(category, try_cast_yaml!(value))?,
             _ => return Err(VarAddError::InvalidSyncType(type_str.to_string()))
         };
 
@@ -737,20 +737,33 @@ impl Definitions {
         }
     }
 
-    fn queue_local_var(&mut self, name: String, value: f64) {
-        if self.did_write_recently(&name) {return}
-        self.current_sync.lvars.insert(name, value);
+    fn queue_local_var(&mut self, result: GetResult) {
+        if self.did_write_recently(&result.var_name) {return}
+        self.current_sync.lvars.insert(result.var_name, result.var.floating);
+    }
+
+    // Processes client data and adds to the result queue if it changed
+    pub fn process_client_data(&mut self, conn: &simconnect::SimConnector, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
+        // Guard clauses
+        // Get var data
+        let lvar = match self.lvarstransfer.process_client_data(conn ,data) {
+            Some(var) => var,
+            None => return
+        };
+
+        match lvar {
+            LVarResult::Single(result) => self.queue_local_var(result),
+            LVarResult::Multi(results) => {
+                for result in results {
+                    self.queue_local_var(result);
+                }
+            }
+        }
     }
 
     fn process_js_data(&mut self) {
         if let Some(payload) = self.jstransfer.poll() {
             match payload {
-                jscommunicator::Payloads::MultiVar { data } => {
-                    for (name, value) in data {
-                        self.queue_local_var(name, value);
-                    }
-                }
-                jscommunicator::Payloads::SingleVar { name, value } => self.queue_local_var(name, value),
                 jscommunicator::Payloads::Interaction { name: interaction_name } => {
                     self.current_sync.events.push(EventTriggered { event_name: interaction_name, data: 0})
                 }
@@ -913,10 +926,10 @@ impl Definitions {
             // Otherwise sync them using defined events
             if let Some(mappings) = self.mappings.get_mut(&var_name) {
                 for mapping in mappings {
-                    if !evalute_condition(&self.jstransfer, &self.avarstransfer, mapping.condition.as_ref(), &data) {continue}
+                    if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &data) {continue}
 
                     execute_mapping!(new_value, action, data, mapping, {
-                        action.set_new(new_value, conn, &mut self.jstransfer, &mut self.gaugetransfer)
+                        action.set_new(new_value, conn, &mut self.lvarstransfer)
                     }, {
                         if interpolate && self.interpolate_vars.contains(&var_name) {
                             // Queue data for interpolation
@@ -940,12 +953,12 @@ impl Definitions {
     pub fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap, interpolate: bool) {
         for (var_name, value) in data {
             for mapping in self.mappings.get_mut(&var_name).unwrap() {
-                if !evalute_condition(&self.jstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(value)) {continue}
+                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(value)) {continue}
 
                 execute_mapping!(new_value, action, VarReaderTypes::F64(value), mapping, {
-                    action.set_new(new_value, conn, &mut self.jstransfer, &mut self.gaugetransfer)
+                    action.set_new(new_value, conn, &mut self.lvarstransfer)
                 }, {
-                    self.jstransfer.set(var_name.clone(), None, Some(value));
+                    self.lvarstransfer.set(conn, &var_name, value.to_string().as_ref());
                 });
 
                 self.last_written.insert(var_name.clone(), Instant::now());
@@ -957,7 +970,7 @@ impl Definitions {
         for event in data {
 
             if event.event_name.starts_with("H:") {
-                self.jstransfer.trigger_interaction(event.event_name.clone());
+                self.lvarstransfer.send_raw(conn, &event.event_name);
             } else {
                 self.events.trigger_event(conn, &event.event_name, event.data as u32);
             }
@@ -981,7 +994,7 @@ impl Definitions {
 
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
-        self.gaugetransfer.on_connected(conn);
+        self.lvarstransfer.on_connected(conn);
 
         self.jstransfer.start();
 
@@ -991,7 +1004,7 @@ impl Definitions {
     pub fn get_all_current(&self) -> AllNeedSync {
         AllNeedSync {
             avars: self.avarstransfer.get_all_vars().clone(),
-            lvars: self.jstransfer.get_all_vars(),
+            lvars: self.lvarstransfer.get_all_vars(),
             events: EventData::new(),
         }
     }
@@ -1009,7 +1022,7 @@ impl Definitions {
     }
 
     pub fn get_number_lvars(&self) -> usize {
-        return self.jstransfer.get_number_defined()
+        return self.lvarstransfer.get_number_defined()
     }
 
     pub fn reset_interpolate(&mut self) {
