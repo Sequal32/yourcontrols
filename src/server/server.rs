@@ -91,6 +91,7 @@ impl TransferStruct {
             Payloads::PeerEstablished { .. } => {return}  // No client should be able to send this
             // No processing needed
             Payloads::Update { .. } => {}
+            Payloads::Ready => {}
             // Used
             Payloads::InitHandshake { name, version } => {
                 // Version check

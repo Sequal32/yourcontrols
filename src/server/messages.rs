@@ -22,6 +22,8 @@ pub enum Payloads {
     InitHandshake {name: String, version: String},
     TransferControl {from: String, to: String},
     SetObserver {from: String, to: String, is_observer: bool},
+    // Ready to receive data
+    Ready,
     // Hole punching payloads
     Handshake {session_id: String}, // With hoster
     HostingReceived {session_id: String},
@@ -94,6 +96,7 @@ pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<P
         Payloads::PlayerJoined {..} | 
         Payloads::PlayerLeft {..} | 
         Payloads::SetObserver {..} |
+        Payloads::Ready |
         Payloads::TransferControl {..} => Packet::reliable_sequenced(target, payload, Some(3)),
         Payloads::InvalidVersion {..} | 
         Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload),
@@ -106,7 +109,6 @@ pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<P
     match sender.try_send(packet) {
         Ok(_) => Ok(()),
         Err(e) => {
-            println!("{:?}", e);
             Err(Error::Dummy)
         }
     }

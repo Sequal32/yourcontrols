@@ -174,11 +174,8 @@ pub trait TransferClient {
         }).ok();
     }
 
-    fn send_init(&self, version: String) {
-        self.get_transmitter().try_send(Payloads::InitHandshake {
-            name: self.get_server_name().to_string(),
-            version
-        }).ok();
+    fn send_ready(&self) {
+        self.get_transmitter().try_send(Payloads::Ready).ok();
     }
 }
 

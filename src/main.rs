@@ -1,4 +1,4 @@
-// #![windows_subsystem = "windows"]
+#![windows_subsystem = "windows"]
 
 mod app;
 mod clientmanager;
@@ -62,8 +62,8 @@ fn write_configuration(config: &Config) {
 
 fn calculate_update_rate(update_rate: u16) -> f64 {1.0 / update_rate as f64}
 
-fn start_client(timeout: u64, username: String, session_id: String, isipv6: bool, ip: Option<IpAddr>, hostname: Option<String>, port: Option<u16>, method: ConnectionMethod) -> Result<Client, String> {
-    let mut client = Client::new(username, timeout);
+fn start_client(timeout: u64, username: String, session_id: String, version: String, isipv6: bool, ip: Option<IpAddr>, hostname: Option<String>, port: Option<u16>, method: ConnectionMethod) -> Result<Client, String> {
+    let mut client = Client::new(username, version, timeout);
 
     let client_result = match method {
         ConnectionMethod::Direct => {
@@ -150,9 +150,9 @@ fn main() {
     let mut definitions = Definitions::new();
 
     let mut need_update = false;
-    let mut did_send_name = false;
+    let mut was_ready = false;
 
-    let mut connection_time = None;
+    let mut connection_time = Instant::now();
 
     let mut config_to_load = String::new();
     // Helper closures
@@ -278,10 +278,6 @@ fn main() {
                         Payloads::PlayerJoined{name, in_control, is_observer, is_server} => {
                             info!("[NETWORK] {} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
                                 // Send initial aircraft state
-                            if control.has_control() {
-                                client.update(definitions.get_all_current(), false);
-                            }
-
                             app_interface.new_connection(&name);
 
                             if client.is_server() {
@@ -297,6 +293,12 @@ fn main() {
                             if in_control {
                                 app_interface.set_incontrol(&name);
                                 clients.set_client_control(name);
+                            }
+                        }
+                        // Person is ready to receive data
+                        Payloads::Ready => {
+                            if control.has_control() {
+                                client.update(definitions.get_all_current(), false);
                             }
                         }
                         Payloads::PlayerLeft{name} => {
@@ -352,7 +354,7 @@ fn main() {
                             }
                             
                             need_update = true;
-                            connection_time = Some(Instant::now());
+                            connection_time = Instant::now();
                         }
                         Event::ConnectionLost(reason) => {
                             info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
@@ -386,22 +388,27 @@ fn main() {
             definitions.step(&conn, !control.has_control());
 
             // Handle initial connection delay, allows lvars to be processed
-            if let Some(connection_time) = connection_time {
-                if connection_time.elapsed().as_secs() >= 3 {
-                        // Update
-                    let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
-                    
-                    if !observing && can_update {
-                        let permission = SyncPermission {
-                            is_server: client.is_server(),
-                            is_master: control.has_control(),
-                            is_init: false,
-                        };
-        
-                        write_update_data(&mut definitions, client, &permission);
-        
-                        update_rate_instant = Instant::now();
-                    }
+            if connection_time.elapsed().as_secs() >= 3 {
+                // Tell server we're ready to receive data after 3 seconds
+                if !was_ready && !client.is_server() {
+                    was_ready = true;
+                    client.send_ready();
+                    definitions.clear_sync();
+                }
+
+                // Update
+                let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
+                
+                if !observing && can_update {
+                    let permission = SyncPermission {
+                        is_server: client.is_server(),
+                        is_master: control.has_control(),
+                        is_init: false,
+                    };
+    
+                    write_update_data(&mut definitions, client, &permission);
+    
+                    update_rate_instant = Instant::now();
                 }
             }
         }
@@ -464,10 +471,9 @@ fn main() {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        match start_client(config.conn_timeout, username.clone(), session_id, isipv6, ip, hostname, port, method) {
+                        match start_client(config.conn_timeout, username.clone(), updater.get_version().to_string(), session_id, isipv6, ip, hostname, port, method) {
                             Ok(client) => {
                                 info!("[NETWORK] Client started.");
-                                client.send_init(updater.get_version().to_string());
                                 transfer_client = Some(Box::new(client));
                             }
                             Err(e) => {
@@ -581,8 +587,7 @@ fn main() {
             // Prevent sending any more data
             transfer_client = None;
             should_set_none_client = false;
-            did_send_name = false;
-            connection_time = None;
+            was_ready = false;
         }
 
         if timer.elapsed().as_millis() < 10 {

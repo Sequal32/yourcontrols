@@ -10,6 +10,7 @@ use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, Recei
 
 struct TransferStruct {
     name: String,
+    version: String,
     // Internally receive data to send to clients
     client_rx: Receiver<Payloads>,
     // Send data to app to receive client data
@@ -38,6 +39,7 @@ impl TransferStruct {
             Payloads::HostingReceived { .. } => {}
             Payloads::InitHandshake { .. } => {}
             Payloads::PeerEstablished { .. } => {}
+            Payloads::Ready => {}
             // No futher handling required
             Payloads::TransferControl { ..} => {}
             Payloads::SetObserver { .. } => {}
@@ -61,6 +63,13 @@ impl TransferStruct {
                 }
                 // Established connection with host
                 self.connected = true;
+
+                // Send initial data
+                messages::send_message(Payloads::InitHandshake {
+                    name: self.name.clone(),
+                    version: self.version.clone(),
+                }, addr.clone(), self.net_transfer.get_sender()).ok();
+                
                 
                 info!("[NETWORK] Established connection with {} on {}!", addr, session_id);
 
@@ -124,11 +133,12 @@ pub struct Client {
     server_tx: Sender<ReceiveMessage>,
     // IP
     username: String,
+    version: String,
     timeout: u64
 }
 
 impl Client {
-    pub fn new(username: String, timeout: u64) -> Self {
+    pub fn new(username: String, version: String, timeout: u64) -> Self {
         let (client_tx, client_rx) = unbounded();
         let (server_tx, server_rx) = unbounded();
 
@@ -137,7 +147,8 @@ impl Client {
             timeout,
             transfer: None,
             client_rx, client_tx, server_rx, server_tx,
-            username: username
+            username,
+            version,
         }
     }
 
@@ -192,6 +203,7 @@ impl Client {
                 session_id: session_id,
                 // State
                 name: self.get_server_name().to_string(),
+                version: self.version.clone(),
                 should_stop: self.should_stop.clone(),
             }
         ));
