@@ -66,6 +66,7 @@ ConnectionList.prototype.setObserver = function(name, observing) {
 }
 
 ConnectionList.prototype.remove = function(name) {
+    if (this.list[name] == null) {return}
     this.object.removeChild(this.list[name].object)
     delete this.list[name]
 }
