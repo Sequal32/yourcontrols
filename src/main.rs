@@ -152,7 +152,7 @@ fn main() {
     let mut need_update = false;
     let mut was_ready = false;
 
-    let mut connection_time = Instant::now();
+    let mut connection_time = None;
 
     let mut config_to_load = String::new();
     // Helper closures
@@ -354,7 +354,7 @@ fn main() {
                             }
                             
                             need_update = true;
-                            connection_time = Instant::now();
+                            connection_time = Some(Instant::now());
                         }
                         Event::ConnectionLost(reason) => {
                             info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
@@ -388,27 +388,29 @@ fn main() {
             definitions.step(&conn, !control.has_control());
 
             // Handle initial connection delay, allows lvars to be processed
-            if connection_time.elapsed().as_secs() >= 3 {
-                // Tell server we're ready to receive data after 3 seconds
-                if !was_ready && !client.is_server() {
-                    was_ready = true;
-                    client.send_ready();
-                    definitions.clear_sync();
-                }
-
-                // Update
-                let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
-                
-                if !observing && can_update {
-                    let permission = SyncPermission {
-                        is_server: client.is_server(),
-                        is_master: control.has_control(),
-                        is_init: false,
-                    };
+            if let Some(time) = connection_time {
+                if time.elapsed().as_secs() >= 3 {
+                    // Tell server we're ready to receive data after 3 seconds
+                    if !was_ready && !client.is_server() {
+                        was_ready = true;
+                        client.send_ready();
+                        definitions.clear_sync();
+                    }
     
-                    write_update_data(&mut definitions, client, &permission);
-    
-                    update_rate_instant = Instant::now();
+                    // Update
+                    let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
+                    
+                    if !observing && can_update {
+                        let permission = SyncPermission {
+                            is_server: client.is_server(),
+                            is_master: control.has_control(),
+                            is_init: false,
+                        };
+        
+                        write_update_data(&mut definitions, client, &permission);
+        
+                        update_rate_instant = Instant::now();
+                    }
                 }
             }
         }
@@ -471,7 +473,7 @@ fn main() {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        match start_client(config.conn_timeout, username.clone(), updater.get_version().to_string(), session_id, isipv6, ip, hostname, port, method) {
+                        match start_client(config.conn_timeout, username.clone(), session_id, updater.get_version().to_string(), isipv6, ip, hostname, port, method) {
                             Ok(client) => {
                                 info!("[NETWORK] Client started.");
                                 transfer_client = Some(Box::new(client));
@@ -588,6 +590,7 @@ fn main() {
             transfer_client = None;
             should_set_none_client = false;
             was_ready = false;
+            connection_time = None;
         }
 
         if timer.elapsed().as_millis() < 10 {

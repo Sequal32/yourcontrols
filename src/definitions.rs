@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant, path::PathBuf};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::{gaugecommunicator::{GaugeCommunicator, GetResult, LVarResult}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path, varreader::SimValue, velocity::VelocityCorrector};
+use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::{gaugecommunicator::{GetResult, LVarResult}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path, varreader::SimValue, velocity::VelocityCorrector};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
