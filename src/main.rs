@@ -240,7 +240,7 @@ fn main() {
                             }
 
                             if !clients.is_observer(&from) {
-                                definitions.on_receive_data(
+                                match definitions.on_receive_data(
                                     &conn,
                                     data,
                                     time,
@@ -250,7 +250,12 @@ fn main() {
                                         is_init: true,
                                     },
                                     !need_update
-                                );
+                                ) {
+                                    Ok(_) => {}
+                                    Err(e) => {
+                                        client.stop(e.to_string());
+                                    }
+                                }
                                 // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
                                 need_update = false;
                             }

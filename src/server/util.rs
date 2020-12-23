@@ -41,8 +41,8 @@ pub fn get_rendezvous_server(is_ipv6: bool) -> Result<SocketAddr, HostnameLookup
 
 pub fn get_socket_config(timeout: u64) -> laminar::Config {
     laminar::Config {
-        heartbeat_interval: None,
-        idle_connection_timeout: Duration::from_secs(10000),
+        heartbeat_interval: Some(Duration::from_millis(HEARTBEAT_INTERVAL_MS)),
+        idle_connection_timeout: Duration::from_secs(timeout),
         receive_buffer_max_size: 65536,
         ..Default::default()
     }

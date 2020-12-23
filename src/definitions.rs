@@ -23,6 +23,18 @@ impl Display for ConfigLoadError {
     }
 }
 
+pub enum WriteDataError {
+    MissingMapping(String)
+}
+
+impl Display for WriteDataError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            WriteDataError::MissingMapping(mapping_name) => write!(f, "No definition exists for {}. Do you have matching .yaml files?", mapping_name),
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum VarAddError {
     MissingField(&'static str),
@@ -747,7 +759,6 @@ impl Definitions {
 
     // Processes client data and adds to the result queue if it changed
     pub fn process_client_data(&mut self, conn: &simconnect::SimConnector, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
-        // Guard clauses
         // Get var data
         let lvar = match self.lvarstransfer.process_client_data(conn ,data) {
             Some(var) => var,
@@ -961,48 +972,68 @@ impl Definitions {
         self.avarstransfer.set_vars(conn, &to_sync);
     }
 
-    pub fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap, interpolate: bool) {
+    pub fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap, _interpolate: bool) -> Result<(), WriteDataError> {
         for (var_name, value) in data {
-            for mapping in self.mappings.get_mut(&var_name).unwrap() {
-                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(value)) {continue}
 
-                execute_mapping!(new_value, action, VarReaderTypes::F64(value), mapping, {
-                    action.set_new(new_value, conn, &mut self.lvarstransfer)
-                }, {
-                    self.lvarstransfer.set(conn, &var_name, value.to_string().as_ref());
-                });
+            match self.mappings.get_mut(&var_name) {
+                Some(mappings) => {
+                    for mapping in mappings {
 
-                self.last_written.insert(var_name.clone(), Instant::now());
+                        if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(value)) {continue}
+        
+                        execute_mapping!(new_value, action, VarReaderTypes::F64(value), mapping, {
+                            action.set_new(new_value, conn, &mut self.lvarstransfer)
+                        }, {
+                            self.lvarstransfer.set(conn, &var_name, value.to_string().as_ref());
+                        });
+        
+                        self.last_written.insert(var_name.clone(), Instant::now());
+
+                    }
+                }
+                None => return Err(WriteDataError::MissingMapping(var_name))
             }
         }
+
+        Ok(())
     }
 
-    pub fn write_event_data(&mut self, conn: &SimConnector, data: EventData) {
+    pub fn write_event_data(&mut self, conn: &SimConnector, data: EventData) -> Result<(), WriteDataError> {
         for event in data {
 
             if event.event_name.starts_with("H:") {
+                // Use gauge to transmit H: event
                 self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
+
             } else {
-                self.events.trigger_event(conn, &event.event_name, event.data as u32);
+                // Event doesn't exist
+                if let Err(()) = self.events.trigger_event(conn, &event.event_name, event.data as u32) {
+                    return Err(WriteDataError::MissingMapping(event.event_name))
+                };
+
             }
             
             self.last_written.insert(event.event_name, Instant::now());
         }
+
+        Ok(())
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, time: f64, sync_permission: &SyncPermission, interpolate: bool) {
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, time: f64, sync_permission: &SyncPermission, interpolate: bool) -> Result<(), WriteDataError> {
         let mut data = data;
         self.filter_all_sync(&mut data, sync_permission);
 
         // In this specific order
         // Aircraft var data should overwrite any event data
-        self.write_event_data(conn, data.events);
+        self.write_event_data(conn, data.events)?;
         self.write_aircraft_data(conn, data.avars, time, interpolate);
-        self.write_local_data(conn, data.lvars, interpolate);
+        self.write_local_data(conn, data.lvars, interpolate)?;
+
+        Ok(())
     }
 
     // To be called when SimConnect connects
-    pub fn on_connected(&mut self, conn: &SimConnector) {
+    pub fn on_connected(&mut self, conn: &SimConnector) -> Result<(), ()> {
         self.interpolation_avars.reset();
 
         self.avarstransfer.on_connected(conn);
@@ -1010,9 +1041,12 @@ impl Definitions {
         self.lvarstransfer.on_connected(conn);
         self.velocity_corrector.on_connected(conn);
 
-        self.jstransfer.start();
+        // Might be running another instance
+        if let Err(_) = self.jstransfer.start() {return Err(())};
 
         conn.request_data_on_sim_object(0, self.avarstransfer.define_id, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
+
+        Ok(())
     }
 
     pub fn get_all_current(&self) -> AllNeedSync {

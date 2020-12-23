@@ -83,10 +83,6 @@ impl GaugeCommunicator {
     fn get_request_string(&self, request_id: u32) -> &String {
         return self.requests.get_by_right(&request_id).unwrap()
     }
-
-    pub fn get(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>) {	
-        self.send_raw(conn, &format_get(var_name, var_units));	
-    }	
     
     pub fn set(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>, val: &str) {	
         let mut writer = MemWriter::new(128, 4).unwrap();	

@@ -48,7 +48,7 @@ fn interpolate_value(from: f64, to: f64, alpha: f64, options: Option<&Interpolat
 }
 
 // Returns if set
-fn set_next_value(current: &mut Packet, current_time: f64, queue: &mut Vec<Packet>, options: Option<&InterpolateOptions>, key: &str) -> Option<f64> {
+fn set_next_value(current: &mut Packet, current_time: f64, queue: &mut Vec<Packet>, options: Option<&InterpolateOptions>) -> Option<f64> {
     if queue.len() == 0 {return None;}
 
     for i in 0..queue.len() {
@@ -146,7 +146,7 @@ impl Interpolate {
             let queue = self.data_queue.get_mut(key).unwrap();
             let options = self.options.get(key);
 
-            if let Some(value) = set_next_value(current, self.current_time, queue, options, key) {
+            if let Some(value) = set_next_value(current, self.current_time, queue, options) {
                 return_data.insert(key.clone(), VarReaderTypes::F64(value));
             }
         }

@@ -60,10 +60,6 @@ impl MemWriter {
         unsafe{self.working_pointer = self.working_pointer.offset(count);}
     }
 
-    pub fn get_current_location(&self) -> *const u8 {
-        return self.working_pointer;
-    }
-
     pub fn get_data_location(&self) -> *const u8 {
         return self.start_pointer;
     }

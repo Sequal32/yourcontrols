@@ -1,7 +1,8 @@
+use log::{error, info};
 use retain_mut::RetainMut;
 use serde::{Serialize, Deserialize};
 use spin_sleep::sleep;
-use std::{collections::{VecDeque}, net::{SocketAddr, TcpListener, TcpStream}, time::Duration};
+use std::{collections::{VecDeque}, io, net::{SocketAddr, TcpListener, TcpStream}, time::Duration};
 use tungstenite::{HandshakeError, Message, WebSocket, accept};
 
 #[derive(Deserialize, Debug)]
@@ -39,13 +40,15 @@ impl JSCommunicator {
         }
     }
 
-    pub fn start(&mut self) {
-        if self.listener.is_some() {return}
+    pub fn start(&mut self) -> Result<(), io::Error> {
+        if self.listener.is_some() {return Ok(())}
 
-        let listener = TcpListener::bind("0.0.0.0:7780".parse::<SocketAddr>().unwrap()).unwrap();
+        let listener = TcpListener::bind("0.0.0.0:7780".parse::<SocketAddr>().unwrap())?;
         listener.set_nonblocking(true).ok();
 
         self.listener = Some(listener);
+
+        Ok(())
     }
 
     pub fn poll(&mut self) -> Option<Payloads> {
@@ -103,11 +106,12 @@ impl JSCommunicator {
 
             match info.stream.read_message() {
                 Ok(Message::Text(text)) => {
-                    println!("{}", text);
+                    
                     match serde_json::from_str(&text) {
                         Ok(payload) => {
 
                             if let Payloads::Handshake {name} = &payload {
+                                info!("[JS] Panel gauge connected: {}", name);
                                 info.name = name.clone();
                             }
 
@@ -116,7 +120,9 @@ impl JSCommunicator {
                             return true;
 
                         },
-                        Err(e) => {println!("BAD JSON {:?} {}", e, text)}
+                        Err(e) => {
+                            error!("[JS] Error deserializing data! Data: {} Reason: {}", text, e)
+                        }
                     }
 
                 }

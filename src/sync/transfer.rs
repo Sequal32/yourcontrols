@@ -43,8 +43,15 @@ impl Events {
         return self.event_map.get_by_right(&event_id);
     }
 
-    pub fn trigger_event(&self, conn: &SimConnector, event_name: &str, data: u32) {
-        conn.transmit_client_event(1, *self.event_map.get_by_left(&event_name.to_string()).unwrap(), data, 0, 0);
+    pub fn trigger_event(&self, conn: &SimConnector, event_name: &str, data: u32) -> Result<(), ()> {
+        let event_id = match self.event_map.get_by_left(&event_name.to_string()) {
+            Some(id) => *id,
+            None => return Err(())
+        };
+
+        conn.transmit_client_event(1, event_id, data, 0, 0);
+
+        Ok(())
     }
 
     pub fn on_connected(&self, conn: &SimConnector) {
