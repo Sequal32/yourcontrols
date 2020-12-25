@@ -217,7 +217,9 @@ struct VarEntry {
     update_every: Option<f64>,
     condition: Option<Condition>,
     #[serde(default)]
-    constant: bool
+    constant: bool,
+    #[serde(default)]
+    unreliable: bool,
 }
 
 #[derive(Deserialize)]
@@ -248,6 +250,8 @@ struct NumSetGenericEntry<T> {
     index_reversed: bool,
     // The event to call after the number is set
     swap_event_name: Option<String>,
+    #[serde(default)]
+    unreliable: bool,
 }
 
 #[derive(Deserialize)]
@@ -397,6 +401,8 @@ pub struct Definitions {
     last_written: HashMap<String, Instant>,
     // Values to constantly keep updating, even if no data was received
     constant_avars: HashMap<String, Option<VarReaderTypes>>,
+    // Vars that shouldn't be sent reliably
+    unreliable_vars: HashSet<String>,
     // Helper struct to correct aircraft velocity
     velocity_corrector: VelocityCorrector,
     // Vars that should not be sent over the network
@@ -441,6 +447,7 @@ impl Definitions {
             interpolation_avars: Interpolate::new(),
             
             constant_avars: HashMap::new(),
+            unreliable_vars: HashSet::new(),
             velocity_corrector: VelocityCorrector::new(2),
             do_not_sync: HashSet::new(),
             
@@ -460,6 +467,10 @@ impl Definitions {
             if std::matches!(var_type, VarType::AircraftVar) {
                 self.interpolation_avars.set_key_options(&var_name, options);
             }
+        }
+
+        if var.unreliable {
+            self.unreliable_vars.insert(var_name.clone());
         }
         
         // Handle custom periods
@@ -587,6 +598,10 @@ impl Definitions {
 
         if var.use_calculator || var.event_param.is_some() {
             action.set_calculator_event_name(Some(&var.event_name), var.event_param.is_some())
+        }
+
+        if var.unreliable {
+            self.unreliable_vars.insert(var.var_name.clone());
         }
 
         if let Some(event_param) = var.event_param {
@@ -877,7 +892,7 @@ impl Definitions {
     }
 
     fn split_interpolate(&self, data: &mut AllNeedSync) -> AllNeedSync {
-        data.filter_keep(|name| self.interpolate_vars.contains(name))
+        data.filter_keep(|name| self.interpolate_vars.contains(name) || self.unreliable_vars.contains(name))
     }
 
     pub fn get_need_sync(&mut self, sync_permission: &SyncPermission) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
