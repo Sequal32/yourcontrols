@@ -389,11 +389,7 @@ impl Server {
                                 } else {
                                         // Client disconnected
                                     transfer.remove_client(addr);
-
                                 }
-                            }
-                            Error::SerdeError(e) => {
-                                error!("Error deserializing data: {}", e)
                             }
                             Error::ReadTimeout => {
                                 break

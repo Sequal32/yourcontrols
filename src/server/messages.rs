@@ -2,6 +2,7 @@ use std::{net::SocketAddr};
 
 use crossbeam_channel::{Sender};
 use laminar::{Packet, SocketEvent};
+use log::warn;
 use serde::{Serialize, Deserialize};
 use serde_json::Value;
 
@@ -75,7 +76,10 @@ fn read_value(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Value), Erro
 
     match serde_json::from_slice(packet.payload()) {
         Ok(s) => Ok((packet.addr(), s)),
-        Err(e) => Err(Error::SerdeError(e))
+        Err(e) => {
+            warn!("Could not deserialize packet! Data: {:?} Reason: {}", String::from_utf8(packet.payload().to_vec()), e);
+            Err(Error::SerdeError(e))
+        }
     }
 }
 
