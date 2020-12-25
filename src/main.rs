@@ -176,7 +176,7 @@ fn main() {
                 *config_to_load = String::new();
                 return false;
             }
-        };
+        }.ok();
 
         definitions.reset_interpolate();
 

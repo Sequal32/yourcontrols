@@ -241,6 +241,7 @@ struct NumSetGenericEntry<T> {
     event_name: String,
     event_param: Option<u32>,
     multiply_by: Option<T>,
+    add_by: Option<T>,
     #[serde(default)]
     use_calculator: bool,
     #[serde(default)]
@@ -585,7 +586,7 @@ impl Definitions {
         let mut action = Box::new(NumSet::new(event_id));
 
         if var.use_calculator || var.event_param.is_some() {
-            action.set_calculator_event_name(Some(&var.event_name))
+            action.set_calculator_event_name(Some(&var.event_name), var.event_param.is_some())
         }
 
         if let Some(event_param) = var.event_param {
@@ -594,6 +595,10 @@ impl Definitions {
 
         if let Some(multiply_by) = var.multiply_by {
             action.set_multiply_by(multiply_by);
+        }
+
+        if let Some(add_by) = var.add_by {
+            action.set_add_by(add_by);
         }
 
         if let Some(swap_event) = var.swap_event_name.as_ref() {
@@ -788,6 +793,7 @@ impl Definitions {
 
     // Processes event data name and the additional dword data
     pub fn process_event_data(&mut self, data: &simconnect::SIMCONNECT_RECV_EVENT) {
+        // Not for us
         if data.uGroupID != self.events.group_id {return}
         
         // Regular KEY event
@@ -1044,6 +1050,7 @@ impl Definitions {
         // Might be running another instance
         if let Err(_) = self.jstransfer.start() {return Err(())};
 
+        // Get aircraft data
         conn.request_data_on_sim_object(0, self.avarstransfer.define_id, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
 
         Ok(())

@@ -1,4 +1,4 @@
-use std::{cmp::PartialOrd, fmt::Display, ops::{AddAssign, Mul, Sub, SubAssign}};
+use std::{cmp::PartialOrd, fmt::Display, ops::{Add, AddAssign, Mul, Sub, SubAssign}};
 
 use num::{FromPrimitive, ToPrimitive};
 use simconnect;
@@ -97,6 +97,7 @@ pub struct NumSet<T> {
     event_param: Option<u32>,
     swap_event_id: Option<u32>,
     multiply_by: Option<T>,
+    add_by: Option<T>,
     index_reversed: bool,
     
     current: T,
@@ -110,9 +111,12 @@ impl<T> NumSet<T> where T: Default {
         }
     }
 
-    pub fn set_calculator_event_name(&mut self, event_name: Option<&str>) {
+    pub fn set_calculator_event_name(&mut self, event_name: Option<&str>, with_param: bool) {
         match event_name {
-            Some(event_name) => self.event_name = Some(format!("K:2:{}", event_name)),
+            Some(event_name) => match with_param {
+                true => self.event_name = Some(format!("K:2:{}", event_name)),
+                false => self.event_name = Some(format!("K:{}", event_name))
+            },
             None => self.event_name = None
         }
     }
@@ -125,13 +129,17 @@ impl<T> NumSet<T> where T: Default {
         self.multiply_by = Some(multiply_by)
     }
 
+    pub fn set_add_by(&mut self, add_by: T) {
+        self.add_by = Some(add_by)
+    }
+
     pub fn set_param(&mut self, event_param: u32, index_reversed: bool) {
         self.event_param = Some(event_param);
         self.index_reversed = index_reversed;
     }
 }
 
-impl<T> Syncable<T> for NumSet<T> where T: Default + PartialEq + Mul<T, Output = T> + FromPrimitive + ToPrimitive + Display + Copy {
+impl<T> Syncable<T> for NumSet<T> where T: Default + PartialEq + Mul<T, Output = T> + Add<T, Output = T> + FromPrimitive + ToPrimitive + Display + Copy {
     fn set_current(&mut self, current: T) {
         self.current = current
     }
@@ -142,6 +150,11 @@ impl<T> Syncable<T> for NumSet<T> where T: Default + PartialEq + Mul<T, Output =
         let value = match self.multiply_by.as_ref() {
             Some(multiply_by) => new * multiply_by.clone(),
             None => new
+        };
+
+        let value = match self.add_by.as_ref() {
+            Some(add_by) => value + add_by.clone(),
+            None => value
         };
 
         if let Some(event_name) = self.event_name.as_ref() {
