@@ -94,20 +94,26 @@ shared:
     var_name: A:GENERAL ENG STARTER:2
     var_units: Bool
     event_name: TOGGLE_STARTER2
-  -
+  - # Engine 1
     type: ToggleSwitch
-    var_name: A:FUELSYSTEM VALVE SWITCH:6
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
     var_units: Bool
     event_name: FUELSYSTEM_VALVE_OPEN
     off_event_name: FUELSYSTEM_VALVE_CLOSE
-    event_param: 6
-  -
-    type: ToggleSwitch
-    var_name: A:FUELSYSTEM VALVE SWITCH:7
+    event_param: 1
+  - # Engine 2
+    type: ToggleSwitch 
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
     var_units: Bool
     event_name: FUELSYSTEM_VALVE_OPEN
     off_event_name: FUELSYSTEM_VALVE_CLOSE
-    event_param: 7
+    event_param: 2
+  - # ASOBO_AIRBUS_Push_Fuel_Valve_Template Crossfeed
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:3
+    var_units: Bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 3
   - # A32NX_ENGINE_MODE_SELECTOR_TEMPLATE
     type: NumSet
     var_name: A:TURB ENG IGNITION SWITCH EX1:2
@@ -342,7 +348,7 @@ shared:
     type: var
     var_name: L:A32NX_ELEC_IDG2LOCK_TOGGLE
     var_type: f64
-  - # ASOBO_AIRBUS_Push_Fuel_Valve_Template
+  - # ASOBO_AIRBUS_Push_Fuel_Valve_Template APU
     type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:8
     var_units: Bool
@@ -558,15 +564,15 @@ shared:
     var_type: f64
   - # ASOBO_AIRLINER_ADIRS_Knob_Template
     type: var
-    var_name: L:A320_Neo_ADIRS_KNOB_1
+    var_name: L:A32NX_ADIRS_KNOB_1
     var_type: f64
   - # ASOBO_AIRLINER_ADIRS_Knob_Template
     type: var
-    var_name: L:A320_Neo_ADIRS_KNOB_2
+    var_name: L:A32NX_ADIRS_KNOB_2
     var_type: f64
   - # ASOBO_AIRLINER_ADIRS_Knob_Template
     type: var
-    var_name: L:A320_Neo_ADIRS_KNOB_3
+    var_name: L:A32NX_ADIRS_KNOB_3
     var_type: f64
   - # LOCK_OVHD_EVAC_COMMAND
     type: var
@@ -599,7 +605,7 @@ shared:
     var_type: f64
   - # ASOBO_GT_Switch_Dummy LOCK_OVHD_CALLS_EMER
     type: var
-    var_name: L:A32NX_CALLS_EMERLOCK_TOGGLE
+    var_name: L:A32NX_CALLS_EMER_ON_LOCK
     var_type: f64
   - # ASOBO_GT_Push_Button_Airliner PUSH_OVHD_CALLS_EMER
     type: var
@@ -665,10 +671,6 @@ shared:
     type: var
     var_name: L:A320_Neo_AIRCOND_LVL_3
     var_type: f64
-  # - # ASOBO_GT_Switch_Dummy TODO: is O var
-  #   type: var
-  #   var_name: L:KNOB_OVHD_AUDIOSWITCH
-  #   var_type: f64
   # Right column is all ASOBO_AIRBUS_Push_Dummy_Template
   - # ASOBO_GT_Push_Button_Airliner
     type: var
@@ -700,6 +702,10 @@ shared:
     var_type: f64
   # Overhead_Audio_Panel
   # all ASOBO_AIRBUS_Push_Dummy_Template
+  -
+    type: var
+    var_name: L:KNOB_OVHD_AUDIOSWITCH_Position
+    var_type: f64
   # OverHead_AntiIce
   - # A32NX_DEICE_Switch_Engine_Template
     type: ToggleSwitch
@@ -719,14 +725,8 @@ shared:
     event_name: TOGGLE_STRUCTURAL_DEICE
   -
     type: var
-    var_name: L:A32NX_PITOT_HEAT_AUTO
+    var_name: L:A32NX_MAN_PITOT_HEAT
     var_type: f64
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT
-    var_units: Bool
-    var_type: i32
-    event_name: PITOT_HEAT_SET
   - # ASOBO_HANDLING_Switch_Wipers_Template
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:77
@@ -741,83 +741,103 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 77
     index_reversed: true
-  - # ASOBO_AIRLINER_FIRE_TEST
+  # Fire subtemplates
+  - # FBW_Airbus_FIRE_TEST_BUTTON
     type: var
-    var_name: L:FIRE_TEST_ENG1
+    var_name: L:A32NX_FIRE_TEST_ENG1_IsDown
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_AGENT
+  - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:XMLVAR_PUSH_OVHD_FIRE_ENG1_AGENT1_DISCHARGE
+    var_name: L:A32NX_FIRE_ENG1_AGENT1_Discharge
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_AGENT
+  - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:XMLVAR_PUSH_OVHD_FIRE_ENG1_AGENT2_DISCHARGE
+    var_name: L:A32NX_FIRE_ENG1_AGENT2_Discharge
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_GUARD
+  - # FBW_Airbus_FIRE_GUARD
     type: var
-    var_name: L:LOCK_OVHD_ENG1_SWITCH_IsDown
+    var_name: L:A32NX_FIRE_GUARD_STATE_ENG1_IsDown
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_BUTTON
+  - # FBW_Airbus_FIRE_BUTTON
     type: var
-    var_name: L:FIRE_BUTTON_ENG1
+    var_name: L:A32NX_FIRE_BUTTON_STATE_ENG1_IsDown
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_TEST
+  - # FBW_Airbus_FIRE_TEST_BUTTON
     type: var
-    var_name: L:FIRE_TEST_ENG2
+    var_name: L:A32NX_FIRE_TEST_ENG2_IsDown
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_AGENT
+  - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:XMLVAR_PUSH_OVHD_FIRE_ENG2_AGENT1_DISCHARGE
+    var_name: L:A32NX_Fire_ENG2_Agent1_Discharge
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_AGENT
+  - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:XMLVAR_PUSH_OVHD_FIRE_ENG2_AGENT2_DISCHARGE
+    var_name: L:A32NX_Fire_ENG2_Agent2_Discharge
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_GUARD
+  - # FBW_Airbus_FIRE_GUARD
     type: var
-    var_name: L:LOCK_OVHD_ENG2_SWITCH_IsDown
+    var_name: L:A32NX_FIRE_GUARD_STATE_ENG2_IsDown
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_BUTTON
+  - # FBW_Airbus_FIRE_BUTTON
     type: var
-    var_name: L:FIRE_BUTTON_ENG2
+    var_name: L:A32NX_FIRE_BUTTON_STATE_ENG2_IsDown
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_TEST
+  # APU
+  - # FBW_Airbus_FIRE_TEST_BUTTON
     type: var
-    var_name: L:FIRE_TEST_APU
+    var_name: L:A32NX_FIRE_TEST_APU_IsDown
     var_type: f64
-  - # ASOBO_AIRLINER_FIRE_TEST
+  - # FBW_Airbus_FIRE_AGENT
     type: var
-    var_name: L:FIRE_TEST_SMOKE
+    var_name: L:A32NX_FIRE_APU_AGENT1_Discharge
     var_type: f64
-  - # ASOBO_GT_Switch_Dummy
+  - # FBW_Airbus_FIRE_BUTTON
     type: var
-    var_name: L:A32NX_CARGOSMOKE_DISCH2LOCK_TOGGLE
+    var_name: L:A32NX_FIRE_BUTTON_STATE_APU_IsDown
+    var_type: f64
+  - # FBW_Airbus_FIRE_GUARD
+    type: var
+    var_name: L:A32NX_FIRE_GUARD_STATE_APU_IsDown
+    var_type: f64
+  # CARGO_SMOKE
+  - # FBW_Airbus_FIRE_TEST_BUTTON
+    type: var
+    var_name: L:A32NX_FIRE_TEST_CARGO_IsDown
     var_type: f64
   - # ASOBO_GT_Switch_Dummy
     type: var
     var_name: L:A32NX_CARGOSMOKE_DISCH1LOCK_TOGGLE
     var_type: f64
+  - # ASOBO_GT_Switch_Dummy
+    type: var
+    var_name: L:A32NX_CARGOSMOKE_DISCH2LOCK_TOGGLE
+    var_type: f64
   # Overhead_Misc
   -
     type: var
-    var_name: L:PUSH_OVHD_GPWS_TERR
+    var_name: L:A32NX_GPWS_TEST
     var_type: f64
   -
     type: var
-    var_name: L:PUSH_OVHD_GPWS_SYS
+    var_name: L:A32NX_GPWS_TERR_OFF
     var_type: f64
   -
     type: var
-    var_name: L:PUSH_OVHD_GPWS_GSMODE
+    var_name: L:A32NX_GPWS_SYS_OFF
     var_type: f64
   -
     type: var
-    var_name: L:PUSH_OVHD_GPWS_FLAP
+    var_name: L:A32NX_GPWS_GS_OFF
     var_type: f64
   -
     type: var
-    var_name: L:PUSH_OVHD_GPWS_LDG
+    var_name: L:A32NX_GPWS_FLAP_OFF
     var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_GPWS_FLAPS3
+    var_type: f64
+
   - # ASOBO_AIRLINER_OXYGEN_Template
     type: var
     var_name: L:PUSH_OVHD_OXYGEN_CREW
@@ -908,6 +928,27 @@ shared:
     type: var
     var_name: L:A32NX_OVHD_APU_AUTOEXITING_TEST
     var_type: f64
+  # Cabin pressure
+  -
+    type: var
+    var_name: L:A32NX_MAN_VS_CONTROL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_KNOB_OVHD_CABINPRESS_LDGELEV
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_CAB_PRESS_MODE_MAN
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_DITCHING
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_DITCHING_LOCK
+    var_type: f64
   -
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:1
@@ -975,11 +1016,28 @@ shared:
     var_name: L:XMLVAR_Autopilot_2_Status
     var_type: f64
   -
+    type: var
+    var_name: L:A32NX_AUTOPILOT_APPR_MODE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AUTOPILOT_LOC_MODE
+    var_type: f64
+  -
     type: event
     event_name: AP_LOC_HOLD
   -
     type: event
     event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_LOC_HOLD_ON
+  -
+    type: event
+    event_name: AP_LOC_HOLD_OFF
+  -
+    type: event
+    event_name: AP_APR_HOLD_ON
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM
@@ -1039,6 +1097,14 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Autopilot_Altitude_Increment
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AUTOPILOT_APPR_MODE
+    var_type: f64
+  -
+    type: var
+    var_name: L:A32NX_AUTOPILOT_LOC_MODE
     var_type: f64
   - # ASOBO_AIRBUS_Push_Metric_Alt_Template
     type: var
@@ -1364,65 +1430,3 @@ init:
     var_type: i32
     event_name: RUDDER_TRIM_SET
     multiply_by: 164
-
-server:
-  -
-    type: var
-    var_name: FUEL TANK CENTER LEVEL
-    var_units: percent
-    var_type: f64
-    update_every: 5
-  -
-    type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
-    var_units: percent
-    var_type: f64
-    update_every: 5
-  -
-    type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
-    var_units: percent
-    var_type: f64
-    update_every: 5
-  -
-    type: var
-    var_name: FUEL TANK LEFT AUX LEVEL
-    var_units: percent
-    var_type: f64
-    update_every: 5
-  -
-    type: var
-    var_name: FUEL TANK RIGHT AUX LEVEL
-    var_units: percent
-    var_type: f64
-    update_every: 5
-  -
-    type: var
-    var_name: PAYLOAD STATION WEIGHT:1
-    var_units: lbs
-    var_type: f64
-  -
-    type: var
-    var_name: PAYLOAD STATION WEIGHT:2
-    var_units: lbs
-    var_type: f64
-  -
-    type: var
-    var_name: PAYLOAD STATION WEIGHT:3
-    var_units: lbs
-    var_type: f64
-  -
-    type: var
-    var_name: PAYLOAD STATION WEIGHT:4
-    var_units: lbs
-    var_type: f64
-  -
-    type: var
-    var_name: PAYLOAD STATION WEIGHT:5
-    var_units: lbs
-    var_type: f64
-  -
-    type: var
-    var_name: PAYLOAD STATION WEIGHT:6
-    var_units: lbs
-    var_type: f64
