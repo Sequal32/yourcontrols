@@ -17,8 +17,10 @@ The following aircraft are currently supported:
 * FBW A32NX Stable + Dev
 * Cessna 152
 * Cessna 172 G1000
+* DR400
 * Diamond DA40
 * Diamond DA62
+* Icon A5
 * Pitts
 * TBM 930
 * XCub
@@ -34,13 +36,13 @@ Download and run the [installer](https://github.com/sequal32/yourcontrolsinstall
 2. Launch MSFS, select the same aircraft and spawn location. **Do NOT enable multiplayer unless you're on different servers.**
 3. Once everyone has spawned in, start up the included .exe file. **Do NOT run as administrator.**
 4. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying (both server/clients should do this).
-4.
+5. When a person connects, make sure to click the `Observer` button next to their name if you want them to be able to manipulate switches.
+6.
     **Hoster (designate one person to run)**:
 
-    Try all of these options in this order, until one works for you.
+    Try all of these options in this order, until one works for you. `Cloud Server` does not have a 100% success rate. If you fail to connect using this method, try having another person host, but ultimately you'll have to fall back on the other methods.
 
     **Cloud Server**
-    This does not have a 100% success rate. If you fail to connect using this method, try having another person host, but ultimately you'll have to fall back on the methods described below.
 
     1. Click `Start Server`
     2. Give the provided session code to the joiners.
@@ -88,6 +90,7 @@ A connection to the server could not be established. Follow the steps for port f
 
 ### Client can see host manipulate switches but not vice-versa
 The host needs to click on the `Observer` button under the client's name in the connection list.
+
 ## Limitations
 * Some knobs are purely animation, and not represented by a local variable therefor cannot be synced, such as the TBM830's oxygen (yet...)
 * Avionics currently rely on syncing button presses only and not state. If the MCDUs are different in any way before connecting, they will desyncronize.
