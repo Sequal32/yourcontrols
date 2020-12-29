@@ -150,7 +150,7 @@ fn main() {
     let mut definitions = Definitions::new();
 
     let mut need_update = false;
-    let mut was_ready = false;
+    let mut is_ready = false;
 
     let mut connection_time = None;
 
@@ -239,7 +239,7 @@ fn main() {
                                 control.finalize_transfer(&conn)
                             }
 
-                            if !clients.is_observer(&from) {
+                            if !clients.is_observer(&from) && is_ready {
                                 match definitions.on_receive_data(
                                     &conn,
                                     data,
@@ -396,8 +396,8 @@ fn main() {
             if let Some(time) = connection_time {
                 if time.elapsed().as_secs() >= 3 {
                     // Tell server we're ready to receive data after 3 seconds
-                    if !was_ready && !client.is_server() {
-                        was_ready = true;
+                    if !is_ready && !client.is_server() {
+                        is_ready = true;
                         client.send_ready();
                         definitions.clear_sync();
                     }
@@ -594,7 +594,7 @@ fn main() {
             // Prevent sending any more data
             transfer_client = None;
             should_set_none_client = false;
-            was_ready = false;
+            is_ready = false;
             connection_time = None;
         }
 

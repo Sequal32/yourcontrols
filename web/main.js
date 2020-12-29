@@ -448,7 +448,7 @@ $("#main-form-join").submit(function(e) {
 })
 
 function update() {
-    invoke({type:"update"})
+    invoke({type:"runUpdater"})
     version_alert_button.classList.add("btn-primary")
     version_alert_button.classList.remove("btn-danger")
     version_alert_button.innerHTML = "Downloading....";
