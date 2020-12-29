@@ -4,7 +4,7 @@ use crossbeam_channel::{Sender};
 use laminar::{Packet, SocketEvent};
 use log::warn;
 use serde::{Serialize, Deserialize};
-use serde_json::Value;
+use rmp_serde;
 
 use crate::definitions::AllNeedSync;
 
@@ -13,7 +13,6 @@ use super::SenderReceiver;
 const ACK_BYTES: &[u8] = &[0x41, 0x43, 0x4b];
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(tag = "type", rename_all = "camelCase")]
 pub enum Payloads {
     InvalidName {},
     InvalidVersion {server_version: String},
@@ -34,16 +33,11 @@ pub enum Payloads {
 
 #[derive(Debug)]
 pub enum Error {
-    SerdeError(serde_json::Error),
     ConnectionClosed(SocketAddr),
+    SerdeDecodeError(rmp_serde::decode::Error),
+    SerdeEncodeError(rmp_serde::encode::Error),
     ReadTimeout,
     Dummy
-}
-
-impl From<serde_json::Error> for Error {
-    fn from(e: serde_json::Error) -> Self {
-        Error::SerdeError(e)
-    }
 }
 
 // Need to manually acknowledge since most of the time we don't send packets back
@@ -58,7 +52,8 @@ fn acknowledge_packet(sender: &mut Sender<Packet>, packet: &Packet) {
 }
 
 //
-fn read_value(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Value), Error>  {
+
+pub fn get_next_message(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Payloads), Error> {
     let packet = match transfer.get_receiver().try_recv() {
         Ok(event) => match event {
             SocketEvent::Packet(packet) => packet,
@@ -74,22 +69,17 @@ fn read_value(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Value), Erro
         acknowledge_packet(transfer.get_sender(), &packet);
     }
 
-    match serde_json::from_slice(packet.payload()) {
+    match rmp_serde::from_slice(packet.payload()) {
         Ok(s) => Ok((packet.addr(), s)),
         Err(e) => {
-            warn!("Could not deserialize packet! Data: {:?} Reason: {}", String::from_utf8(packet.payload().to_vec()), e);
-            Err(Error::SerdeError(e))
+            warn!("Could not deserialize packet! Reason: {}", e);
+            Err(Error::SerdeDecodeError(e))
         }
     }
 }
 
-pub fn get_next_message(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Payloads), Error> {
-    let (addr, json) = read_value(transfer)?;
-    Ok((addr, serde_json::from_value(json)?))
-}
-
 pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<Packet>) -> Result<(), Error> {
-    let payload = serde_json::to_string(&message)?.as_bytes().to_vec();
+    let payload = rmp_serde::to_vec(&message).map_err(|e| Error::SerdeEncodeError(e))?;
 
     let packet = match message {
         // Unused
