@@ -73,12 +73,12 @@ shared:
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: bool
     event_name: TOGGLE_ALTERNATOR1
-  - # ASOBO_ELECTRICAL_Push_Starter_SubTemplate
-    type: ToggleSwitch
+  -
+    type: NumSet
     var_name: A:GENERAL ENG STARTER:1
     var_units: Bool
-    event_name: TOGGLE_STARTER1
-    switch_on: true
+    var_type: i32
+    event_name: SET_STARTER1_HELD
   - # ASOBO_DEICE_Switch_Pitot_Template
     type: ToggleSwitch
     var_name: A:PITOT HEAT
@@ -86,14 +86,15 @@ shared:
     event_name: PITOT_HEAT_TOGGLE
   - # ASOBO_DEICE_Lever_Engine_Template
     type: NumSet
-    var_name: GENERAL ENG ANTI ICE POSITION:1
-    var_units: percent
+    var_name: A:GENERAL ENG ANTI ICE POSITION:1
+    var_units: Position 16k
     var_type: i32
-    event_name: ANTI_ICE_GRADUAL_SET_ENG:1
-  -
-    type: BusToggle
-    connection_index: 2
-    bus_index: 1
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+  - # Avionics switch
+    type: CustomCalculator
+    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+    
   - #ASOBO_PASSENGER_Switch_Cabin_Heat_Template
     type: var
     var_name: L:XMLVAR_CabinHeatSwitch1Status

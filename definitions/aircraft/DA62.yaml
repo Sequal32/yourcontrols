@@ -88,6 +88,14 @@ shared:
     var_units: Enum
     var_type: i32
     event_name: FUEL_SELECTOR_SET
+  -
+    type: var
+    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_1_IsOpen
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_2_IsOpen
+    var_type: f64
   - # Fuel_Switch_Tranfer_Aux
     type: NumSet
     var_name: A:FUEL SELECTED TRANSFER MOD
@@ -108,7 +116,6 @@ shared:
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:30
     var_units: bool
-
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 30
   - # ASOBO_ELECTRICAL_Switch_Alternator_Template

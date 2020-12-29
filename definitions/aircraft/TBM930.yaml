@@ -27,19 +27,18 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
-  # TODO: change to Lvar (currently animation)
-  # - #ASOBO_PRESSURIZATION_Push_MicroMask_Cover_Template
-  #   type: var
-  #   var_name: L:XMLVAR_MICRO_MASK_cover
-  #   var_type: i32
-  # - # ASOBO_PRESSURIZATION_Switch_Deploy_Template
-  #   type: var
-  #   var_name: L:XMLVAR_Deploy
-  #   var_type: i32
-  # - # ASOBO_PRESSURIZATION_Switch_Oxygen_Template
-  #   type: var
-  #   var_name: L:XMLVAR_Oxygen
-  #   var_type: i32
+  - #ASOBO_PRESSURIZATION_Push_MicroMask_Cover_Template
+    type: var
+    var_name: L:XMLVAR_MICRO_MASK_COVER
+    var_type: f64
+  - # ASOBO_PRESSURIZATION_Switch_Deploy_Template
+    type: var
+    var_name: L:XMLVAR_Oxygen_Deploy
+    var_type: f64
+  - # ASOBO_PRESSURIZATION_Switch_Oxygen_Template
+    type: var
+    var_name: L:XMLVAR_Oxygen_Switch
+    var_type: f64
   - # secondary altimeter/altitude
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:2

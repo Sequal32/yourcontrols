@@ -6,7 +6,6 @@ include:
   - definitions/modules/radios.yaml
   - definitions/modules/singlega.yaml
   - definitions/modules/trim.yaml
-  - definitions/modules/transponder.yaml
 
 shared:
   -
@@ -68,6 +67,28 @@ shared:
     type: var
     var_name: L:XMLVAR_AttitudeDisplay_Luminosity
     var_type: f64
+  -
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: number
+    var_type: i32
+
+init:
+  -
+    type: NumDigitSet
+    var_name: A:TRANSPONDER CODE:1
+    var_units: Number
+    var_type: i32
+    up_event_names:
+      - XPNDR_1_INC
+      - XPNDR_10_INC
+      - XPNDR_100_INC
+      - XPNDR_1000_INC
+    down_event_names:
+      - XPNDR_1_DEC
+      - XPNDR_10_DEC
+      - XPNDR_100_DEC
+      - XPNDR_1000_DEC
     
 # master:
 server:
