@@ -772,7 +772,15 @@ impl Definitions {
         }
     }
 
-    fn queue_local_var(&mut self, result: GetResult) {
+    fn process_local_var(&mut self, result: GetResult) {
+        if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
+            for mapping in mappings {
+                execute_mapping!(new_value, action, VarReaderTypes::F64(result.var.floating), mapping, {
+                    action.set_current(new_value)
+                }, {});
+            }
+        }
+
         if self.did_write_recently(&result.var_name) {return}
         self.current_sync.lvars.insert(result.var_name, result.var.floating);
     }
@@ -786,10 +794,10 @@ impl Definitions {
         };
 
         match lvar {
-            LVarResult::Single(result) => self.queue_local_var(result),
+            LVarResult::Single(result) => self.process_local_var(result),
             LVarResult::Multi(results) => {
                 for result in results {
-                    self.queue_local_var(result);
+                    self.process_local_var(result);
                 }
             }
         }
