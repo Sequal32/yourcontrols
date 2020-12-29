@@ -171,7 +171,7 @@ fn main() {
                 definitions.on_connected(&conn)
             }
             Err(e) => {
-                log::error!("[PROGRAM] Could not load configuration file {}: {}", config_to_load,e);
+                error!("[PROGRAM] Could not load configuration file {}: {}", config_to_load,e);
                 // Prevent server/client from starting as config could not be laoded.
                 *config_to_load = String::new();
                 return false;

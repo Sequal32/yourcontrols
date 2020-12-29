@@ -16,7 +16,7 @@ const RENDEZVOUS_SERVER_HOSTNAME: &str = "cloudserver.yourcontrols.xyz";
 const RENDEZVOUS_PORT: u16 = 5555;
 
 pub fn get_bind_address(is_ipv6: bool, port: Option<u16>) -> SocketAddr {
-    let bind_string = format!("{}:{}", if is_ipv6 {"::"} else {"0.0.0.0"}, port.unwrap_or(0));
+    let bind_string = format!("{}:{}", if is_ipv6 {"[::]"} else {"0.0.0.0"}, port.unwrap_or(0));
     bind_string.parse().unwrap()
 }
 
