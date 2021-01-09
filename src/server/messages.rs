@@ -67,6 +67,8 @@ pub fn get_next_message(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Pa
     // Handle acknowledgements
     if packet.payload() != ACK_BYTES {
         acknowledge_packet(transfer.get_sender(), &packet);
+    } else {
+        return Err(Error::Dummy)
     }
 
     match rmp_serde::from_slice(packet.payload()) {
