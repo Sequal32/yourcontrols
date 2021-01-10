@@ -4,40 +4,37 @@ master:
     var_name: A:PLANE LATITUDE
     var_units: Degrees
     var_type: f64
-    interpolate: {}
+    interpolate: Default
   -
     type: var
     var_name: A:PLANE LONGITUDE
     var_units: Degrees
     var_type: f64
-    interpolate: {}
+    interpolate: Default
   -
     type: var
     var_name: A:PLANE ALTITUDE
     var_units: Feet
     var_type: f64
-    interpolate: {}
+    interpolate: Default
   -
     type: var
     var_name: A:PLANE PITCH DEGREES
     var_units: Degrees
     var_type: f64
-    interpolate:
-      wrap180: true
+    interpolate: Wrap180
   -
     type: var
     var_name: A:PLANE BANK DEGREES
     var_units: Degrees
     var_type: f64
-    interpolate:
-      wrap90: true
+    interpolate: Wrap90
   -
     type: var
     var_name: A:PLANE HEADING DEGREES MAGNETIC
     var_units: Degrees
     var_type: f64
-    interpolate:
-      wrap360: true
+    interpolate: Wrap360
   -
     type: var
     var_name: A:YOKE X POSITION
@@ -76,20 +73,20 @@ master:
     type: var
     var_name: A:ELEVATOR POSITION
     var_units: Position 16k
-    var_type: i32
-    interpolate: {}
+    var_type: f64
+    interpolate: Default
   -
     type: var
     var_name: A:AILERON POSITION
     var_units: Position 16k
-    var_type: i32
-    interpolate: {}
+    var_type: f64
+    interpolate: Default
   -
     type: var
     var_name: A:RUDDER POSITION
     var_units: Position 16k
-    var_type: i32
-    interpolate: {}
+    var_type: f64
+    interpolate: Default
   -
     type: var
     var_name: A:VELOCITY BODY X

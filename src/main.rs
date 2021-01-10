@@ -3,7 +3,6 @@
 mod app;
 mod clientmanager;
 mod definitions;
-mod interpolate;
 mod server;
 mod simconfig;
 mod sync;
@@ -234,11 +233,6 @@ fn main() {
                             // Not non high updating packets for debugging
                             if !is_unreliable {info!("[PACKET] {:?}", data)}
 
-                                // Seamlessly transfer from losing control wihout freezing
-                            if control.has_pending_transfer() {
-                                control.finalize_transfer(&conn)
-                            }
-
                             if !clients.is_observer(&from) && ready_to_send_data {
                                 match definitions.on_receive_data(
                                     &conn,
@@ -265,7 +259,7 @@ fn main() {
                             definitions.clear_sync();
                             if to == client.get_server_name() {
                                 info!("[CONTROL] Taking control from {}", from);
-                                control.take_control(&conn);
+                                control.take_control();
                                 app_interface.gain_control();
                                 clients.set_no_control();
                             // Someone else has controls, if we have controls we let go and listen for their messages
@@ -321,7 +315,7 @@ fn main() {
                                     info!("[CONTROL] {} had control, taking control back.", name);
                                     app_interface.gain_control();
 
-                                    control.take_control(&conn);
+                                    control.take_control();
                                     client.transfer_control(client.get_server_name().to_string());
                                 }
                             }
@@ -346,7 +340,7 @@ fn main() {
                                     // Display server started message
                                 app_interface.server_started(0, client.get_session_id().as_deref());
                                     // Unfreeze aircraft
-                                control.take_control(&conn);
+                                control.take_control();
                                 app_interface.gain_control();
                             } else {
                                     // Display connected message
@@ -364,7 +358,7 @@ fn main() {
                         Event::ConnectionLost(reason) => {
                             info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
                                 // TAKE BACK CONTROL
-                            control.take_control(&conn);
+                            control.take_control();
 
                             clients.reset();
                             observing = false;
@@ -390,7 +384,7 @@ fn main() {
             }
 
 
-            definitions.step(&conn, !control.has_control());
+            definitions.step();
 
             // Handle initial connection delay, allows lvars to be processed
             if let Some(time) = connection_time {
@@ -527,7 +521,6 @@ fn main() {
                     // connected = true;
                     if connected {
                         // Display not connected to server message
-                        control.on_connected(&conn);
                         info!("[SIM] Connected to SimConnect.");
                     } else {
                         // Display trying to connect message

@@ -1,8 +1,9 @@
+use bimap::{self, BiHashMap};
+use serde::Deserialize;
+use simconnect::SimConnector;
+use std::{collections::HashMap, io::{Cursor}};
 use super::memwriter::MemWriter;
 use {byteorder::{ReadBytesExt, LittleEndian}};
-use bimap::{self, BiHashMap};
-use simconnect::SimConnector;
-use std::{io::{Cursor}};
 
 #[derive(Debug, Clone)]
 pub struct LVar {
@@ -32,6 +33,28 @@ struct ReceiveData {
     // s: std::ffi::CString
 }
 
+#[derive(Debug)]
+struct InterpolateMapping {
+    datum_id: u32,
+    interpolation_type: InterpolationType,
+    exec_string: String
+}
+
+#[derive(Debug)]
+pub struct InterpolateData {
+    pub name: String,
+    pub value: f64,
+    pub time: f64
+}
+
+#[derive(Deserialize, Debug)]
+pub enum InterpolationType {
+    Default,
+    Wrap180,
+    Wrap90,
+    Wrap360
+}
+
 fn format_get(var_name: &str, var_units: Option<&str>) -> String {
     if let Some(unit) = var_units {
         return format!(r#"({}, {})"#, var_name, unit.trim());
@@ -43,6 +66,7 @@ fn format_get(var_name: &str, var_units: Option<&str>) -> String {
 pub struct GaugeCommunicator {
     requests: BiHashMap<String, u32>,
     datums: Vec<String>,
+    interpolate_datums: HashMap<String, InterpolateMapping>,
     next_request_id: u32,
 }
 
@@ -57,12 +81,15 @@ const SEND: u32 = 0;
 const RECEIVE: u32 = 1;
 const SEND_MULTIPLE: u32 = 2;
 const RECEIVE_MULTIPLE: u32 = 3;
+const MAP_INTERPOLATE: u32 = 4;
+const SEND_INTERPOLATE: u32 = 5;
 
 impl GaugeCommunicator {
     pub fn new() -> Self {
         Self {
             requests: BiHashMap::new(),
             datums: Vec::new(),
+            interpolate_datums: HashMap::new(),
             next_request_id: 0
         }
     }
@@ -121,6 +148,40 @@ impl GaugeCommunicator {
         conn.add_to_client_data_definition(RECEIVE_MULTIPLE, (self.datums.len() * 16) as u32, 16, 0.0, self.datums.len() as u32);
 
         conn.set_client_data(SEND_MULTIPLE, SEND_MULTIPLE, 0, 0, 128, writer.get_data_location() as *mut std::ffi::c_void);
+    }
+
+    // Aircraft vars only
+    pub fn add_interpolate_mapping(&mut self, calculator_var_name: &str, index_var_name: String, var_units: Option<&str>, interpolation_type: InterpolationType) {
+        let exec_string = match var_units {
+            Some(unit) => format!(r#"(>{}, {})"#, calculator_var_name.trim(), unit.trim()),
+            None => format!(r#"(>{})"#, calculator_var_name.trim())
+        };
+
+        self.interpolate_datums.insert(index_var_name, InterpolateMapping {
+            datum_id: self.interpolate_datums.len() as u32,
+            interpolation_type,
+            exec_string,
+        });
+    }
+
+    pub fn send_new_interpolation_data(&self, conn: &SimConnector, time: f64, data: &Vec<InterpolateData>) {
+        let mut writer = MemWriter::new(2048, 8).unwrap();
+        let mut count = 0;
+
+        writer.write_u32(100);
+        writer.write_f64(time);
+
+        for entry in data {
+            if let Some(datum) = self.interpolate_datums.get(&entry.name) {
+                
+                writer.write_u32(datum.datum_id);
+                writer.write_f64(entry.value);
+
+                count += 1;
+            }
+        }
+
+        conn.set_client_data(SEND_INTERPOLATE, SEND_INTERPOLATE, simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED, 0, count * 12 + 12, writer.get_data_location() as *mut std::ffi::c_void);
     }
 
     fn read_multiple_data(&mut self, count: u32, pointer: *const u32) -> Result<Vec<GetResult>, std::io::Error> {
@@ -207,12 +268,35 @@ impl GaugeCommunicator {
         }
     }
 
+    fn write_interpolate_mapping(&mut self, conn: &SimConnector) {
+        let mut writer = MemWriter::new(2048, 4).unwrap();
+
+        for (_, datum) in self.interpolate_datums.iter() {
+
+            let interpolation_type_int = match datum.interpolation_type {
+                InterpolationType::Default => 0,
+                InterpolationType::Wrap180 => 1,
+                InterpolationType::Wrap90 => 2,
+                InterpolationType::Wrap360 => 3,
+            };
+
+            writer.write_u32(datum.datum_id);
+            writer.write_u32(interpolation_type_int);
+            writer.write_str(&datum.exec_string);
+            writer.pad(64-datum.exec_string.len() as isize);
+        }
+
+        conn.set_client_data(MAP_INTERPOLATE, MAP_INTERPOLATE, simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED, 0, (self.interpolate_datums.len() * 72) as u32, writer.get_data_location() as *mut std::ffi::c_void);
+    }
+
     pub fn on_connected(&mut self, conn: &SimConnector) {
         // Assign named data area to a client id
-        conn.map_client_data_name_to_id("LVARSEND", SEND);
-        conn.map_client_data_name_to_id("LVARRECEIVE", RECEIVE);
-        conn.map_client_data_name_to_id("LVARSENDMULTI", SEND_MULTIPLE);
-        conn.map_client_data_name_to_id("LVARRECEIVEMULTI", RECEIVE_MULTIPLE);
+        conn.map_client_data_name_to_id("YCSEND", SEND);
+        conn.map_client_data_name_to_id("YCRECEIVE", RECEIVE);
+        conn.map_client_data_name_to_id("YCSENDMULTI", SEND_MULTIPLE);
+        conn.map_client_data_name_to_id("YCRECEIVEMULTI", RECEIVE_MULTIPLE);
+        conn.map_client_data_name_to_id("YCMAPINTERPOLATE", MAP_INTERPOLATE);
+        conn.map_client_data_name_to_id("YCSENDINTERPOLATE", SEND_INTERPOLATE);
    
         // Define layout of client data area
         conn.add_to_client_data_definition(SEND, 0, 4, 0.0, 0);
@@ -224,16 +308,19 @@ impl GaugeCommunicator {
 
         conn.add_to_client_data_definition(SEND_MULTIPLE, 0, 128, 0.0, 0);
         conn.add_to_client_data_definition(RECEIVE_MULTIPLE, 0, 16, 0.0, 0);
-        // conn.add_to_client_data_definition(LVARRECEIVE, 16, 112, 0.0, 3);
-        // Create data area that other clients can read/write
-        conn.create_client_data(SEND, 128, simconnect::SIMCONNECT_CREATE_CLIENT_DATA_FLAG_DEFAULT);
-        conn.create_client_data(RECEIVE, 128, simconnect::SIMCONNECT_CREATE_CLIENT_DATA_FLAG_DEFAULT);
-        conn.create_client_data(SEND_MULTIPLE, 128, 0);
-        conn.create_client_data(RECEIVE_MULTIPLE, 8096, 0);
+
+        conn.add_to_client_data_definition(SEND_INTERPOLATE, 0, 8, 0.0, 100);
+
+        for i in 0..30 {
+            conn.add_to_client_data_definition(MAP_INTERPOLATE, i * 68, 68, 0.0, i);
+            conn.add_to_client_data_definition(SEND_INTERPOLATE, i * 8 + 8, 8, 0.0, i);
+        }
         // Listen for data written onto the RECEIVE data area
         conn.request_client_data(RECEIVE, 0, RECEIVE, simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, 0, 0, 0, 0);
         conn.request_client_data(RECEIVE_MULTIPLE, 0, RECEIVE_MULTIPLE, simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
         // Clear gauge definitions
         self.clear_definitions(conn);
+        // Write some data
+        self.write_interpolate_mapping(conn);
     }
 }

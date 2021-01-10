@@ -18,17 +18,9 @@ impl Control {
         }
     }
 
-    pub fn finalize_transfer(&mut self, conn: &SimConnector) {
-        conn.transmit_client_event(1, 1000, !self.has_control as u32, 5, 0);
-        conn.transmit_client_event(1, 1001, !self.has_control as u32, 5, 0);
-        conn.transmit_client_event(1, 1002, !self.has_control as u32, 5, 0);
-        self.transferring_control = false;
-    }
-
-    pub fn take_control(&mut self, conn: &SimConnector) {
+    pub fn take_control(&mut self) {
         self.has_control = true;
         self.control_change_time = Instant::now();
-        self.finalize_transfer(conn);
     }
 
     pub fn lose_control(&mut self) {
@@ -37,17 +29,7 @@ impl Control {
         self.transferring_control = true;
     }
 
-    pub fn has_pending_transfer(&self) -> bool {
-        return self.transferring_control;
-    }
-
     pub fn has_control(&self) -> bool {
         return self.has_control;
-    }
-
-    pub fn on_connected(&mut self, conn: &SimConnector) {
-        conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
-        conn.map_client_event_to_sim_event(1001, "FREEZE_ALTITUDE_SET");
-        conn.map_client_event_to_sim_event(1002, "FREEZE_ATTITUDE_SET");
     }
 }

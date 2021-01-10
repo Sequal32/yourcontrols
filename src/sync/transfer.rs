@@ -76,7 +76,7 @@ struct LocalVarEntry {
 }
 
 pub struct LVarSyncer {
-    transfer: GaugeCommunicator,
+    pub transfer: GaugeCommunicator,
     vars: HashMap<String, LocalVarEntry>,
     raw_count: u32,
 }

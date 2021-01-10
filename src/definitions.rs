@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant, path::PathBuf};
-use crate::{interpolate::Interpolate, interpolate::InterpolateOptions, sync::{gaugecommunicator::{GetResult, LVarResult}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path, varreader::SimValue, velocity::VelocityCorrector};
+use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path, velocity::VelocityCorrector};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -213,9 +213,9 @@ struct VarEntry {
     var_name: String,
     var_units: Option<String>,
     var_type: InDataTypes,
-    interpolate: Option<InterpolateOptions>,
     update_every: Option<f64>,
     condition: Option<Condition>,
+    interpolate: Option<InterpolationType>,
     #[serde(default)]
     constant: bool,
     #[serde(default)]
@@ -244,6 +244,7 @@ struct NumSetGenericEntry<T> {
     event_param: Option<u32>,
     multiply_by: Option<T>,
     add_by: Option<T>,
+    interpolate: Option<InterpolationType>,
     #[serde(default)]
     use_calculator: bool,
     #[serde(default)]
@@ -407,8 +408,6 @@ pub struct Definitions {
     velocity_corrector: VelocityCorrector,
     // Vars that should not be sent over the network
     do_not_sync: HashSet<String>,
-    // Structs that actually do the interpolation
-    interpolation_avars: Interpolate,
     // Vars that need interpolation
     interpolate_vars: HashSet<String>,
 }
@@ -444,8 +443,6 @@ impl Definitions {
 
             current_sync: AllNeedSync::new(),
 
-            interpolation_avars: Interpolate::new(),
-            
             constant_avars: HashMap::new(),
             unreliable_vars: HashSet::new(),
             velocity_corrector: VelocityCorrector::new(2),
@@ -461,11 +458,11 @@ impl Definitions {
         let (var_name, var_type) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
 
         // Handle interpolation for this variable
-        if let Some(options) = var.interpolate {
+        if let Some(interpolate) = var.interpolate {
             self.interpolate_vars.insert(var_name.clone());
             
             if std::matches!(var_type, VarType::AircraftVar) {
-                self.interpolation_avars.set_key_options(&var_name, options);
+                self.lvarstransfer.transfer.add_interpolate_mapping(&var.var_name, var_name.clone(), var.var_units.as_deref(), interpolate);
             }
         }
 
@@ -602,6 +599,10 @@ impl Definitions {
 
         if var.unreliable {
             self.unreliable_vars.insert(var.var_name.clone());
+        }
+
+        if let Some(interpolate_type) = var.interpolate {
+            self.lvarstransfer.transfer.add_interpolate_mapping(&var.var_name, var_string.clone(), var.var_units.as_deref(), interpolate_type);
         }
 
         if let Some(event_param) = var.event_param {
@@ -870,36 +871,15 @@ impl Definitions {
         }
     }
 
-    fn add_constants_to_data(&mut self, data: &mut SimValue) {
-        // Add constants
-        for (var_name, value) in self.constant_avars.iter() {
-            if data.contains_key(var_name) {continue}
-            if let Some(value) = value {
-                data.insert(var_name.clone(), value.clone());
-            }
-        }
-    }
-
-    fn interpolate(&mut self, conn: &SimConnector) {
-        if let Some(mut aircraft_interpolation_data) = self.interpolation_avars.step() {
-            self.add_constants_to_data(&mut aircraft_interpolation_data);
-            self.write_aircraft_data_unchecked(conn, &aircraft_interpolation_data);
-        }
-    }
-
-    pub fn step(&mut self, conn: &SimConnector, should_interpolate: bool) {
+    pub fn step(&mut self) {
         self.process_js_data();
-
-        if !should_interpolate {return}
-        // Interpolate AVARS        
-        self.interpolate(conn);
     }
 
     fn filter_all_sync(&self, data: &mut AllNeedSync, sync_permission: &SyncPermission) {
         data.filter(|name| self.can_sync(name, sync_permission));
     }
 
-    fn split_interpolate(&self, data: &mut AllNeedSync) -> AllNeedSync {
+    fn split_unreliable(&self, data: &mut AllNeedSync) -> AllNeedSync {
         data.filter_keep(|name| self.interpolate_vars.contains(name) || self.unreliable_vars.contains(name))
     }
 
@@ -910,18 +890,12 @@ impl Definitions {
         // Filter out based on what the client's current permissions are
         self.filter_all_sync(&mut data, sync_permission);
         // Split into interpolated vs non interpolated values - used for reliable/unreliable transmissions
-        let regular = self.split_interpolate(&mut data);
+        let regular = self.split_unreliable(&mut data);
         // Convert into options
-        let interpolated = if data.is_empty() {None} else {Some(data)};
+        let unreliable = if data.is_empty() {None} else {Some(data)};
         let regular = if regular.is_empty() {None} else {Some(regular)};
 
-        return (interpolated, regular);
-    }
-
-    // Skip checking with self.sync_vars and creating a new hashmap - used for interpolation
-    fn write_aircraft_data_unchecked(&mut self, conn: &SimConnector, data: &AVarMap) {
-        if data.len() == 0 {return}
-        self.avarstransfer.set_vars(conn, data);
+        return (unreliable, regular);
     }
 
     fn can_sync(&self, var_name: &str, sync_permission: &SyncPermission) -> bool {
@@ -965,6 +939,8 @@ impl Definitions {
         let mut data = data;
         self.velocity_corrector.add_wind_component(&mut data);
 
+        let mut interpolation_data = Vec::new();
+
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             self.last_written.insert(var_name.to_string(), Instant::now());
@@ -985,10 +961,14 @@ impl Definitions {
                         if interpolate && self.interpolate_vars.contains(&var_name) {
                             // Queue data for interpolation
                             if let VarReaderTypes::F64(value) = data {
-                                self.interpolation_avars.queue_interpolate(&var_name, time, value)
+                                interpolation_data.push(InterpolateData {
+                                   name: var_name.clone(),
+                                   value,
+                                   time
+                                });
                             }
                         } else {
-                            // Set data right away
+                                // Set data right away
                             to_sync.insert(var_name.clone(), data.clone());
                         }
                     });
@@ -996,9 +976,13 @@ impl Definitions {
             }
         }
 
-        if to_sync.len() == 0 {return;}
+        if interpolation_data.len() > 0 {
+            self.lvarstransfer.transfer.send_new_interpolation_data(conn, time, &interpolation_data);
+        }
 
-        self.avarstransfer.set_vars(conn, &to_sync);
+        if to_sync.len() > 0 {
+            self.avarstransfer.set_vars(conn, &to_sync);
+        }
     }
 
     pub fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap, _interpolate: bool) -> Result<(), WriteDataError> {
@@ -1063,8 +1047,6 @@ impl Definitions {
 
     // To be called when SimConnect connects
     pub fn on_connected(&mut self, conn: &SimConnector) -> Result<(), ()> {
-        self.interpolation_avars.reset();
-
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
@@ -1104,7 +1086,7 @@ impl Definitions {
     }
 
     pub fn reset_interpolate(&mut self) {
-        self.interpolation_avars.reset();
+        // self.lvarstransfer.reset_interpolate();
         self.reset_constants();
     }
 }
