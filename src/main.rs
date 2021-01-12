@@ -221,13 +221,14 @@ fn main() {
                 match message {
                     ReceiveMessage::Payload(payload) => match payload {
                         // Unused
-                        Payloads::Handshake { .. } => {}
-                        Payloads::HostingReceived { .. } => {}
-                        Payloads::AttemptConnection { .. } => {}
-                        Payloads::PeerEstablished { .. } => {}
-                        Payloads::InvalidVersion {..} => {}
-                        Payloads::InvalidName {..} => {}
-                        Payloads::InitHandshake {..} => {}
+                        Payloads::Handshake { .. } |
+                        Payloads::HostingReceived { .. } |
+                        Payloads::AttemptConnection { .. } |
+                        Payloads::PeerEstablished { .. } |
+                        Payloads::InvalidVersion {..} |
+                        Payloads::InvalidName {..} |
+                        Payloads::InitHandshake {..} |
+                        Payloads::Heartbeat => {}
                         // Used
                         Payloads::Update {data, from, is_unreliable, time} => {
                             // Not non high updating packets for debugging

@@ -10,8 +10,6 @@ use crate::definitions::AllNeedSync;
 
 use super::SenderReceiver;
 
-const ACK_BYTES: &[u8] = &[0x41, 0x43, 0x4b];
-
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum Payloads {
     InvalidName {},
@@ -29,6 +27,7 @@ pub enum Payloads {
     HostingReceived {session_id: String},
     AttemptConnection {peer: SocketAddr},
     PeerEstablished {peer: SocketAddr},
+    Heartbeat
 }
 
 #[derive(Debug)]
@@ -38,17 +37,6 @@ pub enum Error {
     SerdeEncodeError(rmp_serde::encode::Error),
     ReadTimeout,
     Dummy
-}
-
-// Need to manually acknowledge since most of the time we don't send packets back
-fn acknowledge_packet(sender: &mut Sender<Packet>, packet: &Packet) {
-    if let laminar::DeliveryGuarantee::Reliable = packet.delivery_guarantee() {
-        match packet.order_guarantee() {
-            laminar::OrderingGuarantee::None => {}
-            laminar::OrderingGuarantee::Sequenced(stream) => {sender.send(Packet::reliable_sequenced(packet.addr(), ACK_BYTES.to_vec(), stream)).ok();},
-            laminar::OrderingGuarantee::Ordered(stream) => {sender.send(Packet::reliable_ordered(packet.addr(), ACK_BYTES.to_vec(), stream)).ok();}
-        };
-    }
 }
 
 //
@@ -63,13 +51,6 @@ pub fn get_next_message(transfer: &mut SenderReceiver) -> Result<(SocketAddr, Pa
         }
         Err(_) => return Err(Error::ReadTimeout)
     };
-
-    // Handle acknowledgements
-    if packet.payload() != ACK_BYTES {
-        acknowledge_packet(transfer.get_sender(), &packet);
-    } else {
-        return Err(Error::Dummy)
-    }
 
     match rmp_serde::from_slice(packet.payload()) {
         Ok(s) => Ok((packet.addr(), s)),
@@ -98,6 +79,7 @@ pub fn send_message(message: Payloads, target: SocketAddr, sender: &mut Sender<P
         Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload),
         Payloads::PeerEstablished {..} |
         Payloads::Handshake {..} => Packet::unreliable(target, payload),
+        Payloads::Heartbeat => Packet::reliable_ordered(target, payload, Some(2)),
         Payloads::Update {is_unreliable, ..} => if is_unreliable {Packet::unreliable_sequenced(target, payload, Some(1))} else {Packet::reliable_ordered(target, payload, Some(2))}
     };
 

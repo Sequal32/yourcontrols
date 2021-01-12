@@ -10,6 +10,7 @@ use super::Payloads;
 
 pub const MAX_PUNCH_RETRIES: u8 = 5;
 pub const LOOP_SLEEP_TIME_MS: u64 = 5;
+pub const HEARTBEAT_INTERVAL_MANUAL_SECS: f32 = 0.25;
 
 const HEARTBEAT_INTERVAL_MS: u64 = 1000;
 const RENDEZVOUS_SERVER_HOSTNAME: &str = "cloudserver.yourcontrols.xyz";

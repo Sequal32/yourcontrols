@@ -6,7 +6,7 @@ use std::{net::{SocketAddr}, net::IpAddr, sync::Mutex, time::Duration, time::Ins
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::thread;
 
-use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
+use super::{Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
 
 struct TransferStruct {
     name: String,
@@ -25,6 +25,7 @@ struct TransferStruct {
     retries: u8,
     // State
     should_stop: Arc<AtomicBool>,
+    heartbeat_instant: Instant
 }
 
 impl TransferStruct {
@@ -36,16 +37,17 @@ impl TransferStruct {
     fn handle_message(&mut self, addr: SocketAddr, payload: Payloads) {
         match &payload {
             // Unused by client
-            Payloads::HostingReceived { .. } => {}
-            Payloads::InitHandshake { .. } => {}
-            Payloads::PeerEstablished { .. } => {}
-            Payloads::Ready => {}
+            Payloads::HostingReceived { .. } |
+            Payloads::InitHandshake { .. } |
+            Payloads::PeerEstablished { .. } |
+            Payloads::Ready |
             // No futher handling required
-            Payloads::TransferControl { ..} => {}
-            Payloads::SetObserver { .. } => {}
-            Payloads::PlayerJoined { .. } => {}
-            Payloads::PlayerLeft { .. } => {}
-            Payloads::Update { .. } => {}
+            Payloads::TransferControl { ..} |
+            Payloads::SetObserver { .. } |
+            Payloads::PlayerJoined { .. } |
+            Payloads::PlayerLeft { .. } |
+            Payloads::Update { .. } |
+            Payloads::Heartbeat => {}
             // Used
             Payloads::InvalidVersion { server_version } => {
                 self.stop(format!("Server has mismatching version {}", server_version));
@@ -111,6 +113,18 @@ impl TransferStruct {
             }
 
             info!("[NETWORK] Sent packet to {}. Retry #{}", addr, self.retries);
+        }
+    }
+
+    // Reliably compared to default heartbeat implementation
+    fn handle_heartbeat(&mut self) {
+        if let Some(addr) = self.received_address {
+            
+            if self.heartbeat_instant.elapsed().as_secs_f32() < HEARTBEAT_INTERVAL_MANUAL_SECS {return}
+
+            self.heartbeat_instant = Instant::now();
+            messages::send_message(Payloads::Heartbeat, addr, self.net_transfer.get_sender()).ok();
+
         }
     }
 
@@ -205,6 +219,7 @@ impl Client {
                 name: self.get_server_name().to_string(),
                 version: self.version.clone(),
                 should_stop: self.should_stop.clone(),
+                heartbeat_instant: Instant::now()
             }
         ));
         let transfer_thread_clone = transfer.clone();
@@ -249,6 +264,7 @@ impl Client {
 
                 transfer.handle_handshake();
                 transfer.handle_app_message();
+                transfer.handle_heartbeat();
 
                 if transfer.should_stop() {break}
 
