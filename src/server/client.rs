@@ -16,7 +16,7 @@ struct TransferStruct {
     // Send data to app to receive client data
     server_tx: Sender<ReceiveMessage>,
     // Reading/writing to UDP stream
-    net_transfer: SenderReceiver,
+    net: SenderReceiver,
     // Hole punching
     connected: bool,
     received_address: Option<SocketAddr>,
@@ -67,10 +67,10 @@ impl TransferStruct {
                 self.connected = true;
 
                 // Send initial data
-                messages::send_message(Payloads::InitHandshake {
+                self.net.send_message(Payloads::InitHandshake {
                     name: self.name.clone(),
                     version: self.version.clone(),
-                }, addr.clone(), self.net_transfer.get_sender()).ok();
+                }, addr.clone()).ok();
                 
                 
                 info!("[NETWORK] Established connection with {} on {}!", addr, session_id);
@@ -88,7 +88,7 @@ impl TransferStruct {
     fn handle_app_message(&mut self) {
         while let Ok(payload) = self.client_rx.try_recv() {
             if let Some(address) = self.received_address {
-                messages::send_message(payload, address, self.net_transfer.get_sender()).ok();
+                self.net.send_message(payload, address).ok();
             }
         }
     }
@@ -101,7 +101,7 @@ impl TransferStruct {
         if let Some(timer) = self.retry_timer.as_ref() {if timer.elapsed().as_secs() < 1 {return}}
 
         if let Some(addr) = self.received_address {
-            messages::send_message(Payloads::Handshake {session_id: self.session_id.clone()}, addr, self.net_transfer.get_sender()).ok();
+            self.net.send_message(Payloads::Handshake {session_id: self.session_id.clone()}, addr).ok();
             // Reset second timer
             self.retry_timer = Some(Instant::now());
             self.retries += 1;
@@ -118,12 +118,13 @@ impl TransferStruct {
 
     // Reliably compared to default heartbeat implementation
     fn handle_heartbeat(&mut self) {
+        if !self.connected {return}
         if let Some(addr) = self.received_address {
             
             if self.heartbeat_instant.elapsed().as_secs_f32() < HEARTBEAT_INTERVAL_MANUAL_SECS {return}
 
             self.heartbeat_instant = Instant::now();
-            messages::send_message(Payloads::Heartbeat, addr, self.net_transfer.get_sender()).ok();
+            self.net.send_message(Payloads::Heartbeat, addr).ok();
 
         }
     }
@@ -171,60 +172,52 @@ impl Client {
     }
 
     pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), StartClientError> {
-        let socket = self.get_socket(ip.is_ipv6())?;
-
-        // Signifies no hole punching
-        let blank_session_id = String::new();
-        let addr = match_ip_address_to_socket_addr(ip, port);
-
-        messages::send_message(Payloads::Handshake {
-            session_id: blank_session_id.clone()
-        }, addr.clone(), &mut socket.get_packet_sender()).ok();
-
-        self.run(socket, blank_session_id, None, Some(addr))
+        self.run(ip.is_ipv6(), String::new(), None, Some(match_ip_address_to_socket_addr(ip, port)))
     }
 
     pub fn start_with_hole_punch(&mut self, session_id: String, is_ipv6: bool) -> Result<(), StartClientError> {
-        let socket = self.get_socket(is_ipv6)?;
-        let server_address = get_rendezvous_server(is_ipv6)?;
-        // Request session ip
-        messages::send_message(Payloads::Handshake {
-            session_id: session_id.clone()
-        }, server_address, &mut socket.get_packet_sender()).ok();
-
-        self.run(socket, session_id, Some(server_address), None)
+        self.run(is_ipv6, session_id, Some(get_rendezvous_server(is_ipv6)?), None)
     }
 
-    pub fn run(&mut self, socket: Socket, session_id: String, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), StartClientError> {
-        let mut socket = socket;
+    pub fn run(&mut self, is_ipv6: bool, session_id: String, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), StartClientError> {
+        let mut socket = self.get_socket(is_ipv6)?;
 
         info!("[NETWORK] Listening on {:?}", socket.local_addr());
 
-        let transfer = Arc::new(Mutex::new(
-            TransferStruct {
-                // Transfer
-                client_rx: self.client_rx.clone(),
-                server_tx: self.server_tx.clone(),
-                net_transfer: SenderReceiver::new(
-                    socket.get_packet_sender(),
-                    socket.get_event_receiver(), 
-                ),
-                // Holepunching
-                retries: 0,
-                connected: false,
-                received_address: target_address,
-                retry_timer: None,
-                session_id: session_id,
-                // State
-                name: self.get_server_name().to_string(),
-                version: self.version.clone(),
-                should_stop: self.should_stop.clone(),
-                heartbeat_instant: Instant::now()
-            }
-        ));
-        let transfer_thread_clone = transfer.clone();
+        let mut transfer = TransferStruct {
+            // Transfer
+            client_rx: self.client_rx.clone(),
+            server_tx: self.server_tx.clone(),
+            net: SenderReceiver::from_socket(&socket),
+            // Holepunching
+            retries: 0,
+            connected: false,
+            received_address: target_address,
+            retry_timer: None,
+            session_id: session_id.clone(),
+            // State
+            name: self.get_server_name().to_string(),
+            version: self.version.clone(),
+            should_stop: self.should_stop.clone(),
+            heartbeat_instant: Instant::now()
+        };
 
-        self.transfer = Some(transfer);
+        if let Some(rendezvous) = rendezvous {
+            // Send a handshake to rendezvous to resolve session id with an ip address
+            transfer.net.send_message(Payloads::Handshake {
+                session_id: session_id.clone()
+            }, rendezvous.clone()).ok();
+        } else if let Some(addr) = target_address {
+            // Send a handshake to the target address to start establishing a connection
+            transfer.net.send_message(Payloads::Handshake {
+                session_id: String::new(),
+            }, addr.clone()).ok();
+        }
+
+        let transfer_send = Arc::new(Mutex::new(transfer));
+        let transfer_thread_clone = transfer_send.clone();
+
+        self.transfer = Some(transfer_send);
 
         let rendezvous_timer = Instant::now();
         let timeout = self.timeout;
@@ -238,7 +231,7 @@ impl Client {
                 socket.manual_poll(Instant::now());
                 
                 loop {
-                    match messages::get_next_message(&mut transfer.net_transfer) {
+                    match transfer.net.get_next_message() {
                         Ok((addr, payload)) => {
                             transfer.handle_message(addr, payload);
                         },
@@ -249,9 +242,7 @@ impl Client {
                                     transfer.stop("No message received from server.".to_string())
                                 }
                             }
-                            Error::ReadTimeout => {
-                                break
-                            }
+                            Error::ReadTimeout(_) => break,
                             _ => {}
                         }
                     };

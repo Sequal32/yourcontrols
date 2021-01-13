@@ -18,7 +18,7 @@ struct TransferStruct {
     session_id: String,
     clients: HashMap<String, Client>,
     // Reading/writing to UDP stream
-    net_transfer: SenderReceiver,
+    net: SenderReceiver,
     // Holepunching
     rendezvous_server: Option<SocketAddr>,
     clients_to_holepunch: Vec<HolePunchSession>,
@@ -35,35 +35,33 @@ struct TransferStruct {
 }
 
 impl TransferStruct {
-    fn send_message(&mut self, payload: Payloads, target: SocketAddr) {
-        messages::send_message(payload, target, self.net_transfer.get_sender()).ok();
-    }
-    
     fn send_to_all(&mut self, except: Option<&SocketAddr>, payload: Payloads) {
-        let mut sender = self.net_transfer.get_sender().clone();
+        let mut to_send = Vec::new();
 
         for (_, client) in self.clients.iter() {
             if let Some(except) = except {
                 if client.addr == *except {continue}
             }
 
-            messages::send_message(payload.clone(), client.addr.clone(), &mut sender).ok();
+            to_send.push(client.addr.clone());
         }
+
+        self.net.send_message_to_multiple(payload, to_send).ok();
     }
 
     fn handle_handshake(&mut self) {
         if self.clients_to_holepunch.len() == 0 {return;}
 
-        let mut sender = self.net_transfer.get_sender().clone();
         let session_id = self.session_id.clone();
+        let mut to_send = Vec::new();
 
         self.clients_to_holepunch.retain_mut(|session| {
         // Send a message every second
             if let Some(timer) = session.timer.as_ref() {if timer.elapsed().as_secs() < 1 {return true;}}            
         
-            messages::send_message(Payloads::Handshake {
+            to_send.push((Payloads::Handshake {
                 session_id: session_id.clone()
-            }, session.addr.clone(), &mut sender).ok();
+            }, session.addr.clone()));
             // Reset second timer
             session.retries += 1;
             session.timer = Some(Instant::now());
@@ -77,6 +75,10 @@ impl TransferStruct {
 
             return true;
         });
+
+        for (payload, addr) in to_send {
+            self.net.send_message(payload, addr).ok();
+        }
     }
 
     fn handle_message(&mut self, addr: SocketAddr, payload: Payloads) {
@@ -98,9 +100,9 @@ impl TransferStruct {
             Payloads::InitHandshake { name, version } => {
                 // Version check
                 if *version != self.version {
-                    self.send_message(Payloads::InvalidVersion {
+                    self.net.send_message(Payloads::InvalidVersion {
                         server_version: self.version.clone(),
-                    }, addr);
+                    }, addr).ok();
                     return;
                 }
 
@@ -115,22 +117,21 @@ impl TransferStruct {
                 }
 
                 if invalid_name {
-                    self.send_message(Payloads::InvalidName{}, addr);
+                    self.net.send_message(Payloads::InvalidName{}, addr).ok();
                     return;
                 }
 
                 // Send all connected clients to new player
-                let mut sender = self.net_transfer.get_sender().clone();
                 for (name, client) in self.clients.iter() {
-                    messages::send_message(Payloads::PlayerJoined { 
+                    self.net.send_message(Payloads::PlayerJoined { 
                         name: name.clone(), 
                         in_control: self.in_control == *name, 
                         is_server: false, 
                         is_observer: client.is_observer
-                    }, addr, &mut sender).ok();
+                    }, addr).ok();
                 }
                 // Send self
-                self.send_message(Payloads::PlayerJoined { name: self.username.clone(), in_control: self.in_control == self.username, is_server: true, is_observer: false}, addr);
+                self.net.send_message(Payloads::PlayerJoined { name: self.username.clone(), in_control: self.in_control == self.username, is_server: true, is_observer: false}, addr).ok();
                 // Add client
                 self.clients.insert(name.clone(), Client {addr: addr.clone(),
                     is_observer: false,
@@ -154,10 +155,10 @@ impl TransferStruct {
                 info!("[NETWORK] Handshake received from {} on {}", addr, session_id);
                     // Incoming UDP packet from peer
                 if *session_id == self.session_id {
-                    self.send_message(Payloads::Handshake{session_id: session_id.clone()}, addr.clone());
+                    self.net.send_message(Payloads::Handshake{session_id: session_id.clone()}, addr.clone()).ok();
                     
                     if let Some(rendezvous) = self.rendezvous_server.as_ref() {
-                        messages::send_message(Payloads::PeerEstablished {peer: addr}, rendezvous.clone(), self.net_transfer.get_sender()).ok();
+                        self.net.send_message(Payloads::PeerEstablished {peer: addr}, rendezvous.clone()).ok();
 
                         self.clients_to_holepunch.retain(|x| {
                             x.addr != addr
@@ -334,9 +335,6 @@ impl Server {
         let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(3))?;
         let addr: SocketAddr = get_rendezvous_server(is_ipv6)?;
 
-        // Send message to external server to obtain session ID
-        messages::send_message(Payloads::Handshake {session_id: String::new()}, addr.clone(), &mut socket.get_packet_sender()).ok();
-
         self.run(socket, Some(addr))
     }
 
@@ -345,7 +343,7 @@ impl Server {
 
         info!("[NETWORK] Listening on {:?}", socket.local_addr());
 
-        let transfer = Arc::new(Mutex::new(TransferStruct {
+        let mut transfer = TransferStruct {
             // Holepunching
             session_id: String::new(),
             rendezvous_server: rendezvous,
@@ -353,10 +351,7 @@ impl Server {
             // Transfer
             server_tx: self.server_tx.clone(),
             client_rx: self.client_rx.clone(),
-            net_transfer: SenderReceiver::new(
-                socket.get_packet_sender(),
-                socket.get_event_receiver(), 
-            ),
+            net: SenderReceiver::from_socket(&socket),
             // State
             in_control: self.username.clone(),
             clients: HashMap::new(),
@@ -365,15 +360,20 @@ impl Server {
             username: self.username.clone(),
             version: self.version.clone(),
             heartbeat_instant: Instant::now()
-        }));
-        let transfer_thread_clone = transfer.clone();
+        };
+        
 
-        self.transfer = Some(transfer);
-
-        // If not hole punching, then tell the application that the server is immediately ready
-        if rendezvous.is_none() {
-            self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
+        if let Some(addr) = rendezvous {
+            // Send handshake payload to rendezvous server to get session ID
+            transfer.net.send_message(Payloads::Handshake {session_id: String::new()}, addr.clone()).ok();
+        } else {
+            // If not hole punching, then tell the application that the server is immediately ready
+            self.server_tx.send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
         }
+
+        let transfer_send = Arc::new(Mutex::new(transfer));
+        let transfer_thread_clone = transfer_send.clone();
+        self.transfer = Some(transfer_send);
 
         // Run main loop
         thread::spawn(move || {
@@ -384,8 +384,7 @@ impl Server {
                 socket.manual_poll(Instant::now());
 
                 loop {
-                    let message = messages::get_next_message(&mut transfer.net_transfer);
-                    match message {
+                    match transfer.net.get_next_message() {
                         Ok((addr, payload)) => {
                             transfer.handle_message(addr, payload);
                         },
@@ -402,9 +401,7 @@ impl Server {
                                     transfer.remove_client(addr);
                                 }
                             }
-                            Error::ReadTimeout => {
-                                break
-                            }
+                            Error::ReadTimeout(_) => break,
                             _ => {}
                         }
                     };
