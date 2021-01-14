@@ -380,6 +380,10 @@ fn main() {
                         Event::SessionIdFetchFailed => {
                             app_interface.server_fail("Could not connect to Cloud Server to fetch session ID.")
                         }
+
+                        Event::Metrics(metrics) => {
+                            app_interface.send_network(&metrics);
+                        }
                     }
                 }
             }

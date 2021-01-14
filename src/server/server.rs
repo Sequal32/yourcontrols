@@ -2,10 +2,11 @@ use crossbeam_channel::{Receiver, Sender, unbounded};
 use log::{error, info};
 use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
+use messages::Message;
 use retain_mut::RetainMut;
 use spin_sleep::sleep;
 use std::{collections::HashMap, mem, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
-use laminar::{Socket};
+use laminar::{Metrics, Socket};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
 use super::{Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
 
@@ -31,7 +32,10 @@ struct TransferStruct {
     number_connections: Arc<AtomicU16>,
     username: String,
     version: String,
-    heartbeat_instant: Instant
+    heartbeat_instant: Instant,
+    // Metrics
+    metrics: HashMap<SocketAddr, Metrics>,
+    metrics_instant: Instant
 }
 
 impl TransferStruct {
@@ -211,6 +215,20 @@ impl TransferStruct {
         self.send_to_all(None, Payloads::Heartbeat);
     }
 
+    fn handle_metrics(&mut self) {
+        if self.metrics_instant.elapsed().as_secs_f32() < 1.0 {return}
+
+        let mut all_metrics = Metrics::default();
+
+        for metric in self.metrics.values().cloned() {
+            all_metrics += metric;
+        }
+
+        self.metrics_instant = Instant::now();
+        
+        self.server_tx.send(ReceiveMessage::Event(Event::Metrics(all_metrics))).ok();
+    }
+
     fn remove_client(&mut self, addr: SocketAddr) {
         let mut removed_client_name: Option<String> = None;
 
@@ -231,6 +249,8 @@ impl TransferStruct {
             self.number_connections.fetch_sub(1, SeqCst);
             self.server_tx.try_send(ReceiveMessage::Payload(player_left_payload)).ok();
         }
+
+        self.metrics.remove(&addr);
     }
 
     fn should_stop(&self) -> bool {
@@ -359,7 +379,9 @@ impl Server {
             number_connections: self.number_connections.clone(),
             username: self.username.clone(),
             version: self.version.clone(),
-            heartbeat_instant: Instant::now()
+            heartbeat_instant: Instant::now(),
+            metrics_instant: Instant::now(),
+            metrics: HashMap::new()
         };
         
 
@@ -385,22 +407,25 @@ impl Server {
 
                 loop {
                     match transfer.net.get_next_message() {
-                        Ok((addr, payload)) => {
+                        Ok(Message::Payload(addr, payload)) => {
                             transfer.handle_message(addr, payload);
                         },
-                        Err(e) => match e {
-                            Error::ConnectionClosed(addr) => {
-                                    // Could not reach rendezvous
-                                if transfer.session_id == "" && rendezvous.is_some() && rendezvous.unwrap() == addr {
+                        Ok(Message::ConnectionClosed(addr)) => {
+                                // Could not reach rendezvous
+                            if transfer.session_id == "" && rendezvous.is_some() && rendezvous.unwrap() == addr {
 
-                                    transfer.server_tx.try_send(ReceiveMessage::Event(Event::SessionIdFetchFailed)).ok();
-                                    transfer.should_stop.store(true, SeqCst);
+                                transfer.server_tx.try_send(ReceiveMessage::Event(Event::SessionIdFetchFailed)).ok();
+                                transfer.should_stop.store(true, SeqCst);
 
-                                } else {
-                                        // Client disconnected
-                                    transfer.remove_client(addr);
-                                }
+                            } else {
+                                    // Client disconnected
+                                transfer.remove_client(addr);
                             }
+                        }
+                        Ok(Message::Metrics(addr, metrics)) => {
+                            transfer.metrics.insert(addr, metrics);
+                        }
+                        Err(e) => match e {
                             Error::ReadTimeout(_) => break,
                             _ => {}
                         }
@@ -410,6 +435,7 @@ impl Server {
                 transfer.handle_handshake();
                 transfer.handle_app_message();
                 transfer.handle_heartbeat();
+                transfer.handle_metrics();
 
                 if transfer.should_stop() {break}
 

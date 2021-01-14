@@ -6,7 +6,7 @@ use std::{net::{SocketAddr}, net::IpAddr, sync::Mutex, time::Duration, time::Ins
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::thread;
 
-use super::{Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
+use super::{Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Message, Payloads, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
 
 struct TransferStruct {
     name: String,
@@ -232,16 +232,24 @@ impl Client {
                 
                 loop {
                     match transfer.net.get_next_message() {
-                        Ok((addr, payload)) => {
+                        Ok(Message::Payload(addr, payload)) => {
                             transfer.handle_message(addr, payload);
                         },
-                        Err(e) => match e {
-                            Error::ConnectionClosed(addr) => {
+                        Ok(Message::ConnectionClosed(addr)) => {
                                 // Can't connect to rendezvous to obtain session key
-                                if rendezvous.is_none() || (rendezvous.is_some() && rendezvous.unwrap() != addr) {
-                                    transfer.stop("No message received from server.".to_string())
+                            if rendezvous.is_none() || (rendezvous.is_some() && rendezvous.unwrap() != addr) {
+                                transfer.stop("No message received from server.".to_string())
+                            }
+                        }
+                        Ok(Message::Metrics(addr, metrics)) => {
+                            // Send message from game server, not rendezvous
+                            if let Some(received_address) = transfer.received_address {
+                                if received_address == addr {
+                                    transfer.server_tx.send(ReceiveMessage::Event(Event::Metrics(metrics))).ok();
                                 }
                             }
+                        }
+                        Err(e) => match e {
                             Error::ReadTimeout(_) => break,
                             _ => {}
                         }

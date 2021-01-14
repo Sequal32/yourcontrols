@@ -48,6 +48,15 @@ var joinConnectCloud = document.getElementById("join-connect-cloud")
 var joinIpInput = document.getElementById("join-ip-input")
 var joinPortInput = document.getElementById("join-port-input")
 
+// Network
+var networkDiv = document.getElementById("network")
+var downloadBandwidth = document.getElementById("download-bandwidth")
+var downloadRate = document.getElementById("download-rate")
+var uploadBandwidth = document.getElementById("upload-bandwidth")
+var uploadRate = document.getElementById("upload-rate")
+var networkLoss = document.getElementById("network-loss")
+var ping = document.getElementById("network-ping")
+
 var forceButton = document.getElementById("force-button")
 
 var is_connected = false
@@ -69,11 +78,12 @@ function invoke(data) {
 function SetStuffVisible(visible) {
     if (is_client) {
         document.getElementById("not_user_client").hidden = visible;
-        document.getElementById("is_user_client").hidden = !visible;
+        document.getElementById("top-right-card").appendChild(networkDiv)
     } else {
         document.getElementById("not_server_running").hidden = visible;
-        document.getElementById("is_server_running").hidden = !visible;
+        document.getElementById("top-left-card").appendChild(networkDiv)
     }
+    networkDiv.hidden = !visible
     document.getElementById("is_client_server_running").hidden = visible;
     document.getElementById("not_client_server_running").hidden = !visible;
 }
@@ -187,6 +197,15 @@ function LoadSettings(newSettings) {
     settings = newSettings
 }
 
+function UpdateMetrics(metrics) {
+    downloadBandwidth.textContent = "↓ " + metrics.receiveBandwidth.toFixed(2) + "KB/s"
+    downloadRate.textContent = Math.floor(metrics.receivePackets) + " Packets/s"
+    uploadBandwidth.textContent = "↑ " + metrics.sentBandwidth.toFixed(2) + " KB/s"
+    uploadRate.textContent = Math.floor(metrics.sentPackets) + " Packets/s"
+    networkLoss.textContent = (metrics.packetLoss * 100).toFixed(2) + "% Packet loss"
+    ping.textContent = metrics.ping + "ms"
+}
+
 // Handle server messages
 function MessageReceived(data) {
     switch (data["type"]) {
@@ -274,6 +293,9 @@ function MessageReceived(data) {
             break;
         case "config_msg":
             LoadSettings(JSON.parse(data["data"]))
+            break;
+        case "metrics":
+            UpdateMetrics(JSON.parse(data["data"]))
             break;
     }
 }

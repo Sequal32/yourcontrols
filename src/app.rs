@@ -1,9 +1,11 @@
 use base64;
 use crossbeam_channel::{Receiver, TryRecvError, unbounded};
+use laminar::Metrics;
 use std::{net::IpAddr, io::Read};
 use std::fs::File;
 use std::{sync::{Mutex, Arc, atomic::{AtomicBool, Ordering::SeqCst}}, thread};
 use serde::{Serialize, Deserialize};
+use serde_json::json;
 use crate::{simconfig, util::resolve_relative_path};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -217,5 +219,18 @@ impl App {
 
     pub fn send_config(&self, value: &str){
         self.invoke("config_msg", Some(value));
+    }
+
+    pub fn send_network(&self, metrics: &Metrics) {
+        self.invoke("metrics", Some(
+            json!({
+                "sentPackets": metrics.sent_packets,
+                "receivePackets": metrics.received_packets,
+                "sentBandwidth": metrics.sent_kbps,
+                "receiveBandwidth": metrics.receive_kbps,
+                "packetLoss": metrics.packet_loss,
+                "ping": metrics.rtt/2.0
+            }).to_string().as_str()
+        ))
     }
 }

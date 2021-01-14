@@ -1,5 +1,6 @@
 use crossbeam_channel::{Receiver, Sender};
 use dns_lookup::lookup_host;
+use laminar::Metrics;
 use std::{fmt::Display, net::IpAddr, net::SocketAddr, net::SocketAddrV4, net::SocketAddrV6, time::Duration};
 use std::time::SystemTime;
 
@@ -41,8 +42,8 @@ pub fn get_rendezvous_server(is_ipv6: bool) -> Result<SocketAddr, HostnameLookup
 
 pub fn get_socket_config(timeout: u64) -> laminar::Config {
     laminar::Config {
-        heartbeat_interval: Some(Duration::from_millis(HEARTBEAT_INTERVAL_MS)),
-        idle_connection_timeout: Duration::from_secs(timeout),
+        heartbeat_interval: None,
+        idle_connection_timeout: Duration::from_secs(10000),
         receive_buffer_max_size: 65536,
         max_packets_in_flight: u16::MAX,
         ..Default::default()
@@ -58,7 +59,8 @@ pub enum Event {
     ConnectionEstablished,
     UnablePunchthrough,
     SessionIdFetchFailed,
-    ConnectionLost(String)
+    ConnectionLost(String),
+    Metrics(Metrics)
 }
 
 #[derive(Debug)]

@@ -1,6 +1,6 @@
 use crate::definitions::AllNeedSync;
 use crossbeam_channel::{Receiver, Sender, TryRecvError};
-use laminar::{Packet, Socket, SocketEvent};
+use laminar::{Metrics, Packet, Socket, SocketEvent};
 use log::warn;
 use rmp_serde::{self, decode, encode};
 use serde::{Serialize, Deserialize};
@@ -29,9 +29,14 @@ pub enum Payloads {
     Heartbeat
 }
 
+pub enum Message {
+    Payload(SocketAddr, Payloads),
+    ConnectionClosed(SocketAddr),
+    Metrics(SocketAddr, Metrics)
+}
+
 #[derive(Debug)]
 pub enum Error {
-    ConnectionClosed(SocketAddr),
     SerdeDecodeError(decode::Error),
     SerdeEncodeError(encode::Error),
     CompressError(io::Error),
@@ -102,24 +107,23 @@ impl SenderReceiver {
         }
     }
 
-    pub fn get_next_message(&mut self) -> Result<(SocketAddr, Payloads), Error> {
+    pub fn get_next_message(&mut self) -> Result<Message, Error> {
         // Receive packet
         let packet = match self.receiver.try_recv()? {
             SocketEvent::Packet(packet) => packet,
             SocketEvent::Disconnect(addr) |
-            SocketEvent::Timeout(addr) => {return Err(Error::ConnectionClosed(addr))}
+            SocketEvent::Timeout(addr) => {return Ok(Message::ConnectionClosed(addr))},
+            SocketEvent::Metrics(addr, metrics) => {return Ok(Message::Metrics(addr, metrics))},
             _ => {return Err(Error::NotProcessed)}
         };
     
         // Decompress
         let payload_bytes = self.decompressor.decompress(packet.payload(), 16382)?;
         // Decode to struct
-        match rmp_serde::from_slice(&payload_bytes) {
-            Ok(s) => Ok((packet.addr(), s)),
-            Err(e) => {
-                Err(Error::SerdeDecodeError(e))
-            }
-        }
+        let payload = rmp_serde::from_slice(&payload_bytes)?;
+        return Ok(
+            Message::Payload(packet.addr(), payload)
+        );
     }
 
     fn prepare_payload_bytes(&mut self, message: &Payloads) -> Result<Vec<u8>, Error> {
@@ -130,11 +134,11 @@ impl SenderReceiver {
     }
 
     pub fn send_message(&mut self, message: Payloads, target: SocketAddr) -> Result<(), Error> {
-        let payload_bytes = self.prepare_payload_bytes(&message);
+        let payload_bytes = self.prepare_payload_bytes(&message)?;
         // Send payload
         self.sender.send(get_packet_for_message(
             &message, 
-            payload_bytes?,
+            payload_bytes,
             target
         )).ok();
 
