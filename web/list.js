@@ -5,7 +5,7 @@ function ConnectionList(html_list) {
 
 ConnectionList.prototype.update = function() {
     for (var key in this.list) {
-        this.list[key].setButtonsVisibility(has_control, is_client)
+        this.list[key].setButtonsVisibility(has_control)
     }
 }
 
@@ -50,7 +50,7 @@ ConnectionList.prototype.add = function(name) {
     let listItemObject = new ConnectionListItem(listItem, name)
     this.list[name] = listItemObject
 
-    listItemObject.setButtonsVisibility(has_control, is_client)
+    listItemObject.setButtonsVisibility(has_control)
     if (!is_client) {listItemObject.observeButtonClicked()}
 }
 
@@ -132,12 +132,12 @@ ConnectionListItem.prototype.setObserver = function(observing) {
     this.statusText.innerHTML = "Observing"
     this.statusText.classList.toggle("entry-text-observe", observing)
     this.statusText.classList.toggle("entry-text-in-control", !observing)
-    this.statusText.hidden = !observing
+    this.statusText.hidden = !observing || !is_client
 }
 
-ConnectionListItem.prototype.setButtonsVisibility = function(hasControl, isClient) {
+ConnectionListItem.prototype.setButtonsVisibility = function(hasControl) {
     this.controlButton.hidden = this.is_observer || (!hasControl && !this.is_observer)
-    this.observeButton.hidden = isClient || this.controlButton.hidden
+    this.observeButton.hidden = is_client || this.controlButton.hidden
 }
 
 ConnectionListItem.prototype.hideStatus = function() {

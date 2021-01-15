@@ -96,6 +96,7 @@ impl TransferStruct {
             Payloads::PlayerLeft { .. } |
             Payloads::SetObserver { .. } |
             Payloads::Heartbeat |
+            Payloads::SetHost |
             Payloads::PeerEstablished { .. } => {return}  // No client should be able to send this
             // No processing needed
             Payloads::Update { .. } => {}

@@ -281,7 +281,9 @@ fn main() {
                             app_interface.new_connection(&name);
 
                             if client.is_server() {
+
                                 app_interface.server_started(client.get_connected_count(), client.get_session_id().as_deref());
+
                             } else {
                                 // Show as observing on client side, server shouldn't show the message, only the controls
                                 app_interface.set_observing(&name, is_observer);
@@ -333,6 +335,9 @@ fn main() {
                                 clients.set_observer(&to, is_observer);
                                 app_interface.set_observing(&to, is_observer);
                             }
+                        }
+                        Payloads::SetHost => {
+                            app_interface.set_host();
                         }
                     }
                     ReceiveMessage::Event(e) => match e {

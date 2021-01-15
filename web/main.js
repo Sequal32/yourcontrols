@@ -84,6 +84,7 @@ function SetStuffVisible(visible) {
         document.getElementById("top-left-card").appendChild(networkDiv)
     }
     networkDiv.hidden = !visible
+    ping.hidden = !is_client
     document.getElementById("is_client_server_running").hidden = visible;
     document.getElementById("not_client_server_running").hidden = !visible;
 }
@@ -229,7 +230,13 @@ function MessageReceived(data) {
         case "server":
             is_client = false
             alert.updatetext("success", "Server started! " + data["data"])
+            $("#not_user_client").append(forceButton)
             OnConnected()
+            break;
+        case "host":
+            is_client = false;
+            forceButton.hidden = false
+            $("#not_server_running").append(forceButton)
             break;
         case "error":
             alert.updatetext("danger", data["data"])

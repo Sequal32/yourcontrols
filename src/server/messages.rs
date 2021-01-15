@@ -11,8 +11,9 @@ const COMPRESS_DICTIONARY: &[u8] = include_bytes!("compress_dict.bin");
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum Payloads {
-    InvalidName {},
+    InvalidName,
     InvalidVersion {server_version: String},
+    SetHost,
     PlayerJoined {name: String, in_control: bool, is_server: bool, is_observer: bool},
     PlayerLeft {name: String},
     Update {data: AllNeedSync, from: String, is_unreliable: bool, time: f64},
@@ -73,17 +74,18 @@ fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: So
         // Unused
         Payloads::AttemptConnection {..} |
         Payloads::HostingReceived {..} |
+        Payloads::SetHost {..} |
         // Used
+        Payloads::InvalidVersion {..} | 
+        Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload_bytes),
+        Payloads::PeerEstablished {..} |
+        Payloads::Handshake {..} => Packet::unreliable(target, payload_bytes),
         Payloads::InitHandshake {..} | 
         Payloads::PlayerJoined {..} | 
         Payloads::PlayerLeft {..} | 
         Payloads::SetObserver {..} |
         Payloads::Ready |
-        Payloads::TransferControl {..} => Packet::reliable_sequenced(target, payload_bytes, Some(3)),
-        Payloads::InvalidVersion {..} | 
-        Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload_bytes),
-        Payloads::PeerEstablished {..} |
-        Payloads::Handshake {..} => Packet::unreliable(target, payload_bytes),
+        Payloads::TransferControl {..} |
         Payloads::Heartbeat => Packet::reliable_ordered(target, payload_bytes, Some(2)),
         Payloads::Update {is_unreliable, ..} => if *is_unreliable {Packet::unreliable_sequenced(target, payload_bytes, Some(1))} else {Packet::reliable_ordered(target, payload_bytes, Some(2))}
     }

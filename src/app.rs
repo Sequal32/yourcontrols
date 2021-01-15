@@ -233,4 +233,8 @@ impl App {
             }).to_string().as_str()
         ))
     }
+
+    pub fn set_host(&self){
+        self.invoke("host", None);
+    }
 }

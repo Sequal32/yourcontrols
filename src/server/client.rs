@@ -47,6 +47,7 @@ impl TransferStruct {
             Payloads::PlayerJoined { .. } |
             Payloads::PlayerLeft { .. } |
             Payloads::Update { .. } |
+            Payloads::SetHost |
             Payloads::Heartbeat => {}
             // Used
             Payloads::InvalidVersion { server_version } => {
