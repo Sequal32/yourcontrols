@@ -38,6 +38,7 @@ var server_ip6radio = document.getElementById("server-ip6")
 var cloudMethod = document.getElementById("punchthrough-radio")
 var directMethod = document.getElementById("direct-radio")
 var upnpMethod = document.getElementById("upnp-radio")
+var relayMethod = document.getElementById("relay-radio")
 
 var sessionDiv = document.getElementById("session-div")
 var sessionIpRadios = document.getElementById("session-ip-radios")
@@ -114,6 +115,7 @@ function OnConnected() {
     session_ip6radio.disabled = true
     server_ip6radio.disabled = true
     cloudMethod.disabled = true
+    relayMethod.disabled = true
     directMethod.disabled = true
     upnpMethod.disabled = true
 
@@ -366,18 +368,22 @@ upnpMethod.addEventListener("change", function() {
     port_div.hidden = false
 })
 
+relayMethod.addEventListener("change", function() {
+    port_div.hidden = true
+})
+
 joinConnectCloud.addEventListener("change", function() {
     sessionDiv.hidden = false
     joinPortDiv.hidden = true
     joinIpDiv.hidden = true
-    sessionIpRadios.hidden = false
+    sessionIpRadios.hidden = true
 })
 
 joinConnectDirect.addEventListener("change", function() {
     sessionDiv.hidden = true
     joinPortDiv.hidden = false
     joinIpDiv.hidden = false
-    sessionIpRadios.hidden = true
+    sessionIpRadios.hidden = false
 })
 
 joinPortInput.addEventListener("change", function() {
@@ -419,7 +425,7 @@ $("#main-form-host").submit(function(e) {
     if (is_connected) {invoke({type: "disconnect"}); return}
 
     // Get radio button
-    const method = cloudMethod.checked ? cloudMethod.value : directMethod.checked ? directMethod.value : upnpMethod.checked ? upnpMethod.value : "";
+    const method = cloudMethod.checked ? cloudMethod.value : relayMethod.checked ? relayMethod.value : directMethod.checked ? directMethod.value : upnpMethod.checked ? upnpMethod.value : "";
     const port_ok = method == "cloudServer" ? true : ValidateInt(port_input_host);
 
     if (!port_ok || !ValidateName(username)) {return}

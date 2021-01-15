@@ -83,4 +83,8 @@ impl ClientManager {
         self.clients.clear();
         self.current_control = None;
     }
+
+    pub fn get_number_clients(&self) -> usize {
+        self.clients.len()
+    }
 }

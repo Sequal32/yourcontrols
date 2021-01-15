@@ -126,9 +126,7 @@ impl Display for PortForwardResult {
 }
 
 pub trait TransferClient {
-    fn get_connected_count(&self) -> u16;
-    fn is_server(&self) -> bool;
-
+    fn is_host(&self) -> bool;
     fn get_transmitter(&self) -> &Sender<Payloads>;
     fn get_server_transmitter(&self) -> &Sender<ReceiveMessage>;
     fn get_receiver(&self) -> &Receiver<ReceiveMessage>;

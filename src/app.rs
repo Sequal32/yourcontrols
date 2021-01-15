@@ -13,6 +13,7 @@ use crate::{simconfig, util::resolve_relative_path};
 pub enum ConnectionMethod {
     Direct,
     UPnP,
+    Relay,
     CloudServer
 }
 

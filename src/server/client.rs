@@ -37,9 +37,9 @@ impl TransferStruct {
     fn handle_message(&mut self, addr: SocketAddr, payload: Payloads) {
         match &payload {
             // Unused by client
-            Payloads::HostingReceived { .. } |
             Payloads::InitHandshake { .. } |
             Payloads::PeerEstablished { .. } |
+            Payloads::RequestHosting {..} | 
             Payloads::Ready |
             // No futher handling required
             Payloads::TransferControl { ..} |
@@ -77,6 +77,9 @@ impl TransferStruct {
                 info!("[NETWORK] Established connection with {} on {}!", addr, session_id);
 
                 self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
+            }
+            Payloads::HostingReceived { session_id } => {
+                self.session_id = session_id.clone();
             }
             Payloads::AttemptConnection { peer } => {
                 self.received_address = Some(peer.clone())
@@ -150,7 +153,8 @@ pub struct Client {
     // IP
     username: String,
     version: String,
-    timeout: u64
+    timeout: u64,
+    is_host: bool
 }
 
 impl Client {
@@ -165,6 +169,7 @@ impl Client {
             client_rx, client_tx, server_rx, server_tx,
             username,
             version,
+            is_host: false
         }
     }
 
@@ -173,15 +178,21 @@ impl Client {
     }
 
     pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), StartClientError> {
-        self.run(ip.is_ipv6(), String::new(), None, Some(match_ip_address_to_socket_addr(ip, port)))
+        self.run(ip.is_ipv6(), None, None, Some(match_ip_address_to_socket_addr(ip, port)))
     }
 
     pub fn start_with_hole_punch(&mut self, session_id: String, is_ipv6: bool) -> Result<(), StartClientError> {
-        self.run(is_ipv6, session_id, Some(get_rendezvous_server(is_ipv6)?), None)
+        self.run(is_ipv6, Some(session_id), Some(get_rendezvous_server(is_ipv6)?), None)
     }
 
-    pub fn run(&mut self, is_ipv6: bool, session_id: String, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), StartClientError> {
+    pub fn start_with_relay(&mut self) -> Result<(), StartClientError> {
+        self.run(false, None, Some(get_rendezvous_server(false)?), None)
+    }
+
+    pub fn run(&mut self, is_ipv6: bool, session_id: Option<String>, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), StartClientError> {
         let mut socket = self.get_socket(is_ipv6)?;
+
+        self.is_host = session_id.is_none();
 
         info!("[NETWORK] Listening on {:?}", socket.local_addr());
 
@@ -195,7 +206,7 @@ impl Client {
             connected: false,
             received_address: target_address,
             retry_timer: None,
-            session_id: session_id.clone(),
+            session_id: session_id.clone().unwrap_or_default(),
             // State
             name: self.get_server_name().to_string(),
             version: self.version.clone(),
@@ -204,10 +215,13 @@ impl Client {
         };
 
         if let Some(rendezvous) = rendezvous {
-            // Send a handshake to rendezvous to resolve session id with an ip address
-            transfer.net.send_message(Payloads::Handshake {
-                session_id: session_id.clone()
-            }, rendezvous.clone()).ok();
+            if let Some(session_id) = session_id {
+                // Send a handshake to rendezvous to resolve session id with an ip address
+                transfer.net.send_message(Payloads::Handshake {session_id: session_id.clone()}, rendezvous).ok();
+            } else {
+                transfer.net.send_message(Payloads::RequestHosting {self_hosted: false}, rendezvous).ok();
+            }
+            
         } else if let Some(addr) = target_address {
             // Send a handshake to the target address to start establishing a connection
             transfer.net.send_message(Payloads::Handshake {
@@ -279,12 +293,8 @@ impl Client {
 }
 
 impl TransferClient for Client {
-    fn get_connected_count(&self) -> u16 {
-        return 1;
-    }
-
-    fn is_server(&self) -> bool {
-        false
+    fn is_host(&self) -> bool {
+        return self.is_host
     }
 
     fn get_transmitter(&self) -> &Sender<Payloads> {

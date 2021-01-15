@@ -1,7 +1,6 @@
 use crate::definitions::AllNeedSync;
 use crossbeam_channel::{Receiver, Sender, TryRecvError};
 use laminar::{Metrics, Packet, Socket, SocketEvent};
-use log::warn;
 use rmp_serde::{self, decode, encode};
 use serde::{Serialize, Deserialize};
 use std::{io, net::SocketAddr};
@@ -14,6 +13,7 @@ pub enum Payloads {
     InvalidName,
     InvalidVersion {server_version: String},
     SetHost,
+    RequestHosting {self_hosted: bool},
     PlayerJoined {name: String, in_control: bool, is_server: bool, is_observer: bool},
     PlayerLeft {name: String},
     Update {data: AllNeedSync, from: String, is_unreliable: bool, time: f64},
@@ -86,6 +86,7 @@ fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: So
         Payloads::SetObserver {..} |
         Payloads::Ready |
         Payloads::TransferControl {..} |
+        Payloads::RequestHosting {..} | 
         Payloads::Heartbeat => Packet::reliable_ordered(target, payload_bytes, Some(2)),
         Payloads::Update {is_unreliable, ..} => if *is_unreliable {Packet::unreliable_sequenced(target, payload_bytes, Some(1))} else {Packet::reliable_ordered(target, payload_bytes, Some(2))}
     }

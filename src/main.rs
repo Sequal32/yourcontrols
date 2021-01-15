@@ -81,7 +81,8 @@ fn start_client(timeout: u64, username: String, session_id: String, version: Str
         ConnectionMethod::CloudServer => {
             client.start_with_hole_punch(session_id, isipv6)
         }
-        ConnectionMethod::UPnP => {Ok(())}
+        ConnectionMethod::Relay |
+        ConnectionMethod::UPnP => {panic!("Never should be reached!")}
     };
 
     match client_result {
@@ -227,6 +228,7 @@ fn main() {
                         Payloads::PeerEstablished { .. } |
                         Payloads::InvalidVersion {..} |
                         Payloads::InvalidName {..} |
+                        Payloads::RequestHosting {..} |
                         Payloads::InitHandshake {..} |
                         Payloads::Heartbeat => {}
                         // Used
@@ -279,19 +281,19 @@ fn main() {
                             info!("[NETWORK] {} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
                                 // Send initial aircraft state
                             app_interface.new_connection(&name);
+                            clients.add_client(name.clone());
+                            clients.set_server(&name, is_server);
+                            clients.set_observer(&name, is_observer);
 
-                            if client.is_server() {
+                            if client.is_host() {
 
-                                app_interface.server_started(client.get_connected_count(), client.get_session_id().as_deref());
+                                app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
 
                             } else {
                                 // Show as observing on client side, server shouldn't show the message, only the controls
                                 app_interface.set_observing(&name, is_observer);
                             }
 
-                            clients.add_client(name.clone());
-                            clients.set_server(&name, is_server);
-                            clients.set_observer(&name, is_observer);
                             if in_control {
                                 app_interface.set_incontrol(&name);
                                 clients.set_client_control(name);
@@ -305,8 +307,8 @@ fn main() {
                         }
                         Payloads::PlayerLeft{name} => {
                             info!("[NETWORK] {} lost connection.", name);
-                            if client.is_server() {
-                                app_interface.server_started(client.get_connected_count(), client.get_session_id().as_deref());
+                            if client.is_host() {
+                                app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
                             }
                             app_interface.lost_connection(&name);
                             clients.remove_client(&name);
@@ -314,7 +316,7 @@ fn main() {
                             if clients.client_has_control(&name) {
                                 clients.set_no_control();
                                 // Transfer control to myself if I'm server
-                                if client.is_server() {
+                                if client.is_host() {
                                     info!("[CONTROL] {} had control, taking control back.", name);
                                     app_interface.gain_control();
 
@@ -342,7 +344,7 @@ fn main() {
                     }
                     ReceiveMessage::Event(e) => match e {
                         Event::ConnectionEstablished => {
-                            if client.is_server() {
+                            if client.is_host() {
                                     // Display server started message
                                 app_interface.server_started(0, client.get_session_id().as_deref());
                                     // Unfreeze aircraft
@@ -379,7 +381,7 @@ fn main() {
                             }
                         }
                         Event::UnablePunchthrough => {
-                            app_interface.client_fail("Could not connect to host! Port forwarding or hamachi is required.")
+                            app_interface.client_fail("Could not connect to host! Please port forward or using 'Request Hosting'!")
                         }
                         
                         Event::SessionIdFetchFailed => {
@@ -411,7 +413,7 @@ fn main() {
                     
                     if !observing && can_update {
                         let permission = SyncPermission {
-                            is_server: client.is_server(),
+                            is_server: client.is_host(),
                             is_master: control.has_control(),
                             is_init: false,
                         };
@@ -439,32 +441,49 @@ fn main() {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        let mut server = Box::new(Server::new(username.clone(), updater.get_version().to_string()));
-
-                        let result = match method {
-                            ConnectionMethod::Direct => {
-                                server.start(isipv6, port, false)
-                            }
-                            ConnectionMethod::UPnP => {
-                                server.start(isipv6, port, true)
-                            }
+                        match method {
+                            ConnectionMethod::Direct |
+                            ConnectionMethod::UPnP |
                             ConnectionMethod::CloudServer => {
-                                server.start_with_hole_punching(isipv6)
+                                let mut server = Box::new(Server::new(username.clone(), updater.get_version().to_string()));
+
+                                let result = match method {
+                                    ConnectionMethod::Direct => server.start(isipv6, port, false),
+                                    ConnectionMethod::UPnP => server.start(isipv6, port, true),
+                                    ConnectionMethod::CloudServer => server.start_with_hole_punching(isipv6),
+                                    _ => panic!("Not implemented!")
+                                };
+
+
+                                match result {
+                                    Ok(_) => {
+                                        // Assign server as transfer client
+                                        transfer_client = Some(server);
+                                        ready_to_send_data = true;
+                                        info!("[NETWORK] Server started");
+                                    }
+                                    Err(e) => {
+                                        app_interface.server_fail(e.to_string().as_str());
+                                        info!("[NETWORK] Could not start server! Reason: {}", e);
+                                    }
+                                }
+
+                            }
+                            ConnectionMethod::Relay => {
+                                let mut client = Box::new(Client::new(username.clone(), updater.get_version().to_string(), config.conn_timeout));
+                                
+                                match client.start_with_relay() {
+                                    Ok(_) => {
+                                        transfer_client = Some(client);
+                                        ready_to_send_data = true;
+                                        info!("[NETWORK] Hosting started");
+                                    }
+                                    Err(e) => {
+                                        info!("[NETWORK] Hosting could not start! Reason: {}", e);
+                                    }
+                                }
                             }
                         };
-
-                        match result {
-                            Ok(_) => {
-                                // Assign server as transfer client
-                                transfer_client = Some(server);
-                                ready_to_send_data = true;
-                                info!("[NETWORK] Server started");
-                            }
-                            Err(e) => {
-                                app_interface.server_fail(e.to_string().as_str());
-                                info!("[NETWORK] Could not start server! Reason: {}", e);
-                            }
-                        }
 
                         config.port = port;
                         config.name = username;

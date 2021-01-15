@@ -95,6 +95,7 @@ impl TransferStruct {
             Payloads::PlayerJoined { .. } |
             Payloads::PlayerLeft { .. } |
             Payloads::SetObserver { .. } |
+            Payloads::RequestHosting { .. } |
             Payloads::Heartbeat |
             Payloads::SetHost |
             Payloads::PeerEstablished { .. } => {return}  // No client should be able to send this
@@ -160,10 +161,10 @@ impl TransferStruct {
                 info!("[NETWORK] Handshake received from {} on {}", addr, session_id);
                     // Incoming UDP packet from peer
                 if *session_id == self.session_id {
-                    self.net.send_message(Payloads::Handshake{session_id: session_id.clone()}, addr.clone()).ok();
+                    self.net.send_message(Payloads::Handshake{session_id: session_id.clone()}, addr).ok();
                     
                     if let Some(rendezvous) = self.rendezvous_server.as_ref() {
-                        self.net.send_message(Payloads::PeerEstablished {peer: addr}, rendezvous.clone()).ok();
+                        self.net.send_message(Payloads::PeerEstablished {peer: addr}, *rendezvous).ok();
 
                         self.clients_to_holepunch.retain(|x| {
                             x.addr != addr
@@ -342,7 +343,7 @@ impl Server {
         Ok(())
     }
 
-    pub fn start(&mut self, is_ipv6: bool, port: u16, upnp: bool) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartClientError> {
+    pub fn start(&mut self, is_ipv6: bool, port: u16, upnp: bool) -> Result<(), StartClientError> {
         let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(3))?;
         // Attempt to port forward
         if upnp {
@@ -352,14 +353,14 @@ impl Server {
         self.run(socket, None)
     }
 
-    pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartClientError> {
+    pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(), StartClientError> {
         let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(3))?;
         let addr: SocketAddr = get_rendezvous_server(is_ipv6)?;
 
         self.run(socket, Some(addr))
     }
 
-    fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(Sender<Payloads>, Receiver<ReceiveMessage>), StartClientError> {
+    fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(), StartClientError> {
         let mut socket = socket;
 
         info!("[NETWORK] Listening on {:?}", socket.local_addr());
@@ -388,7 +389,7 @@ impl Server {
 
         if let Some(addr) = rendezvous {
             // Send handshake payload to rendezvous server to get session ID
-            transfer.net.send_message(Payloads::Handshake {session_id: String::new()}, addr.clone()).ok();
+            transfer.net.send_message(Payloads::RequestHosting {self_hosted: true}, addr).ok();
         } else {
             // If not hole punching, then tell the application that the server is immediately ready
             self.server_tx.send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
@@ -446,16 +447,12 @@ impl Server {
             }
         });
 
-        Ok((self.client_tx.clone(), self.server_rx.clone()))
+        Ok(())
     }
 }
 
 impl TransferClient for Server {
-    fn get_connected_count(&self) -> u16 {
-        return self.number_connections.load(SeqCst);
-    }
-
-    fn is_server(&self) -> bool {
+    fn is_host(&self) -> bool {
         true
     }
 
