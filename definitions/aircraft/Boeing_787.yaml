@@ -1,0 +1,586 @@
+include:
+  - definitions/modules/general.yaml
+  - definitions/modules/physics.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/autopilot2.yaml
+  - definitions/modules/radios.yaml
+shared:
+  # Lights
+  # Nav/logo/beacon etc lights
+  - # ASOBO_LIGHTING_Switch_Light_Beacon_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT BEACON
+    var_units: Bool
+    event_name: TOGGLE_BEACON_LIGHTS
+  - # ASOBO_LIGHTING_Switch_Light_Landing_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 1
+  - # ASOBO_LIGHTING_Switch_Light_Landing_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 2
+  - # ASOBO_LIGHTING_Switch_Light_Landing_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:3
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 3
+  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI
+    var_units: Bool
+    event_name: TOGGLE_TAXI_LIGHTS
+  - # ASOBO_LIGHTING_Switch_Light_Navigation_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT NAV
+    var_units: Bool
+    event_name: TOGGLE_NAV_LIGHTS
+  - # ASOBO_LIGHTING_Switch_Light_Strobe_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT STROBE
+    var_units: Bool
+    event_name: STROBES_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LOGO
+    var_units: Bool
+    event_name: TOGGLE_LOGO_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT RECOGNITION
+    var_units: Bool
+    event_name: TOGGLE_RECOGNITION_LIGHTS
+  - # ASOBO_LIGHTING_Switch_Light_Wing_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT WING
+    var_units: Bool
+    event_name: TOGGLE_WING_LIGHTS
+
+  - # Apu
+    type: var
+    var_name: L:XMLVAR_APU_StarterKnob_Pos
+    var_type: f64
+
+  - # Apu Starter
+    type: ToggleSwitch
+    var_name: A:APU SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: APU_STARTER
+    off_event_name: APU_OFF_SWITCH
+
+  - # Anti Ice
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    event_param: 1
+
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+    event_param: 2
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:3
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:5
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 5
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:6
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 6
+  - # Engine Starter 1
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+  - # Engine Starter 2
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER2
+
+  - # Battery
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+
+  - # Dome Lights
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:25
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 25
+  - # Lower dspl/constrast
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:30
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 30
+  -
+    type: ToggleSwitch
+    var_name: LIGHT CABIN:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 4
+
+  - # Master Brightness
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:31
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 31
+  - # Master Brightness Button
+    type: var
+    var_name: L:XMLVAR_LightMasterActive
+    var_type: f64
+
+  - # APU Gen 1
+    type: ToggleSwitch
+    var_name: A:APU GENERATOR SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: APU_GENERATOR_SWITCH_TOGGLE
+    event_param: 1
+
+  - # APU Gen 2
+    type: ToggleSwitch
+    var_name: A:APU GENERATOR SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: APU_GENERATOR_SWITCH_TOGGLE
+    event_param: 2
+
+  - # External Power
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 3
+  
+  - # Windsheild Deice
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
+
+  - # Wipers
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:73
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 73
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:73
+    var_units: Percent
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 73
+    index_reversed: true
+    
+  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    event_name: TOGGLE_TAXI_LIGHTS
+    event_param: 1
+  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI:2
+    var_units: Bool
+    event_name: TOGGLE_TAXI_LIGHTS
+    event_param: 2
+  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI:3
+    var_units: Bool
+    event_name: TOGGLE_TAXI_LIGHTS
+    event_param: 3
+  - # Overhead Panel
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:24
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 24
+    index_reversed: true
+  - # Glare Shield Panel
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:21
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 21
+    index_reversed: true
+  - # Glare Shield Flood Light
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:20
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 20
+    index_reversed: true
+  - # Altitude Hold
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_ALTITUDE_HOLD
+  - # Localizer Hold
+    type: event
+    event_name: AP_LOC_HOLD
+  -
+    type: var
+    var_name: L:AS01B_AUTO_THROTTLE_ARM_STATE
+    var_type: f64
+  - # Authrottle
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT THROTTLE ARM
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_ARM
+  - # Vertical Speed Button
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+  - # Bus 1
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL GENALT SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: GENALT_BUS1_CONTACT_SET
+    event_param: 1
+  - # Bus 2
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL GENALT SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: GENALT_BUS1_CONTACT_SET
+    event_param: 2
+  - # Bus 3
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL GENALT SWITCH:3
+    var_units: Bool
+    var_type: bool
+    event_name: GENALT_BUS1_CONTACT_SET
+    event_param: 3
+  - # Bus 4
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL GENALT SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: GENALT_BUS1_CONTACT_SET
+    event_param: 4
+  - # Heading Hold
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_HDG_HOLD
+  - # F/D's
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
+    use_calculator: true
+  - # Wing Anti-Ice
+    type: ToggleSwitch
+    var_name: A:STRUCTURAL DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STRUCTURAL_DEICE
+  - # Taxi Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TAXI_LIGHTS
+  - # Engine Generator
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+    event_param: 1
+  - # Engine Generator 2
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR2
+    event_param: 2
+  - # Engine Generator 3
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR3
+    event_param: 3
+  - # Engine Generator 4
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR4
+    event_param: 4
+  - # ALT 100's - 1000's
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+    var_type: f64
+  - # Flight Level Change
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
+    var_units: Bool
+    var_type: bool
+    event_name: FLIGHT_LEVEL_CHANGE
+  - # Hud
+    type: var
+    var_name: L:XMLVAR_HUD_1_DOWN
+    var_type: f64
+  - # Flaps
+    type: NumSet
+    var_name: A:FLAPS HANDLE PERCENT
+    var_units: percent
+    var_type: i32
+    event_name: FLAPS_CONTINUOUS_SET
+    multiply_by: 164
+  - # Gear
+    type: ToggleSwitch
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    event_name: GEAR_DOWN
+    off_event_name: GEAR_UP
+  - # AutoBrakes
+    type: NumSet
+    var_name: A:AUTO BRAKE SWITCH CB
+    var_units: Enum
+    var_type: i32
+    event_name: SET_AUTOBRAKE_CONTROL
+  - # Transponder Var
+    type: var
+    var_name: L:XMLVAR_Transponder_Mode
+    var_type: f64
+  - # Transponder
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: Enum
+    var_type: i32
+  - # Fuel Cutoff
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+  - 
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+  - # Crossfeed
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:3
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 3
+  - # Spoilers Axis
+    type: NumSet
+    var_name: A:SPOILERS HANDLE POSITION
+    var_units: Percent
+    var_type: i32
+    event_name: SPOILERS_SET
+    multiply_by: 164
+  - # Arm Spoilers
+    type: ToggleSwitch
+    var_name: A:SPOILERS ARMED
+    var_units: Bool
+    event_name: SPOILERS_ARM_ON
+    off_event_name: SPOILERS_ARM_OFF
+  - # Barometer
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+    var_type: f64
+  - # Barometer Knob
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:1
+    var_units: Millibars
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 1
+    multiply_by: 16
+  - # Arm Fuel Jettison
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:8
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 8
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:5
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 5
+  - # Fuel Balance
+    type: var
+    var_name: L:FuelBalanceSystemActive
+    var_type: f64
+  -
+    type: var
+    var_name: L:BTN_WX_ACTIVE:1
+    var_type: f64
+  -
+    type: var
+    var_name: L:BTN_WX_ACTIVE:2
+    var_type: f64
+  -
+    type: var
+    var_name: L:BTN_TERRONND_ACTIVE:1
+    var_type: f64
+  -
+    type: var
+    var_name: L:BTN_TERRONND_ACTIVE:2
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Mins_Selector_Baro
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_MFD_Side_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_MFD_Side_2
+    var_type: f64
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
+    var_type: f64
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVar_Autobrake_Disarm
+    var_type: f64
+  -
+    type: var
+    var_name: L:B787_MAP_MODE
+    var_type: f64
+
+master:
+  -
+    type: Var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Number
+    var_type: f64
+    interpolate: Default
+  -
+    type: Var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_units: Number
+    var_type: f64
+    interpolate: Default
