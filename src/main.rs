@@ -398,6 +398,15 @@ fn main() {
 
             definitions.step();
 
+            // Handle specific program triggered actions
+            if definitions.control_transfer_requested {
+                if !control.has_control() {
+                    control.take_control();
+                    client.take_control(clients.get_client_in_control().unwrap().clone());
+                }
+                definitions.control_transfer_requested = false;
+            }
+
             // Handle initial connection delay, allows lvars to be processed
             if let Some(time) = connection_time {
                 if time.elapsed().as_secs() >= 3 {

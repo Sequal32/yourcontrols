@@ -8,14 +8,17 @@ pub struct Client {
 
 pub struct ClientManager {
     clients: HashMap<String, Client>,
-    current_control: Option<String>
+    current_control: Option<String>,
+    next_control: Option<String>,
 }
 
 impl ClientManager {
     pub fn new() -> Self {
         Self {
             clients: HashMap::new(),
-            current_control: None
+            current_control: None,
+            // Client joined "first", cycling to next "first" person after client leaves
+            next_control: None
         }
     }
 
@@ -46,11 +49,25 @@ impl ClientManager {
     }
 
     pub fn add_client(&mut self, name: String) {
-        self.clients.insert(name.to_string(), Default::default());
+        self.clients.insert(name.clone(), Default::default());
+
+        if self.next_control.is_none() {
+            self.next_control = Some(name);
+        }
     }
 
     pub fn remove_client(&mut self, name: &str) {
         self.clients.remove(name);
+
+        if let Some(next_control) = self.next_control.as_ref() {
+            if next_control == name {
+                self.next_control = self.clients.keys().into_iter().next().map(|x| x.clone());
+            }
+        }
+    }
+
+    pub fn get_next_client_for_control(&self) -> Option<&String> {
+        self.next_control.as_ref()
     }
 
     pub fn is_observer(&self, name: &str) -> bool {

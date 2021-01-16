@@ -1342,6 +1342,23 @@ shared:
     type: var
     var_name: L:A32NX_COCKPIT_DOOR_LOCKED
     var_type: f64
+  # Take control priority
+  -
+    type: ProgramAction
+    action: TakeControls
+    var_name: L:A32NX_PRIORITY_TAKEOVER:1
+    var_type: f64
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: ProgramAction
+    action: TakeControls
+    var_name: L:A32NX_PRIORITY_TAKEOVER:2
+    var_type: f64
+    condition:
+      equals:
+        F64: 1.0
   - # ASOBO_HANDLING_Wheel_ElevatorTrim_Template
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT

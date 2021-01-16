@@ -84,22 +84,25 @@ macro_rules! try_cast_yaml {
 }
 
 macro_rules! execute_mapping {
-    ($new_value_name: ident, $action_name: ident, $new_value: expr, $mapping: expr, $action: block, $var_only_action: block) => {
+    ($new_value_name: ident, $action_name: ident, $new_value: expr, $mapping: expr, $action: block, $var_only_action: block, $program_action: block) => {
         match $new_value {
             VarReaderTypes::Bool($new_value_name) => match &mut $mapping.action {
                 ActionType::Bool($action_name) => $action
+                ActionType::ProgramAction($action_name) => $program_action
                 ActionType::VarOnly => $var_only_action
                 _ => {}
             }
 
             VarReaderTypes::I32($new_value_name) => match &mut $mapping.action {
                 ActionType::I32($action_name) => $action
+                ActionType::ProgramAction($action_name) => $program_action
                 ActionType::VarOnly => $var_only_action
                 _ => {}
             }
 
             VarReaderTypes::F64($new_value_name) => match &mut $mapping.action {
                 ActionType::F64($action_name) => $action
+                ActionType::ProgramAction($action_name) => $program_action
                 ActionType::VarOnly => $var_only_action
                 _ => {}
             }
@@ -284,6 +287,20 @@ struct CustomCalculatorEntry {
     condition: Option<Condition>
 }
 
+#[derive(Deserialize)]
+struct ProgramActionEntry {
+    var_name: String,
+    var_units: Option<String>,
+    var_type: InDataTypes,
+    condition: Condition,
+    action: ProgramAction
+}
+
+#[derive(Deserialize)]
+enum ProgramAction {
+    TakeControls
+}
+
 // The struct that get_need_sync returns. Holds all the aircraft/local variables and events that have changed since the last call.
 #[derive(Deserialize, Serialize, Debug, Default, Clone)]
 pub struct AllNeedSync {
@@ -343,6 +360,7 @@ enum ActionType {
     F64(Box<dyn Syncable<f64>>),
     I32(Box<dyn Syncable<i32>>),
     Bool(Box<dyn Syncable<bool>>),
+    ProgramAction(ProgramAction),
     VarOnly
 }
 
@@ -410,6 +428,8 @@ pub struct Definitions {
     do_not_sync: HashSet<String>,
     // Vars that need interpolation
     interpolate_vars: HashSet<String>,
+    // For indicating that an event has been triggered and the control should be transferred to the next person
+    pub control_transfer_requested: bool
 }
 
 fn get_category_from_string(category: &str) -> Result<Category, VarAddError> {
@@ -451,6 +471,8 @@ impl Definitions {
             categories: HashMap::new(),
             periods: HashMap::new(),
             interpolate_vars: HashSet::new(),
+
+            control_transfer_requested: false,
         }
     }
 
@@ -720,6 +742,14 @@ impl Definitions {
         Ok(())
     }
 
+    fn add_program_action(&mut self, category: &str, var: ProgramActionEntry) -> Result<(), VarAddError> {
+
+        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
+        self.add_mapping(var_string, ActionType::ProgramAction(var.action), Some(var.condition))?;
+
+        Ok(())
+    }
+
     // Calls the correct method for the specified "action" type
     fn parse_var(&mut self, category: &str, value: Value) -> Result<(), VarAddError> {
         let type_str = check_and_return_field!("type", value, str);
@@ -734,6 +764,7 @@ impl Definitions {
             "NUMINCREMENT" => self.add_num_increment(category, try_cast_yaml!(value))?,
             "NUMDIGITSET" => self.add_num_digit_set(category, try_cast_yaml!(value))?,
             "CUSTOMCALCULATOR" => self.add_custom_calculator(category, try_cast_yaml!(value))?,
+            "PROGRAMACTION" => self.add_program_action(category, try_cast_yaml!(value))?,
             _ => return Err(VarAddError::InvalidSyncType(type_str.to_string()))
         };
 
@@ -785,12 +816,17 @@ impl Definitions {
         }
     }
 
+    #[allow(unused_variables)]
     fn process_local_var(&mut self, result: GetResult) {
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
                 execute_mapping!(new_value, action, VarReaderTypes::F64(result.var.floating), mapping, {
                     action.set_current(new_value)
-                }, {});
+                }, {}, {
+                    match action {
+                        ProgramAction::TakeControls => self.control_transfer_requested = true
+                    }
+                });
             }
         }
 
@@ -848,6 +884,7 @@ impl Definitions {
     }
 
     // Process changed aircraft variables and update SyncActions related to it
+    #[allow(unused_variables)]
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
         self.velocity_corrector.process_sim_object_data(data);
 
@@ -864,7 +901,7 @@ impl Definitions {
                     for mapping in mappings {
                         execute_mapping!(new_value, action, value, mapping, {
                             action.set_current(new_value)
-                        }, {});
+                        }, {}, {});
                     }
                 }
 
@@ -941,6 +978,7 @@ impl Definitions {
         }
     }
 
+    #[allow(unused_variables)]
     pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64, interpolate: bool) {
         if data.len() == 0 {return}
 
@@ -983,6 +1021,10 @@ impl Definitions {
                                 // Set data right away
                             to_sync.insert(var_name.clone(), data.clone());
                         }
+                    }, {
+                        match action {
+                            ProgramAction::TakeControls => self.control_transfer_requested = true
+                        }
                     });
                 }
             }
@@ -997,6 +1039,7 @@ impl Definitions {
         }
     }
 
+    #[allow(unused_variables)]
     pub fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap, _interpolate: bool) -> Result<(), WriteDataError> {
         for (var_name, value) in data {
 
@@ -1010,7 +1053,7 @@ impl Definitions {
                             action.set_new(new_value, conn, &mut self.lvarstransfer)
                         }, {
                             self.lvarstransfer.set(conn, &var_name, value.to_string().as_ref());
-                        });
+                        }, {});
         
                         self.last_written.insert(var_name.clone(), Instant::now());
 
