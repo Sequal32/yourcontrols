@@ -138,6 +138,7 @@ function OnDisconnect(text) {
     server_ip4radio.disabled = false
     session_ip6radio.disabled = false
     server_ip6radio.disabled = false
+    relayMethod.disabled = false
     cloudMethod.disabled = false
     directMethod.disabled = false
     upnpMethod.disabled = false
