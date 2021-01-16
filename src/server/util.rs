@@ -16,6 +16,12 @@ const HEARTBEAT_INTERVAL_MS: u64 = 1000;
 const RENDEZVOUS_SERVER_HOSTNAME: &str = "cloudserver.yourcontrols.xyz";
 const RENDEZVOUS_PORT: u16 = 5555;
 
+// Types
+pub type ClientSender = Sender<(Payloads, Option<String>)>;
+pub type ClientReceiver = Receiver<(Payloads, Option<String>)>;
+pub type ServerSender = Sender<ReceiveMessage>;
+pub type ServerReceiver = Receiver<ReceiveMessage>;
+
 pub fn get_bind_address(is_ipv6: bool, port: Option<u16>) -> SocketAddr {
     let bind_string = format!("{}:{}", if is_ipv6 {"[::]"} else {"0.0.0.0"}, port.unwrap_or(0));
     bind_string.parse().unwrap()
@@ -127,21 +133,21 @@ impl Display for PortForwardResult {
 
 pub trait TransferClient {
     fn is_host(&self) -> bool;
-    fn get_transmitter(&self) -> &Sender<Payloads>;
-    fn get_server_transmitter(&self) -> &Sender<ReceiveMessage>;
-    fn get_receiver(&self) -> &Receiver<ReceiveMessage>;
+    fn get_transmitter(&self) -> &ClientSender;
+    fn get_server_transmitter(&self) -> &ServerSender;
+    fn get_receiver(&self) -> &ServerReceiver;
     fn get_server_name(&self) -> &str;
     fn get_session_id(&self) -> Option<String>;
     // Application specific functions
     fn stop(&mut self, reason: String);
 
     fn update(&self, data: AllNeedSync, is_unreliable: bool) {
-        self.get_transmitter().try_send(Payloads::Update {
+        self.get_transmitter().try_send((Payloads::Update {
             data,
             from: self.get_server_name().to_string(),
             time: get_seconds(),
             is_unreliable
-        }).ok();
+        }, None)).ok();
     }
 
     fn get_next_message(&self) -> Result<ReceiveMessage, crossbeam_channel::TryRecvError> {
@@ -153,7 +159,7 @@ pub trait TransferClient {
             from: self.get_server_name().to_string(),
             to: target
         };
-        self.get_transmitter().try_send(message.clone()).ok();
+        self.get_transmitter().try_send((message.clone(), None)).ok();
         self.get_server_transmitter().try_send(ReceiveMessage::Payload(message)).ok();
     }
 
@@ -163,19 +169,23 @@ pub trait TransferClient {
             to: self.get_server_name().to_string(),
         };
 
-        self.get_transmitter().try_send(message.clone()).ok();
+        self.get_transmitter().try_send((message.clone(), None)).ok();
         self.get_server_transmitter().try_send(ReceiveMessage::Payload(message)).ok();
     }
 
     fn set_observer(&self, target: String, is_observer: bool) {
-        self.get_transmitter().try_send(Payloads::SetObserver {
+        self.get_transmitter().try_send((Payloads::SetObserver {
             from: self.get_server_name().to_string(),
             to: target,
             is_observer: is_observer
-        }).ok();
+        }, None)).ok();
     }
 
     fn send_ready(&self) {
-        self.get_transmitter().try_send(Payloads::Ready).ok();
+        self.get_transmitter().try_send((Payloads::Ready, None)).ok();
+    }
+
+    fn send_definitions(&self, bytes: Box<[u8]>, target: String) {
+        self.get_transmitter().try_send((Payloads::AircraftDefinition {bytes}, Some(target))).ok();
     }
 }

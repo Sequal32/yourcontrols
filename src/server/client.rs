@@ -6,15 +6,15 @@ use std::{net::{SocketAddr}, net::IpAddr, sync::Mutex, time::Duration, time::Ins
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::thread;
 
-use super::{Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Message, Payloads, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
+use super::{ClientReceiver, ClientSender, Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Message, Payloads, ReceiveMessage, SenderReceiver, ServerReceiver, ServerSender, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
 
 struct TransferStruct {
     name: String,
     version: String,
     // Internally receive data to send to clients
-    client_rx: Receiver<Payloads>,
+    client_rx: ClientReceiver,
     // Send data to app to receive client data
-    server_tx: Sender<ReceiveMessage>,
+    server_tx: ServerSender,
     // Reading/writing to UDP stream
     net: SenderReceiver,
     // Hole punching
@@ -42,6 +42,7 @@ impl TransferStruct {
             Payloads::RequestHosting {..} | 
             Payloads::Ready |
             // No futher handling required
+            Payloads::AircraftDefinition { .. } |
             Payloads::TransferControl { ..} |
             Payloads::SetObserver { .. } |
             Payloads::PlayerJoined { .. } |
@@ -90,7 +91,7 @@ impl TransferStruct {
     }
 
     fn handle_app_message(&mut self) {
-        while let Ok(payload) = self.client_rx.try_recv() {
+        while let Ok((payload, _)) = self.client_rx.try_recv() {
             if let Some(address) = self.received_address {
                 self.net.send_message(payload, address).ok();
             }
@@ -143,13 +144,13 @@ pub struct Client {
     should_stop: Arc<AtomicBool>,
     transfer: Option<Arc<Mutex<TransferStruct>>>,
     // Recieve data from clients
-    server_rx: Receiver<ReceiveMessage>,
+    server_rx: ServerReceiver,
     // Send data to clients
-    client_tx: Sender<Payloads>,
+    client_tx: ClientSender,
     // Internally receive data to send to clients
-    client_rx: Receiver<Payloads>,
+    client_rx: ClientReceiver,
     // Send data to app to receive client data
-    server_tx: Sender<ReceiveMessage>,
+    server_tx: ServerSender,
     // IP
     username: String,
     version: String,
@@ -192,7 +193,7 @@ impl Client {
     pub fn run(&mut self, is_ipv6: bool, session_id: Option<String>, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), StartClientError> {
         let mut socket = self.get_socket(is_ipv6)?;
 
-        self.is_host = session_id.is_none();
+        self.is_host = session_id.is_none() && target_address.is_none();
 
         info!("[NETWORK] Listening on {:?}", socket.local_addr());
 
@@ -297,15 +298,15 @@ impl TransferClient for Client {
         return self.is_host
     }
 
-    fn get_transmitter(&self) -> &Sender<Payloads> {
+    fn get_transmitter(&self) -> &ClientSender {
         return &self.client_tx
     }
 
-    fn get_server_transmitter(&self) -> &Sender<ReceiveMessage> {
+    fn get_server_transmitter(&self) -> &ServerSender {
         return &self.server_tx
     }
 
-    fn get_receiver(&self) -> &Receiver<ReceiveMessage> {
+    fn get_receiver(&self) -> &ServerReceiver {
         return &self.server_rx
     }
 

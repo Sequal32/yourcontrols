@@ -8,17 +8,21 @@ use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, I
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
-    FileError,
+    FileError(std::io::Error),
     YamlError(serde_yaml::Error, String),
-    ParseError(VarAddError, String)
+    ParseError(VarAddError, String),
+    ParseBytesError(VarAddError),
+    InvalidBytes(serde_yaml::Error)
 }
 
 impl Display for ConfigLoadError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ConfigLoadError::FileError => write!(f, "Could not open file."),
-            ConfigLoadError::YamlError(e, file_name) => write!(f, "Could not parse {} as YAML...{}", file_name, e.to_string()),
-            ConfigLoadError::ParseError(e, file_name) => write!(f, "Error parsing configuration in {}...{}", file_name, e)
+            ConfigLoadError::FileError(e) => write!(f, "Could not open file...{}", e),
+            ConfigLoadError::YamlError(e, file_name) => write!(f, "Could not parse {} as YAML...{}", file_name, e),
+            ConfigLoadError::ParseError(e, file_name) => write!(f, "Error parsing configuration in {}...{}", file_name, e),
+            ConfigLoadError::ParseBytesError(e) => write!(f, "Error parsing bytes configuration...{}", e),
+            ConfigLoadError::InvalidBytes(e) => write!(f, "Could not parse bytes as YAML...{}", e),
         }
     }
 }
@@ -418,8 +422,6 @@ pub struct Definitions {
     // Value to hold the current queue
     current_sync: AllNeedSync,
     last_written: HashMap<String, Instant>,
-    // Values to constantly keep updating, even if no data was received
-    constant_avars: HashMap<String, Option<VarReaderTypes>>,
     // Vars that shouldn't be sent reliably
     unreliable_vars: HashSet<String>,
     // Helper struct to correct aircraft velocity
@@ -463,7 +465,6 @@ impl Definitions {
 
             current_sync: AllNeedSync::new(),
 
-            constant_avars: HashMap::new(),
             unreliable_vars: HashSet::new(),
             velocity_corrector: VelocityCorrector::new(2),
             do_not_sync: HashSet::new(),
@@ -495,10 +496,6 @@ impl Definitions {
         // Handle custom periods
         if let Some(period) = var.update_every {
             self.periods.insert(var_name.clone(), Period::new(period));
-        }
-
-        if var.constant {
-            self.constant_avars.insert(var_name.clone(), None);
         }
 
         self.add_mapping(var_name, ActionType::VarOnly, var.condition)?;
@@ -771,6 +768,19 @@ impl Definitions {
         return Ok(());
     }
 
+    fn shrink_maps(&mut self) {
+        self.mappings.shrink_to_fit();
+        self.categories.shrink_to_fit();
+        self.periods.shrink_to_fit();
+        self.unreliable_vars.shrink_to_fit();
+        self.do_not_sync.shrink_to_fit();
+        self.interpolate_vars.shrink_to_fit();
+
+        self.lvarstransfer.shrink_maps();
+        self.events.shrink_maps();
+        self.avarstransfer.shrink_maps();
+    }
+
     // Iterates over the yaml's "actions"
     fn parse_yaml(&mut self, yaml: IndexMap<String, Vec<Value>>) -> Result<(), VarAddError> {
         for (key, value) in yaml {
@@ -795,25 +805,30 @@ impl Definitions {
             
         }
 
+        // Shrink all maps
+        self.shrink_maps();
+
         Ok(())
     }
 
     // Load yaml from file
     pub fn load_config(&mut self, path: &PathBuf) -> Result<(), ConfigLoadError> {
-        let file = match File::open(path) {
-            Ok(f) => f,
-            Err(_) => return Err(ConfigLoadError::FileError)
-        };
+        let file = File::open(path)
+            .map_err(|e| ConfigLoadError::FileError(e))?;
 
-        let yaml: IndexMap<String, Vec<Value>> = match serde_yaml::from_reader(file) {
-            Ok(y) => y,
-            Err(e) => return Err(ConfigLoadError::YamlError(e, path.to_string_lossy().into_owned()))
-        };
+        let yaml: IndexMap<String, Vec<Value>> = serde_yaml::from_reader(file)
+            .map_err(|e| ConfigLoadError::YamlError(e, path.to_string_lossy().into_owned()))?;
 
-        match self.parse_yaml(yaml) {
-            Ok(_) => Ok(()),
-            Err(e) => Err(ConfigLoadError::ParseError(e, path.to_string_lossy().into_owned()))
-        }
+        self.parse_yaml(yaml)
+            .map_err(|e| ConfigLoadError::ParseError(e, path.to_string_lossy().into_owned()))
+    }
+
+    pub fn load_config_from_bytes(&mut self, bytes: Box<[u8]>) -> Result<(), ConfigLoadError> {
+        let yaml: IndexMap<String, Vec<Value>> = serde_yaml::from_slice(&bytes)
+            .map_err(|e| ConfigLoadError::InvalidBytes(e))?;
+
+        self.parse_yaml(yaml)
+            .map_err(|e| ConfigLoadError::ParseBytesError(e))
     }
 
     #[allow(unused_variables)]
@@ -972,12 +987,6 @@ impl Definitions {
         }
     }
 
-    fn reset_constants(&mut self) {
-        for value in self.constant_avars.values_mut() {
-            *value = None;
-        }
-    }
-
     #[allow(unused_variables)]
     pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64, interpolate: bool) {
         if data.len() == 0 {return}
@@ -994,11 +1003,6 @@ impl Definitions {
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             self.last_written.insert(var_name.to_string(), Instant::now());
-
-            // Log constant
-            if let Some(value) = self.constant_avars.get_mut(&var_name) {
-                *value = Some(data.clone());
-            }
 
             // Otherwise sync them using defined events
             if let Some(mappings) = self.mappings.get_mut(&var_name) {
@@ -1108,7 +1112,8 @@ impl Definitions {
         self.velocity_corrector.on_connected(conn);
 
         // Might be running another instance
-        if let Err(_) = self.jstransfer.start() {return Err(())};
+        self.jstransfer.start()
+            .map_err(|_| ())?;
 
         // Get aircraft data
         conn.request_data_on_sim_object(0, self.avarstransfer.define_id, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
@@ -1138,10 +1143,5 @@ impl Definitions {
 
     pub fn get_number_lvars(&self) -> usize {
         return self.lvarstransfer.get_number_defined()
-    }
-
-    pub fn reset_interpolate(&mut self) {
-        // self.lvarstransfer.reset_interpolate();
-        self.reset_constants();
     }
 }

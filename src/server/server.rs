@@ -8,7 +8,7 @@ use spin_sleep::sleep;
 use std::{collections::HashMap, mem, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
 use laminar::{Metrics, Socket};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
-use super::{Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
+use super::{ClientReceiver, ClientSender, Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, SenderReceiver, ServerReceiver, ServerSender, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
 
 struct Client {
     addr: SocketAddr,
@@ -24,8 +24,8 @@ struct TransferStruct {
     rendezvous_server: Option<SocketAddr>,
     clients_to_holepunch: Vec<HolePunchSession>,
     // Sending/writing to app
-    server_tx: Sender<ReceiveMessage>,
-    client_rx: Receiver<Payloads>,
+    server_tx: ServerSender,
+    client_rx: ClientReceiver,
     // State
     in_control: String,
     should_stop: Arc<AtomicBool>,
@@ -96,6 +96,7 @@ impl TransferStruct {
             Payloads::PlayerLeft { .. } |
             Payloads::SetObserver { .. } |
             Payloads::RequestHosting { .. } |
+            Payloads::AircraftDefinition { .. } |
             Payloads::Heartbeat |
             Payloads::SetHost |
             Payloads::PeerEstablished { .. } => {return}  // No client should be able to send this
@@ -197,7 +198,7 @@ impl TransferStruct {
     }
 
     fn handle_app_message(&mut self) {
-        while let Ok(payload) = self.client_rx.try_recv() {
+        while let Ok((payload, target)) = self.client_rx.try_recv() {
             match &payload {
                 Payloads::TransferControl { from: _, to } => {
                     self.in_control = to.clone();
@@ -205,7 +206,13 @@ impl TransferStruct {
                 _ => {}
             }
 
-            self.send_to_all(None, payload);
+            if let Some(target) = target {
+                if let Some(client) = self.clients.get(&target) {
+                    self.net.send_message(payload, client.addr).ok();
+                }
+            } else {
+                self.send_to_all(None, payload);
+            }
         }
     }
 
@@ -283,14 +290,14 @@ pub struct Server {
     transfer: Option<Arc<Mutex<TransferStruct>>>,
     
     // Send data to peers
-    client_tx: Sender<Payloads>,
+    client_tx: ClientSender,
     // Internally receive data to send to clients
-    client_rx: Receiver<Payloads>,
+    client_rx: ClientReceiver,
 
     // Send data to app to receive client data
-    server_tx: Sender<ReceiveMessage>,
+    server_tx: ServerSender,
     // Recieve data from server
-    server_rx: Receiver<ReceiveMessage>,
+    server_rx: ServerReceiver,
 
     username: String,
     version: String
@@ -456,15 +463,15 @@ impl TransferClient for Server {
         true
     }
 
-    fn get_transmitter(&self) -> &Sender<Payloads> {
+    fn get_transmitter(&self) -> &ClientSender {
         return &self.client_tx;
     }
 
-    fn get_server_transmitter(&self) -> &Sender<ReceiveMessage> {
+    fn get_server_transmitter(&self) -> &ServerSender {
         return &self.server_tx
     }
 
-    fn get_receiver(&self) -> &Receiver<ReceiveMessage> {
+    fn get_receiver(&self) -> &ServerReceiver {
         return &self.server_rx;
     }
 
@@ -482,7 +489,7 @@ impl TransferClient for Server {
             from: self.get_server_name().to_string(),
             to: target
         };
-        self.get_transmitter().try_send(message.clone()).ok();
+        self.get_transmitter().try_send((message.clone(), None)).ok();
         self.get_server_transmitter().try_send(ReceiveMessage::Payload(message)).ok();
     }
 
@@ -494,11 +501,11 @@ impl TransferClient for Server {
             }
         }
 
-        self.client_tx.try_send(Payloads::SetObserver {
+        self.client_tx.try_send((Payloads::SetObserver {
             from: self.get_server_name().to_string(),
             to: target,
             is_observer: is_observer
-        }).ok();
+        }, None)).ok();
     }
 
     fn get_session_id(&self) -> Option<String> {

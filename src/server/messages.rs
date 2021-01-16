@@ -12,6 +12,7 @@ const COMPRESS_DICTIONARY: &[u8] = include_bytes!("compress_dict.bin");
 pub enum Payloads {
     InvalidName,
     InvalidVersion {server_version: String},
+    AircraftDefinition {bytes: Box<[u8]>},
     SetHost,
     RequestHosting {self_hosted: bool},
     PlayerJoined {name: String, in_control: bool, is_server: bool, is_observer: bool},
@@ -76,6 +77,7 @@ fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: So
         Payloads::HostingReceived {..} |
         Payloads::SetHost {..} |
         // Used
+        Payloads::AircraftDefinition {..}  |
         Payloads::InvalidVersion {..} | 
         Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload_bytes),
         Payloads::PeerEstablished {..} |

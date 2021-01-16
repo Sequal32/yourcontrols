@@ -478,8 +478,6 @@ $("#main-form-join").submit(function(e) {
     } 
 
     FormButtonsDisabled(true)
-
-    UpdateAircraft(aircraftList.value)
     invoke(data);
 })
 

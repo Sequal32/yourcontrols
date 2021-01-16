@@ -64,6 +64,10 @@ impl Events {
         }
     }
 
+    pub fn shrink_maps(&mut self) {
+        self.should_notify.shrink_to_fit();
+    }
+
     pub fn get_number_defined(&self) -> usize {
         return self.event_map.len()
     }
@@ -186,6 +190,10 @@ impl LVarSyncer {
     pub fn get_number_defined(&self) -> usize {
         return self.vars.len()
     }
+
+    pub fn shrink_maps(&mut self) {
+        self.vars.shrink_to_fit();
+    }
 }
 
 pub struct AircraftVars {
@@ -264,5 +272,9 @@ impl AircraftVars {
 
     pub fn get_number_defined(&self) -> usize {
         return self.vars.len()
+    }
+
+    pub fn shrink_maps(&mut self) {
+        self.vars.shrink_to_fit();
     }
 }

@@ -22,7 +22,7 @@ use simconnect::{DispatchResult, SimConnector};
 use simplelog;
 use spin_sleep::sleep;
 use crate::util::{get_hostname_ip, resolve_relative_path};
-use std::{net::IpAddr, fs::{read_dir, File}, io, time::Duration, time::Instant};
+use std::{fs::{read_dir, File}, io::{self, Read}, net::IpAddr, path::PathBuf, time::Duration, time::Instant};
 use update::Updater;
 
 use control::*;
@@ -131,7 +131,6 @@ fn main() {
     let mut installer_spawned = false;
 
     // Set up sim connect
-    let mut connected = false;
     let mut observing = false;
     // Client stopped, need to stop transfer client
     let mut should_set_none_client = false;
@@ -150,20 +149,24 @@ fn main() {
     let mut definitions = Definitions::new();
 
     let mut need_update = false;
-    let mut ready_to_send_data = false;
+    let mut ready_to_process_data = false;
 
     let mut connection_time = None;
 
     let mut config_to_load = String::new();
     // Helper closures
+    let get_config_path = |config_name: &str| -> PathBuf {
+        let mut path = resolve_relative_path(AIRCRAFT_DEFINITIONS_PATH);
+        path.push(config_name.clone());
+        path
+    };
     // Load defintions
     let load_definitions = |conn: &SimConnector,
                             definitions: &mut Definitions,
                             config_to_load: &mut String|
      -> bool {
         // Load aircraft configuration
-        let mut path = resolve_relative_path(AIRCRAFT_DEFINITIONS_PATH);
-        path.push(config_to_load.clone());
+        let path = get_config_path(config_to_load);
 
         match definitions.load_config(&path) {
             Ok(_) => {
@@ -171,24 +174,38 @@ fn main() {
                 definitions.on_connected(&conn)
             }
             Err(e) => {
-                error!("[PROGRAM] Could not load configuration file {}: {}", config_to_load,e);
+                error!("[DEFINITIONS] Could not load configuration file {}: {}", config_to_load,e);
                 // Prevent server/client from starting as config could not be laoded.
                 *config_to_load = String::new();
                 return false;
             }
         }.ok();
 
-        definitions.reset_interpolate();
-
         info!("[DEFINITIONS] {} loaded successfully.", config_to_load);
 
         return true;
     };
 
+    let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions, app: &App| {
+        // Connect to simconnect
+        *definitions = Definitions::new();
+        let connected = conn.connect("YourControls");
+        // let connected = true;
+        if connected {
+            // Display not connected to server message
+            info!("[SIM] Connected to SimConnect.");
+        } else {
+            // Display trying to connect message
+            app_interface.error("Could not connect to SimConnect! Is the sim running?");
+        };
+
+        return connected;
+    };
+
     loop {
         let timer = Instant::now();
 
-        if connected {
+        if let Some(client) = transfer_client.as_mut() {
             // Simconnect message
             while let Ok(message) = conn.get_next_message() {
                 match message {
@@ -208,16 +225,13 @@ fn main() {
                         definitions.process_event_data(data);
                     }
                     DispatchResult::Quit(_) => {
-                        if let Some(client) = transfer_client.as_mut() {
-                            client.stop("Sim closed.".to_string());
-                        }
+                        client.stop("Sim closed.".to_string());
                     }
                     _ => {}
                 }
             };
-        }
 
-        if let Some(client) = transfer_client.as_mut() {
+        
             while let Ok(message) = client.get_next_message() {
                 match message {
                     ReceiveMessage::Payload(payload) => match payload {
@@ -236,7 +250,7 @@ fn main() {
                             // Not non high updating packets for debugging
                             if !is_unreliable {info!("[PACKET] {:?}", data)}
 
-                            if !clients.is_observer(&from) && ready_to_send_data {
+                            if !clients.is_observer(&from) && ready_to_process_data {
                                 match definitions.on_receive_data(
                                     &conn,
                                     data,
@@ -270,14 +284,13 @@ fn main() {
                                 if from == client.get_server_name() {
                                     app_interface.lose_control();
                                     control.lose_control();
-                                    definitions.reset_interpolate();
                                 }
                                 info!("[CONTROL] {} is now in control.", to);
                                 app_interface.set_incontrol(&to);
                                 clients.set_client_control(to);
                             }
                         }
-                        Payloads::PlayerJoined{name, in_control, is_observer, is_server} => {
+                        Payloads::PlayerJoined {name, in_control, is_observer, is_server} => {
                             info!("[NETWORK] {} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
                                 // Send initial aircraft state
                             app_interface.new_connection(&name);
@@ -288,6 +301,17 @@ fn main() {
                             if client.is_host() {
 
                                 app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
+
+                                // Send definitions
+                                match File::open(get_config_path(&config_to_load)) {
+                                    Ok(mut file) => {
+                                        let mut buf = Vec::new();
+                                        file.read_to_end(&mut buf);
+                                        client.send_definitions(buf.into_boxed_slice(), name.clone());
+                                    }
+                                    Err(_) => client.stop("Config file deleted when trying to send to client.".to_string())
+                                }
+                                
 
                             } else {
                                 // Show as observing on client side, server shouldn't show the message, only the controls
@@ -341,6 +365,19 @@ fn main() {
                         Payloads::SetHost => {
                             app_interface.set_host();
                         }
+                        Payloads::AircraftDefinition {bytes} => {
+                            match definitions.load_config_from_bytes(bytes) {
+                                Ok(_) => {
+                                    info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events from the server", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
+                                    definitions.on_connected(&conn).ok();
+                                }
+                                Err(e) => {
+                                    error!("[DEFINITIONS] Could not load server sent configuration file: {}", e);
+                                }
+                            }
+                            // Start the connection timer to wait to send the ready payload
+                            connection_time = Some(Instant::now());
+                        }
                     }
                     ReceiveMessage::Event(e) => match e {
                         Event::ConnectionEstablished => {
@@ -350,6 +387,8 @@ fn main() {
                                     // Unfreeze aircraft
                                 control.take_control();
                                 app_interface.gain_control();
+                                    // Not really used by the host
+                                connection_time = Some(Instant::now());
                             } else {
                                     // Display connected message
                                 app_interface.connected();
@@ -361,7 +400,6 @@ fn main() {
                             }
                             
                             need_update = true;
-                            connection_time = Some(Instant::now());
                         }
                         Event::ConnectionLost(reason) => {
                             info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
@@ -373,12 +411,6 @@ fn main() {
                             should_set_none_client = true;
 
                             app_interface.client_fail(&reason);
-
-                            if connected {
-                                    // Close simconnect connection
-                                conn.close();
-                                connected = false;
-                            }
                         }
                         Event::UnablePunchthrough => {
                             app_interface.client_fail("Could not connect to host! Please port forward or using 'Request Hosting'!")
@@ -395,7 +427,6 @@ fn main() {
                 }
             }
 
-
             definitions.step();
 
             // Handle specific program triggered actions
@@ -410,17 +441,11 @@ fn main() {
             // Handle initial connection delay, allows lvars to be processed
             if let Some(time) = connection_time {
                 if time.elapsed().as_secs() >= 3 {
-                    // Tell server we're ready to receive data after 3 seconds
-                    if !ready_to_send_data {
-                        ready_to_send_data = true;
-                        client.send_ready();
-                        definitions.clear_sync();
-                    }
-    
                     // Update
                     let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
                     
-                    if !observing && can_update {
+                    // Do not let server send initial data - wait for data to get cleared on the previous loop
+                    if !observing && can_update && ready_to_process_data {
                         let permission = SyncPermission {
                             is_server: client.is_host(),
                             is_master: control.has_control(),
@@ -431,6 +456,18 @@ fn main() {
         
                         update_rate_instant = Instant::now();
                     }
+
+                    // Tell server we're ready to receive data after 3 seconds
+                    if !ready_to_process_data {
+                        ready_to_process_data = true;
+                        definitions.clear_sync();
+
+                        info!("SENDING READY: {}", client.is_host());
+
+                        if !client.is_host() {
+                            client.send_ready();
+                        }
+                    }
                 }
             }
         }
@@ -439,6 +476,8 @@ fn main() {
         match app_interface.get_next_message() {
             Ok(msg) => match msg {
                 AppMessage::StartServer {username, port, isipv6, method} => {
+                    let connected = connect_to_sim(&mut conn, &mut definitions, &app_interface);
+
                     if config_to_load == "" {
                         app_interface.server_fail("Select an aircraft config first!");
                         
@@ -468,7 +507,6 @@ fn main() {
                                     Ok(_) => {
                                         // Assign server as transfer client
                                         transfer_client = Some(server);
-                                        ready_to_send_data = true;
                                         info!("[NETWORK] Server started");
                                     }
                                     Err(e) => {
@@ -484,7 +522,6 @@ fn main() {
                                 match client.start_with_relay() {
                                     Ok(_) => {
                                         transfer_client = Some(client);
-                                        ready_to_send_data = true;
                                         info!("[NETWORK] Hosting started");
                                     }
                                     Err(e) => {
@@ -500,14 +537,9 @@ fn main() {
                     }
                 }
                 AppMessage::Connect {session_id, username, method, ip, port, isipv6, hostname} => {
-                    if config_to_load == "" {
-                        app_interface.client_fail("Select an aircraft config first!");
+                    let connected = connect_to_sim(&mut conn, &mut definitions, &app_interface);
 
-                    } else if !load_definitions(&conn, &mut definitions, &mut config_to_load) {
-
-                        app_interface.error("Error loading definition files. Check the log for more information.");
-                        
-                    } else if connected {
+                    if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
@@ -551,19 +583,7 @@ fn main() {
                 AppMessage::LoadAircraft {config_file_name} => {
                     // Load config
                     info!("[DEFINITIONS] {} aircraft config selected.", config_file_name);
-                    definitions = Definitions::new();
                     config_to_load = config_file_name.clone();
-
-                    // Connect to simconnect
-                    connected = conn.connect("Your Controls");
-                    // connected = true;
-                    if connected {
-                        // Display not connected to server message
-                        info!("[SIM] Connected to SimConnect.");
-                    } else {
-                        // Display trying to connect message
-                        app_interface.error("Could not connect to SimConnect! Is the sim running?");
-                    };
                 }
                 AppMessage::Startup => {
                     // List aircraft
@@ -626,8 +646,9 @@ fn main() {
             // Prevent sending any more data
             transfer_client = None;
             should_set_none_client = false;
-            ready_to_send_data = false;
+            ready_to_process_data = false;
             connection_time = None;
+            conn.close();
         }
 
         if timer.elapsed().as_millis() < 10 {
