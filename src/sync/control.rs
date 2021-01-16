@@ -1,7 +1,5 @@
 use std::{time::{Instant}};
 
-use simconnect::SimConnector;
-
 pub struct Control {
     has_control: bool,
     // Used to seemlessly transfer control

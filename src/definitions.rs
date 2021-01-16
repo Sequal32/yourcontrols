@@ -586,43 +586,51 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_num_set_generic<T>(&mut self, data_type: InDataTypes, category: &str, var: NumSetGenericEntry<T>) -> Result<(Box<NumSet<T>>, String), VarAddError> where T: Default {
+    fn add_num_set_generic<T>(&mut self, data_type: InDataTypes, category: &str, var: NumSetGenericEntry<T>) -> Result<(Option<Box<NumSet<T>>>, String), VarAddError> where T: Default {
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
 
-        let mut action = Box::new(NumSet::new(event_id));
-
-        if var.use_calculator || var.event_param.is_some() {
-            action.set_calculator_event_name(Some(&var.event_name), var.event_param.is_some())
-        }
-
-        if var.unreliable {
-            self.unreliable_vars.insert(var.var_name.clone());
-        }
-
         if let Some(interpolate_type) = var.interpolate {
-            self.lvarstransfer.transfer.add_interpolate_mapping(&var.var_name, var_string.clone(), var.var_units.as_deref(), interpolate_type);
-        }
 
-        if let Some(event_param) = var.event_param {
-            action.set_param(event_param, var.index_reversed);
-        }
+            self.lvarstransfer.transfer.add_interpolate_mapping(&format!("K:{}", &var.event_name), var_string.clone(), var.var_units.as_deref(), interpolate_type);
+            self.interpolate_vars.insert(var_string.clone());
+            self.add_mapping(var_string.clone(), ActionType::VarOnly, None)?;
 
-        if let Some(multiply_by) = var.multiply_by {
-            action.set_multiply_by(multiply_by);
-        }
+        } else {
 
-        if let Some(add_by) = var.add_by {
-            action.set_add_by(add_by);
-        }
+            let mut action = Box::new(NumSet::new(event_id));
 
-        if let Some(swap_event) = var.swap_event_name.as_ref() {
-            let swap_event_id = self.events.get_or_map_event_id(swap_event, false);
-            action.set_swap_event(swap_event_id);
-        }
+            if var.unreliable {
+                self.unreliable_vars.insert(var.var_name.clone());
+            }
+    
+            if var.use_calculator || var.event_param.is_some() {
+                action.set_calculator_event_name(Some(&var.event_name), var.event_param.is_some())
+            }
+    
+            if let Some(event_param) = var.event_param {
+                action.set_param(event_param, var.index_reversed);
+            }
+    
+            if let Some(multiply_by) = var.multiply_by {
+                action.set_multiply_by(multiply_by);
+            }
+    
+            if let Some(add_by) = var.add_by {
+                action.set_add_by(add_by);
+            }
+    
+            if let Some(swap_event) = var.swap_event_name.as_ref() {
+                let swap_event_id = self.events.get_or_map_event_id(swap_event, false);
+                action.set_swap_event(swap_event_id);
+            }
 
-        Ok((action, var_string))
+            return Ok((Some(action), var_string))
+
+        }
+        
+        return Ok((None, var_string))
     }
 
     fn add_num_set(&mut self, category: &str, var: Value) -> Result<(), VarAddError> {
@@ -634,11 +642,15 @@ impl Definitions {
         match data_type {
             InDataTypes::I32 => {
                 let (mapping, var_string) = self.add_num_set_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::I32(mapping), condition)?
+                if let Some(mapping) = mapping {
+                    self.add_mapping(var_string, ActionType::I32(mapping), condition)?
+                }
             }
             InDataTypes::F64 => {
                 let (mapping, var_string) = self.add_num_set_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::F64(mapping), condition)?
+                if let Some(mapping) = mapping {
+                    self.add_mapping(var_string, ActionType::F64(mapping), condition)?
+                }
             }
             _ => {}
         };
