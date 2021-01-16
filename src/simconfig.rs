@@ -1,7 +1,14 @@
+use derive_more::{From, Display};
 use serde::{Deserialize, Serialize};
 use serde_json;
-use std::{fs::File, path::PathBuf};
-use std::io::{BufReader, Write};
+use std::{convert::AsRef, fs::File, io};
+use std::io::{Write};
+
+#[derive(From, Display)]
+pub enum ConfigLoadError {
+    FileError(io::Error),
+    SerializeError(serde_json::Error)
+}
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Config {
@@ -29,36 +36,21 @@ impl Default for Config {
 }
 
 impl Config {
-    pub fn write_to_file(&self, path: &PathBuf) -> Result<(), &str> {
-        let mut file = match File::create(path) {
-            Ok(file) => file,
-            Err(_) => {
-                return Err("Could not open configuration file.");
-            }
-        };
+    pub fn write_to_file(&self, path: impl AsRef<std::path::Path>) -> Result<(), ConfigLoadError> {
+        let data_string = serde_json::to_string_pretty(self)?;
 
-        match serde_json::to_string_pretty(self) {
-            Ok(data_string) => match file.write(data_string.as_bytes()) {
-                Ok(_) => Ok(()),
-                Err(_) => Err("Could not write to configuration file."),
-            },
-            Err(_) => Err("Could not serialize structure!"),
-        }
+        let mut file = File::create(path)?;
+        file.write_all(data_string.as_bytes())?;
+
+        Ok(())
     }
 
-    pub fn read_from_file(filename: &PathBuf) -> Result<Self, &str> {
-        let file = match File::open(filename) {
-            Ok(file) => file,
-            Err(_) => {
-                return Err("Could not open configuration file.");
-            }
-        };
-        let reader = BufReader::new(file);
+    pub fn read_from_file(filename: impl AsRef<std::path::Path>) -> Result<Self, ConfigLoadError> {
+        let file = File::open(filename)?;
 
-        match serde_json::from_reader(reader) {
-            Ok(data) => Ok(data),
-            Err(_) => Err("Configuration file corrupted."),
-        }
+        let config = serde_json::from_reader(file)?;
+
+        Ok(config)
     }
 
     pub fn get_json_string(&self) -> String {

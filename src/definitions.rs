@@ -3,8 +3,8 @@ use serde_yaml::{self, Value};
 use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
-use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::Display, fs::File, time::Instant, path::PathBuf};
-use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, util::resolve_relative_path, velocity::VelocityCorrector};
+use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::{Debug, Display}, fs::File, path::{Path, PathBuf}, time::Instant};
+use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -788,7 +788,7 @@ impl Definitions {
                 for include_file in value {
                     let file_name = include_file.as_str().unwrap();
 
-                    match self.load_config(&resolve_relative_path(file_name)) {
+                    match self.load_config(file_name) {
                         Ok(_) => (),
                         Err(e) => {
                             if let ConfigLoadError::ParseError(e, _) = e {
@@ -812,15 +812,17 @@ impl Definitions {
     }
 
     // Load yaml from file
-    pub fn load_config(&mut self, path: &PathBuf) -> Result<(), ConfigLoadError> {
+    pub fn load_config(&mut self, path: impl AsRef<Path> + Display) -> Result<(), ConfigLoadError> {
+        let path_string = path.to_string();
+
         let file = File::open(path)
             .map_err(|e| ConfigLoadError::FileError(e))?;
 
         let yaml: IndexMap<String, Vec<Value>> = serde_yaml::from_reader(file)
-            .map_err(|e| ConfigLoadError::YamlError(e, path.to_string_lossy().into_owned()))?;
+            .map_err(|e| ConfigLoadError::YamlError(e, path_string.clone()))?;
 
         self.parse_yaml(yaml)
-            .map_err(|e| ConfigLoadError::ParseError(e, path.to_string_lossy().into_owned()))
+            .map_err(|e| ConfigLoadError::ParseError(e, path_string.clone()))
     }
 
     pub fn load_config_from_bytes(&mut self, bytes: Box<[u8]>) -> Result<(), ConfigLoadError> {

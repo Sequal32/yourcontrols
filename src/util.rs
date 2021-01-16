@@ -29,15 +29,6 @@ pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, HostnameL
     }
 }
 
-pub fn resolve_relative_path(relative_path: &str) -> PathBuf {
-    let mut path = std::env::current_exe().unwrap();
-    // Don't need exe path
-    path.pop();
-    // Push further path
-    path.push(relative_path);
-    return path;
-}
-
 #[derive(Eq, PartialEq)]
 pub enum Category {
     Shared,

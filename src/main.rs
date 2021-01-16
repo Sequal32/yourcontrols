@@ -21,7 +21,7 @@ use simconfig::Config;
 use simconnect::{DispatchResult, SimConnector};
 use simplelog;
 use spin_sleep::sleep;
-use crate::util::{get_hostname_ip, resolve_relative_path};
+use crate::util::{get_hostname_ip};
 use std::{fs::{read_dir, File}, io::{self, Read}, net::IpAddr, path::PathBuf, time::Duration, time::Instant};
 use update::Updater;
 
@@ -37,7 +37,7 @@ const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
 fn get_aircraft_configs() -> io::Result<Vec<String>> {
     let mut filenames = Vec::new();
 
-    for file in read_dir(&resolve_relative_path(AIRCRAFT_DEFINITIONS_PATH))? {
+    for file in read_dir(&AIRCRAFT_DEFINITIONS_PATH)? {
         let file = file?;
         filenames.push(
             file.path()
@@ -53,7 +53,7 @@ fn get_aircraft_configs() -> io::Result<Vec<String>> {
 }
 
 fn write_configuration(config: &Config) {
-    match config.write_to_file(&resolve_relative_path(CONFIG_FILENAME)) {
+    match config.write_to_file(CONFIG_FILENAME) {
         Ok(_) => {},
         Err(e) => error!("[PROGRAM] Could not write configuration file! Reason: {}", e)
     };
@@ -104,8 +104,15 @@ fn write_update_data(definitions: &mut Definitions, client: &mut Box<dyn Transfe
 }
 
 fn main() {
+    // Initialize logging
+    simplelog::WriteLogger::init(
+        simplelog::LevelFilter::Info,
+        simplelog::Config::default(),
+        File::create(LOG_FILENAME).unwrap(),
+    )
+    .ok();
     // Load configuration file
-    let mut config = match Config::read_from_file(&resolve_relative_path(CONFIG_FILENAME)) {
+    let mut config = match Config::read_from_file(CONFIG_FILENAME) {
         Ok(config) => config,
         Err(e) => {
             warn!("[PROGRAM] Could not open config. Using default values. Reason: {}", e);
@@ -115,13 +122,6 @@ fn main() {
             config
         }
     };
-    // Initialize logging
-    simplelog::WriteLogger::init(
-        simplelog::LevelFilter::Info,
-        simplelog::Config::default(),
-        File::create(resolve_relative_path(LOG_FILENAME)).unwrap(),
-    )
-    .ok();
 
     let mut conn = simconnect::SimConnector::new();
     let mut control = Control::new();
@@ -156,7 +156,7 @@ fn main() {
     let mut config_to_load = String::new();
     // Helper closures
     let get_config_path = |config_name: &str| -> PathBuf {
-        let mut path = resolve_relative_path(AIRCRAFT_DEFINITIONS_PATH);
+        let mut path = PathBuf::from(AIRCRAFT_DEFINITIONS_PATH);
         path.push(config_name.clone());
         path
     };
@@ -168,7 +168,7 @@ fn main() {
         // Load aircraft configuration
         let path = get_config_path(config_to_load);
 
-        match definitions.load_config(&path) {
+        match definitions.load_config(path.to_string_lossy().to_string()) {
             Ok(_) => {
                 info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
                 definitions.on_connected(&conn)
