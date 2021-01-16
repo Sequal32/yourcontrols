@@ -1,5 +1,6 @@
 include:
   - definitions/modules/general.yaml
+  - definitions/modules/physics.yaml
 
 shared:
   # COCKPIT LIGHTING
@@ -1375,6 +1376,18 @@ shared:
         Bool: true
 
 master:
+  - # ASOBO_ENGINE_Lever_Throttle_Template
+    type: var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: percent
+    var_type: f64
+    interpolate: Default
+  -
+    type: var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_units: percent
+    var_type: f64
+    interpolate: Default
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM
