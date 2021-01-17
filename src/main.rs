@@ -297,22 +297,12 @@ fn main() {
                             clients.add_client(name.clone());
                             clients.set_server(&name, is_server);
                             clients.set_observer(&name, is_observer);
-
+                            
                             if client.is_host() {
-
                                 app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
 
                                 // Send definitions
-                                match File::open(get_config_path(&config_to_load)) {
-                                    Ok(mut file) => {
-                                        let mut buf = Vec::new();
-                                        file.read_to_end(&mut buf);
-                                        client.send_definitions(buf.into_boxed_slice(), name.clone());
-                                    }
-                                    Err(_) => client.stop("Config file deleted when trying to send to client.".to_string())
-                                }
-                                
-
+                                client.send_definitions(definitions.get_buffer_bytes().into_boxed_slice(), name.clone());
                             } else {
                                 // Show as observing on client side, server shouldn't show the message, only the controls
                                 app_interface.set_observing(&name, is_observer);
@@ -331,10 +321,7 @@ fn main() {
                         }
                         Payloads::PlayerLeft{name} => {
                             info!("[NETWORK] {} lost connection.", name);
-                            if client.is_host() {
-                                app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
-                            }
-                            app_interface.lost_connection(&name);
+                            
                             clients.remove_client(&name);
                             // User may have been in control
                             if clients.client_has_control(&name) {
@@ -347,6 +334,11 @@ fn main() {
                                     control.take_control();
                                     client.transfer_control(client.get_server_name().to_string());
                                 }
+                            }
+
+                            app_interface.lost_connection(&name);
+                            if client.is_host() {
+                                app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
                             }
                         }
                         Payloads::SetObserver{from: _, to, is_observer} => {
@@ -461,8 +453,6 @@ fn main() {
                     if !ready_to_process_data {
                         ready_to_process_data = true;
                         definitions.clear_sync();
-
-                        info!("SENDING READY: {}", client.is_host());
 
                         if !client.is_host() {
                             client.send_ready();

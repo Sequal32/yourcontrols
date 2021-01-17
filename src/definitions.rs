@@ -1,9 +1,9 @@
-use indexmap::IndexMap;
+use indexmap::{IndexMap};
 use serde_yaml::{self, Value};
 use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
-use std::{collections::HashMap, collections::HashSet, collections::hash_map::Entry, fmt::{Debug, Display}, fs::File, path::{Path, PathBuf}, time::Instant};
+use std::{collections::HashMap, collections::{HashSet, hash_map}, fmt::{Debug, Display}, fs::File, path::{Path}, time::Instant};
 use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector};
 
 #[derive(Debug)]
@@ -12,7 +12,7 @@ pub enum ConfigLoadError {
     YamlError(serde_yaml::Error, String),
     ParseError(VarAddError, String),
     ParseBytesError(VarAddError),
-    InvalidBytes(serde_yaml::Error)
+    InvalidBytes(rmp_serde::decode::Error)
 }
 
 impl Display for ConfigLoadError {
@@ -405,6 +405,8 @@ struct Mapping {
 }
 
 pub struct Definitions {
+    // Serializable vec that houses all the definitions that can be sent over the network
+    definitions_buffer: IndexMap<String, Vec<Value>>,
     // Data that can be synced using booleans (ToggleSwitch, ToggleSwitchParam)
     mappings: HashMap<String, Vec<Mapping>>,
     // Events to listen to
@@ -455,6 +457,7 @@ fn get_real_var_name(var_name: &str) -> String {
 impl Definitions {
     pub fn new() -> Self {
         Self {
+            definitions_buffer: IndexMap::new(),
             mappings: HashMap::new(),
             events: Events::new(1),
             lvarstransfer: LVarSyncer::new(),
@@ -568,10 +571,10 @@ impl Definitions {
         };
 
         match self.mappings.entry(var_name.to_string()) {
-            Entry::Occupied(mut o) => { 
+            hash_map::Entry::Occupied(mut o) => { 
                 o.get_mut().push(mapping)
             }
-            Entry::Vacant(v) => { v.insert(vec![mapping]); }
+            hash_map::Entry::Vacant(v) => { v.insert(vec![mapping]); }
         };
 
         Ok(())
@@ -747,23 +750,38 @@ impl Definitions {
         Ok(())
     }
 
+    fn add_to_buffer(&mut self, category: String, value: Value) {
+        match self.definitions_buffer.entry(category) {
+            indexmap::map::Entry::Occupied(mut o) => {o.get_mut().push(value)},
+            indexmap::map::Entry::Vacant(v) => {v.insert(vec![value]);}
+        };
+    }
+
+    pub fn get_buffer_bytes(&mut self) -> Vec<u8> {
+        rmp_serde::to_vec(&self.definitions_buffer).unwrap()
+    }
+
     // Calls the correct method for the specified "action" type
-    fn parse_var(&mut self, category: &str, value: Value) -> Result<(), VarAddError> {
+    fn parse_var(&mut self, category: String, value: Value) -> Result<(), VarAddError> {
         let type_str = check_and_return_field!("type", value, str);
 
         // self.check_other_common_fields(&value);
+        let value_clone = value.clone();
+
 
         match type_str.to_uppercase().as_str() {
-            "VAR" => self.add_var(category, try_cast_yaml!(value))?,
-            "EVENT" => self.add_event(category, try_cast_yaml!(value))?,
-            "TOGGLESWITCH" => self.add_toggle_switch(category, try_cast_yaml!(value))?,
-            "NUMSET" => self.add_num_set(category, try_cast_yaml!(value))?,
-            "NUMINCREMENT" => self.add_num_increment(category, try_cast_yaml!(value))?,
-            "NUMDIGITSET" => self.add_num_digit_set(category, try_cast_yaml!(value))?,
-            "CUSTOMCALCULATOR" => self.add_custom_calculator(category, try_cast_yaml!(value))?,
-            "PROGRAMACTION" => self.add_program_action(category, try_cast_yaml!(value))?,
+            "VAR" => self.add_var(&category, try_cast_yaml!(value))?,
+            "EVENT" => self.add_event(&category, try_cast_yaml!(value))?,
+            "TOGGLESWITCH" => self.add_toggle_switch(&category, try_cast_yaml!(value))?,
+            "NUMSET" => self.add_num_set(&category, try_cast_yaml!(value))?,
+            "NUMINCREMENT" => self.add_num_increment(&category, try_cast_yaml!(value))?,
+            "NUMDIGITSET" => self.add_num_digit_set(&category, try_cast_yaml!(value))?,
+            "CUSTOMCALCULATOR" => self.add_custom_calculator(&category, try_cast_yaml!(value))?,
+            "PROGRAMACTION" => self.add_program_action(&category, try_cast_yaml!(value))?,
             _ => return Err(VarAddError::InvalidSyncType(type_str.to_string()))
         };
+        
+        self.add_to_buffer(category, value_clone);
 
         return Ok(());
     }
@@ -799,7 +817,7 @@ impl Definitions {
                 }
             } else {
                 for var_data in value {
-                    self.parse_var(key.as_str(), var_data)?;
+                    self.parse_var(key.clone(), var_data)?;
                 }
             }
             
@@ -826,7 +844,7 @@ impl Definitions {
     }
 
     pub fn load_config_from_bytes(&mut self, bytes: Box<[u8]>) -> Result<(), ConfigLoadError> {
-        let yaml: IndexMap<String, Vec<Value>> = serde_yaml::from_slice(&bytes)
+        let yaml: IndexMap<String, Vec<Value>> = rmp_serde::from_slice(&bytes)
             .map_err(|e| ConfigLoadError::InvalidBytes(e))?;
 
         self.parse_yaml(yaml)

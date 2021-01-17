@@ -123,7 +123,7 @@ impl SenderReceiver {
         };
     
         // Decompress
-        let payload_bytes = self.decompressor.decompress(packet.payload(), 16382)?;
+        let payload_bytes = self.decompressor.decompress(packet.payload(), 131072)?;
         // Decode to struct
         let payload = rmp_serde::from_slice(&payload_bytes)?;
         return Ok(

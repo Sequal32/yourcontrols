@@ -124,6 +124,7 @@ impl TransferStruct {
     // Reliably compared to default heartbeat implementation
     fn handle_heartbeat(&mut self) {
         if !self.connected {return}
+        
         if let Some(addr) = self.received_address {
             
             if self.heartbeat_instant.elapsed().as_secs_f32() < HEARTBEAT_INTERVAL_MANUAL_SECS {return}
