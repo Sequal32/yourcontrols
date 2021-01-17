@@ -7,7 +7,7 @@ use spin_sleep::sleep;
 use std::{collections::HashMap, mem, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
 use laminar::{Socket};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
-use super::{Error, Event, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
+use super::{Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, SenderReceiver, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
 
 struct Client {
     addr: SocketAddr,
@@ -31,6 +31,7 @@ struct TransferStruct {
     number_connections: Arc<AtomicU16>,
     username: String,
     version: String,
+    heartbeat_instant: Instant
 }
 
 impl TransferStruct {
@@ -88,6 +89,7 @@ impl TransferStruct {
             Payloads::PlayerJoined { .. } |
             Payloads::PlayerLeft { .. } |
             Payloads::SetObserver { .. } |
+            Payloads::Heartbeat |
             Payloads::PeerEstablished { .. } => {return}  // No client should be able to send this
             // No processing needed
             Payloads::Update { .. } => {}
@@ -198,6 +200,14 @@ impl TransferStruct {
 
             self.send_to_all(None, payload);
         }
+    }
+
+    // Reliably compared to default heartbeat implementation
+    fn handle_heartbeat(&mut self) {
+        if self.heartbeat_instant.elapsed().as_secs_f32() < HEARTBEAT_INTERVAL_MANUAL_SECS {return}
+
+        self.heartbeat_instant = Instant::now();
+        self.send_to_all(None, Payloads::Heartbeat);
     }
 
     fn remove_client(&mut self, addr: SocketAddr) {
@@ -353,7 +363,8 @@ impl Server {
             should_stop: self.should_stop.clone(),
             number_connections: self.number_connections.clone(),
             username: self.username.clone(),
-            version: self.version.clone()
+            version: self.version.clone(),
+            heartbeat_instant: Instant::now()
         }));
         let transfer_thread_clone = transfer.clone();
 
@@ -401,6 +412,7 @@ impl Server {
 
                 transfer.handle_handshake();
                 transfer.handle_app_message();
+                transfer.handle_heartbeat();
 
                 if transfer.should_stop() {break}
 
