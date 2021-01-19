@@ -36,23 +36,26 @@ master:
     var_type: f64
     interpolate: Wrap360
   -
-    type: var
+    type: NumSet
     var_name: A:YOKE X POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: Default
+    event_name: AXIS_AILERONS_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:YOKE Y POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: Default
+    event_name: AXIS_ELEVATOR_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:RUDDER PEDAL POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: Default
+    event_name: AXIS_RUDDER_SET
+    interpolate: Invert
   -
     type: NumSet
     var_name: A:BRAKE LEFT POSITION EX1

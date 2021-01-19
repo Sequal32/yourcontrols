@@ -1132,6 +1132,10 @@ shared:
   # Number buttons are H events
   - # A32NX_ATC_Panel_TARA
     type: var
+    var_name: L:A32NX_SWITCH_TCAS_Position
+    var_type: f64
+  -
+    type: var
     var_name: L:A32NX_SWITCH_TCAS_Traffic_Position
     var_type: f64
   -
@@ -1376,18 +1380,20 @@ shared:
         Bool: true
 
 master:
-  - # ASOBO_ENGINE_Lever_Throttle_Template
-    type: var
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
-    var_units: percent
-    var_type: f64
-    interpolate: Default
   -
-    type: var
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
-    var_units: percent
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Position 16k
     var_type: f64
-    interpolate: Default
+    event_name: THROTTLE1_SET
+    interpolate: Invert
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE2_SET
+    interpolate: Invert
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM
