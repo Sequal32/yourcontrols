@@ -853,19 +853,26 @@ impl Definitions {
 
     #[allow(unused_variables)]
     fn process_local_var(&mut self, result: GetResult) {
+        let mut should_write = self.did_write_recently(&result.var_name);
+
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
+
+                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(result.var.floating)) {continue}
+
                 execute_mapping!(new_value, action, VarReaderTypes::F64(result.var.floating), mapping, {
                     action.set_current(new_value)
                 }, {}, {
                     match action {
                         ProgramAction::TakeControls => self.control_transfer_requested = true
                     }
+                    should_write = false;
                 });
+                
             }
         }
 
-        if self.did_write_recently(&result.var_name) {return}
+        if !should_write {return}
         self.current_sync.lvars.insert(result.var_name, result.var.floating);
     }
 
@@ -1045,11 +1052,7 @@ impl Definitions {
                                 // Set data right away
                             to_sync.insert(var_name.clone(), data.clone());
                         }
-                    }, {
-                        match action {
-                            ProgramAction::TakeControls => self.control_transfer_requested = true
-                        }
-                    });
+                    }, {});
                 }
             }
         }
