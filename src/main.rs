@@ -424,9 +424,12 @@ fn main() {
             // Handle specific program triggered actions
             if definitions.control_transfer_requested {
                 if !control.has_control() && !observing {
-                    control.take_control();
-                    client.take_control(clients.get_client_in_control().unwrap().clone());
+                    if let Some(in_control) = clients.get_client_in_control() {
+                        control.take_control();
+                        client.take_control(in_control.clone());
+                    }
                 }
+                
                 definitions.control_transfer_requested = false;
             }
 
