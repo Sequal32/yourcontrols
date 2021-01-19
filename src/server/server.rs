@@ -288,7 +288,8 @@ pub struct Server {
     should_stop: Arc<AtomicBool>,
 
     transfer: Option<Arc<Mutex<TransferStruct>>>,
-    
+
+    last_port_forward_result: Option<Result<(), PortForwardResult>>,
     // Send data to peers
     client_tx: ClientSender,
     // Internally receive data to send to clients
@@ -310,11 +311,12 @@ impl Server {
 
         return Self {
             number_connections: Arc::new(AtomicU16::new(0)),
+            last_port_forward_result: None,
             should_stop: Arc::new(AtomicBool::new(false)),
             client_rx, client_tx, server_rx, server_tx,
             transfer: None,
             username: username,
-            version
+            version,
         }
     }
 
@@ -354,7 +356,7 @@ impl Server {
         let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(3))?;
         // Attempt to port forward
         if upnp {
-            self.port_forward(port)?;
+            self.last_port_forward_result = Some(self.port_forward(port));
         }
         
         self.run(socket, None)

@@ -1,4 +1,4 @@
-use crossbeam_channel::{Receiver, Sender, unbounded};
+use crossbeam_channel::{unbounded};
 use log::info;
 use laminar::{Socket};
 use spin_sleep::sleep;

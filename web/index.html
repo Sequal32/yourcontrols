@@ -110,22 +110,19 @@
                                 </div>
                             </div>
                             <div class="form-check" id="connection-radios">
-                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Host using UDP Hole Punching, depending on router this may not work.">
+                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Host by connecting directly to other clients via the Cloud. Depending on router this may not work.">
                                     <input class="form-check-input" type="radio" name="connectionRadios" value="cloudServer" id="punchthrough-radio" checked>
-                                    <label class="form-check-label" for="punchthrough-radio">Cloud Server</label>
+                                    <label class="form-check-label" for="punchthrough-radio">Cloud P2P</label>
                                 </div>
-                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Port forward using UPnP, which needs to be enabled in your router.">
-                                    <input class="form-check-input" type="radio" name="connectionRadios" value="uPnP" id="upnp-radio">
-                                    <label class="form-check-label" for="upnp-radio">UPnP</label>
-                                </div>
-                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Host without doing anything special. The port should be forwarded manually.">
-                                    <input class="form-check-input" type="radio" name="connectionRadios" value="direct" id="direct-radio">
-                                    <label class="form-check-label" for="direct-radio">Direct</label>
-                                </div>
-                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Request a server to be hosted.">
+                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Request a server to be hosted in the Cloud.">
                                     <input class="form-check-input" type="radio" name="connectionRadios" value="relay" id="relay-radio">
                                     <label class="form-check-label" for="relay-radio">Cloud Host</label>
                                 </div>
+                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Host a server without connecting to the Cloud. Requires port fowarding, will attempt to use UPnP to automatically port forward.">
+                                    <input class="form-check-input" type="radio" name="connectionRadios" value="direct" id="direct-radio">
+                                    <label class="form-check-label" for="direct-radio">Direct</label>
+                                </div>
+                                
                             </div>
                             <div class="form-group form-row justify-content-center small-margin align-bottom">
                                 <button type="submit" id="server-button" class="btn btn-primary">Start Server</button>

@@ -12,7 +12,6 @@ use crate::{simconfig};
 #[serde(rename_all = "camelCase")]
 pub enum ConnectionMethod {
     Direct,
-    UPnP,
     Relay,
     CloudServer
 }

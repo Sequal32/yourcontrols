@@ -81,8 +81,7 @@ fn start_client(timeout: u64, username: String, session_id: String, version: Str
         ConnectionMethod::CloudServer => {
             client.start_with_hole_punch(session_id, isipv6)
         }
-        ConnectionMethod::Relay |
-        ConnectionMethod::UPnP => {panic!("Never should be reached!")}
+        ConnectionMethod::Relay => {panic!("Never should be reached!")}
     };
 
     match client_result {
@@ -484,17 +483,14 @@ fn main() {
 
                         match method {
                             ConnectionMethod::Direct |
-                            ConnectionMethod::UPnP |
                             ConnectionMethod::CloudServer => {
                                 let mut server = Box::new(Server::new(username.clone(), updater.get_version().to_string()));
 
                                 let result = match method {
-                                    ConnectionMethod::Direct => server.start(isipv6, port, false),
-                                    ConnectionMethod::UPnP => server.start(isipv6, port, true),
+                                    ConnectionMethod::Direct => server.start(isipv6, port, true),
                                     ConnectionMethod::CloudServer => server.start_with_hole_punching(isipv6),
                                     _ => panic!("Not implemented!")
                                 };
-
 
                                 match result {
                                     Ok(_) => {
