@@ -1,0 +1,236 @@
+include:
+  - definitions/modules/AS1000.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/physics.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+# AUDIO
+
+  - # ASOBO_AUDIO_AudioPanel_Template
+    type: var
+    var_name: L:XMLVAR_AudioPanel
+    var_type: f64
+  -
+    type: ToggleSwitch
+    var_name: A:ADF SOUND
+    var_units: Bool
+    event_name: RADIO_ADF_IDENT_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:COM RECEIVE:1
+    var_units: Bool
+    event_name: COM1_RECEIVE_SELECT
+  -
+    type: ToggleSwitch
+    var_name: A:COM RECEIVE:2
+    var_units: Bool
+    event_name: COM2_RECEIVE_SELECT
+  -
+    type: ToggleSwitch
+    var_name: A:NAV SOUND:1
+    var_units: Bool
+    var_type: i32
+    event_name: RADIO_VOR1_IDENT_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:NAV SOUND:2
+    var_units: Bool
+    var_type: i32
+    event_name: RADIO_VOR2_IDENT_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:DME SOUND
+    var_units: Bool
+    event_name: RADIO_SELECTED_DME_IDENT_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:INTERCOM SYSTEM ACTIVE
+    var_units: Bool
+    event_name: TOGGLE_ICS
+  -
+    type: ToggleSwitch
+    var_name: A:MARKER SOUND
+    var_units: Bool
+    event_name: MARKER_SOUND_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:SPEAKER ACTIVE
+    var_units: Bool
+    event_name: TOGGLE_SPEAKER
+  -
+    type: var
+    var_name: A:AUDIO PANEL VOLUME
+    var_units: percent
+    var_type: i32
+  -
+    type: NumSet
+    var_name: A:PILOT TRANSMITTER TYPE
+    var_units: Enum
+    var_type: i32
+    event_name: PILOT_TRANSMITTER_SET
+  -
+    type: NumSet
+    var_name: A:COPILOT TRANSMITTER TYPE
+    var_units: Enum
+    var_type: i32
+    event_name: COPILOT_TRANSMITTER_SET
+  -
+    type: NumSet
+    var_name: A:MARKER BEACON TEST MUTE
+    var_units: Enum
+    var_type: i32
+    event_name: MARKER_BEACON_TEST_MUTE
+  -
+    type: NumSet
+    var_name: A:MARKER BEACON SENSITIVITY HIGH
+    var_units: Bool
+    var_type: i32
+    event_name: MARKER_BEACON_SENSITIVITY_HIGH
+  -
+    type: NumSet
+    var_name: A:INTERCOM MODE
+    var_units: Enum
+    var_type: i32
+    event_name: INTERCOM_MODE_SET
+
+# AUDIO
+# ELECTRICAL
+
+  - # ASOBO_ELECTRICAL_Switch_Connection_Template
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+    set: 4 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
+    set: 5 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:23
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 23
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:24
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 24
+
+# ELECTRICAL
+# FAILURE
+
+  -
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:39
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:40
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: L:XMLVAR_LTS_Test
+    var_type: f64
+
+# FAILURE
+# LIGHTING INTERNAL
+
+  - # ASOBO_LIGHTING_Knob_Glareshield_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    event_name: GLARESHIELD_LIGHTS_ON
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD POWER SETTING:1
+    var_units: percent
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_POWER_SETTINGS_SET
+    event_param: 1
+
+  - # ASOBO_LIGHTING_Knob_Panel_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    event_name: PANEL_LIGHTS_ON
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL POWER SETTING:1
+    var_units: percent
+    var_type: i32
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+
+  - # ASOBO_LIGHTING_Knob_Cabin_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:4
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:5
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 5
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:5
+    var_units: percent
+    var_type: i32
+    event_name: CABIN_LIGHTS_POWER_SETTINGS_SET
+    event_param: 5
+
+  - # ASOBO_LIGHTING_Ambient_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 11
+
+  - # ASOBO_LIGHTING_Emissive_Template
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+
+# LIGHTING INTERNAL
