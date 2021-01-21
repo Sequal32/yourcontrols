@@ -1,4 +1,5 @@
 include:
+  - definitions/modules/AS1000.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -19,16 +20,16 @@ shared:
 
   - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:39
+    var_name: A:CIRCUIT SWITCH ON:24
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 39
+    event_param: 24
   -
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:40
+    var_name: A:CIRCUIT SWITCH ON:25
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 40
+    event_param: 25
 
   - #ASOBO_ELECTRICAL_Switch_Battery_STBY_Template
     type: var
@@ -48,9 +49,17 @@ shared:
 
   - # ASOBO_LIGHTING_Knob_Panel_Template
     type: ToggleSwitch
-    var_name: A:LIGHT PANEL
+    var_name: A:LIGHT PANEL:1
     var_units: Bool
     event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL POWER SETTING:1
+    var_units: percent
+    var_type: i32
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
 
   - # ASOBO_LIGHTING_Knob_Cabin_Template
     type: ToggleSwitch
@@ -95,27 +104,6 @@ shared:
     event_param: 1
     index_reversed: true
 
-  - # ASOBO_LIGHTING_Knob_Glareshield_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT GLARESHIELD:1
-    var_units: Bool
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD POWER SETTING:1
-    var_units: percent
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT GLARESHIELD:2
-    var_units: Bool
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 2
-
   - # ASOBO_LIGHTING_Knob_Avionics_Template
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -132,10 +120,24 @@ shared:
     event_param: 4
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:7
+    var_name: A:LIGHT POTENTIOMETER:10
     var_units: percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 7
+    event_param: 10
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 11
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
 
 # LIGHTING INTERNAL

@@ -1,0 +1,17 @@
+shared:
+  - # ASOBO_SAFETY_Push_AlternateStaticAir_Template
+    type: ToggleSwitch
+    var_name: A:ALTERNATE STATIC SOURCE OPEN
+    var_units: Bool
+    event_name: TOGGLE_ALTERNATE_STATIC
+
+  - # ASOBO_SAFETY_Switch_ELT_Template
+    type: ToggleSwitch
+    var_name: A:ELT ACTIVATED
+    var_units: Bool
+    off_event_name: ELT_OFF
+    event_name: ELT_ON
+  -
+    type: var
+    var_name: L:XMLVAR_ELT_STATE
+    var_type: i32

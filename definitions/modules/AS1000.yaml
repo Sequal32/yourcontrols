@@ -1,10 +1,8 @@
 include:
-  - definitions/modules/autopilot.yaml
   - definitions/modules/ASCommon.yaml
-  - definitions/modules/radiosinitonly.yaml
 
 shared:
-  - #AS1000 uses index 5 for altimeter
+  - # AS1000 uses index 5 for altimeter
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:5
     var_units: Millibars
@@ -17,10 +15,10 @@ init:
   -
     type: NumSet
     var_name: A:AUTOPILOT NAV SELECTED
-    var_units: Number
+    var_units: number
     var_type: i32
     event_name: AP_NAV_SELECT_SET
-  - 
+  -
     type: var
     var_name: L:PFD_DME_Displayed
     var_type: i32
@@ -32,7 +30,7 @@ init:
   -
     type: NumDigitSet
     var_name: A:TRANSPONDER CODE:1
-    var_units: Number
+    var_units: number
     var_type: i32
     up_event_names:
       - XPNDR_1_INC

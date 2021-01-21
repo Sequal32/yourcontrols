@@ -1,10 +1,10 @@
 shared:
-  - 
+  - # ASOBO_HANDLING_Knob_RudderTrim_Template
     type: NumSet
     var_name: A:RUDDER TRIM PCT
     var_units: percent
     var_type: i32
-    event_name: RUDDER_TRIM_SET
+    event_name: RUDDER_TRIM_SET_EX1
     multiply_by: 164
     condition:
       var:
@@ -13,6 +13,7 @@ shared:
         var_type: bool
       equals:
         Bool: false
+
   - # ASOBO_HANDLING_Wheel_ElevatorTrim_Template
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
@@ -27,10 +28,11 @@ shared:
         var_type: bool
       equals:
         Bool: false
-  - #ASOBO_HANDLING_Switch_AileronTrim_Template
+
+  - # ASOBO_HANDLING_Switch_AileronTrim_Template
     type: NumSet
     var_name: A:AILERON TRIM PCT
-    var_units: Percent
+    var_units: percent
     var_type: i32
     event_name: AILERON_TRIM_SET_EX1
     condition:

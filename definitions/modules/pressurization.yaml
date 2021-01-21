@@ -1,0 +1,27 @@
+# This file only supports aircraft with a max of two engines. You can specify more in the individual profile.
+
+shared:
+  - # ASOBO_PRESSURIZATION_Switch_Engine_Bleed_Template
+    type: ToggleSwitch
+    var_name: A:BLEED AIR ENGINE:1
+    var_units: Bool
+    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:BLEED AIR ENGINE:2
+    var_units: Bool
+    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    event_param: 2
+
+  - # ASOBO_PRESSURIZATION_Switch_APU_Bleed_Template
+    type: ToggleSwitch
+    var_name: A:BLEED AIR APU
+    var_units: Bool
+    event_name: APU_BLEED_AIR_SOURCE_TOGGLE
+
+  - # ASOBO_PRESSURIZATION_Push_Dump_Template
+    type: ToggleSwitch
+    var_name: A:PRESSURIZATION DUMP SWITCH
+    var_units: Bool
+    event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
