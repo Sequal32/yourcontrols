@@ -437,6 +437,47 @@ shared:
     var_type: f64
 
 # GPWS
+# HANDLING
+
+  - # ASOBO_HANDLING_Switch_AntiSkid_Template
+    type: ToggleSwitch
+    var_name: A:ANTISKID BRAKES ACTIVE
+    var_units: Bool
+    event_name: ANTISKID_BRAKES_TOGGLE
+
+  - # ASOBO_HANDLING_Push_Autobrakes_Template
+    type: var
+    var_name: L:XMLVAR_Autobrakes_Level
+    var_units: number
+    var_type: i32
+  -
+    type: NumSet
+    var_name: A:AUTO BRAKE SWITCH CB
+    var_units: number
+    var_type: i32
+    event_name: SET_AUTOBRAKE_CONTROL
+  -
+    type: var
+    var_name: L:A32NX_AUTOBRAKES_ACTIVATED
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: L:A32NX_DISARM_AUTOBRAKES_ON_LG_RETRACT
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: L:A32NX_LG_UP_WAIT_COUNTER
+    var_units: number
+    var_type: i32
+  -
+    type: var
+    var_name: L:A32NX_ON_GROUND_WAIT_COUNTER
+    var_units: number
+    var_type: i32
+
+# HANDLING
 # LIGHTING INTERNAL
 
   -
@@ -952,23 +993,6 @@ shared:
     var_name: L:A32NX_PANEL_DCDU_R_BRIGHTNESS
     var_type: f64
 
-  - # ASOBO_HANDLING_Push_Autobrakes_Template
-    type: var
-    var_name: L:XMLVAR_Autobrakes_Level
-    var_type: f64
-  -
-    type: ToggleSwitch
-    var_name: A:ANTISKID BRAKES ACTIVE
-    var_units: Bool
-    event_name: ANTISKID_BRAKES_TOGGLE
-
-  - # FBW_Airbus_HANDLING_Push_Autobrakes_Template Autobrake
-    type: NumSet
-    var_name: A:AUTO BRAKE SWITCH CB
-    var_units: Enum
-    var_type: i32
-    event_name: SET_AUTOBRAKE_CONTROL
-
   - # ASOBO_GT_Push_Button_Airliner PUSH_OVHD_COCKPITDOORVIDEO
     type: var
     var_name: L:A32NX_OVHD_COCKPITDOORVIDEO_TOGGLE
@@ -1160,7 +1184,7 @@ shared:
     type: var
     var_name: L:A32NX_OVHD_HYD_BLUEPUMP_OVRD_LOCK
     var_type: f64
-  - # FBW_Covered_Push_Toggle
+  -
     type: var
     var_name: L:A32NX_OVHD_HYD_BLUEPUMP_OVRD
     var_type: f64
