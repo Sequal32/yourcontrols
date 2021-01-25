@@ -1,4 +1,5 @@
 include:
+  - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
@@ -14,16 +15,19 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # ASOBO_DEICE_Lever_Engine_Template
+  - # ASOBO_ENGINE_Lever_Primer_SubTemplate
     type: NumSet
-    var_name: GENERAL ENG ANTI ICE POSITION:1
+    var_name: A:RECIP ENG PRIMER:1
     var_units: percent
     var_type: i32
-    event_name: ANTI_ICE_GRADUAL_SET_ENG:1
-
-  - # ASOBO_ENGINE_Lever_Primer_SubTemplate
-    type: event
     event_name: TOGGLE_PRIMER1
+
+  - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:19
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 19
 
   - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
     type: ToggleSwitch

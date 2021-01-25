@@ -11,32 +11,10 @@ include:
   - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radiosinit.yaml
+  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-# AS5000
-
-  - # ASOBO_AS3000_Screen_Template
-    type: var
-    var_name: L:AS3000_MFD_ScreenLuminosity
-    var_units: percent
-    var_type: i32
-  -
-    type: var
-    var_name: L:AS3000_PFD_ScreenLuminosity
-    var_units: percent
-    var_type: i32
-
-# AS5000
-# AUTOPILOT
-
-  - # ASOBO_AUTOPILOT_Knob_Baro_Template
-    type: var
-    var_name: A:KOHLSMAN SETTING MB
-    var_units: millibars
-    var_type: f64
-
-# AUTOPILOT
 # ELECTRICAL
 
   - # ASOBO_ELECTRICAL_Switch_Connection_Template
@@ -113,10 +91,6 @@ shared:
     var_name: A:CIRCUIT ON:51
     var_units: Bool
     var_type: bool
-  -
-    type: var
-    var_name: L:XMLVAR_LTS_Test
-    var_type: f64
 
 # FAILURE
 # FUEL

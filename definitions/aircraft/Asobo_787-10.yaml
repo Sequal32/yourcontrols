@@ -8,6 +8,7 @@ include:
   - definitions/modules/lights.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
+  - definitions/modules/transponder.yaml
 
 shared:
   - # ASOBO_LIGHTING_Switch_Light_Landing_Template
@@ -198,9 +199,6 @@ shared:
     event_param: 20
     index_reversed: true
 
-  - # Localizer Hold
-    type: event
-    event_name: AP_LOC_HOLD
   -
     type: var
     var_name: L:AS01B_AUTO_THROTTLE_ARM_STATE
@@ -270,12 +268,6 @@ shared:
     type: var
     var_name: L:XMLVAR_Transponder_Mode
     var_type: f64
-
-  - # Transponder
-    type: var
-    var_name: A:TRANSPONDER STATE:1
-    var_units: Enum
-    var_type: i32
 
   - # Fuel Cutoff
     type: ToggleSwitch

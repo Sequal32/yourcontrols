@@ -9,41 +9,10 @@ include:
   - definitions/modules/passenger.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-  - # ASOBO_AS1000_MFD_Template
-    type: var
-    var_name: L:AS1000_MFD_ScreenLuminosity
-    var_units: percent
-    var_type: i32
-  -
-    type: var
-    var_name: L:AS1000_PFD_ScreenLuminosity
-    var_units: percent
-    var_type: i32
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 12
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:13
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 13
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:30
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 30
-
 # DEICE
 
   -
@@ -69,10 +38,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_DEICEAlternateDisabled
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_LTS_Test
     var_type: f64
 
 # DEICE
@@ -106,14 +71,17 @@ shared:
 
 # FAILURE
 # FUEL
+
   -
     type: var
     var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_1_IsOpen
-    var_type: f64
+    var_units: Bool
+    var_type: bool
   -
     type: var
     var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_2_IsOpen
-    var_type: f64
+    var_units: Bool
+    var_type: bool
 
 # FUEL
 # LIGHTING INTERNAL
@@ -169,5 +137,26 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:13
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 13
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:30
+    var_units: Percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 30
 
 # LIGHTING INTERNAL
