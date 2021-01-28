@@ -31,26 +31,32 @@ shared:
   - # ASOBO_AUTOPILOT_Knob_Heading_Template
     type: NumSet
     var_name: A:HEADING INDICATOR
-    var_units: degrees
+    var_units: Degrees
     var_type: f64
     event_name: HEADING_BUG_SET
   -
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR
-    var_units: degrees
+    var_units: Degrees
     var_type: f64
     event_name: HEADING_BUG_SET
+  -
+    type: event
+    event_name: HEADING_BUG_INC
+  -
+    type: event
+    event_name: HEADING_BUG_DEC
 
   - # ASOBO_AUTOPILOT_Knob_Course_Template
     type: NumSet
     var_name: A:HEADING INDICATOR
-    var_units: degrees
+    var_units: Degrees
     var_type: f64
     event_name: VOR1_SET
   -
     type: NumSet
     var_name: A:HEADING INDICATOR
-    var_units: degrees
+    var_units: Degrees
     var_type: f64
     event_name: VOR2_SET
 
@@ -78,6 +84,12 @@ shared:
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
   -
+    type: event
+    event_name: AP_ALT_VAR_INC
+  -
+    type: event
+    event_name: AP_ALT_VAR_DEC
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT AIRSPEED HOLD
     var_units: Bool
@@ -87,20 +99,51 @@ shared:
     type: NumSet
     var_name: A:AIRSPEED INDICATED
     var_units: Knots
-    var_type: i32
+    var_type: f64
     event_name: AP_SPD_VAR_SET
-  -
+
+  - # ASOBO_AUTOPILOT_Push_VerticalSpeed_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    event_name: AP_PANEL_VS_HOLD
+
+  - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
     type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR
     var_units: Knots
-    var_type: i32
+    var_type: f64
     event_name: AP_SPD_VAR_SET
+  -
+    type: event
+    event_name: AP_AIRSPEED_ON
+  -
+    type: event
+    event_name: AP_SPD_VAR_INC
+  -
+    type: event
+    event_name: AP_SPD_VAR_DEC
+  -
+    type: event
+    event_name: AP_MACH_ON
+  -
+    type: event
+    event_name: AP_MACH_VAR_INC
+  -
+    type: event
+    event_name: AP_MACH_VAR_DEC
   -
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR
     var_units: Feet per minute
     var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
+  -
+    type: event
+    event_name: AP_VS_VAR_INC
+  -
+    type: event
+    event_name: AP_VS_VAR_DEC
   -
     type: var
     var_name: L:XMLVAR_SpeedIsManuallySet
@@ -115,12 +158,6 @@ shared:
     var_name: A:AUTOPILOT MANAGED SPEED IN MACH
     var_units: Bool
     event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
-
-  - # ASOBO_AUTOPILOT_Push_VerticalSpeed_Template
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT VERTICAL HOLD
-    var_units: Bool
-    event_name: AP_PANEL_VS_HOLD
 
   - # ASOBO_AUTOPILOT_Push_FlightLevelChange_Template
     type: ToggleSwitch
@@ -140,16 +177,11 @@ shared:
     var_units: Bool
     event_name: AP_WING_LEVELER_ON
     off_event_name: AP_WING_LEVELER_OFF
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT NAV1 LOCK
-    var_units: Bool
-    event_name: AP_NAV1_HOLD
 
   - # ASOBO_AUTOPILOT_Push_BackCourse_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT BACKCOURSE HOLD
-    var_units: degrees
+    var_units: Bool
     event_name: AP_BC_HOLD
   -
     type: ToggleSwitch
@@ -188,6 +220,9 @@ shared:
     var_name: A:AUTOPILOT GLIDESLOPE HOLD
     var_units: Bool
     event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_LOC_HOLD
 
   - # ASOBO_AUTOPILOT_Push_AutoThrottle_Template
     type: ToggleSwitch
@@ -206,32 +241,35 @@ shared:
     var_name: A:AUTOPILOT NAV1 LOCK
     var_units: Bool
     event_name: AP_NAV1_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT NAV1 LOCK
-    var_units: Bool
-    event_name: AP_N1_HOLD
 
-  - # ASOBO_AUTOPILOT_Push_Bank_Template
-    type: ToggleSwitch
+  - # ASOBO_AUTOPILOT_Knob_Bank_Limit_Template
+    type: var
     var_name: A:AUTOPILOT MAX BANK
-    var_units: degrees
-    var_type: i32
+    var_units: Degrees
+    var_type: f64
+  -
+    type: event
     event_name: AP_MAX_BANK_INC
   -
-    type: NumIncrement
-    var_name: A:AUTOPILOT MAX BANK
-    var_units: degrees
-    var_type: i32
-    up_event_name: AP_MAX_BANK_INC
-    down_event_name: AP_MAX_BANK_DEC
-    increment_by: 1
+    type: event
+    event_name: AP_MAX_BANK_DEC
 
   - # ASOBO_AUTOPILOT_Push_YawDamper_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT YAW DAMPER
     var_units: Bool
     event_name: YAW_DAMPER_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT NAV SELECTED
+    var_units: Number
+    var_type: i32
+    event_name: AP_NAV_SELECT_SET
   -
     type: NumSet
     var_name: A:RUDDER TRIM DISABLED
@@ -250,14 +288,3 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: ELEVATOR_TRIM_DISABLED_SET
-  -
-    type: ToggleSwitch
-    var_name: A:GPS DRIVES NAV1
-    var_units: Bool
-    event_name: TOGGLE_GPS_DRIVES_NAV1
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT NAV SELECTED
-    var_units: number
-    var_type: i32
-    event_name: AP_NAV_SELECT_SET

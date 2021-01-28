@@ -6,8 +6,10 @@ include:
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
 
 shared:
@@ -296,15 +298,6 @@ shared:
     type: var
     var_name: L:XMLVAR_Baro_Selector_HPA_1
     var_type: f64
-
-  - # Barometer Knob
-    type: NumSet
-    var_name: A:KOHLSMAN SETTING MB:1
-    var_units: Millibars
-    var_type: f64
-    event_name: KOHLSMAN_SET
-    event_param: 1
-    multiply_by: 16
 
   - # Arm Fuel Jettison
     type: ToggleSwitch

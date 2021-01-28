@@ -9,73 +9,15 @@ include:
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
-  - definitions/modules/radiosinit.yaml
+  - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-# AUDIO
-
-  - # ASOBO_NAVCOM_Knob_COM_Volume_Template
-    type: NumSet
-    var_name: A:COM VOLUME:1
-    var_units: Bool
-    var_type: i32
-    event_name: COM1_VOLUME_SET
-  -
-    type: NumSet
-    var_name: A:COM VOLUME:2
-    var_units: Bool
-    var_type: i32
-    event_name: COM2_VOLUME_SET
-  -
-    type: NumSet
-    var_name: A:NAV VOLUME:1
-    var_units: Bool
-    var_type: i32
-    event_name: NAV1_VOLUME_SET
-  -
-    type: NumSet
-    var_name: A:NAV VOLUME:2
-    var_units: Bool
-    var_type: i32
-    event_name: NAV2_VOLUME_SET
-  -
-    type: ToggleSwitch
-    var_name: A:DME SOUND:1
-    var_units: Bool
-    event_name: RADIO_DME1_IDENT_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:DME SOUND:2
-    var_units: Bool
-    event_name: RADIO_DME2_IDENT_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:MARKER SOUND:1
-    var_units: Bool
-    event_name: MARKER_SOUND_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:ADF SOUND:1
-    var_units: Bool
-    event_name: RADIO_ADF_IDENT_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:SPEAKER ACTIVE
-    var_units: Bool
-    event_name: TOGGLE_SPEAKER
-
-# AUDIO
 # AUTOPILOT
 
-  - # ASOBO_AUTOPILOT_Knob_Baro_Template
-    type: var
-    var_name: A:KOHLSMAN SETTING MB
-    var_units: millibars
-    var_type: f64
-  -
+  - # ASOBO_AUTOPILOT_Push_Transfer_Template
     type: var
     var_name: L:XMLVAR_PushXFR
     var_type: f64

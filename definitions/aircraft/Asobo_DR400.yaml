@@ -15,6 +15,31 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+# ELECTRICAL
+
+  - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
+    type: CustomCalculator
+    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:21
+    var_units: Boolean
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 21
+
+# ELECTRICAL
+# FAILURE
+
+  -
+    type: var
+    var_name: A:CIRCUIT NAVCOM1 ON
+    var_units: Bool
+    var_type: bool
+
+# FAILURE
+# LIGHTING INTERNAL
+
   - # ASOBO_LIGHTING_Knob_Panel_Template
     type: ToggleSwitch
     var_name: A:LIGHT PANEL
@@ -33,6 +58,14 @@ shared:
     var_units: Bool
     event_name: GLARESHIELD_LIGHTS_TOGGLE
     event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:1
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    index_reversed: true
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -58,7 +91,4 @@ shared:
     index_reversed: true
     event_param: 7
 
-  - # Avionics switch
-    type: CustomCalculator
-    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
-    set: 1 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+# LIGHTING INTERNAL
