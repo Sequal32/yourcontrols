@@ -4,7 +4,6 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
-  - definitions/modules/trim.yaml
 
 shared:
 # AUTOPILOT
@@ -1041,6 +1040,22 @@ shared:
     var_type: f64
 
 # TCAS
+# TRIM
+
+  -
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: Percent
+    var_type: f64
+    event_name: RUDDER_TRIM_SET
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: Percent
+    var_type: f64
+    event_name: ELEVATOR_TRIM_SET
+
+# TRIM
 
   - # ASOBO_AIRBUS_Push_TERRONND_SubTemplate
     type: var
