@@ -56,28 +56,27 @@ master:
     var_units: Position 16k
     var_type: f64
     event_name: AXIS_AILERONS_SET
-    interpolate: Invert
+    interpolate: Default
   -
     type: NumSet
     var_name: A:YOKE Y POSITION
     var_units: Position 16k
     var_type: f64
     event_name: AXIS_ELEVATOR_SET
-    interpolate: Invert
+    interpolate: Default
   -
     type: NumSet
     var_name: A:RUDDER PEDAL POSITION
     var_units: Position 16k
     var_type: f64
     event_name: AXIS_RUDDER_SET
-    interpolate: Invert
+    interpolate: Default
   -
     type: NumSet
     var_name: A:BRAKE LEFT POSITION EX1
     var_units: Position 32k
     var_type: i32
     event_name: AXIS_LEFT_BRAKE_SET
-    add_by: -16384
     unreliable: true
   -
     type: NumSet
@@ -85,5 +84,4 @@ master:
     var_units: Position 32k
     var_type: i32
     event_name: AXIS_RIGHT_BRAKE_SET
-    add_by: -16384
     unreliable: true

@@ -1,35 +1,83 @@
 include:
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
-  - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
-  - definitions/modules/radios.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
 # AUTOPILOT
 
+  - # ASOBO_AUTOPILOT_Push_Autopilot_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    event_name: AP_MASTER
+
+  - # ASOBO_AUTOPILOT_Push_FlightDirector_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
   -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
+    use_calculator: true
+
+  - # ASOBO_AUTOPILOT_Knob_Heading_Template
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+    event_param: 1
+
+  - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR:2
     var_units: Feet per minute
     var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
     event_param: 2
-  -
+
+  - # ASOBO_AUTOPILOT_Knob_Altitude_Template
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
     var_units: Feet
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
     event_param: 3
+
+  - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
+
+  - # ASOBO_AUTOPILOT_Push_AutoThrottle_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT THROTTLE ARM
+    var_units: Bool
+    event_name: AUTO_THROTTLE_ARM
+
+  - # ASOBO_ENGINE_SWITCH_TOGA_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
+    var_units: Bool
+    event_name: AUTO_THROTTLE_TO_GA
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
@@ -101,6 +149,22 @@ shared:
 # CHRONOMETER
 # DEICE
 
+  - # ASOBO_DEICE_Switch_Engine_Template
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+
+  - # ASOBO_DEICE_Switch_Airframe_Template
+    type: ToggleSwitch
+    var_name: A:STRUCTURAL DEICE SWITCH
+    var_units: Bool
+    event_name: TOGGLE_STRUCTURAL_DEICE
   -
     type: var
     var_name: L:A32NX_MAN_PITOT_HEAT
@@ -157,7 +221,7 @@ shared:
 # ELAC
 # ELECTRICAL
 
-  - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate AIRBUS SPECIFIC
+  - # ASOBO_ELECTRICAL_Switch_Connection_Template
     type: CustomCalculator
     get: 10 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
     set: 6 10 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
@@ -317,7 +381,7 @@ shared:
     off_event_name: FUELSYSTEM_VALVE_CLOSE
     event_param: 1
   -
-    type: ToggleSwitch 
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:2
     var_units: Bool
     event_name: FUELSYSTEM_VALVE_OPEN
@@ -413,12 +477,12 @@ shared:
   - # ASOBO_HANDLING_Push_Autobrakes_Template
     type: var
     var_name: L:XMLVAR_Autobrakes_Level
-    var_units: number
+    var_units: Number
     var_type: i32
   -
     type: NumSet
     var_name: A:AUTO BRAKE SWITCH CB
-    var_units: number
+    var_units: Number
     var_type: i32
     event_name: SET_AUTOBRAKE_CONTROL
   -
@@ -434,15 +498,33 @@ shared:
   -
     type: var
     var_name: L:A32NX_LG_UP_WAIT_COUNTER
-    var_units: number
+    var_units: Number
     var_type: i32
   -
     type: var
     var_name: L:A32NX_ON_GROUND_WAIT_COUNTER
-    var_units: number
+    var_units: Number
     var_type: i32
 
 # HANDLING
+# KOHLSMAN
+
+  -
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:1
+    var_units: Millibars
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:2
+    var_units: Millibars
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 2
+
+# KOHLSMAN
 # LIGHTING INTERNAL
 
   -
@@ -706,14 +788,14 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT TAXI:2
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: TOGGLE_TAXI_LIGHTS
     event_param: 2
   -
     type: NumSet
     var_name: A:LIGHT TAXI:3
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: TOGGLE_TAXI_LIGHTS
     event_param: 3
@@ -730,7 +812,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT LANDING:2
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: LANDING_LIGHTS_TOGGLE
     event_param: 2
@@ -741,7 +823,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT LANDING:3
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: LANDING_LIGHTS_TOGGLE
     event_param: 3
@@ -812,6 +894,28 @@ shared:
 
 # RADAR
 # RADIOS
+
+  -
+    type: ToggleSwitch
+    var_name: A:COM TRANSMIT:1
+    var_units: Bool
+    event_name: PILOT_TRANSMITTER_SET
+    event_param: 0
+    switch_on: true
+  -
+    type: ToggleSwitch
+    var_name: A:COM TRANSMIT:2
+    var_units: Bool
+    event_name: PILOT_TRANSMITTER_SET
+    event_param: 1
+    switch_on: true
+  -
+    type: ToggleSwitch
+    var_name: A:COM TRANSMIT:3
+    var_units: Bool
+    event_name: PILOT_TRANSMITTER_SET
+    event_param: 2
+    switch_on: true
 
   - # FBW_AIRLINER_Audio_Panel_Template
     type: var
@@ -918,6 +1022,12 @@ shared:
     var_name: L:A32NX_MASTER_CAUTION
     var_type: f64
 
+  - # ASOBO_SAFETY_Indicator_Template
+    type: var
+    var_name: L:XMLVAR_LTS_Test
+    var_units: Number
+    var_type: i32
+
 # SAFETY
 # TCAS
 
@@ -942,12 +1052,12 @@ shared:
     var_name: L:BTN_TERRONND_2_ACTIVE
     var_type: f64
 
-  - # ASOBO_GT_Component_Emissive_Gauge 
+  - # ASOBO_GT_Component_Emissive_Gauge
     type: var
     var_name: L:A32NX_PANEL_DCDU_L_BRIGHTNESS
     var_type: f64
 
-  - # ASOBO_GT_Component_Emissive_Gauge 
+  - # ASOBO_GT_Component_Emissive_Gauge
     type: var
     var_name: L:A32NX_PANEL_DCDU_R_BRIGHTNESS
     var_type: f64
@@ -1288,28 +1398,28 @@ shared:
     var_name: L:A32NX_BTN_TOCONFIG
     var_type: f64
     condition:
-      equals: 
+      equals:
         F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_RCL
     var_type: f64
     condition:
-      equals: 
+      equals:
         F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_CLR
     var_type: f64
     condition:
-      equals: 
+      equals:
         F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_CLR2
     var_type: f64
     condition:
-      equals: 
+      equals:
         F64: 1
   -
     type: var
@@ -1337,3 +1447,61 @@ shared:
     condition:
       equals:
         F64: 1.0
+
+init:
+  -
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: Enum
+    var_type: i32
+  -
+    type: NumDigitSet
+    var_name: A:TRANSPONDER CODE:1
+    var_units: Number
+    var_type: i32
+    up_event_names:
+      - XPNDR_1_INC
+      - XPNDR_10_INC
+      - XPNDR_100_INC
+      - XPNDR_1000_INC
+    down_event_names:
+      - XPNDR_1_DEC
+      - XPNDR_10_DEC
+      - XPNDR_100_DEC
+      - XPNDR_1000_DEC
+  -
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:1
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:1
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM_STBY_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:2
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM2_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:2
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM2_STBY_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:3
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM3_RADIO_SET
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:3
+    var_units: Frequency BCD16
+    var_type: i32
+    event_name: COM3_STBY_RADIO_SET

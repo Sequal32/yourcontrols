@@ -30,35 +30,10 @@ shared:
 
   - # ASOBO_AUTOPILOT_Knob_Heading_Template
     type: NumSet
-    var_name: A:HEADING INDICATOR
-    var_units: Degrees
-    var_type: f64
-    event_name: HEADING_BUG_SET
-  -
-    type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR
     var_units: Degrees
     var_type: f64
     event_name: HEADING_BUG_SET
-  -
-    type: event
-    event_name: HEADING_BUG_INC
-  -
-    type: event
-    event_name: HEADING_BUG_DEC
-
-  - # ASOBO_AUTOPILOT_Knob_Course_Template
-    type: NumSet
-    var_name: A:HEADING INDICATOR
-    var_units: Degrees
-    var_type: f64
-    event_name: VOR1_SET
-  -
-    type: NumSet
-    var_name: A:HEADING INDICATOR
-    var_units: Degrees
-    var_type: f64
-    event_name: VOR2_SET
 
   - # ASOBO_AUTOPILOT_Push_Altitude_Template
     type: ToggleSwitch
@@ -73,34 +48,15 @@ shared:
 
   - # ASOBO_AUTOPILOT_Knob_Altitude_Template
     type: NumSet
-    var_name: A:INDICATED ALTITUDE
-    var_units: Feet
-    var_type: i32
-    event_name: AP_ALT_VAR_SET_ENGLISH
-  -
-    type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR
     var_units: Feet
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
   -
-    type: event
-    event_name: AP_ALT_VAR_INC
-  -
-    type: event
-    event_name: AP_ALT_VAR_DEC
-  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT AIRSPEED HOLD
     var_units: Bool
     event_name: AP_PANEL_SPEED_HOLD
-
-  - # ASOBO_AUTOPILOT_Knob_Speed_Template
-    type: NumSet
-    var_name: A:AIRSPEED INDICATED
-    var_units: Knots
-    var_type: f64
-    event_name: AP_SPD_VAR_SET
 
   - # ASOBO_AUTOPILOT_Push_VerticalSpeed_Template
     type: ToggleSwitch
@@ -117,33 +73,16 @@ shared:
   -
     type: event
     event_name: AP_AIRSPEED_ON
-  -
-    type: event
-    event_name: AP_SPD_VAR_INC
-  -
-    type: event
-    event_name: AP_SPD_VAR_DEC
+
+  - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
+    type: NumSet
+    var_name: A:AUTOPILOT MACH HOLD VAR
+    var_units: Mach
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
   -
     type: event
     event_name: AP_MACH_ON
-  -
-    type: event
-    event_name: AP_MACH_VAR_INC
-  -
-    type: event
-    event_name: AP_MACH_VAR_DEC
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT VERTICAL HOLD VAR
-    var_units: Feet per minute
-    var_type: i32
-    event_name: AP_VS_VAR_SET_ENGLISH
-  -
-    type: event
-    event_name: AP_VS_VAR_INC
-  -
-    type: event
-    event_name: AP_VS_VAR_DEC
   -
     type: var
     var_name: L:XMLVAR_SpeedIsManuallySet
@@ -152,6 +91,12 @@ shared:
     type: var
     var_name: L:XMLVAR_AirSpeedIsInMach
     var_type: f64
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
 
   - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
     type: ToggleSwitch
@@ -191,11 +136,6 @@ shared:
     off_event_name: AP_ATT_HOLD_OFF
 
   - # ASOBO_AUTOPILOT_Push_FlightDirector_Template
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE
-    var_units: Bool
-    event_name: TOGGLE_FLIGHT_DIRECTOR
-  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
     var_units: Bool
