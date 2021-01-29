@@ -1,0 +1,216 @@
+include:
+  - definitions/modules/AS1000.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/physics.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+# AUTOPILOT
+
+  - # ASOBO_AUTOPILOT_Push_Transfer_Template
+    type: var
+    var_name: L:XMLVAR_PushXFR
+    var_type: f64
+
+# AUTOPILOT
+# ELECTRICAL
+
+  - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:26
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 26
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:27
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 27
+  -
+    type: var
+    var_name: L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
+    var_type: f64
+
+# ELECTRICAL
+# FAILURE
+
+  -
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:28
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:30
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:43
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:44
+    var_units: Bool
+    var_type: bool
+
+# FAILURE
+# HANDLING
+
+  - # ASOBO_HANDLING_Lever_InertSep_Template
+    type: var
+    var_name: L:XMLVAR_InterSep
+    var_type: f64
+
+# HANDLING
+# LIGHTING EXTERNAL
+
+  - # ASOBO_LIGHTING_Switch_Light_Landing_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 2
+
+# LIGHTING EXTERNAL
+# LIGHTING INTERNAL
+
+  - # ASOBO_LIGHTING_Knob_Panel_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    
+  - # ASOBO_LIGHTING_Knob_Pedestal_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT PEDESTRAL
+    var_units: Bool
+    event_name: PEDESTRAL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+
+  - # ASOBO_LIGHTING_Knob_Cabin_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:13
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 13
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:4
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 4
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:14
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 14
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:15
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 15
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 16
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:18
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 18
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:30
+    var_units: percent
+    var_type: i32
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 30
+
+# LIGHTING INTERNAL
+# PRESSURIZATION
+
+  -
+    type: var
+    var_name: L:XMLVAR_BLEEDAIR_HEAT_POSITION
+    var_type: f64
+
+# PRESSURIZATION
