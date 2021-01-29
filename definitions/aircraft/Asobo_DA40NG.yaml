@@ -19,20 +19,6 @@ shared:
 # ELECTRICAL
 
   - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
-    set: 4 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
-    set: 5 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:7
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 7
-  -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:22
     var_units: Bool
@@ -105,15 +91,6 @@ shared:
     event_name: FUEL_TRANSFER_CUSTOM_INDEX_TOGGLE
 
 # FUEL
-# INSTRUMENT
-
-  - # ASOBO_INSTRUMENT_Knob_AttitudeCage_Template
-    type: ToggleSwitch
-    var_name: A:ATTITUDE CAGE
-    var_units: Bool
-    event_name: ATTITUDE_CAGE_BUTTON
-
-# INSTRUMENT
 # LIGHTING INTERNAL
 
   - # ASOBO_LIGHTING_Knob_Panel_Template
