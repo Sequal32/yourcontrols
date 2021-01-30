@@ -16,29 +16,32 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-# ELECTRICAL
-
-  - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
+  - # Avionics
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:24
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 24
 
-# ELECTRICAL
-# ENGINE
-
-  - # ASOBO_ENGINE_Lever_CowlFlaps_Template
+  - # Cowl Flaps
     type: NumSet
     var_name: A:RECIP ENG COWL FLAP POSITION:1
     var_units: Percent
     var_type: i32
     event_name: COWLFLAP1_SET
 
-# ENGINE
-# FAILURE
-
+  - # Passengers
+    type: var
+    var_name: L:XMLVAR_CabinHeat_Position_2
+    var_units: Percent
+    var_type: i32
   -
+    type: var
+    var_name: L:XMLVAR_CabinHeat_Position_3
+    var_units: Percent
+    var_type: i32
+
+  - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
     var_units: Bool
@@ -59,10 +62,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-# FAILURE
-# LIGHTING INTERNAL
-
-  - # ASOBO_LIGHTING_Knob_Panel_Template
+  - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:0
     var_units: Bool
@@ -88,8 +88,7 @@ shared:
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
-
-  - # ASOBO_LIGHTING_Knob_Panel_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
@@ -114,8 +113,7 @@ shared:
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
-
-  - # ASOBO_LIGHTING_Knob_Glareshield_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD
     var_units: Bool
@@ -141,19 +139,3 @@ shared:
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
-
-# LIGHTING INTERNAL
-# PASSENGER
-
-  -
-    type: var
-    var_name: L:XMLVAR_CabinHeat_Position_2
-    var_units: Percent
-    var_type: i32
-  -
-    type: var
-    var_name: L:XMLVAR_CabinHeat_Position_3
-    var_units: Percent
-    var_type: i32
-
-# PASSENGER
