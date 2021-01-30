@@ -14,9 +14,7 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-# DEICE
-
-  -
+  - # Deice
     type: var
     var_name: L:XMLVAR_IceLightState
     var_type: f64
@@ -41,20 +39,14 @@ shared:
     var_name: L:XMLVAR_DEICEAlternateDisabled
     var_type: f64
 
-# DEICE
-# ELECTRICAL
-
-  - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
+  - # Avionics
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:30
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 30
 
-# ELECTRICAL
-# FAILURE
-
-  -
+  - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
     var_units: Bool
@@ -75,10 +67,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-# FAILURE
-# FUEL
-
-  -
+  - # Fuel
     type: var
     var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_1_IsOpen
     var_units: Bool
@@ -89,10 +78,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-# FUEL
-# LIGHTING INTERNAL
-
-  - # ASOBO_LIGHTING_Knob_Panel_Template
+  - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT PANEL
     var_units: Bool
@@ -104,8 +90,7 @@ shared:
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
-
-  - # ASOBO_LIGHTING_Knob_Glareshield_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD
     var_units: Bool
@@ -117,8 +102,7 @@ shared:
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
-
-  - # ASOBO_LIGHTING_Switch_Light_Cabin_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
@@ -164,5 +148,3 @@ shared:
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 30
-
-# LIGHTING INTERNAL

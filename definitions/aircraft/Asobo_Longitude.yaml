@@ -16,8 +16,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-# ELECTRICAL
-
   - # ASOBO_ELECTRICAL_Switch_Connection_Template
     type: CustomCalculator
     get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
@@ -39,20 +37,18 @@ shared:
     get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
     set: 6 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
-  - # ASOBO_ELECTRICAL_Switch_APU_Starter_Template
+  - # APU
     type: var
     var_name: A:APU SWITCH
     var_units: number
     var_type: i32
-  -
+
+  - # Standby Battery
     type: var
     var_name: L:XMLVAR_STBYBattery_Test
     var_type: f64
 
-# ELECTRICAL
-# FAILURE
-
-  -
+  - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
     var_units: Bool
@@ -93,10 +89,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-# FAILURE
-# FUEL
-
-  - # ASOBO_FUEL_Switch_Crossfeed_Template
+  - # Crossfeed
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:45
     var_units: Bool
@@ -109,10 +102,7 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 46
 
-# FUEL
-# HANDLING
-
-  - # ASOBO_HANDLING_Push_AutoSpoiler_Template
+  - # AutoSpoiler
     type: ToggleSwitch
     var_name: A:SPOILERS ARMED
     var_units: Bool
@@ -123,24 +113,19 @@ shared:
     var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
     var_type: f64
 
-# HANDLING
-# LIGHTING EXTERNAL
-
-  - # ASOBO_LIGHTING_Switch_Light_Beacon_Template
+  - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT BEACON:1
     var_units: Bool
     event_name: TOGGLE_BEACON_LIGHTS
     event_param: 1
-
-  - # ASOBO_LIGHTING_Switch_Light_Navigation_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT NAV:1
     var_units: Bool
     event_name: TOGGLE_NAV_LIGHTS
     event_param: 1
-
-  - # ASOBO_LIGHTING_Switch_Light_Landing_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT LANDING:1
     var_units: Bool
@@ -152,38 +137,31 @@ shared:
     var_units: Bool
     event_name: LANDING_LIGHTS_TOGGLE
     event_param: 2
-
-  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT TAXI:1
     var_units: Bool
     event_name: TOGGLE_TAXI_LIGHTS
     event_param: 1
-
-  - # ASOBO_LIGHTING_Switch_Light_Strobe_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT STROBE:1
     var_units: Bool
     event_name: STROBES_TOGGLE
     event_param: 1
-
-  - # ASOBO_LIGHTING_Switch_Light_Wing_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT WING
     var_units: Bool
     event_name: TOGGLE_WING_LIGHTS
-
-  - # ASOBO_LIGHTING_Switch_Light_Logo_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT LOGO:1
     var_units: Bool
     event_name: TOGGLE_LOGO_LIGHTS
     event_param: 1
 
-# LIGHTING EXTERNAL
-# LIGHTING INTERNAL
-
-  - # ASOBO_LIGHTING_Knob_Panel_Template
+  - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -197,8 +175,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 1
-
-  - # ASOBO_LIGHTING_Knob_Cabin_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
@@ -240,8 +217,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 3
-
-  - # ASOBO_LIGHTING_Avionics_Template
+  -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:15
     var_units: percent
@@ -326,13 +302,3 @@ shared:
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 32
-
-  - # ASOBO_LIGHTING_Emissive_Template
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
-
-# LIGHTING INTERNAL

@@ -15,9 +15,7 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-# ELECTRICAL
-
-  - # ASOBO_ELECTRICAL_Switch_Avionics_Bus_Template
+  - # Avionics
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:39
     var_units: Bool
@@ -30,7 +28,7 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 40
 
-  - #ASOBO_ELECTRICAL_Switch_Battery_STBY_Template
+  - # Standby Battery
     type: var
     var_name: L:XMLVAR_STBYBattery_Test
     var_type: bool
@@ -43,10 +41,7 @@ shared:
     var_name: L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
     var_type: bool
 
-# ELECTRICAL
-# FAILURE
-
-  -
+  - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
     var_units: Bool
@@ -77,16 +72,12 @@ shared:
     var_units: Bool
     var_type: bool
 
-# FAILURE
-# LIGHTING INTERNAL
-
-  - # ASOBO_LIGHTING_Knob_Panel_Template
+  - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT PANEL
     var_units: Bool
     event_name: PANEL_LIGHTS_SET
-
-  - # ASOBO_LIGHTING_Knob_Cabin_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
@@ -114,8 +105,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 2
     index_reversed: true
-
-  - # ASOBO_LIGHTING_Knob_Pedestal_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT PEDESTRAL:1
     var_units: Bool
@@ -128,8 +118,7 @@ shared:
     event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
     event_param: 1
     index_reversed: true
-
-  - # ASOBO_LIGHTING_Knob_Glareshield_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
@@ -149,8 +138,7 @@ shared:
     var_units: Bool
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 2
-
-  - # ASOBO_LIGHTING_Knob_Avionics_Template
+  -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
     var_units: percent
@@ -178,5 +166,3 @@ shared:
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 15
-
-# LIGHTING INTERNAL

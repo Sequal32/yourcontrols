@@ -14,18 +14,18 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Choke
-    type: var
-    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
-    var_units: Percent
-    var_type: i32
-
   - # Avionics
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:20
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 20
+
+  - # Choke
+    type: var
+    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
+    var_units: Percent
+    var_type: i32
 
   - # Failures
     type: var

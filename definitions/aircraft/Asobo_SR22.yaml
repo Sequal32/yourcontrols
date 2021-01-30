@@ -15,25 +15,12 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-# AUDIO
-
   - # ASOBO_AUDIO_AudioPanel_Template
     type: var
     var_name: L:XMLVAR_AudioPanel
     var_type: f64
 
-# AUDIO
-# ELECTRICAL
-
-  - # ASOBO_ELECTRICAL_Switch_Connection_Template
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
-    set: 4 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
-    set: 5 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
+  - # Avionics
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:23
     var_units: Bool
@@ -46,10 +33,7 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 24
 
-# ELECTRICAL
-# FAILURE
-
-  -
+  - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
     var_units: Bool
@@ -65,10 +49,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-# FAILURE
-# LIGHTING INTERNAL
-
-  - # ASOBO_LIGHTING_Knob_Glareshield_Template
+  - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
@@ -81,8 +62,7 @@ shared:
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_POWER_SETTINGS_SET
     event_param: 1
-
-  - # ASOBO_LIGHTING_Knob_Panel_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -95,8 +75,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 1
-
-  - # ASOBO_LIGHTING_Knob_Cabin_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
@@ -133,21 +112,10 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_POWER_SETTINGS_SET
     event_param: 5
-
-  - # ASOBO_LIGHTING_Ambient_Template
+  -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:11
     var_units: percent
     var_type: i32
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
-
-  - # ASOBO_LIGHTING_Emissive_Template
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
-
-# LIGHTING INTERNAL

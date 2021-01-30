@@ -6,15 +6,12 @@ include:
   - definitions/modules/pressurization.yaml
 
 shared:
-# AUTOPILOT
-
-  - # ASOBO_AUTOPILOT_Push_Autopilot_Template
+  - # Autopilot
     type: ToggleSwitch
     var_name: A:AUTOPILOT MASTER
     var_units: Bool
     event_name: AP_MASTER
-
-  - # ASOBO_AUTOPILOT_Push_FlightDirector_Template
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
     var_units: Bool
@@ -28,8 +25,7 @@ shared:
     event_name: TOGGLE_FLIGHT_DIRECTOR
     event_param: 2
     use_calculator: true
-
-  - # ASOBO_AUTOPILOT_Knob_Heading_Template
+  -
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:1
     var_units: Degrees
@@ -43,36 +39,31 @@ shared:
     var_type: f64
     event_name: AP_SPD_VAR_SET
     event_param: 1
-
-  - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
+  -
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR:2
     var_units: Feet per minute
     var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
     event_param: 2
-
-  - # ASOBO_AUTOPILOT_Knob_Altitude_Template
+  -
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
     var_units: Feet
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
     event_param: 3
-
-  - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT MANAGED SPEED IN MACH
     var_units: Bool
     event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
-
-  - # ASOBO_AUTOPILOT_Push_AutoThrottle_Template
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM
     var_units: Bool
     event_name: AUTO_THROTTLE_ARM
-
-  - # ASOBO_ENGINE_SWITCH_TOGA_Template
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
     var_units: Bool
@@ -121,10 +112,7 @@ shared:
     var_name: L:A32NX_TRK_FPA_MODE_ACTIVE
     var_type: f64
 
-# AUTOPILOT
-# CHRONOMETER
-
-  -
+  - # Chronometer
     type: var
     var_name: L:PUSH_AUTOPILOT_CHRONO_L
     var_type: f64
@@ -145,10 +133,7 @@ shared:
     var_name: L:PUSH_CHRONO_SET
     var_type: f64
 
-# CHRONOMETER
-# DEICE
-
-  - # ASOBO_DEICE_Switch_Engine_Template
+  - # Deice
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:1
     var_units: Bool
@@ -158,8 +143,7 @@ shared:
     var_name: A:ENG ANTI ICE:2
     var_units: Bool
     event_name: ANTI_ICE_TOGGLE_ENG2
-
-  - # ASOBO_DEICE_Switch_Airframe_Template
+  -
     type: ToggleSwitch
     var_name: A:STRUCTURAL DEICE SWITCH
     var_units: Bool
@@ -169,10 +153,7 @@ shared:
     var_name: L:A32NX_MAN_PITOT_HEAT
     var_type: f64
 
-# DEICE
-# ELAC
-
-  - # ASOBO_AIRBUS_Push_ELAC_Template
+  - # ELAC
     type: ToggleSwitch
     var_name: A:FLY BY WIRE ELAC SWITCH:1
     var_units: Bool
@@ -185,7 +166,7 @@ shared:
     event_name: FLY_BY_WIRE_ELAC_TOGGLE
     event_param: 2
 
-  - # ASOBO_AIRBUS_Push_FAC_Template
+  - # FAC
     type: ToggleSwitch
     var_name: A:FLY BY WIRE FAC SWITCH:1
     var_units: Bool
@@ -198,7 +179,7 @@ shared:
     event_name: FLY_BY_WIRE_FAC_TOGGLE
     event_param: 2
 
-  - # ASOBO_AIRBUS_Push_SEC_Template
+  - # SEC
     type: ToggleSwitch
     var_name: A:FLY BY WIRE SEC SWITCH:1
     var_units: Bool
@@ -216,9 +197,6 @@ shared:
     var_units: Bool
     event_name: FLY_BY_WIRE_SEC_TOGGLE
     event_param: 3
-
-# ELAC
-# ELECTRICAL
 
   - # ASOBO_ELECTRICAL_Switch_Connection_Template
     type: CustomCalculator
@@ -273,7 +251,7 @@ shared:
     var_name: L:A32NX_APU_START_ACTIVATED
     var_type: f64
 
-  - # ASOBO_HANDLING_Switch_Wipers_Template
+  - # Wipers
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:77
     var_units: Bool
@@ -288,19 +266,13 @@ shared:
     event_param: 77
     index_reversed: true
 
-# ELECTRICAL
-# FAILURE
-
-  -
+  - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
     var_units: Bool
     var_type: bool
 
-# FAILURE
-# FIRE
-
-  -
+  - # Fire
     type: var
     var_name: L:A32NX_FIRE_TEST_ENG1_IsDown
     var_type: f64
@@ -369,10 +341,7 @@ shared:
     var_name: L:A32NX_CARGOSMOKE_DISCH2LOCK_TOGGLE
     var_type: f64
 
-# FIRE
-# FUEL
-
-  -
+  - # Fuel
     type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:1
     var_units: Bool
@@ -398,8 +367,7 @@ shared:
     var_units: Bool
     event_name: FUELSYSTEM_VALVE_TOGGLE
     event_param: 8
-
-  - # ASOBO_FUEL_Push_Pump_Template
+  -
     type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:1
     var_units: Bool
@@ -436,10 +404,7 @@ shared:
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 6
 
-# FUEL
-# GPWS
-
-  -
+  - # GPWS
     type: var
     var_name: L:A32NX_GPWS_TEST
     var_type: f64
@@ -464,16 +429,13 @@ shared:
     var_name: L:A32NX_GPWS_FLAPS3
     var_type: f64
 
-# GPWS
-# HANDLING
-
-  - # ASOBO_HANDLING_Switch_AntiSkid_Template
+  - # AntiSkid
     type: ToggleSwitch
     var_name: A:ANTISKID BRAKES ACTIVE
     var_units: Bool
     event_name: ANTISKID_BRAKES_TOGGLE
 
-  - # ASOBO_HANDLING_Push_Autobrakes_Template
+  - # Autobrakes
     type: var
     var_name: L:XMLVAR_Autobrakes_Level
     var_units: Number
@@ -505,10 +467,7 @@ shared:
     var_units: Number
     var_type: i32
 
-# HANDLING
-# KOHLSMAN
-
-  -
+  - # Kohlsman
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:1
     var_units: Millibars
@@ -523,10 +482,7 @@ shared:
     event_name: KOHLSMAN_SET
     event_param: 2
 
-# KOHLSMAN
-# LIGHTING INTERNAL
-
-  -
+  - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -775,10 +731,7 @@ shared:
     var_name: L:XMLVAR_SWITCH_OVHD_INTLT_ANNLT_Position
     var_type: f64
 
-# LIGHTING INTERNAL
-# LIGHTING EXTERNAL
-
-  -
+  - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT TAXI:1
     var_units: Bool
@@ -851,10 +804,7 @@ shared:
     var_name: L:STROBE_1_AUTO
     var_type: f64
 
-# LIGHTING EXTERNAL
-# PRINTER
-
-  -
+  - # Printer
     type: var
     var_name: L:A32NX_PRINTER_PRINTING
     var_units: Bool
@@ -875,10 +825,7 @@ shared:
     var_units: Number
     var_type: i32
 
-# PRINTER
-# RADAR
-
-  -
+  - # Radar
     type: var
     var_name: L:XMLVAR_A320_WeatherRadar_Sys
     var_type: f64
@@ -891,10 +838,7 @@ shared:
     var_name: L:A32NX_SWITCH_RADAR_PWS_Position
     var_type: f64
 
-# RADAR
-# RADIOS
-
-  -
+  - # Radios
     type: ToggleSwitch
     var_name: A:COM TRANSMIT:1
     var_units: Bool
@@ -1009,10 +953,7 @@ shared:
     var_name: L:XMLVAR_COM_2_VHF_R_Switch_Down
     var_type: f64
 
-# RADIOS
-# SAFETY
-
-  -
+  - # Safety
     type: var
     var_name: L:A32NX_MASTER_WARNING
     var_type: f64
@@ -1020,15 +961,11 @@ shared:
     type: var
     var_name: L:A32NX_MASTER_CAUTION
     var_type: f64
-
-  - # ASOBO_SAFETY_Indicator_Template
+  -
     type: var
     var_name: L:XMLVAR_LTS_Test
     var_units: Number
     var_type: i32
-
-# SAFETY
-# TCAS
 
   - # A32NX_ATC_Panel_TARA
     type: var
@@ -1039,10 +976,7 @@ shared:
     var_name: L:A32NX_SWITCH_TCAS_Traffic_Position
     var_type: f64
 
-# TCAS
-# TRIM
-
-  -
+  - # Trim
     type: NumSet
     var_name: A:RUDDER TRIM PCT
     var_units: Percent
@@ -1054,8 +988,6 @@ shared:
     var_units: Percent
     var_type: f64
     event_name: ELEVATOR_TRIM_SET
-
-# TRIM
 
   - # ASOBO_AIRBUS_Push_TERRONND_SubTemplate
     type: var

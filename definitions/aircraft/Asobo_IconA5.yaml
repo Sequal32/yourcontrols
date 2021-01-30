@@ -12,13 +12,7 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # ASOBO_HANDLING_Switch_WaterRudder_Template
-    type: var
-    var_name: A:WATER RUDDER HANDLE POSITION
-    var_units: percent
-    var_type: i32
-
-  - # ASOBO_LIGHTING_Knob_Panel_Template
+  - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -30,8 +24,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 1
-
-  - # ASOBO_LIGHTING_Knob_Cabin_Template
+  -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
@@ -47,3 +40,9 @@ shared:
     type: var
     var_name: L:XMLVAR_AttitudeDisplay_Luminosity
     var_type: f64
+
+  - # Water Rudder
+    type: var
+    var_name: A:WATER RUDDER HANDLE POSITION
+    var_units: percent
+    var_type: i32
