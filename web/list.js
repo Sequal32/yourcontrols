@@ -35,7 +35,7 @@ ConnectionList.prototype.add = function(name) {
     var observeButton = document.createElement("button")
     observeButton.className = "btn btn-outline-secondary btn-sm entry-button"
     observeButton.type = "button"
-    observeButton.innerHTML = "Observer"
+    observeButton.innerHTML = "Make Observer"
 
     var statusText = document.createElement("p")
     statusText.className = "entry-button"

@@ -419,7 +419,7 @@ $("#main-form-host").submit(function(e) {
     if (is_connected) {invoke({type: "disconnect"}); return}
 
     // Get radio button
-    const method = cloudMethod.checked ? cloudMethod.value : relayMethod.checked ? relayMethod.value : directMethod.checked ? directMethod.value;
+    const method = cloudMethod.checked ? cloudMethod.value : relayMethod.checked ? relayMethod.value : directMethod.checked ? directMethod.value : "";
     const port_ok = method == "cloudServer" ? true : ValidateInt(port_input_host);
 
     if (!port_ok || !ValidateName(username)) {return}
@@ -450,7 +450,7 @@ $("#main-form-join").submit(function(e) {
 
     let data = {
         type: "connect", 
-        session_id: session_input.value,
+        session_id: session_input.value.toUpperCase(),
         username: username.value,
         method: method,
         isipv6: session_ip6radio.checked
