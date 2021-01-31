@@ -16,39 +16,62 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # ASOBO_PRESSURIZATION_Switch_Bleed_Template
+  - # Autopilot Extras
+    type: var
+    var_name: L:XMLVAR_PushXFR
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_VNAVButtonValue
+    var_type: f64
+
+  - # Bleed
     type: NumSet
     var_name: A:BLEED AIR SOURCE CONTROL
     var_units: Enum
     var_type: i32
     event_name: BLEED_AIR_SOURCE_CONTROL_SET
 
-  - # ASOBO_PRESSURIZATION_Push_Dump_Cover_Template
+  - # Deice
     type: var
-    var_name: L:XMLVAR_Press_DUMP_cover
+    var_name: L:XMLVAR_Pitot_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_2
     var_type: f64
 
-  - # ASOBO_PRESSURIZATION_Push_MicroMask_Cover_Template
-    type: var
-    var_name: L:XMLVAR_MICRO_MASK_COVER
-    var_type: f64
-
-  - # ASOBO_PRESSURIZATION_Switch_Deploy_Template
-    type: var
-    var_name: L:XMLVAR_Oxygen_Deploy
-    var_type: f64
-
-  - # ASOBO_PRESSURIZATION_Switch_Oxygen_Template
-    type: var
-    var_name: L:XMLVAR_Oxygen_Switch
-    var_type: f64
-
-  - # ASOBO_GT_Interaction_DraggingYAxis_Code ENGINE_Lever_ManOverride
+  - # Engine
     type: var
     var_name: L:LEVER_MAN_OVRD
     var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_ThrottlePos_XAxis
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_ThrottlePos_YAxis
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_InertSep1_Switch
+    var_type: f64
 
-  - # ASOBO_ENGINE_Switch_Starter_Template
+  - # Electrical
+    type: ToggleSwitch
+    var_name: GENERAL ENG GENERATOR SWITCH:1
+    var_units: Bool
+    event_name: TOGGLE_ALTERNATOR1
+  -
+    type: var
+    var_name: L:XMLVAR_ElecGen
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_CrashLeverPos
+    var_type: f64
+  -
     type: var
     var_name: L:XMLVAR_Starter
     var_type: f64
@@ -57,99 +80,29 @@ shared:
     var_name: L:XMLVAR_Starter_IsHeld
     var_type: f64
 
-  - # ASOBO_FUEL_Switch_Pump_Template
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT AVIONICS ON
+    var_units: Bool
+    var_type: bool
+
+  - # Fuel
     type: var
     var_name: L:XMLVAR_BoostFuelPump
     var_type: f64
-
-  - # FUEL_Switch_Selector
+  -
     type: var
     var_name: L:XMLVAR_FuelSelectorAuto
     var_type: f64
 
-  - # LIGHTING_Knob_Panel
-    type: ToggleSwitch
-    var_name: A:LIGHT PANEL
-    var_units: Bool
-    event_name: TOGGLE_PANEL_LIGHTS
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT PEDESTRAL
-    var_units: Bool
-    event_name: TOGGLE_PEDESTRAL_LIGHTS
-
-  - # Panel knob on overhead
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_4_SET
-
-  - # ASOBO_LIGHTING_Switch_Template
+  - # Pressurization
     type: var
-    var_name: L:XMLVAR_LightDimmer
-    var_type: f64
-
-  - # ELECTRICAL_Switch_Source
-    type: var
-    var_name: L:XMLVAR_CrashLeverPos
-    var_type: f64
-
-  - # ELECTRICAL_Switch_Generator
-    type: var
-    var_name: L:XMLVAR_ElecGen
-    var_type: f64
-  -
-    type: ToggleSwitch
-    var_name: GENERAL ENG GENERATOR SWITCH:1
-    var_units: Bool
-    event_name: TOGGLE_ALTERNATOR1
-
-  - # ASOBO_DEICE_Switch_Pitot_Template
-    type: var
-    var_name: L:XMLVAR_Pitot_1
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_2
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_InertSep1_Switch
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_PushXFR
-    var_type: f64
-
-  - # ASOBO_LIGHTING_Switch_Template
-    type: var
-    var_name: L:XMLVAR_LightDimmer
-    var_type: f64
-
-  - # ASOBO_LIGHTING_Switch_Template
-    type: var
-    var_name: L:XMLVAR_CabinLightOn
-    var_type: f64
-
-  - # ASOBO_LIGHTING_Switch_Template
-    type: var
-    var_name: L:XMLVAR_AccessLightOn
-    var_type: f64
-
-  - # ASOBO_GT_Toggle_Variable
-    type: var
-    var_name: L:XMLVAR_PilotLightOn
-    var_type: f64
-
-  - # ASOBO_GT_Toggle_Variable
-    type: var
-    var_name: L:XMLVAR_CopilotLightOn
-    var_type: f64
-
-  - # ASOBO_GT_Toggle_Variable
-    type: var
-    var_name: L:XMLVAR_CircuitBreaker_Light_ON
+    var_name: L:XMLVAR_Press_DUMP_cover
     var_type: f64
   -
     type: var
@@ -157,7 +110,12 @@ shared:
     var_type: f64
   -
     type: var
-    var_name: L:HOTAIRFLOW_KNOB
+    var_name: L:XMLVAR_MICRO_MASK_COVER
+    var_type: f64
+
+  - # Passenger
+    type: var
+    var_name: L:AC_KNOB_FAN
     var_type: f64
   -
     type: var
@@ -165,7 +123,7 @@ shared:
     var_type: f64
   -
     type: var
-    var_name: L:AC_KNOB_FAN
+    var_name: L:HOTAIRFLOW_KNOB
     var_type: f64
   -
     type: var
@@ -173,5 +131,99 @@ shared:
     var_type: f64
   -
     type: var
-    var_name: L:XMLVAR_VNAVButtonValue
+    var_name: L:XMLVAR_Oxygen_Deploy
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Oxygen_Switch
+    var_type: f64
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_4_SET
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    event_name: CABIN_LIGHTS_SET
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PEDESTRAL
+    var_units: Bool
+    event_name: PEDESTRAL_LIGHTS_SET
+  -
+    type: var
+    var_name: L:XMLVAR_FORCE_PULSE_ON
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_PilotLightOn
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_7_SET
+    index_reversed: true
+  -
+    type: var
+    var_name: L:XMLVAR_CopilotLightOn
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_6_SET
+    index_reversed: true
+  -
+    type: var
+    var_name: L:XMLVAR_CabinLightOn
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_5_SET
+    index_reversed: true
+  -
+    type: var
+    var_name: L:XMLVAR_AccessLightOn
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:8
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_8_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:9
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_9_SET
+    index_reversed: true
+  -
+    type: var
+    var_name: L:XMLVAR_LightDimmer
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_CircuitBreaker_Light_ON
     var_type: f64
