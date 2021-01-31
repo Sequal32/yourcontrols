@@ -6,6 +6,7 @@ include:
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
   - definitions/modules/physics.yaml
@@ -13,10 +14,9 @@ include:
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
 
 shared:
-  - # ASOBO_ELECTRICAL_Switch_Connection_Template
+  - # Electrical
     type: CustomCalculator
     get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
     set: 1 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
@@ -40,7 +40,12 @@ shared:
   - # APU
     type: var
     var_name: A:APU SWITCH
-    var_units: number
+    var_units: Number
+    var_type: i32
+  -
+    type: var
+    var_name: L:XMLVAR_APU_StarterKnob_Pos
+    var_units: Number
     var_type: i32
 
   - # Standby Battery
@@ -108,24 +113,34 @@ shared:
     var_units: Bool
     event_name: SPOILERS_ARM_TOGGLE
 
-  - # ASOBO_HANDLING_Switch_Secondary_ElevatorTrim_Available_Template
+  - # Trim
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: Percent
+    var_type: f64
+    event_name: RUDDER_TRIM_SET_EX1
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: Percent
+    var_type: f64
+    event_name: ELEVATOR_TRIM_SET
+  -
+    type: var
+    var_name: A:AILERON TRIM PCT
+    var_units: Percent
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AileronTrim
+    var_units: Number
+    var_type: i32
+  -
     type: var
     var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
     var_type: f64
 
   - # Lights
-    type: ToggleSwitch
-    var_name: A:LIGHT BEACON:1
-    var_units: Bool
-    event_name: TOGGLE_BEACON_LIGHTS
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT NAV:1
-    var_units: Bool
-    event_name: TOGGLE_NAV_LIGHTS
-    event_param: 1
-  -
     type: ToggleSwitch
     var_name: A:LIGHT LANDING:1
     var_units: Bool
@@ -139,39 +154,14 @@ shared:
     event_param: 2
   -
     type: ToggleSwitch
-    var_name: A:LIGHT TAXI:1
-    var_units: Bool
-    event_name: TOGGLE_TAXI_LIGHTS
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT STROBE:1
-    var_units: Bool
-    event_name: STROBES_TOGGLE
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT WING
-    var_units: Bool
-    event_name: TOGGLE_WING_LIGHTS
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT LOGO:1
-    var_units: Bool
-    event_name: TOGGLE_LOGO_LIGHTS
-    event_param: 1
-
-  - # Lights
-    type: ToggleSwitch
     var_name: A:LIGHT PANEL:1
     var_units: Bool
-    event_name: PANEL_LIGHTS_ON
-    off_event_name: PANEL_LIGHTS_OFF
+    event_name: PANEL_LIGHTS_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING:1
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 1
@@ -179,13 +169,12 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
-    event_name: CABIN_LIGHTS_ON
-    off_event_name: CABIN_LIGHTS_OFF
+    event_name: CABIN_LIGHTS_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:1
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 1
@@ -193,13 +182,12 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:2
     var_units: Bool
-    event_name: CABIN_LIGHTS_ON
-    off_event_name: CABIN_LIGHTS_OFF
+    event_name: CABIN_LIGHTS_SET
     event_param: 2
   -
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:2
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 2
@@ -207,69 +195,19 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:3
     var_units: Bool
-    event_name: CABIN_LIGHTS_ON
-    off_event_name: CABIN_LIGHTS_OFF
+    event_name: CABIN_LIGHTS_SET
     event_param: 3
   -
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:3
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 3
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:15
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 15
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:16
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 16
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:17
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 17
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:18
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 18
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:19
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 19
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:20
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 20
-    index_reversed: true
-
-  - # ASOBO_LIGHTING_Ambient_Template
-    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 10
@@ -277,7 +215,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:11
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
@@ -285,15 +223,63 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:12
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 12
     index_reversed: true
   -
     type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:15
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 15
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 16
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:17
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 17
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:18
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 18
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:19
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 19
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:20
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 20
+    index_reversed: true
+  -
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:30
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 30
@@ -301,7 +287,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:31
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 31
@@ -309,7 +295,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:32
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 32
