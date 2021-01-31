@@ -69,10 +69,12 @@ shared:
     var_type: i32
     event_name: COM_STBY_RADIO_SET
   -
-    type: var
+    type: NumSet
     var_name: A:COM VOLUME:1
     var_units: Percent
     var_type: i32
+    event_name: COM1_VOLUME_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:COM SPACING MODE:1
@@ -94,10 +96,12 @@ shared:
     var_type: i32
     event_name: COM2_STBY_RADIO_SET
   -
-    type: var
+    type: NumSet
     var_name: A:COM VOLUME:2
     var_units: Percent
     var_type: i32
+    event_name: COM2_VOLUME_SET
+    event_param: 2
   -
     type: NumSet
     var_name: A:COM SPACING MODE:2
@@ -118,10 +122,12 @@ shared:
     var_type: i32
     event_name: COM3_STBY_RADIO_SET
   -
-    type: var
+    type: NumSet
     var_name: A:COM VOLUME:3
     var_units: Percent
     var_type: i32
+    event_name: COM3_VOLUME_SET
+    event_param: 3
 
   - # ADF
     type: NumSet
