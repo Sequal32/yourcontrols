@@ -13,7 +13,6 @@ include:
   - definitions/modules/radiosinit.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
 
 shared:
   - # Autopilot XFR
@@ -130,22 +129,45 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 46
 
+  - # ASOBO_AS3000_Screen_Template
+    type: var
+    var_name: L:CJ4_PFD_ScreenLuminosity
+    var_units: Percent
+    var_type: i32
+  -
+    type: var
+    var_name: L:CJ4_MFD_ScreenLuminosity
+    var_units: Percent
+    var_type: i32
+
+  - # Trim
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: Percent
+    var_type: f64
+    event_name: RUDDER_TRIM_SET_EX1
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: Percent
+    var_type: f64
+    event_name: ELEVATOR_TRIM_SET
+  -
+    type: var
+    var_name: A:AILERON TRIM PCT
+    var_units: Percent
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AileronTrim
+    var_units: Number
+    var_type: i32
+
   - # Secondary Trim
     type: var
     var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
     var_units: Bool
     var_type: bool
-
-  - # ASOBO_AS3000_Screen_Template
-    type: var
-    var_name: L:CJ4_PFD_ScreenLuminosity
-    var_units: percent
-    var_type: i32
-  -
-    type: var
-    var_name: L:CJ4_MFD_ScreenLuminosity
-    var_units: percent
-    var_type: i32
 
   - # Lights
     type: ToggleSwitch
@@ -153,17 +175,41 @@ shared:
     var_units: Bool
     event_name: PANEL_LIGHTS_SET
   -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
     event_name: CABIN_LIGHTS_SET
     event_param: 1
   -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:2
     var_units: Bool
     event_name: CABIN_LIGHTS_SET
     event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:3
@@ -172,40 +218,16 @@ shared:
     event_param: 3
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 5
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:6
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 6
-    index_reversed: true
-  -
-    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 10
@@ -213,7 +235,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:11
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
@@ -221,7 +243,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:12
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 12
@@ -229,7 +251,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:13
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 13
@@ -237,8 +259,40 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:14
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:15
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 15
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 16
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:17
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 17
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:18
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 18
     index_reversed: true
