@@ -19,10 +19,11 @@ init:
     var_type: i32
     event_name: RADIO_VOR1_IDENT_SET
   -
-    type: var
+    type: NumSet
     var_name: A:NAV VOLUME:1
     var_units: Percent
     var_type: f64
+    event_name: NAV1_VOLUME_SET
 
   - # NAV2
     type: NumSet
@@ -44,10 +45,11 @@ init:
     var_type: i32
     event_name: RADIO_VOR2_IDENT_SET
   -
-    type: var
+    type: NumSet
     var_name: A:NAV VOLUME:2
     var_units: Percent
     var_type: f64
+    event_name: NAV2_VOLUME_SET
 
   - # COM1
     type: NumSet
@@ -68,7 +70,6 @@ init:
     var_units: Percent
     var_type: f64
     event_name: COM1_VOLUME_SET
-    event_param: 1
   -
     type: NumSet
     var_name: A:COM SPACING MODE:1
@@ -95,7 +96,6 @@ init:
     var_units: Percent
     var_type: f64
     event_name: COM2_VOLUME_SET
-    event_param: 2
   -
     type: NumSet
     var_name: A:COM SPACING MODE:2
@@ -121,7 +121,6 @@ init:
     var_units: Percent
     var_type: f64
     event_name: COM3_VOLUME_SET
-    event_param: 3
 
   - # ADF
     type: NumSet
@@ -139,14 +138,14 @@ init:
   -
     type: NumSet
     var_name: A:ADF SOUND:1
-    var_units: Bool
-    var_type: i32
+    var_units: Percent
+    var_type: f64
     event_name: RADIO_ADF_IDENT_SET
   -
     type: NumSet
     var_name: A:ADF SOUND:2
-    var_units: Bool
-    var_type: i32
+    var_units: Percent
+    var_type: f64
     event_name: KEY_RADIO_VOR2_IDENT_SET
   -
     type: var
@@ -157,14 +156,14 @@ init:
   - # DME
     type: NumSet
     var_name: A:DME SOUND:1
-    var_units: Bool
-    var_type: i32
+    var_units: Percent
+    var_type: f64
     event_name: RADIO_DME1_IDENT_SET
   -
     type: NumSet
     var_name: A:DME SOUND:2
-    var_units: Bool
-    var_type: i32
+    var_units: Percent
+    var_type: f64
     event_name: RADIO_DME2_IDENT_SET
 
   - # Audio Panel
@@ -246,9 +245,10 @@ init:
     var_type: i32
     event_name: INTERCOM_MODE_SET
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:MARKER SOUND:1
-    var_units: Bool
+    var_units: Percent
+    var_type: f64
     event_name: MARKER_SOUND_TOGGLE
   -
     type: NumSet
