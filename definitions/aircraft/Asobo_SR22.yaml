@@ -8,6 +8,7 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
+  - definitions/modules/passenger.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -53,12 +54,11 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
-    event_name: GLARESHIELD_LIGHTS_ON
-    event_param: 1
+    event_name: GLARESHIELD_LIGHTS_SET
   -
     type: NumSet
     var_name: A:LIGHT GLARESHIELD POWER SETTING:1
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_POWER_SETTINGS_SET
     event_param: 1
@@ -67,12 +67,11 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:1
     var_units: Bool
-    event_name: PANEL_LIGHTS_ON
-    event_param: 1
+    event_name: PANEL_LIGHTS_SET
   -
     type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING:1
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 1
@@ -105,20 +104,37 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:5
     var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    event_name: CABIN_LIGHTS_SET
     event_param: 5
   -
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:5
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: CABIN_LIGHTS_POWER_SETTINGS_SET
     event_param: 5
     index_reversed: true
   -
     type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+    index_reversed: true
+
+  - # AS1000
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 10
+    index_reversed: true
+  -
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:11
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
