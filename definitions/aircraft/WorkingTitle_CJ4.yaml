@@ -1,0 +1,93 @@
+include:
+  - definitions/aircraft/Asobo_CJ4.yaml
+
+shared:
+  - # Autopilot
+    type: var
+    var_name: L:WT_CJ4_LNAV_MODE
+    var_type: f64
+  -
+    type: var
+    var_name: L:WT_CJ4_VNAV_ON
+    var_type: f64
+  -
+    type: var
+    var_name: L:WT_CJ4_BARO_SET
+    var_type: f64
+  -
+    type: var
+    var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
+    var_type: f64
+  -
+    type: var
+    var_name: L:WT_CJ4_Altitude_Alerter_Active
+    var_type: f64
+  -
+    type: var
+    var_name: L:WT_CJ4_Altitude_Alerter_Cancel
+    var_type: f64
+  -
+    type: var
+    var_name: L:WT_CJ4_INHIBIT_SEQUENCE
+    var_type: f64
+  -
+    type: var
+    var_name: L:WT_FLIGHT_DIRECTOR_BANK
+    var_type: f64
+  -
+    type: var
+    var_name: L:WT_NAV_SENSITIVITY
+    var_type: f64
+  -
+    type: var
+    var_name: L:WT_NAV_TO_NAV_TRANSFER_STATE
+    var_type: f64
+  -
+    type: var
+    var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+    var_type: f64
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:49
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 49
+
+  - # Lights
+    type: var
+    var_name: L:SAFETY_LIGHT_ON
+    var_type: f64
+  -
+    type: var
+    var_name: L:SEATBELT_LIGHT_ON
+    var_type: f64
+
+  - # Passengers
+    type: var
+    var_name: L:PASSENGER_KNOB_AIR_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:PASSENGER_KNOB_AIR_2
+    var_type: f64
+  -
+    type: var
+    var_name: L:PASSENGER_KNOB_AIR_3
+    var_type: f64
+  -
+    type: var
+    var_name: L:PASSENGER_KNOB_HEAT_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:PASSENGER_KNOB_HEAD_2
+    var_type: f64
+  -
+    type: var
+    var_name: L:CLIMATE_CONTROL
+    var_type: f64
+  -
+    type: var
+    var_name: L:PRESSOURCE
+    var_type: f64

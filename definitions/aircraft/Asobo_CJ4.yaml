@@ -17,7 +17,15 @@ include:
 shared:
   - # Autopilot XFR
     type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+    var_type: f64
+  -
+    type: var
     var_name: L:XMLVAR_PushXFR
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
     var_type: f64
 
   - # Comm Power
@@ -36,23 +44,19 @@ shared:
   - # Deice
     type: var
     var_name: L:XMLVAR_Pitot_1
-    var_units: Bool
-    var_type: bool
+    var_type: f64
   -
     type: var
     var_name: L:XMLVAR_Pitot_2
-    var_units: Bool
-    var_type: bool
+    var_type: f64
   -
     type: var
     var_name: L:XMLVAR_Airframe_1
-    var_units: Bool
-    var_type: bool
+    var_type: f64
   -
     type: var
     var_name: L:XMLVAR_Airframe_2
-    var_units: Bool
-    var_type: bool
+    var_type: f64
 
   - # Avionics
     type: ToggleSwitch
@@ -162,10 +166,6 @@ shared:
   -
     type: var
     var_name: L:FMC_UPDATE_CURRENT_PAGE
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
     var_type: f64
   -
     type: var
