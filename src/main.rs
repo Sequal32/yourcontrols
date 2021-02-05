@@ -22,7 +22,7 @@ use simconnect::{DispatchResult, SimConnector};
 use simplelog;
 use spin_sleep::sleep;
 use crate::util::{get_hostname_ip};
-use std::{fs::{read_dir, File}, io::{self, Read}, net::IpAddr, path::PathBuf, time::Duration, time::Instant};
+use std::{fs::{read_dir, File}, io::{self}, net::IpAddr, path::PathBuf, time::Duration, time::Instant};
 use update::Updater;
 
 use control::*;
@@ -162,6 +162,7 @@ fn main() {
     // Load defintions
     let load_definitions = |conn: &SimConnector,
                             definitions: &mut Definitions,
+                            control: &mut Control,
                             config_to_load: &mut String|
      -> bool {
         // Load aircraft configuration
@@ -170,6 +171,7 @@ fn main() {
         match definitions.load_config(path.to_string_lossy().to_string()) {
             Ok(_) => {
                 info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
+                control.on_connected(&conn);
                 definitions.on_connected(&conn)
             }
             Err(e) => {
@@ -275,14 +277,14 @@ fn main() {
                             definitions.clear_sync();
                             if to == client.get_server_name() {
                                 info!("[CONTROL] Taking control from {}", from);
-                                control.take_control();
+                                control.take_control(&conn);
                                 app_interface.gain_control();
                                 clients.set_no_control();
                             // Someone else has controls, if we have controls we let go and listen for their messages
                             } else {
                                 if from == client.get_server_name() {
                                     app_interface.lose_control();
-                                    control.lose_control();
+                                    control.lose_control(&conn);
                                 }
                                 info!("[CONTROL] {} is now in control.", to);
                                 app_interface.set_incontrol(&to);
@@ -330,7 +332,7 @@ fn main() {
                                     info!("[CONTROL] {} had control, taking control back.", name);
                                     app_interface.gain_control();
 
-                                    control.take_control();
+                                    control.take_control(&conn);
                                     client.transfer_control(client.get_server_name().to_string());
                                 }
                             }
@@ -376,7 +378,7 @@ fn main() {
                                     // Display server started message
                                 app_interface.server_started(0, client.get_session_id().as_deref());
                                     // Unfreeze aircraft
-                                control.take_control();
+                                control.take_control(&conn);
                                 app_interface.gain_control();
                                     // Not really used by the host
                                 connection_time = Some(Instant::now());
@@ -385,7 +387,7 @@ fn main() {
                                 app_interface.connected();
                                 app_interface.lose_control();
                                     // Freeze aircraft
-                                control.lose_control();
+                                control.lose_control(&conn);
                                     // Intiailly observer
                                 observing = true;
                             }
@@ -395,7 +397,7 @@ fn main() {
                         Event::ConnectionLost(reason) => {
                             info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
                                 // TAKE BACK CONTROL
-                            control.take_control();
+                            control.take_control(&conn);
 
                             clients.reset();
                             observing = false;
@@ -424,7 +426,7 @@ fn main() {
             if definitions.control_transfer_requested {
                 if !control.has_control() && !observing {
                     if let Some(in_control) = clients.get_client_in_control() {
-                        control.take_control();
+                        control.take_control(&conn);
                         client.take_control(in_control.clone());
                     }
                 }
@@ -473,7 +475,7 @@ fn main() {
                     if config_to_load == "" {
                         app_interface.server_fail("Select an aircraft config first!");
                         
-                    } else if !load_definitions(&conn, &mut definitions, &mut config_to_load) {
+                    } else if !load_definitions(&conn, &mut definitions, &mut control, &mut config_to_load) {
 
                         app_interface.error("Error loading definition files. Check the log for more information.");
                         
