@@ -249,7 +249,7 @@ impl TransferStruct {
             return true
         });
 
-        info!("[NETWORK] Removing client {} who has name {:?}", addr, removed_client_name);
+        info!("[NETWORK] Removing client from port {} who has name {:?}", addr.port(), removed_client_name);
 
         if let Some(name) = removed_client_name {
             let player_left_payload = Payloads::PlayerLeft {name: name.clone()};
@@ -301,22 +301,23 @@ pub struct Server {
     server_rx: ServerReceiver,
 
     username: String,
-    version: String
+    version: String,
+    timeout: u64
 }
 
 impl Server {
-    pub fn new(username: String, version: String) -> Self  {
+    pub fn new(username: String, version: String, timeout: u64) -> Self  {
         let (client_tx, client_rx) = unbounded();
         let (server_tx, server_rx) = unbounded();
 
         return Self {
             number_connections: Arc::new(AtomicU16::new(0)),
+            
             last_port_forward_result: None,
             should_stop: Arc::new(AtomicBool::new(false)),
             client_rx, client_tx, server_rx, server_tx,
             transfer: None,
-            username: username,
-            version,
+            username, version, timeout
         }
     }
 
@@ -353,7 +354,7 @@ impl Server {
     }
 
     pub fn start(&mut self, is_ipv6: bool, port: u16, upnp: bool) -> Result<(), StartClientError> {
-        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(3))?;
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(self.timeout))?;
         // Attempt to port forward
         if upnp {
             self.last_port_forward_result = Some(self.port_forward(port));
@@ -363,7 +364,7 @@ impl Server {
     }
 
     pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(), StartClientError> {
-        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(3))?;
+        let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(self.timeout))?;
         let addr: SocketAddr = get_rendezvous_server(is_ipv6)?;
 
         self.run(socket, Some(addr))
