@@ -1,9 +1,9 @@
 use indexmap::{IndexMap};
 use serde_yaml::{self, Value};
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, __private::de};
 use simconnect::SimConnector;
 
-use std::{collections::HashMap, collections::{HashSet, hash_map}, fmt::{Debug, Display}, fs::File, path::{Path}, time::Instant};
+use std::{borrow::Cow, collections::HashMap, collections::{HashSet, hash_map}, fmt::{Debug, Display}, fs::File, path::{Path}, time::Instant};
 use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector};
 
 #[derive(Debug)]
@@ -178,6 +178,8 @@ pub type LVarMap = HashMap<String, f64>;
 // Name of the event the DWORD data associated with it with how many times it got triggered (not a map as the event could've got triggered multiple times before the data could get send)
 pub type EventData = Vec<EventTriggered>;
 
+type CancelEvents = Vec<String>;
+
 #[derive(Debug)]
 enum VarType {
     AircraftVar,
@@ -227,6 +229,7 @@ struct VarEntry {
     constant: bool,
     #[serde(default)]
     unreliable: bool,
+    cancel: Option<CancelEvents>,
 }
 
 #[derive(Deserialize)]
@@ -240,7 +243,8 @@ struct ToggleSwitchGenericEntry {
     switch_on: bool,
     #[serde(default)]
     use_calculator: bool,
-    condition: Option<Condition>
+    condition: Option<Condition>,
+    cancel: Option<CancelEvents>,
 }
 
 #[derive(Deserialize)]
@@ -260,6 +264,7 @@ struct NumSetGenericEntry<T> {
     swap_event_name: Option<String>,
     #[serde(default)]
     unreliable: bool,
+    cancel: Option<CancelEvents>,
 }
 
 #[derive(Deserialize)]
@@ -272,6 +277,7 @@ struct NumIncrementEntry<T> {
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
     pass_difference: bool,
+    cancel: Option<CancelEvents>,
 }
 
 
@@ -281,14 +287,16 @@ struct NumDigitSetEntry {
     var_units: Option<String>,
     up_event_names: Vec<String>,
     down_event_names: Vec<String>,
-    condition: Option<Condition>
+    condition: Option<Condition>,
+    cancel: Option<CancelEvents>,
 }
 
 #[derive(Deserialize)]
 struct CustomCalculatorEntry {
     get: String,
     set: String,
-    condition: Option<Condition>
+    condition: Option<Condition>,
+    cancel: Option<CancelEvents>,
 }
 
 #[derive(Deserialize)]
@@ -401,7 +409,18 @@ impl Period {
 
 struct Mapping {
     action: ActionType,
-    condition: Option<Condition>
+    condition: Option<Condition>,
+    cancel: Option<CancelEvents>
+}
+
+impl Default for Mapping {
+    fn default() -> Self {
+        Self {
+            action: ActionType::VarOnly,
+            condition: None,
+            cancel: None
+        }
+    }
 }
 
 pub struct Definitions {
@@ -501,7 +520,11 @@ impl Definitions {
             self.periods.insert(var_name.clone(), Period::new(period));
         }
 
-        self.add_mapping(var_name, ActionType::VarOnly, var.condition)?;
+        self.add_mapping(var_name, Mapping {
+            action: ActionType::VarOnly, 
+            condition: var.condition,
+            cancel: var.cancel
+        })?;
 
         Ok(())
     }
@@ -554,21 +577,17 @@ impl Definitions {
         }
     }
 
-    fn add_mapping(&mut self, var_name: String, mapping: ActionType, condition: Option<Condition>) -> Result<(), VarAddError> {
-        let mut condition = condition;
+    fn add_mapping(&mut self, var_name: String, mapping: Mapping) -> Result<(), VarAddError> {
+        let mut mapping = mapping;
 
-        if let Some(condition) = condition.as_mut() {
+        if let Some(condition) = mapping.condition.as_mut() {
             if let Some(var_data) = condition.var.as_mut() {
+                // Add new var to watch for
                 let (var_string, _) = self.add_var_string("shared", &var_data.var_name, var_data.var_units.as_deref(), var_data.var_type)?;
                 var_data.var_name = var_string.clone();
                 self.do_not_sync.insert(var_string);
             }
         }
-        
-        let mapping = Mapping {
-            action: mapping,
-            condition: condition,
-        };
 
         match self.mappings.entry(var_name.to_string()) {
             hash_map::Entry::Occupied(mut o) => { 
@@ -603,7 +622,11 @@ impl Definitions {
 
         action.set_switch_on(var.switch_on);
 
-        self.add_mapping(var_string, ActionType::Bool(Box::new(action)), var.condition)?;
+        self.add_mapping(var_string, Mapping {
+            action: ActionType::Bool(Box::new(action)),
+            condition: var.condition,
+            cancel: var.cancel
+        })?;
 
         Ok(())
     }
@@ -617,7 +640,10 @@ impl Definitions {
 
             self.lvarstransfer.transfer.add_interpolate_mapping(&format!("K:{}", &var.event_name), var_string.clone(), var.var_units.as_deref(), interpolate_type);
             self.interpolate_vars.insert(var_string.clone());
-            self.add_mapping(var_string.clone(), ActionType::VarOnly, None)?;
+            self.add_mapping(var_string.clone(), Mapping {
+                action: ActionType::VarOnly,
+                .. Default::default()
+            })?;
 
         } else {
 
@@ -660,18 +686,27 @@ impl Definitions {
         let data_type = get_data_type_from_string(data_type_string)?;
 
         let condition = try_cast_yaml!(var["condition"].clone());
+        let cancel = try_cast_yaml!(var["cancel"].clone());
         
         match data_type {
             InDataTypes::I32 => {
                 let (mapping, var_string) = self.add_num_set_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
                 if let Some(mapping) = mapping {
-                    self.add_mapping(var_string, ActionType::I32(mapping), condition)?
+                    self.add_mapping(var_string, Mapping {
+                        action: ActionType::I32(mapping),
+                        condition,
+                        cancel
+                    })?
                 }
             }
             InDataTypes::F64 => {
                 let (mapping, var_string) = self.add_num_set_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
                 if let Some(mapping) = mapping {
-                    self.add_mapping(var_string, ActionType::F64(mapping), condition)?
+                    self.add_mapping(var_string, Mapping {
+                        action: ActionType::F64(mapping),
+                        condition,
+                        cancel
+                    })?
                 }
             }
             _ => {}
@@ -697,15 +732,24 @@ impl Definitions {
         let data_type = get_data_type_from_string(data_type_string)?;
 
         let condition = try_cast_yaml!(var["condition"].clone());
+        let cancel = try_cast_yaml!(var["cancel"].clone());
 
         match data_type {
             InDataTypes::I32 => {
                 let (mapping, var_string) = self.add_num_increment_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::I32(mapping), condition)?;
+                self.add_mapping(var_string, Mapping {
+                    action: ActionType::I32(mapping),
+                    condition,
+                    cancel
+                })?
             }
             InDataTypes::F64 => {
                 let (mapping, var_string) = self.add_num_increment_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, ActionType::F64(mapping), condition)?;
+                self.add_mapping(var_string, Mapping {
+                    action: ActionType::F64(mapping),
+                    condition,
+                    cancel
+                })?
             }
             _ => {}
         };
@@ -726,7 +770,11 @@ impl Definitions {
         }
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
-        self.add_mapping(var_string, ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))), var.condition)?;
+        self.add_mapping(var_string, Mapping {
+            action: ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))),
+            condition: var.condition,
+            cancel: var.cancel
+        })?;
 
         Ok(())
     }
@@ -737,7 +785,11 @@ impl Definitions {
         let var_name = self.lvarstransfer.add_custom_var(var.get);
 
         self.categories.insert(var_name.clone(), category);
-        self.add_mapping(var_name, ActionType::F64(Box::new(CustomCalculator::new(var.set))), var.condition)?;
+        self.add_mapping(var_name, Mapping {
+            action: ActionType::F64(Box::new(CustomCalculator::new(var.set))), 
+            condition: var.condition,
+            cancel: var.cancel
+        })?;
 
         Ok(())
     }
@@ -745,7 +797,11 @@ impl Definitions {
     fn add_program_action(&mut self, category: &str, var: ProgramActionEntry) -> Result<(), VarAddError> {
 
         let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
-        self.add_mapping(var_string, ActionType::ProgramAction(var.action), Some(var.condition))?;
+        self.add_mapping(var_string, Mapping {
+            action: ActionType::ProgramAction(var.action),
+            condition: Some(var.condition),
+            ..Default::default()}
+        )?;
 
         Ok(())
     }
@@ -859,6 +915,12 @@ impl Definitions {
             for mapping in mappings {
 
                 if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(result.var.floating)) {continue}
+                
+                if let Some(cancel) = &mapping.cancel {
+                    for event_name in cancel {
+                        self.last_written.insert(event_name.to_string(), Instant::now());
+                    }
+                }
 
                 execute_mapping!(new_value, action, VarReaderTypes::F64(result.var.floating), mapping, {
                     action.set_current(new_value)
@@ -897,8 +959,10 @@ impl Definitions {
     fn process_js_data(&mut self) {
         if let Some(payload) = self.jstransfer.poll() {
             match payload {
-                jscommunicator::Payloads::Interaction { name: interaction_name } => {
-                    self.current_sync.events.push(EventTriggered { event_name: interaction_name, data: 0})
+                jscommunicator::Payloads::Interaction { name } => {
+                    if self.did_write_recently(&name[5..]) { // Canceled event
+                        self.current_sync.events.push(EventTriggered { event_name: name, data: 0})
+                    }
                 }
                 _ => {}
             }
@@ -941,6 +1005,14 @@ impl Definitions {
                 // Set current var syncactions
                 if let Some(mappings) = self.mappings.get_mut(&var_name) {
                     for mapping in mappings {
+                        if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &value) {continue}
+                        
+                        if let Some(cancel) = &mapping.cancel {
+                            for event_name in cancel {
+                                self.last_written.insert(event_name.to_string(), Instant::now());
+                            }
+                        }
+
                         execute_mapping!(new_value, action, value, mapping, {
                             action.set_current(new_value)
                         }, {}, {});
@@ -1034,8 +1106,6 @@ impl Definitions {
             // Otherwise sync them using defined events
             if let Some(mappings) = self.mappings.get_mut(&var_name) {
                 for mapping in mappings {
-                    if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &data) {continue}
-
                     execute_mapping!(new_value, action, data, mapping, {
                         action.set_new(new_value, conn, &mut self.lvarstransfer)
                     }, {
@@ -1074,8 +1144,6 @@ impl Definitions {
                 Some(mappings) => {
                     for mapping in mappings {
 
-                        if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(value)) {continue}
-        
                         execute_mapping!(new_value, action, VarReaderTypes::F64(value), mapping, {
                             action.set_new(new_value, conn, &mut self.lvarstransfer)
                         }, {
