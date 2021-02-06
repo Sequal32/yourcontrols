@@ -853,7 +853,7 @@ impl Definitions {
 
     #[allow(unused_variables)]
     fn process_local_var(&mut self, result: GetResult) {
-        let mut should_write = self.did_write_recently(&result.var_name);
+        let mut should_write = !self.did_write_recently(&result.var_name);
 
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
