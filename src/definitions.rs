@@ -960,7 +960,7 @@ impl Definitions {
         if let Some(payload) = self.jstransfer.poll() {
             match payload {
                 jscommunicator::Payloads::Interaction { name } => {
-                    if self.did_write_recently(&name[5..]) { // Canceled event
+                    if !self.did_write_recently(&name[5..]) { // Canceled event
                         self.current_sync.events.push(EventTriggered { event_name: name, data: 0})
                     }
                 }
