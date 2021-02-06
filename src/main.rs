@@ -486,7 +486,7 @@ fn main() {
                         match method {
                             ConnectionMethod::Direct |
                             ConnectionMethod::CloudServer => {
-                                let mut server = Box::new(Server::new(username.clone(), updater.get_version().to_string()));
+                                let mut server = Box::new(Server::new(username.clone(), updater.get_version().to_string(), config.conn_timeout));
 
                                 let result = match method {
                                     ConnectionMethod::Direct => server.start(isipv6, port, true),

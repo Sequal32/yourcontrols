@@ -24,9 +24,9 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
-            port: 7777,
+            port: 25071,
             update_rate: 30,
-            conn_timeout: 5,
+            conn_timeout: 3,
             check_for_betas: false,
             ip: String::new(),
             name: String::new(),

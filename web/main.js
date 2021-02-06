@@ -20,7 +20,6 @@ var username = document.getElementById("username-input")
 var session_input = document.getElementById("session-input")
 var name_input_join = document.getElementById("name-input-join")
 var theme_selector = document.getElementById("theme-select")
-var beta_selector = document.getElementById("beta-select")
 
 var update_rate_input = document.getElementById("update-rate-input")
 var timeout_input = document.getElementById("timeout-input")
@@ -191,7 +190,6 @@ function LoadSettings(newSettings) {
     timeout_input.value = newSettings.conn_timeout
     update_rate_input.value = newSettings.update_rate
     theme_selector.checked = newSettings.ui_dark_theme
-    beta_selector.checked = newSettings.check_for_betas
 
     setTheme(newSettings.ui_dark_theme)
 
@@ -402,7 +400,6 @@ $("#settings-form").submit(function(e) {
     newSettings.conn_timeout = ValidateInt(timeout_input) ? parseInt(timeout_input.value) : null
     newSettings.update_rate = ValidateInt(update_rate_input) ? parseInt(update_rate_input.value) : null
     newSettings.ui_dark_theme = theme_selector.checked
-    newSettings.check_for_betas = beta_selector.checked 
 
     for (key in newSettings) {
         if (newSettings[key] === null) {return}
