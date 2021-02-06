@@ -16,7 +16,7 @@ init:
     type: NumSet
     var_name: A:NAV SOUND:1
     var_units: Bool
-    var_type: i32
+    var_type: f64
     event_name: RADIO_VOR1_IDENT_SET
   -
     type: NumSet
@@ -42,7 +42,7 @@ init:
     type: NumSet
     var_name: A:NAV SOUND:2
     var_units: Bool
-    var_type: i32
+    var_type: f64
     event_name: RADIO_VOR2_IDENT_SET
   -
     type: NumSet
@@ -138,31 +138,31 @@ init:
   -
     type: NumSet
     var_name: A:ADF SOUND:1
-    var_units: Percent
+    var_units: Bool
     var_type: f64
     event_name: RADIO_ADF_IDENT_SET
   -
     type: NumSet
     var_name: A:ADF SOUND:2
-    var_units: Percent
+    var_units: Bool
     var_type: f64
     event_name: KEY_RADIO_VOR2_IDENT_SET
   -
     type: var
     var_name: A:ADF VOLUME:1
-    var_units: Percent
+    var_units: Percent over 100
     var_type: f64
 
   - # DME
     type: NumSet
     var_name: A:DME SOUND:1
-    var_units: Percent
+    var_units: Bool
     var_type: f64
     event_name: RADIO_DME1_IDENT_SET
   -
     type: NumSet
     var_name: A:DME SOUND:2
-    var_units: Percent
+    var_units: Bool
     var_type: f64
     event_name: RADIO_DME2_IDENT_SET
 
@@ -177,21 +177,21 @@ init:
     var_units: Bool
     event_name: PILOT_TRANSMITTER_SET
     switch_on: true
-    event_param: 0
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:COM TRANSMIT:2
     var_units: Bool
     event_name: PILOT_TRANSMITTER_SET
     switch_on: true
-    event_param: 1
+    event_param: 2
   -
     type: ToggleSwitch
     var_name: A:COM TRANSMIT:3
     var_units: Bool
     event_name: PILOT_TRANSMITTER_SET
     switch_on: true
-    event_param: 2
+    event_param: 3
   -
     type: NumSet
     var_name: A:PILOT TRANSMITTER TYPE
@@ -247,7 +247,7 @@ init:
   -
     type: NumSet
     var_name: A:MARKER SOUND:1
-    var_units: Percent
+    var_units: Bool
     var_type: f64
     event_name: MARKER_SOUND_TOGGLE
   -

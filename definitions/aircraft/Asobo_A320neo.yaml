@@ -91,6 +91,27 @@ shared:
     var_units: Bool
     event_name: ANTI_ICE_TOGGLE_ENG2
 
+  - # ECAM
+    type: var
+    var_name: L:XMLVAR_ECAM_CURRENT_PAGE
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:22
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 22
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:23
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 23
+    index_reversed: true
+
   - # ELAC
     type: ToggleSwitch
     var_name: A:FLY BY WIRE ELAC SWITCH:1
@@ -410,12 +431,9 @@ shared:
   - # Trim
     type: NumSet
     var_name: A:RUDDER TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
     event_name: RUDDER_TRIM_SET
-  -
-    type: event
-    event_name: RUDDER_TRIM_RESET
   -
     type: var
     var_name: L:XMLVAR_RudderTrim
@@ -423,22 +441,23 @@ shared:
   -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
     event_name: ELEVATOR_TRIM_SET
+    condition:
+      var:
+        var_name: AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
   -
     type: var
     var_name: A:AILERON TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
 
   - # Lights
-    type: ToggleSwitch
-    var_name: A:LIGHT TAXI:1
-    var_units: Bool
-    event_name: TOGGLE_TAXI_LIGHTS
-    event_param: 1
-  -
     type: NumSet
     var_name: A:LIGHT TAXI:2
     var_units: Percent
@@ -452,12 +471,6 @@ shared:
     var_type: i32
     event_name: TOGGLE_TAXI_LIGHTS
     event_param: 3
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT LANDING:1
-    var_units: Bool
-    event_name: LANDING_LIGHTS_TOGGLE
-    event_param: 1
   -
     type: var
     var_name: L:LANDING_1_Retracted
@@ -640,27 +653,6 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 21
-    index_reversed: true
-
-  - # ECAM
-    type: var
-    var_name: L:XMLVAR_ECAM_CURRENT_PAGE
-    var_type: f64
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:22
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 22
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:23
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 23
     index_reversed: true
 
   - # Wipers

@@ -1,10 +1,10 @@
 include:
   - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
@@ -13,7 +13,7 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Autopilot Extras
+  - # Autopilot
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
     var_type: f64
@@ -87,6 +87,27 @@ shared:
     var_type: bool
 
   - # Deice
+    type: ToggleSwitch
+    var_name: A:STRUCTURAL DEICE SWITCH
+    var_units: Bool
+    event_name: TOGGLE_STRUCTURAL_DEICE
+  -
+    type: NumSet
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Enum
+    var_type: i32
+    event_name: WINDSHIELD_DEICE_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+  -
     type: var
     var_name: L:XMLVAR_IsDeiceAirFrame
     var_type: f64
@@ -127,30 +148,6 @@ shared:
     var_units: Bool
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 3
-  -
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL GENALT SWITCH:1
-    var_units: Bool
-    event_name: GENALT_BUS1_CONTACT_SET
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL GENALT SWITCH:2
-    var_units: Bool
-    event_name: GENALT_BUS1_CONTACT_SET
-    event_param: 2
-  -
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL GENALT SWITCH:3
-    var_units: Bool
-    event_name: GENALT_BUS1_CONTACT_SET
-    event_param: 3
-  -
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL GENALT SWITCH:4
-    var_units: Bool
-    event_name: GENALT_BUS1_CONTACT_SET
-    event_param: 4
 
   - # Failures
     type: var
@@ -376,12 +373,6 @@ shared:
 
   - # Lights
     type: ToggleSwitch
-    var_name: A:LIGHT LANDING:1
-    var_units: Bool
-    event_name: LANDING_LIGHTS_TOGGLE
-    event_param: 1
-  -
-    type: ToggleSwitch
     var_name: A:LIGHT LANDING:2
     var_units: Bool
     event_name: LANDING_LIGHTS_TOGGLE
@@ -394,12 +385,6 @@ shared:
     event_param: 3
   -
     type: ToggleSwitch
-    var_name: A:LIGHT TAXI:1
-    var_units: Bool
-    event_name: TOGGLE_TAXI_LIGHTS
-    event_param: 1
-  -
-    type: ToggleSwitch
     var_name: A:LIGHT TAXI:2
     var_units: Bool
     event_name: TOGGLE_TAXI_LIGHTS
@@ -410,31 +395,6 @@ shared:
     var_units: Bool
     event_name: TOGGLE_TAXI_LIGHTS
     event_param: 3
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT BEACON:1
-    var_units: Bool
-    event_name: TOGGLE_BEACON_LIGHTS
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT LOGO:1
-    var_units: Bool
-    event_name: TOGGLE_LOGO_LIGHTS
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT NAV:1
-    var_units: Bool
-    event_name: TOGGLE_NAV_LIGHTS
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT STROBE
-    var_units: Bool
-    event_name: STROBES_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT WING:1
-    var_units: Bool
-    event_name: TOGGLE_WING_LIGHTS
 
   - # Master Brightness
     type: NumSet

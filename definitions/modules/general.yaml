@@ -8,21 +8,20 @@ shared:
   - # ASOBO_HANDLING_Lever_Flaps_Continuous_Template
     type: NumSet
     var_name: A:FLAPS HANDLE PERCENT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: i32
     event_name: FLAPS_CONTINUOUS_SET
 
-  - # ASOBO_LANDING_GEAR_Lever_Gear_Template
-    type: ToggleSwitch
+  - # ASOBO_LANDING_GEAR_Lever_Gear_Template (Var to support more than Up/Down)
+    type: var
     var_name: A:GEAR HANDLE POSITION
-    var_units: Bool
-    event_name: GEAR_DOWN
-    off_event_name: GEAR_UP
+    var_units: Number
+    var_type: i32
 
   - # ASOBO_HANDLING_Lever_Spoilers_Template
     type: NumSet
     var_name: A:SPOILERS HANDLE POSITION
-    var_units: Percent
+    var_units: Position 16k
     var_type: i32
     event_name: SPOILERS_SET
   -

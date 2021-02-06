@@ -6,27 +6,16 @@ shared:
     event_name: AP_MASTER
 
   - # ASOBO_AUTOPILOT_Push_Disconnect_Template
-    type: NumSet
+    type: var
     var_name: A:AUTOPILOT DISENGAGED
     var_units: Bool
-    var_type: i32
-    event_name: AUTOPILOT_DISENGAGE_SET
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT DISENGAGED
-    var_units: Bool
-    event_name: AUTOPILOT_DISENGAGE_TOGGLE
+    var_type: bool
 
   - # ASOBO_AUTOPILOT_Push_Heading_Template
-    type: ToggleSwitch
+    type: var
     var_name: A:AUTOPILOT HEADING LOCK
     var_units: Bool
-    event_name: AP_PANEL_HEADING_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT HEADING LOCK
-    var_units: Bool
-    event_name: AP_HDG_HOLD
+    var_type: bool
 
   - # ASOBO_AUTOPILOT_Knob_Heading_Template
     type: NumSet
@@ -36,15 +25,10 @@ shared:
     event_name: HEADING_BUG_SET
 
   - # ASOBO_AUTOPILOT_Push_Altitude_Template
-    type: ToggleSwitch
+    type: var
     var_name: A:AUTOPILOT ALTITUDE LOCK
     var_units: Bool
-    event_name: AP_PANEL_ALTITUDE_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT ALTITUDE LOCK
-    var_units: Bool
-    event_name: AP_ALT_HOLD
+    var_type: bool
 
   - # ASOBO_AUTOPILOT_Knob_Altitude_Template
     type: NumSet
@@ -63,6 +47,10 @@ shared:
     var_name: A:AUTOPILOT VERTICAL HOLD
     var_units: Bool
     event_name: AP_PANEL_VS_HOLD
+  -
+    type: var
+    var_name: L:XMLVAR_VNAVButtonValue
+    var_type: f64
 
   - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
     type: NumSet
@@ -71,18 +59,11 @@ shared:
     var_type: f64
     event_name: AP_SPD_VAR_SET
   -
-    type: event
-    event_name: AP_AIRSPEED_ON
-
-  - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
     type: NumSet
     var_name: A:AUTOPILOT MACH HOLD VAR
     var_units: Mach
     var_type: f64
     event_name: AP_SPD_VAR_SET
-  -
-    type: event
-    event_name: AP_MACH_ON
   -
     type: var
     var_name: L:XMLVAR_SpeedIsManuallySet
@@ -111,17 +92,10 @@ shared:
     event_name: FLIGHT_LEVEL_CHANGE
 
   - # ASOBO_AUTOPILOT_Push_Level_Template
-    type: ToggleSwitch
+    type: var
     var_name: A:AUTOPILOT WING LEVELER
     var_units: Bool
-    event_name: AP_PITCH_LEVELER_ON
-    off_event_name: AP_PITCH_LEVELER_OFF
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT WING LEVELER
-    var_units: Bool
-    event_name: AP_WING_LEVELER_ON
-    off_event_name: AP_WING_LEVELER_OFF
+    var_type: bool
 
   - # ASOBO_AUTOPILOT_Push_BackCourse_Template
     type: ToggleSwitch
@@ -156,11 +130,6 @@ shared:
     var_units: Bool
     event_name: AP_APR_HOLD
   -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT GLIDESLOPE HOLD
-    var_units: Bool
-    event_name: AP_APR_HOLD
-  -
     type: event
     event_name: AP_LOC_HOLD
 
@@ -187,12 +156,6 @@ shared:
     var_name: A:AUTOPILOT MAX BANK
     var_units: Degrees
     var_type: f64
-  -
-    type: event
-    event_name: AP_MAX_BANK_INC
-  -
-    type: event
-    event_name: AP_MAX_BANK_DEC
 
   - # ASOBO_AUTOPILOT_Push_YawDamper_Template
     type: ToggleSwitch
@@ -205,11 +168,10 @@ shared:
     var_units: Bool
     event_name: TOGGLE_GPS_DRIVES_NAV1
   -
-    type: NumSet
+    type: var
     var_name: A:AUTOPILOT NAV SELECTED
     var_units: Number
     var_type: i32
-    event_name: AP_NAV_SELECT_SET
   -
     type: NumSet
     var_name: A:RUDDER TRIM DISABLED

@@ -2,33 +2,25 @@ shared:
   -
     type: NumSet
     var_name: A:RUDDER TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
     event_name: RUDDER_TRIM_SET
   -
-    type: event
-    event_name: RUDDER_TRIM_LEFT
-  -
-    type: event
-    event_name: RUDDER_TRIM_RIGHT
-  -
-    type: event
-    event_name: RUDDER_TRIM_RESET
-  -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
     event_name: ELEVATOR_TRIM_SET
+    condition:
+      var:
+        var_name: AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
   -
     type: NumSet
     var_name: A:AILERON TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
     event_name: AILERON_TRIM_SET
-  -
-    type: event
-    event_name: AILERON_TRIM_LEFT
-  -
-    type: event
-    event_name: AILERON_TRIM_RIGHT

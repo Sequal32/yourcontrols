@@ -27,11 +27,19 @@ shared:
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 23
-  -
+
+  - # Electrical
     type: var
     var_name: L:XMLVAR_ElecMaster
-    var_units: number
-    var_type: i32
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Electrical_Master_Battery_Turned_ON
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_SAFETY_Panel_Test_Enabled
+    var_type: f64
 
   - # Engine
     type: var

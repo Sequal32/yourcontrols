@@ -1,6 +1,5 @@
 include:
   - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -10,12 +9,11 @@ include:
   - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/radiosinit.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
 
 shared:
-  - # Autopilot XFR
+  - # Autopilot
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
     var_type: f64
@@ -42,6 +40,16 @@ shared:
     event_param: 30
 
   - # Deice
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+  -
     type: var
     var_name: L:XMLVAR_Pitot_1
     var_type: f64
@@ -167,39 +175,40 @@ shared:
     type: var
     var_name: L:FMC_UPDATE_CURRENT_PAGE
     var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_VNAVButtonValue
-    var_type: f64
 
   - # Trim
     type: NumSet
     var_name: A:RUDDER TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
     event_name: RUDDER_TRIM_SET_EX1
   -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
     event_name: ELEVATOR_TRIM_SET
+    condition:
+      var:
+        var_name: AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
   -
     type: var
     var_name: A:AILERON TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
   -
     type: var
     var_name: L:XMLVAR_AileronTrim
     var_units: Number
     var_type: i32
-
-  - # Secondary Trim
+  -
     type: var
     var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
-    var_units: Bool
-    var_type: bool
+    var_type: f64
 
   - # Lights
     type: ToggleSwitch

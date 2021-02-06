@@ -18,17 +18,6 @@ shared:
     var_units: Bool
     event_name: WINDSHIELD_DEICE_TOGGLE
 
-  - # ASOBO_DEICE_Switch_Engine_Template
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:1
-    var_units: Bool
-    event_name: ANTI_ICE_TOGGLE_ENG1
-  -
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:2
-    var_units: Bool
-    event_name: ANTI_ICE_TOGGLE_ENG2
-
   - # ASOBO_ENGINE_Switch_AlternateAir_Template
     type: ToggleSwitch
     var_name: A:RECIP ENG ALTERNATE AIR POSITION:1
@@ -53,15 +42,15 @@ shared:
     event_name: TOGGLE_PROPELLER_DEICE
     event_param: 2
 
-  - # ASOBO_DEICE_Lever_Engine_Template
+  - # ASOBO_DEICE_Lever_Engine_Template (Also works for ENG ANTI ICE toggle)
     type: NumSet
     var_name: A:GENERAL ENG ANTI ICE POSITION:1
-    var_units: Percent
-    var_type: i32
+    var_units: Position 16k
+    var_type: f64
     event_name: ANTI_ICE_GRADUAL_SET_ENG1
   -
     type: NumSet
     var_name: A:GENERAL ENG ANTI ICE POSITION:2
-    var_units: Percent
-    var_type: i32
+    var_units: Position 16k
+    var_type: f64
     event_name: ANTI_ICE_GRADUAL_SET_ENG2

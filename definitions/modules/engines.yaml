@@ -12,17 +12,6 @@ shared:
     var_units: Bool
     event_name: ENGINE_MASTER_2_TOGGLE
 
-  - # ASOBO_ENGINE_Push_Starter_Template
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG STARTER:1
-    var_units: Bool
-    event_name: TOGGLE_STARTER1
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG STARTER:2
-    var_units: Bool
-    event_name: TOGGLE_STARTER2
-
   - # ASOBO_ENGINE_Push_Ignition_Template
     type: NumSet
     var_name: A:TURB ENG IGNITION SWITCH EX1:1
@@ -62,14 +51,14 @@ master:
   - # ASOBO_ENGINE_Lever_Throttle_Template
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
-    var_units: Percent
+    var_units: Position 16K
     var_type: f64
     event_name: THROTTLE1_SET
     interpolate: Default
   -
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
-    var_units: Percent
+    var_units: Position 16K
     var_type: f64
     event_name: THROTTLE2_SET
     interpolate: Default
