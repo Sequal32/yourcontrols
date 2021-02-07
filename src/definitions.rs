@@ -942,7 +942,10 @@ impl Definitions {
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
 
-                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(result.var.floating)) {continue}
+                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(result.var.floating)) {
+                    should_write = false;
+                    continue
+                }
                 
                 if let Some(cancel) = &mapping.cancel {
                     for event_name in cancel {
@@ -1030,10 +1033,16 @@ impl Definitions {
             self.velocity_corrector.remove_wind_component(&mut data);
             // Update all syncactions with the changed values
             for (var_name, value) in data {
+                // Determine if this variable should be updated
+                let mut should_write = !check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &var_name) && !self.do_not_sync.contains(&var_name);
                 // Set current var syncactions
                 if let Some(mappings) = self.mappings.get_mut(&var_name) {
                     for mapping in mappings {
-                        if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &value) {continue}
+                        if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &value) {
+                            // Does not statisfy mapping condition... do not write.
+                            should_write = false;
+                            continue
+                        }
                         
                         if let Some(cancel) = &mapping.cancel {
                             for event_name in cancel {
@@ -1046,9 +1055,6 @@ impl Definitions {
                         }, {}, {});
                     }
                 }
-
-                // Determine if this variable should be updated
-                let mut should_write = !check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &var_name) && !self.do_not_sync.contains(&var_name);
 
                 if let Some(period) = self.periods.get_mut(&var_name) {
                     should_write = should_write && period.do_update();
