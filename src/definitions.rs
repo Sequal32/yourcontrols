@@ -3,7 +3,7 @@ use serde_yaml::{self, Value};
 use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
-use std::{collections::HashMap, collections::{HashSet, hash_map}, fmt::{Debug, Display}, fs::File, path::{Path}, time::Instant};
+use std::{collections::HashMap, collections::{HashSet, VecDeque, hash_map}, fmt::{Debug, Display}, fs::File, path::{Path}, time::Instant};
 use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector};
 
 #[derive(Debug)]
@@ -464,7 +464,11 @@ pub struct Definitions {
     periods: HashMap<String, Period>,
     // Value to hold the current queue
     current_sync: AllNeedSync,
+    // Keep track of which definitions just got written so we don't sync them again
     last_written: HashMap<String, u32>,
+    // Delay events by 100ms in order for them to get synced correctly
+    event_queue: VecDeque<EventTriggered>,
+    event_timer: Instant,
     // Vars that shouldn't be sent reliably
     unreliable_vars: HashSet<String>,
     // Helper struct to correct aircraft velocity
@@ -508,6 +512,8 @@ impl Definitions {
             last_written: HashMap::new(),
 
             current_sync: AllNeedSync::new(),
+            event_queue: VecDeque::new(),
+            event_timer: Instant::now(),
 
             unreliable_vars: HashSet::new(),
             velocity_corrector: VelocityCorrector::new(2),
@@ -1068,8 +1074,33 @@ impl Definitions {
         }
     }
 
-    pub fn step(&mut self) {
+    fn process_events(&mut self, conn: &SimConnector) -> Result<(), WriteDataError> {
+        if let Some(event) = self.event_queue.pop_front() {
+
+            if event.event_name.starts_with("H:") {
+
+                if self.event_timer.elapsed().as_millis() < 100 {return Ok(())}
+                // Use gauge to transmit H: event
+                self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
+
+                self.event_timer = Instant::now();
+                
+            } else {
+                // Event doesn't exist
+                if let Err(()) = self.events.trigger_event(conn, &event.event_name, event.data as u32) {
+                    return Err(WriteDataError::MissingMapping(event.event_name))
+                };
+
+                increment_write_counter_for(&mut self.last_written, &event.event_name);;
+            }
+        }
+
+        Ok(())
+    }
+
+    pub fn step(&mut self, conn: &SimConnector) -> Result<(), WriteDataError> {
         self.process_js_data();
+        self.process_events(conn)
     }
 
     fn filter_all_sync(&self, data: &mut AllNeedSync, sync_permission: &SyncPermission) {
@@ -1115,7 +1146,7 @@ impl Definitions {
     
 
     #[allow(unused_variables)]
-    pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64, interpolate: bool) {
+    fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64, interpolate: bool) {
         if data.len() == 0 {return}
 
         let mut to_sync = AVarMap::new();
@@ -1165,7 +1196,7 @@ impl Definitions {
     }
 
     #[allow(unused_variables)]
-    pub fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap, _interpolate: bool) -> Result<(), WriteDataError> {
+    fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap, _interpolate: bool) -> Result<(), WriteDataError> {
         for (var_name, value) in data {
 
             match self.mappings.get_mut(&var_name) {
@@ -1189,22 +1220,9 @@ impl Definitions {
         Ok(())
     }
 
-    pub fn write_event_data(&mut self, conn: &SimConnector, data: EventData) -> Result<(), WriteDataError> {
+    fn write_event_data(&mut self, conn: &SimConnector, data: EventData) -> Result<(), WriteDataError> {
         for event in data {
-
-            if event.event_name.starts_with("H:") {
-                // Use gauge to transmit H: event
-                self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
-
-            } else {
-                // Event doesn't exist
-                if let Err(()) = self.events.trigger_event(conn, &event.event_name, event.data as u32) {
-                    return Err(WriteDataError::MissingMapping(event.event_name))
-                };
-
-            }
-            
-            increment_write_counter_for(&mut self.last_written, &event.event_name);
+            self.event_queue.push_back(event);
         }
 
         Ok(())
