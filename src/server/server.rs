@@ -146,7 +146,7 @@ impl TransferStruct {
 
                 self.number_connections.fetch_add(1, SeqCst);
 
-                let empty_new_player = Payloads::PlayerJoined { name: name.clone(), in_control: false, is_server: false, is_observer: true};
+                let empty_new_player = Payloads::PlayerJoined { name: name.clone(), in_control: false, is_server: false, is_observer: false};
 
                 self.send_to_all(Some(&addr), empty_new_player.clone());
                 self.server_tx.try_send(ReceiveMessage::Payload(empty_new_player)).ok();

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
 use std::{collections::HashMap, collections::{HashSet, VecDeque, hash_map}, fmt::{Debug, Display}, fs::File, path::{Path}, time::Instant};
-use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector};
+use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
 #[derive(Debug)]
 pub enum ConfigLoadError {
@@ -453,7 +453,7 @@ pub struct Definitions {
     // Events to listen to
     events: Events,
     // Helper struct to execute calculator events
-    lvarstransfer: LVarSyncer,
+    pub lvarstransfer: LVarSyncer,
     // Helper struct to retrieve/set vars not settable in SimConnect
     jstransfer: JSCommunicator,
     // Helper struct to retrieve *changed* aircraft variables using the CHANGED and TAGGED flags in SimConnect
@@ -471,8 +471,6 @@ pub struct Definitions {
     event_timer: Instant,
     // Vars that shouldn't be sent reliably
     unreliable_vars: HashSet<String>,
-    // Helper struct to correct aircraft velocity
-    velocity_corrector: VelocityCorrector,
     // Vars that should not be sent over the network
     do_not_sync: HashSet<String>,
     // Vars that need interpolation
@@ -516,7 +514,6 @@ impl Definitions {
             event_timer: Instant::now(),
 
             unreliable_vars: HashSet::new(),
-            velocity_corrector: VelocityCorrector::new(2),
             do_not_sync: HashSet::new(),
             
             categories: HashMap::new(),
@@ -1029,14 +1026,10 @@ impl Definitions {
     // Process changed aircraft variables and update SyncActions related to it
     #[allow(unused_variables)]
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
-        self.velocity_corrector.process_sim_object_data(data);
-
         if self.avarstransfer.define_id != data.dwDefineID {return}
         
         // Data might be bad/config files don't line up
         if let Ok(mut data) = self.avarstransfer.read_vars(data) {
-            // Remove wind
-            self.velocity_corrector.remove_wind_component(&mut data);
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Determine if this variable should be updated
@@ -1152,10 +1145,6 @@ impl Definitions {
         let mut to_sync = AVarMap::new();
         to_sync.reserve(data.len());
 
-        // Correct velocity
-        let mut data = data;
-        self.velocity_corrector.add_wind_component(&mut data);
-
         let mut interpolation_data = Vec::new();
 
         // Only sync vars that are defined as so
@@ -1170,13 +1159,11 @@ impl Definitions {
                     }, {
                         if interpolate && self.interpolate_vars.contains(&var_name) {
                             // Queue data for interpolation
-                            if let VarReaderTypes::F64(value) = data {
-                                interpolation_data.push(InterpolateData {
-                                   name: var_name.clone(),
-                                   value,
-                                   time
-                                });
-                            }
+                            interpolation_data.push(InterpolateData {
+                                name: var_name.clone(),
+                                value: data.get_as_f64(),
+                                time
+                            });
                         } else {
                                 // Set data right away
                             to_sync.insert(var_name.clone(), data.clone());
@@ -1246,7 +1233,6 @@ impl Definitions {
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
-        self.velocity_corrector.on_connected(conn);
 
         // Might be running another instance
         self.jstransfer.start()

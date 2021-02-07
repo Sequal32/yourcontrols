@@ -222,10 +222,18 @@ impl GaugeCommunicator {
         return Ok(return_vars);
     }
 
-    fn clear_definitions(&mut self, conn: &SimConnector) {
+    fn do_operation(&self, operation: i32, conn: &SimConnector) {
         let mut writer = MemWriter::new(128, 4).unwrap();
-        writer.write_i32(-1);
+        writer.write_i32(operation);
         conn.set_client_data(SEND, SEND, 0, 0, 128, writer.get_data_location() as *mut std::ffi::c_void);
+    }
+
+    fn clear_definitions(&mut self, conn: &SimConnector) {
+        self.do_operation(-1, conn);
+    }
+
+    pub fn stop_interpolation(&self, conn: &SimConnector) {
+        self.do_operation(-2, conn);
     }
 
     pub fn fetch_all(&self, conn: &SimConnector) {

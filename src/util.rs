@@ -46,9 +46,13 @@ pub enum VarReaderTypes {
 }
 
 impl VarReaderTypes {
-    pub fn get_as_f64(&self) -> Option<&f64> {
-        if let VarReaderTypes::F64(data) = self {return Some(data)}
-        None
+    pub fn get_as_f64(&self) -> f64 {
+        match self {
+            VarReaderTypes::Bool(v) => *v as i32 as f64,
+            VarReaderTypes::I32(v) => *v as f64,
+            VarReaderTypes::I64(v) => *v as f64,
+            VarReaderTypes::F64(v) => *v
+        }
     }
 }
 
