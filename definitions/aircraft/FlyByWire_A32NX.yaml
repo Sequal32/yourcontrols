@@ -100,8 +100,6 @@ shared:
     var_units: Bool
     event_name: APU_BLEED_AIR_SOURCE_TOGGLE
 
-
-
   - # Deice
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:1
@@ -117,8 +115,6 @@ shared:
     var_name: A:STRUCTURAL DEICE SWITCH
     var_units: Bool
     event_name: TOGGLE_STRUCTURAL_DEICE
-
-
 
   - # ELAC
     type: ToggleSwitch
@@ -258,14 +254,14 @@ shared:
   - # Kohlsman
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:1
-    var_units: Millibars
+    var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:2
-    var_units: Millibars
+    var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
     event_param: 2
@@ -603,13 +599,13 @@ shared:
     type: NumSet
     var_name: A:RUDDER TRIM PCT
     var_units: Percent scaler 16k
-    var_type: i32
+    var_type: f64
     event_name: RUDDER_TRIM_SET
   -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
     var_units: Percent scaler 16k
-    var_type: i32
+    var_type: f64
     event_name: ELEVATOR_TRIM_SET
     condition: # Because the aircraft is FBW, the trim is constantly adjusted so there's no need to sync this in the air
       var:
