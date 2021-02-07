@@ -185,10 +185,13 @@ shared:
     event_name: RADIO_DME2_IDENT_TOGGLE
 
   - # Audio Panel
-    type: var
+    type: NumIncrement
     var_name: A:AUDIO PANEL VOLUME
     var_units: Percent
-    var_type: f64
+    var_type: i32
+    up_event_name: AUDIO_PANEL_VOLUME_INC
+    down_event_name: AUDIO_PANEL_VOLUME_DEC
+    increment_by: 1
   -
     type: ToggleSwitch
     var_name: A:COM TRANSMIT:1

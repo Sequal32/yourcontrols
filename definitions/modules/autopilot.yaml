@@ -167,11 +167,17 @@ shared:
     var_name: A:GPS DRIVES NAV1
     var_units: Bool
     event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel:
+      - AS1000_PFD_SOFTKEYS_6
+      - AS3000_PFD_1_SOFTKEYS_7
   -
     type: var
     var_name: A:AUTOPILOT NAV SELECTED
     var_units: Number
     var_type: i32
+    cancel:
+      - AS1000_PFD_SOFTKEYS_6
+      - AS3000_PFD_1_SOFTKEYS_7
   -
     type: NumSet
     var_name: A:RUDDER TRIM DISABLED
