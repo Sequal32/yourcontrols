@@ -99,7 +99,6 @@ shared:
     var_name: A:BLEED AIR APU
     var_units: Bool
     event_name: APU_BLEED_AIR_SOURCE_TOGGLE
-
   - # Deice
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:1
@@ -115,7 +114,6 @@ shared:
     var_name: A:STRUCTURAL DEICE SWITCH
     var_units: Bool
     event_name: TOGGLE_STRUCTURAL_DEICE
-
   - # ELAC
     type: ToggleSwitch
     var_name: A:FLY BY WIRE ELAC SWITCH:1
@@ -1365,15 +1363,24 @@ shared:
   -
     type: var
     var_name: L:A32NX_BTN_CLR
+    condition:
+      equals:
+        F64: 1
   -
     type: var
     var_name: L:A32NX_ECAM_SFAIL
   -
     type: var
     var_name: L:A32NX_BTN_CLR2
+    condition:
+      equals:
+        F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_RCL
+    condition:
+      equals:
+        F64: 1
   -
     type: var
     var_name: L:XMLVAR_COM_1_VHF_L_Switch_Down
