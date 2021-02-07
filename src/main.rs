@@ -10,7 +10,6 @@ mod syncdefs;
 mod update;
 mod util;
 mod varreader;
-mod velocity;
 
 use app::{App, AppMessage, ConnectionMethod};
 use clientmanager::ClientManager;
@@ -277,7 +276,7 @@ fn main() {
                             definitions.clear_sync();
                             if to == client.get_server_name() {
                                 info!("[CONTROL] Taking control from {}", from);
-                                control.take_control(&conn);
+                                control.take_control(&conn, &definitions.lvarstransfer.transfer);
                                 app_interface.gain_control();
                                 clients.set_no_control();
                             // Someone else has controls, if we have controls we let go and listen for their messages
@@ -301,7 +300,6 @@ fn main() {
                             
                             if client.is_host() {
                                 app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
-
                                 // Send definitions
                                 client.send_definitions(definitions.get_buffer_bytes().into_boxed_slice(), name.clone());
                             } else {
@@ -332,7 +330,7 @@ fn main() {
                                     info!("[CONTROL] {} had control, taking control back.", name);
                                     app_interface.gain_control();
 
-                                    control.take_control(&conn);
+                                    control.take_control(&conn, &definitions.lvarstransfer.transfer);
                                     client.transfer_control(client.get_server_name().to_string());
                                 }
                             }
@@ -378,7 +376,7 @@ fn main() {
                                     // Display server started message
                                 app_interface.server_started(0, client.get_session_id().as_deref());
                                     // Unfreeze aircraft
-                                control.take_control(&conn);
+                                control.take_control(&conn, &definitions.lvarstransfer.transfer);
                                 app_interface.gain_control();
                                     // Not really used by the host
                                 connection_time = Some(Instant::now());
@@ -397,7 +395,7 @@ fn main() {
                         Event::ConnectionLost(reason) => {
                             info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
                                 // TAKE BACK CONTROL
-                            control.take_control(&conn);
+                            control.take_control(&conn, &definitions.lvarstransfer.transfer);
 
                             clients.reset();
                             observing = false;
@@ -428,7 +426,7 @@ fn main() {
             if definitions.control_transfer_requested {
                 if !control.has_control() && !observing {
                     if let Some(in_control) = clients.get_client_in_control() {
-                        control.take_control(&conn);
+                        control.take_control(&conn, &definitions.lvarstransfer.transfer);
                         client.take_control(in_control.clone());
                     }
                 }

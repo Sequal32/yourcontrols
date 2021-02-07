@@ -1,5 +1,7 @@
 use simconnect::SimConnector;
 
+use super::gaugecommunicator::GaugeCommunicator;
+
 pub struct Control {
     has_control: bool,
 }
@@ -17,9 +19,10 @@ impl Control {
         conn.transmit_client_event(1, 1002, !self.has_control as u32, 5, 0);
     }
 
-    pub fn take_control(&mut self, conn: &SimConnector) {
+    pub fn take_control(&mut self, conn: &SimConnector, gauge_communicator: &GaugeCommunicator) {
         self.has_control = true;
         self.do_transfer(conn);
+        gauge_communicator.stop_interpolation(conn);
     }
 
     pub fn lose_control(&mut self, conn: &SimConnector) {
