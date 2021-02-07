@@ -893,12 +893,18 @@ impl Definitions {
                         }
                     }
                 }
+            } else if key == "ignore" {
+
+                for ignore_value in value {
+                    let ignore_name = ignore_value.as_str().unwrap();
+                    self.last_written.insert(ignore_name.to_string(), u32::MAX);
+                }
+
             } else {
                 for var_data in value {
                     self.parse_var(key.clone(), var_data)?;
                 }
             }
-            
         }
 
         // Shrink all maps
@@ -1047,7 +1053,7 @@ impl Definitions {
                 if let Some(period) = self.periods.get_mut(&var_name) {
                     should_write = should_write && period.do_update();
                 }
-
+ 
                 if should_write {
                     // Queue data for reading
                     self.current_sync.avars.insert(var_name.clone(), value);
