@@ -1027,9 +1027,11 @@ impl Definitions {
     #[allow(unused_variables)]
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
         if self.avarstransfer.define_id != data.dwDefineID {return}
+        // Do not increment counter a second time
+        let mut did_cancel = HashSet::new();
         
         // Data might be bad/config files don't line up
-        if let Ok(mut data) = self.avarstransfer.read_vars(data) {
+        if let Ok(data) = self.avarstransfer.read_vars(data) {
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Determine if this variable should be updated
@@ -1045,7 +1047,9 @@ impl Definitions {
                         
                         if let Some(cancel) = &mapping.cancel {
                             for event_name in cancel {
+                                if did_cancel.contains(event_name) {continue}
                                 increment_write_counter_for(&mut self.last_written, event_name);
+                                did_cancel.insert(event_name.clone());
                             }
                         }
 
