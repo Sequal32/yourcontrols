@@ -1,9 +1,9 @@
 use indexmap::{IndexMap};
 use serde_yaml::{self, Value};
-use serde::{Deserialize, Serialize, __private::de};
+use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
-use std::{borrow::Cow, collections::HashMap, collections::{HashSet, hash_map}, fmt::{Debug, Display}, fs::File, path::{Path}, time::Instant};
+use std::{collections::HashMap, collections::{HashSet, hash_map}, fmt::{Debug, Display}, fs::File, path::{Path}, time::Instant};
 use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes, velocity::VelocityCorrector};
 
 #[derive(Debug)]
@@ -115,6 +115,28 @@ macro_rules! execute_mapping {
     }
 }
 
+fn increment_write_counter_for(map: &mut HashMap<String, u32>, data_name: &str) {
+    if let Some(data_name) = map.get_mut(data_name) {
+        *data_name += 1;
+    } else {
+        map.insert(data_name.to_string(), 1);
+    }
+}
+
+fn check_did_write_recently_and_deincrement_counter_for(map: &mut HashMap<String, u32>, data_name: &str) -> bool {
+    let mut did_write_recently = false;
+
+    if let Some(count) = map.get_mut(data_name) {
+        did_write_recently = *count != 0;
+
+        if did_write_recently {
+            *count -= 1;
+        }
+    }
+
+    return did_write_recently
+}
+
 fn get_data_type_from_string(string: &str) -> Result<InDataTypes, VarAddError> {
     Ok(
         match string {
@@ -221,7 +243,7 @@ struct Condition {
 struct VarEntry {
     var_name: String,
     var_units: Option<String>,
-    var_type: InDataTypes,
+    var_type: Option<InDataTypes>,
     update_every: Option<f64>,
     condition: Option<Condition>,
     interpolate: Option<InterpolationType>,
@@ -442,7 +464,7 @@ pub struct Definitions {
     periods: HashMap<String, Period>,
     // Value to hold the current queue
     current_sync: AllNeedSync,
-    last_written: HashMap<String, Instant>,
+    last_written: HashMap<String, u32>,
     // Vars that shouldn't be sent reliably
     unreliable_vars: HashSet<String>,
     // Helper struct to correct aircraft velocity
@@ -500,7 +522,7 @@ impl Definitions {
     }
 
     fn add_var(&mut self, category: &str, var: VarEntry) -> Result<(), VarAddError> {
-        let (var_name, var_type) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
+        let (var_name, var_type) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type.unwrap_or(InDataTypes::F64))?;
 
         // Handle interpolation for this variable
         if let Some(interpolate) = var.interpolate {
@@ -909,7 +931,7 @@ impl Definitions {
 
     #[allow(unused_variables)]
     fn process_local_var(&mut self, result: GetResult) {
-        let mut should_write = !self.did_write_recently(&result.var_name);
+        let mut should_write = !check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &result.var_name);
 
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
@@ -918,7 +940,7 @@ impl Definitions {
                 
                 if let Some(cancel) = &mapping.cancel {
                     for event_name in cancel {
-                        self.last_written.insert(event_name.to_string(), Instant::now());
+                        increment_write_counter_for(&mut self.last_written, event_name);
                     }
                 }
 
@@ -960,7 +982,7 @@ impl Definitions {
         if let Some(payload) = self.jstransfer.poll() {
             match payload {
                 jscommunicator::Payloads::Interaction { name } => {
-                    if !self.did_write_recently(&name[5..]) { // Canceled event
+                    if !check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &name[5..]) { // Canceled event
                         self.current_sync.events.push(EventTriggered { event_name: name, data: 0})
                     }
                 }
@@ -981,7 +1003,7 @@ impl Definitions {
         };
 
         // Check timer
-        if self.did_write_recently(&event_name) {return;}
+        if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &event_name) {return;}
 
         self.current_sync.events.push(EventTriggered {
             event_name: event_name,
@@ -1009,7 +1031,7 @@ impl Definitions {
                         
                         if let Some(cancel) = &mapping.cancel {
                             for event_name in cancel {
-                                self.last_written.insert(event_name.to_string(), Instant::now());
+                                increment_write_counter_for(&mut self.last_written, event_name);
                             }
                         }
 
@@ -1020,7 +1042,7 @@ impl Definitions {
                 }
 
                 // Determine if this variable should be updated
-                let mut should_write = !self.did_write_recently(&var_name) && !self.do_not_sync.contains(&var_name);
+                let mut should_write = !check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &var_name) && !self.do_not_sync.contains(&var_name);
 
                 if let Some(period) = self.periods.get_mut(&var_name) {
                     should_write = should_write && period.do_update();
@@ -1078,13 +1100,7 @@ impl Definitions {
         return true
     }
 
-    fn did_write_recently(&self, data_name: &str) -> bool {
-        if let Some(timer) = self.last_written.get(data_name) {
-            return timer.elapsed().as_secs() < 1
-        } else {
-            return false
-        }
-    }
+    
 
     #[allow(unused_variables)]
     pub fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64, interpolate: bool) {
@@ -1101,7 +1117,7 @@ impl Definitions {
 
         // Only sync vars that are defined as so
         for (var_name, data) in data {
-            self.last_written.insert(var_name.to_string(), Instant::now());
+            increment_write_counter_for(&mut self.last_written, &var_name);
 
             // Otherwise sync them using defined events
             if let Some(mappings) = self.mappings.get_mut(&var_name) {
@@ -1150,7 +1166,7 @@ impl Definitions {
                             self.lvarstransfer.set(conn, &var_name, value.to_string().as_ref());
                         }, {});
         
-                        self.last_written.insert(var_name.clone(), Instant::now());
+                        increment_write_counter_for(&mut self.last_written, &var_name);
 
                     }
                 }
@@ -1176,7 +1192,7 @@ impl Definitions {
 
             }
             
-            self.last_written.insert(event.event_name, Instant::now());
+            increment_write_counter_for(&mut self.last_written, &event.event_name);
         }
 
         Ok(())
