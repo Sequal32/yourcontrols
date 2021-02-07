@@ -420,7 +420,9 @@ fn main() {
                 }
             }
 
-            definitions.step();
+            if let Err(e) = definitions.step(&conn) {
+                client.stop(e.to_string());
+            }
 
             // Handle specific program triggered actions
             if definitions.control_transfer_requested {
