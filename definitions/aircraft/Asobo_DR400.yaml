@@ -1,6 +1,7 @@
 include:
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -76,39 +77,3 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 7
     index_reversed: true
-
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG STARTER:1
-    var_units: Bool
-    var_type: i32
-    event_name: SET_STARTER1_HELD
-
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_IsDown
-    var_type: f64
-
-  - # ASOBO_ELECTRICAL_Switch_Magneto_Template
-    type: var
-    var_name: A:RECIP ENG LEFT MAGNETO:1
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:RECIP ENG RIGHT MAGNETO:1
-    var_units: Bool
-    var_type: bool
-  
-  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
-    var_units: Bool
-    event_name: TOGGLE_ALTERNATOR1
-
-  - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL MASTER BATTERY:1
-    var_units: Bool
-    event_name: TOGGLE_MASTER_BATTERY
-    event_param: 1

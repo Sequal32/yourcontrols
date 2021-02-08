@@ -1,16 +1,18 @@
 # This file only supports aircraft with a max of two engines. You can specify more in the individual profile.
 
 shared:
-  - # ASOBO_FUEL_Switch_Pump_Template
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG FUEL PUMP SWITCH:1
-    var_units: Bool
-    event_name: TOGGLE_ELECT_FUEL_PUMP1
+  - # ASOBO_FUEL_Switch_Pump_Template (Also works for GENERAL ENG FUEL PUMP SWITCH)
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP1_SET
   -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG FUEL PUMP SWITCH:2
-    var_units: Bool
-    event_name: TOGGLE_ELECT_FUEL_PUMP2
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP2_SET
 
   - # ASOBO_FUEL_Knob_Selector_Template
     type: NumSet
@@ -33,6 +35,9 @@ shared:
     var_units: Enum
     var_type: i32
     event_name: SET_FUEL_TRANSFER_CUSTOM
+  -
+    type: event
+    event_name: FUEL_TRANSFER_CUSTOM_INDEX_TOGGLE
 
   - # ASOBO_FUEL_Switch_Cutoff_Template
     type: ToggleSwitch
