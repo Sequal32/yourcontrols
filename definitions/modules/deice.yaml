@@ -18,17 +18,6 @@ shared:
     var_units: Bool
     event_name: WINDSHIELD_DEICE_TOGGLE
 
-  - # ASOBO_DEICE_Switch_Engine_Template
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:1
-    var_units: Bool
-    event_name: ANTI_ICE_TOGGLE_ENG1
-  -
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:2
-    var_units: Bool
-    event_name: ANTI_ICE_TOGGLE_ENG2
-
   - # ASOBO_DEICE_Lever_Engine_Template (Works for both ENG ANTI ICE toggle and RECIP ENG ALTERNATE position. Makes no sense, I know)
     type: NumSet
     var_name: A:GENERAL ENG ANTI ICE POSITION:1
@@ -42,18 +31,27 @@ shared:
     var_type: f64
     event_name: ANTI_ICE_GRADUAL_SET_ENG2
 
-  - # ASOBO_ENGINE_Switch_AlternateAir_Template
-    type: NumSet
+  - # ASOBO_DEICE_Switch_Engine_Template
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+
+  - # ASOBO_ENGINE_Switch_AlternateAir_Template (Var cause event conflict with above)
+    type: var
     var_name: A:RECIP ENG ALTERNATE AIR POSITION:1
     var_units: Position 16k
     var_type: f64
-    event_name: ANTI_ICE_TOGGLE_ENG1
   -
-    type: NumSet
+    type: var
     var_name: A:RECIP ENG ALTERNATE AIR POSITION:2
     var_units: Position 16k
     var_type: f64
-    event_name: ANTI_ICE_TOGGLE_ENG2
 
   - # ASOBO_DEICE_Switch_Propeller_Template
     type: ToggleSwitch
