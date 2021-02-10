@@ -15,18 +15,50 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
+  - # Electrical
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:20
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 20
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
+    set: 2 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:37
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 37
 
   - # Choke
     type: var
     var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
     var_units: Percent
     var_type: i32
+
+  - # NavCom
+    type: ToggleSwitch
+    var_name: A:COM TEST:1
+    var_units: Bool
+    event_name: RADIO_COMMNAV1_TEST_TOGGLE
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:35
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:37
+    var_units: Bool
+    var_type: bool
 
   - # Lights
     type: ToggleSwitch
@@ -63,19 +95,3 @@ shared:
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 2
     index_reversed: true
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:35
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:37
-    var_units: Bool
-    var_type: bool
