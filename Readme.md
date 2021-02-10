@@ -13,10 +13,8 @@ Shared Cockpit for MSFS
   - [Client can see host manipulate switches but not vice-versa](#client-can-see-host-manipulate-switches-but-not-vice-versa)
 - [Limitations](#limitations)
 
-The following ASOBO aircraft are supported:
-* All 30 original
-
-The following 3rd-party and modded aircraft are supported:
+The following aircraft are supported:
+* All 30 stock by ASOBO
 * FlyByWire A32NX Stable & Dev
 * JPLogistics C152X
 * Working Title CJ4
