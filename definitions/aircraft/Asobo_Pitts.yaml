@@ -18,6 +18,18 @@ shared:
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 23
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:35
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 35
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:36
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 36
 
   - # Cowl Flap
     type: NumSet
@@ -25,3 +37,15 @@ shared:
     var_units: Percent
     var_type: i32
     event_name: COWLFLAP1_SET
+
+  - # NAVCOMM
+    type: ToggleSwitch
+    var_name: A:COM TEST:1
+    var_units: Bool
+    event_name: RADIO_COMMNAV1_TEST_TOGGLE
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT NAVCOM1 ON
+    var_units: Bool
+    var_type: bool

@@ -17,6 +17,12 @@ include:
 shared:
   - # Avionics
     type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:38
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 38
+  -
+    type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:39
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
@@ -40,6 +46,17 @@ shared:
     type: var
     var_name: L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
     var_type: bool
+
+  - # NAVCOMM
+    type: ToggleSwitch
+    var_name: A:COM TEST:1
+    var_units: Bool
+    event_name: RADIO_COMMNAV1_TEST_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:COM TEST:2
+    var_units: Bool
+    event_name: RADIO_COMMNAV2_TEST_TOGGLE
 
   - # Failures
     type: var
