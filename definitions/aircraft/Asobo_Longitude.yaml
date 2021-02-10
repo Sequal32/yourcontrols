@@ -38,6 +38,12 @@ shared:
     set: 6 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
   - # APU
+    type: ToggleSwitch
+    var_name: A:APU SWITCH
+    var_units: Bool
+    event_name: APU_STARTER
+    off_event_name: APU_OFF_SWITCH
+  -
     type: var
     var_name: L:XMLVAR_APU_StarterKnob_Pos
     var_type: f64

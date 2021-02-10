@@ -164,11 +164,18 @@ shared:
     event_param: 2
   -
     type: var
-    var_name: L:XMLVAR_APU_StarterKnob_Pos
+    var_name: L:XMLVAR_StandbyPower_Selector
     var_type: f64
+
+  - # APU
+    type: ToggleSwitch
+    var_name: A:APU SWITCH
+    var_units: Bool
+    event_name: APU_STARTER
+    off_event_name: APU_OFF_SWITCH
   -
     type: var
-    var_name: L:XMLVAR_StandbyPower_Selector
+    var_name: L:XMLVAR_APU_StarterKnob_Pos
     var_type: f64
 
   - # Engines
