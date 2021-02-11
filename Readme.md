@@ -18,6 +18,7 @@ The following aircraft are supported:
 * FlyByWire A32NX Stable & Dev
 * JPLogistics C152X
 * Working Title CJ4
+* DA62X by MrTommymxr
 
 
 ## Downloading
