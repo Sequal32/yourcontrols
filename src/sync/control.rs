@@ -17,6 +17,7 @@ impl Control {
         conn.transmit_client_event(1, 1000, !self.has_control as u32, 5, 0);
         conn.transmit_client_event(1, 1001, !self.has_control as u32, 5, 0);
         conn.transmit_client_event(1, 1002, !self.has_control as u32, 5, 0);
+        conn.transmit_client_event(1, 1003, !self.has_control as u32, 5, 0);
     }
 
     pub fn take_control(&mut self, conn: &SimConnector, gauge_communicator: &GaugeCommunicator) {
@@ -38,5 +39,6 @@ impl Control {
         conn.map_client_event_to_sim_event(1000, "FREEZE_LATITUDE_LONGITUDE_SET");
         conn.map_client_event_to_sim_event(1001, "FREEZE_ALTITUDE_SET");
         conn.map_client_event_to_sim_event(1002, "FREEZE_ATTITUDE_SET");
+        conn.map_client_event_to_sim_event(1003, "AUTORUDDER_TOGGLE");
     }
 }
