@@ -1072,11 +1072,11 @@ impl Definitions {
     }
 
     fn process_events(&mut self, conn: &SimConnector) -> Result<(), WriteDataError> {
-        if let Some(event) = self.event_queue.pop_front() {
+        if let Some(event) = self.event_queue.front() {
 
             if event.event_name.starts_with("H:") {
 
-                if self.event_timer.elapsed().as_millis() < 100 {return Ok(())}
+                if self.event_timer.elapsed().as_millis() < 50 {return Ok(())}
                 // Use gauge to transmit H: event
                 self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
 
@@ -1085,12 +1085,14 @@ impl Definitions {
             } else {
                 // Event doesn't exist
                 if let Err(()) = self.events.trigger_event(conn, &event.event_name, event.data as u32) {
-                    return Err(WriteDataError::MissingMapping(event.event_name))
+                    return Err(WriteDataError::MissingMapping(event.event_name.clone()))
                 };
 
-                increment_write_counter_for(&mut self.last_written, &event.event_name);;
+                increment_write_counter_for(&mut self.last_written, &event.event_name);
             }
         }
+
+        self.event_queue.pop_front();
 
         Ok(())
     }
