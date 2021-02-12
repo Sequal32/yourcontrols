@@ -11,34 +11,6 @@ include:
   - definitions/modules/transponder.yaml
 
 shared:
-  - # Autopilot Extras
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_2_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_Mode
-    var_type: f64
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
-    var_units: Feet
-    var_type: i32
-    event_name: AP_ALT_VAR_SET_ENGLISH
-    event_param: 3
-
   - # APU
     type: ToggleSwitch
     var_name: A:APU SWITCH
@@ -229,6 +201,34 @@ shared:
     var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 6
+
+  - # Glareshield
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_Mode
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 3
 
   - # Radar
     type: var

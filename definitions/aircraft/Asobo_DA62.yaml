@@ -15,32 +15,7 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Autopilot
-    type: var
-    var_name: L:XMLVAR_Autopilot_2_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_VNAVButtonValue
-    var_type: f64
-  -
-    type: var
-    var_name: L:HUD_AP_SELECTED_SPEED
-    var_type: f64
-  -
-    type: var
-    var_name: L:HUD_AP_SELECTED_ALTITUDE
-    var_type: f64
-
   - # Deice
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-    var_type: f64
-  -
     type: var
     var_name: L:XMLVAR_IceLightState
     var_type: f64
@@ -71,6 +46,19 @@ shared:
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 30
+    
+  - # Aux pumps
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:9
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 9
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:10
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 10
 
   - # Failures
     type: var

@@ -13,65 +13,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Autopilot
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_2_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_ForcedToSTD
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_SavedPressure
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Mins_Selector_Baro
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_FPA_MODE_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_EICAS_INDEX
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_MFD_SIDE_
-    var_type: f64
-  -
-    type: var
-    var_name: L:AP_VS_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:AS01B_AUTO_THROTTLE_ARM_STATE
-    var_type: f64
-  -
-    type: event
-    event_name: AP_HDG_HOLD_ON
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
-    var_units: Feet
-    var_type: i32
-    event_name: AP_ALT_VAR_SET_ENGLISH
-    event_param: 3
-
   - # AutoBrakes
     type: NumIncrement
     var_name: A:AUTO BRAKE SWITCH CB
@@ -262,6 +203,62 @@ shared:
     type: var
     var_name: L:FuelBalanceSystemActive
     var_type: f64
+
+  - # Glareshield
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_ForcedToSTD
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_SavedPressure
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Mins_Selector_Baro
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_FPA_MODE_ACTIVE
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_EICAS_INDEX
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_MFD_SIDE_
+    var_type: f64
+  -
+    type: var
+    var_name: L:AP_VS_ACTIVE
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS01B_AUTO_THROTTLE_ARM_STATE
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 3
 
   - # Hydraulics
     type: ToggleSwitch

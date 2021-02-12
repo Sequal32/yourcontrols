@@ -12,33 +12,16 @@ include:
   - definitions/modules/transponder.yaml
 
 shared:
-  - # Autopilot Extras
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-    var_type: f64
+  - # APU
+    type: ToggleSwitch
+    var_name: A:APU SWITCH
+    var_units: Bool
+    event_name: APU_STARTER
+    off_event_name: APU_OFF_SWITCH
   -
     type: var
-    var_name: L:XMLVAR_Autopilot_2_Status
+    var_name: L:XMLVAR_APU_StarterKnob_Pos
     var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_3_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:AP_SPEED_INTERVENTION_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:AP_VNAV_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_AUTO_THROTTLE_ARM_0_STATE
-    var_type: f64
-  -
-    type: event
-    event_name: AP_HDG_HOLD_ON
 
   - # AutoBrakes
     type: NumIncrement
@@ -165,17 +148,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_StandbyPower_Selector
-    var_type: f64
-
-  - # APU
-    type: ToggleSwitch
-    var_name: A:APU SWITCH
-    var_units: Bool
-    event_name: APU_STARTER
-    off_event_name: APU_OFF_SWITCH
-  -
-    type: var
-    var_name: L:XMLVAR_APU_StarterKnob_Pos
     var_type: f64
 
   - # Engines
@@ -419,7 +391,27 @@ shared:
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 16
 
-  - # Glass Cockpit
+  - # Glareshield
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_3_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUTO_THROTTLE_ARM_0_STATE
+    var_type: f64
+  -
+    type: var
+    var_name: L:B747_MAP_MODE
+    var_type: f64
+  -
     type: var
     var_name: L:B747_8_MFD_NAV_MODE
     var_type: f64
@@ -441,7 +433,11 @@ shared:
     var_type: f64
   -
     type: var
-    var_name: L:B747_MAP_MODE
+    var_name: L:AP_VNAV_ACTIVE
+    var_type: f64
+  -
+    type: var
+    var_name: L:AP_SPEED_INTERVENTION_ACTIVE
     var_type: f64
   -
     type: var
