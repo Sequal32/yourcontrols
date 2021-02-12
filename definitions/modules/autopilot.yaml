@@ -11,18 +11,12 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: AUTOPILOT_DISENGAGE_SET
-  -
-    type: event
-    event_name: AUTOPILOT_DISENGAGE_TOGGLE
 
   - # ASOBO_AUTOPILOT_Push_Heading_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT HEADING LOCK
     var_units: Bool
-    event_name: AP_PANEL_HEADING_HOLD
-  -
-    type: event
-    event_name: AP_HDG_HOLD_ON
+    event_name: AP_HDG_HOLD
 
   - # ASOBO_AUTOPILOT_Knob_Heading_Template
     type: NumSet
@@ -160,10 +154,13 @@ shared:
     event_name: AP_NAV1_HOLD
 
   - # ASOBO_AUTOPILOT_Knob_Bank_Limit_Template
-    type: var
+    type: NumIncrement
     var_name: A:AUTOPILOT MAX BANK
     var_units: Degrees
     var_type: f64
+    up_event_name: AP_MAX_BANK_INC
+    down_event_name: AP_MAX_BANK_DEC
+    increment_by: 1
 
   - # ASOBO_AUTOPILOT_Push_YawDamper_Template
     type: ToggleSwitch
@@ -179,10 +176,11 @@ shared:
       - AS1000_PFD_SOFTKEYS_6
       - AS3000_PFD_1_SOFTKEYS_7
   -
-    type: var
+    type: NumSet
     var_name: A:AUTOPILOT NAV SELECTED
     var_units: Number
     var_type: i32
+    event_name: AP_NAV_SELECT_SET
     cancel:
       - AS1000_PFD_SOFTKEYS_6
       - AS3000_PFD_1_SOFTKEYS_7
