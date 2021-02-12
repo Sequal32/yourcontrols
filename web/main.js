@@ -202,7 +202,7 @@ function UpdateMetrics(metrics) {
     uploadBandwidth.textContent = "↑ " + metrics.sentBandwidth.toFixed(2) + " KB/s"
     uploadRate.textContent = Math.floor(metrics.sentPackets) + " Packets/s"
     networkLoss.textContent = (metrics.packetLoss * 100).toFixed(2) + "% Packet loss"
-    ping.textContent = metrics.ping + "ms"
+    ping.textContent = metrics.ping.toFixed(0) + "ms"
 }
 
 // Handle server messages
@@ -234,6 +234,7 @@ function MessageReceived(data) {
         case "host":
             is_client = false;
             forceButton.hidden = false
+            ping.hidden = false // Connected to Cloud Host, show ping to there
             $("#not_server_running").append(forceButton)
             break;
         case "error":
