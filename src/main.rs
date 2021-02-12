@@ -386,8 +386,6 @@ fn main() {
                                 app_interface.lose_control();
                                     // Freeze aircraft
                                 control.lose_control(&conn);
-                                    // Intiailly observer
-                                observing = true;
                             }
                             
                             need_update = true;
@@ -404,7 +402,7 @@ fn main() {
                             app_interface.client_fail(&reason);
                         }
                         Event::UnablePunchthrough => {
-                            app_interface.client_fail("Could not connect to host! Please port forward or using 'Request Hosting'!")
+                            app_interface.client_fail("Could not connect to host! Please port forward or using 'Cloud Host'!")
                         }
                         
                         Event::SessionIdFetchFailed => {
