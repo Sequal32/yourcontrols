@@ -79,6 +79,7 @@ fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: So
         // Used
         Payloads::AircraftDefinition {..}  |
         Payloads::InvalidVersion {..} | 
+        Payloads::Heartbeat {..} | 
         Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload_bytes),
         Payloads::PeerEstablished {..} |
         Payloads::Handshake {..} => Packet::unreliable(target, payload_bytes),
@@ -88,9 +89,8 @@ fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: So
         Payloads::SetObserver {..} |
         Payloads::Ready |
         Payloads::TransferControl {..} |
-        Payloads::RequestHosting {..} | 
-        Payloads::Heartbeat => Packet::reliable_ordered(target, payload_bytes, Some(2)),
-        Payloads::Update {is_unreliable, ..} => if *is_unreliable {Packet::unreliable_sequenced(target, payload_bytes, Some(1))} else {Packet::reliable_ordered(target, payload_bytes, Some(2))}
+        Payloads::RequestHosting {..} => Packet::reliable_ordered(target, payload_bytes, Some(1)),
+        Payloads::Update {is_unreliable, ..} => if *is_unreliable {Packet::unreliable_sequenced(target, payload_bytes, Some(0))} else {Packet::reliable_ordered(target, payload_bytes, Some(0))}
     }
 }
 
