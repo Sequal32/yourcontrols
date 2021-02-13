@@ -53,7 +53,9 @@ pub enum InterpolationType {
     Wrap180,
     Wrap90,
     Wrap360,
-    Invert
+    Invert,
+    DefaultConstant,
+    InvertConstant
 }
 
 fn format_get(var_name: &str, var_units: Option<&str>) -> String {
@@ -287,7 +289,9 @@ impl GaugeCommunicator {
                 InterpolationType::Wrap180 => 1,
                 InterpolationType::Wrap90 => 2,
                 InterpolationType::Wrap360 => 3,
-                InterpolationType::Invert => 4
+                InterpolationType::Invert => 4,
+                InterpolationType::DefaultConstant => 5,
+                InterpolationType::InvertConstant => 6,
             };
 
             writer.write_u32(datum.datum_id);

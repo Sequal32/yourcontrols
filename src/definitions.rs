@@ -634,7 +634,10 @@ impl Definitions {
                 // Add new var to watch for
                 let (var_string, _) = self.add_var_string("shared", &var_data.var_name, var_data.var_units.as_deref(), var_data.var_type)?;
                 var_data.var_name = var_string.clone();
-                self.do_not_sync.insert(var_string);
+
+                if self.mappings.get(&var_string).is_none() {
+                    self.do_not_sync.insert(var_string);
+                }
             }
         }
 
