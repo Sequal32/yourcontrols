@@ -53,8 +53,9 @@ shared:
     down_event_name: ADF_CARD_DEC
     increment_by: 1
 
-# - # Recommended not to use as this updates constantly, calibrating the heading indicator isn't used often
-#   type: var
-#   var_name: A:PLANE HEADING DEGREES GYRO
-#   var_units: Degrees
-#   var_type: i32
+#  - # Recommended not to use as this updates constantly, calibrating the heading indicator isn't used often
+#    type: NumSet
+#    var_name: A:PLANE HEADING DEGREES GYRO
+#    var_units: Degrees
+#    var_type: f64
+#    event_name: GYRO_DRIFT_SET
