@@ -200,8 +200,6 @@ pub type LVarMap = HashMap<String, f64>;
 // Name of the event the DWORD data associated with it with how many times it got triggered (not a map as the event could've got triggered multiple times before the data could get send)
 pub type EventData = Vec<EventTriggered>;
 
-type CancelEvents = Vec<String>;
-
 #[derive(Debug)]
 enum VarType {
     AircraftVar,
@@ -216,11 +214,14 @@ pub struct SyncPermission {
 }
 
 // Serde types
-// Describes how an aircraft variable can be set using a SimEvent
-// Describes an event to be listened to for fires
 #[derive(Deserialize)]
 struct EventEntry {
-    event_name: String
+    event_name: String,
+    #[serde(default)]
+    use_calculator: bool,
+    #[serde(default)]
+    cancel_h_events: bool,
+    condition: Option<Condition>,
 }
 
 #[derive(Deserialize)]
@@ -251,7 +252,8 @@ struct VarEntry {
     constant: bool,
     #[serde(default)]
     unreliable: bool,
-    cancel: Option<CancelEvents>,
+    #[serde(default)]
+    cancel_h_events: bool,
 }
 
 #[derive(Deserialize)]
@@ -266,7 +268,8 @@ struct ToggleSwitchGenericEntry {
     #[serde(default)]
     use_calculator: bool,
     condition: Option<Condition>,
-    cancel: Option<CancelEvents>,
+    #[serde(default)]
+    cancel_h_events: bool,
 }
 
 #[derive(Deserialize)]
@@ -286,7 +289,8 @@ struct NumSetGenericEntry<T> {
     swap_event_name: Option<String>,
     #[serde(default)]
     unreliable: bool,
-    cancel: Option<CancelEvents>,
+    #[serde(default)]
+    cancel_h_events: bool,
 }
 
 #[derive(Deserialize)]
@@ -299,7 +303,8 @@ struct NumIncrementEntry<T> {
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
     pass_difference: bool,
-    cancel: Option<CancelEvents>,
+    #[serde(default)]
+    cancel_h_events: bool,
 }
 
 
@@ -310,7 +315,8 @@ struct NumDigitSetEntry {
     up_event_names: Vec<String>,
     down_event_names: Vec<String>,
     condition: Option<Condition>,
-    cancel: Option<CancelEvents>,
+    #[serde(default)]
+    cancel_h_events: bool,
 }
 
 #[derive(Deserialize)]
@@ -318,7 +324,8 @@ struct CustomCalculatorEntry {
     get: String,
     set: String,
     condition: Option<Condition>,
-    cancel: Option<CancelEvents>,
+    #[serde(default)]
+    cancel_h_events: bool,
 }
 
 #[derive(Deserialize)]
@@ -333,6 +340,10 @@ struct ProgramActionEntry {
 #[derive(Deserialize)]
 enum ProgramAction {
     TakeControls
+}
+
+struct EventMapping {
+    use_calculator: bool
 }
 
 // The struct that get_need_sync returns. Holds all the aircraft/local variables and events that have changed since the last call.
@@ -395,6 +406,7 @@ enum ActionType {
     I32(Box<dyn Syncable<i32>>),
     Bool(Box<dyn Syncable<bool>>),
     ProgramAction(ProgramAction),
+    Event(EventMapping),
     VarOnly
 }
 
@@ -432,7 +444,7 @@ impl Period {
 struct Mapping {
     action: ActionType,
     condition: Option<Condition>,
-    cancel: Option<CancelEvents>
+    cancel_h_events: bool
 }
 
 impl Default for Mapping {
@@ -440,7 +452,7 @@ impl Default for Mapping {
         Self {
             action: ActionType::VarOnly,
             condition: None,
-            cancel: None
+            cancel_h_events: false
         }
     }
 }
@@ -469,6 +481,7 @@ pub struct Definitions {
     // Delay events by 100ms in order for them to get synced correctly
     event_queue: VecDeque<EventTriggered>,
     event_timer: Instant,
+    event_cancel_timer: Instant,
     // Vars that shouldn't be sent reliably
     unreliable_vars: HashSet<String>,
     // Vars that should not be sent over the network
@@ -512,6 +525,7 @@ impl Definitions {
             current_sync: AllNeedSync::new(),
             event_queue: VecDeque::new(),
             event_timer: Instant::now(),
+            event_cancel_timer: Instant::now(),
 
             unreliable_vars: HashSet::new(),
             do_not_sync: HashSet::new(),
@@ -548,7 +562,7 @@ impl Definitions {
         self.add_mapping(var_name, Mapping {
             action: ActionType::VarOnly, 
             condition: var.condition,
-            cancel: var.cancel
+            cancel_h_events: var.cancel_h_events
         })?;
 
         Ok(())
@@ -559,6 +573,16 @@ impl Definitions {
 
         self.events.get_or_map_event_id(&event.event_name, true);
         self.categories.insert(event.event_name.clone(), category);
+
+        self.add_mapping(event.event_name, Mapping {
+            action: ActionType::Event(
+                EventMapping {
+                    use_calculator: event.use_calculator,
+                }
+            ),
+            condition: event.condition,
+            cancel_h_events: event.cancel_h_events,
+        })?;
 
         Ok(())
     }
@@ -650,7 +674,7 @@ impl Definitions {
         self.add_mapping(var_string, Mapping {
             action: ActionType::Bool(Box::new(action)),
             condition: var.condition,
-            cancel: var.cancel
+            cancel_h_events: var.cancel_h_events
         })?;
 
         Ok(())
@@ -711,7 +735,7 @@ impl Definitions {
         let data_type = get_data_type_from_string(data_type_string)?;
 
         let condition = try_cast_yaml!(var["condition"].clone());
-        let cancel = try_cast_yaml!(var["cancel"].clone());
+        let cancel_h_events = var["cancel_h_events"].as_bool().unwrap_or(false);
         
         match data_type {
             InDataTypes::I32 => {
@@ -720,7 +744,7 @@ impl Definitions {
                     self.add_mapping(var_string, Mapping {
                         action: ActionType::I32(mapping),
                         condition,
-                        cancel
+                        cancel_h_events
                     })?
                 }
             }
@@ -730,7 +754,7 @@ impl Definitions {
                     self.add_mapping(var_string, Mapping {
                         action: ActionType::F64(mapping),
                         condition,
-                        cancel
+                        cancel_h_events
                     })?
                 }
             }
@@ -757,7 +781,7 @@ impl Definitions {
         let data_type = get_data_type_from_string(data_type_string)?;
 
         let condition = try_cast_yaml!(var["condition"].clone());
-        let cancel = try_cast_yaml!(var["cancel"].clone());
+        let cancel_h_events = var["cancel_h_events"].as_bool().unwrap_or(false);
 
         match data_type {
             InDataTypes::I32 => {
@@ -765,7 +789,7 @@ impl Definitions {
                 self.add_mapping(var_string, Mapping {
                     action: ActionType::I32(mapping),
                     condition,
-                    cancel
+                    cancel_h_events
                 })?
             }
             InDataTypes::F64 => {
@@ -773,7 +797,7 @@ impl Definitions {
                 self.add_mapping(var_string, Mapping {
                     action: ActionType::F64(mapping),
                     condition,
-                    cancel
+                    cancel_h_events
                 })?
             }
             _ => {}
@@ -798,7 +822,7 @@ impl Definitions {
         self.add_mapping(var_string, Mapping {
             action: ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))),
             condition: var.condition,
-            cancel: var.cancel
+            cancel_h_events: var.cancel_h_events
         })?;
 
         Ok(())
@@ -813,7 +837,7 @@ impl Definitions {
         self.add_mapping(var_name, Mapping {
             action: ActionType::F64(Box::new(CustomCalculator::new(var.set))), 
             condition: var.condition,
-            cancel: var.cancel
+            cancel_h_events: var.cancel_h_events
         })?;
 
         Ok(())
@@ -950,10 +974,8 @@ impl Definitions {
                     continue
                 }
                 
-                if let Some(cancel) = &mapping.cancel {
-                    for event_name in cancel {
-                        increment_write_counter_for(&mut self.last_written, event_name);
-                    }
+                if mapping.cancel_h_events {
+                    self.event_cancel_timer = Instant::now();
                 }
 
                 execute_mapping!(new_value, action, VarReaderTypes::F64(result.var.floating), mapping, {
@@ -994,9 +1016,7 @@ impl Definitions {
         if let Some(payload) = self.jstransfer.poll() {
             match payload {
                 jscommunicator::Payloads::Interaction { name } => {
-                    if !check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &name[5..]) { // Canceled event
-                        self.current_sync.events.push(EventTriggered { event_name: name, data: 0})
-                    }
+                    self.current_sync.events.push(EventTriggered { event_name: name, data: 0})
                 }
                 _ => {}
             }
@@ -1014,22 +1034,36 @@ impl Definitions {
             None => return
         };
 
-        // Check timer
-        if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &event_name) {return;}
+        let mut should_write = true;
 
-        self.current_sync.events.push(EventTriggered {
-            event_name: event_name,
-            data: data.dwData,
-        });
+        if let Some(mappings) = self.mappings.get(&event_name) {
+            for mapping in mappings {
+                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::Bool(false)) {
+                    should_write = false;
+                    continue
+                }
+                
+                if mapping.cancel_h_events {
+                    self.event_cancel_timer = Instant::now();
+                }
+
+                // Check timer
+                if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &event_name) {return;}
+            }
+        }
+
+        if should_write {
+            self.current_sync.events.push(EventTriggered {
+                event_name: event_name,
+                data: data.dwData,
+            });
+        }
     }
 
     // Process changed aircraft variables and update SyncActions related to it
     #[allow(unused_variables)]
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
         if self.avarstransfer.define_id != data.dwDefineID {return}
-        // Do not increment counter a second time
-        let mut did_cancel = HashSet::new();
-        
         // Data might be bad/config files don't line up
         if let Ok(data) = self.avarstransfer.read_vars(data) {
             // Update all syncactions with the changed values
@@ -1045,12 +1079,8 @@ impl Definitions {
                             continue
                         }
                         
-                        if let Some(cancel) = &mapping.cancel {
-                            for event_name in cancel {
-                                if did_cancel.contains(event_name) {continue}
-                                increment_write_counter_for(&mut self.last_written, event_name);
-                                did_cancel.insert(event_name.clone());
-                            }
+                        if mapping.cancel_h_events {
+                            self.event_cancel_timer = Instant::now();
                         }
 
                         execute_mapping!(new_value, action, value, mapping, {
@@ -1077,18 +1107,30 @@ impl Definitions {
             if event.event_name.starts_with("H:") {
 
                 if self.event_timer.elapsed().as_millis() < 50 {return Ok(())}
-                // Use gauge to transmit H: event
-                self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
 
-                self.event_timer = Instant::now();
+                // H events being cancelled, need to pop at the end
+                if self.event_cancel_timer.elapsed().as_millis() >= 300 {
+                        // Use gauge to transmit H: event
+                    self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
+
+                    self.event_timer = Instant::now();
+                }
                 
             } else {
                 // Event doesn't exist
-                if let Err(()) = self.events.trigger_event(conn, &event.event_name, event.data as u32) {
-                    return Err(WriteDataError::MissingMapping(event.event_name.clone()))
-                };
+                for mapping in self.mappings.get(&event.event_name).ok_or(WriteDataError::MissingMapping(event.event_name.clone()))? {
 
-                increment_write_counter_for(&mut self.last_written, &event.event_name);
+                    if let ActionType::Event(mapping) = &mapping.action {
+
+                        if mapping.use_calculator {
+
+                            self.lvarstransfer.set_unchecked(conn, &format!("K:{}", event.event_name), None, "");
+
+                        } else {
+                            self.events.trigger_event(conn, &event.event_name, event.data as u32).unwrap();
+                        }
+                    }
+                }
             }
         }
 
@@ -1213,7 +1255,7 @@ impl Definitions {
         Ok(())
     }
 
-    fn write_event_data(&mut self, conn: &SimConnector, data: EventData) -> Result<(), WriteDataError> {
+    fn write_event_data(&mut self, data: EventData) -> Result<(), WriteDataError> {
         for event in data {
             self.event_queue.push_back(event);
         }
@@ -1227,7 +1269,7 @@ impl Definitions {
 
         // In this specific order
         // Aircraft var data should overwrite any event data
-        self.write_event_data(conn, data.events)?;
+        self.write_event_data(data.events)?;
         self.write_aircraft_data(conn, data.avars, time, interpolate);
         self.write_local_data(conn, data.lvars, interpolate)?;
 
