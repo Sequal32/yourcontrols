@@ -1,5 +1,6 @@
 use crossbeam_channel::{Receiver, Sender};
 use dns_lookup::lookup_host;
+use dotenv_codegen::dotenv;
 use laminar::Metrics;
 use std::{fmt::Display, net::IpAddr, net::SocketAddr, net::SocketAddrV4, net::SocketAddrV6, time::Duration};
 use std::time::SystemTime;
@@ -13,8 +14,8 @@ pub const LOOP_SLEEP_TIME_MS: u64 = 5;
 pub const HEARTBEAT_INTERVAL_MANUAL_SECS: f32 = 0.5;
 
 const HEARTBEAT_INTERVAL_MS: u64 = 1000;
-const RENDEZVOUS_SERVER_HOSTNAME: &str = "cloudserver.yourcontrols.xyz";
-const RENDEZVOUS_PORT: u16 = 5555;
+const RENDEZVOUS_SERVER_HOSTNAME: &str = dotenv!("SERVER_HOSTNAME");
+const RENDEZVOUS_PORT: &str = dotenv!("SERVER_PORT");
 
 // Types
 pub type ClientSender = Sender<(Payloads, Option<String>)>;
@@ -41,7 +42,7 @@ pub fn match_ip_address_to_socket_addr(ip: IpAddr, port: u16) -> SocketAddr {
 pub fn get_rendezvous_server(is_ipv6: bool) -> Result<SocketAddr, HostnameLookupError> {
     for ip in lookup_host(RENDEZVOUS_SERVER_HOSTNAME)? {
         if (ip.is_ipv6() && !is_ipv6) || (ip.is_ipv4() && is_ipv6) {continue;}
-        return Ok(match_ip_address_to_socket_addr(ip, RENDEZVOUS_PORT))
+        return Ok(match_ip_address_to_socket_addr(ip, RENDEZVOUS_PORT.parse().unwrap()))
     }
     Err(HostnameLookupError::WrongIpVersion)
 }
