@@ -10,6 +10,7 @@ include:
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
 
 shared:
   - # AutoBrakes
@@ -370,34 +371,6 @@ shared:
     var_name: A:CABIN SEATBELTS ALERT SWITCH
     var_units: Bool
     event_name: CABIN_SEATBELTS_ALERT_SWITCH_TOGGLE
-
-  - # Trim
-    type: var
-    var_name: A:RUDDER TRIM PCT
-    var_units: Percent scaler 16k
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim
-    var_type: f64
-  -
-    type: NumSet
-    var_name: A:ELEVATOR TRIM PCT
-    var_units: Percent scaler 16k
-    var_type: f64
-    event_name: ELEVATOR_TRIM_SET
-    condition:
-      var:
-        var_name: AUTOPILOT MASTER
-        var_units: Bool
-        var_type: bool
-      equals:
-        Bool: false
-  -
-    type: var
-    var_name: A:AILERON TRIM PCT
-    var_units: Percent scaler 16k
-    var_type: f64
 
   - # Lights
     type: ToggleSwitch
