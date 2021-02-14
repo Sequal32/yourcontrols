@@ -103,6 +103,11 @@ fn write_update_data(definitions: &mut Definitions, client: &mut Box<dyn Transfe
 }
 
 fn main() {
+    if !cfg!(debug_assertions) {
+        // Set CWD to application directory
+        let exe_path = env::current_exe();
+        env::set_current_dir(exe_path.unwrap().parent().unwrap()).ok();
+    }
     // Initialize logging
     simplelog::WriteLogger::init(
         simplelog::LevelFilter::Info,
@@ -110,12 +115,6 @@ fn main() {
         File::create(LOG_FILENAME).unwrap(),
     )
     .ok();
-
-    if !cfg!(debug_assertions) {
-        // Set CWD to application directory
-        let exe_path = env::current_exe();
-        env::set_current_dir(exe_path.unwrap().parent().unwrap()).ok();
-    }
     // Load configuration file
     let mut config = match Config::read_from_file(CONFIG_FILENAME) {
         Ok(config) => config,
@@ -196,8 +195,8 @@ fn main() {
     let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions, app: &App| {
         // Connect to simconnect
         *definitions = Definitions::new();
-        let connected = conn.connect("YourControls");
-        // let connected = true;
+        // let connected = conn.connect("YourControls");
+        let connected = true;
         if connected {
             // Display not connected to server message
             info!("[SIM] Connected to SimConnect.");
