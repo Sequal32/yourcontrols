@@ -357,6 +357,9 @@ fn main() {
                         Payloads::SetHost => {
                             app_interface.set_host();
                         }
+                        Payloads::ConnectionDenied {reason} => {
+                            client.stop(format!("Connection Denied: {}", reason));
+                        }
                         Payloads::AircraftDefinition {bytes} => {
                             match definitions.load_config_from_bytes(bytes) {
                                 Ok(_) => {

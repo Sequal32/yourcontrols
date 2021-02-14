@@ -15,6 +15,7 @@ pub enum Payloads {
     AircraftDefinition {bytes: Box<[u8]>},
     SetHost,
     RequestHosting {self_hosted: bool},
+    ConnectionDenied {reason: String},
     PlayerJoined {name: String, in_control: bool, is_server: bool, is_observer: bool},
     PlayerLeft {name: String},
     Update {data: AllNeedSync, from: String, is_unreliable: bool, time: f64},
@@ -76,6 +77,7 @@ fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: So
         Payloads::AttemptConnection {..} |
         Payloads::HostingReceived {..} |
         Payloads::SetHost {..} |
+        Payloads::ConnectionDenied {..} |
         // Used
         Payloads::AircraftDefinition {..}  |
         Payloads::InvalidVersion {..} | 

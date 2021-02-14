@@ -48,6 +48,7 @@ impl TransferStruct {
             Payloads::PlayerJoined { .. } |
             Payloads::PlayerLeft { .. } |
             Payloads::Update { .. } |
+            Payloads::ConnectionDenied { .. } |
             Payloads::SetHost |
             Payloads::Heartbeat => {}
             // Used

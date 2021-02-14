@@ -97,6 +97,7 @@ impl TransferStruct {
             Payloads::SetObserver { .. } |
             Payloads::RequestHosting { .. } |
             Payloads::AircraftDefinition { .. } |
+            Payloads::ConnectionDenied { .. } |
             Payloads::Heartbeat |
             Payloads::SetHost |
             Payloads::PeerEstablished { .. } => {return}  // No client should be able to send this
@@ -187,7 +188,6 @@ impl TransferStruct {
                 self.clients_to_holepunch.push(HolePunchSession::new(peer.clone()));
                 should_relay = false;
             }
-            
         }
 
         if should_relay {
