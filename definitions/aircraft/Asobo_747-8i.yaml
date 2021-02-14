@@ -428,6 +428,9 @@ shared:
     var_name: L:BTN_WX_ACTIVE
     var_type: f64
   -
+    type: event
+    event_name: AP_HDG_HOLD
+  -
     type: var
     var_name: L:AP_VS_ACTIVE
     var_type: f64
@@ -887,7 +890,7 @@ shared:
   - # Trim
     type: NumSet
     var_name: A:RUDDER TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
     event_name: RUDDER_TRIM_SET_EX1
   -
@@ -906,7 +909,7 @@ shared:
   -
     type: NumSet
     var_name: A:AILERON TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
     event_name: AILERON_TRIM_SET_EX1
 
@@ -929,14 +932,14 @@ master:
   -
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
-    var_units: Percent
+    var_units: Position 16k
     var_type: f64
     event_name: THROTTLE3_SET
     interpolate: DefaultConstant
   -
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:4
-    var_units: Percent
+    var_units: Position 16k
     var_type: f64
     event_name: THROTTLE4_SET
     interpolate: DefaultConstant
