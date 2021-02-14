@@ -21,7 +21,7 @@ use simconnect::{DispatchResult, SimConnector};
 use simplelog;
 use spin_sleep::sleep;
 use crate::util::{get_hostname_ip};
-use std::{fs::{read_dir, File}, io::{self}, net::IpAddr, path::PathBuf, time::Duration, time::Instant};
+use std::{env, fs::{read_dir, File}, io, net::IpAddr, path::PathBuf, time::Duration, time::Instant};
 use update::Updater;
 
 use control::*;
@@ -110,6 +110,12 @@ fn main() {
         File::create(LOG_FILENAME).unwrap(),
     )
     .ok();
+
+    if !cfg!(debug_assertions) {
+        // Set CWD to application directory
+        let exe_path = env::current_exe();
+        env::set_current_dir(exe_path.unwrap().parent().unwrap()).ok();
+    }
     // Load configuration file
     let mut config = match Config::read_from_file(CONFIG_FILENAME) {
         Ok(config) => config,
