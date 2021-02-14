@@ -83,7 +83,7 @@ function SetStuffVisible(visible) {
         document.getElementById("top-left-card").appendChild(networkDiv)
     }
     networkDiv.hidden = !visible
-    ping.hidden = !is_client
+    ping.hidden = true
     document.getElementById("is_client_server_running").hidden = visible;
     document.getElementById("not_client_server_running").hidden = !visible;
 }
