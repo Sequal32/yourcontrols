@@ -117,7 +117,7 @@ impl TransferStruct {
                 self.server_tx.try_send(ReceiveMessage::Event(Event::UnablePunchthrough)).ok();
             }
 
-            info!("[NETWORK] Sent packet to incoming port {}. Retry #{}", addr.port(), self.retries);
+            info!("[NETWORK] Sent packet to port {}. Retry #{}", addr.port(), self.retries);
         }
     }
 
