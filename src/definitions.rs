@@ -115,22 +115,27 @@ macro_rules! execute_mapping {
     }
 }
 
-fn increment_write_counter_for(map: &mut HashMap<String, u32>, data_name: &str) {
-    if let Some(data_name) = map.get_mut(data_name) {
-        *data_name += 1;
+fn increment_write_counter_for(map: &mut HashMap<String, LastWritten>, data_name: &str) {
+    if let Some(last) = map.get_mut(data_name) {
+        last.counter += 1;
+        last.timer = Instant::now();
     } else {
-        map.insert(data_name.to_string(), 1);
+        map.insert(data_name.to_string(), LastWritten {
+            counter: 1,
+            timer: Instant::now()
+        });
     }
 }
 
-fn check_did_write_recently_and_deincrement_counter_for(map: &mut HashMap<String, u32>, data_name: &str) -> bool {
+fn check_did_write_recently_and_deincrement_counter_for(map: &mut HashMap<String, LastWritten>, data_name: &str) -> bool {
     let mut did_write_recently = false;
 
-    if let Some(count) = map.get_mut(data_name) {
-        did_write_recently = *count != 0;
+    if let Some(last) = map.get_mut(data_name) {
+        if last.timer.elapsed().as_secs() >= 1 && last.counter < 1000 {last.counter = 0}
+        did_write_recently = last.counter != 0;
 
         if did_write_recently {
-            *count -= 1;
+            last.counter -= 1;
         }
     }
 
@@ -457,6 +462,11 @@ impl Default for Mapping {
     }
 }
 
+struct LastWritten {
+    counter: u32,
+    timer: Instant,
+}
+
 pub struct Definitions {
     // Serializable vec that houses all the definitions that can be sent over the network
     definitions_buffer: IndexMap<String, Vec<Value>>,
@@ -477,7 +487,7 @@ pub struct Definitions {
     // Value to hold the current queue
     current_sync: AllNeedSync,
     // Keep track of which definitions just got written so we don't sync them again
-    last_written: HashMap<String, u32>,
+    last_written: HashMap<String, LastWritten>,
     // Delay events by 100ms in order for them to get synced correctly
     event_queue: VecDeque<EventTriggered>,
     event_timer: Instant,
@@ -927,7 +937,10 @@ impl Definitions {
 
                 for ignore_value in value {
                     let ignore_name = ignore_value.as_str().unwrap();
-                    self.last_written.insert(ignore_name.to_string(), u32::MAX);
+                    self.last_written.insert(ignore_name.to_string(), LastWritten {
+                        counter: u32::MAX,
+                        timer: Instant::now()
+                    });
                 }
 
             } else {
@@ -1019,6 +1032,7 @@ impl Definitions {
         if let Some(payload) = self.jstransfer.poll() {
             match payload {
                 jscommunicator::Payloads::Interaction { name } => {
+                    if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &name) {return};
                     self.current_sync.events.push(EventTriggered { event_name: name, data: 0})
                 }
                 _ => {}
@@ -1303,7 +1317,7 @@ impl Definitions {
         }
     }
 
-    pub fn clear_sync(&mut self) {
+    pub fn reset_sync(&mut self) {
         self.current_sync.clear();
     }
 
