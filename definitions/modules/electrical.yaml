@@ -1,0 +1,95 @@
+# This file only supports aircraft with a max of two engines. You can specify more in the individual profile.
+
+shared:
+  - # ASOBO_ELECTRICAL_Switch_APU_Generator_Template
+    type: ToggleSwitch
+    var_name: A:APU GENERATOR SWITCH:1
+    var_units: Bool
+    event_name: APU_GENERATOR_SWITCH_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:APU GENERATOR SWITCH:2
+    var_units: Bool
+    event_name: APU_GENERATOR_SWITCH_TOGGLE
+    event_param: 2
+
+  - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:2
+    var_units: Bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 2
+
+  - # ASOBO_ELECTRICAL_Switch_Battery_STBY_Template
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:3
+    var_units: Bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 3
+
+  - # ASOBO_ELECTRICAL_Switch_Avionics_Master_Template
+    type: ToggleSwitch
+    var_name: A:AVIONICS MASTER SWITCH
+    var_units: Bool
+    event_name: TOGGLE_AVIONICS_MASTER
+
+  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    event_name: TOGGLE_ALTERNATOR1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    event_name: TOGGLE_ALTERNATOR2
+
+  - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 1
+
+  - # ASOBO_ELECTRICAL_Push_Starter_Template
+    type: var
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Number
+    var_type: i32
+  -
+    type: event
+    event_name: SET_STARTER1_HELD
+  -
+    type: var
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Number
+    var_type: i32
+  -
+    type: event
+    event_name: SET_STARTER2_HELD
+
+  - # ASOBO_ELECTRICAL_Switch_Magneto_Template
+    type: event
+    event_name: MAGNETO1_SET
+  -
+    type: event
+    event_name: MAGNETO2_SET
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State_IsDown
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Magneto_Starter_IsHeld
+    var_type: f64

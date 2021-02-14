@@ -2,24 +2,32 @@ shared:
   -
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:1
-    var_units: Millibars
+    var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
     event_param: 1
-    multiply_by: 16
+  -
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:2
+    var_units: Millibars scaler 16
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 2
   -
     type: var
     var_name: A:AIRSPEED TRUE CALIBRATE
     var_units: Degrees
-    var_type: i32
-  -
-    type: NumIncrement
-    var_name: A:ATTITUDE BARS POSITION
-    var_units: Percent Over 100
     var_type: f64
-    up_event_name: ATTITUDE_BARS_POSITION_UP
-    down_event_name: ATTITUDE_BARS_POSITION_DOWN
-    increment_by: 0.05
+  -
+    type: ToggleSwitch
+    var_name: A:ATTITUDE CAGE
+    var_units: Bool
+    event_name: ATTITUDE_CAGE_BUTTON
+  -
+    type: var
+    var_name: A:ATTITUDE BARS POSITION
+    var_units: Percent
+    var_type: f64
   -
     type: NumIncrement
     var_name: A:NAV OBS:1
@@ -44,8 +52,10 @@ shared:
     up_event_name: ADF_CARD_INC
     down_event_name: ADF_CARD_DEC
     increment_by: 1
-  # - # Recommended not to use as this updates constantly, calibrating the heading indicator isn't used often
-  #   type: var
-  #   var_name: A:PLANE HEADING DEGREES GYRO,
-  #   var_units: Degrees,
-  #   var_type: i32
+
+#  - # Recommended not to use as this updates constantly, calibrating the heading indicator isn't used often
+#    type: NumSet
+#    var_name: A:PLANE HEADING DEGREES GYRO
+#    var_units: Degrees
+#    var_type: f64
+#    event_name: GYRO_DRIFT_SET

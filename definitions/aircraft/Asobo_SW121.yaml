@@ -1,0 +1,91 @@
+include:
+  - definitions/modules/AS3X.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/passenger.yaml
+  - definitions/modules/physics.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:20
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 20
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
+    set: 2 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:37
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 37
+
+  - # Choke
+    type: var
+    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
+    var_units: Percent
+    var_type: i32
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:35
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:37
+    var_units: Bool
+    var_type: bool
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT NAV:1
+    var_units: Bool
+    event_name: TOGGLE_NAV_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    event_name: PANEL_LIGHTS_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    event_name: TOGGLE_CABIN_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:2
+    var_units: Bool
+    event_name: PANEL_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL POWER SETTING:2
+    var_units: percent
+    var_type: i32
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
+    event_param: 2
+    index_reversed: true

@@ -1,25 +1,16 @@
 shared:
-  - 
+  -
     type: NumSet
     var_name: A:RUDDER TRIM PCT
-    var_units: percent
-    var_type: i32
-    event_name: RUDDER_TRIM_SET
-    multiply_by: 164
-    condition:
-      var:
-        var_name: AUTOPILOT MASTER
-        var_units: Bool
-        var_type: bool
-      equals:
-        Bool: false
-  - # ASOBO_HANDLING_Wheel_ElevatorTrim_Template
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: RUDDER_TRIM_SET_EX1
+  -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
-    var_units: percent
-    var_type: i32
+    var_units: Percent scaler 16k
+    var_type: f64
     event_name: ELEVATOR_TRIM_SET
-    multiply_by: 164
     condition:
       var:
         var_name: AUTOPILOT MASTER
@@ -27,16 +18,9 @@ shared:
         var_type: bool
       equals:
         Bool: false
-  - #ASOBO_HANDLING_Switch_AileronTrim_Template
+  -
     type: NumSet
     var_name: A:AILERON TRIM PCT
-    var_units: Percent
-    var_type: i32
+    var_units: Percent scaler 16k
+    var_type: f64
     event_name: AILERON_TRIM_SET_EX1
-    condition:
-      var:
-        var_name: AUTOPILOT MASTER
-        var_units: Bool
-        var_type: bool
-      equals:
-        Bool: false

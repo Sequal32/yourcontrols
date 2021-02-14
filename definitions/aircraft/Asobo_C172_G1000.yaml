@@ -1,4 +1,5 @@
 include:
+  - definitions/modules/AS1000.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -17,22 +18,16 @@ include:
 shared:
   - # Avionics
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:38
+    var_name: A:CIRCUIT SWITCH ON:24
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 38
+    event_param: 24
   -
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:39
+    var_name: A:CIRCUIT SWITCH ON:25
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 39
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:40
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 40
+    event_param: 25
 
   - # Standby Battery
     type: var
@@ -54,35 +49,38 @@ shared:
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT AVIONICS ON
+    var_name: A:CIRCUIT ON:26
     var_units: Bool
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT ON:9
+    var_name: A:CIRCUIT ON:27
     var_units: Bool
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT ON:10
+    var_name: A:CIRCUIT ON:39
     var_units: Bool
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT ON:38
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:41
+    var_name: A:CIRCUIT ON:44
     var_units: Bool
     var_type: bool
 
   - # Lights
     type: ToggleSwitch
-    var_name: A:LIGHT PANEL
+    var_name: A:LIGHT PANEL:1
     var_units: Bool
     event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL POWER SETTING:1
+    var_units: percent
+    var_type: i32
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
@@ -125,26 +123,6 @@ shared:
     event_param: 1
     index_reversed: true
   -
-    type: ToggleSwitch
-    var_name: A:LIGHT GLARESHIELD:1
-    var_units: Bool
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD POWER SETTING:1
-    var_units: percent
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT GLARESHIELD:2
-    var_units: Bool
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 2
-  -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
     var_units: percent
@@ -162,17 +140,33 @@ shared:
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:7
+    var_name: A:LIGHT POTENTIOMETER:6
     var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 7
+    event_param: 6
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:15
+    var_name: A:LIGHT POTENTIOMETER:10
     var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 15
+    event_param: 10
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 11
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
     index_reversed: true

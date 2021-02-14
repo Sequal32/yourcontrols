@@ -16,50 +16,27 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Deice
-    type: var
-    var_name: L:XMLVAR_IceLightState
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_IceLightMaxStateEnabled
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_DEICEPump
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_DEICE_Windshield_PumpActive
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_DEICE_AlternateCoverOpened
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_DEICEAlternateDisabled
-    var_type: f64
-
   - # Avionics
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:30
+    var_name: A:CIRCUIT SWITCH ON:26
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 30
-    
-  - # Aux pumps
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:9
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 9
+    event_param: 26
+
+  - # Fuel
+    type: var
+    var_name: L:XMLVAR_FUEL_Pump1_High_ON
+    var_type: f64
   -
+    type: var
+    var_name: L:XMLVAR_FUEL_Pump2_High_ON
+    var_type: f64
+
+  - # Prop Sync
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:10
+    var_name: A:PROP SYNC ACTIVE
     var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 10
+    event_name: TOGGLE_PROPELLER_SYNC
 
   - # Failures
     type: var
@@ -68,56 +45,64 @@ shared:
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT ON:31
+    var_name: A:CIRCUIT ON:27
     var_units: Bool
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT ON:32
+    var_name: A:CIRCUIT ON:28
     var_units: Bool
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT ON:44
+    var_name: A:CIRCUIT ON:40
     var_units: Bool
     var_type: bool
 
   - # Fuel
     type: var
-    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_1_IsOpen
+    var_name: L:XMLVAR_FUEL_Pump1_High_ON
     var_units: Bool
     var_type: bool
   -
     type: var
-    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_2_IsOpen
+    var_name: L:XMLVAR_FUEL_Pump2_High_ON
     var_units: Bool
     var_type: bool
 
   - # Lights
     type: ToggleSwitch
-    var_name: A:LIGHT PANEL
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:0
+    var_units: Bool
+    event_name: PANEL_LIGHTS_TOGGLE
+    event_param: 0
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:1
     var_units: Bool
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: Percent
+    var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
-    index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT GLARESHIELD
-    var_units: Bool
-    event_name: GLARESHIELD_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 5
     index_reversed: true
   -
     type: ToggleSwitch
@@ -135,20 +120,41 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:3
     var_units: Bool
-    event_name: CABIN_LIGHTS_SET
+    event_name: TOGGLE_CABIN_LIGHTS
     event_param: 3
   -
     type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:3
-    var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 3
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT GLARESHIELD
+    var_units: Bool
+    event_name: GLARESHIELD_LIGHTS_TOGGLE
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 10
     index_reversed: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent
+    var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 12
@@ -156,16 +162,16 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:13
-    var_units: Percent
+    var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 13
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:30
-    var_units: Percent
+    var_name: A:LIGHT POTENTIOMETER:14
+    var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 30
+    event_param: 14
     index_reversed: true

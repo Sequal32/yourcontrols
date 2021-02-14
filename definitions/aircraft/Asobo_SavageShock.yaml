@@ -1,7 +1,6 @@
 include:
-  - definitions/modules/deice.yaml
-  - definitions/modules/engines.yaml
   - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
@@ -14,32 +13,40 @@ include:
 shared:
   - # Avionics
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:23
+    var_name: A:CIRCUIT SWITCH ON:14
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 23
+    event_param: 14
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
+    set: 2 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:35
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 35
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:36
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 36
 
-  - # Cowl Flap
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:1
+  - # Choke
+    type: var
+    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
     var_units: Percent
     var_type: i32
-    event_name: COWLFLAP1_SET
 
   - # Failures
     type: var
-    var_name: A:CIRCUIT NAVCOM1 ON
+    var_name: A:CIRCUIT GENERAL PANEL ON
     var_units: Bool
     var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:35
+    var_units: Bool
+    var_type: bool
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT STROBE
+    var_units: Bool
+    event_name: STROBES_TOGGLE

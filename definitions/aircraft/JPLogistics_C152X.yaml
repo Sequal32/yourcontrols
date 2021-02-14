@@ -1,0 +1,105 @@
+include:
+  - definitions/aircraft/Asobo_C152.yaml
+
+shared:
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:18
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 18
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:20
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 20
+
+  - # Audio Panel
+    type: var
+    var_name: L:XMLVAR_ADF_MODE_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_VOLUME
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAVCOM_COM_1_VOLUME
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAVCOM_COM_2_VOLUME
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAVCOM_COM_1_TEST
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAVCOM_COM_2_TEST
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAVCOM_NAV_1_VOLUME
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAVCOM_NAV_2_VOLUME
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAVCOM_NAV_1_IDENT
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_NAVCOM_NAV_2_IDENT
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_COM_1_MIC_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_COM_2_MIC_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_BOTH_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_NAV_1_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_NAV_2_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_ADF_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_DME_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_MKR_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_SPKR_SEL
+    var_type: f64
+  -
+    type: var
+    var_name: L:HUD_AP_SELECTED_SPEED
+    var_type: f64
+  -
+    type: var
+    var_name: L:HUD_AP_SELECTED_ALTITUDE
+    var_type: f64
+  -
+    type: var
+    var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+    var_type: f64

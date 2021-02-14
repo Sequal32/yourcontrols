@@ -1,42 +1,58 @@
+# This file only supports the basic layout for exterior lights. Be sure to use the appropriate index and event param numbers when building your own profile. Index 1 should work for variables with both no index number and index 0.
+
 shared:
-  # Nav/logo/beacon etc lights
-  - # ASOBO_LIGHTING_Switch_Light_Beacon_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT BEACON
-    var_units: Bool
-    event_name: TOGGLE_BEACON_LIGHTS
-  - # ASOBO_LIGHTING_Switch_Light_Landing_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT LANDING
-    var_units: Bool
-    event_name: LANDING_LIGHTS_TOGGLE
-  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
-    type: ToggleSwitch
-    var_name: A:LIGHT TAXI
-    var_units: Bool
-    event_name: TOGGLE_TAXI_LIGHTS
   - # ASOBO_LIGHTING_Switch_Light_Navigation_Template
     type: ToggleSwitch
-    var_name: A:LIGHT NAV
+    var_name: A:LIGHT NAV:1
     var_units: Bool
     event_name: TOGGLE_NAV_LIGHTS
+    event_param: 1
+
+  - # ASOBO_LIGHTING_Switch_Light_Beacon_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    event_name: TOGGLE_BEACON_LIGHTS
+    event_param: 1
+
   - # ASOBO_LIGHTING_Switch_Light_Strobe_Template
     type: ToggleSwitch
-    var_name: A:LIGHT STROBE
+    var_name: A:LIGHT STROBE:1
     var_units: Bool
     event_name: STROBES_TOGGLE
-  -
+    event_param: 1
+
+  - # ASOBO_LIGHTING_Switch_Light_Recognition_Template
     type: ToggleSwitch
-    var_name: A:LIGHT LOGO
-    var_units: Bool
-    event_name: TOGGLE_LOGO_LIGHTS
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT RECOGNITION
+    var_name: A:LIGHT RECOGNITION:1
     var_units: Bool
     event_name: TOGGLE_RECOGNITION_LIGHTS
+    event_param: 1
+
+  - # ASOBO_LIGHTING_Switch_Light_Logo_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT LOGO:1
+    var_units: Bool
+    event_name: TOGGLE_LOGO_LIGHTS
+    event_param: 1
+
   - # ASOBO_LIGHTING_Switch_Light_Wing_Template
     type: ToggleSwitch
-    var_name: A:LIGHT WING
+    var_name: A:LIGHT WING:1
     var_units: Bool
     event_name: TOGGLE_WING_LIGHTS
+    event_param: 1
+
+  - # ASOBO_LIGHTING_Switch_Light_Landing_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    event_param: 1
+
+  - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    event_name: TOGGLE_TAXI_LIGHTS
+    event_param: 1

@@ -1,46 +1,48 @@
 include:
-  - definitions/modules/autopilot.yaml
   - definitions/modules/ASCommon.yaml
-  - definitions/modules/radiosinitonly.yaml
 
 shared:
-  - #AS1000 uses index 5 for altimeter
-    type: NumSet
-    var_name: A:KOHLSMAN SETTING MB:5
-    var_units: Millibars
+  -
+    type: var
+    var_name: L:AS1000_MFD_ScreenLuminosity
+    var_units: Percent
     var_type: f64
-    event_name: KOHLSMAN_SET
-    event_param: 5
-    multiply_by: 16
+  -
+    type: var
+    var_name: L:AS1000_MFD_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS1000_PFD_ScreenLuminosity
+    var_units: Percent
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS1000_PFD_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS1000_AttitudeBackup_State
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS1000_SpeedBackup_ScreenLuminosity
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS1000_SpeedBackup_State
+    var_type: f64
 
-init:
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT NAV SELECTED
-    var_units: Number
-    var_type: i32
-    event_name: AP_NAV_SELECT_SET
-  - 
-    type: var
-    var_name: L:PFD_DME_Displayed
-    var_type: i32
-  -
-    type: var
-    var_name: A:TRANSPONDER STATE:1
-    var_units: number
-    var_type: i32
-  -
-    type: NumDigitSet
-    var_name: A:TRANSPONDER CODE:1
-    var_units: Number
-    var_type: i32
-    up_event_names:
-      - XPNDR_1_INC
-      - XPNDR_10_INC
-      - XPNDR_100_INC
-      - XPNDR_1000_INC
-    down_event_names:
-      - XPNDR_1_DEC
-      - XPNDR_10_DEC
-      - XPNDR_100_DEC
-      - XPNDR_1000_DEC
+ignore:
+  - AS1000_PFD_COM_Large_INC
+  - AS1000_PFD_COM_Large_DEC
+  - AS1000_PFD_COM_Small_INC
+  - AS1000_PFD_COM_Small_DEC
+  - AS1000_PFD_NAV_Large_INC
+  - AS1000_PFD_NAV_Large_DEC
+  - AS1000_PFD_NAV_Small_INC
+  - AS1000_PFD_NAV_Small_DEC

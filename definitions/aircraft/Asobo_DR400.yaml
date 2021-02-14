@@ -1,109 +1,79 @@
 include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
-  - definitions/modules/magnetowithstarter.yaml
   - definitions/modules/navigation.yaml
+  - definitions/modules/passenger.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/singlega.yaml
+  - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
-  - definitions/modules/general.yaml
   - definitions/modules/trim.yaml
 
 shared:
-  - # ASOBO_FUEL_Knob_Selector_Template
-    type: NumSet
-    var_name: A:FUEL TANK SELECTOR:1
-    var_units: Enum
-    var_type: i32
-    event_name: FUEL_SELECTOR_SET
-  - # ASOBO_FUEL_Switch_Pump_Template
+  - # Avionics
     type: ToggleSwitch
-    var_name: A:GENERAL ENG FUEL PUMP SWITCH:1
+    var_name: A:CIRCUIT SWITCH ON:21
+    var_units: Boolean
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 21
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT NAVCOM1 ON
     var_units: Bool
-    event_name: TOGGLE_ELECT_FUEL_PUMP1
-  - # ASOBO_LIGHTING_Knob_Glareshield_Template
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_SET
-    index_reversed: true
-    event_param: 5
+    var_type: bool
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    event_name: PANEL_LIGHTS_TOGGLE
   -
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
     event_name: GLARESHIELD_LIGHTS_TOGGLE
     event_param: 1
-  - # ASOBO_LIGHTING_Knob_Glareshield_Template
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
-    var_units: Percent
-    var_type: i32
-    event_name: LIGHT_POTENTIOMETER_SET
-    index_reversed: true
-    event_param: 3
   -
-    type: ToggleSwitch
-    var_name: A:LIGHT PANEL
-    var_units: Bool
-    event_name: PANEL_LIGHTS_TOGGLE
-  - # ASOBO_LIGHTING_Knob_Radio_Template
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD:2
     var_units: Bool
     event_name: GLARESHIELD_LIGHTS_TOGGLE
     event_param: 2
-  - # ASOBO_LIGHTING_Knob_Glareshield_Template
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:1
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
-    var_units: Percent
-    var_type: i32
+    var_units: percent
+    var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    index_reversed: true
     event_param: 7
-  - # ASOBO_ELECTRICAL_Switch_Battery_Master_SubTemplate
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL MASTER BATTERY:1
-    var_units: bool
-    event_name: TOGGLE_MASTER_BATTERY
-    event_param: 1
-  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
-    var_units: bool
-    event_name: TOGGLE_ALTERNATOR1
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG STARTER:1
-    var_units: Bool
-    var_type: i32
-    event_name: SET_STARTER1_HELD
-  - # ASOBO_DEICE_Switch_Pitot_Template
-    type: ToggleSwitch
-    var_name: A:PITOT HEAT
-    var_units: Bool
-    event_name: PITOT_HEAT_TOGGLE
-  - # ASOBO_DEICE_Lever_Engine_Template
-    type: NumSet
-    var_name: A:GENERAL ENG ANTI ICE POSITION:1
-    var_units: Position 16k
-    var_type: i32
-    event_name: ANTI_ICE_GRADUAL_SET_ENG1
-  - # Avionics switch
-    type: CustomCalculator
-    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
-    set: 1 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-    
-  - #ASOBO_PASSENGER_Switch_Cabin_Heat_Template
-    type: var
-    var_name: L:XMLVAR_CabinHeatSwitch1Status
-    var_type: f64
-  - #ASOBO_PASSENGER_Switch_Cabin_Heat_Template
-    type: var
-    var_name: L:XMLVAR_CabinHeatSwitch2Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_DayNightSwitch
-    var_type: f64
+    index_reversed: true

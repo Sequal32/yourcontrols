@@ -1,0 +1,303 @@
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/physics.yaml
+  - definitions/modules/pressurization.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Autopilot
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_PushXFR
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+    var_type: f64
+
+  - # Comm Power
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:28
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 28
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:30
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 30
+
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+  -
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT
+    var_units: Bool
+    event_name: PITOT_HEAT_TOGGLE
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_2
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Airframe_1
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Airframe_2
+    var_type: f64
+
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:23
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 23
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:24
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 24
+  -
+    type: var
+    var_name: L:XMLVAR_Essential_Bus_ON
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AVIONICS_IsComposite
+    var_type: f64
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:39
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:40
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:41
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:42
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:47
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:48
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:49
+    var_units: Bool
+    var_type: bool
+
+  - # ASOBO_AS3000_Screen_Template
+    type: var
+    var_name: L:CJ4_PFD_ScreenLuminosity
+    var_units: Percent
+    var_type: f64
+  -
+    type: var
+    var_name: L:CJ4_MFD_ScreenLuminosity
+    var_units: Percent
+    var_type: f64
+  -
+    type: var
+    var_name: L:Glasscockpit_MFD_Started
+    var_type: f64
+  -
+    type: var
+    var_name: L:CJ4_MAP_MODE
+    var_type: f64
+  -
+    type: var
+    var_name: L:CJ4_MAP_SYMBOLS
+    var_type: f64
+  -
+    type: var
+    var_name: L:CJ4_MAP_ZOOM
+    var_type: f64
+  -
+    type: var
+    var_name: L:FMC_EXEC_ACTIVE
+    var_type: f64
+  -
+    type: var
+    var_name: L:FMC_UPDATE_CURRENT_PAGE
+    var_type: f64
+
+  - # Trim
+    type: var
+    var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
+    var_type: f64
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 10
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 11
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:13
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 13
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:14
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 14
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:15
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 15
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 16
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:17
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 17
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:18
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 18
+    index_reversed: true

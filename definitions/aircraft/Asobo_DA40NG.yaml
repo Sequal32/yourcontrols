@@ -16,50 +16,28 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Deice
-    type: var
-    var_name: L:XMLVAR_IceLightState
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_IceLightMaxStateEnabled
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_DEICEPump
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_DEICE_Windshield_PumpActive
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_DEICE_AlternateCoverOpened
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_DEICEAlternateDisabled
-    var_type: f64
-
   - # Avionics
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:30
+    var_name: A:CIRCUIT SWITCH ON:22
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 30
-    
-  - # Aux pumps
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:9
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 9
+    event_param: 22
   -
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:10
+    var_name: A:CIRCUIT SWITCH ON:23
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 10
+    event_param: 23
+  -
+    type: var
+    var_name: L:XMLVAR_ENGINE_Switch_Master_Cover_Opened
+    var_units: Bool
+    var_type: bool
+
+  - # Electrical
+    type: var
+    var_name: L:XMLVAR_ElecMaster
+    var_type: f64
 
   - # Failures
     type: var
@@ -68,28 +46,27 @@ shared:
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT ON:31
+    var_name: A:CIRCUIT ON:35
     var_units: Bool
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT ON:32
+    var_name: A:CIRCUIT ON:40
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:41
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:42
     var_units: Bool
     var_type: bool
   -
     type: var
     var_name: A:CIRCUIT ON:44
-    var_units: Bool
-    var_type: bool
-
-  - # Fuel
-    type: var
-    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_1_IsOpen
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_2_IsOpen
     var_units: Bool
     var_type: bool
 
@@ -101,10 +78,18 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: Percent
+    var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 16
     index_reversed: true
   -
     type: ToggleSwitch
@@ -114,7 +99,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
-    var_units: Percent
+    var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
@@ -135,36 +120,36 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:3
     var_units: Bool
-    event_name: CABIN_LIGHTS_SET
+    event_name: TOGGLE_CABIN_LIGHTS
     event_param: 3
   -
     type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:3
-    var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 3
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent
+    var_name: A:LIGHT POTENTIOMETER:8
+    var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 12
+    event_param: 8
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:13
-    var_units: Percent
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 13
+    event_param: 11
     index_reversed: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:30
-    var_units: Percent
+    var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 30

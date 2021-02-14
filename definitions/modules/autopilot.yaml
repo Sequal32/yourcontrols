@@ -1,29 +1,37 @@
 shared:
-  -
+  - # ASOBO_AUTOPILOT_Push_Autopilot_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT MASTER
     var_units: Bool
-    var_type: bool
     event_name: AP_MASTER
-  -
+
+  - # ASOBO_AUTOPILOT_Push_Disconnect_Template
+    type: NumSet
+    var_name: A:AUTOPILOT DISENGAGED
+    var_units: Bool
+    var_type: i32
+    event_name: AUTOPILOT_DISENGAGE_SET
+
+  - # ASOBO_AUTOPILOT_Push_Heading_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT HEADING LOCK
     var_units: Bool
-    var_type: bool
     event_name: AP_PANEL_HEADING_HOLD
-  -
+
+  - # ASOBO_AUTOPILOT_Knob_Heading_Template
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR
     var_units: Degrees
     var_type: f64
     event_name: HEADING_BUG_SET
-  -
+
+  - # ASOBO_AUTOPILOT_Push_Altitude_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT ALTITUDE LOCK
     var_units: Bool
-    var_type: bool
     event_name: AP_ALT_HOLD
-  -
+
+  - # ASOBO_AUTOPILOT_Knob_Altitude_Template
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR
     var_units: Feet
@@ -34,101 +42,144 @@ shared:
     var_name: A:AUTOPILOT AIRSPEED HOLD
     var_units: Bool
     event_name: AP_PANEL_SPEED_HOLD
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT AIRSPEED HOLD VAR
-    var_units: Knots
-    var_type: i32
-    event_name: AP_SPD_VAR_SET
-  # Do we need AUTOPILOT MACH HOLD?
-  -
+
+  - # ASOBO_AUTOPILOT_Push_VerticalSpeed_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT VERTICAL HOLD
     var_units: Bool
     event_name: AP_PANEL_VS_HOLD
-  - # Doesn't need a toggleswitch, implicitly climbs aircraft to set altitude
+  -
+    type: var
+    var_name: L:XMLVAR_VNAVButtonValue
+    var_type: f64
+
+  - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR
+    var_units: Knots
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MACH HOLD VAR
+    var_units: Mach
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+  -
+    type: var
+    var_name: L:XMLVAR_SpeedIsManuallySet
+    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_AirSpeedIsInMach
+    var_type: f64
+  -
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR
-    var_units: Feet/minute
+    var_units: Feet per minute
     var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
-  -
+
+  - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
+
+  - # ASOBO_AUTOPILOT_Push_FlightLevelChange_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
     var_units: Bool
     event_name: FLIGHT_LEVEL_CHANGE
-  -
+
+  - # ASOBO_AUTOPILOT_Push_Level_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT WING LEVELER
     var_units: Bool
-    var_type: bool
     event_name: AP_WING_LEVELER_ON
     off_event_name: AP_WING_LEVELER_OFF
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT NAV1 LOCK
-    var_units: Bool
-    var_type: bool
-    event_name: AP_NAV1_HOLD
-  -
+
+  - # ASOBO_AUTOPILOT_Push_BackCourse_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT BACKCOURSE HOLD
     var_units: Bool
-    var_type: bool
     event_name: AP_BC_HOLD
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT PITCH HOLD
     var_units: Bool
-    var_type: bool
     event_name: AP_ATT_HOLD_ON
     off_event_name: AP_ATT_HOLD_OFF
+
+  - # ASOBO_AUTOPILOT_Push_FlightDirector_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
   -
     type: ToggleSwitch
-    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
     var_units: Bool
-    var_type: bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
+    use_calculator: true
+
+  - # ASOBO_AUTOPILOT_Push_Approach_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT APPROACH HOLD
+    var_units: Bool
+    event_name: AP_APR_HOLD
   -
+    type: event
+    event_name: AP_LOC_HOLD
+
+  - # ASOBO_AUTOPILOT_Push_AutoThrottle_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM
     var_units: Bool
-    var_type: bool
     event_name: AUTO_THROTTLE_ARM
-  -
+
+  - # ASOBO_ENGINE_SWITCH_TOGA_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
     var_units: Bool
-    var_type: bool
     event_name: AUTO_THROTTLE_TO_GA
-  -
+
+  - # ASOBO_AUTOPILOT_Push_Navigation_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT NAV1 LOCK
     var_units: Bool
-    var_type: bool
-    event_name: AP_N1_HOLD
-  -
+    event_name: AP_NAV1_HOLD
+
+  - # ASOBO_AUTOPILOT_Knob_Bank_Limit_Template
     type: NumIncrement
     var_name: A:AUTOPILOT MAX BANK
-    var_units: degrees
-    var_type: i32
+    var_units: Degrees
+    var_type: f64
     up_event_name: AP_MAX_BANK_INC
     down_event_name: AP_MAX_BANK_DEC
     increment_by: 1
-  -
+
+  - # ASOBO_AUTOPILOT_Push_YawDamper_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT YAW DAMPER
     var_units: Bool
     event_name: YAW_DAMPER_TOGGLE
   -
-    type: var
-    var_name: L:XMLVAR_AirSpeedIsInMach
-    var_type: f64
-  - # HANDLING_Switch_AutopilotTrim ASOBO_GT_Switch_XStates TBM930
     type: ToggleSwitch
-    var_name: A:AUTOPILOT DISENGAGED
+    var_name: A:GPS DRIVES NAV1
     var_units: Bool
-    event_name: AUTOPILOT_DISENGAGE_TOGGLE
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT NAV SELECTED
+    var_units: Number
+    var_type: i32
+    event_name: AP_NAV_SELECT_SET
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:RUDDER TRIM DISABLED
@@ -143,18 +194,7 @@ shared:
     event_name: AILERON_TRIM_DISABLED_SET
   -
     type: NumSet
-    var_name: A:AUTOPILOT DISENGAGED
+    var_name: A:ELEVATOR TRIM DISABLED
     var_units: Bool
     var_type: i32
-    event_name: AUTOPILOT_DISENGAGE_SET
-  -
-    type: event
-    event_name: AP_APR_HOLD
-
-init:
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT APPROACH HOLD
-    var_units: Bool
-    var_type: bool
-    event_name: AP_APR_HOLD
+    event_name: ELEVATOR_TRIM_DISABLED_SET

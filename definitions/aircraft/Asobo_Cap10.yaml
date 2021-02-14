@@ -5,7 +5,6 @@ include:
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
   - definitions/modules/physics.yaml
@@ -15,12 +14,24 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Engine
-    type: NumSet
-    var_name: A:RECIP ENG PRIMER:1
-    var_units: percent
-    var_type: i32
-    event_name: TOGGLE_PRIMER1
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:20
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 20
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:34
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 34
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:35
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 35
 
   - # Failures
     type: var
@@ -34,43 +45,33 @@ shared:
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT NAVCOM1 ON
+    var_name: A:CIRCUIT ON:34
     var_units: Bool
     var_type: bool
   -
     type: var
-    var_name: A:CIRCUIT NAVCOM2 ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:39
+    var_name: A:CIRCUIT ON:36
     var_units: Bool
     var_type: bool
 
   - # Lights
     type: ToggleSwitch
-    var_name: A:LIGHT CABIN
+    var_name: A:LIGHT PANEL
     var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT GLARESHIELD
-    var_units: Bool
-    event_name: GLARESHIELD_LIGHTS_SET
+    event_name: PANEL_LIGHTS_SET
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
+    var_name: A:LIGHT POTENTIOMETER:3
     var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
+    event_param: 3
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
+    var_name: A:LIGHT POTENTIOMETER:10
     var_units: percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 5
+    event_param: 10
     index_reversed: true

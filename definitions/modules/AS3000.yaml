@@ -4,19 +4,20 @@ include:
 shared:
   -
     type: var
-    var_name: L:AS3000_PFD_1_State
+    var_name: L:AS3000_MFD_ScreenLuminosity
+    var_units: Percent
+    var_type: f64
+  -
+    type: var
+    var_name: L:AS3000_PFD_ScreenLuminosity
+    var_units: Percent
     var_type: f64
 
-init:
-  -
-    type: NumSet
-    var_name: A:COM SPACING MODE:1
-    var_units: Enum
-    var_type: i32
-    event_name: COM_1_SPACING_MODE_SWITCH
-  -
-    type: NumSet
-    var_name: A:COM SPACING MODE:2
-    var_units: Enum
-    var_type: i32
-    event_name: COM_2_SPACING_MODE_SWITCH
+ignore:
+  - YCBAS3000_TSC_Vertical_1#971012391
+  - AS3000_TSC_Vertical_1#-1054176648
+  - AS3000_TSC_Vertical_1#769170470
+  - AS3000_TSC_Vertical_1#Com2Active
+  - AS3000_TSC_Vertical_1#769170469
+  - AS3000_TSC_Vertical_1#-1054176649
+  - AS3000_TSC_Vertical_1#Com1Active

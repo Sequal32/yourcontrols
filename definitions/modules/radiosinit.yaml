@@ -1,4 +1,4 @@
-shared:
+init:
   - # NAV1
     type: NumSet
     var_name: A:NAV ACTIVE FREQUENCY:1
@@ -18,9 +18,6 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: RADIO_VOR1_IDENT_SET
-  -
-    type: event
-    event_name: RADIO_VOR1_IDENT_TOGGLE
   -
     type: NumSet
     var_name: A:NAV VOLUME:1
@@ -47,9 +44,6 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: RADIO_VOR2_IDENT_SET
-  -
-    type: event
-    event_name: RADIO_VOR2_IDENT_TOGGLE
   -
     type: NumSet
     var_name: A:NAV VOLUME:2
@@ -148,9 +142,6 @@ shared:
     var_type: f64
     event_name: RADIO_ADF_IDENT_SET
   -
-    type: event
-    event_name: RADIO_ADF_IDENT_TOGGLE
-  -
     type: NumSet
     var_name: A:ADF SOUND:2
     var_units: Bool
@@ -169,20 +160,11 @@ shared:
     var_type: f64
     event_name: RADIO_DME1_IDENT_SET
   -
-    type: event
-    event_name: RADIO_DME1_IDENT_TOGGLE
-  -
-    type: event
-    event_name: RADIO_SELECTED_DME_IDENT_TOGGLE
-  -
     type: NumSet
     var_name: A:DME SOUND:2
     var_units: Bool
     var_type: f64
     event_name: RADIO_DME2_IDENT_SET
-  -
-    type: event
-    event_name: RADIO_DME2_IDENT_TOGGLE
 
   - # Audio Panel
     type: NumIncrement
