@@ -238,7 +238,6 @@ impl Client {
         self.transfer = Some(transfer_send);
 
         let rendezvous_timer = Instant::now();
-        let timeout = self.timeout;
         // Run main loop
         thread::spawn(move || {
             let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
@@ -275,7 +274,7 @@ impl Client {
                 }
 
                 // Check rendezvous timer
-                if transfer.received_address.is_none() && rendezvous.is_some() && rendezvous_timer.elapsed().as_secs() >= timeout {
+                if transfer.received_address.is_none() && rendezvous.is_some() && rendezvous_timer.elapsed().as_secs() >= 5 {
                     transfer.stop("Could not connect to session.".to_string())
                 }
 
