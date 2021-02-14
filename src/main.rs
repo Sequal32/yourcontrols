@@ -97,6 +97,7 @@ fn write_update_data(definitions: &mut Definitions, client: &mut Box<dyn Transfe
     }
 
     if let Some(data) = reliable {
+        info!("[PACKET] SENT {:?}", data);
         client.update(data, false);
     }
 }
@@ -273,7 +274,7 @@ fn main() {
                         }
                         Payloads::TransferControl{from, to} => {
                             // Someone is transferring controls to us
-                            definitions.clear_sync();
+                            definitions.reset_sync();
                             if to == client.get_server_name() {
                                 info!("[CONTROL] Taking control from {}", from);
                                 control.take_control(&conn, &definitions.lvarstransfer.transfer);
@@ -346,7 +347,7 @@ fn main() {
                                 observing = is_observer;
                                 app_interface.observing(is_observer);
                                 
-                                if !observing {definitions.clear_sync();}
+                                if !observing {definitions.reset_sync();}
                             } else {
                                 info!("[CONTROL] {} is observing? {}", to, is_observer);
                                 clients.set_observer(&to, is_observer);
@@ -402,7 +403,7 @@ fn main() {
                             app_interface.client_fail(&reason);
                         }
                         Event::UnablePunchthrough => {
-                            app_interface.client_fail("Could not connect to host! Please port forward or using 'Cloud Host'!")
+                            app_interface.client_fail("Could not connect to host! Please port forward or use 'Cloud Host'!")
                         }
                         
                         Event::SessionIdFetchFailed => {
@@ -454,7 +455,7 @@ fn main() {
                     // Tell server we're ready to receive data after 3 seconds
                     if !ready_to_process_data {
                         ready_to_process_data = true;
-                        definitions.clear_sync();
+                        definitions.reset_sync();
 
                         if !client.is_host() {
                             client.send_ready();
