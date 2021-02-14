@@ -598,6 +598,10 @@ shared:
     var_type: f64
     event_name: RUDDER_TRIM_SET
   -
+    type: var
+    var_name: L:XMLVAR_RudderTrim
+    var_type: f64
+  -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
     var_units: Percent scaler 16k
@@ -630,6 +634,21 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 77
     index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:80
+    var_units: Bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 80
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:80
+    var_units: Percent
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 80
+    index_reversed: true
+
   # ALL LVARS
   # DO NOT GET RID OF THE COMMENTED LVARS. THEY ARE THERE FOR CROSS-REFERENCING NEW LVARS THAT SHOULD BE ADDED.
   -
@@ -941,12 +960,15 @@ shared:
   -
     type: var
     var_name: L:A32NX_ADIRS_KNOB_1
+    var_type: f64
   -
     type: var
     var_name: L:A32NX_ADIRS_KNOB_2
+    var_type: f64
   -
     type: var
     var_name: L:A32NX_ADIRS_KNOB_3
+    var_type: f64
   -
     type: var
     var_name: L:A32NX_EVAC_COMMAND_TOGGLE_LOCK
