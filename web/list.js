@@ -66,6 +66,7 @@ ConnectionList.prototype.setObserver = function(name, observing) {
 }
 
 ConnectionList.prototype.remove = function(name) {
+    if (!this.list[name]) {return}
     if (this.lastInControl == name) {
         this.lastInControl = null
     }

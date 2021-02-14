@@ -14,7 +14,7 @@
                         <div class="network-left">
                             <p id="download-bandwidth">↓ 0.00 KB/s</p>
                             <p id="download-rate">0 Packets/s</p>
-                            <p id="network-ping">0ms</p>
+                            <p id="network-ping" hidden>0ms</p>
                         </div>
                         <div class="network-right">
                             <p id="upload-bandwidth">↑ 0.00 KB/s</p>
@@ -177,17 +177,17 @@
                             <div class="form-group col-sm-auto bottom-margin" id="update-rate-div">
                                 <label for="update-rate-input">Update Rate</label>
                                 <input type="number" class="form-control themed " id="update-rate-input" aria-describedby="ip-feedback" required>
-                                <small id="update-rate-input-help" class="form-text text-muted">The update rate that aircraft data is sent in hz. Setting this any higher may be unstable.</small>
+                                <small id="update-rate-input-help" class="form-text text-muted">The update rate that aircraft data is sent in hz. Setting this higher may be unstable. Effective range: 10hz-60hz</small>
                             </div>
                             <div class="form-group col-sm-auto bottom-margin" id="timeout-div">
                                 <label for="timeout-input">Connection Timeout</label>
                                 <input type="number" class="form-control themed " id="timeout-input" aria-describedby="ip-feedback" required>
-                                <small id="timeout-input-help" class="form-text text-muted">How many seconds to try to establish a connection with the server before timing out.</small>
+                                <small id="timeout-input-help" class="form-text text-muted">How many seconds after not receiving a message before the connection is dropped. If you're experiencing random disconnects, try setting this value higher.</small>
                             </div>
                             <div class="form-group col-sm-auto bottom-margin">
                                 <div class="form-check" id="buffer-div">
                                     <input class="form-check-input" type="checkbox" id="theme-select">
-                                    <label for="theme-select">Use Dark theme?</label>
+                                    <label for="theme-select">Dark Theme</label>
                                 </div>
                             </div>
                             <div class="form-group form-row justify-content-center small-margin align-bottom">

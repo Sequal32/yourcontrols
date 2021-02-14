@@ -83,7 +83,6 @@ function SetStuffVisible(visible) {
         document.getElementById("top-left-card").appendChild(networkDiv)
     }
     networkDiv.hidden = !visible
-    ping.hidden = true
     document.getElementById("is_client_server_running").hidden = visible;
     document.getElementById("not_client_server_running").hidden = !visible;
 }
@@ -234,7 +233,6 @@ function MessageReceived(data) {
         case "host":
             is_client = false;
             forceButton.hidden = false
-            ping.hidden = false // Connected to Cloud Host, show ping to there
             $("#not_server_running").append(forceButton)
             break;
         case "error":
