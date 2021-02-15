@@ -152,7 +152,6 @@ fn main() {
 
     let mut definitions = Definitions::new();
 
-    let mut need_update = false;
     let mut ready_to_process_data = false;
 
     let mut connection_time = None;
@@ -195,8 +194,8 @@ fn main() {
     let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions, app: &App| {
         // Connect to simconnect
         *definitions = Definitions::new();
-        // let connected = conn.connect("YourControls");
-        let connected = true;
+        let connected = conn.connect("YourControls");
+        // let connected = true;
         if connected {
             // Display not connected to server message
             info!("[SIM] Connected to SimConnect.");
@@ -266,15 +265,12 @@ fn main() {
                                         is_master: clients.client_has_control(&from),
                                         is_init: true,
                                     },
-                                    !need_update
                                 ) {
                                     Ok(_) => {}
                                     Err(e) => {
                                         client.stop(e.to_string());
                                     }
                                 }
-                                // need_update is used here to determine whether to sync immediately (initial connection) or to interpolate
-                                need_update = false;
                             }
                         }
                         Payloads::TransferControl{from, to} => {
@@ -396,8 +392,6 @@ fn main() {
                                     // Freeze aircraft
                                 control.lose_control(&conn);
                             }
-                            
-                            need_update = true;
                         }
                         Event::ConnectionLost(reason) => {
                             info!("[NETWORK] Server/Client stopped. Reason: {}", reason);

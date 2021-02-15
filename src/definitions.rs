@@ -122,7 +122,8 @@ fn increment_write_counter_for(map: &mut HashMap<String, LastWritten>, data_name
     } else {
         map.insert(data_name.to_string(), LastWritten {
             counter: 1,
-            timer: Instant::now()
+            timer: Instant::now(),
+            ignore: false
         });
     }
 }
@@ -131,7 +132,9 @@ fn check_did_write_recently_and_deincrement_counter_for(map: &mut HashMap<String
     let mut did_write_recently = false;
 
     if let Some(last) = map.get_mut(data_name) {
-        if last.timer.elapsed().as_secs() >= 1 && last.counter < 1000 {last.counter = 0}
+        if last.ignore {return true;}
+        if last.timer.elapsed().as_secs() >= 1 {last.counter = 0}
+
         did_write_recently = last.counter != 0;
 
         if did_write_recently {
@@ -465,6 +468,7 @@ impl Default for Mapping {
 struct LastWritten {
     counter: u32,
     timer: Instant,
+    ignore: bool
 }
 
 pub struct Definitions {
@@ -938,8 +942,9 @@ impl Definitions {
                 for ignore_value in value {
                     let ignore_name = ignore_value.as_str().unwrap();
                     self.last_written.insert(ignore_name.to_string(), LastWritten {
-                        counter: u32::MAX,
-                        timer: Instant::now()
+                        counter: 0,
+                        timer: Instant::now(),
+                        ignore: true
                     });
                 }
 
@@ -1032,7 +1037,7 @@ impl Definitions {
         if let Some(payload) = self.jstransfer.poll() {
             match payload {
                 jscommunicator::Payloads::Interaction { name } => {
-                    if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &name) {return};
+                    if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &name[5..]) {return};
                     self.current_sync.events.push(EventTriggered { event_name: name, data: 0})
                 }
                 _ => {}
@@ -1204,7 +1209,7 @@ impl Definitions {
     
 
     #[allow(unused_variables)]
-    fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64, interpolate: bool) {
+    fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64) {
         if data.len() == 0 {return}
 
         let mut to_sync = AVarMap::new();
@@ -1222,7 +1227,7 @@ impl Definitions {
                     execute_mapping!(new_value, action, data, mapping, {
                         action.set_new(new_value, conn, &mut self.lvarstransfer)
                     }, {
-                        if interpolate && self.interpolate_vars.contains(&var_name) {
+                        if self.interpolate_vars.contains(&var_name) {
                             // Queue data for interpolation
                             interpolation_data.push(InterpolateData {
                                 name: var_name.clone(),
@@ -1248,7 +1253,7 @@ impl Definitions {
     }
 
     #[allow(unused_variables)]
-    fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap, _interpolate: bool) -> Result<(), WriteDataError> {
+    fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap) -> Result<(), WriteDataError> {
         for (var_name, value) in data {
 
             match self.mappings.get_mut(&var_name) {
@@ -1280,15 +1285,15 @@ impl Definitions {
         Ok(())
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, time: f64, sync_permission: &SyncPermission, interpolate: bool) -> Result<(), WriteDataError> {
+    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, time: f64, sync_permission: &SyncPermission) -> Result<(), WriteDataError> {
         let mut data = data;
         self.filter_all_sync(&mut data, sync_permission);
 
         // In this specific order
         // Aircraft var data should overwrite any event data
         self.write_event_data(data.events)?;
-        self.write_aircraft_data(conn, data.avars, time, interpolate);
-        self.write_local_data(conn, data.lvars, interpolate)?;
+        self.write_aircraft_data(conn, data.avars, time);
+        self.write_local_data(conn, data.lvars)?;
 
         Ok(())
     }
