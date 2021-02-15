@@ -1,3 +1,5 @@
+# Version 0.5.2 Stable + Dev (GitHub Feb-14-2021)
+
 include:
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
@@ -169,6 +171,26 @@ shared:
     type: CustomCalculator
     get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
     set: 6 11 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    event_name: TOGGLE_EXTERNAL_POWER
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    event_name: TOGGLE_ALTERNATOR1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    event_name: TOGGLE_ALTERNATOR2
+  -
+    type: ToggleSwitch
+    var_name: A:APU GENERATOR SWITCH:1
+    var_units: Bool
+    event_name: APU_GENERATOR_SWITCH_TOGGLE
 
   - # Failures
     type: var
