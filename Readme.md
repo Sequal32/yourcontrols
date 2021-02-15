@@ -13,13 +13,19 @@ Shared Cockpit for MSFS
   - [Client can see host manipulate switches but not vice-versa](#client-can-see-host-manipulate-switches-but-not-vice-versa)
 - [Limitations](#limitations)
 
-The following aircraft are supported:
-* All 30 stock by ASOBO
-* FlyByWire A32NX Stable & Dev
-* JPLogistics C152X
-* Working Title CJ4
-* DA62X by MrTommymxr
+The following aircraft are currently supported:
+* FBW A32NX Stable + Dev
+* Cessna 152
+* Cessna 172 G1000
+* DR400
+* Diamond DA40
+* Diamond DA62
+* Icon A5
+* Pitts
+* TBM 930
+* XCub
 
+Other airliners have 10x the amount of code than the GA aircraft, so they will take a while to be fully implemented.
 
 ## Downloading
 Download and run the [installer](https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip).
