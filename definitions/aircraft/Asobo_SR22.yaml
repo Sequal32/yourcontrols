@@ -45,16 +45,11 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Pump
-    type: var
-    var_name: L:XMLVAR_BoostFuelPump
-    var_units: Number
-    var_type: i32
-
   - # Lights
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
+    var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
   -
     type: NumSet
@@ -65,9 +60,10 @@ shared:
     event_param: 1
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
   -
     type: NumSet
@@ -102,9 +98,10 @@ shared:
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 4
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:5
     var_units: Bool
+    var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 5
   -
@@ -140,3 +137,19 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
     index_reversed: true
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_AudioPanel
+  -
+    type: var
+    var_name: L:XMLVAR_BoostFuelPump
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2

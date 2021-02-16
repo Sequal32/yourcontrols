@@ -54,9 +54,10 @@ shared:
     var_units: Bool
     event_name: TOGGLE_CABIN_LIGHTS
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT GLARESHIELD
     var_units: Bool
+    var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
   -
     type: NumSet
@@ -74,3 +75,19 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  -
+    type: var
+    var_name: L:HUD_AP_SELECTED_SPEED
+  -
+    type: var
+    var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
