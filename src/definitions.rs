@@ -1059,7 +1059,7 @@ impl Definitions {
         if let Some(payload) = self.jstransfer.poll() {
             match payload {
                 jscommunicator::Payloads::Interaction { name } => {
-                    if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &name[5..]) {return};
+                    if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &name[5..]) || self.event_cancel_timer.elapsed().as_millis() < 300 {return};
                     self.current_sync.events.push(EventTriggered { event_name: name, data: 0})
                 }
                 _ => {}
@@ -1160,13 +1160,10 @@ impl Definitions {
 
                 if self.event_timer.elapsed().as_millis() < 50 {return Ok(())}
 
-                // H events being cancelled, need to pop at the end
-                if self.event_cancel_timer.elapsed().as_millis() >= 300 {
-                        // Use gauge to transmit H: event
-                    self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
+                    // Use gauge to transmit H: event
+                self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
 
-                    self.event_timer = Instant::now();
-                }
+                self.event_timer = Instant::now();
                 
             } else {
                 // Event doesn't exist
