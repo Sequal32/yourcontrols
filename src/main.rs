@@ -559,6 +559,7 @@ fn main() {
 
                         // Write config with new values
                         config.name = username;
+                        config.port = port.unwrap_or(config.port);
                         config.ip = if let Some(ip) = ip {ip.to_string()} else {String::new()};
                         write_configuration(&config);
                     }
