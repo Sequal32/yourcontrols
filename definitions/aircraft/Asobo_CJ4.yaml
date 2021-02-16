@@ -14,19 +14,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Autopilot
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_PushXFR
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
-    var_type: f64
-
   - # Comm Power
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:28
@@ -55,22 +42,6 @@ shared:
     var_name: A:PITOT HEAT
     var_units: Bool
     event_name: PITOT_HEAT_TOGGLE
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_1
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_2
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Airframe_1
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Airframe_2
-    var_type: f64
 
   - # Avionics
     type: ToggleSwitch
@@ -84,14 +55,6 @@ shared:
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 24
-  -
-    type: var
-    var_name: L:XMLVAR_Essential_Bus_ON
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_AVIONICS_IsComposite
-    var_type: f64
 
   - # Failures
     type: var
@@ -134,50 +97,11 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # ASOBO_AS3000_Screen_Template
-    type: var
-    var_name: L:CJ4_PFD_ScreenLuminosity
-    var_units: Percent
-    var_type: f64
-  -
-    type: var
-    var_name: L:CJ4_MFD_ScreenLuminosity
-    var_units: Percent
-    var_type: f64
-  -
-    type: var
-    var_name: L:Glasscockpit_MFD_Started
-    var_type: f64
-  -
-    type: var
-    var_name: L:CJ4_MAP_MODE
-    var_type: f64
-  -
-    type: var
-    var_name: L:CJ4_MAP_SYMBOLS
-    var_type: f64
-  -
-    type: var
-    var_name: L:CJ4_MAP_ZOOM
-    var_type: f64
-  -
-    type: var
-    var_name: L:FMC_EXEC_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:FMC_UPDATE_CURRENT_PAGE
-    var_type: f64
-
-  - # Trim
-    type: var
-    var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
-    var_type: f64
-
   - # Lights
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
   -
     type: NumSet
@@ -188,9 +112,10 @@ shared:
     event_param: 3
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
+    var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 1
   -
@@ -202,9 +127,10 @@ shared:
     event_param: 5
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:2
     var_units: Bool
+    var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 2
   -
@@ -216,9 +142,10 @@ shared:
     event_param: 6
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:3
     var_units: Bool
+    var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 3
   -
@@ -301,3 +228,151 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 18
     index_reversed: true
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_Essential_Bus_ON
+  -
+    type: var
+    var_name: L:XMLVAR_AVIONICS_IsComposite
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:XMLVAR_PushXFR
+  -
+    type: var
+    var_name: L:CJ4_PFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_MFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_1
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_2
+  -
+    type: var
+    var_name: L:XMLVAR_Airframe_1
+  -
+    type: var
+    var_name: L:XMLVAR_Airframe_2
+  -
+    type: var
+    var_name: L:XMLVAR_AileronTrim
+  -
+    type: var
+    var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:AIRLINER_FLIGHT_PHASE
+  # -
+  #   type: var
+  #   var_name: L:AIRLINER_V1_SPEED
+  # -
+  #   type: var
+  #   var_name: L:AIRLINER_VR_SPEED
+  # -
+  #   type: var
+  #   var_name: L:AIRLINER_V2_SPEED
+  # -
+  #   type: var
+  #   var_name: L:AIRLINER_VREF_SPEED
+  # -
+  #   type: var
+  #   var_name: L:AIRLINER_VX_SPEED
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_ForcedToSTD
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+  -
+    type: var
+    var_name: L:XMLVAR_Mins_Selector_Baro
+  -
+    type: var
+    var_name: L:RADIONAV_SOURCE
+  -
+    type: var
+    var_name: L:CJ4_MAP_SYMBOLS
+  -
+    type: var
+    var_name: L:CJ4_MAP_ZOOM
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
+  -
+    type: var
+    var_name: L:RADIONAV ACTIVE:1
+  -
+    type: var
+    var_name: L:FMC_UPDATE_CURRENT_PAGE
+  # - # Shoudn't sync
+  #   type: var
+  #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+  -
+    type: var
+    var_name: L:CJ4_PFD_State
+  # - # Doesn't do anything
+  #   type: var
+  #   var_name: L:HUD_AP_SELECTED_SPEED
+  # - # Probably shouldn't sync
+  #   type: var
+  #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:CJ4_MFD_State
+  -
+    type: var
+    var_name: L:Glasscockpit_MFD_Started
+  # -
+  #   type: var
+  #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+  # -
+  #   type: var
+  #   var_name: L:AIRLINER_TO_FLEX_TEMP
+  # -
+  #   type: var
+  #   var_name: L:AIRLINER_CRUISE_ALTITUDE
+  -
+    type: var
+    var_name: L:CJ4_FMC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_FMC_State
+  -
+    type: var
+    var_name: L:CJ4_SAI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_SAI_State
+  # - # Probably shouldnt' sync
+  #   type: var
+  #   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
+  # - # Doesn't do anything
+  #   type: var
+  #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2

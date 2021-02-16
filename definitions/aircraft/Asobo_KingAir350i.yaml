@@ -24,15 +24,6 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 26
 
-  - # Deice
-    type: var
-    var_name: L:XMLVAR_Pitot_1
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_2
-    var_type: f64
-
   - # Prop Sync
     type: ToggleSwitch
     var_name: A:PROP SYNC ACTIVE
@@ -59,12 +50,6 @@ shared:
     var_name: A:CIRCUIT ON:29
     var_units: Bool
     var_type: bool
-
-  - # Fuel
-    type: var
-    var_name: L:XMLVAR_TANK_QUANTITY_Test_IsHeld
-    var_units: Number
-    var_type: i32
 
   - # Fuel Transfer
     type: ToggleSwitch
@@ -135,9 +120,10 @@ shared:
     event_name: PANEL_LIGHTS_TOGGLE
     event_param: 0
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 1
   -
@@ -261,3 +247,43 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
     index_reversed: true
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_Pitot_1
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_2
+  -
+    type: var
+    var_name: L:XMLVAR_DEICE_Aircraft_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_Starter1
+  -
+    type: var
+    var_name: L:XMLVAR_Starter1_EndTimeDown
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_1_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Starter2
+  -
+    type: var
+    var_name: L:XMLVAR_Starter2_EndTimeDown
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_2_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_TANK_QUANTITY_Test_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Light_Test

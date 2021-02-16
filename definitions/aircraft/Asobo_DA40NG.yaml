@@ -28,16 +28,6 @@ shared:
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 23
-  -
-    type: var
-    var_name: L:XMLVAR_ENGINE_Switch_Master_Cover_Opened
-    var_units: Bool
-    var_type: bool
-
-  - # Electrical
-    type: var
-    var_name: L:XMLVAR_ElecMaster
-    var_type: f64
 
   - # Failures
     type: var
@@ -71,9 +61,10 @@ shared:
     var_type: bool
 
   - # Lights
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
   -
     type: NumSet
@@ -92,9 +83,10 @@ shared:
     event_param: 16
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT GLARESHIELD
     var_units: Bool
+    var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
   -
     type: NumSet
@@ -154,3 +146,13 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 30
     index_reversed: true
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_ENGINE_Switch_Master_Cover_Opened
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:XMLVAR_ElecMaster

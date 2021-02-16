@@ -1,3 +1,5 @@
+# Version 0.10.2 Stable + Dev (GitHub Feb-14-2021)
+
 include:
   - definitions/aircraft/Asobo_CJ4.yaml
 
@@ -8,45 +10,19 @@ shared:
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 49
-  -
-    type: var
-    var_name: L:WT_CJ4_HDG_ON
-  -
-    type: var
-    var_name: L:WT_CJ4_NAV_ON
-  -
-    type: var
-    var_name: L:WT_CJ4_FLC_ON
-  -
-    type: var
-    var_name: L:WT_CJ4_VS_ON
-  -
-    type: var
-    var_name: L:WT_CJ4_LNAV_MODE
-  -
-    type: var
-    var_name: L:WT_CJ4_INHIBIT_SEQUENCE
-  -
+
+  - # LVAR Dump (WT only)
     type: var
     var_name: L:THROTTLE1_MODE
   -
     type: var
     var_name: L:THROTTLE2_MODE
-  -
-    type: var
-    var_name: L:Throttle1_Pos
-  -
-    type: var
-    var_name: L:Throttle2_Pos
-#   - # Already defined in CJ4 module
-#     type: var
-#     var_name: L:XMLVAR_Essential_Bus_ON
-#   -
-#     type: var
-#     var_name: L:XMLVAR_AVIONICS_IsComposite
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_ForcedToSTD
+  # -
+  #   type: var
+  #   var_name: L:Throttle1_Pos
+  # -
+  #   type: var
+  #   var_name: L:Throttle2_Pos
   -
     type: var
     var_name: L:XMLVAR_Baro1_SavedPressure
@@ -59,46 +35,15 @@ shared:
   -
     type: var
     var_name: L:WT_CJ4_VNAV_ON
-#   -
-#     type: var
-#     var_name: L:XMLVAR_PushXFR
-#   - # Already defined in CJ4 module
-#     type: var
-#     var_name: L:CJ4_PFD_ScreenLuminosity
-#   -
-#     type: var
-#     var_name: L:CJ4_MFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WT_CJ4_LNAV_MODE
   -
     type: var
     var_name: L:SEATBELT_LIGHT_ON
   -
     type: var
     var_name: L:SAFETY_LIGHT_ON
-#   - # Do not sync
-#     type: var
-#     var_name: L:XMLVAR_YokeHidden1
-#   -
-#     type: var
-#     var_name: L:XMLVAR_YokeHidden2
-    # Already defined in CJ4 module
-#   -
-#     type: var
-#     var_name: L:XMLVAR_Pitot_1
-#   -
-#     type: var
-#     var_name: L:XMLVAR_Pitot_2
-#   -
-#     type: var
-#     var_name: L:XMLVAR_Airframe_1
-#   -
-#     type: var
-#     var_name: L:XMLVAR_Airframe_2
-#   - # Not needed to sync
-#     type: var
-#     var_name: L:XMLVAR_AileronTrim
-#   - # Already defined in CJ4 module
-#     type: var
-#     var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
   -
     type: var
     var_name: L:PASSENGER_KNOB_AIR_1
@@ -122,88 +67,61 @@ shared:
     var_name: L:PASSENGER_KNOB_HEAT_2
   -
     type: var
-    var_name: L:WT.FlightPlan.Version
+    var_name: L:WT_CJ4_INHIBIT_SEQUENCE
   -
     type: var
-    var_name: L:RADIONAV ACTIVE:1
-#   - # Already defined in CJ4 module
-#     type: var
-#     var_name: L:FMC_UPDATE_CURRENT_PAGE
+    var_name: L:WT_CJ4_HDG_ON
   -
     type: var
-    var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+    var_name: L:WT_CJ4_NAV_ON
   -
     type: var
-    var_name: L:TAKEOFF_TIME
+    var_name: L:WT_CJ4_FLC_ON
   -
     type: var
-    var_name: L:LANDING_TIME
-  -
-    type: var
-    var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-  -
-    type: var
-    var_name: L:AIRLINER_TO_FLEX_TEMP
-  -
-    type: var
-    var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
-  -
-    type: var
-    var_name: L:CJ4_FMC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_FMC_State
-  -
-    type: var
-    var_name: L:WT_CJ4_DISPLAY_MSG
-  -
-    type: var
-    var_name: L:CJ4_SAI_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_SAI_State
+    var_name: L:WT_CJ4_VS_ON
   -
     type: var
     var_name: L:WT_FLIGHT_DIRECTOR_BANK
-  -
-    type: var
-    var_name: L:WT_CJ4_DONUT
-  -
-    type: var
-    var_name: L:WT_CJ4_V1_SPEED
-  -
-    type: var
-    var_name: L:WT_CJ4_V1_FMCSET
-  -
-    type: var
-    var_name: L:WT_CJ4_VR_SPEED
-  -
-    type: var
-    var_name: L:WT_CJ4_VR_FMCSET
-  -
-    type: var
-    var_name: L:WT_CJ4_V2_SPEED
-  -
-    type: var
-    var_name: L:WT_CJ4_V2_FMCSET
-  -
-    type: var
-    var_name: L:WT_CJ4_VREF_SPEED
-  -
-    type: var
-    var_name: L:WT_CJ4_VRF_FMCSET
-  -
-    type: var
-    var_name: L:WT_CJ4_VT_SPEED
-  -
-    type: var
-    var_name: L:WT_CJ4_VT_FMCSET
-  -
-    type: var
-    var_name: L:WT_CJ4_VAP
-  -
-    type: var
-    var_name: L:WT_CJ4_VAP_FMCSET
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_DONUT
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_V1_SPEED
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_V1_FMCSET
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_VR_SPEED
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_VR_FMCSET
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_V2_SPEED
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_V2_FMCSET
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_VREF_SPEED
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_VRF_FMCSET
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_VT_SPEED
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_VT_FMCSET
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_VAP
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_VAP_FMCSET
   -
     type: var
     var_name: L:WT_CJ4_BARO_SET
@@ -218,9 +136,6 @@ shared:
     var_name: L:WT_NAV_SENSITIVITY
   -
     type: var
-    var_name: L:CJ4_MAP_SYMBOLS
-  -
-    type: var
     var_name: L:WT_CJ4_DTK
   -
     type: var
@@ -231,75 +146,51 @@ shared:
   -
     type: var
     var_name: L:WT.CJ4.BearingPointerMode_2
-  -
-    type: var
-    var_name: L:WT_CJ4_WPT_ALERT
-  -
-    type: var
-    var_name: L:CJ4 FUEL FLOW:1
-  -
-    type: var
-    var_name: L:CJ4 FUEL FLOW:2
-  -
-    type: var
-    var_name: L:AS1000_Warnings_WarningIndex
-  -
-    type: var
-    var_name: L:RADIONAV_SOURCE
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_WPT_ALERT
+  # -
+  #   type: var
+  #   var_name: L:CJ4 FUEL FLOW:1
+  # -
+  #   type: var
+  #   var_name: L:CJ4 FUEL FLOW:2
   -
     type: var
     var_name: L:WT_CJ4_PFD1_AOA
-  -
-    type: var
-    var_name: L:CJ4_PFD_State
-  -
-    type: var
-    var_name: L:HUD_AP_SELECTED_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-#   - # Already defined in CJ4 module
-#     type: var
-#     var_name: L:CJ4_MAP_ZOOM
-#   -
-#     type: var
-#     var_name: L:CJ4_MFD_State
-  -
-    type: var
-    var_name: L:AS1000_Warnings_Master_Set
-#   -
-#     type: var
-#     var_name: L:Glasscockpit_MFD_Started
-#   - # Don't need to sync
-#     type: var
-#     var_name: L:AIRLINER_V1_SPEED
-#   -
-#     type: var
-#     var_name: L:AIRLINER_VR_SPEED
-#   -
-#     type: var
-#     var_name: L:AIRLINER_V2_SPEED
-#   - # Calculated by AC
-#     type: var
-#     var_name: L:WT_CJ4_VPATH_ALT_DEV
-#   - 
-#     type: var
-#     var_name: L:WT_CJ4_TOD_DISTANCE
-#   -
-#     type: var
-#     var_name: L:WT_CJ4_TOD_REMAINING
-  -
-    type: var
-    var_name: L:WT_NAV_SENSITIVITY_SCALAR
-  -
-    type: var
-    var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-#   - Calculated by AC
-#     type: var
-#     var_name: L:WT_CJ4_XTK
-#   -
-#     type: var
-#     var_name: L:WT_CJ4_IN_DISCONTINUITY
-  -
-    type: var
-    var_name: L:HUD_AP_SELECTED_ALTITUDE
+  # -
+  #   type: var
+  #   var_name: L:WT.FlightPlan.Version
+  # -
+  #   type: var
+  #   var_name: L:TAKEOFF_TIME
+  # -
+  #   type: var
+  #   var_name: L:LANDING_TIME
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_VPATH_ALT_DEV
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_TOD_DISTANCE
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_TOD_REMAINING
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_DISPLAY_MSG
+  # -
+  #   type: var
+  #   var_name: L:WT_NAV_SENSITIVITY_SCALAR
+  # -
+  #   type: var
+  #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_XTK
+  # -
+  #   type: var
+  #   var_name: L:WT_CJ4_IN_DISCONTINUITY

@@ -23,15 +23,6 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 26
 
-  - # Fuel
-    type: var
-    var_name: L:XMLVAR_FUEL_Pump1_High_ON
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_FUEL_Pump2_High_ON
-    var_type: f64
-
   - # Prop Sync
     type: ToggleSwitch
     var_name: A:PROP SYNC ACTIVE
@@ -59,17 +50,6 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Fuel
-    type: var
-    var_name: L:XMLVAR_FUEL_Pump1_High_ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: L:XMLVAR_FUEL_Pump2_High_ON
-    var_units: Bool
-    var_type: bool
-
   - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT LANDING:2
@@ -83,9 +63,10 @@ shared:
     event_name: PANEL_LIGHTS_TOGGLE
     event_param: 0
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 1
   -
@@ -175,3 +156,16 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
     index_reversed: true
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_FUEL_Pump1_High_ON
+  -
+    type: var
+    var_name: L:XMLVAR_FUEL_Pump2_High_ON

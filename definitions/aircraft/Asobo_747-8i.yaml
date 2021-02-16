@@ -19,10 +19,6 @@ shared:
     var_units: Bool
     event_name: APU_STARTER
     off_event_name: APU_OFF_SWITCH
-  -
-    type: var
-    var_name: L:XMLVAR_APU_StarterKnob_Pos
-    var_type: f64
 
   - # AutoBrakes
     type: NumIncrement
@@ -32,11 +28,10 @@ shared:
     up_event_name: INCREASE_AUTOBRAKE_CONTROL
     down_event_name: DECREASE_AUTOBRAKE_CONTROL
     increment_by: 1
-  -
-    type: var
-    var_name: L:XMLVar_Autobrake_Disarm
-    var_units: Bool
-    var_type: bool
+
+  - # Autopilot
+    type: event
+    event_name: AP_HDG_HOLD
 
   - # Deice
     type: NumSet
@@ -73,10 +68,6 @@ shared:
     var_type: i32
     event_name: TOGGLE_STRUCTURAL_DEICE
   -
-    type: var
-    var_name: L:XMLVAR_DeiceAirFrame_Auto
-    var_type: f64
-  -
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:1
     var_units: Bool
@@ -96,11 +87,6 @@ shared:
     var_name: A:ENG ANTI ICE:4
     var_units: Bool
     event_name: ANTI_ICE_TOGGLE_ENG4
-
-  - # EICAS
-    type: var
-    var_name: L:XMLVAR_EICAS_CURRENT_PAGE
-    var_type: f64
 
   - # Electrical
     type: CustomCalculator
@@ -146,10 +132,6 @@ shared:
     var_units: Bool
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 2
-  -
-    type: var
-    var_name: L:XMLVAR_StandbyPower_Selector
-    var_type: f64
 
   - # Engines
     type: ToggleSwitch
@@ -392,94 +374,6 @@ shared:
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 16
 
-  - # Glareshield
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_2_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_3_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_AUTO_THROTTLE_ARM_0_STATE
-    var_type: f64
-  -
-    type: var
-    var_name: L:B747_MAP_MODE
-    var_type: f64
-  -
-    type: var
-    var_name: L:B747_8_MFD_NAV_MODE
-    var_type: f64
-  -
-    type: var
-    var_name: L:B747_8_MFD_RANGE
-    var_type: f64
-  -
-    type: var
-    var_name: L:BTN_TERRONND_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:BTN_WX_ACTIVE
-    var_type: f64
-  -
-    type: event
-    event_name: AP_HDG_HOLD
-  -
-    type: var
-    var_name: L:AP_VS_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:AP_VNAV_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:AP_SPEED_INTERVENTION_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:FMC_UPDATE_CURRENT_PAGE
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_R1_State
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_R2_State
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Mins_Selector_Baro
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_ForcedToSTD
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_SavedPressure
-    var_type: f64
-
   - # Hydraulics
     type: ToggleSwitch
     var_name: A:HYDRAULIC SWITCH:1
@@ -536,9 +430,10 @@ shared:
     event_name: TOGGLE_TAXI_LIGHTS
     event_param: 3
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 1
   -
@@ -550,9 +445,10 @@ shared:
     event_param: 1
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL:2
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 2
   -
@@ -564,9 +460,10 @@ shared:
     event_param: 2
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL:3
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 3
   -
@@ -578,9 +475,10 @@ shared:
     event_param: 3
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL:4
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 4
   -
@@ -592,9 +490,10 @@ shared:
     event_param: 4
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL:5
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 5
   -
@@ -606,9 +505,10 @@ shared:
     event_param: 5
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
+    var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 1
   -
@@ -620,9 +520,10 @@ shared:
     event_param: 1
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:2
     var_units: Bool
+    var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 2
   -
@@ -634,9 +535,10 @@ shared:
     event_param: 2
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:3
     var_units: Bool
+    var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 3
   -
@@ -648,9 +550,10 @@ shared:
     event_param: 3
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PEDESTRAL:1
     var_units: Bool
+    var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
     event_param: 1
   -
@@ -662,9 +565,10 @@ shared:
     event_param: 1
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
+    var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
   -
@@ -676,9 +580,10 @@ shared:
     event_param: 1
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT GLARESHIELD:2
     var_units: Bool
+    var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 2
   -
@@ -690,9 +595,10 @@ shared:
     event_param: 2
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT GLARESHIELD:3
     var_units: Bool
+    var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 3
   -
@@ -795,99 +701,6 @@ shared:
     event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
     event_param: 4
 
-  - # Radios
-    type: var
-    var_name: L:XMLVAR_COM_Transmit_Channel
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM1_CURRENT_FREQ
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM2_CURRENT_FREQ
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM3_CURRENT_FREQ
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_VHF_L_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_VHF_C_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_VHF_R_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_VHF_L_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_VHF_C_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_VHF_R_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_VHF_L_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_VHF_C_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_VHF_R_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_C
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_R
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_L
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_R
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_L
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_C
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Transponder_Mode
-    var_type: f64
-
   - # Wipers
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:111
@@ -902,6 +715,340 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 111
     index_reversed: true
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_SeatBelts
+  -
+    type: var
+    var_name: L:B747_8_MFD_NAV_MODE
+  -
+    type: var
+    var_name: L:XMLVAR_COM2_CURRENT_FREQ
+  -
+    type: var
+    var_name: L:XMLVAR_COM3_CURRENT_FREQ
+  -
+    type: var
+    var_name: L:XMLVAR_COM1_CURRENT_FREQ
+  -
+    type: var
+    var_name: L:FMC_EXEC_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_VHF_L_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_VHF_L_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_VHF_L_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_VHF_C_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_VHF_C_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_VHF_C_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_VHF_R_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_VHF_R_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_VHF_R_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_L
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_L
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_C
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_C
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_R
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_R
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R
+  -
+    type: var
+    var_name: L:XMLVAR_COM_Transmit_Channel
+  -
+    type: var
+    var_name: L:XMLVAR_Transponder_Mode
+  -
+    type: var
+    var_name: L:XMLVAR_LTS_Test
+  -
+    type: var
+    var_name: L:XMLVAR_StandbyPower_Selector
+  -
+    type: var
+    var_name: L:XMLVAR_APU_StarterKnob_Pos
+  -
+    type: var
+    var_name: L:XMLVAR_DeiceAirFrame_Auto
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:B747_8_MFD_Range
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_ForcedToSTD
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_SavedPressure
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
+  -
+    type: var
+    var_name: L:XMLVAR_Mins_Selector_Baro
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R1_State
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R2_State
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_3_Status
+  -
+    type: var
+    var_name: L:XMLVAR_AUTO_THROTTLE_ARM_0_STATE
+  -
+    type: var
+    var_name: L:AP_FLCH_ACTIVE
+  -
+    type: var
+    var_name: L:AP_ALT_HOLD_ACTIVE
+  -
+    type: var
+    var_name: L:AP_HEADING_HOLD_ACTIVE
+  -
+    type: var
+    var_name: L:AP_LNAV_ARMED
+  -
+    type: var
+    var_name: L:AP_VNAV_ARMED
+  -
+    type: var
+    var_name: L:AP_SPD_ACTIVE
+  -
+    type: var
+    var_name: L:AP_VS_ACTIVE
+  -
+    type: var
+    var_name: L:AP_SPEED_INTERVENTION_ACTIVE
+  -
+    type: var
+    var_name: L:AP_VNAV_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_EICAS_CURRENT_PAGE
+  -
+    type: var
+    var_name: L:XMLVar_Autobrake_Disarm
+  -
+    type: var
+    var_name: L:B747_8_EICAS_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_PFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_MFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_FPA_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:B747_8_Com_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_Com_1_State
+  -
+    type: var
+    var_name: L:B747_8_Com_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_Com_2_State
+  -
+    type: var
+    var_name: L:B747_8_Com_3_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_Com_3_State
+  -
+    type: var
+    var_name: L:B747_8_IAS_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_IAS_State
+  # - # Probably shouldn't be synced
+  #   type: var
+  #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+  -
+    type: var
+    var_name: L:B747_8_HDG_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_HDG_State
+  -
+    type: var
+    var_name: L:B747_8_VSpeed_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_VSpeed_State
+  -
+    type: var
+    var_name: L:B747_8_ALT_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_ALT_State
+  -
+    type: var
+    var_name: L:B747_8_SAI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_SAI_State
+  -
+    type: var
+    var_name: L:B747_8_ATC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_ATC_State
+  -
+    type: var
+    var_name: L:B747_8_RUDDER_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_RUDDER_State
+  -
+    type: var
+    var_name: L:AIRLINER_FLIGHT_PHASE
+  -
+    type: var
+    var_name: L:AIRLINER_V1_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_VR_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_V2_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_VREF_SPEED
+  -
+    type: var
+    var_name: L:RADIONAV_SOURCE
+  -
+    type: var
+    var_name: L:AP_LNAV_ACTIVE
+  -
+    type: var
+    var_name: L:BTN_WX_ACTIVE
+  -
+    type: var
+    var_name: L:BTN_TERRONND_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:AIRLINER_THRUST_TAKEOFF_MODE
+  -
+    type: var
+    var_name: L:B747_8_PFD_State
+  -
+    type: var
+    var_name: L:HUD_AP_SELECTED_SPEED
+  -
+    type: var
+    var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:B747_8_MFD_State
+  -
+    type: var
+    var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:B747_MAP_MODE
+  -
+    type: var
+    var_name: L:FMC_UPDATE_CURRENT_PAGE
+  -
+    type: var
+    var_name: L:B747_8_EICAS_1_State
+  -
+    type: var
+    var_name: L:B747_8_EICAS_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_EICAS_2_State
+  -
+    type: var
+    var_name: L:RADIONAV ACTIVE:1
+  -
+    type: var
+    var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+  -
+    type: var
+    var_name: L:AIRLINER_TO_FLEX_TEMP
+  -
+    type: var
+    var_name: L:AIRLINER_CRUISE_ALTITUDE
+  -
+    type: var
+    var_name: L:B747_8_FMC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_FMC_State
 
 master:
   -

@@ -16,15 +16,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Autopilot
-    type: var
-    var_name: L:XMLVAR_PushXFR
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_APTrim
-    var_type: f64
-
   - # Bleed
     type: NumSet
     var_name: A:BLEED AIR SOURCE CONTROL
@@ -32,53 +23,11 @@ shared:
     var_type: i32
     event_name: BLEED_AIR_SOURCE_CONTROL_SET
 
-  - # Deice
-    type: var
-    var_name: L:XMLVAR_Pitot_1
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_2
-    var_type: f64
-
-  - # Engine
-    type: var
-    var_name: L:LEVER_MAN_OVRD
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_ThrottlePos_XAxis
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_ThrottlePos_YAxis
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_InertSep1_Switch
-    var_type: f64
-
   - # Electrical
     type: ToggleSwitch
     var_name: GENERAL ENG GENERATOR SWITCH:1
     var_units: Bool
     event_name: TOGGLE_ALTERNATOR1
-  -
-    type: var
-    var_name: L:XMLVAR_ElecGen
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_CrashLeverPos
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Starter
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_IsHeld
-    var_type: f64
 
   - # Failures
     type: var
@@ -91,20 +40,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Fuel
-    type: var
-    var_name: L:XMLVAR_BoostFuelPump
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_FuelSelectorAuto
-    var_type: f64
-
   - # Pressurization
-    type: var
-    var_name: L:XMLVAR_Press_DUMP_cover
-    var_type: f64
-  -
     type: var
     var_name: L:EMERGENCY_PUSH_RAMAIR_SwitchState
     var_type: f64
@@ -139,9 +75,10 @@ shared:
     var_type: f64
 
   - # Lights
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL
     var_units: Bool
+    var_type: i32
     event_name: PANEL_LIGHTS_SET
   -
     type: NumSet
@@ -151,23 +88,17 @@ shared:
     event_name: LIGHT_POTENTIOMETER_4_SET
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN
     var_units: Bool
+    var_type: i32
     event_name: CABIN_LIGHTS_SET
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PEDESTRAL
     var_units: Bool
+    var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
-  -
-    type: var
-    var_name: L:XMLVAR_FORCE_PULSE_ON
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
-    var_type: f64
   -
     type: var
     var_name: L:XMLVAR_PilotLightOn
@@ -221,9 +152,119 @@ shared:
     index_reversed: true
   -
     type: var
-    var_name: L:XMLVAR_LightDimmer
-    var_type: f64
+    var_name: L:XMLVAR_CircuitBreaker_Light_ON
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
   -
     type: var
-    var_name: L:XMLVAR_CircuitBreaker_Light_ON
-    var_type: f64
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  -
+    type: var
+    var_name: L:XMLVAR_APTrim
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Light_Test
+  -
+    type: var
+    var_name: L:XMLVAR_LandingGearLightTesting
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Check_Down
+  -
+    type: var
+    var_name: L:XMLVAR_LightDimmer
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Check_Down_IsDown
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Light_Test_IsDown
+  -
+    type: var
+    var_name: L:XMLVAR_Press_DUMP_cover
+  -
+    type: var
+    var_name: L:XMLVAR_ThrottlePos_XAxis
+  -
+    type: var
+    var_name: L:LEVER_MAN_OVRD
+  -
+    type: var
+    var_name: L:XMLVAR_ThrottlePos_YAxis
+  -
+    type: var
+    var_name: L:XMLVAR_Starter
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_EndTimeDown
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Ignition
+  -
+    type: var
+    var_name: L:XMLVAR_FuelSelectorAuto
+  -
+    type: var
+    var_name: L:XMLVAR_BoostFuelPump
+  -
+    type: var
+    var_name: L:_FuelTankShiftPressed
+  -
+    type: var
+    var_name: L:XMLVAR_FORCE_PULSE_ON
+  -
+    type: var
+    var_name: L:XMLVAR_CrashLeverPos
+  -
+    type: var
+    var_name: L:XMLVAR_ElecGen
+  -
+    type: var
+    var_name: L:XMLVAR_ElecSource
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_1
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_2
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:XMLVAR_PushXFR
+  -
+    type: var
+    var_name: L:XMLVAR_InertSep1_Switch
+  -
+    type: var
+    var_name: L:XMLVAR_InertSep1_Deployment
+  -
+    type: var
+    var_name: L:XMLVAR_InertSep1_Active
+  -
+    type: var
+    var_name: L:AS3000_1_Timer_Value
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_1_State
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_2_State
+  -
+    type: var
+    var_name: L:AS3000_2_Timer_Value
