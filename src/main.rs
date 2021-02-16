@@ -13,7 +13,7 @@ mod varreader;
 
 use app::{App, AppMessage, ConnectionMethod};
 use clientmanager::ClientManager;
-use definitions::{Definitions, SyncPermission};
+use definitions::{Definitions, SyncPermission, ProgramAction};
 use log::{error, info, warn};
 use server::{Client, Event, Payloads, ReceiveMessage, Server, TransferClient};
 use simconfig::Config;
@@ -424,17 +424,27 @@ fn main() {
             }
 
             // Handle specific program triggered actions
-            if definitions.control_transfer_requested {
-                if !control.has_control() && !observing {
-                    if let Some(in_control) = clients.get_client_in_control() {
-                        control.take_control(&conn, &definitions.lvarstransfer.transfer);
-                        client.take_control(in_control.clone());
+            if let Some(pending_action) = definitions.get_next_pending_action() {
+                match pending_action {
+                    ProgramAction::TakeControls => {
+                        if !control.has_control() && !observing {
+                            if let Some(in_control) = clients.get_client_in_control() {
+                                control.take_control(&conn, &definitions.lvarstransfer.transfer);
+                                client.take_control(in_control.clone());
+                            }
+                        }
+                    }
+                    ProgramAction::TransferControls => {
+                        if control.has_control() {
+                            if let Some(next_control) = clients.get_next_client_for_control() {
+                                client.transfer_control(next_control.clone())
+                            }
+                        }
                     }
                 }
                 
-                definitions.control_transfer_requested = false;
             }
-
+            
             // Handle initial connection delay, allows lvars to be processed
             if let Some(time) = connection_time {
                 if time.elapsed().as_secs() >= 3 {

@@ -3,7 +3,7 @@ use serde_yaml::{self, Value};
 use serde::{Deserialize, Serialize};
 use simconnect::SimConnector;
 
-use std::{collections::HashMap, collections::{HashSet, VecDeque, hash_map}, fmt::{Debug, Display}, fs::File, path::{Path}, time::Instant};
+use std::{collections::HashMap, collections::{HashSet, VecDeque, hash_map}, fmt::{Debug, Display}, fs::File, mem::swap, path::{Path}, time::Instant};
 use crate::{sync::{gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType}, jscommunicator::{self, JSCommunicator}, transfer::{AircraftVars, Events, LVarSyncer}}, syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch}, util::Category, util::InDataTypes, util::VarReaderTypes};
 
 #[derive(Debug)]
@@ -346,8 +346,15 @@ struct ProgramActionEntry {
 }
 
 #[derive(Deserialize)]
-enum ProgramAction {
-    TakeControls
+struct ProgramActionEventEntry {
+    event_name: String,
+    action: ProgramAction
+}
+
+#[derive(Deserialize, Clone)]
+pub enum ProgramAction {
+    TakeControls,
+    TransferControls
 }
 
 struct EventMapping {
@@ -503,7 +510,7 @@ pub struct Definitions {
     // Vars that need interpolation
     interpolate_vars: HashSet<String>,
     // For indicating that an event has been triggered and the control should be transferred to the next person
-    pub control_transfer_requested: bool
+    pending_action: Option<ProgramAction>
 }
 
 fn get_category_from_string(category: &str) -> Result<Category, VarAddError> {
@@ -548,7 +555,7 @@ impl Definitions {
             periods: HashMap::new(),
             interpolate_vars: HashSet::new(),
 
-            control_transfer_requested: false,
+            pending_action: None,
         }
     }
 
@@ -872,6 +879,20 @@ impl Definitions {
         Ok(())
     }
 
+    fn add_program_action_event(&mut self, category: &str, event: ProgramActionEventEntry) -> Result<(), VarAddError> {
+        let category = get_category_from_string(category)?;
+
+        self.events.get_or_map_event_id(&event.event_name, true);
+        self.categories.insert(event.event_name.clone(), category);
+
+        self.add_mapping(event.event_name, Mapping {
+            action: ActionType::ProgramAction(event.action),
+            ..Default::default()
+        })?;
+
+        Ok(())
+    }
+
     fn add_to_buffer(&mut self, category: String, value: Value) {
         match self.definitions_buffer.entry(category) {
             indexmap::map::Entry::Occupied(mut o) => {o.get_mut().push(value)},
@@ -900,6 +921,7 @@ impl Definitions {
             "NUMDIGITSET" => self.add_num_digit_set(&category, try_cast_yaml!(value))?,
             "CUSTOMCALCULATOR" => self.add_custom_calculator(&category, try_cast_yaml!(value))?,
             "PROGRAMACTION" => self.add_program_action(&category, try_cast_yaml!(value))?,
+            "PROGRAMACTIONEVENT" => self.add_program_action_event(&category, try_cast_yaml!(value))?,
             _ => return Err(VarAddError::InvalidSyncType(type_str.to_string()))
         };
         
@@ -1002,9 +1024,7 @@ impl Definitions {
                 execute_mapping!(new_value, action, VarReaderTypes::F64(result.var.floating), mapping, {
                     action.set_current(new_value)
                 }, {}, {
-                    match action {
-                        ProgramAction::TakeControls => self.control_transfer_requested = true
-                    }
+                    self.pending_action = Some(action.clone());
                     should_write = false;
                 });
                 
@@ -1062,12 +1082,20 @@ impl Definitions {
             for mapping in mappings {
                 if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::Bool(false)) {
                     should_write = false;
-                    continue
+                    continue;
+                }
+
+                if let ActionType::ProgramAction(action) = &mapping.action {
+                    self.pending_action = Some(action.clone());
+                    should_write = false;
+                    continue;
                 }
                 
                 if mapping.cancel_h_events {
                     self.event_cancel_timer = Instant::now();
                 }
+
+                
 
                 // Check timer
                 if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &event_name) {return;}
@@ -1177,7 +1205,7 @@ impl Definitions {
     pub fn get_need_sync(&mut self, sync_permission: &SyncPermission) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
         let mut data = AllNeedSync::new();
         // Swap queued vars into local var
-        std::mem::swap(&mut data, &mut self.current_sync);
+        swap(&mut data, &mut self.current_sync);
         // Filter out based on what the client's current permissions are
         self.filter_all_sync(&mut data, sync_permission);
         // Split into interpolated vs non interpolated values - used for reliable/unreliable transmissions
@@ -1336,5 +1364,14 @@ impl Definitions {
 
     pub fn get_number_lvars(&self) -> usize {
         return self.lvarstransfer.get_number_defined()
+    }
+
+    pub fn get_next_pending_action(&mut self) -> Option<ProgramAction> {
+        if self.pending_action.is_none() {return None}
+
+        let mut next_action = None;
+        swap(&mut self.pending_action, &mut next_action);
+
+        next_action
     }
 }
