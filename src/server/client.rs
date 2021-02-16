@@ -76,7 +76,7 @@ impl TransferStruct {
                 }, addr.clone()).ok();
                 
                 
-                info!("[NETWORK] Established connection with {} on {}!", addr, session_id);
+                info!("[NETWORK] Established connection with port {} on {}!", addr.port(), session_id);
 
                 self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
             }

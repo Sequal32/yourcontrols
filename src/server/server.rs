@@ -75,7 +75,7 @@ impl TransferStruct {
                 return false
             }
 
-            info!("[NETWORK] Sent handshake packet to {}. Retry #{}", session.addr, session.retries);
+            info!("[NETWORK] Sent handshake packet to port {}. Retry #{}", session.addr.port(), session.retries);
 
             return true;
         });
