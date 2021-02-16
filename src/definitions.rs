@@ -968,6 +968,8 @@ impl Definitions {
                         timer: Instant::now(),
                         ignore: true
                     });
+
+                    self.add_to_buffer(key.clone(), ignore_value);
                 }
 
             } else {
