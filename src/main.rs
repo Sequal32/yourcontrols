@@ -365,7 +365,10 @@ fn main() {
                             match definitions.load_config_from_bytes(bytes) {
                                 Ok(_) => {
                                     info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events from the server", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
+                                    control.on_connected(&conn);
                                     definitions.on_connected(&conn).ok();
+                                        // Freeze aircraft
+                                    control.lose_control(&conn);
                                 }
                                 Err(e) => {
                                     error!("[DEFINITIONS] Could not load server sent configuration file: {}", e);
@@ -389,8 +392,6 @@ fn main() {
                                     // Display connected message
                                 app_interface.connected();
                                 app_interface.lose_control();
-                                    // Freeze aircraft
-                                control.lose_control(&conn);
                             }
                         }
                         Event::ConnectionLost(reason) => {
