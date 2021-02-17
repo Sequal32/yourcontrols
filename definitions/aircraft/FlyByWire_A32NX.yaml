@@ -3,6 +3,7 @@
 include:
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/radios.yaml
   - definitions/modules/physics.yaml
 
 shared:
@@ -573,28 +574,6 @@ shared:
     var_name: A:LIGHT STROBE
     var_units: Bool
     event_name: STROBES_TOGGLE
-
-  - # Radios
-    type: ToggleSwitch
-    var_name: A:COM TRANSMIT:1
-    var_units: Bool
-    event_name: PILOT_TRANSMITTER_SET
-    event_param: 0
-    switch_on: true
-  -
-    type: ToggleSwitch
-    var_name: A:COM TRANSMIT:2
-    var_units: Bool
-    event_name: PILOT_TRANSMITTER_SET
-    event_param: 1
-    switch_on: true
-  -
-    type: ToggleSwitch
-    var_name: A:COM TRANSMIT:3
-    var_units: Bool
-    event_name: PILOT_TRANSMITTER_SET
-    event_param: 2
-    switch_on: true
 
   - # Take control priority
     type: ProgramAction
@@ -1603,48 +1582,13 @@ shared:
     type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
   -
-    type: NumSet
-    var_name: A:COM ACTIVE FREQUENCY:1
-    var_units: Frequency BCD16
-    var_type: i32
-    event_name: COM_RADIO_SET
-  -
-    type: NumSet
-    var_name: A:COM STANDBY FREQUENCY:1
-    var_units: Frequency BCD16
-    var_type: i32
-    event_name: COM_STBY_RADIO_SET
-  -
-    type: NumSet
-    var_name: A:COM ACTIVE FREQUENCY:2
-    var_units: Frequency BCD16
-    var_type: i32
-    event_name: COM2_RADIO_SET
-  -
-    type: NumSet
-    var_name: A:COM STANDBY FREQUENCY:2
-    var_units: Frequency BCD16
-    var_type: i32
-    event_name: COM2_STBY_RADIO_SET
-  -
-    type: NumSet
-    var_name: A:COM ACTIVE FREQUENCY:3
-    var_units: Frequency BCD16
-    var_type: i32
-    event_name: COM3_RADIO_SET
-  -
-    type: NumSet
-    var_name: A:COM STANDBY FREQUENCY:3
-    var_units: Frequency BCD16
-    var_type: i32
-    event_name: COM3_STBY_RADIO_SET
-  -
     type: var
     var_name: A:TRANSPONDER STATE:1
     var_units: Enum
     var_type: i32
 
 init:
+  # H: events take care of typing the transponder code in
   -
     type: NumDigitSet
     var_name: A:TRANSPONDER CODE:1
