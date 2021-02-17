@@ -595,9 +595,9 @@ shared:
   - # Trim
     type: NumSet
     var_name: A:RUDDER TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
-    event_name: RUDDER_TRIM_SET
+    event_name: RUDDER_TRIM_SET_EX1
   -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
@@ -612,10 +612,11 @@ shared:
       equals:
         Bool: true
   -
-    type: var
+    type: NumSet
     var_name: A:AILERON TRIM PCT
-    var_units: Percent
+    var_units: Percent scaler 16k
     var_type: f64
+    event_name: AILERON_TRIM_SET_EX1
 
   - # Wipers
     type: ToggleSwitch
@@ -1586,6 +1587,38 @@ shared:
     var_name: A:TRANSPONDER STATE:1
     var_units: Enum
     var_type: i32
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
 
 init:
   # H: events take care of typing the transponder code in
