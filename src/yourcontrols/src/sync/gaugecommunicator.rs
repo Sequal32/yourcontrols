@@ -280,7 +280,7 @@ impl GaugeCommunicator {
     }
 
     fn write_interpolate_mapping(&mut self, conn: &SimConnector) {
-        let mut writer = MemWriter::new(2048, 4).unwrap();
+        let mut writer = MemWriter::new(8096, 4).unwrap();
 
         for (_, datum) in self.interpolate_datums.iter() {
 
@@ -325,7 +325,7 @@ impl GaugeCommunicator {
 
         conn.add_to_client_data_definition(SEND_INTERPOLATE, 0, 8, 0.0, 100);
 
-        for i in 0..30 {
+        for i in 0..100 {
             conn.add_to_client_data_definition(MAP_INTERPOLATE, i * 68, 68, 0.0, i);
             conn.add_to_client_data_definition(SEND_INTERPOLATE, i * 8 + 8, 8, 0.0, i);
         }
