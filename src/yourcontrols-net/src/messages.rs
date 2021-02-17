@@ -1,10 +1,12 @@
-use crate::definitions::AllNeedSync;
-use crossbeam_channel::{Receiver, Sender, TryRecvError};
+use crossbeam_channel::{Receiver, Sender};
 use laminar::{Metrics, Packet, Socket, SocketEvent};
-use rmp_serde::{self, decode, encode};
+use rmp_serde::{self};
 use serde::{Serialize, Deserialize};
-use std::{io, net::SocketAddr};
+use yourcontrols_types::AllNeedSync;
+use std::{net::SocketAddr};
 use zstd::block::{Compressor, Decompressor};
+
+use yourcontrols_types::Error;
 
 const COMPRESS_DICTIONARY: &[u8] = include_bytes!("compress_dict.bin");
 
@@ -36,39 +38,6 @@ pub enum Message {
     Payload(SocketAddr, Payloads),
     ConnectionClosed(SocketAddr),
     Metrics(SocketAddr, Metrics)
-}
-
-#[derive(Debug)]
-pub enum Error {
-    SerdeDecodeError(decode::Error),
-    SerdeEncodeError(encode::Error),
-    CompressError(io::Error),
-    ReadTimeout(TryRecvError),
-    NotProcessed
-}
-
-impl From<decode::Error> for Error {
-    fn from(e: decode::Error) -> Self {
-        Self::SerdeDecodeError(e)
-    }
-}
-
-impl From<encode::Error> for Error {
-    fn from(e: encode::Error) -> Self {
-        Self::SerdeEncodeError(e)
-    }
-}
-
-impl From<io::Error> for Error {
-    fn from(e: io::Error) -> Self {
-        Self::CompressError(e)
-    }
-}
-
-impl From<TryRecvError> for Error {
-    fn from(e: TryRecvError) -> Self {
-        Self::ReadTimeout(e)
-    }
 }
 
 fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: SocketAddr) -> Packet {

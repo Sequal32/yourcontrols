@@ -6,7 +6,12 @@ use std::{net::{SocketAddr}, net::IpAddr, sync::Mutex, time::Duration, time::Ins
 use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
 use std::thread;
 
-use super::{ClientReceiver, ClientSender, Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Message, Payloads, ReceiveMessage, SenderReceiver, ServerReceiver, ServerSender, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr, messages, util::{TransferClient}};
+use crate::util::{ClientReceiver, ClientSender, Event, ReceiveMessage, ServerReceiver, ServerSender, TransferClient};
+use crate::util::{get_bind_address, get_socket_config, get_rendezvous_server, match_ip_address_to_socket_addr};
+use crate::util::{HEARTBEAT_INTERVAL_MANUAL_SECS, MAX_PUNCH_RETRIES, LOOP_SLEEP_TIME_MS};
+use crate::messages::{Payloads, SenderReceiver, Message};
+
+use yourcontrols_types::Error;
 
 struct TransferStruct {
     name: String,
@@ -180,19 +185,19 @@ impl Client {
         Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(self.timeout))
     }
 
-    pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), StartClientError> {
+    pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), Error> {
         self.run(ip.is_ipv6(), None, None, Some(match_ip_address_to_socket_addr(ip, port)))
     }
 
-    pub fn start_with_hole_punch(&mut self, session_id: String, is_ipv6: bool) -> Result<(), StartClientError> {
+    pub fn start_with_hole_punch(&mut self, session_id: String, is_ipv6: bool) -> Result<(), Error> {
         self.run(is_ipv6, Some(session_id), Some(get_rendezvous_server(is_ipv6)?), None)
     }
 
-    pub fn start_with_relay(&mut self) -> Result<(), StartClientError> {
+    pub fn start_with_relay(&mut self) -> Result<(), Error> {
         self.run(false, None, Some(get_rendezvous_server(false)?), None)
     }
 
-    pub fn run(&mut self, is_ipv6: bool, session_id: Option<String>, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), StartClientError> {
+    pub fn run(&mut self, is_ipv6: bool, session_id: Option<String>, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), Error> {
         let mut socket = self.get_socket(is_ipv6)?;
 
         self.is_host = session_id.is_none() && target_address.is_none();

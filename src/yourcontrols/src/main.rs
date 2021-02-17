@@ -3,7 +3,6 @@
 mod app;
 mod clientmanager;
 mod definitions;
-mod server;
 mod simconfig;
 mod sync;
 mod syncdefs;
@@ -15,14 +14,15 @@ use app::{App, AppMessage, ConnectionMethod};
 use clientmanager::ClientManager;
 use definitions::{Definitions, SyncPermission, ProgramAction};
 use log::{error, info, warn};
-use server::{Client, Event, Payloads, ReceiveMessage, Server, TransferClient};
 use simconfig::Config;
 use simconnect::{DispatchResult, SimConnector};
 use simplelog;
 use spin_sleep::sleep;
-use crate::util::{get_hostname_ip};
+use yourcontrols_net::{Client, Event, Payloads, ReceiveMessage, Server, TransferClient};
 use std::{env, fs::{read_dir, File}, io, net::IpAddr, path::PathBuf, time::Duration, time::Instant};
 use update::Updater;
+
+use crate::util::{get_hostname_ip};
 
 use control::*;
 use sync::*;
@@ -191,7 +191,7 @@ fn main() {
         return true;
     };
 
-    let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions, app: &App| {
+    let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions| {
         // Connect to simconnect
         *definitions = Definitions::new();
         let connected = conn.connect("YourControls");
@@ -482,7 +482,7 @@ fn main() {
         match app_interface.get_next_message() {
             Ok(msg) => match msg {
                 AppMessage::StartServer {username, port, isipv6, method} => {
-                    let connected = connect_to_sim(&mut conn, &mut definitions, &app_interface);
+                    let connected = connect_to_sim(&mut conn, &mut definitions);
 
                     if config_to_load == "" {
                         app_interface.server_fail("Select an aircraft config first!");
@@ -540,7 +540,7 @@ fn main() {
                     }
                 }
                 AppMessage::Connect {session_id, username, method, ip, port, isipv6, hostname} => {
-                    let connected = connect_to_sim(&mut conn, &mut definitions, &app_interface);
+                    let connected = connect_to_sim(&mut conn, &mut definitions);
 
                     if connected {
                         // Display attempting to start server

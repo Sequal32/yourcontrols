@@ -1,14 +1,19 @@
-use crossbeam_channel::{Receiver, Sender, unbounded};
-use log::{error, info};
+use crossbeam_channel::{unbounded};
+use log::{info};
 use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use local_ipaddress;
-use messages::Message;
 use retain_mut::RetainMut;
 use spin_sleep::sleep;
 use std::{collections::HashMap, mem, net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4}, thread, time::Duration, time::Instant};
 use laminar::{Metrics, Socket};
 use std::sync::{Arc, Mutex, atomic::{AtomicBool, AtomicU16, Ordering::SeqCst}};
-use super::{ClientReceiver, ClientSender, Error, Event, HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES, Payloads, PortForwardResult, ReceiveMessage, SenderReceiver, ServerReceiver, ServerSender, StartClientError, get_bind_address, get_rendezvous_server, get_socket_config, messages, util::{TransferClient}};
+
+use crate::util::{ClientReceiver, ClientSender, Event, ReceiveMessage, ServerReceiver, ServerSender, TransferClient};
+use crate::util::{get_bind_address, get_socket_config, get_rendezvous_server};
+use crate::util::{HEARTBEAT_INTERVAL_MANUAL_SECS, MAX_PUNCH_RETRIES, LOOP_SLEEP_TIME_MS};
+use crate::messages::{Payloads, SenderReceiver, Message};
+
+use yourcontrols_types::Error;
 
 struct Client {
     addr: SocketAddr,
@@ -289,7 +294,7 @@ pub struct Server {
 
     transfer: Option<Arc<Mutex<TransferStruct>>>,
 
-    last_port_forward_result: Option<Result<(), PortForwardResult>>,
+    last_port_forward_result: Option<Result<(), Error>>,
     // Send data to peers
     client_tx: ClientSender,
     // Internally receive data to send to clients
@@ -321,13 +326,13 @@ impl Server {
         }
     }
 
-    fn port_forward(&self, port: u16) -> Result<(), PortForwardResult> {
+    fn port_forward(&self, port: u16) -> Result<(), Error> {
         let local_addr = match local_ipaddress::get() {
             Some(addr) => match addr.parse::<Ipv4Addr>() {
                 Ok(addr) => addr,
-                Err(_) => return Err(PortForwardResult::LocalAddrNotIPv4(addr))
+                Err(_) => return Err(Error::LocalAddrNotIPv4(addr))
             },
-            None => return Err(PortForwardResult::LocalAddrNotFound)
+            None => return Err(Error::LocalAddrNotFound)
         };
 
         info!("[NETWORK] Found local address: {}", local_addr);
@@ -338,14 +343,14 @@ impl Server {
                 ..Default::default()}) 
         {
             Ok(g) => g,
-            Err(e) => return Err(PortForwardResult::GatewayNotFound(e))
+            Err(e) => return Err(Error::GatewayNotFound(e))
         };
 
         info!("[NETWORK] Found gateway at {}", gateway.root_url);
 
         match gateway.add_port(PortMappingProtocol::UDP, port, SocketAddrV4::new(local_addr, port), 86400, "YourControls") {
             Ok(()) => {},
-            Err(e) => return Err(PortForwardResult::AddPortError(e))
+            Err(e) => return Err(Error::AddPortError(e))
         };
 
         info!("[NETWORK] Port forwarded port {}", port);
@@ -353,7 +358,7 @@ impl Server {
         Ok(())
     }
 
-    pub fn start(&mut self, is_ipv6: bool, port: u16, upnp: bool) -> Result<(), StartClientError> {
+    pub fn start(&mut self, is_ipv6: bool, port: u16, upnp: bool) -> Result<(), Error> {
         let socket = Socket::bind_with_config(get_bind_address(is_ipv6, Some(port)), get_socket_config(self.timeout))?;
         // Attempt to port forward
         if upnp {
@@ -363,14 +368,14 @@ impl Server {
         self.run(socket, None)
     }
 
-    pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(), StartClientError> {
+    pub fn start_with_hole_punching(&mut self, is_ipv6: bool) -> Result<(), Error> {
         let socket = Socket::bind_with_config(get_bind_address(is_ipv6, None), get_socket_config(self.timeout))?;
         let addr: SocketAddr = get_rendezvous_server(is_ipv6)?;
 
         self.run(socket, Some(addr))
     }
 
-    fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(), StartClientError> {
+    fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(), Error> {
         let mut socket = socket;
 
         info!("[NETWORK] Listening on {:?}", socket.local_addr());

@@ -1,31 +1,11 @@
-use std::{fmt::Display, io, net::IpAddr, ops::Add, ops::Sub};
+use std::{net::IpAddr, ops::Add, ops::Sub};
 use serde::{Serialize, Deserialize};
+use yourcontrols_types::Error;
 
-#[derive(Debug)]
-pub enum HostnameLookupError {
-    UnresolvedHostname(io::Error),
-    WrongIpVersion
-}
-
-impl Display for HostnameLookupError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            HostnameLookupError::UnresolvedHostname(e) => write!(f, "Could not lookup hostname! Reason: {}", e),
-            HostnameLookupError::WrongIpVersion => write!(f, "No hostname ips matched the requested IP version.")
-        }
-    }
-}
-
-impl From<io::Error> for HostnameLookupError {
-    fn from(e: io::Error) -> Self {
-        HostnameLookupError::UnresolvedHostname(e)
-    }
-}
-
-pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, HostnameLookupError> {
+pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, Error> {
     match dns_lookup::lookup_host(&hostname)?.into_iter().find(|&x| x.is_ipv6() && isipv6 || x.is_ipv4() && !isipv6) {
         Some(ip) => Ok(ip),
-        None => Err(HostnameLookupError::WrongIpVersion)
+        None => Err(Error::MismatchingIpVersion)
     }
 }
 
@@ -35,25 +15,6 @@ pub enum Category {
     Master,
     Server,
     Init
-}
-
-#[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq, PartialOrd)]
-pub enum VarReaderTypes {
-    Bool(bool),
-    I32(i32),
-    I64(i64),
-    F64(f64)
-}
-
-impl VarReaderTypes {
-    pub fn get_as_f64(&self) -> f64 {
-        match self {
-            VarReaderTypes::Bool(v) => *v as i32 as f64,
-            VarReaderTypes::I32(v) => *v as f64,
-            VarReaderTypes::I64(v) => *v as f64,
-            VarReaderTypes::F64(v) => *v
-        }
-    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Copy, Clone)]

@@ -6,6 +6,7 @@ pub struct MemWriter {
     layout: Layout
 }
 
+#[allow(dead_code)]
 impl MemWriter {
     pub fn new(size: usize, align: usize) -> Result<Self, LayoutErr> {
         let layout = Layout::from_size_align(size, align)?;

@@ -58,6 +58,7 @@ impl JSCommunicator {
         return self.incoming_payloads.pop_front()
     }
 
+    #[allow(dead_code)]
     fn write_payload(&mut self, payload: TransmitPayloads) {
         let message = Message::Text(
             serde_json::to_string(&payload).unwrap()
@@ -85,7 +86,7 @@ impl JSCommunicator {
                             break;
                         }
                         Err(HandshakeError::Interrupted(mid)) => result = mid.handshake(),
-                        Err(HandshakeError::Failure(e)) => break
+                        Err(HandshakeError::Failure(_)) => break
                     }
                     sleep(Duration::from_millis(1))
                 }

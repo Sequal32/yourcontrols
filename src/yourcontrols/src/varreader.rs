@@ -1,6 +1,7 @@
 use byteorder::{LittleEndian, ReadBytesExt};
 use std::{collections::HashMap, io::{self, Cursor, ErrorKind}};
-use crate::util::{InDataTypes, VarReaderTypes};
+use crate::util::{InDataTypes};
+use yourcontrols_types::VarReaderTypes;
 
 struct DefinitionEntry {
     data_type: InDataTypes,
@@ -111,6 +112,7 @@ impl VarReader {
         return buf
     }
 
+    #[cfg(test)]
     pub fn get_number_definitions(&self) -> u32 {
         return self.data_map.len() as u32
     }

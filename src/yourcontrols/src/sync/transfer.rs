@@ -1,7 +1,8 @@
 use bimap::BiHashMap;
+use yourcontrols_types::VarReaderTypes;
 use std::{collections::{HashMap, HashSet}, io};
 use simconnect::SimConnector;
-use crate::{util::InDataTypes, varreader::SimValue, varreader::VarReader, util::VarReaderTypes};
+use crate::{util::InDataTypes, varreader::SimValue, varreader::VarReader};
 
 use super::gaugecommunicator::{GaugeCommunicator, GetResult, LVarResult};
 
