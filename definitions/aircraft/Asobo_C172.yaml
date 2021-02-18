@@ -34,18 +34,15 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 40
 
-  - # Standby Battery
+  - # Electrical
     type: var
     var_name: L:XMLVAR_STBYBattery_Test
-    var_type: bool
   -
     type: var
     var_name: L:XMLVAR_STBYBattery_IsHeld
-    var_type: bool
   -
     type: var
     var_name: L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
-    var_type: bool
 
   - # Failures
     type: var
@@ -182,3 +179,17 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 15
     index_reversed: true
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true

@@ -647,8 +647,8 @@ shared:
     event_param: 80
     index_reversed: true
 
-  # ALL LVARS
-  # DO NOT GET RID OF THE COMMENTED LVARS. THEY ARE THERE FOR CROSS-REFERENCING NEW LVARS THAT SHOULD BE ADDED.
+# ALL LVARS
+# DO NOT GET RID OF THE COMMENTED LVARS. THEY ARE THERE FOR CROSS-REFERENCING NEW LVARS THAT SHOULD BE ADDED.
   -
     type: var
     var_name: L:XMLVAR_RMP_L_On
@@ -673,9 +673,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_APU_BLEED_ON
-  # - Calculated by the aicraft
-  #   type: var
-  #   var_name: L:A32NX_APU_EGT
+# - Calculated by the aicraft
+#   type: var
+#   var_name: L:A32NX_APU_EGT
   -
     type: var
     var_name: L:A32NX_APU_EGT_CAUTION
@@ -688,9 +688,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_APU_FLAP_ECAM_OPEN
-  # - Calculated by the aicraft
-  #   type: var
-  #   var_name: L:A32NX_APU_FLAP_OPEN_PERCENTAGE
+# - Calculated by the aicraft
+#   type: var
+#   var_name: L:A32NX_APU_FLAP_OPEN_PERCENTAGE
   -
     type: var
     var_name: L:A32NX_APU_GEN_AMPERAGE
@@ -700,9 +700,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_APU_GEN_FREQ_NORMAL
-  # - Calculated by the aicraft
-  #   type: var
-  #   var_name: L:A32NX_APU_GEN_VOLTAGE
+# - Calculated by the aicraft
+#   type: var
+#   var_name: L:A32NX_APU_GEN_VOLTAGE
   -
     type: var
     var_name: L:A32NX_APU_GEN_VOLTAGE_NORMAL
@@ -958,15 +958,12 @@ shared:
   -
     type: var
     var_name: L:A32NX_ADIRS_KNOB_1
-    var_type: f64
   -
     type: var
     var_name: L:A32NX_ADIRS_KNOB_2
-    var_type: f64
   -
     type: var
     var_name: L:A32NX_ADIRS_KNOB_3
-    var_type: f64
   -
     type: var
     var_name: L:A32NX_EVAC_COMMAND_TOGGLE_LOCK
@@ -1621,8 +1618,7 @@ server:
     unreliable: true
 
 init:
-  # H: events take care of typing the transponder code in
-  -
+  - # H events take care of typing the transponder code in
     type: NumDigitSet
     var_name: A:TRANSPONDER CODE:1
     var_units: Number
