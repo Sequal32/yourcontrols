@@ -304,10 +304,9 @@ fn main() {
                                 app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
                                 // Send definitions
                                 client.send_definitions(definitions.get_buffer_bytes().into_boxed_slice(), name.clone());
-                            } else {
-                                // Show as observing on client side, server shouldn't show the message, only the controls
-                                app_interface.set_observing(&name, is_observer);
                             }
+
+                            app_interface.set_observing(&name, is_observer);
 
                             if in_control {
                                 app_interface.set_incontrol(&name);

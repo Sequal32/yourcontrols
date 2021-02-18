@@ -275,7 +275,7 @@ function MessageReceived(data) {
             break;
         // Other client
         case "set_observing":
-            connectionList.setObserver(data["data"], true)
+            connectionList.setObserver(data["data"], true, !is_client)
             break;
         case "set_not_observing":
             connectionList.setObserver(data["data"], false)

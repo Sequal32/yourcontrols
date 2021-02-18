@@ -61,8 +61,12 @@ ConnectionList.prototype.setInControl = function(name) {
     this.lastInControl = name
 }
 
-ConnectionList.prototype.setObserver = function(name, observing) {
-    this.list[name].setObserver(observing)
+ConnectionList.prototype.setObserver = function(name, observing, forceClick) {
+    if (forceClick) {
+        this.list[name].observeButtonClicked()
+    } else {
+        this.list[name].setObserver(observing)
+    }
 }
 
 ConnectionList.prototype.remove = function(name) {
