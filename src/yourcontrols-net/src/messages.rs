@@ -87,7 +87,7 @@ impl SenderReceiver {
         // Receive packet
         let packet = match self.receiver.try_recv()? {
             SocketEvent::Packet(packet) => packet,
-            SocketEvent::Disconnect(addr) => {return Ok(Message::ConnectionClosed(addr))},
+            SocketEvent::Timeout(addr) => {return Ok(Message::ConnectionClosed(addr))},
             SocketEvent::Metrics(addr, metrics) => {return Ok(Message::Metrics(addr, metrics))},
             _ => {return Err(Error::NotProcessed)}
         };
