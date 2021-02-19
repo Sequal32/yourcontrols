@@ -439,6 +439,11 @@ fn main() {
                             if let Some(next_control) = clients.get_next_client_for_control() {
                                 client.transfer_control(next_control.clone())
                             }
+                        } else {
+                            if let Some(in_control) = clients.get_client_in_control() {
+                                control.take_control(&conn, &definitions.lvarstransfer.transfer);
+                                client.take_control(in_control.clone());
+                            }
                         }
                     }
                 }

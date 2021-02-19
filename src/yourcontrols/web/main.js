@@ -157,6 +157,7 @@ function OnDisconnect(text) {
 
     joinIpInput.value = cacheIpInput
     externalIp.hidden = false
+    forceButton.hidden = false
 
     ResetForm()
     SetStuffVisible(false)
@@ -230,6 +231,7 @@ function MessageReceived(data) {
             connect_button.updatetext("danger", "Disconnect")
             document.getElementById("not_user_client").hidden = true;
             document.getElementById("is_user_client").hidden = false;
+            $("#not_server_running").append(forceButton)
             OnConnected()
             break;
         case "server_fail":
@@ -259,13 +261,13 @@ function MessageReceived(data) {
             connectionList.update()
             connectionList.hideStatusText()
             rectangle_status.style.backgroundColor = "cyan"
-            if (!is_client) {forceButton.hidden = true}
+            forceButton.hidden = true
             break;
         case "lostcontrol":
             has_control = false
             connectionList.update()
             rectangle_status.style.backgroundColor = "red"
-            if (!is_client) {forceButton.hidden = false}
+            forceButton.hidden = false
             break;
         case "overloaded":
             overloaded_alert.hidden = false
@@ -283,9 +285,11 @@ function MessageReceived(data) {
         // Observing
         case "observing":
             rectangle_status.style.backgroundColor = "grey"
+            forceButton.hidden = true
             break;
         case "stop_observing":
             rectangle_status.style.backgroundColor = "red"
+            forceButton.hidden = false
             break;
         // Other client
         case "set_observing":
