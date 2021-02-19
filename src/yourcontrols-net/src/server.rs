@@ -376,8 +376,6 @@ impl Server {
     }
 
     fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(), Error> {
-        let mut socket = socket;
-
         info!("[NETWORK] Listening on {:?}", socket.local_addr());
 
         let mut transfer = TransferStruct {
@@ -388,7 +386,7 @@ impl Server {
             // Transfer
             server_tx: self.server_tx.clone(),
             client_rx: self.client_rx.clone(),
-            net: SenderReceiver::from_socket(&socket),
+            net: SenderReceiver::from_socket(socket),
             // State
             in_control: self.username.clone(),
             clients: HashMap::new(),
@@ -419,8 +417,6 @@ impl Server {
             let sleep_duration = Duration::from_millis(LOOP_SLEEP_TIME_MS);
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
-
-                socket.manual_poll(Instant::now());
 
                 loop {
                     match transfer.net.get_next_message() {

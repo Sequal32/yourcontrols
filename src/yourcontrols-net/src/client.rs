@@ -198,7 +198,7 @@ impl Client {
     }
 
     pub fn run(&mut self, is_ipv6: bool, session_id: Option<String>, rendezvous: Option<SocketAddr>, target_address: Option<SocketAddr>) -> Result<(), Error> {
-        let mut socket = self.get_socket(is_ipv6)?;
+        let socket = self.get_socket(is_ipv6)?;
 
         self.is_host = session_id.is_none() && target_address.is_none();
 
@@ -208,7 +208,7 @@ impl Client {
             // Transfer
             client_rx: self.client_rx.clone(),
             server_tx: self.server_tx.clone(),
-            net: SenderReceiver::from_socket(&socket),
+            net: SenderReceiver::from_socket(socket),
             // Holepunching
             retries: 0,
             connected: false,
@@ -250,8 +250,6 @@ impl Client {
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
 
-                socket.manual_poll(Instant::now());
-                
                 loop {
                     match transfer.net.get_next_message() {
                         Ok(Message::Payload(addr, payload)) => {

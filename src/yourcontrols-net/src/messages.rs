@@ -3,7 +3,7 @@ use laminar::{Metrics, Packet, Socket, SocketEvent};
 use rmp_serde::{self};
 use serde::{Serialize, Deserialize};
 use yourcontrols_types::AllNeedSync;
-use std::{net::SocketAddr};
+use std::{net::SocketAddr, time::Instant};
 use zstd::block::{Compressor, Decompressor};
 
 use yourcontrols_types::Error;
@@ -66,6 +66,7 @@ fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: So
 }
 
 pub struct SenderReceiver {
+    socket: Socket,
     sender: Sender<Packet>,
     receiver: Receiver<SocketEvent>,
     compressor: Compressor,
@@ -74,16 +75,21 @@ pub struct SenderReceiver {
 
 impl SenderReceiver {
 
-    pub fn from_socket(socket: &Socket) -> Self {
+    pub fn from_socket(socket: Socket) -> Self {
+        let sender = socket.get_packet_sender();
+        let receiver = socket.get_event_receiver();
+
         Self {
-            sender: socket.get_packet_sender(),
-            receiver: socket.get_event_receiver(),
+            socket,
+            sender,
+            receiver,
             compressor: Compressor::with_dict(COMPRESS_DICTIONARY.to_vec()),
             decompressor: Decompressor::with_dict(COMPRESS_DICTIONARY.to_vec())
         }
     }
 
     pub fn get_next_message(&mut self) -> Result<Message, Error> {
+        self.socket.manual_poll(Instant::now());
         // Receive packet
         let packet = match self.receiver.try_recv()? {
             SocketEvent::Packet(packet) => packet,
