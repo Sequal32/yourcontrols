@@ -20,6 +20,7 @@ var username = document.getElementById("username-input")
 var session_input = document.getElementById("session-input")
 var name_input_join = document.getElementById("name-input-join")
 var theme_selector = document.getElementById("theme-select")
+var streamer_mode = document.getElementById("streamer-mode")
 
 var update_rate_input = document.getElementById("update-rate-input")
 var timeout_input = document.getElementById("timeout-input")
@@ -57,11 +58,14 @@ var networkLoss = document.getElementById("network-loss")
 var ping = document.getElementById("network-ping")
 
 var forceButton = document.getElementById("force-button")
+var externalIp = document.getElementById("external-ip")
 
 var is_connected = false
 var is_client = false
 var on_client = true
 var has_control = false
+
+var cacheIpInput = ""
 
 var settings = {}
 
@@ -120,6 +124,12 @@ function OnConnected() {
     joinIpInput.disabled = true
     joinPortInput.disabled = true
 
+    cacheIpInput = joinIpInput.value
+    if (streamer_mode.checked) {
+        externalIp.hidden = true
+        joinIpInput.value = joinIpInput.value.split(/\d/).join("X")
+    }
+
     SetStuffVisible(true)
 }
 
@@ -144,6 +154,9 @@ function OnDisconnect(text) {
     joinPortInput.disabled = false
 
     connectionList.clear()
+
+    joinIpInput.value = cacheIpInput
+    externalIp.hidden = false
 
     ResetForm()
     SetStuffVisible(false)
@@ -184,6 +197,7 @@ function LoadSettings(newSettings) {
     port_input_host.value = newSettings.port
     
     joinIpInput.value = newSettings.ip
+    streamer_mode.checked = newSettings.streamer_mode
     
     username.value = newSettings.name
     timeout_input.value = newSettings.conn_timeout
@@ -399,6 +413,7 @@ $("#settings-form").submit(function(e) {
     newSettings.conn_timeout = ValidateInt(timeout_input) ? parseInt(timeout_input.value) : null
     newSettings.update_rate = ValidateInt(update_rate_input) ? parseInt(update_rate_input.value) : null
     newSettings.ui_dark_theme = theme_selector.checked
+    newSettings.streamer_mode = streamer_mode.checked
 
     for (key in newSettings) {
         if (newSettings[key] === null) {return}
@@ -509,4 +524,4 @@ function httpGet(theUrl)
 }
 
 // External IP fetch
-$("#external-ip").text("Your IP: " + httpGet("https://api.ipify.org/"))
+externalIp.innerHTML = "Your IP: " + httpGet("https://api.ipify.org/")

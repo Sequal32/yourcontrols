@@ -19,6 +19,7 @@ pub struct Config {
     pub ip: String,
     pub name: String,
     pub ui_dark_theme: bool,
+    pub streamer_mode: bool,
 }
 
 impl Default for Config {
@@ -31,6 +32,7 @@ impl Default for Config {
             ip: String::new(),
             name: String::new(),
             ui_dark_theme: true,
+            streamer_mode: false
         }
     }
 }
