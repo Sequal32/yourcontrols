@@ -289,6 +289,12 @@ shared:
     event_name: KOHLSMAN_SET
     event_param: 2
 
+  - # Transponder
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: Enum
+    var_type: i32
+
   - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:1
@@ -1582,11 +1588,6 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
-  -
-    type: var
-    var_name: A:TRANSPONDER STATE:1
-    var_units: Enum
-    var_type: i32
 
 server:
   - # Payload
