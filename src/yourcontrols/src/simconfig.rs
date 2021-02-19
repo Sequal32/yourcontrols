@@ -1,13 +1,13 @@
-use derive_more::{From, Display};
+use derive_more::{Display, From};
 use serde::{Deserialize, Serialize};
 use serde_json;
+use std::io::Write;
 use std::{convert::AsRef, fs::File, io};
-use std::io::{Write};
 
 #[derive(From, Display)]
 pub enum ConfigLoadError {
     FileError(io::Error),
-    SerializeError(serde_json::Error)
+    SerializeError(serde_json::Error),
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -32,7 +32,7 @@ impl Default for Config {
             ip: String::new(),
             name: String::new(),
             ui_dark_theme: true,
-            streamer_mode: false
+            streamer_mode: false,
         }
     }
 }

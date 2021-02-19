@@ -1,9 +1,9 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
 #[derive(Default)]
 pub struct Client {
     pub observer_mode: bool,
-    pub is_server: bool
+    pub is_server: bool,
 }
 
 pub struct ClientManager {
@@ -18,13 +18,13 @@ impl ClientManager {
             clients: HashMap::new(),
             current_control: None,
             // Client joined "first", cycling to next "first" person after client leaves
-            next_control: None
+            next_control: None,
         }
     }
 
     pub fn client_has_control(&self, name: &str) -> bool {
         if let Some(client_name) = self.current_control.as_ref() {
-            return name == client_name
+            return name == client_name;
         }
         return false;
     }
@@ -37,7 +37,7 @@ impl ClientManager {
 
             return previous_name;
         }
-        return None
+        return None;
     }
 
     pub fn get_client_in_control(&self) -> Option<&String> {
@@ -72,9 +72,9 @@ impl ClientManager {
 
     pub fn is_observer(&self, name: &str) -> bool {
         if let Some(client) = self.clients.get(name) {
-            return client.observer_mode
+            return client.observer_mode;
         }
-        return false
+        return false;
     }
 
     pub fn set_observer(&mut self, name: &str, is_observer: bool) {
@@ -91,7 +91,7 @@ impl ClientManager {
 
     pub fn client_is_server(&self, name: &str) -> bool {
         if let Some(client) = self.clients.get(name) {
-            return client.is_server
+            return client.is_server;
         }
         return false;
     }

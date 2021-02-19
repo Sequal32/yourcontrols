@@ -12,17 +12,25 @@ mod varreader;
 
 use app::{App, AppMessage, ConnectionMethod};
 use clientmanager::ClientManager;
-use definitions::{Definitions, SyncPermission, ProgramAction};
+use definitions::{Definitions, ProgramAction, SyncPermission};
 use log::{error, info, warn};
 use simconfig::Config;
 use simconnect::{DispatchResult, SimConnector};
 use simplelog;
 use spin_sleep::sleep;
-use yourcontrols_net::{Client, Event, Payloads, ReceiveMessage, Server, TransferClient};
-use std::{env, fs::{read_dir, File}, io, net::IpAddr, path::PathBuf, time::Duration, time::Instant};
+use std::{
+    env,
+    fs::{read_dir, File},
+    io,
+    net::IpAddr,
+    path::PathBuf,
+    time::Duration,
+    time::Instant,
+};
 use update::Updater;
+use yourcontrols_net::{Client, Event, Payloads, ReceiveMessage, Server, TransferClient};
 
-use crate::util::{get_hostname_ip};
+use crate::util::get_hostname_ip;
 
 use control::*;
 use sync::*;
@@ -53,14 +61,29 @@ fn get_aircraft_configs() -> io::Result<Vec<String>> {
 
 fn write_configuration(config: &Config) {
     match config.write_to_file(CONFIG_FILENAME) {
-        Ok(_) => {},
-        Err(e) => error!("[PROGRAM] Could not write configuration file! Reason: {}", e)
+        Ok(_) => {}
+        Err(e) => error!(
+            "[PROGRAM] Could not write configuration file! Reason: {}",
+            e
+        ),
     };
 }
 
-fn calculate_update_rate(update_rate: u16) -> f64 {1.0 / update_rate as f64}
+fn calculate_update_rate(update_rate: u16) -> f64 {
+    1.0 / update_rate as f64
+}
 
-fn start_client(timeout: u64, username: String, session_id: String, version: String, isipv6: bool, ip: Option<IpAddr>, hostname: Option<String>, port: Option<u16>, method: ConnectionMethod) -> Result<Client, String> {
+fn start_client(
+    timeout: u64,
+    username: String,
+    session_id: String,
+    version: String,
+    isipv6: bool,
+    ip: Option<IpAddr>,
+    hostname: Option<String>,
+    port: Option<u16>,
+    method: ConnectionMethod,
+) -> Result<Client, String> {
     let mut client = Client::new(username, version, timeout);
 
     let client_result = match method {
@@ -69,7 +92,7 @@ fn start_client(timeout: u64, username: String, session_id: String, version: Str
             let actual_ip = match hostname {
                 Some(hostname) => match get_hostname_ip(&hostname, isipv6) {
                     Ok(ip) => ip,
-                    Err(e) => return Err(e.to_string())
+                    Err(e) => return Err(e.to_string()),
                 },
                 // If no hostname was passed, an IP must've been passed
                 None => ip.unwrap(),
@@ -77,21 +100,23 @@ fn start_client(timeout: u64, username: String, session_id: String, version: Str
             // A port must've been passed with direct connect
             client.start(actual_ip, port.unwrap())
         }
-        ConnectionMethod::CloudServer => {
-            client.start_with_hole_punch(session_id, isipv6)
-        }
-        ConnectionMethod::Relay => {panic!("Never should be reached!")}
+        ConnectionMethod::CloudServer => client.start_with_hole_punch(session_id, isipv6),
+        ConnectionMethod::Relay => panic!("Never should be reached!"),
     };
 
     match client_result {
         Ok(_) => Ok(client),
-        Err(e) => Err(format!("Could not start client! Reason: {}", e))
+        Err(e) => Err(format!("Could not start client! Reason: {}", e)),
     }
 }
 
-fn write_update_data(definitions: &mut Definitions, client: &mut Box<dyn TransferClient>, permission: &SyncPermission) {
+fn write_update_data(
+    definitions: &mut Definitions,
+    client: &mut Box<dyn TransferClient>,
+    permission: &SyncPermission,
+) {
     let (unreliable, reliable) = definitions.get_need_sync(permission);
-                
+
     if let Some(data) = unreliable {
         client.update(data, true);
     }
@@ -119,7 +144,10 @@ fn main() {
     let mut config = match Config::read_from_file(CONFIG_FILENAME) {
         Ok(config) => config,
         Err(e) => {
-            warn!("[PROGRAM] Could not open config. Using default values. Reason: {}", e);
+            warn!(
+                "[PROGRAM] Could not open config. Using default values. Reason: {}",
+                e
+            );
 
             let config = Config::default();
             write_configuration(&config);
@@ -139,9 +167,7 @@ fn main() {
     // Client stopped, need to stop transfer client
     let mut should_set_none_client = false;
 
-    let app_interface = App::setup(format!(
-        "Shared Cockpit v{}", updater.get_version()
-    ));
+    let app_interface = App::setup(format!("Shared Cockpit v{}", updater.get_version()));
 
     // Transfer
     let mut transfer_client: Option<Box<dyn TransferClient>> = None;
@@ -234,26 +260,32 @@ fn main() {
                     }
                     _ => {}
                 }
-            };
+            }
 
-        
             while let Ok(message) = client.get_next_message() {
                 match message {
                     ReceiveMessage::Payload(payload) => match payload {
                         // Unused
-                        Payloads::Handshake { .. } |
-                        Payloads::HostingReceived { .. } |
-                        Payloads::AttemptConnection { .. } |
-                        Payloads::PeerEstablished { .. } |
-                        Payloads::InvalidVersion {..} |
-                        Payloads::InvalidName {..} |
-                        Payloads::RequestHosting {..} |
-                        Payloads::InitHandshake {..} |
-                        Payloads::Heartbeat => {}
+                        Payloads::Handshake { .. }
+                        | Payloads::HostingReceived { .. }
+                        | Payloads::AttemptConnection { .. }
+                        | Payloads::PeerEstablished { .. }
+                        | Payloads::InvalidVersion { .. }
+                        | Payloads::InvalidName { .. }
+                        | Payloads::RequestHosting { .. }
+                        | Payloads::InitHandshake { .. }
+                        | Payloads::Heartbeat => {}
                         // Used
-                        Payloads::Update {data, from, is_unreliable, time} => {
+                        Payloads::Update {
+                            data,
+                            from,
+                            is_unreliable,
+                            time,
+                        } => {
                             // Not non high updating packets for debugging
-                            if !is_unreliable {info!("[PACKET] {:?}", data)}
+                            if !is_unreliable {
+                                info!("[PACKET] {:?}", data)
+                            }
 
                             if !clients.is_observer(&from) && ready_to_process_data {
                                 match definitions.on_receive_data(
@@ -273,7 +305,7 @@ fn main() {
                                 }
                             }
                         }
-                        Payloads::TransferControl{from, to} => {
+                        Payloads::TransferControl { from, to } => {
                             // Someone is transferring controls to us
                             definitions.reset_sync();
                             if to == client.get_server_name() {
@@ -292,18 +324,32 @@ fn main() {
                                 clients.set_client_control(to);
                             }
                         }
-                        Payloads::PlayerJoined {name, in_control, is_observer, is_server} => {
-                            info!("[NETWORK] {} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
-                                // Send initial aircraft state
+                        Payloads::PlayerJoined {
+                            name,
+                            in_control,
+                            is_observer,
+                            is_server,
+                        } => {
+                            info!(
+                                "[NETWORK] {} connected. In control: {}, observing: {}, server: {}",
+                                name, in_control, is_observer, is_server
+                            );
+                            // Send initial aircraft state
                             app_interface.new_connection(&name);
                             clients.add_client(name.clone());
                             clients.set_server(&name, is_server);
                             clients.set_observer(&name, is_observer);
-                            
+
                             if client.is_host() {
-                                app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
+                                app_interface.server_started(
+                                    clients.get_number_clients() as u16,
+                                    client.get_session_id().as_deref(),
+                                );
                                 // Send definitions
-                                client.send_definitions(definitions.get_buffer_bytes().into_boxed_slice(), name.clone());
+                                client.send_definitions(
+                                    definitions.get_buffer_bytes().into_boxed_slice(),
+                                    name.clone(),
+                                );
                             }
 
                             app_interface.set_observing(&name, is_observer);
@@ -319,9 +365,9 @@ fn main() {
                                 client.update(definitions.get_all_current(), false);
                             }
                         }
-                        Payloads::PlayerLeft{name} => {
+                        Payloads::PlayerLeft { name } => {
                             info!("[NETWORK] {} lost connection.", name);
-                            
+
                             clients.remove_client(&name);
                             // User may have been in control
                             if clients.client_has_control(&name) {
@@ -331,23 +377,33 @@ fn main() {
                                     info!("[CONTROL] {} had control, taking control back.", name);
                                     app_interface.gain_control();
 
-                                    control.take_control(&conn, &definitions.lvarstransfer.transfer);
+                                    control
+                                        .take_control(&conn, &definitions.lvarstransfer.transfer);
                                     client.transfer_control(client.get_server_name().to_string());
                                 }
                             }
 
                             app_interface.lost_connection(&name);
                             if client.is_host() {
-                                app_interface.server_started(clients.get_number_clients() as u16, client.get_session_id().as_deref());
+                                app_interface.server_started(
+                                    clients.get_number_clients() as u16,
+                                    client.get_session_id().as_deref(),
+                                );
                             }
                         }
-                        Payloads::SetObserver{from: _, to, is_observer} => {
+                        Payloads::SetObserver {
+                            from: _,
+                            to,
+                            is_observer,
+                        } => {
                             if to == client.get_server_name() {
                                 info!("[CONTROL] Server set us to observing? {}", is_observer);
                                 observing = is_observer;
                                 app_interface.observing(is_observer);
-                                
-                                if !observing {definitions.reset_sync();}
+
+                                if !observing {
+                                    definitions.reset_sync();
+                                }
                             } else {
                                 info!("[CONTROL] {} is observing? {}", to, is_observer);
                                 clients.set_observer(&to, is_observer);
@@ -357,16 +413,16 @@ fn main() {
                         Payloads::SetHost => {
                             app_interface.set_host();
                         }
-                        Payloads::ConnectionDenied {reason} => {
+                        Payloads::ConnectionDenied { reason } => {
                             client.stop(format!("Connection Denied: {}", reason));
                         }
-                        Payloads::AircraftDefinition {bytes} => {
+                        Payloads::AircraftDefinition { bytes } => {
                             match definitions.load_config_from_bytes(bytes) {
                                 Ok(_) => {
                                     info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events from the server", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
                                     control.on_connected(&conn);
                                     definitions.on_connected(&conn).ok();
-                                        // Freeze aircraft
+                                    // Freeze aircraft
                                     control.lose_control(&conn);
                                 }
                                 Err(e) => {
@@ -376,26 +432,26 @@ fn main() {
                             // Start the connection timer to wait to send the ready payload
                             connection_time = Some(Instant::now());
                         }
-                    }
+                    },
                     ReceiveMessage::Event(e) => match e {
                         Event::ConnectionEstablished => {
                             if client.is_host() {
-                                    // Display server started message
+                                // Display server started message
                                 app_interface.server_started(0, client.get_session_id().as_deref());
-                                    // Unfreeze aircraft
+                                // Unfreeze aircraft
                                 control.take_control(&conn, &definitions.lvarstransfer.transfer);
                                 app_interface.gain_control();
-                                    // Not really used by the host
+                                // Not really used by the host
                                 connection_time = Some(Instant::now());
                             } else {
-                                    // Display connected message
+                                // Display connected message
                                 app_interface.connected();
                                 app_interface.lose_control();
                             }
                         }
                         Event::ConnectionLost(reason) => {
                             info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
-                                // TAKE BACK CONTROL
+                            // TAKE BACK CONTROL
                             control.take_control(&conn, &definitions.lvarstransfer.transfer);
 
                             clients.reset();
@@ -404,18 +460,17 @@ fn main() {
 
                             app_interface.client_fail(&reason);
                         }
-                        Event::UnablePunchthrough => {
-                            app_interface.client_fail("Could not connect to host! Please port forward or use 'Cloud Host'!")
-                        }
-                        
-                        Event::SessionIdFetchFailed => {
-                            app_interface.server_fail("Could not connect to Cloud Server to fetch session ID.")
-                        }
+                        Event::UnablePunchthrough => app_interface.client_fail(
+                            "Could not connect to host! Please port forward or use 'Cloud Host'!",
+                        ),
+
+                        Event::SessionIdFetchFailed => app_interface
+                            .server_fail("Could not connect to Cloud Server to fetch session ID."),
 
                         Event::Metrics(metrics) => {
                             app_interface.send_network(&metrics);
                         }
-                    }
+                    },
                 }
             }
 
@@ -447,15 +502,14 @@ fn main() {
                         }
                     }
                 }
-                
             }
-            
+
             // Handle initial connection delay, allows lvars to be processed
             if let Some(time) = connection_time {
                 if time.elapsed().as_secs() >= 3 {
                     // Update
                     let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
-                    
+
                     // Do not let server send initial data - wait for data to get cleared on the previous loop
                     if !observing && can_update && ready_to_process_data {
                         let permission = SyncPermission {
@@ -463,9 +517,9 @@ fn main() {
                             is_master: control.has_control(),
                             is_init: false,
                         };
-        
+
                         write_update_data(&mut definitions, client, &permission);
-        
+
                         update_rate_instant = Instant::now();
                     }
 
@@ -485,29 +539,43 @@ fn main() {
         // GUI
         match app_interface.get_next_message() {
             Ok(msg) => match msg {
-                AppMessage::StartServer {username, port, isipv6, method} => {
+                AppMessage::StartServer {
+                    username,
+                    port,
+                    isipv6,
+                    method,
+                } => {
                     let connected = connect_to_sim(&mut conn, &mut definitions);
 
                     if config_to_load == "" {
                         app_interface.server_fail("Select an aircraft config first!");
-                        
-                    } else if !load_definitions(&conn, &mut definitions, &mut control, &mut config_to_load) {
-
-                        app_interface.error("Error loading definition files. Check the log for more information.");
-                        
+                    } else if !load_definitions(
+                        &conn,
+                        &mut definitions,
+                        &mut control,
+                        &mut config_to_load,
+                    ) {
+                        app_interface.error(
+                            "Error loading definition files. Check the log for more information.",
+                        );
                     } else if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
                         match method {
-                            ConnectionMethod::Direct |
-                            ConnectionMethod::CloudServer => {
-                                let mut server = Box::new(Server::new(username.clone(), updater.get_version().to_string(), config.conn_timeout));
+                            ConnectionMethod::Direct | ConnectionMethod::CloudServer => {
+                                let mut server = Box::new(Server::new(
+                                    username.clone(),
+                                    updater.get_version().to_string(),
+                                    config.conn_timeout,
+                                ));
 
                                 let result = match method {
                                     ConnectionMethod::Direct => server.start(isipv6, port, true),
-                                    ConnectionMethod::CloudServer => server.start_with_hole_punching(isipv6),
-                                    _ => panic!("Not implemented!")
+                                    ConnectionMethod::CloudServer => {
+                                        server.start_with_hole_punching(isipv6)
+                                    }
+                                    _ => panic!("Not implemented!"),
                                 };
 
                                 match result {
@@ -521,11 +589,14 @@ fn main() {
                                         info!("[NETWORK] Could not start server! Reason: {}", e);
                                     }
                                 }
-
                             }
                             ConnectionMethod::Relay => {
-                                let mut client = Box::new(Client::new(username.clone(), updater.get_version().to_string(), config.conn_timeout));
-                                
+                                let mut client = Box::new(Client::new(
+                                    username.clone(),
+                                    updater.get_version().to_string(),
+                                    config.conn_timeout,
+                                ));
+
                                 match client.start_with_relay() {
                                     Ok(_) => {
                                         transfer_client = Some(client);
@@ -543,14 +614,32 @@ fn main() {
                         write_configuration(&config);
                     }
                 }
-                AppMessage::Connect {session_id, username, method, ip, port, isipv6, hostname} => {
+                AppMessage::Connect {
+                    session_id,
+                    username,
+                    method,
+                    ip,
+                    port,
+                    isipv6,
+                    hostname,
+                } => {
                     let connected = connect_to_sim(&mut conn, &mut definitions);
 
                     if connected {
                         // Display attempting to start server
                         app_interface.attempt();
 
-                        match start_client(config.conn_timeout, username.clone(), session_id, updater.get_version().to_string(), isipv6, ip, hostname, port, method) {
+                        match start_client(
+                            config.conn_timeout,
+                            username.clone(),
+                            session_id,
+                            updater.get_version().to_string(),
+                            isipv6,
+                            ip,
+                            hostname,
+                            port,
+                            method,
+                        ) {
                             Ok(client) => {
                                 info!("[NETWORK] Client started.");
                                 transfer_client = Some(Box::new(client));
@@ -564,7 +653,11 @@ fn main() {
                         // Write config with new values
                         config.name = username;
                         config.port = port.unwrap_or(config.port);
-                        config.ip = if let Some(ip) = ip {ip.to_string()} else {String::new()};
+                        config.ip = if let Some(ip) = ip {
+                            ip.to_string()
+                        } else {
+                            String::new()
+                        };
                         write_configuration(&config);
                     }
                 }
@@ -574,30 +667,39 @@ fn main() {
                         client.stop("Stopped.".to_string());
                     }
                 }
-                AppMessage::TransferControl {target} => {
+                AppMessage::TransferControl { target } => {
                     if let Some(client) = transfer_client.as_ref() {
                         info!("[CONTROL] Giving control to {}", target);
                         // Send server message, will send a loopback Payloads::TransferControl
                         client.transfer_control(target.clone());
                     }
                 }
-                AppMessage::SetObserver {target, is_observer} => {
+                AppMessage::SetObserver {
+                    target,
+                    is_observer,
+                } => {
                     clients.set_observer(&target, is_observer);
                     if let Some(client) = transfer_client.as_ref() {
                         info!("[CONTROL] Setting {} as observer. {}", target, is_observer);
                         client.set_observer(target, is_observer);
                     }
                 }
-                AppMessage::LoadAircraft {config_file_name} => {
+                AppMessage::LoadAircraft { config_file_name } => {
                     // Load config
-                    info!("[DEFINITIONS] {} aircraft config selected.", config_file_name);
+                    info!(
+                        "[DEFINITIONS] {} aircraft config selected.",
+                        config_file_name
+                    );
                     config_to_load = config_file_name.clone();
                 }
                 AppMessage::Startup => {
                     // List aircraft
                     match get_aircraft_configs() {
                         Ok(configs) => {
-                            info!("[DEFINITIONS] Found {} configuration file(s).", configs.len());
+                            info!(
+                                "[DEFINITIONS] Found {} configuration file(s).",
+                                configs.len()
+                            );
 
                             for aircraft_config in configs {
                                 app_interface.add_aircraft(&aircraft_config);
@@ -614,11 +716,14 @@ fn main() {
                         {
                             app_interface.version(&newest_version.to_string());
                         }
-                        info!("[UPDATER] Version {} in use, {} is newest.", app_version, newest_version)
+                        info!(
+                            "[UPDATER] Version {} in use, {} is newest.",
+                            app_version, newest_version
+                        )
                     } else {
                         info!("[UPDATER] Version {} in use.", app_version)
                     }
-                    
+
                     app_interface.send_config(&config.get_json_string());
                 }
                 AppMessage::RunUpdater => {
@@ -633,7 +738,7 @@ fn main() {
                         }
                     };
                 }
-                AppMessage::UpdateConfig {new_config} => {
+                AppMessage::UpdateConfig { new_config } => {
                     config = new_config;
                     update_rate = calculate_update_rate(config.update_rate);
                     write_configuration(&config);
@@ -641,7 +746,7 @@ fn main() {
                 AppMessage::ForceTakeControl => {
                     if let Some(client) = transfer_client.as_ref() {
                         if let Some(client_name) = clients.get_client_in_control() {
-                                //Will send a loopback Payloads::TransferControl
+                            //Will send a loopback Payloads::TransferControl
                             client.take_control(client_name.clone())
                         }
                     }

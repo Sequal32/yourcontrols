@@ -1,9 +1,9 @@
 mod client;
-mod server;
 mod messages;
+mod server;
 mod util;
 
 pub use client::Client;
-pub use server::Server;
 pub use messages::{Message, Payloads, SenderReceiver};
-pub use util::{TransferClient, ReceiveMessage, Event, get_socket_config, get_rendezvous_server};
+pub use server::Server;
+pub use util::{get_rendezvous_server, get_socket_config, Event, ReceiveMessage, TransferClient};

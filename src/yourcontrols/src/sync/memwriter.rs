@@ -3,21 +3,19 @@ use std::alloc::{Layout, LayoutErr};
 pub struct MemWriter {
     start_pointer: *mut u8,
     working_pointer: *mut u8,
-    layout: Layout
+    layout: Layout,
 }
 
 #[allow(dead_code)]
 impl MemWriter {
     pub fn new(size: usize, align: usize) -> Result<Self, LayoutErr> {
         let layout = Layout::from_size_align(size, align)?;
-        let pointer = unsafe{std::alloc::alloc_zeroed(layout)};
-        Ok(
-            Self {
-                start_pointer: pointer,
-                working_pointer: pointer,
-                layout
-            }
-        )
+        let pointer = unsafe { std::alloc::alloc_zeroed(layout) };
+        Ok(Self {
+            start_pointer: pointer,
+            working_pointer: pointer,
+            layout,
+        })
     }
 
     fn write(&mut self, bytes: &[u8]) {
@@ -58,7 +56,9 @@ impl MemWriter {
     }
 
     pub fn pad(&mut self, count: isize) {
-        unsafe{self.working_pointer = self.working_pointer.offset(count);}
+        unsafe {
+            self.working_pointer = self.working_pointer.offset(count);
+        }
     }
 
     pub fn get_data_location(&self) -> *const u8 {
@@ -66,6 +66,8 @@ impl MemWriter {
     }
 
     pub fn deallocate(&mut self) {
-        unsafe{std::alloc::dealloc(self.start_pointer, self.layout);}
+        unsafe {
+            std::alloc::dealloc(self.start_pointer, self.layout);
+        }
     }
 }

@@ -1,30 +1,42 @@
-use indexmap::{IndexMap};
+use indexmap::IndexMap;
+use serde::Deserialize;
 use serde_yaml::{self, Value};
-use serde::{Deserialize};
 use simconnect::SimConnector;
-use std::{collections::HashMap, collections::{HashSet, VecDeque, hash_map}, fmt::{Debug, Display}, fs::File, mem::swap, path::{Path}, time::Instant};
+use std::{
+    collections::HashMap,
+    collections::{hash_map, HashSet, VecDeque},
+    fmt::{Debug, Display},
+    fs::File,
+    mem::swap,
+    path::Path,
+    time::Instant,
+};
 
-use crate::{util::{Category, InDataTypes}};
-use crate::syncdefs::{CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch};
-use crate::sync::gaugecommunicator::{GetResult, InterpolateData, LVarResult, InterpolationType};
-use crate::sync::transfer::{AircraftVars, Events, LVarSyncer};
+use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType, LVarResult};
 use crate::sync::jscommunicator::{JSCommunicator, Payloads};
+use crate::sync::transfer::{AircraftVars, Events, LVarSyncer};
+use crate::syncdefs::{
+    CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch,
+};
+use crate::util::{Category, InDataTypes};
 
-use yourcontrols_types::{AVarMap, AllNeedSync, Error, EventData, EventTriggered, LVarMap, VarReaderTypes};
+use yourcontrols_types::{
+    AVarMap, AllNeedSync, Error, EventData, EventTriggered, LVarMap, VarReaderTypes,
+};
 
 // Checks if a field in a Value exists, otherwise will return an error with the name of the field
 macro_rules! check_and_return_field {
     ($field_name:expr, $var:ident, str) => {
         match $var[$field_name].as_str() {
             Some(s) => s,
-            None => return Err(Error::MissingField($field_name))
+            None => return Err(Error::MissingField($field_name)),
         };
     };
 
     ($field_name:expr, $var:ident, i64) => {
         match $var[$field_name].as_i64() {
             Some(s) => s,
-            None => return Err(Error::MissingField($field_name))
+            None => return Err(Error::MissingField($field_name)),
         };
     };
 }
@@ -34,9 +46,9 @@ macro_rules! try_cast_yaml {
     ($value: expr) => {
         match serde_yaml::from_value($value) {
             Ok(y) => y,
-            Err(e) => return Err(Error::YamlError(e, String::new()))
+            Err(e) => return Err(Error::YamlError(e, String::new())),
         }
-    }
+    };
 }
 
 macro_rules! execute_mapping {
@@ -72,20 +84,30 @@ fn increment_write_counter_for(map: &mut HashMap<String, LastWritten>, data_name
         last.counter += 1;
         last.timer = Instant::now();
     } else {
-        map.insert(data_name.to_string(), LastWritten {
-            counter: 1,
-            timer: Instant::now(),
-            ignore: false
-        });
+        map.insert(
+            data_name.to_string(),
+            LastWritten {
+                counter: 1,
+                timer: Instant::now(),
+                ignore: false,
+            },
+        );
     }
 }
 
-fn check_did_write_recently_and_deincrement_counter_for(map: &mut HashMap<String, LastWritten>, data_name: &str) -> bool {
+fn check_did_write_recently_and_deincrement_counter_for(
+    map: &mut HashMap<String, LastWritten>,
+    data_name: &str,
+) -> bool {
     let mut did_write_recently = false;
 
     if let Some(last) = map.get_mut(data_name) {
-        if last.ignore {return true;}
-        if last.timer.elapsed().as_secs() >= 1 {last.counter = 0}
+        if last.ignore {
+            return true;
+        }
+        if last.timer.elapsed().as_secs() >= 1 {
+            last.counter = 0
+        }
 
         did_write_recently = last.counter != 0;
 
@@ -94,70 +116,73 @@ fn check_did_write_recently_and_deincrement_counter_for(map: &mut HashMap<String
         }
     }
 
-    return did_write_recently
+    return did_write_recently;
 }
 
 fn get_data_type_from_string(string: &str) -> Result<InDataTypes, Error> {
-    Ok(
-        match string {
-            "i32" => InDataTypes::I32,
-            "f64" => InDataTypes::F64,
-            "bool" => InDataTypes::Bool,
-            _ => return Err(Error::MissingField("var_type"))
-        }
-    )
+    Ok(match string {
+        "i32" => InDataTypes::I32,
+        "f64" => InDataTypes::F64,
+        "bool" => InDataTypes::Bool,
+        _ => return Err(Error::MissingField("var_type")),
+    })
 }
 
 fn evalute_condition_values(condition: &Condition, value: &VarReaderTypes) -> bool {
     if let Some(data) = condition.equals {
-        return data == *value
+        return data == *value;
     }
 
     if let Some(data) = condition.greater_than {
-        return data > *value
+        return data > *value;
     }
 
     if let Some(data) = condition.less_than {
-        return data < *value
+        return data < *value;
     }
 
-    return false
+    return false;
 }
 
-fn evalute_condition(lvarstransfer: &LVarSyncer, avarstransfer: &AircraftVars, condition: Option<&Condition>, incoming_value: &VarReaderTypes) -> bool {
+fn evalute_condition(
+    lvarstransfer: &LVarSyncer,
+    avarstransfer: &AircraftVars,
+    condition: Option<&Condition>,
+    incoming_value: &VarReaderTypes,
+) -> bool {
     let condition = match condition {
         Some(condition) => condition,
-        None => return true
+        None => return true,
     };
 
     if let Some(var_data) = condition.var.as_ref() {
         if var_data.var_name.starts_with("L:") {
             if let Some(value) = lvarstransfer.get_var(&var_data.var_name) {
-                return evalute_condition_values(condition, &VarReaderTypes::F64(value))
+                return evalute_condition_values(condition, &VarReaderTypes::F64(value));
             }
         } else {
             if let Some(value) = avarstransfer.get_var(&var_data.var_name) {
-                return evalute_condition_values(condition, value)
+                return evalute_condition_values(condition, value);
             }
         }
     } else {
-        return evalute_condition_values(condition, incoming_value)
+        return evalute_condition_values(condition, incoming_value);
     }
-    
+
     false
 }
 
 #[derive(Debug)]
 enum VarType {
     AircraftVar,
-    LocalVar
+    LocalVar,
 }
 
 #[derive(Debug)]
 pub struct SyncPermission {
     pub is_server: bool,
     pub is_master: bool,
-    pub is_init: bool
+    pub is_init: bool,
 }
 
 // Serde types
@@ -183,7 +208,7 @@ struct Condition {
     var: Option<VarData>,
     equals: Option<VarReaderTypes>,
     greater_than: Option<VarReaderTypes>,
-    less_than: Option<VarReaderTypes>
+    less_than: Option<VarReaderTypes>,
 }
 
 // Describes an aircraft variable to listen for changes
@@ -248,7 +273,6 @@ struct NumIncrementEntry<T> {
     pass_difference: bool,
 }
 
-
 #[derive(Deserialize)]
 struct NumDigitSetEntry {
     var_name: String,
@@ -275,23 +299,23 @@ struct ProgramActionEntry {
     var_units: Option<String>,
     var_type: InDataTypes,
     condition: Condition,
-    action: ProgramAction
+    action: ProgramAction,
 }
 
 #[derive(Deserialize)]
 struct ProgramActionEventEntry {
     event_name: String,
-    action: ProgramAction
+    action: ProgramAction,
 }
 
 #[derive(Deserialize, Clone)]
 pub enum ProgramAction {
     TakeControls,
-    TransferControls
+    TransferControls,
 }
 
 struct EventMapping {
-    use_calculator: bool
+    use_calculator: bool,
 }
 
 enum ActionType {
@@ -300,19 +324,19 @@ enum ActionType {
     Bool(Box<dyn Syncable<bool>>),
     ProgramAction(ProgramAction),
     Event(EventMapping),
-    VarOnly
+    VarOnly,
 }
 
 struct Period {
     time: f64,
-    last_update: Option<Instant>
+    last_update: Option<Instant>,
 }
 
 impl Period {
     fn new(time: f64) -> Self {
         Self {
             time,
-            last_update: None
+            last_update: None,
         }
     }
 
@@ -337,7 +361,7 @@ impl Period {
 struct Mapping {
     action: ActionType,
     condition: Option<Condition>,
-    cancel_h_events: bool
+    cancel_h_events: bool,
 }
 
 impl Default for Mapping {
@@ -345,7 +369,7 @@ impl Default for Mapping {
         Self {
             action: ActionType::VarOnly,
             condition: None,
-            cancel_h_events: false
+            cancel_h_events: false,
         }
     }
 }
@@ -353,7 +377,7 @@ impl Default for Mapping {
 struct LastWritten {
     counter: u32,
     timer: Instant,
-    ignore: bool
+    ignore: bool,
 }
 
 pub struct Definitions {
@@ -388,7 +412,7 @@ pub struct Definitions {
     // Vars that need interpolation
     interpolate_vars: HashSet<String>,
     // For indicating that an event has been triggered and the control should be transferred to the next person
-    pending_action: Option<ProgramAction>
+    pending_action: Option<ProgramAction>,
 }
 
 fn get_category_from_string(category: &str) -> Result<Category, Error> {
@@ -397,15 +421,15 @@ fn get_category_from_string(category: &str) -> Result<Category, Error> {
         "master" => Ok(Category::Master),
         "server" => Ok(Category::Server),
         "init" => Ok(Category::Init),
-        _ => return Err(Error::InvalidCategory(category.to_string()))
+        _ => return Err(Error::InvalidCategory(category.to_string())),
     }
 }
 
 fn get_real_var_name(var_name: &str) -> String {
     if var_name.as_bytes()[1] == b':' {
-        return var_name[2..].to_string()
+        return var_name[2..].to_string();
     } else {
-        return var_name.to_string()
+        return var_name.to_string();
     }
 }
 
@@ -428,7 +452,7 @@ impl Definitions {
 
             unreliable_vars: HashSet::new(),
             do_not_sync: HashSet::new(),
-            
+
             categories: HashMap::new(),
             periods: HashMap::new(),
             interpolate_vars: HashSet::new(),
@@ -438,31 +462,44 @@ impl Definitions {
     }
 
     fn add_var(&mut self, category: &str, var: VarEntry) -> Result<(), Error> {
-        let (var_name, var_type) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type.unwrap_or(InDataTypes::F64))?;
+        let (var_name, var_type) = self.add_var_string(
+            category,
+            &var.var_name,
+            var.var_units.as_deref(),
+            var.var_type.unwrap_or(InDataTypes::F64),
+        )?;
 
         // Handle interpolation for this variable
         if let Some(interpolate) = var.interpolate {
             self.interpolate_vars.insert(var_name.clone());
-            
+
             if std::matches!(var_type, VarType::AircraftVar) {
-                self.lvarstransfer.transfer.add_interpolate_mapping(&var.var_name, var_name.clone(), var.var_units.as_deref(), interpolate);
+                self.lvarstransfer.transfer.add_interpolate_mapping(
+                    &var.var_name,
+                    var_name.clone(),
+                    var.var_units.as_deref(),
+                    interpolate,
+                );
             }
         }
 
         if var.unreliable {
             self.unreliable_vars.insert(var_name.clone());
         }
-        
+
         // Handle custom periods
         if let Some(period) = var.update_every {
             self.periods.insert(var_name.clone(), Period::new(period));
         }
 
-        self.add_mapping(var_name, Mapping {
-            action: ActionType::VarOnly, 
-            condition: var.condition,
-            cancel_h_events: var.cancel_h_events
-        })?;
+        self.add_mapping(
+            var_name,
+            Mapping {
+                action: ActionType::VarOnly,
+                condition: var.condition,
+                cancel_h_events: var.cancel_h_events,
+            },
+        )?;
 
         Ok(())
     }
@@ -473,20 +510,27 @@ impl Definitions {
         self.events.get_or_map_event_id(&event.event_name, true);
         self.categories.insert(event.event_name.clone(), category);
 
-        self.add_mapping(event.event_name, Mapping {
-            action: ActionType::Event(
-                EventMapping {
+        self.add_mapping(
+            event.event_name,
+            Mapping {
+                action: ActionType::Event(EventMapping {
                     use_calculator: event.use_calculator,
-                }
-            ),
-            condition: event.condition,
-            cancel_h_events: event.cancel_h_events,
-        })?;
+                }),
+                condition: event.condition,
+                cancel_h_events: event.cancel_h_events,
+            },
+        )?;
 
         Ok(())
     }
-    
-    fn add_aircraft_variable(&mut self, category: &str, var_name: &str, var_units: &str, var_type: InDataTypes) -> Result<(), Error> {
+
+    fn add_aircraft_variable(
+        &mut self,
+        category: &str,
+        var_name: &str,
+        var_units: &str,
+        var_type: InDataTypes,
+    ) -> Result<(), Error> {
         let category = get_category_from_string(category)?;
 
         self.avarstransfer.add_var(var_name, var_units, var_type);
@@ -495,33 +539,44 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_local_variable(&mut self, category: &str, var_name: &str, var_units: Option<&str>) -> Result<(), Error> {
+    fn add_local_variable(
+        &mut self,
+        category: &str,
+        var_name: &str,
+        var_units: Option<&str>,
+    ) -> Result<(), Error> {
         let category = get_category_from_string(category)?;
 
-        self.lvarstransfer.add_var(var_name.to_string(), var_units.map(String::from));
+        self.lvarstransfer
+            .add_var(var_name.to_string(), var_units.map(String::from));
         self.categories.insert(var_name.to_string(), category);
 
         Ok(())
     }
 
     // Determines whether to add an aircraft variable or local variable based off the variable name
-    fn add_var_string(&mut self, category: &str, var_name: &str, var_units: Option<&str>, var_type: InDataTypes) -> Result<(String, VarType), Error> {
+    fn add_var_string(
+        &mut self,
+        category: &str,
+        var_name: &str,
+        var_units: Option<&str>,
+        var_type: InDataTypes,
+    ) -> Result<(String, VarType), Error> {
         if var_name.starts_with("L:") {
             // Keep var_name with L: in it to pass to execute_calculator code
             self.add_local_variable(category, var_name, var_units)?;
 
-            return Ok((var_name.to_string(), VarType::LocalVar))
-
+            return Ok((var_name.to_string(), VarType::LocalVar));
         } else {
             let actual_var_name = get_real_var_name(var_name);
 
             if let Some(var_units) = var_units {
                 self.add_aircraft_variable(category, &actual_var_name, var_units, var_type)?;
             } else {
-                return Err(Error::MissingField("var_units"))
+                return Err(Error::MissingField("var_units"));
             }
 
-            return Ok((actual_var_name, VarType::AircraftVar))
+            return Ok((actual_var_name, VarType::AircraftVar));
         }
     }
 
@@ -531,7 +586,12 @@ impl Definitions {
         if let Some(condition) = mapping.condition.as_mut() {
             if let Some(var_data) = condition.var.as_mut() {
                 // Add new var to watch for
-                let (var_string, _) = self.add_var_string("shared", &var_data.var_name, var_data.var_units.as_deref(), var_data.var_type)?;
+                let (var_string, _) = self.add_var_string(
+                    "shared",
+                    &var_data.var_name,
+                    var_data.var_units.as_deref(),
+                    var_data.var_type,
+                )?;
                 var_data.var_name = var_string.clone();
 
                 if self.mappings.get(&var_string).is_none() {
@@ -541,19 +601,28 @@ impl Definitions {
         }
 
         match self.mappings.entry(var_name.to_string()) {
-            hash_map::Entry::Occupied(mut o) => { 
-                o.get_mut().push(mapping)
+            hash_map::Entry::Occupied(mut o) => o.get_mut().push(mapping),
+            hash_map::Entry::Vacant(v) => {
+                v.insert(vec![mapping]);
             }
-            hash_map::Entry::Vacant(v) => { v.insert(vec![mapping]); }
         };
 
         Ok(())
     }
 
-    fn add_toggle_switch(&mut self, category: &str, var: ToggleSwitchGenericEntry) -> Result<(), Error> { 
+    fn add_toggle_switch(
+        &mut self,
+        category: &str,
+        var: ToggleSwitchGenericEntry,
+    ) -> Result<(), Error> {
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
-        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::Bool)?;
+        let (var_string, _) = self.add_var_string(
+            category,
+            &var.var_name,
+            var.var_units.as_deref(),
+            InDataTypes::Bool,
+        )?;
 
         let mut action = ToggleSwitch::new(event_id);
 
@@ -566,70 +635,86 @@ impl Definitions {
             let off_event_id = self.events.get_or_map_event_id(off_event, false);
             action.set_off_event(off_event_id);
         }
-        
+
         if let Some(event_param) = var.event_param {
             action.set_param(event_param);
         }
 
         action.set_switch_on(var.switch_on);
 
-        self.add_mapping(var_string, Mapping {
-            action: ActionType::Bool(Box::new(action)),
-            condition: var.condition,
-            cancel_h_events: var.cancel_h_events
-        })?;
+        self.add_mapping(
+            var_string,
+            Mapping {
+                action: ActionType::Bool(Box::new(action)),
+                condition: var.condition,
+                cancel_h_events: var.cancel_h_events,
+            },
+        )?;
 
         Ok(())
     }
 
-    fn add_num_set_generic<T>(&mut self, data_type: InDataTypes, category: &str, var: NumSetGenericEntry<T>) -> Result<(Option<Box<NumSet<T>>>, String), Error> where T: Default {
+    fn add_num_set_generic<T>(
+        &mut self,
+        data_type: InDataTypes,
+        category: &str,
+        var: NumSetGenericEntry<T>,
+    ) -> Result<(Option<Box<NumSet<T>>>, String), Error>
+    where
+        T: Default,
+    {
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
-        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
+        let (var_string, _) =
+            self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
 
         if let Some(interpolate_type) = var.interpolate {
-
-            self.lvarstransfer.transfer.add_interpolate_mapping(&format!("K:{}", &var.event_name), var_string.clone(), var.var_units.as_deref(), interpolate_type);
+            self.lvarstransfer.transfer.add_interpolate_mapping(
+                &format!("K:{}", &var.event_name),
+                var_string.clone(),
+                var.var_units.as_deref(),
+                interpolate_type,
+            );
             self.interpolate_vars.insert(var_string.clone());
-            self.add_mapping(var_string.clone(), Mapping {
-                action: ActionType::VarOnly,
-                .. Default::default()
-            })?;
-
+            self.add_mapping(
+                var_string.clone(),
+                Mapping {
+                    action: ActionType::VarOnly,
+                    ..Default::default()
+                },
+            )?;
         } else {
-
             let mut action = Box::new(NumSet::new(event_id));
 
             if var.unreliable {
                 self.unreliable_vars.insert(var.var_name.clone());
             }
-    
+
             if var.use_calculator || var.event_param.is_some() {
                 action.set_calculator_event_name(Some(&var.event_name), var.event_param.is_some())
             }
-    
+
             if let Some(event_param) = var.event_param {
                 action.set_param(event_param, var.index_reversed);
             }
-    
+
             if let Some(multiply_by) = var.multiply_by {
                 action.set_multiply_by(multiply_by);
             }
-    
+
             if let Some(add_by) = var.add_by {
                 action.set_add_by(add_by);
             }
-    
+
             if let Some(swap_event) = var.swap_event_name.as_ref() {
                 let swap_event_id = self.events.get_or_map_event_id(swap_event, false);
                 action.set_swap_event(swap_event_id);
             }
 
-            return Ok((Some(action), var_string))
-
+            return Ok((Some(action), var_string));
         }
-        
-        return Ok((None, var_string))
+
+        return Ok((None, var_string));
     }
 
     fn add_num_set(&mut self, category: &str, var: Value) -> Result<(), Error> {
@@ -638,26 +723,34 @@ impl Definitions {
 
         let condition = try_cast_yaml!(var["condition"].clone());
         let cancel_h_events = var["cancel_h_events"].as_bool().unwrap_or(false);
-        
+
         match data_type {
             InDataTypes::I32 => {
-                let (mapping, var_string) = self.add_num_set_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
+                let (mapping, var_string) =
+                    self.add_num_set_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
                 if let Some(mapping) = mapping {
-                    self.add_mapping(var_string, Mapping {
-                        action: ActionType::I32(mapping),
-                        condition,
-                        cancel_h_events
-                    })?
+                    self.add_mapping(
+                        var_string,
+                        Mapping {
+                            action: ActionType::I32(mapping),
+                            condition,
+                            cancel_h_events,
+                        },
+                    )?
                 }
             }
             InDataTypes::F64 => {
-                let (mapping, var_string) = self.add_num_set_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
+                let (mapping, var_string) =
+                    self.add_num_set_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
                 if let Some(mapping) = mapping {
-                    self.add_mapping(var_string, Mapping {
-                        action: ActionType::F64(mapping),
-                        condition,
-                        cancel_h_events
-                    })?
+                    self.add_mapping(
+                        var_string,
+                        Mapping {
+                            action: ActionType::F64(mapping),
+                            condition,
+                            cancel_h_events,
+                        },
+                    )?
                 }
             }
             _ => {}
@@ -666,11 +759,20 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_num_increment_generic<T>(&mut self, data_type: InDataTypes, category: &str, var: NumIncrementEntry<T>) -> Result<(Box<NumIncrement<T>>, String), Error> where T: Default {
+    fn add_num_increment_generic<T>(
+        &mut self,
+        data_type: InDataTypes,
+        category: &str,
+        var: NumIncrementEntry<T>,
+    ) -> Result<(Box<NumIncrement<T>>, String), Error>
+    where
+        T: Default,
+    {
         let up_event_id = self.events.get_or_map_event_id(&var.up_event_name, false);
         let down_event_id = self.events.get_or_map_event_id(&var.down_event_name, false);
 
-        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
+        let (var_string, _) =
+            self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
 
         let mut mapping = NumIncrement::new(up_event_id, down_event_id, var.increment_by);
         mapping.set_pass_difference(var.pass_difference);
@@ -687,20 +789,34 @@ impl Definitions {
 
         match data_type {
             InDataTypes::I32 => {
-                let (mapping, var_string) = self.add_num_increment_generic::<i32>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, Mapping {
-                    action: ActionType::I32(mapping),
-                    condition,
-                    cancel_h_events
-                })?
+                let (mapping, var_string) = self.add_num_increment_generic::<i32>(
+                    data_type,
+                    category,
+                    try_cast_yaml!(var),
+                )?;
+                self.add_mapping(
+                    var_string,
+                    Mapping {
+                        action: ActionType::I32(mapping),
+                        condition,
+                        cancel_h_events,
+                    },
+                )?
             }
             InDataTypes::F64 => {
-                let (mapping, var_string) = self.add_num_increment_generic::<f64>(data_type, category, try_cast_yaml!(var))?;
-                self.add_mapping(var_string, Mapping {
-                    action: ActionType::F64(mapping),
-                    condition,
-                    cancel_h_events
-                })?
+                let (mapping, var_string) = self.add_num_increment_generic::<f64>(
+                    data_type,
+                    category,
+                    try_cast_yaml!(var),
+                )?;
+                self.add_mapping(
+                    var_string,
+                    Mapping {
+                        action: ActionType::F64(mapping),
+                        condition,
+                        cancel_h_events,
+                    },
+                )?
             }
             _ => {}
         };
@@ -720,61 +836,92 @@ impl Definitions {
             down_event_ids.push(self.events.get_or_map_event_id(down_event_name, false));
         }
 
-        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), InDataTypes::I32)?;
-        self.add_mapping(var_string, Mapping {
-            action: ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))),
-            condition: var.condition,
-            cancel_h_events: var.cancel_h_events
-        })?;
-
-        Ok(())
-    }
-
-    fn add_custom_calculator(&mut self, category: &str, var: CustomCalculatorEntry) -> Result<(), Error> {
-        let category = get_category_from_string(category)?;
-        
-        let var_name = self.lvarstransfer.add_custom_var(var.get);
-
-        self.categories.insert(var_name.clone(), category);
-        self.add_mapping(var_name, Mapping {
-            action: ActionType::F64(Box::new(CustomCalculator::new(var.set))), 
-            condition: var.condition,
-            cancel_h_events: var.cancel_h_events
-        })?;
-
-        Ok(())
-    }
-
-    fn add_program_action(&mut self, category: &str, var: ProgramActionEntry) -> Result<(), Error> {
-
-        let (var_string, _) = self.add_var_string(category, &var.var_name, var.var_units.as_deref(), var.var_type)?;
-        self.add_mapping(var_string, Mapping {
-            action: ActionType::ProgramAction(var.action),
-            condition: Some(var.condition),
-            ..Default::default()}
+        let (var_string, _) = self.add_var_string(
+            category,
+            &var.var_name,
+            var.var_units.as_deref(),
+            InDataTypes::I32,
+        )?;
+        self.add_mapping(
+            var_string,
+            Mapping {
+                action: ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))),
+                condition: var.condition,
+                cancel_h_events: var.cancel_h_events,
+            },
         )?;
 
         Ok(())
     }
 
-    fn add_program_action_event(&mut self, category: &str, event: ProgramActionEventEntry) -> Result<(), Error> {
+    fn add_custom_calculator(
+        &mut self,
+        category: &str,
+        var: CustomCalculatorEntry,
+    ) -> Result<(), Error> {
+        let category = get_category_from_string(category)?;
+
+        let var_name = self.lvarstransfer.add_custom_var(var.get);
+
+        self.categories.insert(var_name.clone(), category);
+        self.add_mapping(
+            var_name,
+            Mapping {
+                action: ActionType::F64(Box::new(CustomCalculator::new(var.set))),
+                condition: var.condition,
+                cancel_h_events: var.cancel_h_events,
+            },
+        )?;
+
+        Ok(())
+    }
+
+    fn add_program_action(&mut self, category: &str, var: ProgramActionEntry) -> Result<(), Error> {
+        let (var_string, _) = self.add_var_string(
+            category,
+            &var.var_name,
+            var.var_units.as_deref(),
+            var.var_type,
+        )?;
+        self.add_mapping(
+            var_string,
+            Mapping {
+                action: ActionType::ProgramAction(var.action),
+                condition: Some(var.condition),
+                ..Default::default()
+            },
+        )?;
+
+        Ok(())
+    }
+
+    fn add_program_action_event(
+        &mut self,
+        category: &str,
+        event: ProgramActionEventEntry,
+    ) -> Result<(), Error> {
         let category = get_category_from_string(category)?;
 
         self.events.get_or_map_event_id(&event.event_name, true);
         self.categories.insert(event.event_name.clone(), category);
 
-        self.add_mapping(event.event_name, Mapping {
-            action: ActionType::ProgramAction(event.action),
-            ..Default::default()
-        })?;
+        self.add_mapping(
+            event.event_name,
+            Mapping {
+                action: ActionType::ProgramAction(event.action),
+                ..Default::default()
+            },
+        )?;
 
         Ok(())
     }
 
     fn add_to_buffer(&mut self, category: String, value: Value) {
         match self.definitions_buffer.entry(category) {
-            indexmap::map::Entry::Occupied(mut o) => {o.get_mut().push(value)},
-            indexmap::map::Entry::Vacant(v) => {v.insert(vec![value]);}
+            indexmap::map::Entry::Occupied(mut o) => o.get_mut().push(value),
+            indexmap::map::Entry::Vacant(v) => {
+                v.insert(vec![value]);
+            }
         };
     }
 
@@ -789,7 +936,6 @@ impl Definitions {
         // self.check_other_common_fields(&value);
         let value_clone = value.clone();
 
-
         match type_str.to_uppercase().as_str() {
             "VAR" => self.add_var(&category, try_cast_yaml!(value))?,
             "EVENT" => self.add_event(&category, try_cast_yaml!(value))?,
@@ -799,10 +945,12 @@ impl Definitions {
             "NUMDIGITSET" => self.add_num_digit_set(&category, try_cast_yaml!(value))?,
             "CUSTOMCALCULATOR" => self.add_custom_calculator(&category, try_cast_yaml!(value))?,
             "PROGRAMACTION" => self.add_program_action(&category, try_cast_yaml!(value))?,
-            "PROGRAMACTIONEVENT" => self.add_program_action_event(&category, try_cast_yaml!(value))?,
-            _ => return Err(Error::InvalidSyncType(type_str.to_string()))
+            "PROGRAMACTIONEVENT" => {
+                self.add_program_action_event(&category, try_cast_yaml!(value))?
+            }
+            _ => return Err(Error::InvalidSyncType(type_str.to_string())),
         };
-        
+
         self.add_to_buffer(category, value_clone);
 
         return Ok(());
@@ -832,24 +980,28 @@ impl Definitions {
                         Ok(_) => (),
                         Err(e) => {
                             if let Error::YamlError(e, _) = e {
-                                return Err(Error::IncludeError(e.to_string(), file_name.to_string()));
+                                return Err(Error::IncludeError(
+                                    e.to_string(),
+                                    file_name.to_string(),
+                                ));
                             };
                         }
                     }
                 }
             } else if key == "ignore" {
-
                 for ignore_value in value {
                     let ignore_name = ignore_value.as_str().unwrap();
-                    self.last_written.insert(ignore_name.to_string(), LastWritten {
-                        counter: 0,
-                        timer: Instant::now(),
-                        ignore: true
-                    });
+                    self.last_written.insert(
+                        ignore_name.to_string(),
+                        LastWritten {
+                            counter: 0,
+                            timer: Instant::now(),
+                            ignore: true,
+                        },
+                    );
 
                     self.add_to_buffer(key.clone(), ignore_value);
                 }
-
             } else {
                 for var_data in value {
                     self.parse_var(key.clone(), var_data)?;
@@ -867,58 +1019,77 @@ impl Definitions {
     pub fn load_config(&mut self, path: impl AsRef<Path> + Display) -> Result<(), Error> {
         let path_string = path.to_string();
 
-        let file = File::open(path)
-            .map_err(|e| Error::IOError(e))?;
+        let file = File::open(path).map_err(|e| Error::IOError(e))?;
 
-        let yaml: IndexMap<String, Vec<Value>> = serde_yaml::from_reader(file)
-            .map_err(|e| Error::YamlError(e, path_string.clone()))?;
+        let yaml: IndexMap<String, Vec<Value>> =
+            serde_yaml::from_reader(file).map_err(|e| Error::YamlError(e, path_string.clone()))?;
 
         self.parse_yaml(yaml)
     }
 
     pub fn load_config_from_bytes(&mut self, bytes: Box<[u8]>) -> Result<(), Error> {
-        let yaml: IndexMap<String, Vec<Value>> = rmp_serde::from_slice(&bytes)
-            .map_err(|e| Error::NetDecodeError(e))?;
+        let yaml: IndexMap<String, Vec<Value>> =
+            rmp_serde::from_slice(&bytes).map_err(|e| Error::NetDecodeError(e))?;
 
         self.parse_yaml(yaml)
     }
 
     #[allow(unused_variables)]
     fn process_local_var(&mut self, result: GetResult) {
-        let mut should_write = !check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &result.var_name);
+        let mut should_write = !check_did_write_recently_and_deincrement_counter_for(
+            &mut self.last_written,
+            &result.var_name,
+        );
 
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
-
-                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::F64(result.var.floating)) {
+                if !evalute_condition(
+                    &self.lvarstransfer,
+                    &self.avarstransfer,
+                    mapping.condition.as_ref(),
+                    &VarReaderTypes::F64(result.var.floating),
+                ) {
                     should_write = false;
-                    continue
+                    continue;
                 }
-                
+
                 if mapping.cancel_h_events {
                     self.event_cancel_timer = Instant::now();
                 }
 
-                execute_mapping!(new_value, action, VarReaderTypes::F64(result.var.floating), mapping, {
-                    action.set_current(new_value)
-                }, {}, {
-                    self.pending_action = Some(action.clone());
-                    should_write = false;
-                });
-                
+                execute_mapping!(
+                    new_value,
+                    action,
+                    VarReaderTypes::F64(result.var.floating),
+                    mapping,
+                    { action.set_current(new_value) },
+                    {},
+                    {
+                        self.pending_action = Some(action.clone());
+                        should_write = false;
+                    }
+                );
             }
         }
 
-        if !should_write {return}
-        self.current_sync.lvars.insert(result.var_name, result.var.floating);
+        if !should_write {
+            return;
+        }
+        self.current_sync
+            .lvars
+            .insert(result.var_name, result.var.floating);
     }
 
     // Processes client data and adds to the result queue if it changed
-    pub fn process_client_data(&mut self, conn: &simconnect::SimConnector, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
+    pub fn process_client_data(
+        &mut self,
+        conn: &simconnect::SimConnector,
+        data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA,
+    ) {
         // Get var data
-        let lvar = match self.lvarstransfer.process_client_data(conn ,data) {
+        let lvar = match self.lvarstransfer.process_client_data(conn, data) {
             Some(var) => var,
-            None => return
+            None => return,
         };
 
         match lvar {
@@ -935,8 +1106,17 @@ impl Definitions {
         if let Some(payload) = self.jstransfer.poll() {
             match payload {
                 Payloads::Interaction { name } => {
-                    if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &name[5..]) || self.event_cancel_timer.elapsed().as_millis() < 300 {return};
-                    self.current_sync.events.push(EventTriggered { event_name: name, data: 0})
+                    if check_did_write_recently_and_deincrement_counter_for(
+                        &mut self.last_written,
+                        &name[5..],
+                    ) || self.event_cancel_timer.elapsed().as_millis() < 300
+                    {
+                        return;
+                    };
+                    self.current_sync.events.push(EventTriggered {
+                        event_name: name,
+                        data: 0,
+                    })
                 }
                 _ => {}
             }
@@ -946,19 +1126,26 @@ impl Definitions {
     // Processes event data name and the additional dword data
     pub fn process_event_data(&mut self, data: &simconnect::SIMCONNECT_RECV_EVENT) {
         // Not for us
-        if data.uGroupID != self.events.group_id {return}
-        
+        if data.uGroupID != self.events.group_id {
+            return;
+        }
+
         // Regular KEY event
         let event_name = match self.events.match_event_id(data.uEventID) {
             Some(event_name) => event_name.clone(),
-            None => return
+            None => return,
         };
 
         let mut should_write = true;
 
         if let Some(mappings) = self.mappings.get(&event_name) {
             for mapping in mappings {
-                if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &VarReaderTypes::Bool(false)) {
+                if !evalute_condition(
+                    &self.lvarstransfer,
+                    &self.avarstransfer,
+                    mapping.condition.as_ref(),
+                    &VarReaderTypes::Bool(false),
+                ) {
                     should_write = false;
                     continue;
                 }
@@ -968,15 +1155,18 @@ impl Definitions {
                     should_write = false;
                     continue;
                 }
-                
+
                 if mapping.cancel_h_events {
                     self.event_cancel_timer = Instant::now();
                 }
 
-                
-
                 // Check timer
-                if check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &event_name) {return;}
+                if check_did_write_recently_and_deincrement_counter_for(
+                    &mut self.last_written,
+                    &event_name,
+                ) {
+                    return;
+                }
             }
         }
 
@@ -991,36 +1181,52 @@ impl Definitions {
     // Process changed aircraft variables and update SyncActions related to it
     #[allow(unused_variables)]
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
-        if self.avarstransfer.define_id != data.dwDefineID {return}
+        if self.avarstransfer.define_id != data.dwDefineID {
+            return;
+        }
         // Data might be bad/config files don't line up
         if let Ok(data) = self.avarstransfer.read_vars(data) {
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Determine if this variable should be updated
-                let mut should_write = !check_did_write_recently_and_deincrement_counter_for(&mut self.last_written, &var_name) && !self.do_not_sync.contains(&var_name);
+                let mut should_write = !check_did_write_recently_and_deincrement_counter_for(
+                    &mut self.last_written,
+                    &var_name,
+                ) && !self.do_not_sync.contains(&var_name);
                 // Set current var syncactions
                 if let Some(mappings) = self.mappings.get_mut(&var_name) {
                     for mapping in mappings {
-                        if !evalute_condition(&self.lvarstransfer, &self.avarstransfer, mapping.condition.as_ref(), &value) {
+                        if !evalute_condition(
+                            &self.lvarstransfer,
+                            &self.avarstransfer,
+                            mapping.condition.as_ref(),
+                            &value,
+                        ) {
                             // Does not statisfy mapping condition... do not write.
                             should_write = false;
-                            continue
+                            continue;
                         }
-                        
+
                         if mapping.cancel_h_events {
                             self.event_cancel_timer = Instant::now();
                         }
 
-                        execute_mapping!(new_value, action, value, mapping, {
-                            action.set_current(new_value)
-                        }, {}, {});
+                        execute_mapping!(
+                            new_value,
+                            action,
+                            value,
+                            mapping,
+                            { action.set_current(new_value) },
+                            {},
+                            {}
+                        );
                     }
                 }
 
                 if let Some(period) = self.periods.get_mut(&var_name) {
                     should_write = should_write && period.do_update();
                 }
- 
+
                 if should_write {
                     // Queue data for reading
                     self.current_sync.avars.insert(var_name.clone(), value);
@@ -1031,28 +1237,35 @@ impl Definitions {
 
     fn process_events(&mut self, conn: &SimConnector) -> Result<(), Error> {
         if let Some(event) = self.event_queue.front() {
-
             if event.event_name.starts_with("H:") {
+                if self.event_timer.elapsed().as_millis() < 50 {
+                    return Ok(());
+                }
 
-                if self.event_timer.elapsed().as_millis() < 50 {return Ok(())}
-
-                    // Use gauge to transmit H: event
-                self.lvarstransfer.set_unchecked(conn, &event.event_name, None, "");
+                // Use gauge to transmit H: event
+                self.lvarstransfer
+                    .set_unchecked(conn, &event.event_name, None, "");
 
                 self.event_timer = Instant::now();
-                
             } else {
                 // Event doesn't exist
-                for mapping in self.mappings.get(&event.event_name).ok_or(Error::MissingMapping(event.event_name.clone()))? {
-
+                for mapping in self
+                    .mappings
+                    .get(&event.event_name)
+                    .ok_or(Error::MissingMapping(event.event_name.clone()))?
+                {
                     if let ActionType::Event(mapping) = &mapping.action {
-
                         if mapping.use_calculator {
-
-                            self.lvarstransfer.set_unchecked(conn, &format!("K:{}", event.event_name), None, "");
-
+                            self.lvarstransfer.set_unchecked(
+                                conn,
+                                &format!("K:{}", event.event_name),
+                                None,
+                                "",
+                            );
                         } else {
-                            self.events.trigger_event(conn, &event.event_name, event.data as u32).unwrap();
+                            self.events
+                                .trigger_event(conn, &event.event_name, event.data as u32)
+                                .unwrap();
                         }
                     }
                 }
@@ -1074,10 +1287,15 @@ impl Definitions {
     }
 
     fn split_unreliable(&self, data: &mut AllNeedSync) -> AllNeedSync {
-        data.filter_keep(|name| self.interpolate_vars.contains(name) || self.unreliable_vars.contains(name))
+        data.filter_keep(|name| {
+            self.interpolate_vars.contains(name) || self.unreliable_vars.contains(name)
+        })
     }
 
-    pub fn get_need_sync(&mut self, sync_permission: &SyncPermission) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
+    pub fn get_need_sync(
+        &mut self,
+        sync_permission: &SyncPermission,
+    ) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
         let mut data = AllNeedSync::new();
         // Swap queued vars into local var
         swap(&mut data, &mut self.current_sync);
@@ -1086,8 +1304,12 @@ impl Definitions {
         // Split into interpolated vs non interpolated values - used for reliable/unreliable transmissions
         let regular = self.split_unreliable(&mut data);
         // Convert into options
-        let unreliable = if data.is_empty() {None} else {Some(data)};
-        let regular = if regular.is_empty() {None} else {Some(regular)};
+        let unreliable = if data.is_empty() { None } else { Some(data) };
+        let regular = if regular.is_empty() {
+            None
+        } else {
+            Some(regular)
+        };
 
         return (unreliable, regular);
     }
@@ -1096,24 +1318,24 @@ impl Definitions {
         // Check categories
         if let Some(category) = self.categories.get(var_name) {
             if *category == Category::Server && sync_permission.is_server {
-                return true
+                return true;
             } else if *category == Category::Shared {
-                return true
+                return true;
             } else if *category == Category::Master && sync_permission.is_master {
-                return true
+                return true;
             } else if *category == Category::Init && sync_permission.is_init {
-                return true
+                return true;
             }
-            return false
+            return false;
         }
-        return true
+        return true;
     }
-
-    
 
     #[allow(unused_variables)]
     fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64) {
-        if data.len() == 0 {return}
+        if data.len() == 0 {
+            return;
+        }
 
         let mut to_sync = AVarMap::new();
         to_sync.reserve(data.len());
@@ -1127,27 +1349,37 @@ impl Definitions {
             // Otherwise sync them using defined events
             if let Some(mappings) = self.mappings.get_mut(&var_name) {
                 for mapping in mappings {
-                    execute_mapping!(new_value, action, data, mapping, {
-                        action.set_new(new_value, conn, &mut self.lvarstransfer)
-                    }, {
-                        if self.interpolate_vars.contains(&var_name) {
-                            // Queue data for interpolation
-                            interpolation_data.push(InterpolateData {
-                                name: var_name.clone(),
-                                value: data.get_as_f64(),
-                                time
-                            });
-                        } else {
+                    execute_mapping!(
+                        new_value,
+                        action,
+                        data,
+                        mapping,
+                        { action.set_new(new_value, conn, &mut self.lvarstransfer) },
+                        {
+                            if self.interpolate_vars.contains(&var_name) {
+                                // Queue data for interpolation
+                                interpolation_data.push(InterpolateData {
+                                    name: var_name.clone(),
+                                    value: data.get_as_f64(),
+                                    time,
+                                });
+                            } else {
                                 // Set data right away
-                            to_sync.insert(var_name.clone(), data.clone());
-                        }
-                    }, {});
+                                to_sync.insert(var_name.clone(), data.clone());
+                            }
+                        },
+                        {}
+                    );
                 }
             }
         }
 
         if interpolation_data.len() > 0 {
-            self.lvarstransfer.transfer.send_new_interpolation_data(conn, time, &interpolation_data);
+            self.lvarstransfer.transfer.send_new_interpolation_data(
+                conn,
+                time,
+                &interpolation_data,
+            );
         }
 
         if to_sync.len() > 0 {
@@ -1158,22 +1390,26 @@ impl Definitions {
     #[allow(unused_variables)]
     fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap) -> Result<(), Error> {
         for (var_name, value) in data {
-
             match self.mappings.get_mut(&var_name) {
                 Some(mappings) => {
                     for mapping in mappings {
+                        execute_mapping!(
+                            new_value,
+                            action,
+                            VarReaderTypes::F64(value),
+                            mapping,
+                            { action.set_new(new_value, conn, &mut self.lvarstransfer) },
+                            {
+                                self.lvarstransfer
+                                    .set(conn, &var_name, value.to_string().as_ref());
+                            },
+                            {}
+                        );
 
-                        execute_mapping!(new_value, action, VarReaderTypes::F64(value), mapping, {
-                            action.set_new(new_value, conn, &mut self.lvarstransfer)
-                        }, {
-                            self.lvarstransfer.set(conn, &var_name, value.to_string().as_ref());
-                        }, {});
-        
                         increment_write_counter_for(&mut self.last_written, &var_name);
-
                     }
                 }
-                None => return Err(Error::MissingMapping(var_name))
+                None => return Err(Error::MissingMapping(var_name)),
             }
         }
 
@@ -1188,7 +1424,13 @@ impl Definitions {
         Ok(())
     }
 
-    pub fn on_receive_data(&mut self, conn: &SimConnector, data: AllNeedSync, time: f64, sync_permission: &SyncPermission) -> Result<(), Error> {
+    pub fn on_receive_data(
+        &mut self,
+        conn: &SimConnector,
+        data: AllNeedSync,
+        time: f64,
+        sync_permission: &SyncPermission,
+    ) -> Result<(), Error> {
         let mut data = data;
         self.filter_all_sync(&mut data, sync_permission);
 
@@ -1208,11 +1450,20 @@ impl Definitions {
         self.lvarstransfer.on_connected(conn);
 
         // Might be running another instance
-        self.jstransfer.start()
-            .map_err(|_| ())?;
+        self.jstransfer.start().map_err(|_| ())?;
 
         // Get aircraft data
-        conn.request_data_on_sim_object(0, self.avarstransfer.define_id, 0, simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
+        conn.request_data_on_sim_object(
+            0,
+            self.avarstransfer.define_id,
+            0,
+            simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME,
+            simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED
+                | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED,
+            0,
+            0,
+            0,
+        );
 
         Ok(())
     }
@@ -1230,19 +1481,21 @@ impl Definitions {
     }
 
     pub fn get_number_avars(&self) -> usize {
-        return self.avarstransfer.get_number_defined()
+        return self.avarstransfer.get_number_defined();
     }
 
     pub fn get_number_events(&self) -> usize {
-        return self.events.get_number_defined()
+        return self.events.get_number_defined();
     }
 
     pub fn get_number_lvars(&self) -> usize {
-        return self.lvarstransfer.get_number_defined()
+        return self.lvarstransfer.get_number_defined();
     }
 
     pub fn get_next_pending_action(&mut self) -> Option<ProgramAction> {
-        if self.pending_action.is_none() {return None}
+        if self.pending_action.is_none() {
+            return None;
+        }
 
         let mut next_action = None;
         swap(&mut self.pending_action, &mut next_action);

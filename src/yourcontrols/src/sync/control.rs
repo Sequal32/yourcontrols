@@ -7,10 +7,8 @@ pub struct Control {
 }
 
 impl Control {
-    pub fn new() -> Self{
-        Self {
-            has_control: false,
-        }
+    pub fn new() -> Self {
+        Self { has_control: false }
     }
 
     pub fn do_transfer(&mut self, conn: &SimConnector) {

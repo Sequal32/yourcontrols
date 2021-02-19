@@ -23,7 +23,7 @@ pub enum Error {
     InvalidSyncType(String),
     InvalidCategory(String),
     IncludeError(String, String),
-    
+
     MissingMapping(String),
     // Serialization
     JSONSerializeError(serde_json::Error),
@@ -31,14 +31,16 @@ pub enum Error {
     NetEncodeError(rmp_serde::encode::Error),
 
     // Misc
-    NotProcessed
+    NotProcessed,
 }
 
 impl Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Error::IOError(e) => write!(f, "An IO error occured: {}", e),
-            Error::MismatchingIpVersion => write!(f, "No hostname ips matched the requested IP version."),
+            Error::MismatchingIpVersion => {
+                write!(f, "No hostname ips matched the requested IP version.")
+            }
             Error::SocketError(e) => write!(f, "Could not initialize socket! Reason: {}", e),
 
             Error::GatewayNotFound(e) => write!(f, "Gateway not found: {}", e),
@@ -49,19 +51,29 @@ impl Display for Error {
             Error::MissingField(s) => write!(f, r#"Missing field "{}""#, s),
             Error::InvalidSyncType(s) => write!(f, r#"Invalid type "{}""#, s),
             Error::InvalidCategory(s) => write!(f, r#"Invalid category "{}""#, s),
-            Error::YamlError(e, file_name) => write!(f, "Error parsing YAML in {}: {}", file_name, e.to_string()),
+            Error::YamlError(e, file_name) => {
+                write!(f, "Error parsing YAML in {}: {}", file_name, e.to_string())
+            }
             Error::IncludeError(e_str, e) => write!(f, "{} in {}", e_str, e),
-            Error::MissingMapping(mapping_name) => write!(f, "No definition exists for {}. Do you have matching .yaml files?", mapping_name),
-            
-            
-            Error::JSONSerializeError(e) => write!(f, "Could not serialize/deserialize! Reason: {}", e),
-            
-            Error::ReadTimeout(_e) => write!(f, "No message."),
-            Error::NetDecodeError(e) => write!(f, "Could not decode MessagePack data! Reason: {}", e),
-            Error::NetEncodeError(e) => write!(f, "Could not encode MessagePack data! Reason: {}", e),
+            Error::MissingMapping(mapping_name) => write!(
+                f,
+                "No definition exists for {}. Do you have matching .yaml files?",
+                mapping_name
+            ),
 
-            Error::NotProcessed => write!(f, "Not processed.")
-            
+            Error::JSONSerializeError(e) => {
+                write!(f, "Could not serialize/deserialize! Reason: {}", e)
+            }
+
+            Error::ReadTimeout(_e) => write!(f, "No message."),
+            Error::NetDecodeError(e) => {
+                write!(f, "Could not decode MessagePack data! Reason: {}", e)
+            }
+            Error::NetEncodeError(e) => {
+                write!(f, "Could not encode MessagePack data! Reason: {}", e)
+            }
+
+            Error::NotProcessed => write!(f, "Not processed."),
         }
     }
 }

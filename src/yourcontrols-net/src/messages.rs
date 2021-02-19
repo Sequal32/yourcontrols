@@ -1,9 +1,9 @@
 use crossbeam_channel::{Receiver, Sender};
 use laminar::{Metrics, Packet, Socket, SocketEvent};
 use rmp_serde::{self};
-use serde::{Serialize, Deserialize};
-use yourcontrols_types::AllNeedSync;
+use serde::{Deserialize, Serialize};
 use std::{net::SocketAddr, time::Instant};
+use yourcontrols_types::AllNeedSync;
 use zstd::block::{Compressor, Decompressor};
 
 use yourcontrols_types::Error;
@@ -13,34 +13,76 @@ const COMPRESS_DICTIONARY: &[u8] = include_bytes!("compress_dict.bin");
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum Payloads {
     InvalidName,
-    InvalidVersion {server_version: String},
-    AircraftDefinition {bytes: Box<[u8]>},
+    InvalidVersion {
+        server_version: String,
+    },
+    AircraftDefinition {
+        bytes: Box<[u8]>,
+    },
     SetHost,
-    RequestHosting {self_hosted: bool},
-    ConnectionDenied {reason: String},
-    PlayerJoined {name: String, in_control: bool, is_server: bool, is_observer: bool},
-    PlayerLeft {name: String},
-    Update {data: AllNeedSync, from: String, is_unreliable: bool, time: f64},
-    InitHandshake {name: String, version: String},
-    TransferControl {from: String, to: String},
-    SetObserver {from: String, to: String, is_observer: bool},
+    RequestHosting {
+        self_hosted: bool,
+    },
+    ConnectionDenied {
+        reason: String,
+    },
+    PlayerJoined {
+        name: String,
+        in_control: bool,
+        is_server: bool,
+        is_observer: bool,
+    },
+    PlayerLeft {
+        name: String,
+    },
+    Update {
+        data: AllNeedSync,
+        from: String,
+        is_unreliable: bool,
+        time: f64,
+    },
+    InitHandshake {
+        name: String,
+        version: String,
+    },
+    TransferControl {
+        from: String,
+        to: String,
+    },
+    SetObserver {
+        from: String,
+        to: String,
+        is_observer: bool,
+    },
     // Ready to receive data
     Ready,
     // Hole punching payloads
-    Handshake {session_id: String}, // With hoster
-    HostingReceived {session_id: String},
-    AttemptConnection {peer: SocketAddr},
-    PeerEstablished {peer: SocketAddr},
-    Heartbeat
+    Handshake {
+        session_id: String,
+    }, // With hoster
+    HostingReceived {
+        session_id: String,
+    },
+    AttemptConnection {
+        peer: SocketAddr,
+    },
+    PeerEstablished {
+        peer: SocketAddr,
+    },
+    Heartbeat,
 }
 
 pub enum Message {
     Payload(SocketAddr, Payloads),
     ConnectionClosed(SocketAddr),
-    Metrics(SocketAddr, Metrics)
+    Metrics(SocketAddr, Metrics),
 }
 
-fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: SocketAddr) -> Packet {
+fn get_packet_for_message(
+    message: &Payloads,
+    payload_bytes: Vec<u8>,
+    target: SocketAddr,
+) -> Packet {
     match message {
         // Unused
         Payloads::AttemptConnection {..} |
@@ -49,14 +91,14 @@ fn get_packet_for_message(message: &Payloads, payload_bytes: Vec<u8>, target: So
         Payloads::ConnectionDenied {..} |
         // Used
         Payloads::AircraftDefinition {..}  |
-        Payloads::InvalidVersion {..} | 
-        Payloads::Heartbeat {..} | 
+        Payloads::InvalidVersion {..} |
+        Payloads::Heartbeat {..} |
         Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload_bytes),
         Payloads::PeerEstablished {..} |
         Payloads::Handshake {..} => Packet::unreliable(target, payload_bytes),
-        Payloads::InitHandshake {..} | 
-        Payloads::PlayerJoined {..} | 
-        Payloads::PlayerLeft {..} | 
+        Payloads::InitHandshake {..} |
+        Payloads::PlayerJoined {..} |
+        Payloads::PlayerLeft {..} |
         Payloads::SetObserver {..} |
         Payloads::Ready |
         Payloads::TransferControl {..} |
@@ -70,11 +112,10 @@ pub struct SenderReceiver {
     sender: Sender<Packet>,
     receiver: Receiver<SocketEvent>,
     compressor: Compressor,
-    decompressor: Decompressor
+    decompressor: Decompressor,
 }
 
 impl SenderReceiver {
-
     pub fn from_socket(socket: Socket) -> Self {
         let sender = socket.get_packet_sender();
         let receiver = socket.get_event_receiver();
@@ -84,7 +125,7 @@ impl SenderReceiver {
             sender,
             receiver,
             compressor: Compressor::with_dict(COMPRESS_DICTIONARY.to_vec()),
-            decompressor: Decompressor::with_dict(COMPRESS_DICTIONARY.to_vec())
+            decompressor: Decompressor::with_dict(COMPRESS_DICTIONARY.to_vec()),
         }
     }
 
@@ -93,18 +134,16 @@ impl SenderReceiver {
         // Receive packet
         let packet = match self.receiver.try_recv()? {
             SocketEvent::Packet(packet) => packet,
-            SocketEvent::Timeout(addr) => {return Ok(Message::ConnectionClosed(addr))},
-            SocketEvent::Metrics(addr, metrics) => {return Ok(Message::Metrics(addr, metrics))},
-            _ => {return Err(Error::NotProcessed)}
+            SocketEvent::Timeout(addr) => return Ok(Message::ConnectionClosed(addr)),
+            SocketEvent::Metrics(addr, metrics) => return Ok(Message::Metrics(addr, metrics)),
+            _ => return Err(Error::NotProcessed),
         };
-    
+
         // Decompress
         let payload_bytes = self.decompressor.decompress(packet.payload(), 131072)?;
         // Decode to struct
         let payload = rmp_serde::from_slice(&payload_bytes)?;
-        return Ok(
-            Message::Payload(packet.addr(), payload)
-        );
+        return Ok(Message::Payload(packet.addr(), payload));
     }
 
     fn prepare_payload_bytes(&mut self, message: &Payloads) -> Result<Vec<u8>, Error> {
@@ -117,24 +156,28 @@ impl SenderReceiver {
     pub fn send_message(&mut self, message: Payloads, target: SocketAddr) -> Result<(), Error> {
         let payload_bytes = self.prepare_payload_bytes(&message)?;
         // Send payload
-        self.sender.send(get_packet_for_message(
-            &message, 
-            payload_bytes,
-            target
-        )).ok();
+        self.sender
+            .send(get_packet_for_message(&message, payload_bytes, target))
+            .ok();
 
         Ok(())
     }
 
-    pub fn send_message_to_multiple(&mut self, message: Payloads, targets: Vec<SocketAddr>) -> Result<(), Error> {
+    pub fn send_message_to_multiple(
+        &mut self,
+        message: Payloads,
+        targets: Vec<SocketAddr>,
+    ) -> Result<(), Error> {
         let payload_bytes = self.prepare_payload_bytes(&message)?;
 
         for addr in targets {
-            self.sender.send(get_packet_for_message(
-                &message, 
-                payload_bytes.clone(),
-                addr
-            )).ok();
+            self.sender
+                .send(get_packet_for_message(
+                    &message,
+                    payload_bytes.clone(),
+                    addr,
+                ))
+                .ok();
         }
 
         Ok(())
