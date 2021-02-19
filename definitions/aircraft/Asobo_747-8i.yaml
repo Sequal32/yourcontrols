@@ -175,6 +175,16 @@ shared:
     var_type: bool
   -
     type: var
+    var_name: A:LIGHT PANEL ON:1
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:LIGHT PANEL ON:2
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
     var_name: A:LIGHT PANEL ON:3
     var_units: Bool
     var_type: bool
@@ -672,22 +682,6 @@ shared:
     event_param: 50
     index_reversed: true
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:1
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:2
-    var_units: Bool
-    var_type: bool
-
   - # Passenger
     type: ToggleSwitch
     var_name: A:CABIN SEATBELTS ALERT SWITCH
@@ -1000,15 +994,6 @@ shared:
     var_name: L:B747_8_MFD_State
   -
     type: var
-    var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-  -
-    type: var
-    var_name: L:AIRLINER_TO_FLEX_TEMP
-  -
-    type: var
-    var_name: L:AIRLINER_CRUISE_ALTITUDE
-  -
-    type: var
     var_name: L:B747_MAP_MODE
   -
     type: var
@@ -1022,6 +1007,9 @@ shared:
   -
     type: var
     var_name: L:B747_8_EICAS_2_State
+  -
+    type: var
+    var_name: L:AIRLINER_CRUISE_ALTITUDE
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
@@ -1044,6 +1032,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:AIRLINER_VREF_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AIRLINER_TO_FLEX_TEMP
+# -
+#   type: var
+#   var_name: L:AIRLINER_CRUISE_ALTITUDE
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
