@@ -1,4 +1,4 @@
-# Version 0.7
+# Version 0.7.5
 
 include:
   - definitions/aircraft/Asobo_DA40NG.yaml
@@ -13,16 +13,6 @@ shared:
     var_name: L:THROTTLE2_MODE
   -
     type: var
-    var_name: L:DEICE_DEFROST_POWER
-  -
-    type: var
-    var_name: L:DEICE_DEFROST_DUTY_CYCLE
-  -
-    type: var
-    var_name: L:DEICE_DEFROST_DEBUG
-
-  - # FADEC
-    type: var
     var_name: L:FADEC_MASTER
   -
     type: var
@@ -32,7 +22,7 @@ shared:
     var_name: L:FADEC_ECUTEST
   -
     type: var
-    var_name: L:FADEC_ECUTEST_BUTTON_IsDown
+    var_name: L:FADEC_ECUTEST_R
   -
     type: var
     var_name: L:FADEC_ECUTEST_ACTIVE
@@ -44,29 +34,23 @@ shared:
     var_name: L:FADEC_ECUTEST_FAIL_A
   -
     type: var
+    var_name: L:FADEC_ECUTEST_BUTTON_IsDown
+  -
+    type: var
+    var_name: L:FADEC_ECUTEST_BUTTON_MinReleaseTime
+  -
+    type: var
     var_name: L:FADEC_ECUTEST_BUTTON
   -
     type: var
-    var_name: L:FADEC_ECUTEST:1
-  -
-    type: var
     var_name: L:FADEC_ECUTEST_TIMER
-  -
-    type: var
-    var_name: L:FADEC_POWER_LEVER
-  -
-    type: var
-    var_name: L:FADEC_ECU_VOTER
 
 # - # Don't sync
 #   type: var
-#   var_name: L:Throttle1_Pos
+#   var_name: L:FADEC_POWER_LEVER
 # -
 #   type: var
-#   var_name: L:Throttle2_Pos
-# -
-#   type: var
-#   var_name: L:TIME_PASSED
+#   var_name: L:FADEC_POWER_OUTPUT
 # -
 #   type: var
 #   var_name: L:ELEC_TARGET_MAIN_BUS_VOLTAGE
@@ -75,25 +59,100 @@ shared:
 #   var_name: L:ELEC_TARGET_GENALT_BUS_AMPS
 # -
 #   type: var
-#   var_name: L:ELEC_MAIN_BUS_VOLTAGE
-# -
-#   type: var
-#   var_name: L:ELEC_GENALT_BUS_AMPS
-# -
-#   type: var
 #   var_name: L:ENG_TARGET_RADIATOR_TEMPERATURE
 # -
 #   type: var
 #   var_name: L:ENG_TARGET_OIL_TEMPERATURE
 # -
 #   type: var
-#   var_name: L:ENG_TARGET_OIL_PRESSURE
-# -
-#   type: var
 #   var_name: L:ENG_TARGET_GBOX_TEMPERATURE
 # -
 #   type: var
+#   var_name: L:FUEL_INVERTED
+# -
+#   type: var
+#   var_name: L:ENG_TARGET_OIL_PRESSURE
+# -
+#   type: var
+#   var_name: L:TIME_PASSED
+# -
+#   type: var
+#   var_name: L:FUEL_TEMPERATURE_L
+# -
+#   type: var
+#   var_name: L:FUEL_TEMPERATURE_R
+# -
+#   type: var
+#   var_name: L:FUEL_ABS_TEMP_FEED
+# -
+#   type: var
+#   var_name: L:FUEL_ABS_TEMPERATURE_L
+# -
+#   type: var
+#   var_name: L:FUEL_ABS_TEMPERATURE_R
+# -
+#   type: var
+#   var_name: L:FUEL_ABS_TEMPERATURE_RAD
+# -
+#   type: var
+#   var_name: L:FUEL_ENERGY_L
+# -
+#   type: var
+#   var_name: L:FUEL_ENERGY_R
+# -
+#   type: var
+#   var_name: L:FUEL_COOLING_CONSTANT
+# -
+#   type: var
+#   var_name: L:FUEL_TRANSFER_RATE
+# -
+#   type: var
+#   var_name: L:FUEL_ENERGY_TRANS
+# -
+#   type: var
+#   var_name: L:FUEL_R_FACTOR
+# -
+#   type: var
+#   var_name: L:FUEL_L_FACTOR
+# -
+#   type: var
+#   var_name: L:FUEL_ABS_TEMP_RETURN
+# -
+#   type: var
+#   var_name: L:FUEL_ENERGY_RETURN
+# -
+#   type: var
+#   var_name: L:FUEL_COOLING_L
+# -
+#   type: var
+#   var_name: L:FUEL_COOLING_R
+# -
+#   type: var
+#   var_name: L:FUEL_GAL_TOTAL
+# -
+#   type: var
+#   var_name: L:FUEL_GAL_USED
+# -
+#   type: var
+#   var_name: L:FUEL_TOTALISER
+# -
+#   type: var
+#   var_name: L:DEICE_DEFROST_POWER
+# -
+#   type: var
+#   var_name: L:DEICE_DEFROST_DUTY_CYCLE
+# -
+#   type: var
+#   var_name: L:DEICE_DEFROST_DEBUG
+# -
+#   type: var
 #   var_name: L:ENG_GBOX_TEMPERATURE
+# -
+#   type: var
+#   var_name: L:ELEC_MAIN_BUS_VOLTAGE
+# -
+#   type: var
+#   var_name: L:ELEC_GENALT_BUS_AMPS
 # -
 #   type: var
 #   var_name: L:ENG_OIL_PRESSURE
@@ -105,37 +164,16 @@ shared:
 #   var_name: L:ENG_RADIATOR_TEMPERATURE
 # -
 #   type: var
-#   var_name: L:FUEL_TEMPERATURE
+#   var_name: L:FAIL_TIMER
 # -
 #   type: var
-#   var_name: L:FUEL_TEMPERATURE_L
+#   var_name: L:FAIL_DUTY_CYCLE
 # -
 #   type: var
-#   var_name: L:FUEL_TEMPERATURE_R
+#   var_name: L:FAIL_POWER_STRESS
 # -
 #   type: var
-#   var_name: L:FUEL_TARGET_TEMPERATURE_L
+#   var_name: L:FAIL_POWER_TEMP
 # -
 #   type: var
-#   var_name: L:FUEL_TARGET_TEMPERATURE_R
-# -
-#   type: var
-#   var_name: L:FUEL_HEATING_CONSTANT_L
-# -
-#   type: var
-#   var_name: L:FUEL_HEATING_CONSTANT_R
-# -
-#   type: var
-#   var_name: L:FUEL_HEAT_L-T
-# -
-#   type: var
-#   var_name: L:FUEL_HEAT_R-T
-# -
-#   type: var
-#   var_name: L:FUEL_GAL_TOTAL
-# -
-#   type: var
-#   var_name: L:FUEL_GAL_USED
-# -
-#   type: var
-#   var_name: L:FUEL_TOTALISER
+#   var_name: L:ALLOW_UNFAIL
