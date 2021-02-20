@@ -30,7 +30,7 @@ The following aircraft are supported:
 **Recommended:** Download and run the [installer](https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip).
   * If the installer does not open for you, you'll need to install [Webview2](https://go.microsoft.com/fwlink/p/?LinkId=2124703).
 
-**Alternative:** A manual zip is available here. Extract, and then drag the `YourControls` folder inside of the `community` folder into your Community packages. You can put the folder anywhere else and then launch `YourControls.exe`.
+**Alternative:** A manual zip is available [here](https://github.com/sequal32/yourcontrols/releases/latest/download/YourControls.zip). Extract, and then drag the `YourControls` folder inside of the `community` folder into your Community packages. You can put the folder anywhere else and then launch `YourControls.exe`.
 
 ## Running
 1. Ensure everybody has the same **navdata**, **scenery**, and **weather** installed.
@@ -57,7 +57,7 @@ The following aircraft are supported:
 
     **Direct**
     1. If you have a [IPv6 address](https://test-ipv6.com/), you can simply give that along with the port to the joiners.
-    2. **UDP** [port forward](https://www.youtube.com/watch?v=usSpl0yJFnY) either `7777` or the specified port in the application. If port forwarding is not an option, look into using [Hamachi](https://www.youtube.com/watch?v=bWbo0gcFqA8).
+    2. **UDP** [port forward](https://www.youtube.com/watch?v=usSpl0yJFnY) either `25071` or the specified port in the application. If port forwarding is not an option, look into using [Hamachi](https://www.youtube.com/watch?v=bWbo0gcFqA8).
     3. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
     4. Click `Start Server`
       
@@ -94,5 +94,5 @@ If you're seeking help for this mod, or would like to give feedback and join the
 ### Missing DLL
 Install [Microsoft Visual C++ Redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe) to resolve this.
 ## Limitations
-* Some knobs are purely animation, and not represented by a local variable therefor cannot be synced, such as the TBM830's oxygen (yet...)
+* Some knobs are purely animation, and not represented by a local variable therefor cannot be synced, such as guard switches (yet...)
 * Avionics currently rely on syncing button presses only and not state. If the MCDUs are different in any way before connecting, they will desynchronize.

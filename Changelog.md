@@ -9,6 +9,7 @@ Note: Currently, the number of connections to the server is capped at 100, and w
 * New clients will no longer start as an observer
 * You can now set a keybinding to transfer controls to, and take controls from the 1st person on the connection list! Go into the controls menu, and bind a key combo to LAUNCH BAR SWITCH TOGGLE.
 * Streamer Mode - Hides your IP after connecting.
+* New connections as observer - New connections will not be able to manipulate switches.
 
 ## Changes
 * Reworked interpolation - syncs position/rotation data more reliably
@@ -29,12 +30,12 @@ Note: Currently, the number of connections to the server is capped at 100, and w
 * More precise radio syncing (you can now increment by 0.05MHz)
 * Fuel
 
-**Huge thanks to @Tailhook for testing and syncing all of these new aircraft!**
+**Huge thanks to @rthom9 for testing and syncing all of these new aircraft!**
 
 ## New Aircraft
 * Experimental FBW A32NX
 * Mrtommymxr DA40NGX
-* Mrtommyxr DA62X
+* Mrtommymxr DA62X
 * SaltySimulations 747-8
 * TheFrett Bonanza G36
 * WorkingTitle CJ4
