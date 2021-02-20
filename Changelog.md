@@ -30,7 +30,7 @@ Note: Currently, the number of connections to the server is capped at 100, and w
 * More precise radio syncing (you can now increment by 0.05MHz)
 * Fuel
 
-**Huge thanks to @rthom9 for testing and syncing all of these new aircraft!**
+**Huge thanks to @rthom91 for testing and syncing all of these new aircraft!**
 
 ## New Aircraft
 * Experimental FBW A32NX
