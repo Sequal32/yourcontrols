@@ -334,25 +334,31 @@ fn main() {
                                 "[NETWORK] {} connected. In control: {}, observing: {}, server: {}",
                                 name, in_control, is_observer, is_server
                             );
-                            // Send initial aircraft state
-                            app_interface.new_connection(&name);
-                            clients.add_client(name.clone());
-                            clients.set_server(&name, is_server);
-                            clients.set_observer(&name, is_observer);
+
+                            let mut is_observer = is_observer;
 
                             if client.is_host() {
                                 app_interface.server_started(
                                     clients.get_number_clients() as u16,
                                     client.get_session_id().as_deref(),
                                 );
-                                // Send definitions
+
                                 client.send_definitions(
                                     definitions.get_buffer_bytes().into_boxed_slice(),
                                     name.clone(),
                                 );
+
+                                if config.start_observer {
+                                    client.set_observer(name.clone(), true);
+                                    is_observer = true;
+                                }
                             }
 
+                            app_interface.new_connection(&name);
                             app_interface.set_observing(&name, is_observer);
+                            clients.add_client(name.clone());
+                            clients.set_server(&name, is_server);
+                            clients.set_observer(&name, is_observer);
 
                             if in_control {
                                 app_interface.set_incontrol(&name);

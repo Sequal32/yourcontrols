@@ -60,6 +60,7 @@ var ping = document.getElementById("network-ping")
 
 var forceButton = document.getElementById("force-button")
 var externalIp = document.getElementById("external-ip")
+var start_observer = document.getElementById("start-observer")
 
 var is_connected = false
 var is_client = false
@@ -206,6 +207,7 @@ function LoadSettings(newSettings) {
     update_rate_input.value = newSettings.update_rate
     theme_selector.checked = newSettings.ui_dark_theme
     use_upnp.checked = newSettings.use_upnp
+    start_observer.checked = newSettings.start_observer
 
     setTheme(newSettings.ui_dark_theme)
 
@@ -421,6 +423,7 @@ $("#settings-form").submit(function(e) {
     newSettings.ui_dark_theme = theme_selector.checked
     newSettings.streamer_mode = streamer_mode.checked
     newSettings.use_upnp = use_upnp.checked
+    newSettings.start_observer = start_observer.checked
 
     for (key in newSettings) {
         if (newSettings[key] === null) {return}

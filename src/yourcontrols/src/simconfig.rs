@@ -21,6 +21,7 @@ pub struct Config {
     pub ui_dark_theme: bool,
     pub streamer_mode: bool,
     pub use_upnp: bool,
+    pub start_observer: bool,
 }
 
 impl Default for Config {
@@ -35,6 +36,7 @@ impl Default for Config {
             ui_dark_theme: true,
             streamer_mode: false,
             use_upnp: true,
+            start_observer: false,
         }
     }
 }
