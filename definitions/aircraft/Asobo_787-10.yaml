@@ -13,6 +13,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # APU
+    type: ToggleSwitch
+    var_name: A:APU SWITCH
+    var_units: Bool
+    event_name: APU_STARTER
+    off_event_name: APU_OFF_SWITCH
+
   - # AutoBrakes
     type: NumIncrement
     var_name: A:AUTO BRAKE SWITCH CB
@@ -47,13 +54,6 @@ shared:
     var_name: A:ENG ANTI ICE:2
     var_units: Bool
     event_name: ANTI_ICE_TOGGLE_ENG2
-
-  - # APU
-    type: ToggleSwitch
-    var_name: A:APU SWITCH
-    var_units: Bool
-    event_name: APU_STARTER
-    off_event_name: APU_OFF_SWITCH
 
   - # Electrical
     type: ToggleSwitch
