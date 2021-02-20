@@ -105,7 +105,8 @@ fn check_did_write_recently_and_deincrement_counter_for(
         if last.ignore {
             return true;
         }
-        if last.timer.elapsed().as_secs() >= 1 {
+
+        if last.timer.elapsed().as_secs() >= 3 {
             last.counter = 0
         }
 
