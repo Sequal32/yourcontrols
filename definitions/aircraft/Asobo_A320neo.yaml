@@ -26,11 +26,6 @@ shared:
     event_name: ANTISKID_BRAKES_TOGGLE
 
   - # Autobrakes
-    type: var
-    var_name: L:XMLVAR_Autobrakes_Level
-    var_units: Number
-    var_type: i32
-  -
     type: NumSet
     var_name: A:AUTO BRAKE SWITCH CB
     var_units: Enum
@@ -64,27 +59,6 @@ shared:
     var_name: A:ENG ANTI ICE:2
     var_units: Bool
     event_name: ANTI_ICE_TOGGLE_ENG2
-
-  - # ECAM
-    type: var
-    var_name: L:XMLVAR_ECAM_CURRENT_PAGE
-    var_type: f64
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:22
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 22
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:23
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 23
-    index_reversed: true
 
   - # ELAC
     type: ToggleSwitch
@@ -131,7 +105,7 @@ shared:
     event_name: FLY_BY_WIRE_SEC_TOGGLE
     event_param: 3
 
-  - # ASOBO_ELECTRICAL_Switch_Connection_Template
+  - # Electrical
     type: CustomCalculator
     get: 10 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
     set: 6 10 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
@@ -203,222 +177,6 @@ shared:
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 6
 
-  - # Glareshield
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_2_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_Mode
-    var_type: f64
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
-    var_units: Feet
-    var_type: i32
-    event_name: AP_ALT_VAR_SET_ENGLISH
-    event_param: 3
-
-  - # Radar
-    type: var
-    var_name: L:XMLVAR_A320_WeatherRadar_Sys
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_A320_WeatherRadar_Mode
-    var_type: f64
-
-  - # Radios
-    type: var
-    var_name: L:XMLVAR_COM_Transmit_Channel
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_L_NavLockOff
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_L_On
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_L_AM_Active
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_L_BFO_Active
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_L_NAV_Active
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_R_NavLockOff
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_R_On
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_R_AM_Active
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_R_BFO_Active
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_R_NAV_Active
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_VHF_L_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_VHF_C_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_VHF_R_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_VHF_L_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_VHF_C_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_VHF_R_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_VHF_L_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_VHF_C_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_VHF_R_Switch_Down
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_C
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_R
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_L
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_R
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_L
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_C
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_XPNDR_THRT_Switch
-    var_type: f64
-
-  - # ASOBO_AIRLINER_Knob_ND_Template
-    type: var
-    var_name: L:A320_Neo_MFD_NAV_MODE
-    var_type: f64
-  -
-    type: var
-    var_name: L:A320_Neo_MFD_Range
-    var_type: f64
-  -
-    type: var
-    var_name: L:A320_FCU_SHOW_SELECTED_SPEED
-    var_type: f64
-  -
-    type: var
-    var_name: L:A320_FCU_SHOW_SELECTED_HEADING
-    var_type: f64
-  -
-    type: var
-    var_name: L:A320_NE0_FCU_STATE
-    var_type: f64
-  -
-    type: var
-    var_name: L:A320_NEO_FCU_FORCE_SELECTED_ALT
-    var_type: f64
-  -
-    type: var
-    var_name: L:A320_NEO_FCU_FORCE_IDLE_VS
-    var_type: f64
-  -
-    type: var
-    var_name: L:A320_NEO_PREVIEW_DIRECT_TO
-    var_type: f64
-  -
-    type: var
-    var_name: L:BTN_TERRONND_ACTIVE
-    var_type: f64
-  -
-    type: var
-    var_name: L:BTN_LS_FILTER_ACTIVE
-    var_type: f64
-
-  - # ASOBO_AIRBUS_NAV_AID_SWITCH_Template
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_R1_State
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_R2_State
-    var_type: f64
-
   - # Passengers
     type: ToggleSwitch
     var_name: A:CABIN SEATBELTS ALERT SWITCH
@@ -445,10 +203,6 @@ shared:
     event_name: TOGGLE_TAXI_LIGHTS
     event_param: 3
   -
-    type: var
-    var_name: L:LANDING_1_Retracted
-    var_type: f64
-  -
     type: NumSet
     var_name: A:LIGHT LANDING:2
     var_units: Percent
@@ -456,20 +210,12 @@ shared:
     event_name: LANDING_LIGHTS_TOGGLE
     event_param: 2
   -
-    type: var
-    var_name: L:LANDING_2_Retracted
-    var_type: f64
-  -
     type: NumSet
     var_name: A:LIGHT LANDING:3
     var_units: Percent
     var_type: i32
     event_name: LANDING_LIGHTS_TOGGLE
     event_param: 3
-  -
-    type: var
-    var_name: L:STROBE_1_Auto
-    var_type: f64
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:24
@@ -634,6 +380,22 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 21
     index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:22
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 22
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:23
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 23
+    index_reversed: true
 
   - # Wipers
     type: ToggleSwitch
@@ -649,3 +411,466 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 77
     index_reversed: true
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_RMP_L_On
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_On
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_Mode
+  -
+    type: var
+    var_name: L:A320_Neo_MFD_NAV_MODE
+  -
+    type: var
+    var_name: L:XMLVAR_PTU_ON
+  -
+    type: var
+    var_name: L:XMLVAR_ENG_MODE_SEL
+  -
+    type: var
+    var_name: L:XMLVAR_A320_WeatherRadar_Sys
+  -
+    type: var
+    var_name: L:XMLVAR_A320_WeatherRadar_Mode
+  -
+    type: var
+    var_name: L:XMLVAR_Autobrakes_Level
+  -
+    type: var
+    var_name: L:BTN_TERRONND_ACTIVE
+  -
+    type: var
+    var_name: L:STROBE_1_Auto
+  -
+    type: var
+    var_name: L:LANDING_1_Retracted
+  -
+    type: var
+    var_name: L:LANDING_2_Retracted
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+  -
+    type: var
+    var_name: L:BTN_LS_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:A320_Neo_MFD_Range
+  -
+    type: var
+    var_name: L:BTN_CSTR_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:BTN_VORD_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:BTN_WPT_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:BTN_NDB_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:BTN_ARPT_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R1_State
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R2_State
+  -
+    type: var
+    var_name: L:XMLVAR_ECAM_CURRENT_PAGE
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_VHF_L_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_VHF_L_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_VHF_L_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_VHF_C_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_VHF_C_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_VHF_C_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_VHF_R_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_VHF_R_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_VHF_R_Switch_Down
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_L
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_L
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_C
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_C
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_R
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_R
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_INIT
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_GROUP_MODE_IS_DISABLED
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_CURRENT_BUTTON_IN_GROUP_FREQ
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_GROUP_FREQ_IS_DISABLED
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_CURRENT_BUTTON_IN_GROUP_MODE
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_AM_Active
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_NAV_Active
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_BFO_Active
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_GROUP_FREQ_IS_DISABLED
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_CURRENT_BUTTON_IN_GROUP_MODE
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_CURRENT_BUTTON_IN_GROUP_FREQ
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_L_NavLockOff
+  -
+    type: var
+    var_name: L:XMLVAR_COM_Transmit_Channel
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_INIT
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_GROUP_MODE_IS_DISABLED
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_AM_Active
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_NAV_Active
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_BFO_Active
+  -
+    type: var
+    var_name: L:XMLVAR_RMP_R_NavLockOff
+  -
+    type: var
+    var_name: L:XMLVAR_XPNDR_THRT_Switch
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
+  -
+    type: var
+    var_name: L:A320_FCU_SHOW_SELECTED_SPEED
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:A320_FCU_SHOW_SELECTED_HEADING
+  -
+    type: var
+    var_name: L:A320_NEO_FCU_FORCE_IDLE_VS
+  -
+    type: var
+    var_name: L:A320_Neo_FCU_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_FCU_State
+  -
+    type: var
+    var_name: L:A320_NE0_FCU_STATE
+  -
+    type: var
+    var_name: L:A320_Neo_BRK_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_BRK_State
+  -
+    type: var
+    var_name: L:A320_Neo_FDW_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_FDW_State
+  -
+    type: var
+    var_name: L:RADIONAV ACTIVE:1
+  -
+    type: var
+    var_name: L:RADIONAV_SOURCE
+  -
+    type: var
+    var_name: L:A320_Neo_ATC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_ATC_State
+  -
+    type: var
+    var_name: L:A320_Neo_RTPI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_RTPI_State
+  -
+    type: var
+    var_name: L:A320_Neo_BAT_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_BAT_State
+  -
+    type: var
+    var_name: L:AIRLINER_FLIGHT_PHASE
+  -
+    type: var
+    var_name: L:XMLVAR_Mins_Selector_Baro
+  -
+    type: var
+    var_name: L:AP_MANAGED_AIRSPEED
+  -
+    type: var
+    var_name: L:AIRLINER_MINIMUM_DESCENT_ALTITUDE
+  -
+    type: var
+    var_name: L:AIRLINER_DECISION_HEIGHT
+  -
+    type: var
+    var_name: L:A320_NEO_PREVIEW_DIRECT_TO
+  -
+    type: var
+    var_name: L:AIRLINER_FMS_SHOW_TOP_DSCNT
+  -
+    type: var
+    var_name: L:AIRLINER_FMS_SHOW_TOP_CLIMB
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:A320_Neo_PFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_PFD_State
+  -
+    type: var
+    var_name: L:A320_Neo_MFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_MFD_State
+  -
+    type: var
+    var_name: L:A320_Neo_EICAS_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_EICAS_1_State
+  -
+    type: var
+    var_name: L:A320_Neo_EICAS_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_EICAS_2_State
+  -
+    type: var
+    var_name: L:A320_Neo_SAI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_SAI_State
+  -
+    type: var
+    var_name: L:A320_Neo_Clock_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_Clock_State
+  -
+    type: var
+    var_name: L:A320_Neo_Com_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_Com_State
+  -
+    type: var
+    var_name: L:A320_NEO_CDU_START_PAGE
+  -
+    type: var
+    var_name: L:FMC_UPDATE_CURRENT_PAGE
+  -
+    type: var
+    var_name: L:A320_Neo_CDU_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_CDU_State
+  -
+    type: var
+    var_name: L:AIRLINER_TO_GREEN_DOT_SPD
+
+# - # Don't sync
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_TOGA
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Flex_MCT
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Climb
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Idle
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Rev
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Value
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle2_TOGA
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle2_Flex_MCT
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle2_Climb
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle2_Idle
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle2_Rev
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle2_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_Throttle1Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_Throttle2Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim
+# -
+#   type: var
+#   var_name: L:AIRLINER_TO_FLEX_TEMP
+# -
+#   type: var
+#   var_name: L:AIRLINER_V1_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_V2_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VR_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true

@@ -98,14 +98,14 @@ shared:
     up_event_name: PRESSURIZATION_PRESSURE_ALT_INC
     down_event_name: PRESSURIZATION_PRESSURE_ALT_DEC
     increment_by: 53
-  -
-    type: NumIncrement
-    var_name: A:PRESSURIZATION CABIN ALTITUDE RATE
-    var_units: Feet per minute
-    var_type: f64
-    up_event_name: PRESSURIZATION_CLIMB_RATE_INC
-    down_event_name: PRESSURIZATION_CLIMB_RATE_DEC
-    increment_by: 53
+# - # CURRENTLY DOESN'T WORK
+#   type: NumIncrement
+#   var_name: A:PRESSURIZATION CABIN ALTITUDE RATE
+#   var_units: Feet per minute
+#   var_type: f64
+#   up_event_name: PRESSURIZATION_CLIMB_RATE_INC
+#   down_event_name: PRESSURIZATION_CLIMB_RATE_DEC
+#   increment_by: 53
 
   - # Lights
     type: ToggleSwitch
@@ -287,3 +287,29 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Gear_Light_Test
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true

@@ -180,6 +180,16 @@ shared:
     var_type: bool
   -
     type: var
+    var_name: A:LIGHT PANEL ON:1
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:LIGHT PANEL ON:2
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
     var_name: A:LIGHT PANEL ON:3
     var_units: Bool
     var_type: bool
@@ -389,6 +399,12 @@ shared:
     event_param: 4
 
   - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT BEACON:2
+    var_units: Bool
+    event_name: TOGGLE_BEACON_LIGHTS
+    event_param: 2
+  -
     type: ToggleSwitch
     var_name: A:LIGHT LANDING:2
     var_units: Bool
@@ -655,22 +671,6 @@ shared:
     event_param: 50
     index_reversed: true
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:1
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:2
-    var_units: Bool
-    var_type: bool
-
   - # Passenger
     type: ToggleSwitch
     var_name: A:CABIN SEATBELTS ALERT SWITCH
@@ -912,9 +912,6 @@ shared:
   -
     type: var
     var_name: L:B747_8_IAS_State
-  # - # Probably shouldn't be synced
-  #   type: var
-  #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
   -
     type: var
     var_name: L:B747_8_HDG_ScreenLuminosity
@@ -956,18 +953,6 @@ shared:
     var_name: L:AIRLINER_FLIGHT_PHASE
   -
     type: var
-    var_name: L:AIRLINER_V1_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_VR_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_V2_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_VREF_SPEED
-  -
-    type: var
     var_name: L:RADIONAV_SOURCE
   -
     type: var
@@ -995,16 +980,7 @@ shared:
     var_name: L:B747_8_PFD_State
   -
     type: var
-    var_name: L:HUD_AP_SELECTED_SPEED
-  -
-    type: var
-    var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
-    type: var
     var_name: L:B747_8_MFD_State
-  -
-    type: var
-    var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
   -
     type: var
     var_name: L:B747_MAP_MODE
@@ -1022,22 +998,47 @@ shared:
     var_name: L:B747_8_EICAS_2_State
   -
     type: var
-    var_name: L:RADIONAV ACTIVE:1
-  -
-    type: var
-    var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-  -
-    type: var
-    var_name: L:AIRLINER_TO_FLEX_TEMP
-  -
-    type: var
     var_name: L:AIRLINER_CRUISE_ALTITUDE
+  -
+    type: var
+    var_name: L:RADIONAV ACTIVE:1
   -
     type: var
     var_name: L:B747_8_FMC_ScreenLuminosity
   -
     type: var
     var_name: L:B747_8_FMC_State
+
+# - # Don't sync
+#   type: var
+#   var_name: L:AIRLINER_V1_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VR_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_V2_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VREF_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AIRLINER_TO_FLEX_TEMP
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 master:
   -
@@ -1127,15 +1128,63 @@ master:
     var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
     interpolate: DefaultConstant
 
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK CENTER2 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT TIP LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT TIP LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+
 ignore:
   - B747_8_Com_1_BTN_swap
   - B747_8_Com_2_BTN_swap
   - B747_8_Com_3_BTN_swap
-
   - B747_8_Com_1_BTN_vhf
   - B747_8_Com_2_BTN_vhf
   - B747_8_Com_3_BTN_vhf
-
   - B747_8_Com_1_BTN_hf
   - B747_8_Com_2_BTN_hf
   - B747_8_Com_3_BTN_hf
