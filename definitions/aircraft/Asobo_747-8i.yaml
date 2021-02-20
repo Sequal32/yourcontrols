@@ -9,7 +9,6 @@ include:
   - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -67,6 +66,12 @@ shared:
     var_units: Enum
     var_type: i32
     event_name: TOGGLE_STRUCTURAL_DEICE
+  -
+    type: NumSet
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Enum
+    var_type: i32
+    event_name: WINDSHIELD_DEICE_SET
   -
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:1
@@ -262,115 +267,99 @@ shared:
     event_name: FUELSYSTEM_VALVE_TOGGLE
     event_param: 26
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:1
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 1
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:2
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 2
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:3
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 3
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:4
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 4
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:5
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 5
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:6
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 6
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:7
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 7
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:8
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 8
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:9
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 9
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:10
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 10
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:11
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 11
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:12
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 12
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:13
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 13
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:14
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 14
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:15
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 15
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:16
-    var_units: Enum
-    var_type: i32
+    var_units: Bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 16
 
@@ -1137,3 +1126,16 @@ master:
     var_units: Psi
     var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
     interpolate: DefaultConstant
+
+ignore:
+  - B747_8_Com_1_BTN_swap
+  - B747_8_Com_2_BTN_swap
+  - B747_8_Com_3_BTN_swap
+
+  - B747_8_Com_1_BTN_vhf
+  - B747_8_Com_2_BTN_vhf
+  - B747_8_Com_3_BTN_vhf
+
+  - B747_8_Com_1_BTN_hf
+  - B747_8_Com_2_BTN_hf
+  - B747_8_Com_3_BTN_hf
