@@ -130,7 +130,6 @@ impl SenderReceiver {
     }
 
     pub fn get_next_message(&mut self) -> Result<Message, Error> {
-        self.socket.manual_poll(Instant::now());
         // Receive packet
         let packet = match self.receiver.try_recv()? {
             SocketEvent::Packet(packet) => packet,
@@ -144,6 +143,10 @@ impl SenderReceiver {
         // Decode to struct
         let payload = rmp_serde::from_slice(&payload_bytes)?;
         return Ok(Message::Payload(packet.addr(), payload));
+    }
+
+    pub fn poll(&mut self) {
+        self.socket.manual_poll(Instant::now());
     }
 
     fn prepare_payload_bytes(&mut self, message: &Payloads) -> Result<Vec<u8>, Error> {

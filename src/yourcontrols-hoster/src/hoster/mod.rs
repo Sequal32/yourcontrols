@@ -52,6 +52,8 @@ impl Hoster {
     }
 
     fn process_net(&mut self) {
+        self.net.poll();
+
         while let Ok(message) = self.net.get_next_message() {
             match message {
                 Message::Payload(addr, payload) => {

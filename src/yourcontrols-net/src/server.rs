@@ -3,6 +3,7 @@ use igd::{search_gateway, PortMappingProtocol, SearchOptions};
 use laminar::{Metrics, Socket};
 use local_ipaddress;
 use log::info;
+use mem::drop;
 use retain_mut::RetainMut;
 use spin_sleep::sleep;
 use std::sync::{
@@ -527,12 +528,14 @@ impl Server {
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
 
-                loop {
-                    match transfer.net.get_next_message() {
-                        Ok(Message::Payload(addr, payload)) => {
+                transfer.net.poll();
+
+                while let Ok(message) = transfer.net.get_next_message() {
+                    match message {
+                        Message::Payload(addr, payload) => {
                             transfer.handle_message(addr, payload);
                         }
-                        Ok(Message::ConnectionClosed(addr)) => {
+                        Message::ConnectionClosed(addr) => {
                             // Could not reach rendezvous
                             if transfer.session_id == ""
                                 && rendezvous.is_some()
@@ -548,13 +551,9 @@ impl Server {
                                 transfer.remove_client(addr);
                             }
                         }
-                        Ok(Message::Metrics(addr, metrics)) => {
+                        Message::Metrics(addr, metrics) => {
                             transfer.metrics.insert(addr, metrics);
                         }
-                        Err(e) => match e {
-                            Error::ReadTimeout(_) => break,
-                            _ => {}
-                        },
                     };
                 }
 
@@ -567,8 +566,7 @@ impl Server {
                     break;
                 }
 
-                mem::drop(transfer);
-
+                drop(transfer);
                 sleep(sleep_duration);
             }
         });

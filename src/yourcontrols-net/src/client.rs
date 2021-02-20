@@ -1,6 +1,7 @@
 use crossbeam_channel::unbounded;
 use laminar::Socket;
 use log::info;
+use mem::drop;
 use spin_sleep::sleep;
 use std::sync::{
     atomic::{AtomicBool, Ordering::SeqCst},
@@ -324,12 +325,14 @@ impl Client {
             loop {
                 let mut transfer = transfer_thread_clone.lock().unwrap();
 
-                loop {
-                    match transfer.net.get_next_message() {
-                        Ok(Message::Payload(addr, payload)) => {
+                transfer.net.poll();
+
+                while let Ok(message) = transfer.net.get_next_message() {
+                    match message {
+                        Message::Payload(addr, payload) => {
                             transfer.handle_message(addr, payload);
                         }
-                        Ok(Message::ConnectionClosed(addr)) => {
+                        Message::ConnectionClosed(addr) => {
                             // Can't connect to rendezvous to obtain session key
                             if rendezvous.is_none()
                                 || (rendezvous.is_some() && rendezvous.unwrap() != addr)
@@ -337,7 +340,7 @@ impl Client {
                                 transfer.stop("No message received from server.".to_string())
                             }
                         }
-                        Ok(Message::Metrics(addr, metrics)) => {
+                        Message::Metrics(addr, metrics) => {
                             // Send message from game server, not rendezvous
                             if let Some(received_address) = transfer.received_address {
                                 if received_address == addr {
@@ -348,11 +351,7 @@ impl Client {
                                 }
                             }
                         }
-                        Err(e) => match e {
-                            Error::ReadTimeout(_) => break,
-                            _ => {}
-                        },
-                    };
+                    }
                 }
 
                 // Check rendezvous timer
@@ -371,8 +370,7 @@ impl Client {
                     break;
                 }
 
-                mem::drop(transfer);
-
+                drop(transfer);
                 sleep(sleep_duration);
             }
         });
