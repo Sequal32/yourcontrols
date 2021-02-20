@@ -1,4 +1,4 @@
-# Version 0.5.2 Stable + Dev (GitHub Feb-14-2021)
+# Version 0.5.2 Stable + Dev (GitHub Feb-18-2021)
 
 include:
   - definitions/modules/engines.yaml
@@ -288,6 +288,12 @@ shared:
     var_type: f64
     event_name: KOHLSMAN_SET
     event_param: 2
+
+  - # Transponder
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: Enum
+    var_type: i32
 
   - # Lights
     type: ToggleSwitch
@@ -647,8 +653,7 @@ shared:
     event_param: 80
     index_reversed: true
 
-  # ALL LVARS
-  # DO NOT GET RID OF THE COMMENTED LVARS. THEY ARE THERE FOR CROSS-REFERENCING NEW LVARS THAT SHOULD BE ADDED.
+# ALL LVARS - DO NOT GET RID OF THE COMMENTED LVARS. THEY ARE THERE FOR CROSS-REFERENCING NEW LVARS THAT SHOULD BE ADDED.
   -
     type: var
     var_name: L:XMLVAR_RMP_L_On
@@ -673,9 +678,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_APU_BLEED_ON
-  # - Calculated by the aicraft
-  #   type: var
-  #   var_name: L:A32NX_APU_EGT
+# - Calculated by the aicraft
+#   type: var
+#   var_name: L:A32NX_APU_EGT
   -
     type: var
     var_name: L:A32NX_APU_EGT_CAUTION
@@ -688,9 +693,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_APU_FLAP_ECAM_OPEN
-  # - Calculated by the aicraft
-  #   type: var
-  #   var_name: L:A32NX_APU_FLAP_OPEN_PERCENTAGE
+# - Calculated by the aicraft
+#   type: var
+#   var_name: L:A32NX_APU_FLAP_OPEN_PERCENTAGE
   -
     type: var
     var_name: L:A32NX_APU_GEN_AMPERAGE
@@ -700,9 +705,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_APU_GEN_FREQ_NORMAL
-  # - Calculated by the aicraft
-  #   type: var
-  #   var_name: L:A32NX_APU_GEN_VOLTAGE
+# - Calculated by the aicraft
+#   type: var
+#   var_name: L:A32NX_APU_GEN_VOLTAGE
   -
     type: var
     var_name: L:A32NX_APU_GEN_VOLTAGE_NORMAL
@@ -820,6 +825,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_DISARM_AUTOBRAKES_ON_LG_RETRACT
+  -
+    type: var
+    var_name: L:A32NX_BRAKE_FAN_BTN_PRESSED
   -
     type: var
     var_name: L:A32NX_LG_UP_WAIT_COUNTER
@@ -958,15 +966,12 @@ shared:
   -
     type: var
     var_name: L:A32NX_ADIRS_KNOB_1
-    var_type: f64
   -
     type: var
     var_name: L:A32NX_ADIRS_KNOB_2
-    var_type: f64
   -
     type: var
     var_name: L:A32NX_ADIRS_KNOB_3
-    var_type: f64
   -
     type: var
     var_name: L:A32NX_EVAC_COMMAND_TOGGLE_LOCK
@@ -1582,11 +1587,6 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
-  -
-    type: var
-    var_name: A:TRANSPONDER STATE:1
-    var_units: Enum
-    var_type: i32
 
 server:
   - # Payload
@@ -1621,8 +1621,7 @@ server:
     unreliable: true
 
 init:
-  # H: events take care of typing the transponder code in
-  -
+  - # H events take care of typing the transponder code in
     type: NumDigitSet
     var_name: A:TRANSPONDER CODE:1
     var_units: Number

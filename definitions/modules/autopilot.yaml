@@ -37,11 +37,6 @@ shared:
     var_units: Feet
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT AIRSPEED HOLD
-    var_units: Bool
-    event_name: AP_PANEL_SPEED_HOLD
 
   - # ASOBO_AUTOPILOT_Push_VerticalSpeed_Template
     type: ToggleSwitch
@@ -54,14 +49,21 @@ shared:
 
   - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
     type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+
+  - # ASOBO_AUTOPILOT_Push_Speed_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT AIRSPEED HOLD
+    var_units: Bool
+    event_name: AP_PANEL_SPEED_HOLD
+
+  - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
+    type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR
     var_units: Knots
-    var_type: f64
-    event_name: AP_SPD_VAR_SET
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT MACH HOLD VAR
-    var_units: Mach
     var_type: f64
     event_name: AP_SPD_VAR_SET
   -
@@ -71,13 +73,6 @@ shared:
     type: var
     var_name: L:XMLVAR_AirSpeedIsInMach
   -
-    type: NumSet
-    var_name: A:AUTOPILOT VERTICAL HOLD VAR
-    var_units: Feet per minute
-    var_type: i32
-    event_name: AP_VS_VAR_SET_ENGLISH
-
-  - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT MANAGED SPEED IN MACH
     var_units: Bool

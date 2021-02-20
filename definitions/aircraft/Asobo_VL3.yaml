@@ -25,8 +25,6 @@ shared:
   - # Choke
     type: var
     var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
-    var_units: Percent
-    var_type: i32
 
   - # Failures
     type: var
@@ -38,3 +36,17 @@ shared:
     var_name: A:CIRCUIT AVIONICS ON
     var_units: Bool
     var_type: bool
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true

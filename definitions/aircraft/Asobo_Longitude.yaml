@@ -44,19 +44,6 @@ shared:
     var_units: Bool
     event_name: APU_STARTER
     off_event_name: APU_OFF_SWITCH
-  -
-    type: var
-    var_name: L:XMLVAR_APU_StarterKnob_Pos
-    var_type: f64
-
-  - # Standby Battery
-    type: var
-    var_name: L:XMLVAR_STBYBattery_Test
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_STBYBattery_IsHeld
-    var_type: f64
 
   - # Failures
     type: var
@@ -104,11 +91,6 @@ shared:
     var_name: A:SPOILERS ARMED
     var_units: Bool
     event_name: SPOILERS_ARM_TOGGLE
-
-  - # Trim
-    type: var
-    var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
-    var_type: f64
 
   - # Lights
     type: ToggleSwitch
@@ -271,3 +253,61 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 32
     index_reversed: true
+
+  - # LVAR Dump (Asobo only)
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:XMLVAR_APU_StarterKnob_Pos
+  -
+    type: var
+    var_name: L:XMLVAR_STBYBattery_Test
+  -
+    type: var
+    var_name: L:XMLVAR_STBYBattery_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_1_State
+  -
+    type: var
+    var_name: L:AS3000_1_Timer_Value
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_2_State
+  -
+    type: var
+    var_name: L:AS3000_2_Timer_Value
+
+# - # Don't sync
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true

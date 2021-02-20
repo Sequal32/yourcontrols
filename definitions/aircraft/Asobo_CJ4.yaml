@@ -249,6 +249,24 @@ shared:
     var_name: L:CJ4_MFD_ScreenLuminosity
   -
     type: var
+    var_name: L:CJ4_FMC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_SAI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_PFD_State
+  -
+    type: var
+    var_name: L:CJ4_MFD_State
+  -
+    type: var
+    var_name: L:CJ4_FMC_State
+  -
+    type: var
+    var_name: L:CJ4_SAI_State
+  -
+    type: var
     var_name: L:XMLVAR_Pitot_1
   -
     type: var
@@ -261,9 +279,6 @@ shared:
     var_name: L:XMLVAR_Airframe_2
   -
     type: var
-    var_name: L:XMLVAR_AileronTrim
-  -
-    type: var
     var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
   -
     type: var
@@ -274,21 +289,6 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
-  # -
-  #   type: var
-  #   var_name: L:AIRLINER_V1_SPEED
-  # -
-  #   type: var
-  #   var_name: L:AIRLINER_VR_SPEED
-  # -
-  #   type: var
-  #   var_name: L:AIRLINER_V2_SPEED
-  # -
-  #   type: var
-  #   var_name: L:AIRLINER_VREF_SPEED
-  # -
-  #   type: var
-  #   var_name: L:AIRLINER_VX_SPEED
   -
     type: var
     var_name: L:XMLVAR_Baro1_ForcedToSTD
@@ -324,55 +324,70 @@ shared:
     var_name: L:RADIONAV ACTIVE:1
   -
     type: var
+    var_name: L:AIRLINER_CRUISE_ALTITUDE
+  -
+    type: var
     var_name: L:FMC_UPDATE_CURRENT_PAGE
-  # - # Shoudn't sync
-  #   type: var
-  #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
-  -
-    type: var
-    var_name: L:CJ4_PFD_State
-  # - # Doesn't do anything
-  #   type: var
-  #   var_name: L:HUD_AP_SELECTED_SPEED
-  # - # Probably shouldn't sync
-  #   type: var
-  #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-  -
-    type: var
-    var_name: L:CJ4_MFD_State
   -
     type: var
     var_name: L:Glasscockpit_MFD_Started
-  # -
-  #   type: var
-  #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-  # -
-  #   type: var
-  #   var_name: L:AIRLINER_TO_FLEX_TEMP
-  # -
-  #   type: var
-  #   var_name: L:AIRLINER_CRUISE_ALTITUDE
-  -
-    type: var
-    var_name: L:CJ4_FMC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_FMC_State
-  -
-    type: var
-    var_name: L:CJ4_SAI_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_SAI_State
-  # - # Probably shouldnt' sync
-  #   type: var
-  #   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
-  # - # Doesn't do anything
-  #   type: var
-  #   var_name: L:HUD_AP_SELECTED_ALTITUDE
   -
     type: var
     var_name: L:XMLVAR_IsDeiceAirFrame
   -
     type: var
     var_name: L:XMLVAR_IsDeiceAirFrame2
+
+# - # Don't sync
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim
+# -
+#   type: var
+#   var_name: L:AIRLINER_V1_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VR_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_V2_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VREF_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VX_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AIRLINER_TO_FLEX_TEMP
+# -
+#   type: var
+#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+# -
+#   type: var
+#   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true

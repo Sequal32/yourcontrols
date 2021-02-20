@@ -43,36 +43,28 @@ shared:
   - # Pressurization
     type: var
     var_name: L:EMERGENCY_PUSH_RAMAIR_SwitchState
-    var_type: f64
   -
     type: var
     var_name: L:XMLVAR_MICRO_MASK_COVER
-    var_type: f64
 
   - # Passenger
     type: var
     var_name: L:AC_KNOB_FAN
-    var_type: f64
   -
     type: var
     var_name: L:AC_KNOB_TEMP
-    var_type: f64
   -
     type: var
     var_name: L:HOTAIRFLOW_KNOB
-    var_type: f64
   -
     type: var
     var_name: L:AC_SwitchState
-    var_type: f64
   -
     type: var
-    var_name: L:XMLVAR_Oxygen_Deploy
-    var_type: f64
+    var_name: L:XMLVAR_Deploy
   -
     type: var
-    var_name: L:XMLVAR_Oxygen_Switch
-    var_type: f64
+    var_name: L:XMLVAR_Oxygen
 
   - # Lights
     type: NumSet
@@ -102,7 +94,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_PilotLightOn
-    var_type: f64
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
@@ -113,7 +104,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_CopilotLightOn
-    var_type: f64
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
@@ -124,7 +114,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_CabinLightOn
-    var_type: f64
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
@@ -135,7 +124,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_AccessLightOn
-    var_type: f64
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:8
@@ -156,14 +144,11 @@ shared:
 
   - # LVAR Dump (Asobo only)
     type: var
-    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
-  -
-    type: var
     var_name: L:XMLVAR_IsDeiceAirFrame
   -
     type: var
     var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
+  - # Necessary switch - Do not disable
     type: var
     var_name: L:XMLVAR_APTrim
   -
@@ -172,6 +157,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_LandingGearLightTesting
+  -
+    type: var
+    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
   -
     type: var
     var_name: L:XMLVAR_Gear_Check_Down
@@ -189,13 +177,7 @@ shared:
     var_name: L:XMLVAR_Press_DUMP_cover
   -
     type: var
-    var_name: L:XMLVAR_ThrottlePos_XAxis
-  -
-    type: var
     var_name: L:LEVER_MAN_OVRD
-  -
-    type: var
-    var_name: L:XMLVAR_ThrottlePos_YAxis
   -
     type: var
     var_name: L:XMLVAR_Starter
@@ -268,3 +250,17 @@ shared:
   -
     type: var
     var_name: L:AS3000_2_Timer_Value
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
