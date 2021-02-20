@@ -21,6 +21,7 @@ var session_input = document.getElementById("session-input")
 var name_input_join = document.getElementById("name-input-join")
 var theme_selector = document.getElementById("theme-select")
 var streamer_mode = document.getElementById("streamer-mode")
+var use_upnp = document.getElementById("use-upnp")
 
 var update_rate_input = document.getElementById("update-rate-input")
 var timeout_input = document.getElementById("timeout-input")
@@ -157,7 +158,7 @@ function OnDisconnect(text) {
 
     joinIpInput.value = cacheIpInput
     externalIp.hidden = false
-    forceButton.hidden = false
+    forceButton.hidden = true
 
     ResetForm()
     SetStuffVisible(false)
@@ -204,6 +205,7 @@ function LoadSettings(newSettings) {
     timeout_input.value = newSettings.conn_timeout
     update_rate_input.value = newSettings.update_rate
     theme_selector.checked = newSettings.ui_dark_theme
+    use_upnp.checked = newSettings.use_upnp
 
     setTheme(newSettings.ui_dark_theme)
 
@@ -418,6 +420,7 @@ $("#settings-form").submit(function(e) {
     newSettings.update_rate = ValidateInt(update_rate_input) ? parseInt(update_rate_input.value) : null
     newSettings.ui_dark_theme = theme_selector.checked
     newSettings.streamer_mode = streamer_mode.checked
+    newSettings.use_upnp = use_upnp.checked
 
     for (key in newSettings) {
         if (newSettings[key] === null) {return}
@@ -446,6 +449,7 @@ $("#main-form-host").submit(function(e) {
         type: "startServer",
         port: parseInt(port_input_host.value) || 0,
         isipv6: server_ip6radio.checked,
+        use_upnp: use_upnp.checked,
         username: username.value,
         method: method
     })

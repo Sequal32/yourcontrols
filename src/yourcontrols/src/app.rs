@@ -29,6 +29,7 @@ pub enum AppMessage {
     StartServer {
         username: String,
         isipv6: bool,
+        use_upnp: bool,
         port: u16,
         method: ConnectionMethod,
     },

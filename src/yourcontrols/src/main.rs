@@ -544,6 +544,7 @@ fn main() {
                     port,
                     isipv6,
                     method,
+                    use_upnp,
                 } => {
                     let connected = connect_to_sim(&mut conn, &mut definitions);
 
@@ -571,7 +572,9 @@ fn main() {
                                 ));
 
                                 let result = match method {
-                                    ConnectionMethod::Direct => server.start(isipv6, port, true),
+                                    ConnectionMethod::Direct => {
+                                        server.start(isipv6, port, use_upnp)
+                                    }
                                     ConnectionMethod::CloudServer => {
                                         server.start_with_hole_punching(isipv6)
                                     }
@@ -611,6 +614,7 @@ fn main() {
 
                         config.port = port;
                         config.name = username;
+                        config.use_upnp = use_upnp;
                         write_configuration(&config);
                     }
                 }

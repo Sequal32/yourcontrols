@@ -463,7 +463,7 @@ impl Server {
             get_socket_config(self.timeout),
         )?;
         // Attempt to port forward
-        if upnp {
+        if upnp && !is_ipv6 {
             self.last_port_forward_result = Some(self.port_forward(port));
         }
 
