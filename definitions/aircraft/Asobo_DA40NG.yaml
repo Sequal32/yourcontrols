@@ -1,7 +1,6 @@
 include:
   - definitions/modules/AS1000.yaml
   - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -28,6 +27,12 @@ shared:
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 23
+
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT
+    var_units: Bool
+    event_name: PITOT_HEAT_TOGGLE
 
   - # Failures
     type: var
