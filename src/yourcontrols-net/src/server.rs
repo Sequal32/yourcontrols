@@ -228,8 +228,8 @@ impl TransferStruct {
 
             Payloads::Handshake { session_id, .. } => {
                 info!(
-                    "[NETWORK] Handshake received from {} on {}",
-                    addr, session_id
+                    "[NETWORK] Handshake received from port {} on {}",
+                    addr.port(), session_id
                 );
                 // Incoming UDP packet from peer
                 if *session_id == self.session_id {
@@ -263,7 +263,7 @@ impl TransferStruct {
                     .ok();
             }
             Payloads::AttemptConnection { peer } => {
-                info!("[NETWORK] {} attempting connection.", peer);
+                info!("[NETWORK] Port {} attempting connection.", peer.port());
                 self.clients_to_holepunch
                     .push(HolePunchSession::new(peer.clone()));
                 should_relay = false;
