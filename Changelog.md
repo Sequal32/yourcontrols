@@ -1,3 +1,8 @@
+# Version 2.5.1
+## Fixes
+* Fixed an issue where aircraft movement and throttle would not be synced (removed fuel syncage).
+* Small optimization of net code
+
 # Version 2.5.0
 
 ## New Features
