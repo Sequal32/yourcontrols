@@ -190,27 +190,24 @@ fn main() {
         path
     };
     // Load defintions
-    let load_definitions = |conn: &SimConnector,
-                            definitions: &mut Definitions,
-                            control: &mut Control,
-                            config_to_load: &mut String|
-     -> bool {
+    let load_definitions = |definitions: &mut Definitions, config_to_load: &mut String| -> bool {
         // Load aircraft configuration
         let path = get_config_path(config_to_load);
 
         match definitions.load_config(path.to_string_lossy().to_string()) {
             Ok(_) => {
                 info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
-                control.on_connected(&conn);
-                definitions.on_connected(&conn)
             }
             Err(e) => {
-                error!("[DEFINITIONS] Could not load configuration file {}: {}", config_to_load,e);
+                error!(
+                    "[DEFINITIONS] Could not load configuration file {}: {}",
+                    config_to_load, e
+                );
                 // Prevent server/client from starting as config could not be laoded.
                 *config_to_load = String::new();
                 return false;
             }
-        }.ok();
+        };
 
         info!("[DEFINITIONS] {} loaded successfully.", config_to_load);
 
@@ -427,7 +424,11 @@ fn main() {
                                 Ok(_) => {
                                     info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events from the server", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
                                     control.on_connected(&conn);
-                                    definitions.on_connected(&conn).ok();
+
+                                    let def_connect_result = definitions.on_connected(&conn);
+                                    if let Err(()) = def_connect_result {
+                                        client.stop("Error starting WS server. Do you have another YourControls open?".to_string())
+                                    }
                                     // Freeze aircraft
                                     control.lose_control(&conn);
                                 }
@@ -556,16 +557,13 @@ fn main() {
 
                     if config_to_load == "" {
                         app_interface.server_fail("Select an aircraft config first!");
-                    } else if !load_definitions(
-                        &conn,
-                        &mut definitions,
-                        &mut control,
-                        &mut config_to_load,
-                    ) {
+                    } else if !load_definitions(&mut definitions, &mut config_to_load) {
                         app_interface.error(
                             "Error loading definition files. Check the log for more information.",
                         );
                     } else if connected {
+                        definitions.on_connected(&conn).ok();
+                        control.on_connected(&conn);
                         // Display attempting to start server
                         app_interface.attempt();
 

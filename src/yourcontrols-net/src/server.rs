@@ -229,7 +229,8 @@ impl TransferStruct {
             Payloads::Handshake { session_id, .. } => {
                 info!(
                     "[NETWORK] Handshake received from port {} on {}",
-                    addr.port(), session_id
+                    addr.port(),
+                    session_id
                 );
                 // Incoming UDP packet from peer
                 if *session_id == self.session_id {
