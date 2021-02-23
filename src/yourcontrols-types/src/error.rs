@@ -1,4 +1,4 @@
-use std::{fmt::Display, io};
+use std::{fmt::Display, io, string::FromUtf8Error};
 
 use crossbeam_channel::TryRecvError;
 
@@ -29,6 +29,10 @@ pub enum Error {
     JSONSerializeError(serde_json::Error),
     NetDecodeError(rmp_serde::decode::Error),
     NetEncodeError(rmp_serde::encode::Error),
+
+    // Discord
+    Base64Error(base64::DecodeError),
+    UTFError(std::string::FromUtf8Error),
 
     // Misc
     NotProcessed,
@@ -72,6 +76,8 @@ impl Display for Error {
             Error::NetEncodeError(e) => {
                 write!(f, "Could not encode MessagePack data! Reason: {}", e)
             }
+            Error::Base64Error(e) => write!(f, "Could not encode/decode base64! Reason: {}", e),
+            Error::UTFError(e) => write!(f, "Could not convert UTF to string! Reason: {}", e),
 
             Error::NotProcessed => write!(f, "Not processed."),
         }
@@ -105,5 +111,17 @@ impl From<rmp_serde::encode::Error> for Error {
 impl From<crossbeam_channel::TryRecvError> for Error {
     fn from(e: crossbeam_channel::TryRecvError) -> Self {
         Error::ReadTimeout(e)
+    }
+}
+
+impl From<base64::DecodeError> for Error {
+    fn from(e: base64::DecodeError) -> Self {
+        Error::Base64Error(e)
+    }
+}
+
+impl From<std::string::FromUtf8Error> for Error {
+    fn from(e: std::string::FromUtf8Error) -> Self {
+        Error::UTFError(e)
     }
 }
