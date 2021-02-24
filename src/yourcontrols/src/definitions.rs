@@ -1,4 +1,5 @@
 use indexmap::IndexMap;
+use log::info;
 use serde::Deserialize;
 use serde_yaml::{self, Value};
 use simconnect::SimConnector;
@@ -13,16 +14,14 @@ use std::{
 };
 
 use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType, LVarResult};
-use crate::sync::jscommunicator::{JSCommunicator, Payloads};
+use crate::sync::jscommunicator::{JSCommunicator, JSPayloads};
 use crate::sync::transfer::{AircraftVars, Events, LVarSyncer};
 use crate::syncdefs::{
     CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch,
 };
 use crate::util::{Category, InDataTypes};
 
-use yourcontrols_types::{
-    AVarMap, AllNeedSync, Error, EventData, EventTriggered, LVarMap, VarReaderTypes,
-};
+use yourcontrols_types::{AVarMap, AllNeedSync, Error, Event, EventData, LVarMap, VarReaderTypes};
 
 // Checks if a field in a Value exists, otherwise will return an error with the name of the field
 macro_rules! check_and_return_field {
@@ -79,45 +78,19 @@ macro_rules! execute_mapping {
     }
 }
 
-fn increment_write_counter_for(map: &mut HashMap<String, LastWritten>, data_name: &str) {
-    if let Some(last) = map.get_mut(data_name) {
-        last.counter += 1;
-        last.timer = Instant::now();
+fn set_did_write_recently(map: &mut HashMap<String, Instant>, data_name: &str) {
+    if let Some(instant) = map.get_mut(data_name) {
+        *instant = Instant::now();
     } else {
-        map.insert(
-            data_name.to_string(),
-            LastWritten {
-                counter: 1,
-                timer: Instant::now(),
-                ignore: false,
-            },
-        );
+        map.insert(data_name.to_string(), Instant::now());
     }
 }
 
-fn check_did_write_recently_and_deincrement_counter_for(
-    map: &mut HashMap<String, LastWritten>,
-    data_name: &str,
-) -> bool {
-    let mut did_write_recently = false;
-
-    if let Some(last) = map.get_mut(data_name) {
-        if last.ignore {
-            return true;
-        }
-
-        if last.timer.elapsed().as_secs() >= 3 {
-            last.counter = 0
-        }
-
-        did_write_recently = last.counter != 0;
-
-        if did_write_recently {
-            last.counter -= 1;
-        }
-    }
-
-    return did_write_recently;
+fn check_did_write_recently(map: &mut HashMap<String, Instant>, data_name: &str) -> bool {
+    return map
+        .get(data_name)
+        .map(|x| x.elapsed().as_secs() < 1)
+        .unwrap_or(false);
 }
 
 fn get_data_type_from_string(string: &str) -> Result<InDataTypes, Error> {
@@ -375,12 +348,6 @@ impl Default for Mapping {
     }
 }
 
-struct LastWritten {
-    counter: u32,
-    timer: Instant,
-    ignore: bool,
-}
-
 pub struct Definitions {
     // Serializable vec that houses all the definitions that can be sent over the network
     definitions_buffer: IndexMap<String, Vec<Value>>,
@@ -401,9 +368,9 @@ pub struct Definitions {
     // Value to hold the current queue
     current_sync: AllNeedSync,
     // Keep track of which definitions just got written so we don't sync them again
-    last_written: HashMap<String, LastWritten>,
+    last_written: HashMap<String, Instant>,
     // Delay events by 100ms in order for them to get synced correctly
-    event_queue: VecDeque<EventTriggered>,
+    event_queue: VecDeque<Event>,
     event_timer: Instant,
     event_cancel_timer: Instant,
     // Vars that shouldn't be sent reliably
@@ -991,16 +958,8 @@ impl Definitions {
                 }
             } else if key == "ignore" {
                 for ignore_value in value {
-                    let ignore_name = ignore_value.as_str().unwrap();
-                    self.last_written.insert(
-                        ignore_name.to_string(),
-                        LastWritten {
-                            counter: 0,
-                            timer: Instant::now(),
-                            ignore: true,
-                        },
-                    );
-
+                    self.do_not_sync
+                        .insert(ignore_value.as_str().unwrap().to_string());
                     self.add_to_buffer(key.clone(), ignore_value);
                 }
             } else {
@@ -1037,10 +996,7 @@ impl Definitions {
 
     #[allow(unused_variables)]
     fn process_local_var(&mut self, result: GetResult) {
-        let mut should_write = !check_did_write_recently_and_deincrement_counter_for(
-            &mut self.last_written,
-            &result.var_name,
-        );
+        let mut should_write = !check_did_write_recently(&mut self.last_written, &result.var_name);
 
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
@@ -1104,21 +1060,21 @@ impl Definitions {
     }
 
     fn process_js_data(&mut self) {
-        if let Some(payload) = self.jstransfer.poll() {
-            match payload {
-                Payloads::Interaction { name } => {
-                    if check_did_write_recently_and_deincrement_counter_for(
-                        &mut self.last_written,
-                        &name[5..],
-                    ) || self.event_cancel_timer.elapsed().as_millis() < 300
+        if let Some(message) = self.jstransfer.poll() {
+            match message.payload {
+                JSPayloads::Interaction { name } => {
+                    if self.do_not_sync.get(&name[5..]).is_some()
+                        || self.event_cancel_timer.elapsed().as_millis() < 300
                     {
                         return;
                     };
-                    self.current_sync.events.push(EventTriggered {
-                        event_name: name,
-                        data: 0,
-                    })
+                    self.current_sync.events.push(Event::JSEvent { name });
                 }
+                JSPayloads::Input { id, value } => self.current_sync.events.push(Event::JSInput {
+                    id,
+                    value,
+                    instrument: message.instrument_name,
+                }),
                 _ => {}
             }
         };
@@ -1162,19 +1118,16 @@ impl Definitions {
                 }
 
                 // Check timer
-                if check_did_write_recently_and_deincrement_counter_for(
-                    &mut self.last_written,
-                    &event_name,
-                ) {
+                if check_did_write_recently(&mut self.last_written, &event_name) {
                     return;
                 }
             }
         }
 
         if should_write {
-            self.current_sync.events.push(EventTriggered {
-                event_name: event_name,
-                data: data.dwData,
+            self.current_sync.events.push(Event::KeyEvent {
+                name: event_name,
+                value: data.dwData,
             });
         }
     }
@@ -1190,10 +1143,8 @@ impl Definitions {
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Determine if this variable should be updated
-                let mut should_write = !check_did_write_recently_and_deincrement_counter_for(
-                    &mut self.last_written,
-                    &var_name,
-                ) && !self.do_not_sync.contains(&var_name);
+                let mut should_write = !check_did_write_recently(&mut self.last_written, &var_name)
+                    && !self.do_not_sync.contains(&var_name);
                 // Set current var syncactions
                 if let Some(mappings) = self.mappings.get_mut(&var_name) {
                     for mapping in mappings {
@@ -1236,40 +1187,56 @@ impl Definitions {
         }
     }
 
+    fn process_js_interaction(&mut self, conn: &SimConnector, name: String) {
+        if self.event_timer.elapsed().as_millis() < 50 {
+            self.event_queue.push_front(Event::JSEvent { name });
+            return;
+        }
+
+        // Use gauge to transmit H: event
+        self.lvarstransfer.set_unchecked(conn, &name, None, "");
+
+        self.event_timer = Instant::now();
+    }
+
+    fn process_key_event(
+        &mut self,
+        conn: &simconnect::SimConnector,
+        name: String,
+        value: u32,
+    ) -> Result<(), Error> {
+        for mapping in self
+            .mappings
+            .get(&name)
+            .ok_or(Error::MissingMapping(name.clone()))?
+        {
+            if let ActionType::Event(mapping) = &mapping.action {
+                if mapping.use_calculator {
+                    self.lvarstransfer
+                        .set_unchecked(conn, &format!("K:{}", name), None, "");
+                } else {
+                    self.events.trigger_event(conn, &name, value).unwrap();
+                }
+            }
+        }
+
+        Ok(())
+    }
+
     fn process_events(&mut self, conn: &SimConnector) -> Result<(), Error> {
-        if let Some(event) = self.event_queue.front() {
-            if event.event_name.starts_with("H:") {
-                if self.event_timer.elapsed().as_millis() < 50 {
-                    return Ok(());
-                }
+        if let Some(event) = self.event_queue.pop_front() {
+            match event {
+                Event::JSEvent { name } => self.process_js_interaction(conn, name),
 
-                // Use gauge to transmit H: event
-                self.lvarstransfer
-                    .set_unchecked(conn, &event.event_name, None, "");
+                Event::JSInput {
+                    id,
+                    value,
+                    instrument,
+                } => self
+                    .jstransfer
+                    .write_payload(JSPayloads::Input { id, value }, Some(&instrument)),
 
-                self.event_timer = Instant::now();
-            } else {
-                // Event doesn't exist
-                for mapping in self
-                    .mappings
-                    .get(&event.event_name)
-                    .ok_or(Error::MissingMapping(event.event_name.clone()))?
-                {
-                    if let ActionType::Event(mapping) = &mapping.action {
-                        if mapping.use_calculator {
-                            self.lvarstransfer.set_unchecked(
-                                conn,
-                                &format!("K:{}", event.event_name),
-                                None,
-                                "",
-                            );
-                        } else {
-                            self.events
-                                .trigger_event(conn, &event.event_name, event.data as u32)
-                                .unwrap();
-                        }
-                    }
-                }
+                Event::KeyEvent { name, value } => self.process_key_event(conn, name, value)?,
             }
         }
 
@@ -1345,7 +1312,7 @@ impl Definitions {
 
         // Only sync vars that are defined as so
         for (var_name, data) in data {
-            increment_write_counter_for(&mut self.last_written, &var_name);
+            set_did_write_recently(&mut self.last_written, &var_name);
 
             // Otherwise sync them using defined events
             if let Some(mappings) = self.mappings.get_mut(&var_name) {
@@ -1407,7 +1374,7 @@ impl Definitions {
                             {}
                         );
 
-                        increment_write_counter_for(&mut self.last_written, &var_name);
+                        set_did_write_recently(&mut self.last_written, &var_name);
                     }
                 }
                 None => return Err(Error::MissingMapping(var_name)),

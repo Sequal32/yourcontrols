@@ -6,9 +6,19 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
-pub struct EventTriggered {
-    pub event_name: String,
-    pub data: u32,
+pub enum Event {
+    JSEvent {
+        name: String,
+    },
+    JSInput {
+        id: String,
+        value: String,
+        instrument: String,
+    },
+    KeyEvent {
+        name: String,
+        value: u32,
+    },
 }
 
 #[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq, PartialOrd)]
@@ -35,7 +45,7 @@ pub type AVarMap = HashMap<String, VarReaderTypes>;
 // Name of local variable and the value of it
 pub type LVarMap = HashMap<String, f64>;
 // Name of the event the DWORD data associated with it with how many times it got triggered (not a map as the event could've got triggered multiple times before the data could get send)
-pub type EventData = Vec<EventTriggered>;
+pub type EventData = Vec<Event>;
 #[derive(Debug, Deserialize, Serialize, Clone, Default)]
 pub struct AllNeedSync {
     pub avars: AVarMap,
@@ -89,12 +99,32 @@ impl AllNeedSync {
             return false;
         });
 
-        self.events.retain(|event| {
-            if filter_fn(&event.event_name) {
-                return true;
+        self.events.retain(|event| match event {
+            Event::JSEvent { name } => {
+                if filter_fn(&name) {
+                    return true;
+                }
+                filtered.events.push(event.clone());
+                return false;
             }
-            filtered.events.push(event.clone());
-            return false;
+            Event::JSInput {
+                id,
+                value,
+                instrument,
+            } => {
+                if filter_fn(id) {
+                    return true;
+                }
+                filtered.events.push(event.clone());
+                return false;
+            }
+            Event::KeyEvent { name, value } => {
+                if filter_fn(name) {
+                    return true;
+                }
+                filtered.events.push(event.clone());
+                return false;
+            }
         });
 
         return filtered;

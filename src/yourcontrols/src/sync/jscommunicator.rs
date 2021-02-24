@@ -10,18 +10,18 @@ use std::{
 };
 use tungstenite::{accept, HandshakeError, Message, WebSocket};
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "camelCase")]
-pub enum Payloads {
+pub enum JSPayloads {
     // Receive
     Interaction { name: String },
     Handshake { name: String },
+    Input { id: String, value: String },
 }
 
-#[derive(Serialize, Debug)]
-#[serde(tag = "type", rename_all = "camelCase")]
-pub enum TransmitPayloads {
-    // Transmit
+pub struct JSMessage {
+    pub payload: JSPayloads,
+    pub instrument_name: String,
 }
 
 struct StreamInfo {
@@ -33,7 +33,7 @@ struct StreamInfo {
 pub struct JSCommunicator {
     streams: Vec<StreamInfo>,
     listener: Option<TcpListener>,
-    incoming_payloads: VecDeque<Payloads>,
+    incoming_payloads: VecDeque<JSMessage>,
 }
 
 impl JSCommunicator {
@@ -58,19 +58,32 @@ impl JSCommunicator {
         Ok(())
     }
 
-    pub fn poll(&mut self) -> Option<Payloads> {
+    pub fn poll(&mut self) -> Option<JSMessage> {
         self.accept_connections();
         self.read_messages();
 
         return self.incoming_payloads.pop_front();
     }
 
-    #[allow(dead_code)]
-    fn write_payload(&mut self, payload: TransmitPayloads) {
-        let message = Message::Text(serde_json::to_string(&payload).unwrap());
+    fn write_message_to_instrument(&mut self, message: Message, instrument: &str) {
+        if let Some(info) = self.streams.iter_mut().find(|x| x.name == instrument) {
+            info.stream.write_message(message).ok();
+        }
+    }
 
+    fn write_message_to_all(&mut self, message: Message) {
         for info in self.streams.iter_mut() {
             info.stream.write_message(message.clone()).ok();
+        }
+    }
+
+    pub fn write_payload(&mut self, payload: JSPayloads, instrument: Option<&str>) {
+        let message = Message::Text(serde_json::to_string(&payload).unwrap());
+
+        if let Some(instrument) = instrument {
+            self.write_message_to_instrument(message, instrument);
+        } else {
+            self.write_message_to_all(message);
         }
     }
 
@@ -98,25 +111,25 @@ impl JSCommunicator {
         }
     }
 
-    fn process_payload(&mut self, payload: &Payloads) {
-        match payload {
-            _ => {}
-        }
-    }
-
     fn read_messages(&mut self) {
-        let mut read_payloads = Vec::new();
+        let incoming_payloads = &mut self.incoming_payloads;
 
         self.streams.retain_mut(|info| {
             match info.stream.read_message() {
                 Ok(Message::Text(text)) => match serde_json::from_str(&text) {
                     Ok(payload) => {
-                        if let Payloads::Handshake { name } = &payload {
-                            info!("[JS] Panel gauge connected: {}", name);
-                            info.name = name.clone();
+                        match &payload {
+                            JSPayloads::Handshake { name } => {
+                                info!("[JS] Panel gauge connected: {}", name);
+                                info.name = name.clone();
+                            }
+                            _ => {}
                         }
 
-                        read_payloads.push(payload);
+                        incoming_payloads.push_back(JSMessage {
+                            payload,
+                            instrument_name: info.name.clone(),
+                        });
 
                         return true;
                     }
@@ -128,16 +141,10 @@ impl JSCommunicator {
                 Ok(Message::Close(_)) => {
                     return false;
                 }
-                Err(_) => {}
                 _ => {}
             }
 
             return true;
         });
-
-        for payload in read_payloads {
-            self.process_payload(&payload);
-            self.incoming_payloads.push_back(payload);
-        }
     }
 }
