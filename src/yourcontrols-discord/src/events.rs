@@ -40,22 +40,25 @@ impl EventHandler for YourControlsDiscordEvents {
 
     fn on_activity_join_request(
         &mut self,
-        _discord: &Discord<'_, Self>,
+        discord: &Discord<'_, Self>,
         user: &discord_game_sdk::User,
     ) {
-        println!("on_activity_join_request {:?}", user)
+        discord.accept_invite(user.id(), |_discord, Result| {
+            println!("on_activity_join_request {:?}", Result.unwrap())
+        });
     }
 
     fn on_activity_invite(
         &mut self,
-        _discord: &Discord<'_, Self>,
+        discord: &Discord<'_, Self>,
         kind: discord_game_sdk::Action,
         user: &discord_game_sdk::User,
         activity: &discord_game_sdk::Activity,
     ) {
+
         self.tx.send(DiscordEvent::Invited {
-            secret: self.secret.clone(),
-        });
-        println!("on_activity_invite {:?} {:?} {:?}", kind, user, activity)
+            secret: activity.party_id().to_string(),
+        }).ok();
     }
+
 }

@@ -19,19 +19,18 @@ pub enum DiscordEvent {
     Invited { secret: Secret },
 }
 
-// Write unit tests for this struct
-struct SecretEncoder {}
+pub struct SecretEncoder {}
 
 impl SecretEncoder {
-    fn encode_ip(addr: SocketAddr) -> Secret {
+    pub fn encode_ip(addr: SocketAddr) -> Secret {
         encode(addr.to_string().as_bytes())
     }
 
-    fn encode_session_id(session_id: String) -> Secret {
+    pub fn encode_session_id(session_id: String) -> Secret {
         encode(session_id.as_bytes())
     }
 
-    fn decode_secret(secret: &str) -> Result<JoinMethod, Error> {
+    pub fn decode_secret(secret: &str) -> Result<JoinMethod, Error> {
         let decode_bytes = decode(secret)?;
         let decode_s = String::from_utf8(decode_bytes)?;
 
@@ -59,7 +58,7 @@ impl<'a> YourControlsDiscord<'a> {
         }
     }
     pub fn do_callbacks(&mut self) {
-        self.discord.run_callbacks();
+        self.discord.run_callbacks().ok();
     }
     pub fn get_pending_events(&mut self) -> Option<DiscordEvent> {
         match self
@@ -82,6 +81,32 @@ impl<'a> YourControlsDiscord<'a> {
         &mut self.activity
     }
 
+    pub fn set_large_image_key(&mut self, img_key: &str) {
+        self.activity.with_large_image_key(img_key);
+    }
+
+    pub fn set_large_image_desc(&mut self, desc: &str) {
+        self.activity.with_large_image_tooltip(desc);
+    }
+
+    pub fn set_lobby_info(&mut self, id: &str, ammount: u32, capacity: u32) {
+        self.activity.with_party_id(id);
+        self.activity.with_party_amount(ammount);
+        self.activity.with_party_capacity(capacity);
+    }
+
+    pub fn set_secret(&mut self, secret: &str){
+        self.activity.with_join_secret(secret);
+    }
+
+    pub fn set_state(&mut self, state:&str){
+        self.activity.with_state(state);
+    }
+
+    pub fn set_details(&mut self, details: &str){
+        self.activity.with_details(details);
+    }
+
     pub fn set_current_time(&mut self) {
         self.activity.with_start_time(
             SystemTime::now()
@@ -98,13 +123,13 @@ mod test {
 
     #[test]
     fn test_bad_secret() {
-        assert!(SecretEncoder::decode_secret("oof").is_err());
+        assert!(SecretEncoder::decode_secret("test").is_err());
     }
 
     #[test]
     fn test_encode_decode() {
-        let encoded = SecretEncoder::encode_session_id("safesucks".to_string());
-        let output = JoinMethod::SessionCode("safesucks".to_string());
+        let encoded = SecretEncoder::encode_session_id("test".to_string());
+        let output = JoinMethod::SessionCode("test".to_string());
         assert!(std::matches!(
             SecretEncoder::decode_secret(&encoded),
             Ok(output)
