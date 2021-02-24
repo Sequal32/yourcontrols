@@ -334,6 +334,9 @@ fn main() {
 
                             let mut is_observer = is_observer;
 
+                            // This should be before the if statement as server_started counts the number of clients connected
+                            clients.add_client(name.clone());
+
                             if client.is_host() {
                                 app_interface.server_started(
                                     clients.get_number_clients() as u16,
@@ -353,7 +356,6 @@ fn main() {
 
                             app_interface.new_connection(&name);
                             app_interface.set_observing(&name, is_observer);
-                            clients.add_client(name.clone());
                             clients.set_server(&name, is_server);
                             clients.set_observer(&name, is_observer);
 
@@ -715,6 +717,8 @@ fn main() {
                         }
                         Err(_) => {}
                     }
+
+                    app_interface.send_config(&config.get_json_string());
                     // Update version
                     let app_version = updater.get_version();
                     if let Ok(newest_version) = updater.get_latest_version() {
@@ -731,8 +735,6 @@ fn main() {
                     } else {
                         info!("[UPDATER] Version {} in use.", app_version)
                     }
-
-                    app_interface.send_config(&config.get_json_string());
                 }
                 AppMessage::RunUpdater => {
                     match updater.run_installer() {
