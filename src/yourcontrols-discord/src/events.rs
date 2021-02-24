@@ -43,9 +43,9 @@ impl EventHandler for YourControlsDiscordEvents {
         discord: &Discord<'_, Self>,
         user: &discord_game_sdk::User,
     ) {
-        discord.accept_invite(user.id(), |_discord, Result| {
-            println!("on_activity_join_request {:?}", Result.unwrap())
-        });
+        self.tx
+            .send(DiscordEvent::AskedToJoin { user_id: user.id() })
+            .ok();
     }
 
     fn on_activity_invite(
