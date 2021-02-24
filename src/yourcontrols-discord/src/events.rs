@@ -55,10 +55,10 @@ impl EventHandler for YourControlsDiscordEvents {
         user: &discord_game_sdk::User,
         activity: &discord_game_sdk::Activity,
     ) {
-
-        self.tx.send(DiscordEvent::Invited {
-            secret: activity.party_id().to_string(),
-        }).ok();
+        self.tx
+            .send(DiscordEvent::Invited {
+                secret: activity.party_id().to_string(),
+            })
+            .ok();
     }
-
 }

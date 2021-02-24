@@ -1,7 +1,7 @@
 mod events;
 
 use base64::{decode, encode};
-use discord_game_sdk::{Activity, Discord};
+use discord_game_sdk::{Activity, Discord, UserID};
 use events::YourControlsDiscordEvents;
 use std::{net::SocketAddr, str::FromStr, time::SystemTime};
 
@@ -16,6 +16,7 @@ pub enum JoinMethod {
 
 pub enum DiscordEvent {
     Join { method: JoinMethod },
+    AskedToJoin { user_id: UserID },
     Invited { secret: Secret },
 }
 
@@ -77,8 +78,8 @@ impl<'a> YourControlsDiscord<'a> {
         self.discord.update_activity(&self.activity, |_, _| {})
     }
 
-    pub fn get_activity_mut(&mut self) -> &mut Activity {
-        &mut self.activity
+    pub fn accept_invite(&mut self, user_id: UserID) {
+        self.discord.accept_invite(user_id, |_, _| {})
     }
 
     pub fn set_large_image_key(&mut self, img_key: &str) {
@@ -95,15 +96,15 @@ impl<'a> YourControlsDiscord<'a> {
         self.activity.with_party_capacity(capacity);
     }
 
-    pub fn set_secret(&mut self, secret: &str){
+    pub fn set_secret(&mut self, secret: &str) {
         self.activity.with_join_secret(secret);
     }
 
-    pub fn set_state(&mut self, state:&str){
+    pub fn set_state(&mut self, state: &str) {
         self.activity.with_state(state);
     }
 
-    pub fn set_details(&mut self, details: &str){
+    pub fn set_details(&mut self, details: &str) {
         self.activity.with_details(details);
     }
 
