@@ -10,6 +10,35 @@ shared:
     var_units: Bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 49
+  
+  # Autopilot
+  - # On LNAV, index 1 is manual tuned heading
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+    conditions:
+      - var: 
+          var_name: L:WT_CJ4_NAV_ON
+          var_type: f64
+        equals:
+          F64: 1.0
+
+  - # On VNAV, index 1 is manual tuned altitude
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: AP_ALT_HOLD
+    event_param: 1
+    conditions:
+      - var: 
+          var_name: L:WT_CJ4_VNAV_ON
+          var_type: f64
+        equals:
+          F64: 1.0
 
   - # LVAR Dump (WT only)
     type: var
