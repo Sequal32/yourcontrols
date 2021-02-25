@@ -12,13 +12,16 @@ use std::{
     time::Instant,
 };
 
-use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType, LVarResult};
 use crate::sync::jscommunicator::{JSCommunicator, JSPayloads};
 use crate::sync::transfer::{AircraftVars, Events, LVarSyncer};
 use crate::syncdefs::{
     CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch,
 };
 use crate::util::{Category, InDataTypes};
+use crate::{
+    sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType, LVarResult},
+    velocity::VelocityCorrector,
+};
 
 use yourcontrols_types::{AVarMap, AllNeedSync, Error, Event, EventData, LVarMap, VarReaderTypes};
 
@@ -385,6 +388,8 @@ pub struct Definitions {
     current_sync: AllNeedSync,
     // Keep track of which definitions just got written so we don't sync them again
     last_written: HashMap<String, Instant>,
+    // Helper struct to remove and add velocity
+    velocity_corrector: VelocityCorrector,
     // Delay events by 100ms in order for them to get synced correctly
     event_queue: VecDeque<Event>,
     event_timer: Instant,
@@ -428,6 +433,8 @@ impl Definitions {
             avarstransfer: AircraftVars::new(1),
 
             last_written: HashMap::new(),
+
+            velocity_corrector: VelocityCorrector::new(2),
 
             current_sync: AllNeedSync::new(),
             event_queue: VecDeque::new(),
@@ -1153,11 +1160,14 @@ impl Definitions {
     // Process changed aircraft variables and update SyncActions related to it
     #[allow(unused_variables)]
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
+        self.velocity_corrector.process_sim_object_data(data);
         if self.avarstransfer.define_id != data.dwDefineID {
             return;
         }
         // Data might be bad/config files don't line up
-        if let Ok(data) = self.avarstransfer.read_vars(data) {
+        if let Ok(mut data) = self.avarstransfer.read_vars(data) {
+            // Remove wind component
+            self.velocity_corrector.remove_wind_component(&mut data);
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Determine if this variable should be updated
@@ -1328,6 +1338,10 @@ impl Definitions {
 
         let mut interpolation_data = Vec::new();
 
+        let mut data = data;
+        // Add back wind component
+        self.velocity_corrector.add_wind_component(&mut data);
+
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             set_did_write_recently(&mut self.last_written, &var_name);
@@ -1434,6 +1448,7 @@ impl Definitions {
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
+        self.velocity_corrector.on_connected(conn);
 
         // Might be running another instance
         self.jstransfer.start().map_err(|_| ())?;

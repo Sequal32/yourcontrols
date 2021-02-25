@@ -9,6 +9,7 @@ mod syncdefs;
 mod update;
 mod util;
 mod varreader;
+mod velocity;
 
 use app::{App, AppMessage, ConnectionMethod};
 use clientmanager::ClientManager;
