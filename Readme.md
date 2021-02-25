@@ -1,6 +1,6 @@
 ![https://github.com/Sequal32/yourcontrol](/assets/logo.png)
 [![](https://img.shields.io/static/v1?label=enjoying%20the%20mod?%20&style=for-the-badge&message=DONATE&logo=paypal&labelColor=orange&color=darkorange)](https://www.paypal.com/paypalme/ctam1207)
-[![](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge)](https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip) [![](https://img.shields.io/github/downloads/Sequal32/yourcontrol/total?style=for-the-badge)](https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip) [![](https://img.shields.io/discord/764805300229636107?color=blue&label=discord&logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/p7Bzcv3Yjd)
+[![](https://img.shields.io/github/v/tag/Sequal32/yourcontrol?label=release&style=for-the-badge)](https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip) [![](https://img.shields.io/github/downloads/Sequal32/yourcontrolsinstaller/total?style=for-the-badge)](https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip) [![](https://img.shields.io/discord/764805300229636107?color=blue&label=discord&logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/p7Bzcv3Yjd)
 
 Shared Cockpit for MSFS 
 [**Changelog**](/Changelog.md)
@@ -16,13 +16,14 @@ Table of Contents
   - [Missing DLL](#missing-dll)
   - [Most switches or avionics are not syncing](#most-switches-or-avionics-are-not-syncing)
   - [My copilot's aircraft is above me](#my-copilots-aircraft-is-above-me)
+  - [My copilot's aircraft is in front or behind me](#my-copilots-aircraft-is-in-front-or-behind-me)
   - [Mismatching speeds/altitude](#mismatching-speedsaltitude)
 - [Limitations](#limitations)
 
 ## Supported Aircraft
 The following aircraft are supported:
 * All 30 stock by ASOBO
-* FlyByWire A32NX Stable & Dev
+* FlyByWire A32NX Stable, Dev, Experimental
 * JPLogistics C152X
 * Working Title CJ4
 * MrTommymxr DA62X
@@ -47,19 +48,20 @@ The following aircraft are supported:
     **Cloud P2P**
     Cloud P2P utilizes a rendezvous server in order to connect two computers behind a router. Dependending on your router, this may fail and you'll have to use other connection methods. *This is the preferred method*.
 
-    1. Click `Start Server`
-    2. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
+    1. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
+    2. Click `Start Server`
     3. Give the provided session code to the joiners.
 
     **Cloud Host**
     Cloud Host utilizes a hosted server that *relays* traffic between computers. Because of the high traffic this uses, the current connection limit is capped at 100.
 
-    1. Click `Start Server`
-    2. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
+    
+    1. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
+    2. Click `Start Server`
     3. Give the provided session code to the joiners.
 
     **Direct**
-    1. If you have a [IPv6 address](https://test-ipv6.com/), you can simply give that along with the port to the joiners.
+    1. If you have an [IPv6 address](https://test-ipv6.com/), you can simply give that along with the port to the joiners.
     2. **UDP** [port forward](https://www.youtube.com/watch?v=usSpl0yJFnY) either `25071` or the specified port in the application. If port forwarding is not an option, try enabling UPnP, or use Cloud P2P or Cloud Host.
     3. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
     4. Click `Start Server`
@@ -79,7 +81,7 @@ Notes:
    
 3. If you want to load a SimBrief Flightplan in the A32NX, you need to set the **same SimBrief username** in the AOC settings.
    
-4. For aircraft and avionics that have setting saving functionality (A32NX, Working Title, etc...), the state of the aircraft may be different depending on those settings and you should verify that you and your copilot(s) have the same settings.
+4. For aircraft and avionics that have setting saving functionality (A32NX, Working Title, etc...), the state of the aircraft may be different depending on those settings. You should verify that you and your copilot(s) have the same settings.
 
 ## Settings
 - **Dark Mode**: Switches between light and dark theme for the application.
@@ -96,18 +98,22 @@ If you enjoy the mod, considering showing your gratitude with a donation! I've p
 ### Discord
 <a href="https://discord.gg/SxYqf2n"><img src="https://discord.com/assets/e4923594e694a21542a489471ecffa50.svg" width="200"/></a>
 
-If you're seeking help for this mod, or would like to give feedback and join the commnity, join the discord by clicking on the image above!
+If you're seeking help for this mod, or would like to give feedback and join the community, join the discord by clicking on the image above!
 
 ### Missing DLL
 Install [Microsoft Visual C++ Redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe) to resolve this.
 
 ### Most switches or avionics are not syncing
 
-Restart your simulator. If it still isn't working reinstall YourControls.
+Restart your simulator. If it still isn't working, manually delete the `YourControls` folder inside your community folder and reinstall YourControls.
 
 ### My copilot's aircraft is above me
 
 This is commonly due to mismatching sceneries. Please ensure you have the same addon airports installed and that you're not at an airport that is handcrafted in one edition of the sim, but not in the other (Premium Deluxe vs Deluxe).
+
+### My copilot's aircraft is in front or behind me
+
+Disable multiplayer and make sure you *are not* in the same group. If you're using an online network such as VATSIM or IVAO, check out their documentation on how to enable observer mode for shared cockpit.
 
 ### Mismatching speeds/altitude
 
@@ -116,3 +122,4 @@ Unfortunately, weather cannot currently be synced between flight simulators. If 
 ## Limitations
 * Some knobs are purely animation, and not represented by a local variable therefor cannot be synced, such as guard switches (yet...)
 * Avionics currently rely on syncing button presses only and not state. If the MCDUs are different in any way before connecting, they will desynchronize.
+* Scenery, weather, and navdata cannot be synced. Please ensure you have the same settings prior to connecting.
