@@ -586,17 +586,17 @@ shared:
     action: TakeControls
     var_name: L:A32NX_PRIORITY_TAKEOVER:1
     var_type: f64
-    condition:
-      equals:
-        F64: 1.0
+    conditions:
+      - equals:
+          F64: 1.0
   -
     type: ProgramAction
     action: TakeControls
     var_name: L:A32NX_PRIORITY_TAKEOVER:2
     var_type: f64
-    condition:
-      equals:
-        F64: 1.0
+    conditions:
+      - equals:
+          F64: 1.0
 
   - # Trim
     type: NumSet
@@ -610,13 +610,13 @@ shared:
     var_units: Percent scaler 16k
     var_type: f64
     event_name: ELEVATOR_TRIM_SET
-    condition: # Because the aircraft is FBW, the trim is constantly adjusted so there's no need to sync this in the air
-      var:
-        var_name: A:SIM ON GROUND
-        var_units: Bool
-        var_type: bool
-      equals:
-        Bool: true
+    conditions: # Because the aircraft is FBW, the trim is constantly adjusted so there's no need to sync this in the air
+      - var:
+          var_name: A:SIM ON GROUND
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: true
   -
     type: NumSet
     var_name: A:AILERON TRIM PCT
@@ -1374,14 +1374,14 @@ shared:
   -
     type: var
     var_name: L:A32NX_BTN_TOCONFIG
-    condition:
-      equals:
+    conditions:
+      - equals:
         F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_CLR
-    condition:
-      equals:
+    conditions:
+      - equals:
         F64: 1
   -
     type: var
@@ -1389,14 +1389,14 @@ shared:
   -
     type: var
     var_name: L:A32NX_BTN_CLR2
-    condition:
-      equals:
+    conditions:
+      - equals:
         F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_RCL
-    condition:
-      equals:
+    conditions:
+      - equals:
         F64: 1
   -
     type: var

@@ -47,23 +47,29 @@ master:
     var_units: Feet per second
     var_type: f64
     interpolate: Default
-    condition:
-      var:
-        var_name: A:AUTOPILOT MASTER
-        var_units: Bool
-        var_type: bool
-      equals:
-        Bool: true
+    conditions:
+      - var:
+          var_name: A:AUTOPILOT MASTER
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: true
   -
     type: var
     var_name: A:AIRSPEED INDICATED
     var_units: Knots
     var_type: f64
     interpolate: Default
-    condition:
-      var:
-        var_name: A:AUTOPILOT MASTER
-        var_units: Bool
-        var_type: bool
-      equals:
-        Bool: false
+    conditions:
+      - var:
+          var_name: A:AUTOPILOT MASTER
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: false
+      - var:
+          var_name: A:SIM ON GROUND
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: false
