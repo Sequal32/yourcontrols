@@ -246,6 +246,11 @@ fn main() {
                         warn!("[SIM] SimConnect exception occurred: {}", unsafe {
                             data.dwException
                         });
+
+                        if data.dwException == 31 {
+                            // Client data area was not initialized by the gauge
+                            client.stop("Could not connect to the YourControls gauge. Do you have the community package installed correctly?".to_string())
+                        }
                     }
                     DispatchResult::ClientData(data) => {
                         definitions.process_client_data(&conn, data);
