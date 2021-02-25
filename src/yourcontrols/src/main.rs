@@ -2,6 +2,7 @@
 
 mod app;
 mod clientmanager;
+mod corrector;
 mod definitions;
 mod simconfig;
 mod sync;
@@ -9,7 +10,6 @@ mod syncdefs;
 mod update;
 mod util;
 mod varreader;
-mod velocity;
 
 use app::{App, AppMessage, ConnectionMethod};
 use clientmanager::ClientManager;

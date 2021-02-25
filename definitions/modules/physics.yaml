@@ -48,7 +48,7 @@ master:
     var_type: f64
     interpolate: Default
     conditions:
-      - var:
+      - var: # Indicated airspeed should be synced when not on autopilot
           var_name: A:AUTOPILOT MASTER
           var_units: Bool
           var_type: bool
@@ -61,7 +61,7 @@ master:
     var_type: f64
     interpolate: Default
     conditions:
-      - var:
+      - var: # Velocity body Z should be synced on the ground and on autopilot as AIRSPEED INDICATED messes with the other velocity bodies and throws the FD off
           var_name: A:AUTOPILOT MASTER
           var_units: Bool
           var_type: bool

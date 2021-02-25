@@ -2,26 +2,21 @@ use indexmap::IndexMap;
 use serde::Deserialize;
 use serde_yaml::{self, Value};
 use simconnect::SimConnector;
-use std::{
-    collections::HashMap,
-    collections::{hash_map, HashSet, VecDeque},
-    fmt::{Debug, Display},
-    fs::File,
-    mem::swap,
-    path::Path,
-    time::Instant,
-};
+use std::collections::{hash_map, HashMap, HashSet, VecDeque};
+use std::fmt::{Debug, Display};
+use std::fs::File;
+use std::mem::swap;
+use std::path::Path;
+use std::time::Instant;
 
+use crate::corrector::Corrector;
+use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType, LVarResult};
 use crate::sync::jscommunicator::{JSCommunicator, JSPayloads};
 use crate::sync::transfer::{AircraftVars, Events, LVarSyncer};
 use crate::syncdefs::{
     CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch,
 };
 use crate::util::{Category, InDataTypes};
-use crate::{
-    sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType, LVarResult},
-    velocity::VelocityCorrector,
-};
 
 use yourcontrols_types::{AVarMap, AllNeedSync, Error, Event, EventData, LVarMap, VarReaderTypes};
 
@@ -106,15 +101,15 @@ fn get_data_type_from_string(string: &str) -> Result<InDataTypes, Error> {
 
 fn evalute_condition_values(condition: &Condition, value: &VarReaderTypes) -> bool {
     if let Some(data) = condition.equals {
-        return data == *value;
+        return *value == data;
     }
 
     if let Some(data) = condition.greater_than {
-        return data > *value;
+        return *value > data;
     }
 
     if let Some(data) = condition.less_than {
-        return data < *value;
+        return *value < data;
     }
 
     return false;
@@ -388,8 +383,8 @@ pub struct Definitions {
     current_sync: AllNeedSync,
     // Keep track of which definitions just got written so we don't sync them again
     last_written: HashMap<String, Instant>,
-    // Helper struct to remove and add velocity
-    velocity_corrector: VelocityCorrector,
+    // Helper struct to calculate velocity and correct plane/ground altitude
+    physics_corrector: Corrector,
     // Delay events by 100ms in order for them to get synced correctly
     event_queue: VecDeque<Event>,
     event_timer: Instant,
@@ -434,7 +429,7 @@ impl Definitions {
 
             last_written: HashMap::new(),
 
-            velocity_corrector: VelocityCorrector::new(2),
+            physics_corrector: Corrector::new(2),
 
             current_sync: AllNeedSync::new(),
             event_queue: VecDeque::new(),
@@ -574,6 +569,7 @@ impl Definitions {
     fn add_mapping(&mut self, var_name: String, mapping: Mapping) -> Result<(), Error> {
         let mut mapping = mapping;
 
+        // Conditions
         if let Some(conditions) = mapping.condition.as_mut() {
             for condition in conditions {
                 if let Some(var_data) = condition.var.as_mut() {
@@ -586,12 +582,16 @@ impl Definitions {
                     )?;
                     var_data.var_name = var_string.clone();
 
+                    // Do not add var to do not sync if there's a mapping for it
                     if self.mappings.get(&var_string).is_none() {
                         self.do_not_sync.insert(var_string);
                     }
                 }
             }
         }
+
+        // If the var name was already added to do not sync... remove it
+        self.do_not_sync.remove(&var_name);
 
         match self.mappings.entry(var_name.to_string()) {
             hash_map::Entry::Occupied(mut o) => o.get_mut().push(mapping),
@@ -714,7 +714,7 @@ impl Definitions {
         let data_type_string: &str = check_and_return_field!("var_type", var, str);
         let data_type = get_data_type_from_string(data_type_string)?;
 
-        let condition = try_cast_yaml!(var["condition"].clone());
+        let condition = try_cast_yaml!(var["conditions"].clone());
         let cancel_h_events = var["cancel_h_events"].as_bool().unwrap_or(false);
 
         match data_type {
@@ -777,7 +777,7 @@ impl Definitions {
         let data_type_string: &str = check_and_return_field!("var_type", var, str);
         let data_type = get_data_type_from_string(data_type_string)?;
 
-        let condition = try_cast_yaml!(var["condition"].clone());
+        let condition = try_cast_yaml!(var["conditions"].clone());
         let cancel_h_events = var["cancel_h_events"].as_bool().unwrap_or(false);
 
         match data_type {
@@ -1160,14 +1160,14 @@ impl Definitions {
     // Process changed aircraft variables and update SyncActions related to it
     #[allow(unused_variables)]
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
-        self.velocity_corrector.process_sim_object_data(data);
+        self.physics_corrector.process_sim_object_data(data);
         if self.avarstransfer.define_id != data.dwDefineID {
             return;
         }
         // Data might be bad/config files don't line up
         if let Ok(mut data) = self.avarstransfer.read_vars(data) {
-            // Remove wind component
-            self.velocity_corrector.remove_wind_component(&mut data);
+            // Remove some computed components
+            self.physics_corrector.remove_components(&mut data);
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Determine if this variable should be updated
@@ -1339,8 +1339,8 @@ impl Definitions {
         let mut interpolation_data = Vec::new();
 
         let mut data = data;
-        // Add back wind component
-        self.velocity_corrector.add_wind_component(&mut data);
+        // Add some local computed components
+        self.physics_corrector.add_components(&mut data);
 
         // Only sync vars that are defined as so
         for (var_name, data) in data {
@@ -1448,7 +1448,7 @@ impl Definitions {
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
-        self.velocity_corrector.on_connected(conn);
+        self.physics_corrector.on_connected(conn);
 
         // Might be running another instance
         self.jstransfer.start().map_err(|_| ())?;
