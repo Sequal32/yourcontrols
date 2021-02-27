@@ -47,29 +47,3 @@ master:
     var_units: Feet per second
     var_type: f64
     interpolate: Default
-    conditions:
-      - var: # Indicated airspeed should be synced when not on autopilot
-          var_name: A:AUTOPILOT MASTER
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: true
-  -
-    type: var
-    var_name: A:AIRSPEED INDICATED
-    var_units: Knots
-    var_type: f64
-    interpolate: Default
-    conditions:
-      - var: # Velocity body Z should be synced on the ground and on autopilot as AIRSPEED INDICATED messes with the other velocity bodies and throws the FD off
-          var_name: A:AUTOPILOT MASTER
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: false
-      - var:
-          var_name: A:SIM ON GROUND
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: false

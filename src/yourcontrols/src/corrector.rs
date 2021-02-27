@@ -36,7 +36,7 @@ impl Corrector {
     }
 
     pub fn remove_components(&self, data: &mut AVarMap) {
-        if let Some(VarReaderTypes::F64(velocity)) = data.get_mut("BODY VELOCITY Z") {
+        if let Some(VarReaderTypes::F64(velocity)) = data.get_mut("VELOCITY BODY Z") {
             *velocity -= self.current.wind_z
         }
 
@@ -48,7 +48,7 @@ impl Corrector {
     }
 
     pub fn add_components(&self, data: &mut AVarMap) {
-        if let Some(VarReaderTypes::F64(velocity)) = data.get_mut("BODY VELOCITY Z") {
+        if let Some(VarReaderTypes::F64(velocity)) = data.get_mut("VELOCITY BODY Z") {
             *velocity += self.current.wind_z
         }
 
