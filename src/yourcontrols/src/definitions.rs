@@ -1020,7 +1020,8 @@ impl Definitions {
     }
 
     fn process_local_var(&mut self, result: GetResult) {
-        let mut should_write = !check_did_write_recently(&mut self.last_written, &result.var_name);
+        let mut should_write = !check_did_write_recently(&mut self.last_written, &result.var_name)
+            && !self.do_not_sync.contains(&result.var_name);
 
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
@@ -1029,8 +1030,7 @@ impl Definitions {
                     &self.avarstransfer,
                     mapping.condition.as_ref(),
                     &VarReaderTypes::F64(result.var.floating),
-                ) | self.do_not_sync.contains(&result.var_name)
-                {
+                ) {
                     should_write = false;
                     continue;
                 }
