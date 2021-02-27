@@ -1,0 +1,56 @@
+﻿/** This mixin makes a single line element fit exactly on the Roboto font for easier integration. */
+ingame-ui#CustomPanel {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content: center;
+  height:100% !important;
+  width: 100% !important;
+  /*border: 2px solid blue !important;*/
+}
+ingame-ui#CustomPanel #CustomPanelWrap {
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  height: 100% !important;
+  /*border: 2px solid red !important;*/
+  min-height: 0;
+  min-width: 0;
+  overflow:hidden;
+  align-items: stretch !important;
+  flex: 1 1 auto !important;
+}
+ingame-ui#CustomPanel #CustomPanelWrap #CustomPanelIframe {
+  flex: 1 1 auto !important;
+  border: 0;
+}
+ingame-ui#CustomPanel #MainDisplay.hidden {
+  display: none;
+}
+ingame-ui#CustomPanel #Footer.hidden {
+  display: none;
+}
+ingame-ui#CustomPanel .ingameUiContent {
+  /*border: 2px solid green !important;*/
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  overflow:hidden !important;
+  align-items: stretch !important;
+  flex: 1 1 auto !important;
+}
+ingame-ui#CustomPanel .ingameUiWrapper {
+  /*border: 2px solid yellow !important;*/
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  overflow:hidden !important;
+  align-items: stretch !important;
+  flex: 1 1 auto !important;
+}
