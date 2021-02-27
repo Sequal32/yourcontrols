@@ -1283,8 +1283,6 @@ impl Definitions {
             }
         }
 
-        self.event_queue.pop_front();
-
         Ok(())
     }
 
@@ -1489,14 +1487,18 @@ impl Definitions {
     }
 
     pub fn get_all_current(&self) -> AllNeedSync {
+        let mut avars = self
+            .avarstransfer
+            .get_all_vars()
+            .clone()
+            .into_iter()
+            .filter(|(x, _)| !self.do_not_sync.contains(x))
+            .collect();
+
+        self.physics_corrector.remove_components(&mut avars);
+
         AllNeedSync {
-            avars: self
-                .avarstransfer
-                .get_all_vars()
-                .clone()
-                .into_iter()
-                .filter(|(x, _)| !self.do_not_sync.contains(x))
-                .collect(),
+            avars,
             lvars: self
                 .lvarstransfer
                 .get_all_vars()
