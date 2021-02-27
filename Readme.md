@@ -40,6 +40,7 @@ The following aircraft are supported:
 1. Ensure everybody has the same **navdata**, **scenery**, and **weather** installed.
 2. Launch MSFS, select the same aircraft and spawn location. **Do NOT enable multiplayer unless you're on different servers.**
 3. Once everyone has spawned in, start up the included .exe file. **Do NOT run as administrator.**
+4. It is important that you do not touch anything (especially avionics!) until everybody is connected.
 4.
     **Hoster (designate one person to run)**:
 
@@ -117,9 +118,10 @@ Disable multiplayer and make sure you *are not* in the same group. If you're usi
 
 ### Mismatching speeds/altitude
 
-Unfortunately, weather cannot currently be synced between flight simulators. If the sea pressure is off or the winds are off, you will experience desync.
+Unfortunately, weather cannot currently be synced between flight simulators. If the sea pressure, ISA, temperature, and other weather-related aspects are different, you will experience desync.
 
 ## Limitations
 * Some knobs are purely animation, and not represented by a local variable therefor cannot be synced, such as guard switches (yet...)
 * Avionics currently rely on syncing button presses only and not state. If the MCDUs are different in any way before connecting, they will desynchronize.
 * Scenery, weather, and navdata cannot be synced. Please ensure you have the same settings prior to connecting.
+* Ground services, and ATC cannot be synced.
