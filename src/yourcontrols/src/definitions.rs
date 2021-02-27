@@ -680,7 +680,7 @@ impl Definitions {
             let mut action = Box::new(NumSet::new(event_id));
 
             if var.unreliable {
-                self.unreliable_vars.insert(var.var_name.clone());
+                self.unreliable_vars.insert(var_string.clone());
             }
 
             if var.use_calculator || var.event_param.is_some() {
