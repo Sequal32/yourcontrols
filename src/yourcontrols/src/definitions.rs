@@ -139,7 +139,7 @@ fn evalute_condition(
     }
 }
 
-fn evalute_conditions(
+fn evaluate_conditions(
     lvarstransfer: &LVarSyncer,
     avarstransfer: &AircraftVars,
     conditions: Option<&Vec<Condition>>,
@@ -1019,18 +1019,18 @@ impl Definitions {
         self.parse_yaml(yaml)
     }
 
-    #[allow(unused_variables)]
     fn process_local_var(&mut self, result: GetResult) {
         let mut should_write = !check_did_write_recently(&mut self.last_written, &result.var_name);
 
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
-                if !evalute_conditions(
+                if !evaluate_conditions(
                     &self.lvarstransfer,
                     &self.avarstransfer,
                     mapping.condition.as_ref(),
                     &VarReaderTypes::F64(result.var.floating),
-                ) {
+                ) | self.do_not_sync.contains(&result.var_name)
+                {
                     should_write = false;
                     continue;
                 }
@@ -1057,6 +1057,7 @@ impl Definitions {
         if !should_write {
             return;
         }
+
         self.current_sync
             .lvars
             .insert(result.var_name, result.var.floating);
@@ -1122,7 +1123,7 @@ impl Definitions {
 
         if let Some(mappings) = self.mappings.get(&event_name) {
             for mapping in mappings {
-                if !evalute_conditions(
+                if !evaluate_conditions(
                     &self.lvarstransfer,
                     &self.avarstransfer,
                     mapping.condition.as_ref(),
@@ -1176,7 +1177,7 @@ impl Definitions {
                 // Set current var syncactions
                 if let Some(mappings) = self.mappings.get_mut(&var_name) {
                     for mapping in mappings {
-                        if !evalute_conditions(
+                        if !evaluate_conditions(
                             &self.lvarstransfer,
                             &self.avarstransfer,
                             mapping.condition.as_ref(),
@@ -1263,6 +1264,20 @@ impl Definitions {
                 } => self
                     .jstransfer
                     .write_payload(JSPayloads::Input { id, value }, Some(&instrument)),
+                Event::Time {
+                    hour,
+                    minute,
+                    day,
+                    year,
+                } => self.jstransfer.write_payload(
+                    JSPayloads::Time {
+                        hour,
+                        minute,
+                        day,
+                        year,
+                    },
+                    None,
+                ),
 
                 Event::KeyEvent { name, value } => self.process_key_event(conn, name, value)?,
             }
@@ -1271,6 +1286,10 @@ impl Definitions {
         self.event_queue.pop_front();
 
         Ok(())
+    }
+
+    pub fn request_time(&mut self) {
+        self.jstransfer.write_payload(JSPayloads::RequestTime, None);
     }
 
     pub fn step(&mut self, conn: &SimConnector) -> Result<(), Error> {
@@ -1471,8 +1490,19 @@ impl Definitions {
 
     pub fn get_all_current(&self) -> AllNeedSync {
         AllNeedSync {
-            avars: self.avarstransfer.get_all_vars().clone(),
-            lvars: self.lvarstransfer.get_all_vars(),
+            avars: self
+                .avarstransfer
+                .get_all_vars()
+                .clone()
+                .into_iter()
+                .filter(|(x, _)| !self.do_not_sync.contains(x))
+                .collect(),
+            lvars: self
+                .lvarstransfer
+                .get_all_vars()
+                .into_iter()
+                .filter(|(x, _)| !self.do_not_sync.contains(x))
+                .collect(),
             events: EventData::new(),
         }
     }

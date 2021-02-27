@@ -375,6 +375,10 @@ fn main() {
                             if control.has_control() {
                                 client.update(definitions.get_all_current(), false);
                             }
+                            // Request time update to sync
+                            if client.is_host() {
+                                definitions.request_time();
+                            }
                         }
                         Payloads::PlayerLeft { name } => {
                             info!("[NETWORK] {} lost connection.", name);

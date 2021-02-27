@@ -14,9 +14,23 @@ use tungstenite::{accept, HandshakeError, Message, WebSocket};
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum JSPayloads {
     // Receive
-    Interaction { name: String },
-    Handshake { name: String },
-    Input { id: String, value: String },
+    Interaction {
+        name: String,
+    },
+    Handshake {
+        name: String,
+    },
+    Input {
+        id: String,
+        value: String,
+    },
+    Time {
+        hour: u32,
+        minute: u32,
+        day: u32,
+        year: u32,
+    },
+    RequestTime,
 }
 
 pub struct JSMessage {
@@ -141,6 +155,7 @@ impl JSCommunicator {
                 Ok(Message::Close(_)) => {
                     return false;
                 }
+                Err(tungstenite::Error::AlreadyClosed) => return false,
                 _ => {}
             }
 

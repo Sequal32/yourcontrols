@@ -19,6 +19,12 @@ pub enum Event {
         name: String,
         value: u32,
     },
+    Time {
+        hour: u32,
+        minute: u32,
+        day: u32,
+        year: u32,
+    },
 }
 
 #[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq, PartialOrd)]
@@ -121,6 +127,7 @@ impl AllNeedSync {
             Event::JSEvent { name } => filter_or_push!(name, events, event),
             Event::JSInput { id, .. } => filter_or_push!(id, events, event),
             Event::KeyEvent { name, .. } => filter_or_push!(name, events, event),
+            Event::Time { .. } => filter_or_push!("", events, event),
         });
 
         return filtered;
