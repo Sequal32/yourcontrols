@@ -1,21 +1,22 @@
 [package]
-name = "app"
+name = "yourcontrols_ui"
 version = "0.1.0"
 description = "A Tauri App"
-authors = ["you"]
+authors = [ "you" ]
 license = ""
 repository = ""
-default-run = "app"
+default-run = "yourcontrols_ui"
 edition = "2018"
 build = "src/build.rs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "0.11" }
-crossbeam_channel = "0.5.0"
+serde_json = "1.0.64"
+crossbeam-channel = "0.5.0"
+tungstenite = "0.13.0"
+simplelog = "0.9"
+serde_repr = "0.1"
+serde = { version = "1.0", features = [ "derive" ] }
+tauri = { version = "0.11", features = [ "all-api" ] }
 
 [target."cfg(windows)".build-dependencies]
 winres = "0.1"
@@ -25,5 +26,5 @@ embedded-server = [ "tauri/embedded-server" ]
 no-server = [ "tauri/no-server" ]
 
 [[bin]]
-name = "app"
-path = "src/main.rs"
+name = "yourcontrols_ui"
+path = "src/test.rs"
