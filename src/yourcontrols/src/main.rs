@@ -249,7 +249,8 @@ fn main() {
 
                         if data.dwException == 31 {
                             // Client data area was not initialized by the gauge
-                            client.stop("Could not connect to the YourControls gauge. Do you have the community package installed correctly?".to_string())
+                            client.stop("Could not connect to the YourControls gauge. Do you have the community package installed correctly?".to_string());
+                            break;
                         }
                     }
                     DispatchResult::ClientData(data) => {
