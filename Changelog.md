@@ -1,3 +1,12 @@
+# Version 2.5.4
+* Fixed an error message when NAV is activated on the CJ4
+* Fixed an issue where brakes would still be depressed for others after releasing them
+* Fixed multiple autopilot definitions conflicts on the WT CJ4
+* Fixed off by one logic for the course and altimeter on the G1000s
+* Fixed an issue where avionic presses would be triggered multiple times for clients
+
+* Added C208B seatbelt signs/other INOP switches as an optional feature
+
 # Version 2.5.3
 
 ## New Features

@@ -80,7 +80,7 @@ Notes:
    
 2. For the G1000/FMC/other avionics, only one person should be interacting with a given area at a time. For example, one person flies while the other fills out the flightplan (you should not be filing out the flightplan at the same time), or one person adjusts the transponder while another zooms out the map. This is to avoid desynchronization issues.
    
-3. If you want to load a SimBrief Flightplan in the A32NX, you need to set the **same SimBrief username** in the AOC settings.
+3. If you want to load a SimBrief Flightplan in the A32NX, you need to set the **same SimBrief username** in the AOC settings. For other aircraft that use SimBrief to import, set the same username via their methods.
    
 4. For aircraft and avionics that have setting saving functionality (A32NX, Working Title, etc...), the state of the aircraft may be different depending on those settings. You should verify that you and your copilot(s) have the same settings.
 
