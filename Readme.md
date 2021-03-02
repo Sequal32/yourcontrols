@@ -10,6 +10,8 @@ Table of Contents
 - [Downloading](#downloading)
 - [Running](#running)
 - [Settings](#settings)
+- [What You Can Expect to Sync](#what-you-can-expect-to-sync)
+- [What You Can Not Expect To Sync](#what-you-can-not-expect-to-sync)
 - [Support Me!](#support-me)
 - [Troubleshooting](#troubleshooting)
   - [Discord](#discord)
@@ -89,6 +91,26 @@ Notes:
 - **Streamer Mode**: Hides your IP after connecting.
 - **Use UPnP**: Attempts to automatically port forward using UPnP. You can check if it was actually successful in the Log.txt file.
 - **New connections start as observer**: New connections will be unable to manipulate switches.
+
+## What You Can Expect to Sync
+* Position/Rotation
+* Controls
+* Every functional switch
+* Avionics/FMCs
+* Autopilot
+* Time (on initial connection)
+
+## What You Can Not Expect To Sync
+* Speed when weather is desynced (ISA/Temperature difference)
+* Weather
+* Navdata
+* Ground Services
+* ATC
+* Setting radio frequencies via ATC menu
+* INOP Switches
+* MCDU/FMC being the same (keypresses are synced, not the actual computer state itself) (go slowly!)
+* Switches that have no other effect other than to switch on and off (doesn't actually affect the function of the aircraft)
+  * Guard switches
 
 ## Support Me!
 If you enjoy the mod, considering showing your gratitude with a donation! I've put a few hundred hours of my own time into making this program in order for everyone to have an opportunity to fly together in as many aircraft as possible. It'll also help me keep the servers up.

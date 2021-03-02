@@ -1,3 +1,9 @@
+# Version 2.5.5
+* Support new dev version of A32NX (APU/Electrical button syncage)
+* Fixed an issue where the aircraft would be floating or through the ground on initial connection
+* C152 - attempted to fix heading gyro desync
+* WT CJ4 - fixed various desync
+
 # Version 2.5.4
 * Fixed an error message when NAV is activated on the CJ4
 * Fixed an issue where brakes would still be depressed for others after releasing them
