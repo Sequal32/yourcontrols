@@ -75,6 +75,12 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
+  -
+    type: var
+    var_name: A:PLANE HEADING DEGREES GYRO # Drifts for some reason
+    var_units: Degrees
+    var_type: f64
+    interpolate: DefaultConstant
 
 server:
   - # Payload
