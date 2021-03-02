@@ -10,6 +10,7 @@ const ALTITUDE_CHANGE_THRESHOLD: f64 = 1000.0;
 struct Current {
     wind_z: f64,
     ground_alt: f64,
+    alt_above_ground: f64,
 }
 
 fn average(new_value: f64, average: f64) -> f64 {
@@ -28,6 +29,7 @@ impl Corrector {
 
         avars.add_var("AIRCRAFT WIND Z", "Feet per second", InDataTypes::F64);
         avars.add_var("GROUND ALTITUDE", "Feet", InDataTypes::F64);
+        avars.add_var("PLANE ALT ABOVE GROUND", "Feet", InDataTypes::F64);
 
         Self {
             avars,
@@ -41,7 +43,7 @@ impl Corrector {
         }
 
         if let Some(VarReaderTypes::F64(altitude)) = data.get_mut("PLANE ALTITUDE") {
-            if *altitude <= ALTITUDE_CHANGE_THRESHOLD {
+            if self.current.alt_above_ground <= ALTITUDE_CHANGE_THRESHOLD {
                 *altitude -= self.current.ground_alt
             }
         }
@@ -53,7 +55,7 @@ impl Corrector {
         }
 
         if let Some(VarReaderTypes::F64(altitude)) = data.get_mut("PLANE ALTITUDE") {
-            if *altitude <= ALTITUDE_CHANGE_THRESHOLD {
+            if self.current.alt_above_ground <= ALTITUDE_CHANGE_THRESHOLD {
                 *altitude += self.current.ground_alt
             }
         }
@@ -85,7 +87,16 @@ impl Corrector {
             }
 
             if let Some(VarReaderTypes::F64(altitude)) = data.get("GROUND ALTITUDE") {
-                self.current.ground_alt = average(*altitude, self.current.ground_alt);
+                if self.current.ground_alt == 0.0 {
+                    // Not set yet, set value right away without averaging
+                    self.current.ground_alt = *altitude
+                } else {
+                    self.current.ground_alt = average(*altitude, self.current.ground_alt);
+                }
+            }
+
+            if let Some(VarReaderTypes::F64(altitude)) = data.get("PLANE ALT ABOVE GROUND") {
+                self.current.alt_above_ground = *altitude;
             }
         }
     }
