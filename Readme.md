@@ -48,15 +48,15 @@ The following aircraft are supported:
 
     Try all of these options in this order, until one works for you.
 
-    **Cloud P2P**
-    Cloud P2P utilizes a rendezvous server in order to connect two computers behind a router. Dependending on your router, this may fail and you'll have to use other connection methods. *This is the preferred method*.
+    **Butt P2P**
+    Butt P2P utilizes a rendezvous server in order to connect two computers behind a router. Dependending on your router, this may fail and you'll have to use other connection methods. *This is the preferred method*.
 
     1. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
     2. Click `Start Server`
     3. Give the provided session code to the joiners.
 
-    **Cloud Host**
-    Cloud Host utilizes a hosted server that *relays* traffic between computers. Because of the high traffic this uses, the current connection limit is capped at 100.
+    **Butt Host**
+    Butt Host utilizes a hosted server that *relays* traffic between computers. Because of the high traffic this uses, the current connection limit is capped at 100.
 
     
     1. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
@@ -65,12 +65,12 @@ The following aircraft are supported:
 
     **Direct**
     1. If you have an [IPv6 address](https://test-ipv6.com/), you can simply give that along with the port to the joiners.
-    2. **UDP** [port forward](https://www.youtube.com/watch?v=usSpl0yJFnY) either `25071` or the specified port in the application. If port forwarding is not an option, try enabling UPnP, or use Cloud P2P or Cloud Host.
+    2. **UDP** [port forward](https://www.youtube.com/watch?v=usSpl0yJFnY) either `25071` or the specified port in the application. If port forwarding is not an option, try enabling UPnP, or use Butt P2P or Butt Host.
     3. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
     4. Click `Start Server`
       
 1. **Joiners**:
-   If given a Session Code, click `Cloud Server`, paste code, and click `Connect`
+   If given a Session Code, click `Butt Server`, paste code, and click `Connect`
 
    If given an IP, confirm with the hoster whether it is IPv4 or IPv6, enter port, and click `Connect` 
 
@@ -94,6 +94,7 @@ Notes:
 
 ## What You Can Expect to Sync
 * Position/Rotation
+* Position/Rotation when changed by Slew Mode
 * Controls
 * Every functional switch
 * Avionics/FMCs
@@ -101,8 +102,9 @@ Notes:
 * Time (on initial connection)
 
 ## What You Can Not Expect To Sync
-* Speed when weather is desynced (ISA/Temperature difference)
+* Speed when Weather is not the same across users (ISA/Temperature difference)
 * Weather
+* Visual effect of slew mode (the 'fixed camera' view will only be seen by initiating user)
 * Navdata
 * Ground Services
 * ATC
