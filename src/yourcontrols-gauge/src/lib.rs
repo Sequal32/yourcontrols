@@ -1,14 +1,16 @@
-#![cfg(any(target_arch = "wasm32", doc))]
+mod diff;
+mod fragment;
 mod gauge;
-use gauge::MainGauge;
+mod util;
 
-pub type GenericResult<T> = Result<T, Box<dyn std::error::Error>>;
+use gauge::MainGauge;
+use util::GenericResult;
 
 const PROGRAM_NAME: &str = "YourControlsGauge";
 
 // Used for quick reloading via aircraft selector
 #[msfs::gauge(name=YourControlsGauge)]
-async fn callback(mut gauge: msfs::Gauge) -> Result<(), Box<dyn std::error::Error>> {
+async fn callback(mut gauge: msfs::Gauge) -> GenericResult<()> {
     let mut simconnect = gauge.open_simconnect(PROGRAM_NAME)?;
     let mut program_gauge = MainGauge::new();
 
@@ -26,7 +28,7 @@ async fn callback(mut gauge: msfs::Gauge) -> Result<(), Box<dyn std::error::Erro
 }
 
 #[msfs::standalone_module]
-async fn module(mut module: msfs::StandaloneModule) -> Result<(), Box<dyn std::error::Error>> {
+async fn module(mut module: msfs::StandaloneModule) -> GenericResult<()> {
     let mut simconnect = module.open_simconnect(PROGRAM_NAME)?;
     let mut program_gauge = MainGauge::new();
 

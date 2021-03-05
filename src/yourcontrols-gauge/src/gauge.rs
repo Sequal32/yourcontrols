@@ -1,10 +1,9 @@
+use crate::util::{GenericResult, DATA_SIZE};
 use msfs::sim_connect::{client_data_definition, ClientDataArea, SimConnect, SimConnectRecv};
-
-use crate::GenericResult;
 
 #[client_data_definition]
 struct ClientData {
-    inner: [u8; 8192],
+    inner: [u8; DATA_SIZE],
 }
 
 #[derive(serde::Deserialize, Debug)]
