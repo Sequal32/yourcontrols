@@ -1,6 +1,7 @@
 mod diff;
 mod fragment;
 mod gauge;
+mod interpolation;
 mod util;
 
 use gauge::MainGauge;
@@ -9,7 +10,7 @@ use util::GenericResult;
 const PROGRAM_NAME: &str = "YourControlsGauge";
 
 // Used for quick reloading via aircraft selector
-#[msfs::gauge(name=YourControlsGauge)]
+#[msfs::gauge(name=PROGRAM_NAME)]
 async fn callback(mut gauge: msfs::Gauge) -> GenericResult<()> {
     let mut simconnect = gauge.open_simconnect(PROGRAM_NAME)?;
     let mut program_gauge = MainGauge::new();

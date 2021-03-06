@@ -1,5 +1,5 @@
 use crate::util::{GenericResult, DATA_SIZE};
-use msfs::sim_connect::{client_data_definition, ClientDataArea, SimConnect, SimConnectRecv};
+use msfs::sim_connect::{client_data_definition, SimConnect, SimConnectRecv};
 
 #[client_data_definition]
 struct ClientData {
