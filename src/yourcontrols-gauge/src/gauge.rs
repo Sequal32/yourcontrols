@@ -1,5 +1,9 @@
+
+
 use crate::util::{GenericResult, DATA_SIZE};
-use msfs::sim_connect::{client_data_definition, SimConnect, SimConnectRecv};
+use msfs::{
+    sim_connect::{client_data_definition, SimConnect, SimConnectRecv},
+};
 
 #[client_data_definition]
 struct ClientData {
@@ -27,7 +31,6 @@ impl MainGauge {
         simconnect.create_client_data::<ClientData>("YourControlsSim")?;
         simconnect.request_client_data::<ClientData>(0, "YourControlsSim");
         simconnect.create_client_data::<ClientData>("YourControlsExternal")?;
-        simconnect.request_client_data::<ClientData>(0, "YourControlsExternal");
         Ok(())
     }
 
