@@ -1,7 +1,9 @@
+mod data;
 mod diff;
 mod fragment;
 mod gauge;
 mod interpolation;
+mod sync;
 mod util;
 
 use gauge::MainGauge;
