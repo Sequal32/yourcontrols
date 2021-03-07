@@ -1,10 +1,13 @@
 use crate::util::Error;
 use crate::util::GenericResult;
+
+#[cfg(any(target_arch = "wasm32", doc))]
 use msfs::legacy::{
     execute_calculator_code, AircraftVariable, CompiledCalculatorCode, NamedVariable,
 };
 
 #[derive(Default)]
+#[cfg(any(target_arch = "wasm32", doc))]
 pub struct GenericVariable {
     named: Option<NamedVariable>,
     var: Option<AircraftVariable>,
@@ -13,6 +16,7 @@ pub struct GenericVariable {
     compiled_get: Option<CompiledCalculatorCode>,
 }
 
+#[cfg(any(target_arch = "wasm32", doc))]
 impl GenericVariable {
     pub fn new_var(name: &str, units: &str, index: Option<usize>) -> GenericResult<Self> {
         let index = index.unwrap_or(0);
@@ -45,6 +49,7 @@ impl GenericVariable {
     }
 }
 
+#[cfg(any(target_arch = "wasm32", doc))]
 impl Variable for GenericVariable {
     fn get(&self) -> f64 {
         if let Some(named) = self.named.as_ref() {
@@ -62,7 +67,7 @@ impl Variable for GenericVariable {
         0.0
     }
 
-    fn set(&self, value: f64) {
+    fn set(&mut self, value: f64) {
         if let Some(named) = self.named.as_ref() {
             named.set_value(value);
         }
@@ -74,8 +79,9 @@ impl Variable for GenericVariable {
     }
 }
 
+#[cfg(any(target_arch = "wasm32", doc))]
 impl Syncable for GenericVariable {
-    fn process_incoming(&self, value: f64) {
+    fn process_incoming(&mut self, value: f64) {
         if self.get() == value {
             return;
         }
@@ -87,12 +93,14 @@ impl Syncable for GenericVariable {
     }
 }
 
+#[cfg(any(target_arch = "wasm32", doc))]
 pub struct EventSet {
     event_name: String,
     event_index: Option<u32>,
     index_reversed: bool,
 }
 
+#[cfg(any(target_arch = "wasm32", doc))]
 impl EventSet {
     fn set_with_value_and_index(&self, value: f64, index: u32) {
         if self.index_reversed {
@@ -113,12 +121,13 @@ impl EventSet {
     }
 }
 
+#[cfg(any(target_arch = "wasm32", doc))]
 impl Settable for EventSet {
-    fn set(&self) {
+    fn set(&mut self) {
         execute_calculator_code::<f64>(&format!("(>K:{})", self.event_name));
     }
 
-    fn set_with_value(&self, value: f64) {
+    fn set_with_value(&mut self, value: f64) {
         if let Some(index) = self.event_index {
             self.set_with_value_and_index(value, index);
         } else {
@@ -128,19 +137,19 @@ impl Settable for EventSet {
 }
 
 pub trait Syncable {
-    fn process_incoming(&self, value: f64);
+    fn process_incoming(&mut self, value: f64);
     fn get_var_value(&self) -> f64;
 }
 
 pub trait Variable {
     fn get(&self) -> f64;
     fn get_bool(&self) -> bool {
-        self.get() == 0.0
+        self.get() == 1.0
     }
-    fn set(&self, value: f64);
+    fn set(&mut self, value: f64);
 }
 
 pub trait Settable {
-    fn set(&self);
-    fn set_with_value(&self, value: f64);
+    fn set(&mut self);
+    fn set_with_value(&mut self, value: f64);
 }

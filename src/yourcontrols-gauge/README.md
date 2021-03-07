@@ -20,3 +20,12 @@ target = "wasm32-wasi"
 
 Run `cargo build`
 `yourcontrols_gauge.wasm` will be created in `target/release/wasm32-wasi/debug/yourcontrols_gauge.wasm`
+
+# Tests
+Because you can't exactly execute a .wasm file, you'll need to build and run the tests into an executable file.
+
+Run `cargo test --target x86_64-pc-windows-gnu`
+
+If GNU target doesn't link correctly for some reason, you can use the msvc target:
+
+Run `cargo test --target x86_64-pc-windows-msvc`
