@@ -1,5 +1,6 @@
 use std::{collections::HashMap, hash::Hash};
 
+/// Keeps track of values of type `B` mapped to a value of type `A`.
 struct DiffChecker<A, B> {
     values: HashMap<A, B>,
 }
@@ -15,7 +16,8 @@ where
         }
     }
 
-    // returns true for newly added values, otherwise, returns whether the value was changed
+    /// Creates or overwrites a tracked value.
+    /// Returns true for newly added values. Otherwise, returns whether the value was changed.
     pub fn add(&mut self, id: A, value: B) -> bool {
         let did_change = self.values.get(&id).map_or(true, |x| *x != value);
 
@@ -24,6 +26,7 @@ where
         did_change
     }
 
+    /// Resets the map.
     pub fn clear(&mut self) {
         self.values.clear()
     }

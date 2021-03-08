@@ -1,3 +1,4 @@
+/// Splits an `i32` into a `Vec<i32>` corresponding to the digits of the number read left to right.
 pub struct NumberDigits {
     digits: Vec<i32>,
 }
@@ -16,8 +17,7 @@ impl NumberDigits {
 
         Self { digits }
     }
-    // Returns a 0 to simulate padding if the value is missing
-    // Reads left to right
+    // Returns a 0 to simulate padding if the value is missing.
     pub fn get(&self, index: usize) -> i32 {
         if index + 1 > self.digits.len() {
             return 0;

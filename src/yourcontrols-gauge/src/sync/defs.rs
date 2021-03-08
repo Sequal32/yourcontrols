@@ -3,17 +3,22 @@ use std::{cell::RefCell, rc::Rc};
 use super::util::NumberDigits;
 use crate::data::{Settable, Syncable, Variable};
 
-type MultiVariable = Rc<RefCell<dyn Variable>>;
-type MultiSettable = Rc<RefCell<dyn Settable>>;
+pub type RcVariable = Rc<RefCell<dyn Variable>>;
+pub type RcSettable = Rc<RefCell<dyn Settable>>;
 
+/// A ToggleSwitch will execute `event` if the incoming value does not match its current value in `var`.
+///
+/// `off_event` will be used if the incoming value is 0.0 (false)
+///
+/// `switch_on` will only trigger `event` if the incoming value is 1.0 (true)
 pub struct ToggleSwitch {
-    var: MultiVariable,
+    pub var: RcVariable,
     // Either the toggle event or the off event
-    event: MultiSettable,
+    pub event: RcSettable,
     // To be used in the event where two events control this switch
-    off_event: Option<MultiSettable>,
+    pub off_event: Option<RcSettable>,
     // Only trigger if the new value is on
-    switch_on: bool,
+    pub switch_on: bool,
 }
 
 impl Syncable for ToggleSwitch {
@@ -46,12 +51,18 @@ impl Syncable for ToggleSwitch {
     }
 }
 
+/// NumSet will execute `event` with the parameter of the incoming value.
+/// `swap_event` will be executed after `event` is executed.
+///
+/// The value will be multiplied by `multiply_by` if specified, or added if `add_by` is specified.
+///
+/// The implmentation of both multiply_by and add_by being set is undefined.
 pub struct NumSet {
-    var: MultiVariable,
-    event: MultiSettable,
-    swap_event: Option<MultiSettable>,
-    multiply_by: Option<f64>,
-    add_by: Option<f64>,
+    pub var: RcVariable,
+    pub event: RcSettable,
+    pub swap_event: Option<RcSettable>,
+    pub multiply_by: Option<f64>,
+    pub add_by: Option<f64>,
 }
 
 impl Syncable for NumSet {
@@ -70,12 +81,17 @@ impl Syncable for NumSet {
     }
 }
 
+/// NumIncrement continuiously calls `up_event` and `down_event` the number of times it takes for the stored value in `var` to match the incoming value
+/// where `increment_amount` specifies how much each call to `up_event` and `down_event` increments.
+///
+/// Alternatively, if `pass_difference` is set to true, the difference of the stored value in `var` and the incoming value will be
+/// passed as a parameter to the relevent event instead.
 pub struct NumIncrement {
-    var: MultiVariable,
-    up_event: MultiSettable,
-    down_event: MultiSettable,
-    increment_amount: f64,
-    pass_difference: bool,
+    pub var: RcVariable,
+    pub up_event: RcSettable,
+    pub down_event: RcSettable,
+    pub increment_amount: f64,
+    pub pass_difference: bool,
 }
 
 impl Syncable for NumIncrement {
@@ -111,11 +127,15 @@ impl Syncable for NumIncrement {
     }
 }
 
-// inc_events should be the same length as dec_events
+/// NumDigitSet splits a float's left of the decimal digits into an array of u8,
+/// and then calls the corresponding digit's events in `inc_events` and `dec_events` continuously
+/// until the value stored in var matches the incoming value.
+///
+/// `inc_events` should be the same length as `dec_events`.
 pub struct NumDigitSet {
-    var: MultiVariable,
-    inc_events: Vec<MultiSettable>,
-    dec_events: Vec<MultiSettable>,
+    pub var: RcVariable,
+    pub inc_events: Vec<RcSettable>,
+    pub dec_events: Vec<RcSettable>,
 }
 
 impl Syncable for NumDigitSet {
@@ -156,9 +176,8 @@ impl Syncable for NumDigitSet {
 
 #[cfg(test)]
 mod tests {
-    use super::{MultiSettable, NumDigitSet, NumIncrement, NumSet, ToggleSwitch};
+    use super::{NumDigitSet, NumIncrement, NumSet, RcSettable, ToggleSwitch};
     use crate::data::{Settable, Syncable, Variable};
-    use core::num;
     use std::{cell::RefCell, rc::Rc};
 
     struct EventCallCounter {
@@ -371,14 +390,8 @@ mod tests {
 
         let mut num_digit_set = NumDigitSet {
             var: var.clone(),
-            inc_events: inc_events
-                .iter()
-                .map(|x| x.clone() as MultiSettable)
-                .collect(),
-            dec_events: dec_events
-                .iter()
-                .map(|x| x.clone() as MultiSettable)
-                .collect(),
+            inc_events: inc_events.iter().map(|x| x.clone() as RcSettable).collect(),
+            dec_events: dec_events.iter().map(|x| x.clone() as RcSettable).collect(),
         };
 
         num_digit_set.process_incoming(1679.0);

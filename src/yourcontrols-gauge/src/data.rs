@@ -6,6 +6,10 @@ use msfs::legacy::{
     execute_calculator_code, AircraftVariable, CompiledCalculatorCode, NamedVariable,
 };
 
+/// A wrapper struct for NamedVariable, AircraftVariable, and calculator codes.
+///
+/// `get()` for `Variable` will return the first non-none variable.
+/// `set()` for `Variable` will either directly set a NamedVariable, or use execute_calculator_code to set AircraftVariable or a calculator code.
 #[derive(Default)]
 #[cfg(any(target_arch = "wasm32", doc))]
 pub struct GenericVariable {
@@ -93,6 +97,7 @@ impl Syncable for GenericVariable {
     }
 }
 
+/// Provides multiple `set` implementations for an `event_name` and an `event_index`.
 #[cfg(any(target_arch = "wasm32", doc))]
 pub struct EventSet {
     event_name: String,
@@ -102,6 +107,13 @@ pub struct EventSet {
 
 #[cfg(any(target_arch = "wasm32", doc))]
 impl EventSet {
+    /// The event will be executed with a value and an index.
+    ///
+    /// Format:
+    /// `{value} {index} (>{event_name})`
+    ///
+    /// or with index_reversed:
+    /// `{index} {value} (>{event_name})`
     fn set_with_value_and_index(&self, value: f64, index: u32) {
         if self.index_reversed {
             execute_calculator_code::<f64>(&format!(
@@ -116,6 +128,10 @@ impl EventSet {
         }
     }
 
+    /// The event will be executed with a value.
+    ///
+    /// Format:
+    /// `{value} (>{event_name})`
     fn set_with_value_only(&self, value: f64) {
         execute_calculator_code::<f64>(&format!("{} (>K:{})", value, self.event_name));
     }

@@ -1,19 +1,22 @@
+use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 
-use serde::{Deserialize, Serialize};
-
+/// Serves as a header for a FragmentedMessage.
+/// Includes the index of the complete message that the fragment is a part of and the fragment count of the complete message.
 #[derive(Serialize, Deserialize)]
 pub struct MessageHeader {
     fragment_index: u8,
     fragment_count: u8,
 }
 
+/// A fragmented message with a header, and the fragmented bytes.
 #[derive(Serialize, Deserialize)]
 pub struct FragmentedMessage {
     header: MessageHeader,
     bytes: Vec<u8>,
 }
 
+/// Fragments into FragmentedMessages and combines FragmentedMessages into a Vec<u8>.
 pub struct MessageFragmenter {
     fragment_size: usize,
     processing_fragments: VecDeque<FragmentedMessage>,
@@ -27,6 +30,7 @@ impl MessageFragmenter {
         }
     }
 
+    /// Turns a Vec<u8> into FragmentedMessages.
     pub fn fragment_bytes(&self, bytes: Vec<u8>) -> Vec<FragmentedMessage> {
         let mut fragmented_messages = Vec::new();
 
@@ -47,18 +51,23 @@ impl MessageFragmenter {
         fragmented_messages
     }
 
+    /// Processes a fragment.
+    /// If the fragment is part of a complete message, store the fragment to be combined later.
+    /// If the fragment is the last piece of a complete message, combine all previously received fragments into a Vec<u8>.
     pub fn process_fragment(&mut self, fragment: FragmentedMessage) -> Option<Vec<u8>> {
-        let is_final_fragment = fragment.header.fragment_index < fragment.header.fragment_count - 1;
+        let is_final_fragment =
+            fragment.header.fragment_index == fragment.header.fragment_count - 1;
 
         self.processing_fragments.push_back(fragment);
 
-        if is_final_fragment {
+        if !is_final_fragment {
             return None;
         }
 
         Some(self.combine_fragments())
     }
 
+    /// Combines all previously received fragments into a Vec<u8>.
     fn combine_fragments(&mut self) -> Vec<u8> {
         let mut combined_bytes = Vec::new();
 

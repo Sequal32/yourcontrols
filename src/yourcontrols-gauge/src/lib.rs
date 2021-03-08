@@ -1,16 +1,17 @@
-mod data;
-mod diff;
-mod fragment;
-mod gauge;
-mod interpolation;
-mod sync;
-mod util;
+pub mod data;
+pub mod diff;
+pub mod fragment;
+pub mod gauge;
+pub mod interpolation;
+pub mod sync;
+pub mod util;
 
 use gauge::MainGauge;
 use util::GenericResult;
 
 const PROGRAM_NAME: &str = "YourControlsGauge";
 
+/// The entry point of the gauge. This is called when the module is loaded in.
 #[msfs::standalone_module]
 async fn module(mut module: msfs::StandaloneModule) -> GenericResult<()> {
     let mut simconnect = module.open_simconnect(PROGRAM_NAME)?;

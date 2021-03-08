@@ -1,10 +1,7 @@
-
-
 use crate::util::{GenericResult, DATA_SIZE};
-use msfs::{
-    sim_connect::{client_data_definition, SimConnect, SimConnectRecv},
-};
+use msfs::sim_connect::{client_data_definition, SimConnect, SimConnectRecv};
 
+/// A wrapper struct for an array of size DATA_SIZE bytes
 #[client_data_definition]
 struct ClientData {
     inner: [u8; DATA_SIZE],
@@ -20,6 +17,7 @@ enum Payloads {
     },
 }
 
+/// The main driver to process and send out messages through SimConnect.
 pub struct MainGauge {}
 
 impl MainGauge {
@@ -27,6 +25,7 @@ impl MainGauge {
         Self {}
     }
 
+    /// Creates/Setup ClientDataAreas for communication
     pub fn setup(&mut self, simconnect: &mut SimConnect) -> GenericResult<()> {
         simconnect.create_client_data::<ClientData>("YourControlsSim")?;
         simconnect.request_client_data::<ClientData>(0, "YourControlsSim");
