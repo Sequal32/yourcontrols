@@ -1,11 +1,10 @@
-use std::collections::{HashMap};
-
-
 use self::util::{get_time_as_seconds, Data, InterpolationType, Packet};
 use crate::util::{DatumKey, DatumValue, Time};
+use std::collections::HashMap;
 
 mod util;
 
+/// Handles interpolation of `Data` based on `InterpolationType`
 struct Interpolation {
     data: HashMap<DatumKey, Data>,
     last_called: Time,
@@ -23,6 +22,7 @@ impl Interpolation {
         }
     }
 
+    /// Queues an f64 to be interpolated to `value` at time `time`.
     fn queue_value(&mut self, id: u32, value: f64, time: f64) {
         let mut data = self.data.get_mut(&id).unwrap();
 
@@ -53,6 +53,10 @@ impl Interpolation {
         self.newest_data_time = time;
     }
 
+    /// Maps some options to `id`.
+    ///
+    /// `calculator` is a String to be executed using `execute_calculator_code` in the format of Type:Name,Units or just Type:Name.
+    /// Examples of `calculator`: `A:PLANE LATITUDE, Dergrees`, `K:AXIS_ELEVATOR_SET`
     pub fn set_data_options(
         &mut self,
         id: u32,
@@ -113,10 +117,12 @@ impl Interpolation {
         self.interpolate_code_for_time(current_time)
     }
 
+    /// Returns a string that should be executed using `execute_calculator_code` with interpolated values.
     pub fn compute_interpolate_code(&mut self) -> Option<String> {
         self.compute_interpolate_code_from_seconds(get_time_as_seconds())
     }
 
+    /// Resets all mapped data.
     pub fn reset(&mut self) {
         self.data.clear()
     }
