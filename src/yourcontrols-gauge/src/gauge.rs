@@ -1,3 +1,4 @@
+use crate::messages::Payloads;
 use crate::util::{GenericResult, DATA_SIZE};
 use msfs::sim_connect::{client_data_definition, SimConnect, SimConnectRecv};
 
@@ -5,16 +6,6 @@ use msfs::sim_connect::{client_data_definition, SimConnect, SimConnectRecv};
 #[client_data_definition]
 struct ClientData {
     inner: [u8; DATA_SIZE],
-}
-
-#[derive(serde::Deserialize, Debug)]
-enum Payloads {
-    Test,
-    Hello {
-        hi: bool,
-        no: String,
-        something: f64,
-    },
 }
 
 /// The main driver to process and send out messages through SimConnect.

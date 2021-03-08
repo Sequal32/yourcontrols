@@ -1,8 +1,7 @@
 pub mod data;
-pub mod diff;
-pub mod fragment;
 pub mod gauge;
 pub mod interpolation;
+pub mod messages;
 pub mod sync;
 pub mod util;
 

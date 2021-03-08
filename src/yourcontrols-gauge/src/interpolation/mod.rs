@@ -5,7 +5,7 @@ use std::collections::HashMap;
 mod util;
 
 /// Handles interpolation of `Data` based on `InterpolationType`
-struct Interpolation {
+pub struct Interpolation {
     data: HashMap<DatumKey, Data>,
     last_called: Time,
     current_time: Time,
