@@ -15,8 +15,9 @@ where
         }
     }
 
+    // returns true for newly added values, otherwise, returns whether the value was changed
     pub fn add(&mut self, id: A, value: B) -> bool {
-        let did_change = self.values.get(&id).map_or(false, |x| *x != value);
+        let did_change = self.values.get(&id).map_or(true, |x| *x != value);
 
         self.values.insert(id, value);
 
@@ -46,6 +47,6 @@ mod test {
         let mut diff_checker = DiffChecker::new();
         diff_checker.add(0, 1.0);
         diff_checker.clear();
-        assert!(!diff_checker.add(0, 1.0));
+        assert!(diff_checker.add(0, 1.0));
     }
 }

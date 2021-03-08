@@ -12,6 +12,8 @@ impl NumberDigits {
             value /= 10;
         }
 
+        digits.reverse();
+
         Self { digits }
     }
     // Returns a 0 to simulate padding if the value is missing
