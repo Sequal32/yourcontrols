@@ -1,7 +1,7 @@
 use std::{collections::HashMap, hash::Hash};
 
 /// Keeps track of values of type `B` mapped to a value of type `A`.
-struct DiffChecker<A, B> {
+pub struct DiffChecker<A, B> {
     values: HashMap<A, B>,
 }
 

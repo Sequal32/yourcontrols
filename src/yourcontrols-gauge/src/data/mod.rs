@@ -1,5 +1,10 @@
+use std::{cell::RefCell, rc::Rc};
+
 use crate::util::Error;
 use crate::util::GenericResult;
+
+pub mod diff;
+pub mod watcher;
 
 #[cfg(any(target_arch = "wasm32", doc))]
 use msfs::legacy::{
@@ -151,6 +156,9 @@ impl Settable for EventSet {
         }
     }
 }
+
+pub type RcVariable = Rc<RefCell<dyn Variable>>;
+pub type RcSettable = Rc<RefCell<dyn Settable>>;
 
 pub trait Syncable {
     fn process_incoming(&mut self, value: f64);
