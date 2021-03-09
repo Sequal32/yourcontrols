@@ -1,10 +1,7 @@
-use std::{cell::RefCell, rc::Rc};
+
 
 use super::util::NumberDigits;
-use crate::data::{Settable, Syncable, Variable};
-
-pub type RcVariable = Rc<RefCell<dyn Variable>>;
-pub type RcSettable = Rc<RefCell<dyn Settable>>;
+use crate::data::{RcSettable, RcVariable, Settable, Syncable, Variable};
 
 /// A ToggleSwitch will execute `event` if the incoming value does not match its current value in `var`.
 ///
@@ -178,72 +175,10 @@ impl Syncable for NumDigitSet {
 mod tests {
     use super::{NumDigitSet, NumIncrement, NumSet, RcSettable, ToggleSwitch};
     use crate::data::{Settable, Syncable, Variable};
-    use std::{cell::RefCell, rc::Rc};
-
-    struct EventCallCounter {
-        called_count: u32,
-        last_set_value: f64,
-    }
-
-    impl EventCallCounter {
-        pub fn new() -> Self {
-            Self {
-                called_count: 0,
-                last_set_value: 0.0,
-            }
-        }
-
-        pub fn reset(&mut self) {
-            self.called_count = 0;
-            self.last_set_value = 0.0;
-        }
-    }
-
-    impl Settable for EventCallCounter {
-        fn set(&mut self) {
-            self.called_count += 1;
-        }
-
-        fn set_with_value(&mut self, value: f64) {
-            self.called_count += 1;
-            self.last_set_value = value;
-        }
-    }
-
-    struct TestVariable {
-        value: f64,
-    }
-
-    impl TestVariable {
-        pub fn new(value: f64) -> Self {
-            Self { value }
-        }
-
-        pub fn set_new_value(&mut self, value: f64) {
-            self.value = value;
-        }
-    }
-
-    impl Variable for TestVariable {
-        fn get(&self) -> f64 {
-            self.value
-        }
-
-        fn set(&mut self, _value: f64) {}
-    }
-
-    fn get_test_variable(value: f64) -> Rc<RefCell<TestVariable>> {
-        Rc::new(RefCell::new(TestVariable::new(value)))
-    }
-
-    fn get_call_counter() -> Rc<RefCell<EventCallCounter>> {
-        Rc::new(RefCell::new(EventCallCounter::new()))
-    }
-
-    fn process_then_set(var: &RefCell<TestVariable>, event: &mut Syncable, value: f64) {
-        event.process_incoming(value);
-        var.borrow_mut().set_new_value(value);
-    }
+    use crate::util::test::{
+        get_call_counter, get_test_variable, process_then_set,
+    };
+    
 
     #[test]
     fn test_toggle_switch() {
