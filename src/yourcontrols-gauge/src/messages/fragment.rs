@@ -3,10 +3,13 @@ use std::collections::VecDeque;
 
 /// Serves as a header for a FragmentedMessage.
 /// Includes the index of the complete message that the fragment is a part of and the fragment count of the complete message.
+///
+/// The total header size is 12 bytes (aligned) or 10 bytes (packed)
 #[derive(Serialize, Deserialize)]
 pub struct MessageHeader {
     fragment_index: u8,
     fragment_count: u8,
+    fragment_size: usize,
 }
 
 /// A fragmented message with a header, and the fragmented bytes.
@@ -39,12 +42,15 @@ impl MessageFragmenter {
         let mut bytes_iter = bytes.into_iter();
 
         for fragment_index in 0..fragment_count {
+            let bytes: Vec<u8> = (&mut bytes_iter).take(self.fragment_size).collect();
+
             fragmented_messages.push(FragmentedMessage {
                 header: MessageHeader {
                     fragment_index,
                     fragment_count,
+                    fragment_size: bytes.len(),
                 },
-                bytes: (&mut bytes_iter).take(self.fragment_size).collect(),
+                bytes,
             })
         }
 
@@ -72,7 +78,7 @@ impl MessageFragmenter {
         let mut combined_bytes = Vec::new();
 
         while let Some(mut fragment) = self.processing_fragments.pop_front() {
-            combined_bytes.append(&mut fragment.bytes);
+            combined_bytes.extend_from_slice(&fragment.bytes[0..fragment.header.fragment_size]);
         }
 
         combined_bytes
@@ -90,10 +96,12 @@ mod tests {
 
         assert_eq!(fragmented_messages[0].header.fragment_count, 3);
         assert_eq!(fragmented_messages[0].header.fragment_index, 0);
+        assert_eq!(fragmented_messages[0].header.fragment_size, 4);
         assert_eq!(fragmented_messages[0].bytes, b"Hell");
 
         assert_eq!(fragmented_messages[2].header.fragment_count, 3);
         assert_eq!(fragmented_messages[2].header.fragment_index, 2);
+        assert_eq!(fragmented_messages[2].header.fragment_size, 4);
         assert_eq!(fragmented_messages[2].bytes, b"rld!");
     }
 
@@ -104,10 +112,12 @@ mod tests {
 
         assert_eq!(fragmented_messages[0].header.fragment_count, 3);
         assert_eq!(fragmented_messages[0].header.fragment_index, 0);
+        assert_eq!(fragmented_messages[0].header.fragment_size, 5);
         assert_eq!(fragmented_messages[0].bytes, b"Hello");
 
         assert_eq!(fragmented_messages[2].header.fragment_count, 3);
         assert_eq!(fragmented_messages[2].header.fragment_index, 2);
+        assert_eq!(fragmented_messages[2].header.fragment_size, 2);
         assert_eq!(fragmented_messages[2].bytes, b"d!");
     }
 
