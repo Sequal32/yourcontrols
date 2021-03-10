@@ -5,6 +5,7 @@ use crate::util::GenericResult;
 
 pub mod datum;
 pub mod diff;
+mod util;
 pub mod watcher;
 
 #[cfg(any(target_arch = "wasm32", doc))]

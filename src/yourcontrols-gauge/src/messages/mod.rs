@@ -6,10 +6,23 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Payloads {
-    Test,
-    Hello {
-        hi: bool,
-        no: String,
-        something: f64,
-    },
+    // Transmit to Sim
+    WatchVariable {},
+    WatchEvent {},
+    MultiWatchVariable {},
+    MultiWatchEvent {},
+    ExecuteCalculator {},
+    AddMapping {},
+    SendIncomingValues {},
+
+    QueueInterpolationData {},
+    SetInterpolationData {},
+    StopInterpolation {},
+    ResetInterpolation {},
+
+    Ping,
+    // Receive from Sim
+    VariableChange {},
+    EventTriggered {},
+    Pong,
 }

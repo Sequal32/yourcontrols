@@ -1,15 +1,18 @@
+#[cfg(any(target_arch = "wasm32", doc))]
 use msfs::legacy::execute_calculator_code;
-use std::{borrow::Borrow, collections::HashMap, time::Instant};
+use std::{collections::HashMap, time::Instant};
 
-use crate::interpolation::Interpolation;
 use crate::util::{DatumKey, DatumValue, Time};
+use crate::{interpolation::Interpolation, sync::Condition};
 
-use super::{watcher::VariableWatcher, RcVariable, Syncable};
+use super::util::{ChangedDatum, DeltaTimeChange};
+use super::watcher::VariableWatcher;
+use super::{RcVariable, Syncable};
 
 struct Datum {
     var: Option<RcVariable>,
     watch_data: Option<VariableWatcher>,
-    // condition: Option<Condition>,
+    condition: Option<Condition>,
     interpolate: Option<Interpolation>,
     mapping: Option<Box<dyn Syncable>>,
 }
@@ -22,13 +25,6 @@ impl Datum {
         }
     }
 
-    fn execute_mapping(&mut self, incoming_value: DatumValue) {
-        match self.mapping.as_mut() {
-            Some(m) => m.process_incoming(incoming_value),
-            None => {}
-        }
-    }
-
     fn get_interpolation_calculator(&mut self, tick: Time) -> Option<String> {
         match self.interpolate.as_mut() {
             Some(i) => i.compute_interpolate_code(tick),
@@ -37,68 +33,71 @@ impl Datum {
     }
 
     fn queue_interpolate(&mut self, value: DatumValue, tick: Time) {
-        if let Some(interpolate) = self.interpolate.as_mut() {
-            interpolate.queue_data(value, tick);
-        }
-    }
-}
-
-struct ChangedDatum {
-    pub key: DatumKey,
-    pub value: DatumValue,
-}
-
-struct DeltaTimeChange {
-    current_time: Time,
-    instant: Instant,
-}
-
-impl DeltaTimeChange {
-    pub fn new(start_time: Time) -> Self {
-        Self {
-            current_time: start_time,
-            instant: Instant::now(),
+        match self.interpolate.as_mut() {
+            Some(i) => i.queue_data(value, tick),
+            None => {}
         }
     }
 
-    pub fn step(&mut self) -> Time {
-        self.current_time += self.instant.elapsed().as_secs_f64();
-        self.current_time
+    fn execute_mapping(&mut self, incoming_value: DatumValue) {
+        if !self.is_condition_satisifed(incoming_value) {
+            return;
+        }
+
+        match self.mapping.as_mut() {
+            Some(m) => m.process_incoming(incoming_value),
+            None => {}
+        }
+    }
+
+    fn is_condition_satisifed(&self, incoming_value: DatumValue) -> bool {
+        self.condition
+            .as_ref()
+            .map_or(true, |x| x.is_satisfied(incoming_value))
     }
 }
 
 struct DatumManager {
     datums: HashMap<u32, Datum>,
-
     interpolation_time: Option<DeltaTimeChange>,
     poll_time: DeltaTimeChange,
 }
 
 impl DatumManager {
-    pub fn new(datums: HashMap<u32, Datum>) -> Self {
+    pub fn new() -> Self {
         Self {
-            datums,
+            datums: HashMap::new(),
             interpolation_time: None,
             poll_time: DeltaTimeChange::new(0.0),
         }
     }
 
+    #[cfg(any(target_arch = "wasm32", doc))]
     fn execute_interpolate_strings(&self, interpolation_strings: Vec<String>) {
-        execute_calculator_code::<f64>(&interpolation_strings.join(" "));
+        execute_calculator_code::<()>(&interpolation_strings.join(" "));
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    fn execute_interpolate_strings(&self, interpolation_strings: Vec<String>) {}
+
+    fn get_interpolation_tick(&mut self) -> Time {
+        self.interpolation_time
+            .as_mut()
+            .map(|x| x.step())
+            .unwrap_or(0.0)
+    }
+
+    pub fn add_datum(&mut self, key: DatumKey, datum: Datum) {
+        self.datums.insert(key, datum);
     }
 
     pub fn poll(&mut self) {
         let mut interpolation_strings = Vec::new();
         let mut changed_datums = Vec::new();
 
+        let interpolation_tick = self.get_interpolation_tick();
         // Execute stuff
         for (key, datum) in self.datums.iter_mut() {
-            let interpolation_tick = self
-                .interpolation_time
-                .as_mut()
-                .map(|x| x.step())
-                .unwrap_or(0.0);
-
             if let Some(interpolate_string) = datum.get_interpolation_calculator(interpolation_tick)
             {
                 interpolation_strings.push(interpolate_string);
@@ -115,14 +114,14 @@ impl DatumManager {
     pub fn process_incoming_data(&mut self, data: HashMap<DatumKey, DatumValue>, tick: Time) {
         // Set interpolation time
         if self.interpolation_time.is_none() {
-            self.interpolation_time = Some(DeltaTimeChange::new(tick));
+            self.interpolation_time = Some(DeltaTimeChange::new(tick - 0.05));
         }
 
         // Execute stuff
         for (key, value) in data {
             if let Some(datum) = self.datums.get_mut(&key) {
                 datum.execute_mapping(value);
-                datum.queue_interpolate(value, self.interpolation_time.as_mut().unwrap().step());
+                datum.queue_interpolate(value, tick);
             }
         }
     }
