@@ -12,7 +12,7 @@ pub mod watcher;
 use msfs::legacy::{
     execute_calculator_code, AircraftVariable, CompiledCalculatorCode, NamedVariable,
 };
-use msfs::sim_connect::{SimConnect, SimConnectRecv};
+use msfs::sim_connect::SimConnect;
 
 /// A wrapper struct for NamedVariable, AircraftVariable, and calculator codes.
 ///
@@ -24,9 +24,10 @@ pub struct GenericVariable {
     named: Option<NamedVariable>,
     var: Option<AircraftVariable>,
     // Without parentheses & greater than
-    calculator_partial: Option<String>,
-    compiled_get: Option<CompiledCalculatorCode>,
+    calculator_set: Option<String>,
+    calculator_get: Option<CompiledCalculatorCode>,
 }
+
 #[cfg(any(target_arch = "wasm32"))]
 impl GenericVariable {
     pub fn new_var(name: &str, units: &str, index: Option<usize>) -> GenericResult<Self> {
@@ -34,7 +35,7 @@ impl GenericVariable {
 
         Ok(Self {
             var: Some(AircraftVariable::from(name, units, index)?),
-            calculator_partial: Some(format!("{}:{}, {}", name, index, units)),
+            calculator_set: Some(format!("(>{}:{}, {})", name, index, units)),
             ..Default::default()
         })
     }
@@ -46,19 +47,17 @@ impl GenericVariable {
         })
     }
 
-    pub fn new_calculator(left: String, right: Option<String>) -> GenericResult<Self> {
-        let right = right.unwrap_or(String::new());
-
+    pub fn new_calculator(get: String, set: String) -> GenericResult<Self> {
         Ok(Self {
-            compiled_get: Some(
-                CompiledCalculatorCode::new(&format!("({}, {})", left, right))
-                    .ok_or(Error::VariableInitializeError)?,
+            calculator_get: Some(
+                CompiledCalculatorCode::new(&get).ok_or(Error::VariableInitializeError)?,
             ),
-            calculator_partial: Some(format!("{}, {}", left, right)),
+            calculator_set: Some(set),
             ..Default::default()
         })
     }
 }
+
 #[cfg(any(target_arch = "wasm32"))]
 impl Variable for GenericVariable {
     fn get(&self) -> DatumValue {
@@ -70,7 +69,7 @@ impl Variable for GenericVariable {
             return var.get();
         }
 
-        if let Some(calculator) = self.compiled_get.as_ref() {
+        if let Some(calculator) = self.calculator_get.as_ref() {
             return calculator.execute().unwrap_or(0.0);
         }
 
@@ -83,8 +82,8 @@ impl Variable for GenericVariable {
         }
 
         // Handles aircraft variables too
-        if let Some(calculator) = self.calculator_partial.as_ref() {
-            execute_calculator_code::<()>(&format!("{} (>{})", value, calculator));
+        if let Some(calculator) = self.calculator_set.as_ref() {
+            execute_calculator_code::<()>(calculator);
         }
     }
 }
@@ -99,7 +98,6 @@ impl Syncable for GenericVariable {
     }
 }
 
-#[cfg(any(target_arch = "wasm32"))]
 /// Provides multiple `set` implementations for an `event_name` and an `event_index`.
 pub struct EventSet {
     event_name: String,
@@ -119,12 +117,12 @@ impl EventSet {
     fn set_with_value_and_index(&self, value: DatumValue, index: u32) {
         if self.index_reversed {
             execute_calculator_code::<DatumValue>(&format!(
-                "{} {} (>K:{})",
+                "{} {} (>K:2:{})",
                 value, index, self.event_name
             ));
         } else {
             execute_calculator_code::<DatumValue>(&format!(
-                "{} {} (>K:{})",
+                "{} {} (>K:2:{})",
                 index, value, self.event_name
             ));
         }
