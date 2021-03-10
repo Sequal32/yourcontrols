@@ -8,17 +8,18 @@ pub mod diff;
 mod util;
 pub mod watcher;
 
-#[cfg(any(target_arch = "wasm32", doc))]
+#[cfg(any(target_arch = "wasm32"))]
 use msfs::legacy::{
     execute_calculator_code, AircraftVariable, CompiledCalculatorCode, NamedVariable,
 };
+use msfs::sim_connect::{SimConnect, SimConnectRecv};
 
 /// A wrapper struct for NamedVariable, AircraftVariable, and calculator codes.
 ///
 /// `get()` for `Variable` will return the first non-none variable.
 /// `set()` for `Variable` will either directly set a NamedVariable, or use execute_calculator_code to set AircraftVariable or a calculator code.
+#[cfg(any(target_arch = "wasm32"))]
 #[derive(Default)]
-#[cfg(any(target_arch = "wasm32", doc))]
 pub struct GenericVariable {
     named: Option<NamedVariable>,
     var: Option<AircraftVariable>,
@@ -26,8 +27,7 @@ pub struct GenericVariable {
     calculator_partial: Option<String>,
     compiled_get: Option<CompiledCalculatorCode>,
 }
-
-#[cfg(any(target_arch = "wasm32", doc))]
+#[cfg(any(target_arch = "wasm32"))]
 impl GenericVariable {
     pub fn new_var(name: &str, units: &str, index: Option<usize>) -> GenericResult<Self> {
         let index = index.unwrap_or(0);
@@ -59,8 +59,7 @@ impl GenericVariable {
         })
     }
 }
-
-#[cfg(any(target_arch = "wasm32", doc))]
+#[cfg(any(target_arch = "wasm32"))]
 impl Variable for GenericVariable {
     fn get(&self) -> DatumValue {
         if let Some(named) = self.named.as_ref() {
@@ -90,7 +89,7 @@ impl Variable for GenericVariable {
     }
 }
 
-#[cfg(any(target_arch = "wasm32", doc))]
+#[cfg(any(target_arch = "wasm32"))]
 impl Syncable for GenericVariable {
     fn process_incoming(&mut self, value: DatumValue) {
         if self.get() == value {
@@ -100,15 +99,15 @@ impl Syncable for GenericVariable {
     }
 }
 
+#[cfg(any(target_arch = "wasm32"))]
 /// Provides multiple `set` implementations for an `event_name` and an `event_index`.
-#[cfg(any(target_arch = "wasm32", doc))]
 pub struct EventSet {
     event_name: String,
     event_index: Option<u32>,
     index_reversed: bool,
 }
 
-#[cfg(any(target_arch = "wasm32", doc))]
+#[cfg(any(target_arch = "wasm32"))]
 impl EventSet {
     /// The event will be executed with a value and an index.
     ///
@@ -140,7 +139,7 @@ impl EventSet {
     }
 }
 
-#[cfg(any(target_arch = "wasm32", doc))]
+#[cfg(any(target_arch = "wasm32"))]
 impl Settable for EventSet {
     fn set(&mut self) {
         execute_calculator_code::<DatumValue>(&format!("(>K:{})", self.event_name));
@@ -155,13 +154,62 @@ impl Settable for EventSet {
     }
 }
 
+/// Listens to an `event_name` and keeps track of how many times it was triggered.
+pub struct KeyEvent {
+    trigger_count: u32,
+    event_name: String,
+    id: u32,
+}
+
+impl KeyEvent {
+    /// Constructs and starts listening for triggers of `event_name`.
+    pub fn new(simconnect: &mut SimConnect, event_name: String) -> Self {
+        Self {
+            id: simconnect
+                .map_client_event_to_sim_event(&event_name, false)
+                .unwrap_or(0),
+            trigger_count: 0,
+            event_name,
+        }
+    }
+
+    /// Increments `trigger_count` if the SimConnect event's ID matches the ID of this.
+    pub fn process_sim_event_data(&mut self, data: SimConnectRecv) {
+        if let SimConnectRecv::Event(e) = data {
+            if e.id() == self.id {
+                self.trigger_count += 1;
+            }
+        }
+    }
+
+    pub fn reset_count(&mut self) {
+        self.trigger_count = 0;
+    }
+
+    /// Getter for `trigger_counter`.
+    pub fn trigger_count(&self) -> u32 {
+        self.trigger_count
+    }
+}
+
+#[cfg(any(target_arch = "wasm32"))]
+impl Syncable for KeyEvent {
+    fn process_incoming(&mut self, value: DatumValue) {
+        execute_calculator_code::<DatumValue>(&format!("{} (>K:{})", value, self.event_name));
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+impl Syncable for KeyEvent {}
+
+pub type MultiMutable<T> = Rc<RefCell<T>>;
 /// A clonable, reference counted variable.
-pub type RcVariable = Rc<RefCell<dyn Variable>>;
+pub type RcVariable = MultiMutable<dyn Variable>;
 /// A clonable, reference counted settable.
-pub type RcSettable = Rc<RefCell<dyn Settable>>;
-/// A trait used to execute a task upon receiving a value.
+pub type RcSettable = MultiMutable<dyn Settable>;
+/// Used to execute a task upon receiving a value.
 pub trait Syncable {
-    fn process_incoming(&mut self, value: DatumValue);
+    fn process_incoming(&mut self, value: DatumValue) {}
 }
 
 pub trait Variable {
@@ -173,6 +221,6 @@ pub trait Variable {
 }
 
 pub trait Settable {
-    fn set(&mut self);
-    fn set_with_value(&mut self, value: DatumValue);
+    fn set(&mut self) {}
+    fn set_with_value(&mut self, value: DatumValue) {}
 }

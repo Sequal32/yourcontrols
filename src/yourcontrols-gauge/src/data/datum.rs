@@ -1,4 +1,4 @@
-#[cfg(any(target_arch = "wasm32", doc))]
+#[cfg(any(target_arch = "wasm32"))]
 use msfs::legacy::execute_calculator_code;
 use std::{collections::HashMap, time::Instant};
 
@@ -7,11 +7,13 @@ use crate::{interpolation::Interpolation, sync::Condition};
 
 use super::util::{ChangedDatum, DeltaTimeChange};
 use super::watcher::VariableWatcher;
+use super::KeyEvent;
 use super::{RcVariable, Syncable};
 
 /// A Datum can watch for changes in variables, conditionally execute a mapping (event/setting the variable) or be interpolated to a value every frame.
 pub struct Datum {
     var: Option<RcVariable>,
+    watch_event: Option<KeyEvent>,
     watch_data: Option<VariableWatcher>,
     condition: Option<Condition>,
     interpolate: Option<Interpolation>,
@@ -73,7 +75,7 @@ impl DatumManager {
         }
     }
 
-    #[cfg(any(target_arch = "wasm32", doc))]
+    #[cfg(any(target_arch = "wasm32"))]
     fn execute_interpolate_strings(&self, interpolation_strings: Vec<String>) {
         execute_calculator_code::<()>(&interpolation_strings.join(" "));
     }
