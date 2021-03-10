@@ -1,130 +1,121 @@
-use self::util::{get_time_as_seconds, Data, InterpolationType, Packet};
-use crate::util::{DatumKey, DatumValue, Time};
-use std::collections::HashMap;
+use self::util::{interpolate_value, InterpolationType};
+use crate::util::{DatumValue, Time};
+use std::collections::{VecDeque};
 
 mod util;
 
+#[derive(Default, Clone)]
+pub struct Packet {
+    pub value: DatumValue,
+    pub time: Time,
+    pub current: DatumValue,
+}
+
 /// Handles interpolation of `Data` based on `InterpolationType`
 pub struct Interpolation {
-    data: HashMap<DatumKey, Data>,
-    last_called: Time,
-    current_time: Time,
     newest_data_time: Time,
+    did_init: bool,
+
+    current_packet: Packet,
+    interpolate_type: InterpolationType,
+    calculator: String,
+    queue: VecDeque<Packet>,
 }
 
 impl Interpolation {
-    fn new() -> Self {
+    fn new(interpolate_type: InterpolationType, calculator: String) -> Self {
         Self {
-            data: HashMap::new(),
-            last_called: 0.0,
-            current_time: 0.0,
-            newest_data_time: 0.0,
+            newest_data_time: Time::default(),
+            did_init: false,
+
+            queue: VecDeque::new(),
+            current_packet: Packet::default(),
+            interpolate_type,
+            calculator,
         }
     }
 
-    /// Queues an f64 to be interpolated to `value` at time `time`.
-    fn queue_value(&mut self, id: u32, value: f64, time: f64) {
-        let mut data = self.data.get_mut(&id).unwrap();
+    fn calculate_next_value(&mut self, tick: Time) {
+        if self.queue.is_empty() {
+            return;
+        }
 
+        for index in 0..self.queue.len() {
+            let next_packet = self.queue.get(index).cloned().unwrap();
+
+            // Packet is in the future
+            if next_packet.time - tick > 0.0 {
+                // How far we are into interpolating from the "current" packet to the next packet
+                let mut alpha = (tick - self.current_packet.time)
+                    / (next_packet.time - self.current_packet.time);
+
+                // Haven't finished interpolating to the next packet yet
+                if alpha <= 1.0 {
+                    if index > 0 {
+                        let new_current = self.queue.get(index - 1).cloned().unwrap();
+
+                        for _ in 0..index {
+                            self.queue.pop_front();
+                        }
+
+                        self.current_packet.time = new_current.time;
+                        self.current_packet.value = new_current.value;
+
+                        // Recalculate alpha between this
+                        alpha = (tick - new_current.time) / (next_packet.time - new_current.time);
+                    }
+                } else {
+                    continue;
+                }
+
+                self.current_packet.current = interpolate_value(
+                    self.current_packet.value,
+                    next_packet.value,
+                    alpha,
+                    &self.interpolate_type,
+                );
+
+                return;
+            }
+        }
+
+        // No valid packets found, use very last value
+        self.current_packet = self.queue.pop_back().unwrap();
+    }
+
+    pub fn queue_data(&mut self, data: DatumValue, time: Time) {
         let new_packet = Packet {
-            value,
+            value: data,
             time,
-            current: value,
+            current: data,
         };
 
-        if data.did_init {
-            data.queue.push_back(new_packet)
+        if self.did_init {
+            self.queue.push_back(new_packet);
         } else {
-            data.current_packet = new_packet;
-            data.did_init = true;
-        }
-    }
-
-    pub fn queue_data(&mut self, data: &HashMap<DatumKey, DatumValue>, time: f64) {
-        for (id, value) in data {
-            self.queue_value(*id, *value, time)
-        }
-
-        // Allow interpolate to run
-        if self.newest_data_time == 0.0 {
-            self.current_time = time - 0.1
+            self.current_packet = new_packet;
+            self.did_init = true;
         }
 
         self.newest_data_time = time;
     }
 
-    /// Maps some options to `id`.
-    ///
-    /// `calculator` is a String to be executed using `execute_calculator_code` in the format of Type:Name,Units or just Type:Name.
-    /// Examples of `calculator`: `A:PLANE LATITUDE, Dergrees`, `K:AXIS_ELEVATOR_SET`
-    pub fn set_data_options(
-        &mut self,
-        id: u32,
-        calculator: String,
-        interpolate_type: InterpolationType,
-    ) {
-        self.data
-            .insert(id, Data::new(calculator, interpolate_type));
-    }
-
-    fn interpolate_code_for_time(&mut self, time: Time) -> Option<String> {
-        let mut calculator = String::new();
-
-        for (_, data) in self.data.iter_mut() {
-            if !data.did_init {
-                continue;
-            }
-            // No data received for this key for a while, stop setting if not constant
-            if self.newest_data_time - data.last_received_time > 0.5
-                && !data.interpolate_type.is_constant()
-            {
-                continue;
-            }
-
-            data.calculate_next_value(time);
-
-            calculator += &format!("{} (>{})", data.current_packet.current, data.calculator);
-            calculator += " ";
-        }
-
-        Some(calculator)
-    }
-
-    fn compute_interpolate_code_from_seconds(&mut self, current_time: Time) -> Option<String> {
-        let mut delta_time = current_time - self.last_called;
-
-        self.last_called = current_time;
-
+    pub fn compute_interpolate_code(&mut self, tick: Time) -> Option<String> {
         // No data queued yet
-        if self.current_time == 0.0 {
+        if !self.did_init {
+            return None;
+        }
+        // No data received for this key for a while, stop setting if not constant
+        if tick - self.newest_data_time > 0.5 && !self.interpolate_type.is_constant() {
             return None;
         }
 
-        // Difference between last data received and the current time. Need to correct for large errors.
-        let diff = self.newest_data_time - self.current_time;
+        self.calculate_next_value(tick);
 
-        // Catch up
-        if diff > 0.2 {
-            delta_time += diff - 0.2;
-        // No data received for a while
-        } else if diff < -0.3 {
-            self.reset();
-            return None;
-        }
-
-        self.current_time += delta_time;
-
-        self.interpolate_code_for_time(current_time)
-    }
-
-    /// Returns a string that should be executed using `execute_calculator_code` with interpolated values.
-    pub fn compute_interpolate_code(&mut self) -> Option<String> {
-        self.compute_interpolate_code_from_seconds(get_time_as_seconds())
-    }
-
-    /// Resets all mapped data.
-    pub fn reset(&mut self) {
-        self.data.clear()
+        Some(format!(
+            "{} (>{})",
+            self.current_packet.current, self.calculator
+        ))
     }
 }
 
@@ -133,42 +124,57 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_set_and_queue_data() {
-        let mut interpolation = Interpolation::new();
-        interpolation.set_data_options(
-            0,
-            "A:PLANE LATITUDE, Degrees".to_string(),
-            InterpolationType::DefaultConstant,
-        );
-
-        // Basic initial value
-
-        let mut new_data = HashMap::new();
-        new_data.insert(0, 50.0);
-        interpolation.queue_data(&new_data, 0.0);
-
-        assert!(interpolation
-            .compute_interpolate_code_from_seconds(0.0)
-            .expect("should be some")
-            .contains("50 (>A:PLANE LATITUDE, Degrees)"),);
-
-        // Should support multiple
-        interpolation.set_data_options(
-            1,
+    fn test_in_sequence() {
+        let mut interpolation = Interpolation::new(
+            InterpolationType::Default,
             "A:PLANE ALTITUDE, Feet".to_string(),
-            InterpolationType::DefaultConstant,
+        );
+        interpolation.queue_data(0.0, 0.0);
+        interpolation.queue_data(100.0, 1.0);
+        interpolation.queue_data(200.0, 2.0);
+        interpolation.queue_data(1000.0, 10.0);
+        interpolation.queue_data(11000.0, 20.0);
+
+        interpolation.calculate_next_value(0.0);
+        assert_eq!(interpolation.current_packet.current, 0.0);
+        // Next in sequence
+        interpolation.calculate_next_value(0.5);
+        assert_eq!(interpolation.current_packet.current, 50.0);
+        interpolation.calculate_next_value(1.5);
+        assert_eq!(interpolation.current_packet.current, 150.0);
+        // Skip packets
+        interpolation.calculate_next_value(15.5);
+        assert_eq!(interpolation.current_packet.current, 6500.0);
+        // Over time
+        interpolation.calculate_next_value(50.0);
+        assert_eq!(interpolation.current_packet.current, 11000.0);
+    }
+
+    #[test]
+    fn test_empty_queue() {
+        let mut interpolation = Interpolation::new(
+            InterpolationType::Default,
+            "A:PLANE ALTITUDE, Feet".to_string(),
         );
 
-        new_data.insert(0, 200.0);
-        new_data.insert(1, 200.0);
+        assert!(interpolation.compute_interpolate_code(0.0).is_none())
+    }
 
-        interpolation.queue_data(&new_data, 1.0);
+    #[test]
+    fn test_correct_calculator() {
+        let mut interpolation = Interpolation::new(
+            InterpolationType::Default,
+            "A:PLANE ALTITUDE, Feet".to_string(),
+        );
 
-        let calculator = interpolation
-            .compute_interpolate_code_from_seconds(0.5)
-            .expect("should be some");
+        interpolation.queue_data(0.0, 0.0);
+        interpolation.queue_data(100.0, 1.0);
 
-        assert!(calculator.contains("125 (>A:PLANE LATITUDE, Degrees)"));
-        assert!(calculator.contains("200 (>A:PLANE ALTITUDE, Feet)"));
+        assert_eq!(
+            interpolation
+                .compute_interpolate_code(0.0)
+                .expect("should exist"),
+            "0 (>A:PLANE ALTITUDE, Feet)"
+        )
     }
 }

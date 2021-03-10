@@ -3,6 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use crate::util::Error;
 use crate::util::GenericResult;
 
+pub mod datum;
 pub mod diff;
 pub mod watcher;
 
