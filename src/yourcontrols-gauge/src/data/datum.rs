@@ -9,7 +9,8 @@ use super::util::{ChangedDatum, DeltaTimeChange};
 use super::watcher::VariableWatcher;
 use super::{RcVariable, Syncable};
 
-struct Datum {
+/// A Datum can watch for changes in variables, conditionally execute a mapping (event/setting the variable) or be interpolated to a value every frame.
+pub struct Datum {
     var: Option<RcVariable>,
     watch_data: Option<VariableWatcher>,
     condition: Option<Condition>,
@@ -18,7 +19,7 @@ struct Datum {
 }
 
 impl Datum {
-    fn get_changed_value(&mut self, tick: Time) -> Option<f64> {
+    fn get_changed_value(&mut self, tick: Time) -> Option<DatumValue> {
         match self.watch_data.as_mut() {
             Some(w) => w.poll(tick),
             None => None,
@@ -57,7 +58,7 @@ impl Datum {
     }
 }
 
-struct DatumManager {
+pub struct DatumManager {
     datums: HashMap<u32, Datum>,
     interpolation_time: Option<DeltaTimeChange>,
     poll_time: DeltaTimeChange,
@@ -87,10 +88,12 @@ impl DatumManager {
             .unwrap_or(0.0)
     }
 
+    /// Adds a datum.
     pub fn add_datum(&mut self, key: DatumKey, datum: Datum) {
         self.datums.insert(key, datum);
     }
 
+    /// Runs interpolation and watcher tasks for each datum.
     pub fn poll(&mut self) {
         let mut interpolation_strings = Vec::new();
         let mut changed_datums = Vec::new();
@@ -111,6 +114,7 @@ impl DatumManager {
         self.execute_interpolate_strings(interpolation_strings);
     }
 
+    /// Incoming data is queued for interpolation or is used to execute datum mappings.
     pub fn process_incoming_data(&mut self, data: HashMap<DatumKey, DatumValue>, tick: Time) {
         // Set interpolation time
         if self.interpolation_time.is_none() {
@@ -126,6 +130,7 @@ impl DatumManager {
         }
     }
 
+    /// Stops and resets the timing for interpolation.
     pub fn reset_interpolate(&mut self) {
         self.interpolation_time = None;
     }

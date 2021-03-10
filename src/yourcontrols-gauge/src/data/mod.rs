@@ -1,7 +1,7 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::util::Error;
 use crate::util::GenericResult;
+use crate::util::{DatumValue, Error};
 
 pub mod datum;
 pub mod diff;
@@ -62,7 +62,7 @@ impl GenericVariable {
 
 #[cfg(any(target_arch = "wasm32", doc))]
 impl Variable for GenericVariable {
-    fn get(&self) -> f64 {
+    fn get(&self) -> DatumValue {
         if let Some(named) = self.named.as_ref() {
             return named.get_value();
         }
@@ -78,29 +78,25 @@ impl Variable for GenericVariable {
         0.0
     }
 
-    fn set(&mut self, value: f64) {
+    fn set(&mut self, value: DatumValue) {
         if let Some(named) = self.named.as_ref() {
             named.set_value(value);
         }
 
         // Handles aircraft variables too
         if let Some(calculator) = self.calculator_partial.as_ref() {
-            execute_calculator_code::<f64>(&format!("{} (>{})", value, calculator));
+            execute_calculator_code::<()>(&format!("{} (>{})", value, calculator));
         }
     }
 }
 
 #[cfg(any(target_arch = "wasm32", doc))]
 impl Syncable for GenericVariable {
-    fn process_incoming(&mut self, value: f64) {
+    fn process_incoming(&mut self, value: DatumValue) {
         if self.get() == value {
             return;
         }
         self.set(value)
-    }
-
-    fn get_var_value(&self) -> f64 {
-        self.get()
     }
 }
 
@@ -121,14 +117,14 @@ impl EventSet {
     ///
     /// or with index_reversed:
     /// `{index} {value} (>{event_name})`
-    fn set_with_value_and_index(&self, value: f64, index: u32) {
+    fn set_with_value_and_index(&self, value: DatumValue, index: u32) {
         if self.index_reversed {
-            execute_calculator_code::<f64>(&format!(
+            execute_calculator_code::<DatumValue>(&format!(
                 "{} {} (>K:{})",
                 value, index, self.event_name
             ));
         } else {
-            execute_calculator_code::<f64>(&format!(
+            execute_calculator_code::<DatumValue>(&format!(
                 "{} {} (>K:{})",
                 index, value, self.event_name
             ));
@@ -139,18 +135,18 @@ impl EventSet {
     ///
     /// Format:
     /// `{value} (>{event_name})`
-    fn set_with_value_only(&self, value: f64) {
-        execute_calculator_code::<f64>(&format!("{} (>K:{})", value, self.event_name));
+    fn set_with_value_only(&self, value: DatumValue) {
+        execute_calculator_code::<DatumValue>(&format!("{} (>K:{})", value, self.event_name));
     }
 }
 
 #[cfg(any(target_arch = "wasm32", doc))]
 impl Settable for EventSet {
     fn set(&mut self) {
-        execute_calculator_code::<f64>(&format!("(>K:{})", self.event_name));
+        execute_calculator_code::<DatumValue>(&format!("(>K:{})", self.event_name));
     }
 
-    fn set_with_value(&mut self, value: f64) {
+    fn set_with_value(&mut self, value: DatumValue) {
         if let Some(index) = self.event_index {
             self.set_with_value_and_index(value, index);
         } else {
@@ -159,23 +155,24 @@ impl Settable for EventSet {
     }
 }
 
+/// A clonable, reference counted variable.
 pub type RcVariable = Rc<RefCell<dyn Variable>>;
+/// A clonable, reference counted settable.
 pub type RcSettable = Rc<RefCell<dyn Settable>>;
-
+/// A trait used to execute a task upon receiving a value.
 pub trait Syncable {
-    fn process_incoming(&mut self, value: f64);
-    fn get_var_value(&self) -> f64;
+    fn process_incoming(&mut self, value: DatumValue);
 }
 
 pub trait Variable {
-    fn get(&self) -> f64;
+    fn get(&self) -> DatumValue;
     fn get_bool(&self) -> bool {
         self.get() == 1.0
     }
-    fn set(&mut self, value: f64);
+    fn set(&mut self, value: DatumValue);
 }
 
 pub trait Settable {
     fn set(&mut self);
-    fn set_with_value(&mut self, value: f64);
+    fn set_with_value(&mut self, value: DatumValue);
 }

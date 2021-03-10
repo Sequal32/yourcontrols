@@ -1,7 +1,6 @@
-
-
 use super::util::NumberDigits;
 use crate::data::{RcSettable, RcVariable, Settable, Syncable, Variable};
+use crate::util::DatumValue;
 
 /// A ToggleSwitch will execute `event` if the incoming value does not match its current value in `var`.
 ///
@@ -19,7 +18,7 @@ pub struct ToggleSwitch {
 }
 
 impl Syncable for ToggleSwitch {
-    fn process_incoming(&mut self, value: f64) {
+    fn process_incoming(&mut self, value: DatumValue) {
         let switch_should_be_on = value == 1.0;
         let switch_currently_on = self.var.borrow_mut().get_bool();
 
@@ -42,10 +41,6 @@ impl Syncable for ToggleSwitch {
             }
         }
     }
-
-    fn get_var_value(&self) -> f64 {
-        self.var.borrow_mut().get()
-    }
 }
 
 /// NumSet will execute `event` with the parameter of the incoming value.
@@ -58,12 +53,12 @@ pub struct NumSet {
     pub var: RcVariable,
     pub event: RcSettable,
     pub swap_event: Option<RcSettable>,
-    pub multiply_by: Option<f64>,
-    pub add_by: Option<f64>,
+    pub multiply_by: Option<DatumValue>,
+    pub add_by: Option<DatumValue>,
 }
 
 impl Syncable for NumSet {
-    fn process_incoming(&mut self, value: f64) {
+    fn process_incoming(&mut self, value: DatumValue) {
         let value = value * self.multiply_by.unwrap_or(1.0) + self.add_by.unwrap_or(0.0);
         let mut event = self.event.borrow_mut();
 
@@ -72,9 +67,6 @@ impl Syncable for NumSet {
         if let Some(swap_event) = self.swap_event.as_ref() {
             swap_event.borrow_mut().set();
         }
-    }
-    fn get_var_value(&self) -> f64 {
-        self.var.borrow().get()
     }
 }
 
@@ -87,12 +79,12 @@ pub struct NumIncrement {
     pub var: RcVariable,
     pub up_event: RcSettable,
     pub down_event: RcSettable,
-    pub increment_amount: f64,
+    pub increment_amount: DatumValue,
     pub pass_difference: bool,
 }
 
 impl Syncable for NumIncrement {
-    fn process_incoming(&mut self, value: f64) {
+    fn process_incoming(&mut self, value: DatumValue) {
         let current = self.var.borrow().get();
 
         let mut up_event = self.up_event.borrow_mut();
@@ -118,10 +110,6 @@ impl Syncable for NumIncrement {
             }
         }
     }
-
-    fn get_var_value(&self) -> f64 {
-        self.var.borrow().get()
-    }
 }
 
 /// NumDigitSet splits a float's left of the decimal digits into an array of u8,
@@ -136,7 +124,7 @@ pub struct NumDigitSet {
 }
 
 impl Syncable for NumDigitSet {
-    fn process_incoming(&mut self, value: f64) {
+    fn process_incoming(&mut self, value: DatumValue) {
         let current = NumberDigits::new(self.var.borrow().get() as i32);
         let value = NumberDigits::new(value as i32);
 
@@ -165,20 +153,13 @@ impl Syncable for NumDigitSet {
             }
         }
     }
-
-    fn get_var_value(&self) -> f64 {
-        self.var.borrow().get()
-    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::{NumDigitSet, NumIncrement, NumSet, RcSettable, ToggleSwitch};
     use crate::data::{Settable, Syncable, Variable};
-    use crate::util::test::{
-        get_call_counter, get_test_variable, process_then_set,
-    };
-    
+    use crate::util::test::{get_call_counter, get_test_variable, process_then_set};
 
     #[test]
     fn test_toggle_switch() {
