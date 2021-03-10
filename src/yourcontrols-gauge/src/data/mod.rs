@@ -173,13 +173,9 @@ impl KeyEvent {
         }
     }
 
-    /// Increments `trigger_count` if the SimConnect event's ID matches the ID of this.
-    pub fn process_sim_event_data(&mut self, data: SimConnectRecv) {
-        if let SimConnectRecv::Event(e) = data {
-            if e.id() == self.id {
-                self.trigger_count += 1;
-            }
-        }
+    /// Increments `trigger_count`
+    pub fn increment_count(&mut self) {
+        self.trigger_count += 1;
     }
 
     pub fn reset_count(&mut self) {

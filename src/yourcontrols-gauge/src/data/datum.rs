@@ -1,5 +1,6 @@
 #[cfg(any(target_arch = "wasm32"))]
 use msfs::legacy::execute_calculator_code;
+use msfs::sim_connect::SimConnectRecv;
 use std::{collections::HashMap, time::Instant};
 
 use crate::util::{DatumKey, DatumValue, Time};
@@ -22,35 +23,31 @@ pub struct Datum {
 
 impl Datum {
     fn get_changed_value(&mut self, tick: Time) -> Option<DatumValue> {
-        match self.watch_data.as_mut() {
-            Some(w) => w.poll(tick),
-            None => None,
-        }
+        self.watch_data.as_mut()?.poll(tick)
     }
 
     fn get_interpolation_calculator(&mut self, tick: Time) -> Option<String> {
-        match self.interpolate.as_mut() {
-            Some(i) => i.compute_interpolate_code(tick),
-            None => None,
-        }
+        self.interpolate.as_mut()?.compute_interpolate_code(tick)
     }
 
-    fn queue_interpolate(&mut self, value: DatumValue, tick: Time) {
-        match self.interpolate.as_mut() {
-            Some(i) => i.queue_data(value, tick),
-            None => {}
-        }
+    fn queue_interpolate(&mut self, value: DatumValue, tick: Time) -> Option<()> {
+        self.interpolate.as_mut()?.queue_data(value, tick);
+        Some(())
     }
 
-    fn execute_mapping(&mut self, incoming_value: DatumValue) {
-        if !self.is_condition_satisifed(incoming_value) {
-            return;
+    fn process_sim_event_id(&mut self, id: u32) -> Option<()> {
+        let event = self.watch_event.as_mut()?;
+        if id == event.id {
+            event.increment_count()
         }
+        Some(())
+    }
 
-        match self.mapping.as_mut() {
-            Some(m) => m.process_incoming(incoming_value),
-            None => {}
+    fn execute_mapping(&mut self, incoming_value: DatumValue) -> Option<()> {
+        if self.is_condition_satisifed(incoming_value) {
+            self.mapping.as_mut()?.process_incoming(incoming_value);
         }
+        Some(())
     }
 
     fn is_condition_satisifed(&self, incoming_value: DatumValue) -> bool {
@@ -135,5 +132,11 @@ impl DatumManager {
     /// Stops and resets the timing for interpolation.
     pub fn reset_interpolate(&mut self) {
         self.interpolation_time = None;
+    }
+
+    pub fn process_sim_event_id(&mut self, id: u32) {
+        for (key, value) in self.datums.iter_mut() {
+            value.process_sim_event_id(id);
+        }
     }
 }
