@@ -1,7 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::util::GenericResult;
-use crate::util::{DatumValue, Error};
+use crate::util::{Error, GenericResult};
 
 pub mod datum;
 pub mod diff;
@@ -13,6 +12,7 @@ use msfs::legacy::{
     execute_calculator_code, AircraftVariable, CompiledCalculatorCode, NamedVariable,
 };
 use msfs::sim_connect::SimConnect;
+use yourcontrols_types::DatumValue;
 
 /// A wrapper struct for NamedVariable, AircraftVariable, and calculator codes.
 ///
@@ -194,7 +194,9 @@ impl Syncable for KeyEvent {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-impl Syncable for KeyEvent {}
+impl Syncable for KeyEvent {
+    fn process_incoming(&mut self, value: DatumValue) {}
+}
 
 pub type MultiMutable<T> = Rc<RefCell<T>>;
 /// A clonable, reference counted variable.
@@ -203,7 +205,7 @@ pub type RcVariable = MultiMutable<dyn Variable>;
 pub type RcSettable = MultiMutable<dyn Settable>;
 /// Used to execute a task upon receiving a value.
 pub trait Syncable {
-    fn process_incoming(&mut self, value: DatumValue) {}
+    fn process_incoming(&mut self, value: DatumValue);
 }
 
 pub trait Variable {
@@ -216,5 +218,5 @@ pub trait Variable {
 
 pub trait Settable {
     fn set(&mut self) {}
-    fn set_with_value(&mut self, value: DatumValue) {}
+    fn set_with_value(&mut self, value: DatumValue);
 }

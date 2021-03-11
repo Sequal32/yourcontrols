@@ -1,6 +1,7 @@
-use self::util::{interpolate_value, InterpolationType};
-use crate::util::{DatumValue, Time};
-use std::collections::{VecDeque};
+use yourcontrols_types::{DatumValue, InterpolationType, Time};
+
+use self::util::interpolate_value;
+use std::collections::VecDeque;
 
 mod util;
 

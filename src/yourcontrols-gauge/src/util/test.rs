@@ -2,8 +2,6 @@ use std::{cell::RefCell, rc::Rc};
 
 use crate::data::{Settable, Syncable, Variable};
 
-use super::DatumValue;
-
 pub struct EventCallCounter {
     pub called_count: u32,
     pub last_set_value: DatumValue,

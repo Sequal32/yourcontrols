@@ -3,12 +3,6 @@ use std::fmt::Display;
 pub const DATA_SIZE: usize = 8192;
 /// A result acception any error.
 pub type GenericResult<T> = Result<T, Box<dyn std::error::Error>>;
-/// Type used for keeping track of vars mapped to values.
-pub type DatumKey = u32;
-/// Type used for getting/setting values.
-pub type DatumValue = f64;
-/// Time type used for interpolation.
-pub type Time = f64;
 
 #[derive(Debug)]
 pub enum Error {

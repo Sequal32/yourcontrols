@@ -1,6 +1,7 @@
+use yourcontrols_types::DatumValue;
+
 use super::util::NumberDigits;
 use crate::data::{RcSettable, RcVariable, Settable, Syncable, Variable};
-use crate::util::DatumValue;
 
 /// A ToggleSwitch will execute `event` if the incoming value does not match its current value in `var`.
 ///

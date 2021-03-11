@@ -77,7 +77,7 @@ impl MessageFragmenter {
     fn combine_fragments(&mut self) -> Vec<u8> {
         let mut combined_bytes = Vec::new();
 
-        while let Some(mut fragment) = self.processing_fragments.pop_front() {
+        while let Some(fragment) = self.processing_fragments.pop_front() {
             combined_bytes.extend_from_slice(&fragment.bytes[0..fragment.header.fragment_size]);
         }
 

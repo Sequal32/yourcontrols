@@ -1,6 +1,8 @@
 mod error;
+mod gauge;
 
 pub use error::Error;
+pub use gauge::*;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -131,5 +133,25 @@ impl AllNeedSync {
         });
 
         return filtered;
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub enum InterpolationType {
+    Default,
+    DefaultConstant,
+    Wrap360,
+    Wrap180,
+    Wrap90,
+    Invert,
+    InvertConstant,
+}
+
+impl InterpolationType {
+    pub fn is_constant(&self) -> bool {
+        match self {
+            Self::InvertConstant | Self::DefaultConstant => true,
+            _ => false,
+        }
     }
 }

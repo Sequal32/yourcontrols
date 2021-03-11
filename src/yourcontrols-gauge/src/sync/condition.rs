@@ -1,5 +1,6 @@
+use yourcontrols_types::DatumValue;
+
 use crate::data::RcVariable;
-use crate::util::DatumValue;
 
 /// If var is specified, the condition will be applied on the value of the var when `is_satisfied` is called.
 /// Otherwise, the condition will be applied on the `incoming_value`.

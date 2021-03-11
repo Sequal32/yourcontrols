@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use crate::util::{DatumKey, DatumValue, Time};
+use yourcontrols_types::{DatumKey, DatumValue, Time};
 
 pub struct ChangedDatum {
     pub key: DatumKey,

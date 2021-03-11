@@ -1,7 +1,6 @@
-
+use yourcontrols_types::{DatumValue, Time};
 
 use super::{RcVariable, Variable};
-use crate::util::{DatumValue, Time};
 
 /// Period where a variable becomes "Changed".
 pub enum WatchPeriod {
@@ -72,7 +71,7 @@ impl VariableWatcher {
 mod tests {
     use super::*;
 
-    use crate::util::test::{get_test_variable};
+    use crate::util::test::get_test_variable;
 
     #[test]
     fn test_frame() {

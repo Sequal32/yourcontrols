@@ -2,8 +2,8 @@
 use msfs::legacy::execute_calculator_code;
 use msfs::sim_connect::SimConnectRecv;
 use std::{collections::HashMap, time::Instant};
+use yourcontrols_types::{DatumKey, DatumValue, Time};
 
-use crate::util::{DatumKey, DatumValue, Time};
 use crate::{interpolation::Interpolation, sync::Condition};
 
 use super::util::{ChangedDatum, DeltaTimeChange};

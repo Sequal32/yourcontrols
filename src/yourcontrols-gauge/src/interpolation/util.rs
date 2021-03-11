@@ -1,24 +1,4 @@
-
-
-
-pub enum InterpolationType {
-    Default,
-    DefaultConstant,
-    Wrap360,
-    Wrap180,
-    Wrap90,
-    Invert,
-    InvertConstant,
-}
-
-impl InterpolationType {
-    pub fn is_constant(&self) -> bool {
-        match self {
-            Self::InvertConstant | Self::DefaultConstant => true,
-            _ => false,
-        }
-    }
-}
+use yourcontrols_types::InterpolationType;
 
 pub fn interpolate(from: f64, to: f64, alpha: f64) -> f64 {
     return from + alpha * (to - from);

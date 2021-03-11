@@ -1,7 +1,6 @@
 pub mod data;
 pub mod gauge;
 pub mod interpolation;
-pub mod messages;
 pub mod sync;
 pub mod util;
 
