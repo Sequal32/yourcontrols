@@ -5,7 +5,7 @@ use std::collections::VecDeque;
 /// Includes the index of the complete message that the fragment is a part of and the fragment count of the complete message.
 ///
 /// The total header size is 12 bytes (aligned) or 10 bytes (packed)
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct MessageHeader {
     fragment_index: u8,
     fragment_count: u8,
@@ -13,7 +13,7 @@ pub struct MessageHeader {
 }
 
 /// A fragmented message with a header, and the fragmented bytes.
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct FragmentedMessage {
     header: MessageHeader,
     bytes: Vec<u8>,

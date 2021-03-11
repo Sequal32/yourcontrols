@@ -2,7 +2,7 @@ use std::convert::TryInto;
 
 use crate::util::{GenericResult, DATA_SIZE};
 use msfs::sim_connect::{client_data_definition, ClientDataArea, SimConnect, SimConnectRecv};
-use yourcontrols_types::{MessageFragmenter, Payloads};
+use yourcontrols_types::{FragmentedMessage, MessageFragmenter, Payloads};
 
 /// A wrapper struct for an array of size DATA_SIZE bytes
 #[client_data_definition]
@@ -42,25 +42,37 @@ impl MainGauge {
 
         for fragment in fragmented_messages {
             let fragment_bytes = rmp_serde::encode::to_vec(&fragment).unwrap();
-            simconnect.set_client_data(
-                area,
-                &ClientData {
-                    inner: fragment_bytes.try_into().unwrap(),
-                },
-            );
+            let mut client_data = [0; DATA_SIZE];
+
+            for (place, element) in client_data.iter_mut().zip(fragment_bytes.iter()) {
+                *place = *element;
+            }
+
+            simconnect.set_client_data(area, &ClientData { inner: client_data });
         }
     }
 
     fn process_client_data(&mut self, simconnect: &mut SimConnect, data: &ClientData) {
-        let payload: Payloads = match rmp_serde::decode::from_slice(&data.inner) {
+        let fragment: FragmentedMessage = match rmp_serde::decode::from_slice(&data.inner) {
             Ok(p) => p,
             Err(_) => return,
+        };
+
+        println!("{:?}", fragment);
+
+        let bytes = match self.fragmenter.process_fragment(fragment) {
+            Some(b) => b,
+            None => return,
+        };
+
+        let payload: Payloads = match rmp_serde::decode::from_slice(&bytes) {
+            Ok(p) => p,
+            Err(e) => return,
         };
 
         println!("{:?}", payload);
 
         match payload {
-            Payloads::SetDatums { datums } => {}
             Payloads::Ping => self.send_message(simconnect, Payloads::Pong),
             _ => {}
         }
@@ -71,10 +83,10 @@ impl MainGauge {
         simconnect: &mut SimConnect,
         message: SimConnectRecv<'_>,
     ) {
-        println!("Simconnect message! {:?}", message);
         match message {
             SimConnectRecv::Null => {}
             SimConnectRecv::ClientData(e) => {
+                println!("Client data message! {:?}", e);
                 self.process_client_data(simconnect, e.into::<ClientData>(simconnect).unwrap())
             }
             SimConnectRecv::EventFrame(_) => {}
