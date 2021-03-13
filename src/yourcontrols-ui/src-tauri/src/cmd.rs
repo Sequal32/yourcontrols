@@ -6,6 +6,7 @@ use super::util::ConnectionState;
 #[serde(tag = "cmd", rename_all = "camelCase")]
 pub enum Cmd {
     TestNetwork,
+    UiReady,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
