@@ -1,7 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-use super::util::ConnectionState;
-
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(tag = "cmd", rename_all = "camelCase")]
 pub enum Cmd {
