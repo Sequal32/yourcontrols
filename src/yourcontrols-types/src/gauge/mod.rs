@@ -1,8 +1,10 @@
 mod fragment;
 mod messages;
+mod msgpack;
 
 pub use fragment::*;
 pub use messages::*;
+pub use msgpack::*;
 
 /// Type used for keeping track of vars mapped to values.
 pub type DatumKey = u32;

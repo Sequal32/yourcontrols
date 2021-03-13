@@ -18,7 +18,7 @@ async fn module(mut module: msfs::StandaloneModule) -> GenericResult<()> {
     program_gauge.setup(&mut simconnect);
 
     while let Some(message) = module.next_event().await {
-        program_gauge.process_simconnect_message(&mut simconnect, message)
+        program_gauge.process_simconnect_message(&mut simconnect, message);
     }
 
     Ok(())

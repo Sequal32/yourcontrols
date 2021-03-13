@@ -2,6 +2,8 @@ use std::{fmt::Display, io};
 
 use crossbeam_channel::TryRecvError;
 
+pub type Result<T> = std::result::Result<T, Error>;
+
 #[derive(Debug)]
 pub enum Error {
     // Net
@@ -36,8 +38,11 @@ pub enum Error {
 
     // Websocket
     WebsocketError(tungstenite::Error),
+    // Gauge
+    VariableInitializeError,
 
     // Misc
+    None,
     NotProcessed,
 }
 
@@ -85,6 +90,8 @@ impl Display for Error {
                 write!(f, "Could not send message through websocket: {:?}", e)
             }
 
+            Error::VariableInitializeError => write!(f, "Var could not be initialized."),
+            Error::None => write!(f, "No value returned."),
             Error::NotProcessed => write!(f, "Not processed."),
         }
     }

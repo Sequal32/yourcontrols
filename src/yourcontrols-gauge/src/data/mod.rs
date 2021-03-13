@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::util::{Error, GenericResult};
+
 
 pub mod datum;
 pub mod diff;
@@ -12,7 +12,7 @@ use msfs::legacy::{
     execute_calculator_code, AircraftVariable, CompiledCalculatorCode, NamedVariable,
 };
 use msfs::sim_connect::SimConnect;
-use yourcontrols_types::DatumValue;
+use yourcontrols_types::{DatumValue, Error, Result};
 
 /// A wrapper struct for NamedVariable, AircraftVariable, and calculator codes.
 ///
@@ -30,24 +30,27 @@ pub struct GenericVariable {
 
 #[cfg(any(target_arch = "wasm32"))]
 impl GenericVariable {
-    pub fn new_var(name: &str, units: &str, index: Option<usize>) -> GenericResult<Self> {
+    pub fn new_var(name: &str, units: &str, index: Option<usize>) -> Result<Self> {
         let index = index.unwrap_or(0);
 
         Ok(Self {
-            var: Some(AircraftVariable::from(name, units, index)?),
+            var: Some(
+                AircraftVariable::from(name, units, index)
+                    .map_err(|_| Error::VariableInitializeError)?,
+            ),
             calculator_set: Some(format!("(>{}:{}, {})", name, index, units)),
             ..Default::default()
         })
     }
 
-    pub fn new_named(name: &str) -> GenericResult<Self> {
+    pub fn new_named(name: &str) -> Result<Self> {
         Ok(Self {
             named: Some(NamedVariable::from(name)),
             ..Default::default()
         })
     }
 
-    pub fn new_calculator(get: String, set: String) -> GenericResult<Self> {
+    pub fn new_calculator(get: String, set: String) -> Result<Self> {
         Ok(Self {
             calculator_get: Some(
                 CompiledCalculatorCode::new(&get).ok_or(Error::VariableInitializeError)?,
