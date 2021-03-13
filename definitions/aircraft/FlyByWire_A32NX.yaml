@@ -178,6 +178,18 @@ shared:
     var_units: Bool
     event_name: TOGGLE_EXTERNAL_POWER
   -
+    type: var
+    var_name: L:A32NX_OVHD_ELEC_BAT_10_PB_IS_AUTO
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ELEC_BAT_11_PB_IS_AUTO
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ELEC_BAT_10_PB_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ELEC_BAT_11_PB_HAS_FAULT
+  -
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
@@ -671,13 +683,47 @@ shared:
     var_name: L:A32NX_COLD_AND_DARK_SPAWN
   -
     type: var
-    var_name: L:A32NX_APU_BLEED_AIR_VALVE_OPEN
+    var_name: L:A32NX_APU_BLEED_AIR_VALVE_OPEN # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_APU_BLEED_FAULT
+    var_name: L:A32NX_APU_BLEED_FAULT # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_APU_BLEED_ON
+    var_name: L:A32NX_APU_BLEED_ON # TO BE REMOVED ON NEXT STABLE
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_ENG_1_PUMP_PB_IS_AUTO
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_ENG_1_PUMP_PB_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_ENG_2_PUMP_PB_IS_AUTO
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_ENG_2_PUMP_PB_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_EPUMPB_PB_IS_AUTO
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_EPUMPB_PB_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_PTU_PB_IS_AUTO
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_PTU_PB_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_EPUMPY_PB_IS_AUTO
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_EPUMPY_PB_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_HYD_EPUMPY_OVRD_PB_IS_ON
+  
 # - Calculated by the aicraft
 #   type: var
 #   var_name: L:A32NX_APU_EGT
@@ -734,16 +780,25 @@ shared:
   #   var_name: L:A32NX_APU_N
   -
     type: var
-    var_name: L:A32NX_APU_START_CONTACTOR_ENERGIZED
+    var_name: L:A32NX_APU_START_CONTACTOR_ENERGIZED # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_APU_AVAILABLE
+    var_name: L:A32NX_APU_AVAILABLE # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:A32NX_APU_START_ACTIVATED # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:A32NX_OVHD_APU_START_PB_IS_ON
+  -
+    type: var
+    var_name: L:A32NX_OVHD_PNEU_APU_BLEED_PB_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_PNEU_APU_BLEED_PB_IS_ON
+  -
+    type: var
+    var_name: L:A32NX_OVHD_APU_START_PB_IS_AVAILABLE
   -
     type: var
     var_name: L:A32NX_EFB_TURNED_ON
@@ -1040,16 +1095,16 @@ shared:
     var_name: L:A32NX_EMERELECPWR_MANONLOCK_TOGGLE
   -
     type: var
-    var_name: L:A32NX_HYD_ENG1PUMP_TOGGLE
+    var_name: L:A32NX_HYD_ENG1PUMP_TOGGLE # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_HYD_ENG1PUMP_FAULT
+    var_name: L:A32NX_HYD_ENG1PUMP_FAULT # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_HYD_ENG2PUMP_TOGGLE
+    var_name: L:A32NX_HYD_ENG2PUMP_TOGGLE # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_HYD_ENG2PUMP_FAULT
+    var_name: L:A32NX_HYD_ENG2PUMP_FAULT # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:A32NX_HYD_RATMANONLOCK_TOGGLE
@@ -1058,22 +1113,22 @@ shared:
     var_name: L:A32NX_HYD_ELECPUMP_TOGGLE_LOCK
   -
     type: var
-    var_name: L:A32NX_HYD_ELECPUMP_TOGGLE
+    var_name: L:A32NX_HYD_ELECPUMP_TOGGLE # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_HYD_ELECPUMP_FAULT
+    var_name: L:A32NX_HYD_ELECPUMP_FAULT # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_HYD_PTU_TOGGLE
+    var_name: L:A32NX_HYD_PTU_TOGGLE # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_HYD_PTU_FAULT
+    var_name: L:A32NX_HYD_PTU_FAULT # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_HYD_ELECPUMPY_TOGGLE
+    var_name: L:A32NX_HYD_ELECPUMPY_TOGGLE # TO BE REMOVED ON NEXT STABLE
   -
     type: var
-    var_name: L:A32NX_HYD_ELECPUMPY_FAULT
+    var_name: L:A32NX_HYD_ELECPUMPY_FAULT # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:A32NX_AIRCOND_PACK1_TOGGLE
@@ -1256,7 +1311,7 @@ shared:
     var_name: L:A32NX_OVHD_HYD_BLUEPUMP_OVRD_LOCK
   -
     type: var
-    var_name: L:A32NX_OVHD_HYD_BLUEPUMP_OVRD
+    var_name: L:A32NX_OVHD_HYD_BLUEPUMP_OVRD # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:A32NX_OVHD_HYD_LEAK_MEASUREMENT_G_LOCK
