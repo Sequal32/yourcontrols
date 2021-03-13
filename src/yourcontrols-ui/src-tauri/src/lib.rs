@@ -1,10 +1,7 @@
 use cmd::Cmd;
 use cmd::UIEvents;
-use crossbeam_channel::{unbounded, Receiver, Sender};
-use std::{
-    thread::{sleep, spawn},
-    time::Duration,
-};
+use crossbeam_channel::{Receiver, Sender, unbounded};
+use std::{thread::{sleep, spawn}, time::Duration};
 pub mod cmd;
 pub mod util;
 
@@ -21,11 +18,11 @@ impl Ui {
         let (ui_tx, ui_rx) = unbounded::<UIEvents>();
         let (app_tx, app_rx) = unbounded::<Cmd>();
         spawn(move || {
-            let app = tauri::AppBuilder::new()
+            let _app = tauri::AppBuilder::new()
                 .invoke_handler(move |_webview, arg| match serde_json::from_str(arg) {
                     Err(e) => Err(e.to_string()),
                     Ok(command) => {
-                        app_tx.send(command);
+                        app_tx.send(command).ok();
                         Ok(())
                     }
                 })
@@ -36,32 +33,52 @@ impl Ui {
                         match ui_rx.try_recv() {
                             Ok(event) => match &event {
                                 UIEvents::StartUpText { .. } => {
-                                    tauri::event::emit(
+                                    match tauri::event::emit(
                                         &mut webview,
                                         "startUpText",
                                         Some(event.clone()),
-                                    );
+                                    ) {
+                                        Ok(_) => {}
+                                        Err(e) => {
+                                            println!("{:?}", e)
+                                        }
+                                    };
                                 }
                                 UIEvents::InitData { .. } => {
-                                    tauri::event::emit(
+                                    match tauri::event::emit(
                                         &mut webview,
                                         "initData",
                                         Some(event.clone()),
-                                    );
+                                    ) {
+                                        Ok(_) => {}
+                                        Err(e) => {
+                                            println!("{:?}", e)
+                                        }
+                                    };
                                 }
                                 UIEvents::LoadingComplete => {
-                                    tauri::event::emit(
+                                    match tauri::event::emit(
                                         &mut webview,
                                         "loadingComplete",
                                         Some(event.clone()),
-                                    );
+                                    ) {
+                                        Ok(_) => {}
+                                        Err(e) => {
+                                            println!("{:?}", e)
+                                        }
+                                    };
                                 }
                                 UIEvents::NetworkTestResult { .. } => {
-                                    tauri::event::emit(
+                                    match tauri::event::emit(
                                         &mut webview,
                                         "networkTestResult",
                                         Some(event.clone()),
-                                    );
+                                    ) {
+                                        Ok(_) => {}
+                                        Err(e) => {
+                                            println!("{:?}", e)
+                                        }
+                                    };
                                 }
                             },
                             Err(_) => {}
