@@ -41,7 +41,7 @@ impl Ui {
                                     ) {
                                         Ok(_) => {}
                                         Err(e) => {
-                                            error!(target:"UI", "{:?}", e)
+                                            error!(target:"yourcontrols-ui", "{:?}", e)
                                         }
                                     };
                                 }
@@ -53,7 +53,7 @@ impl Ui {
                                     ) {
                                         Ok(_) => {}
                                         Err(e) => {
-                                            error!(target:"UI", "{:?}", e)
+                                            error!(target:"yourcontrols-ui", "{:?}", e)
                                         }
                                     };
                                 }
@@ -65,7 +65,7 @@ impl Ui {
                                     ) {
                                         Ok(_) => {}
                                         Err(e) => {
-                                            error!(target:"UI", "{:?}", e)
+                                            error!(target:"yourcontrols-ui", "{:?}", e)
                                         }
                                     };
                                 }
@@ -77,7 +77,7 @@ impl Ui {
                                     ) {
                                         Ok(_) => {}
                                         Err(e) => {
-                                            error!(target:"UI", "{:?}", e)
+                                            error!(target:"yourcontrols-ui", "{:?}", e)
                                         }
                                     };
                                 }
