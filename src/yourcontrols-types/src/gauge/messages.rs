@@ -46,6 +46,13 @@ pub enum VarType {
     },
 }
 
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+pub enum SyncPermission {
+    Shared,
+    Master,
+    Server,
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ConditionMessage {
     equals: Option<DatumValue>,

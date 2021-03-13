@@ -1,8 +1,8 @@
 #[cfg(any(target_arch = "wasm32"))]
 use msfs::legacy::execute_calculator_code;
-use msfs::sim_connect::SimConnectRecv;
-use std::{collections::HashMap, time::Instant};
-use yourcontrols_types::{DatumKey, DatumValue, Time};
+
+use std::{collections::HashMap};
+use yourcontrols_types::{DatumKey, DatumValue, SyncPermission, Time};
 
 use crate::{interpolation::Interpolation, sync::Condition};
 
@@ -19,6 +19,7 @@ pub struct Datum {
     condition: Option<Condition>,
     interpolate: Option<Interpolation>,
     mapping: Option<Box<dyn Syncable>>,
+    sync_permission: Option<SyncPermission>,
 }
 
 impl Datum {
@@ -54,6 +55,13 @@ impl Datum {
         self.condition
             .as_ref()
             .map_or(true, |x| x.is_satisfied(incoming_value))
+    }
+
+    fn can_execute(&self, sync_permission: &SyncPermission) -> bool {
+        self.sync_permission
+            .as_ref()
+            .map(|x| x == sync_permission)
+            .unwrap_or(true)
     }
 }
 
@@ -93,7 +101,7 @@ impl DatumManager {
     }
 
     /// Runs interpolation and watcher tasks for each datum.
-    pub fn poll(&mut self) {
+    pub fn poll(&mut self, sync_permission: &SyncPermission) {
         let mut interpolation_strings = Vec::new();
         let mut changed_datums = Vec::new();
 
@@ -106,6 +114,10 @@ impl DatumManager {
             }
 
             if let Some(value) = datum.get_changed_value(self.poll_time.step()) {
+                // Based on sync permission
+                if !datum.can_execute(sync_permission) {
+                    continue;
+                }
                 changed_datums.push(ChangedDatum { key: *key, value })
             }
         }
@@ -114,7 +126,12 @@ impl DatumManager {
     }
 
     /// Incoming data is queued for interpolation or is used to execute datum mappings.
-    pub fn process_incoming_data(&mut self, data: HashMap<DatumKey, DatumValue>, tick: Time) {
+    pub fn process_incoming_data(
+        &mut self,
+        data: HashMap<DatumKey, DatumValue>,
+        tick: Time,
+        sync_permission: &SyncPermission,
+    ) {
         // Set interpolation time
         if self.interpolation_time.is_none() {
             self.interpolation_time = Some(DeltaTimeChange::new(tick - 0.05));
@@ -123,6 +140,10 @@ impl DatumManager {
         // Execute stuff
         for (key, value) in data {
             if let Some(datum) = self.datums.get_mut(&key) {
+                if !datum.can_execute(sync_permission) {
+                    return;
+                }
+
                 datum.execute_mapping(value);
                 datum.queue_interpolate(value, tick);
             }
@@ -135,7 +156,7 @@ impl DatumManager {
     }
 
     pub fn process_sim_event_id(&mut self, id: u32) {
-        for (key, value) in self.datums.iter_mut() {
+        for (_key, value) in self.datums.iter_mut() {
             value.process_sim_event_id(id);
         }
     }
