@@ -1,7 +1,7 @@
 use cmd::Cmd;
 use cmd::UIEvents;
 use crossbeam_channel::{Receiver, Sender, unbounded};
-use std::{thread::{sleep, spawn}, time::Duration};
+use std::{option::Option, thread::{sleep, spawn}, time::Duration};
 pub mod cmd;
 pub mod util;
 
@@ -99,7 +99,7 @@ impl Ui {
         self.ui_tx.send(event).ok();
     }
 
-    pub fn get_pending_events(&mut self) {
-        self.app_rx.try_recv();
+    pub fn get_pending_events(&self) -> Option<Cmd> {
+        self.app_rx.try_recv().ok()
     }
 }
