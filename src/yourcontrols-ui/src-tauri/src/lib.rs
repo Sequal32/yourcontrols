@@ -2,6 +2,7 @@ use cmd::Cmd;
 use cmd::UIEvents;
 use crossbeam_channel::{Receiver, Sender, unbounded};
 use std::{option::Option, thread::{sleep, spawn}, time::Duration};
+use log::{error};
 pub mod cmd;
 pub mod util;
 
@@ -40,7 +41,7 @@ impl Ui {
                                     ) {
                                         Ok(_) => {}
                                         Err(e) => {
-                                            println!("{:?}", e)
+                                            error!(target:"UI", "{:?}", e)
                                         }
                                     };
                                 }
@@ -52,7 +53,7 @@ impl Ui {
                                     ) {
                                         Ok(_) => {}
                                         Err(e) => {
-                                            println!("{:?}", e)
+                                            error!(target:"UI", "{:?}", e)
                                         }
                                     };
                                 }
@@ -64,7 +65,7 @@ impl Ui {
                                     ) {
                                         Ok(_) => {}
                                         Err(e) => {
-                                            println!("{:?}", e)
+                                            error!(target:"UI", "{:?}", e)
                                         }
                                     };
                                 }
@@ -76,7 +77,7 @@ impl Ui {
                                     ) {
                                         Ok(_) => {}
                                         Err(e) => {
-                                            println!("{:?}", e)
+                                            error!(target:"UI", "{:?}", e)
                                         }
                                     };
                                 }
