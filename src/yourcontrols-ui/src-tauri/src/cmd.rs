@@ -26,7 +26,7 @@ pub enum UIEvents {
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum TestNetworkResult {
-    CouldServer,
+    CloudServer,
     CloudServerP2P,
     UPnP,
     Direct,
