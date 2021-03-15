@@ -44,7 +44,9 @@ impl Corrector {
 
         if let Some(VarReaderTypes::F64(altitude)) = data.get_mut("PLANE ALTITUDE") {
             if self.current.alt_above_ground <= ALTITUDE_CHANGE_THRESHOLD {
-                *altitude -= self.current.ground_alt
+                *altitude -= self.current.ground_alt;
+                // Mark for adding back
+                data.insert("CORRECTED".to_string(), VarReaderTypes::Bool(true));
             }
         }
     }
@@ -54,8 +56,13 @@ impl Corrector {
             *velocity += self.current.wind_z
         }
 
+        let is_altitude_corrected = data
+            .get("CORRECTED")
+            .map(|x| *x == VarReaderTypes::Bool(true))
+            .unwrap_or(false);
+
         if let Some(VarReaderTypes::F64(altitude)) = data.get_mut("PLANE ALTITUDE") {
-            if self.current.alt_above_ground <= ALTITUDE_CHANGE_THRESHOLD {
+            if is_altitude_corrected {
                 *altitude += self.current.ground_alt
             }
         }
