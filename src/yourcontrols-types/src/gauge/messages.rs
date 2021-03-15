@@ -46,11 +46,19 @@ pub enum VarType {
     },
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Default)]
+pub struct SyncPermissionState {
+    pub server: bool,
+    pub master: bool,
+    pub init: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub enum SyncPermission {
     Shared,
     Master,
     Server,
+    Init,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

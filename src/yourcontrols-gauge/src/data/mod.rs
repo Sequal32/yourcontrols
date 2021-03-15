@@ -1,12 +1,9 @@
 use std::{cell::RefCell, rc::Rc};
 
-
-
 pub mod datum;
 pub mod diff;
 mod util;
 pub mod watcher;
-
 #[cfg(any(target_arch = "wasm32"))]
 use msfs::legacy::{
     execute_calculator_code, AircraftVariable, CompiledCalculatorCode, NamedVariable,
@@ -207,10 +204,14 @@ pub type RcVariable = MultiMutable<dyn Variable>;
 /// A clonable, reference counted settable.
 pub type RcSettable = MultiMutable<dyn Settable>;
 /// Used to execute a task upon receiving a value.
+#[cfg(test)]
+use mockall::automock;
+
+#[cfg_attr(test, automock)]
 pub trait Syncable {
     fn process_incoming(&mut self, value: DatumValue);
 }
-
+#[cfg_attr(test, automock)]
 pub trait Variable {
     fn get(&self) -> DatumValue;
     fn get_bool(&self) -> bool {
@@ -218,7 +219,7 @@ pub trait Variable {
     }
     fn set(&mut self, value: DatumValue);
 }
-
+#[cfg_attr(test, automock)]
 pub trait Settable {
     fn set(&mut self) {}
     fn set_with_value(&mut self, value: DatumValue);

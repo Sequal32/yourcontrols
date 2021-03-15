@@ -1,6 +1,7 @@
-use std::{cell::RefCell, rc::Rc};
-
+#![cfg(test)]
 use crate::data::{Settable, Syncable, Variable};
+use std::{cell::RefCell, rc::Rc};
+use yourcontrols_types::DatumValue;
 
 pub struct EventCallCounter {
     pub called_count: u32,
