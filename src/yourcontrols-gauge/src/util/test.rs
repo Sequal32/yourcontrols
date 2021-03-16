@@ -3,6 +3,7 @@ use crate::data::{Settable, Syncable, Variable};
 use std::{cell::RefCell, rc::Rc};
 use yourcontrols_types::DatumValue;
 
+#[derive(Debug)]
 pub struct EventCallCounter {
     pub called_count: u32,
     pub last_set_value: DatumValue,
@@ -33,6 +34,7 @@ impl Settable for EventCallCounter {
     }
 }
 
+#[derive(Debug)]
 pub struct TestVariable {
     value: DatumValue,
 }

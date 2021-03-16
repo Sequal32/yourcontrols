@@ -5,7 +5,7 @@ use std::collections::VecDeque;
 
 mod util;
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 pub struct Packet {
     pub value: DatumValue,
     pub time: Time,
@@ -13,6 +13,7 @@ pub struct Packet {
 }
 
 /// Handles interpolation of `Data` based on `InterpolationType`
+#[derive(Debug)]
 pub struct Interpolation {
     newest_data_time: Time,
     did_init: bool,

@@ -1,7 +1,6 @@
-use std::{
-    cell::{Ref, RefCell},
-    rc::Rc,
-};
+use std::cell::{Ref, RefCell};
+use std::fmt::Debug;
+use std::rc::Rc;
 
 pub mod datum;
 pub mod diff;
@@ -19,7 +18,7 @@ use yourcontrols_types::{DatumValue, Error, Result};
 /// `get()` for `Variable` will return the first non-none variable.
 /// `set()` for `Variable` will either directly set a NamedVariable, or use execute_calculator_code to set AircraftVariable or a calculator code.
 #[cfg(any(target_arch = "wasm32"))]
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct GenericVariable {
     named: Option<NamedVariable>,
     var: Option<AircraftVariable>,
@@ -38,7 +37,7 @@ impl GenericVariable {
                 AircraftVariable::from(name, units, index)
                     .map_err(|_| Error::VariableInitializeError)?,
             ),
-            calculator_set: Some(format!("(>{}:{}, {})", name, index, units)),
+            calculator_set: Some(format!("(>A:{}:{}, {})", name, index, units)),
             ..Default::default()
         })
     }
@@ -102,6 +101,8 @@ impl Syncable for GenericVariable {
 }
 
 /// Provides multiple `set` implementations for an `event_name` and an `event_index`.
+#[derive(Debug)]
+#[cfg(any(target_arch = "wasm32"))]
 pub struct EventSet {
     event_name: String,
     event_index: Option<u32>,
@@ -176,6 +177,7 @@ impl Settable for EventSet {
 }
 
 /// Listens to an `event_name` and keeps track of how many times it was triggered.
+#[derive(Debug)]
 pub struct KeyEvent {
     trigger_count: u32,
     event_name: String,
@@ -234,6 +236,7 @@ use mockall::automock;
 pub trait Syncable {
     fn process_incoming(&mut self, value: DatumValue);
 }
+
 #[cfg_attr(test, automock)]
 pub trait Variable {
     fn get(&self) -> DatumValue;

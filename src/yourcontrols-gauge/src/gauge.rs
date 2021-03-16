@@ -1,18 +1,18 @@
+#![cfg(any(target_arch = "wasm32"))]
+
+use msfs::sim_connect::{client_data_definition, ClientDataArea, SimConnect, SimConnectRecv};
 use std::{cell::RefCell, rc::Rc};
 
-use crate::{
-    data::{
-        datum::{Datum, DatumManager},
-        watcher::VariableWatcher,
-        EventSet, GenericVariable, KeyEvent, RcSettable, RcVariable, Syncable,
-    },
-    interpolation::Interpolation,
-    sync::{Condition, NumDigitSet, NumIncrement, NumSet, ToggleSwitch},
-    util::{GenericResult, DATA_SIZE},
-};
-use msfs::sim_connect::{client_data_definition, ClientDataArea, SimConnect, SimConnectRecv};
+use crate::data::datum::{Datum, DatumManager};
+use crate::data::watcher::VariableWatcher;
+use crate::data::{EventSet, GenericVariable, KeyEvent, RcSettable, RcVariable, Syncable};
+use crate::interpolation::Interpolation;
+use crate::sync::{Condition, NumDigitSet, NumIncrement, NumSet, ToggleSwitch};
+use crate::util::{GenericResult, DATA_SIZE};
+
 use yourcontrols_types::{
-    DatumMessage, MappingType, MessagePackFragmenter, Payloads, Result, VarType,
+    DatumMessage, MappingType, MessagePackFragmenter, Payloads, Result, SyncPermissionState,
+    VarType,
 };
 
 /// A wrapper struct for an array of size DATA_SIZE bytes
@@ -25,6 +25,7 @@ struct ClientData {
 pub struct MainGauge {
     fragmenter: MessagePackFragmenter,
     datum_manager: DatumManager,
+    sync_permission_state: SyncPermissionState,
     send_data_area: Option<ClientDataArea<ClientData>>,
 }
 
@@ -33,6 +34,7 @@ impl MainGauge {
         Self {
             fragmenter: MessagePackFragmenter::new(DATA_SIZE - 16), // Leave 16 bytes free for header
             datum_manager: DatumManager::new(),
+            sync_permission_state: SyncPermissionState::default(),
             send_data_area: None,
         }
     }
@@ -64,7 +66,12 @@ impl MainGauge {
         Ok(())
     }
 
-    fn add_datums(&mut self, simconnect: &mut SimConnect, message: DatumMessage) -> Result<()> {
+    fn add_datum(
+        &mut self,
+        simconnect: &mut SimConnect,
+        datum_index: u32,
+        message: DatumMessage,
+    ) -> Result<()> {
         let mut watch_data = None;
         let mut condition = None;
         let mut mapping = None;
@@ -169,20 +176,25 @@ impl MainGauge {
             .watch_event
             .map(|event_name| KeyEvent::new(simconnect, event_name));
 
-        self.datum_manager.add_datum(
-            0,
-            Box::new(Datum {
-                var,
-                watch_event,
-                watch_data,
-                condition,
-                interpolate,
-                mapping,
-                sync_permission: message.sync_permission,
-            }),
-        );
+        let datum = Datum {
+            var,
+            watch_event,
+            watch_data,
+            condition,
+            interpolate,
+            mapping,
+            sync_permission: message.sync_permission,
+        };
+
+        self.datum_manager.add_datum(datum_index, Box::new(datum));
 
         Ok(())
+    }
+
+    fn add_datums(&mut self, simconnect: &mut SimConnect, datums: Vec<DatumMessage>) {
+        for (index, datum) in datums.into_iter().enumerate() {
+            self.add_datum(simconnect, index as u32, datum);
+        }
     }
 
     fn process_client_data(
@@ -193,24 +205,29 @@ impl MainGauge {
         let payload = self.fragmenter.process_fragment_bytes(&data.inner)?;
 
         match payload {
+            // Unused
+            Payloads::VariableChange { .. } | Payloads::EventTriggered {} | Payloads::Pong => {}
+            // Receiving
             Payloads::Ping => self.send_message(simconnect, Payloads::Pong)?,
 
-            Payloads::SetDatums { datums } => {}
+            Payloads::SetDatums { datums } => self.add_datums(simconnect, datums),
+
+            Payloads::ResetInterpolation => self.datum_manager.reset_interpolate_time(),
+
+            Payloads::ResetAll => self.datum_manager = DatumManager::new(),
+
+            Payloads::UpdateSyncPermission { new } => self.sync_permission_state = new,
+
+            Payloads::SendIncomingValues { data, time } => self
+                .datum_manager
+                .process_incoming_data(data, time, &self.sync_permission_state),
+            // TODO:
             Payloads::WatchVariable {} => {}
             Payloads::WatchEvent {} => {}
             Payloads::MultiWatchVariable {} => {}
             Payloads::MultiWatchEvent {} => {}
             Payloads::ExecuteCalculator {} => {}
             Payloads::AddMapping {} => {}
-            Payloads::SendIncomingValues {} => {}
-            Payloads::QueueInterpolationData {} => {}
-            Payloads::SetInterpolationData {} => {}
-            Payloads::StopInterpolation {} => {}
-            Payloads::ResetInterpolation {} => {}
-            Payloads::ResetAll => {}
-            Payloads::VariableChange {} => {}
-            Payloads::EventTriggered {} => {}
-            Payloads::Pong => {}
         }
 
         Ok(())
@@ -227,7 +244,12 @@ impl MainGauge {
                 println!("Client data message! {:?}", e);
                 self.process_client_data(simconnect, e.into::<ClientData>(simconnect).unwrap())?
             }
-            SimConnectRecv::EventFrame(_) => {}
+            SimConnectRecv::EventFrame(_) => {
+                let changed = self.datum_manager.poll(&self.sync_permission_state);
+                if changed.len() > 0 {
+                    self.send_message(simconnect, Payloads::VariableChange { changed });
+                }
+            }
             _ => {}
         }
 

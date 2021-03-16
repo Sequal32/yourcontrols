@@ -76,13 +76,13 @@ mod tests {
 
         // Init
         assert_eq!(watcher.poll(0.0), Some(100.0));
-        // Not changed
-        assert_eq!(watcher.poll(50.0), None);
         // Changed but under period
         var.borrow_mut().set_new_value(50.0);
         assert_eq!(watcher.poll(unchanged_tick), None);
         // Changed
         assert_eq!(watcher.poll(changed_tick), Some(50.0));
+        // Not changed
+        assert_eq!(watcher.poll(100.0), None);
     }
 
     #[test]

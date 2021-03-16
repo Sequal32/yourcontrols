@@ -2,11 +2,13 @@
 use msfs::legacy::execute_calculator_code;
 
 use std::collections::HashMap;
-use yourcontrols_types::{DatumKey, DatumValue, SyncPermission, SyncPermissionState, Time};
+use yourcontrols_types::{
+    ChangedDatum, DatumKey, DatumValue, SyncPermission, SyncPermissionState, Time,
+};
 
 use crate::{interpolation::Interpolation, sync::Condition};
 
-use super::util::{ChangedDatum, DeltaTimeChange};
+use super::util::DeltaTimeChange;
 use super::watcher::VariableWatcher;
 use super::KeyEvent;
 use super::{RcVariable, Syncable};
@@ -147,12 +149,12 @@ impl DatumManager {
     pub fn process_incoming_data(
         &mut self,
         data: HashMap<DatumKey, DatumValue>,
-        tick: Time,
+        interpolate_tick: Time,
         sync_permission: &SyncPermissionState,
     ) {
         // Set interpolation time
         if self.interpolation_time.is_none() {
-            self.interpolation_time = Some(DeltaTimeChange::new(tick - 0.05));
+            self.interpolation_time = Some(DeltaTimeChange::new(interpolate_tick - 0.05));
         }
 
         // Execute stuff
@@ -163,13 +165,13 @@ impl DatumManager {
                 }
 
                 datum.execute_mapping(value);
-                datum.queue_interpolate(value, tick);
+                datum.queue_interpolate(value, interpolate_tick);
             }
         }
     }
 
     /// Stops and resets the timing for interpolation.
-    pub fn reset_interpolate(&mut self) {
+    pub fn reset_interpolate_time(&mut self) {
         self.interpolation_time = None;
     }
 
