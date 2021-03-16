@@ -1,4 +1,7 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::{Ref, RefCell},
+    rc::Rc,
+};
 
 pub mod datum;
 pub mod diff;
@@ -107,6 +110,22 @@ pub struct EventSet {
 
 #[cfg(any(target_arch = "wasm32"))]
 impl EventSet {
+    pub fn new(event_name: String) -> Self {
+        Self {
+            event_name,
+            event_index: None,
+            index_reversed: false,
+        }
+    }
+
+    pub fn new_with_index(event_name: String, event_index: u32, index_reversed: bool) -> Self {
+        Self {
+            event_name,
+            event_index: Some(event_index),
+            index_reversed,
+        }
+    }
+
     /// The event will be executed with a value and an index.
     ///
     /// Format:
@@ -134,6 +153,10 @@ impl EventSet {
     /// `{value} (>{event_name})`
     fn set_with_value_only(&self, value: DatumValue) {
         execute_calculator_code::<DatumValue>(&format!("{} (>K:{})", value, self.event_name));
+    }
+
+    pub fn into_rc(self) -> RcSettable {
+        Rc::new(RefCell::new(self))
     }
 }
 

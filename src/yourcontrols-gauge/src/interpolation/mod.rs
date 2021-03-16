@@ -24,7 +24,7 @@ pub struct Interpolation {
 }
 
 impl Interpolation {
-    fn new(interpolate_type: InterpolationType, calculator: String) -> Self {
+    pub fn new(interpolate_type: InterpolationType, calculator: String) -> Self {
         Self {
             newest_data_time: Time::default(),
             did_init: false,

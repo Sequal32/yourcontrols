@@ -6,10 +6,10 @@ use crate::data::RcVariable;
 /// Otherwise, the condition will be applied on the `incoming_value`.
 #[derive(Default)]
 pub struct Condition {
-    var: Option<RcVariable>,
-    equals: Option<DatumValue>,
-    less_than: Option<DatumValue>,
-    greater_than: Option<DatumValue>,
+    pub var: Option<RcVariable>,
+    pub equals: Option<DatumValue>,
+    pub less_than: Option<DatumValue>,
+    pub greater_than: Option<DatumValue>,
 }
 
 impl Condition {

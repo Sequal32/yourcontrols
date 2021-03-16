@@ -1,23 +1,6 @@
-use yourcontrols_types::{DatumValue, Time};
+use yourcontrols_types::{DatumValue, Time, WatchPeriod};
 
 use super::{RcVariable, Variable};
-
-/// Period where a variable becomes "Changed".
-pub enum WatchPeriod {
-    Frame,
-    Hz16,
-    Second,
-}
-
-impl WatchPeriod {
-    pub fn as_seconds_f64(&self) -> f64 {
-        match self {
-            WatchPeriod::Frame => 0.0,
-            WatchPeriod::Hz16 => 0.26,
-            WatchPeriod::Second => 1.0,
-        }
-    }
-}
 
 /// A pollable struct to watch for changes in variables in given intervals of `WatcherPeriod`.
 pub struct VariableWatcher {

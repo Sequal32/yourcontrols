@@ -24,13 +24,13 @@ pub trait DatumTrait {
 /// A Datum can watch for changes in variables, conditionally execute a mapping (event/setting the variable) or be interpolated to a value every frame.
 #[derive(Default)]
 pub struct Datum {
-    var: Option<RcVariable>,
-    watch_event: Option<KeyEvent>,
-    watch_data: Option<VariableWatcher>,
-    condition: Option<Condition>,
-    interpolate: Option<Interpolation>,
-    mapping: Option<Box<dyn Syncable>>,
-    sync_permission: Option<SyncPermission>,
+    pub var: Option<RcVariable>,
+    pub watch_event: Option<KeyEvent>,
+    pub watch_data: Option<VariableWatcher>,
+    pub condition: Option<Condition>,
+    pub interpolate: Option<Interpolation>,
+    pub mapping: Option<Box<dyn Syncable>>,
+    pub sync_permission: Option<SyncPermission>,
 }
 
 impl DatumTrait for Datum {
