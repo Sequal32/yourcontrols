@@ -1,4 +1,6 @@
-use crate::{DatumValue, InterpolationType};
+use std::collections::HashMap;
+
+use crate::{DatumKey, DatumValue, InterpolationType, Time};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -27,7 +29,7 @@ pub enum MappingType {
         dec_events: Vec<String>,
     },
     Var,
-    ProgramAction, // TODO:
+    // TODO: ProgramAction,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -63,31 +65,41 @@ pub enum SyncPermission {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ConditionMessage {
-    equals: Option<DatumValue>,
-    less_than: Option<DatumValue>,
-    greater_than: Option<DatumValue>,
+    #[serde(default)]
+    pub use_var: bool,
+    pub equals: Option<DatumValue>,
+    pub less_than: Option<DatumValue>,
+    pub greater_than: Option<DatumValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InterpolateMessage {
-    calculator: String,
-    interpolate_type: InterpolationType,
+    pub calculator: String,
+    pub interpolate_type: InterpolationType,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Default)]
 pub struct DatumMessage {
-    var: Option<VarType>,
-    watch_event: Option<String>, // Event name,
-    should_watch: bool,          // Watch variable
-    condition: Option<ConditionMessage>,
-    interpolate: Option<InterpolateMessage>,
-    mapping: Option<MappingType>,
+    pub var: Option<VarType>,
+    pub watch_event: Option<String>,       // Event name,
+    pub watch_period: Option<WatchPeriod>, // Watch variable
+    pub condition: Option<ConditionMessage>,
+    pub interpolate: Option<InterpolateMessage>,
+    pub mapping: Option<MappingType>,
+    pub sync_permission: Option<SyncPermission>,
+}
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ChangedDatum {
+    pub key: DatumKey,
+    pub value: DatumValue,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum Payloads {
     // Transmit to Sim
-    SetDatums { datums: Vec<DatumMessage> },
+    SetDatums {
+        datums: Vec<DatumMessage>,
+    },
 
     WatchVariable {},
     WatchEvent {},
@@ -95,17 +107,39 @@ pub enum Payloads {
     MultiWatchEvent {},
     ExecuteCalculator {},
     AddMapping {},
-    SendIncomingValues {},
+    SendIncomingValues {
+        data: HashMap<DatumKey, DatumValue>,
+        time: Time,
+    },
+    UpdateSyncPermission {
+        new: SyncPermissionState,
+    },
 
-    QueueInterpolationData {},
-    SetInterpolationData {},
-    StopInterpolation {},
-    ResetInterpolation {},
-
+    ResetInterpolation,
     Ping,
     ResetAll,
     // Receive from Sim
-    VariableChange {},
+    VariableChange {
+        changed: Vec<ChangedDatum>,
+    },
     EventTriggered {},
     Pong,
+}
+
+/// Period where a variable becomes "Changed".
+#[derive(Serialize, Deserialize, Debug)]
+pub enum WatchPeriod {
+    Frame,
+    Hz16,
+    Second,
+}
+
+impl WatchPeriod {
+    pub fn as_seconds_f64(&self) -> f64 {
+        match self {
+            WatchPeriod::Frame => 0.0,
+            WatchPeriod::Hz16 => 0.26,
+            WatchPeriod::Second => 1.0,
+        }
+    }
 }
