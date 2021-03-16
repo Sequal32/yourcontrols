@@ -1,7 +1,10 @@
 dependencies:
   '@types/jquery': 3.5.5
+  '@types/marked': 2.0.0
+  axios: 0.21.1
   core-js: 3.9.1
   jquery: 3.6.0
+  marked: 2.0.1
   vue: 2.6.12
   vue-class-component: 7.2.6_vue@2.6.12
   vue-property-decorator: 9.1.2_2dc4252c5371093c9ebcca71536ac4e9
@@ -1263,6 +1266,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-MPtoySlAZQ37VoLaPcTHCu1RWJ4llDkULYZIzOYxlhxBqYPB0RsRlmMU0R6tahtFe27mIdkHV+551ZWV4PLmVw==
+  /@types/marked/2.0.0:
+    dev: false
+    resolution:
+      integrity: sha512-kSOVa3R6HJvFdd3UIbTYvrSBTPHjXhNErh7/8oSCKOwqdOkk4Oj8N77n+f6dsgd1jW3j3SU5EhnmRxPhNKOmtQ==
   /@types/mime/1.3.2:
     dev: true
     resolution:
@@ -2370,6 +2377,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
+  /axios/0.21.1:
+    dependencies:
+      follow-redirects: 1.13.3_debug@4.3.1
+    dev: false
+    resolution:
+      integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   /babel-code-frame/6.26.0:
     dependencies:
       chalk: 1.1.3
@@ -3620,7 +3633,7 @@ packages:
       import-fresh: 3.3.0
       parse-json: 5.2.0
       path-type: 4.0.0
-      yaml: 1.10.1
+      yaml: 1.10.2
     dev: true
     engines:
       node: '>=8'
@@ -5414,7 +5427,6 @@ packages:
   /follow-redirects/1.13.3_debug@4.3.1:
     dependencies:
       debug: 4.3.1
-    dev: true
     engines:
       node: '>=4.0'
     peerDependencies:
@@ -7779,6 +7791,13 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
+  /marked/2.0.1:
+    dev: false
+    engines:
+      node: '>= 8.16.2'
+    hasBin: true
+    resolution:
+      integrity: sha512-5+/fKgMv2hARmMW7DOpykr2iLhl0NgjyELk5yn92iE7z8Se1IS9n3UsFm86hFXIkvMBmVxki8+ckcpjBeyo/hw==
   /md5.js/1.3.5:
     dependencies:
       hash-base: 3.1.0
@@ -12556,13 +12575,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
-  /yaml/1.10.1:
+  /yaml/1.10.2:
     dev: true
     engines:
       node: '>= 6'
     optional: true
     resolution:
-      integrity: sha512-z/asvd+V08l1ywhaemZVirCwjdzLo6O1/0j2JbYCsGjiezupNQqjs5IIPyNtctbHjPEckqzVGd4jvpU5Lr25vQ==
+      integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
   /yargs-parser/13.1.2:
     dependencies:
       camelcase: 5.3.1
@@ -12638,6 +12657,7 @@ packages:
       integrity: sha512-+aybvXv/xafL6I67uSH5yLHrSy4/OaSOV9tniw4yZFIHpINXUcctVHE/WzHxOONrL2GHzJ8Fd4iDrNyaS6TVbg==
 specifiers:
   '@types/jquery': ^3.5.5
+  '@types/marked': ^2.0.0
   '@typescript-eslint/eslint-plugin': ^2.33.0
   '@typescript-eslint/parser': ^2.33.0
   '@vue/cli-plugin-babel': ~4.5.0
@@ -12648,12 +12668,14 @@ specifiers:
   '@vue/cli-service': ~4.5.0
   '@vue/eslint-config-prettier': ^6.0.0
   '@vue/eslint-config-typescript': ^5.0.2
+  axios: ^0.21.1
   core-js: ^3.6.5
   eslint: ^6.7.2
   eslint-plugin-prettier: ^3.1.3
   eslint-plugin-vue: ^6.2.2
   jquery: ^3.6.0
   lint-staged: ^9.5.0
+  marked: ^2.0.1
   node-sass: ^4.12.0
   prettier: ^1.19.1
   sass-loader: ^8.0.2
