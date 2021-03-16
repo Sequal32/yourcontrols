@@ -5,6 +5,11 @@ use serde::{Deserialize, Serialize};
 pub enum Cmd {
     TestNetwork,
     UiReady,
+
+    // Debug stuff below
+    SetNetworkResultError,
+    SetNetworkResultPending,
+    SetNetworkResultSuccess,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -35,7 +40,7 @@ pub enum TestNetworkResult {
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum ResultStatus {
-    Pending,
+    Pending {},
     Error { reason: String },
-    Success,
+    Success {},
 }
