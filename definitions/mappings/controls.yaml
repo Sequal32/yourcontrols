@@ -1,0 +1,46 @@
+-
+  type: var
+  var_name: A:GENERAL ENG MIXTURE LEVER POSITION
+  var_units: Percent
+-
+  type: NumSet
+  var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+  var_units: Position 16k
+  event_name: THROTTLE1_SET
+  interpolate: DefaultConstant
+-
+  type: NumSet
+  var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+  var_units: Position 16k
+  event_name: THROTTLE2_SET
+  interpolate: DefaultConstant
+-
+  type: NumSet
+  var_name: A:BRAKE LEFT POSITION EX1
+  var_units: Position 32k
+  event_name: AXIS_LEFT_BRAKE_SET
+  add_by: -16384
+-
+  type: NumSet
+  var_name: A:BRAKE RIGHT POSITION EX1
+  var_units: Position 32k
+  event_name: AXIS_RIGHT_BRAKE_SET
+  add_by: -16384
+-
+  type: NumSet
+  var_name: A:YOKE X POSITION
+  var_units: Position 16k
+  event_name: AXIS_AILERONS_SET
+  interpolate: InvertConstant
+-
+  type: NumSet
+  var_name: A:YOKE Y POSITION
+  var_units: Position 16k
+  event_name: AXIS_ELEVATOR_SET
+  interpolate: InvertConstant
+-
+  type: NumSet
+  var_name: A:RUDDER PEDAL POSITION
+  var_units: Position 16k
+  event_name: AXIS_RUDDER_SET
+  interpolate: InvertConstant
