@@ -11,9 +11,7 @@
           pending: status.cloudServer == 0,
           success: status.cloudServer == 1,
           error: status.cloudServer == 2
-        }">
-          {{statusText.cloudServer}}
-        </div>
+        }" v-html="statusText.cloudServer" />
       </div>
       <div class="protocol">
         Cloud Server P2P
@@ -21,9 +19,7 @@
           pending: status.cloudServerP2P == 0,
           success: status.cloudServerP2P == 1,
           error: status.cloudServerP2P == 2
-        }">
-          {{statusText.cloudServerP2P}}
-        </div>
+        }" v-html="statusText.cloudServerP2P" />
       </div>
       <div class="protocol">
         UPnP Port: {{port}}
@@ -31,9 +27,7 @@
           pending: status.uPnP == 0,
           success: status.uPnP == 1,
           error: status.uPnP == 2
-        }">
-          {{statusText.uPnP}}
-        </div>
+        }" v-html="statusText.uPnP" />
       </div>
       <div class="protocol">
         Direct Port: {{port}}
@@ -41,10 +35,11 @@
           pending: status.direct == 0,
           success: status.direct == 1,
           error: status.direct == 2
-        }">
-          {{statusText.direct}}
-        </div>
+        }" v-html="statusText.direct" />
       </div>
+    </div>
+    <div class="inputs">
+      <div class="center" @click.stop="showDetails()">Details</div>
     </div>
     <div class="inputs">
       <div>
@@ -53,12 +48,57 @@
       </div>
       <div class="start" @click.stop="startTest()">Start</div>
     </div>
-    <br>
-    DEBUG below
-    <div class="inputs">
-      <div class="start" @click.stop="errorBTN()">Eroor</div>
-      <div class="start" @click.stop="pendingBTN()">Pending</div>
-      <div class="start" @click.stop="successBTN()">Success</div>
+    <div class="modal" v-if="modal">
+      <div class="body">
+        <div class="close" @click.stop="closeDetails()"><i class="fas fa-times"></i></div>
+        <div class="title">Network Test Details</div>
+        
+        <div class="protocols">
+          <div class="protocol">
+            Cloud Server
+            <div class="status" :class="{
+              pending: status.cloudServer == 0,
+              success: status.cloudServer == 1,
+              error: status.cloudServer == 2
+            }">
+              {{modalText.cloudServer}}
+            </div>
+          </div>
+          
+          <div class="protocol">
+            Cloud Server P2P
+            <div class="status" :class="{
+              pending: status.cloudServerP2P == 0,
+              success: status.cloudServerP2P == 1,
+              error: status.cloudServerP2P == 2
+            }">
+              {{modalText.cloudServerP2P}}
+            </div>
+          </div>
+          
+          <div class="protocol">
+            UPnP Port: {{port}}
+            <div class="status" :class="{
+              pending: status.uPnP == 0,
+              success: status.uPnP == 1,
+              error: status.uPnP == 2
+            }">
+              {{modalText.uPnP}}
+            </div>
+          </div>
+          
+          <div class="protocol">
+            Direct Port: {{port}}
+            <div class="status" :class="{
+              pending: status.direct == 0,
+              success: status.direct == 1,
+              error: status.direct == 2
+            }">
+              {{modalText.direct}}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -102,7 +142,14 @@ interface Data {
     uPnP: string
     direct: string
   },
-  port: number
+  modalText?: {
+    cloudServer: string
+    cloudServerP2P: string
+    uPnP: string
+    direct: string
+  },
+  port: number,
+  modal: boolean
 }
 
 export default Vue.extend({
@@ -120,70 +167,35 @@ export default Vue.extend({
         uPnP: "",
         direct: ""
       },
-      port: 25071
+      modalText: {
+        cloudServer: "",
+        cloudServerP2P: "",
+        uPnP: "",
+        direct: ""
+      },
+      port: 25071,
+      modal: false,
     }
   },
   created() {
+    const status: any = this.status
+    const statusText: any = this.statusText
+    const modalText: any = this.modalText
     listen("networkTestResult", (data: TestData)=> {
       if (data.payload.status.pending) {
-        switch (data.payload.test) {
-          case "cloudServer":
-            this.status.cloudServer = STATUS.pending
-            this.statusText.cloudServer = "Testing..."
-            break;
-          case "cloudServerP2P":
-            this.status.cloudServerP2P = STATUS.pending 
-            this.statusText.cloudServerP2P = "Testing..."
-            break;
-          case "uPnP":
-            this.status.uPnP = STATUS.pending 
-            this.statusText.uPnP = "Testing..."
-            break;
-          case "direct":
-            this.status.direct = STATUS.pending 
-            this.statusText.direct = "Testing..."
-            break;
-        }
+        status[data.payload.test] = STATUS.pending
+        statusText[data.payload.test] = '<i class="fas fa-ellipsis-h"></i>'
+        modalText[data.payload.test] = "Testing..."
       }
       if (data.payload.status.success) {
-        switch (data.payload.test) {
-          case "cloudServer":
-            this.status.cloudServer = STATUS.success 
-            this.statusText.cloudServer = "Success"
-            break;
-          case "cloudServerP2P":
-            this.status.cloudServerP2P = STATUS.success 
-            this.statusText.cloudServerP2P = "Success"
-            break;
-          case "uPnP":
-            this.status.uPnP = STATUS.success 
-            this.statusText.uPnP = "Success"
-            break;
-          case "direct":
-            this.status.direct = STATUS.success 
-            this.statusText.direct = "Success"
-            break;
-        }
+        status[data.payload.test] = STATUS.success
+        statusText[data.payload.test] = '<i class="fas fa-check"></i>'
+        modalText[data.payload.test] = "Success"
       }
       if (data.payload.status.error) {
-        switch (data.payload.test) {
-          case "cloudServer":
-            this.status.cloudServer = STATUS.error
-            this.statusText.cloudServer = "Error: " + data.payload.status.error.reason
-            break;
-          case "cloudServerP2P":
-            this.status.cloudServerP2P = STATUS.error
-            this.statusText.cloudServerP2P = "Error: "+ data.payload.status.error.reason
-            break;
-          case "uPnP":
-            this.status.uPnP = STATUS.error
-            this.statusText.uPnP = "Error: "+ data.payload.status.error.reason
-            break;
-          case "direct":
-            this.status.direct = STATUS.error
-            this.statusText.direct = "Error: "+ data.payload.status.error.reason
-            break;
-        }
+        status[data.payload.test] = STATUS.error
+        statusText[data.payload.test] = '<i class="fas fa-times"></i>'
+        modalText[data.payload.test] = "Error: " + data.payload.status.error.reason
       }
     })
   },
@@ -202,15 +214,17 @@ export default Vue.extend({
       this.statusText.cloudServerP2P = ""
       this.statusText.uPnP = ""
       this.statusText.direct = ""
+      
+      this.modalText.cloudServer = ""
+      this.modalText.cloudServerP2P = ""
+      this.modalText.uPnP = ""
+      this.modalText.direct = ""
     },
-    errorBTN() {
-      invoke({cmd:"setNetworkResultError", port: this.port})
+    showDetails() {
+      this.modal = true
     },
-    pendingBTN() {
-      invoke({cmd:"setNetworkResultPending", port: this.port})
-    },
-    successBTN() {
-      invoke({cmd:"setNetworkResultSuccess", port: this.port})
+    closeDetails() {
+      this.modal = false
     }
   }
 })
@@ -236,21 +250,19 @@ export default Vue.extend({
       .status{
         background-color: #909090;
         min-height: 24px;
-        min-width: 100px;
-        max-width: 50%;
+        min-width: 24px;
         border-radius: 20px;
         padding: 5px;
         font-weight: 600;
-        text-shadow: 0px 0px 5px #000;
         text-align: center;
         &.pending {
-          background-color: #0bd5ff;
+          background-color: #0bd5ffa8;
         }
         &.error {
-          background-color: #F6C502;
+          background-color: #F6C502a8;
         }
         &.success {
-          background-color: #50D836;
+          background-color: #51d836a8;
         }
       }
     }
@@ -259,7 +271,8 @@ export default Vue.extend({
     width: 90%;
     margin: auto;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    padding: 20px;
     input {
       text-align: center;
       padding: 3px;
@@ -277,6 +290,46 @@ export default Vue.extend({
       height: 26px;
       padding: 3px;
       cursor: pointer;
+    }
+    .center {
+      text-align: center;
+      text-decoration: underline;
+    }
+  }
+  .modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 5%;
+    .body {
+      position: relative;
+      margin: auto;
+      margin-top: 5%;
+      padding-bottom: 5%;
+      width: 90%;
+      background-color: #002a33;
+      box-shadow: 0px 0px 50px -10px #000;
+      min-height: 90%;
+      .title {
+        padding-top: 10%;
+      }
+      .close {
+        width: 25px;
+        height: 25px;
+        position: absolute;
+        right: 1%;
+        top: 2%;
+      }
+      .protocols {
+        margin-top: 10%;
+        .status {
+          min-height: 25px;
+          min-width: 100px;
+          max-width: 50%;
+        }
+      }
     }
   }
 }
