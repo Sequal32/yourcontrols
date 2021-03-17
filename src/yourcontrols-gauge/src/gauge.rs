@@ -1,6 +1,8 @@
 #![cfg(any(target_arch = "wasm32"))]
 
-use msfs::sim_connect::{client_data_definition, ClientDataArea, SimConnect, SimConnectRecv};
+use msfs::sim_connect::{
+    client_data_definition, data_definition, ClientDataArea, Period, SimConnect, SimConnectRecv,
+};
 use std::{cell::RefCell, rc::Rc};
 
 use crate::data::datum::{Datum, DatumManager};
@@ -19,6 +21,13 @@ use yourcontrols_types::{
 #[client_data_definition]
 struct ClientData {
     inner: [u8; DATA_SIZE],
+}
+
+#[data_definition]
+struct AircraftData {
+    #[name = "BRAKE PARKING POSITION"]
+    #[unit = "Bool"]
+    parking_brake: bool,
 }
 
 /// The main driver to process and send out messages through SimConnect.
@@ -43,10 +52,13 @@ impl MainGauge {
     pub fn setup(&mut self, simconnect: &mut SimConnect) -> GenericResult<()> {
         simconnect.create_client_data::<ClientData>("YourControlsSim")?;
         simconnect.request_client_data::<ClientData>(0, "YourControlsSim")?;
-        simconnect.subscribe_to_system_event("Frame")?;
 
         self.send_data_area =
             Some(simconnect.create_client_data::<ClientData>("YourControlsExternal")?);
+
+        // Request "fake" data to be sent every simulation frame. Solely for the purpose of getting a timer every simframe
+        simconnect.request_data_on_sim_object::<AircraftData>(0, 0, Period::SimFrame, false);
+
         Ok(())
     }
 
@@ -244,7 +256,8 @@ impl MainGauge {
                 println!("Client data message! {:?}", e);
                 self.process_client_data(simconnect, e.into::<ClientData>(simconnect).unwrap())?
             }
-            SimConnectRecv::EventFrame(_) => {
+            // Triggered every simulation frame
+            SimConnectRecv::SimObjectData(_) => {
                 let changed = self.datum_manager.poll(&self.sync_permission_state);
                 if changed.len() > 0 {
                     self.send_message(simconnect, Payloads::VariableChange { changed });
