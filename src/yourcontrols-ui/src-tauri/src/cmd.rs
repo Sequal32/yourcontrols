@@ -3,13 +3,10 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(tag = "cmd", rename_all = "camelCase")]
 pub enum Cmd {
-    TestNetwork,
+    TestNetwork {
+        port: i64
+    },
     UiReady,
-
-    // Debug stuff below
-    SetNetworkResultError,
-    SetNetworkResultPending,
-    SetNetworkResultSuccess,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
