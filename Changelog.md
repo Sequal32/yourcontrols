@@ -1,3 +1,49 @@
+# Version 2.5.5
+* Support new dev version of A32NX (APU/Electrical button syncage)
+* Fixed an issue where the aircraft would be floating or through the ground on initial connection
+* C152 - attempted to fix heading gyro desync
+* WT CJ4 - fixed various desync
+
+# Version 2.5.4
+* Fixed an error message when NAV is activated on the CJ4
+* Fixed an issue where brakes would still be depressed for others after releasing them
+* Fixed multiple autopilot definitions conflicts on the WT CJ4
+* Fixed off by one logic for the course and altimeter on the G1000s
+* Fixed an issue where avionic presses would be triggered multiple times for clients
+
+* Added C208B seatbelt signs/other INOP switches as an optional feature
+
+# Version 2.5.3
+
+## New Features
+* Added an error message when the community package is not loaded in the simulator
+
+## Fixes
+* Fixed a script error in the frontend UI that would pop up when the external IP could not be fetched
+* Fixed an issue where the number of clients connected would not update
+* Fixed an issue where the UI would be delayed in loading the saved config
+
+* Fixed an issue where the game would crash when transferring controls
+* Fixed an issue where clients would get teleported to various locations when transferring controls
+* Attempted to fix an issue where controls, switches, and avionics would stop working (gauge crashed)
+* Attempted to fix an issue where some switches/key presses would get randomly dropped
+  
+* Fixed an issue where the selected altitude would reset when climbing and nearing the selected altitude
+* Fixed pitch hold/autopilot leveler not syncing as intended
+* Fixed the FLC, HDG, NAV, VNAV, VS on the WT CJ4 where it would not sync properly
+* Fixed nav radios not syncing properly
+
+## Misc
+* Completely refactored the JS side of things
+
+## Synced
+* A32NX Coffee
+* A32NX EFB Textboxes (ensure you have the same A32NX version)
+* Time (on initial connection)
+* Fuel
+* Speed when winds are mismatched
+* Altitude when scenery is mismatched
+
 # Version 2.5.1
 ## Fixes
 * Fixed an issue where aircraft movement and throttle would not be synced (removed fuel syncage).

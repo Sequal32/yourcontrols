@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use semver::Version;
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(tag = "cmd", rename_all = "camelCase")]
@@ -10,6 +11,16 @@ pub enum Cmd {
 }
 
 #[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct  Aircraft {
+    newest_version: Option<Version>,
+    installed_version: Option<Version>,
+    install_locked: bool,
+    name: String,
+    author: String
+}
+
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(untagged, rename_all = "camelCase")]
 pub enum UIEvents {
     StartUpText {
@@ -17,7 +28,7 @@ pub enum UIEvents {
     },
     InitData {
         version: String,
-        acupdate: bool,
+        aircrafts: Vec<Aircraft>
     },
     LoadingComplete,
     NetworkTestResult {

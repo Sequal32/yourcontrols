@@ -11,10 +11,18 @@ import { invoke } from 'tauri/api/tauri'
 import { setTitle } from 'tauri/api/window'
 import Vue from "vue";
 
+interface Aircraft {
+  newestVersion: string,
+  installedVersion: string,
+  installLocked: boolean,
+  name: string,
+  author: string,
+}
+
 interface InitDataPayload {
   type: string,
   payload: {
-    acupdate: boolean,
+    aircrafts: [Aircraft],
     version: string,
   }
 }
@@ -25,6 +33,8 @@ export default Vue.extend({
     listen('initData', (p: InitDataPayload) => {
       this.showLoadingScreen()
       window.localStorage.setItem("version",p.payload.version)
+      window.localStorage.setItem("airctafts",JSON.stringify(p.payload.aircrafts))
+      window.localStorage.setItem("initData",JSON.stringify(p))
       setTitle("YourControls v" + window.localStorage.getItem('version'))
     })
     listen('loadingComplete', _ => this.showMainScreen())

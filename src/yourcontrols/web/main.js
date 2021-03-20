@@ -526,13 +526,21 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 })
 
-function httpGet(theUrl)
+function httpGet()
 {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    return xmlHttp.responseText;
+    xmlHttp.open( "GET", "https://api.ipify.org" );
+    xmlHttp.send();
+
+    function failed() {
+        externalIp.innerHTML = "Your IP: Failed to retrieve"
+    }
+
+    xmlHttp.onload = function() {
+        externalIp.innerHTML = "Your IP: " + xmlHttp.response
+    }
+    xmlHttp.onerror = failed
+    xmlHttp.ontimeout = failed
 }
 
-// External IP fetch
-externalIp.innerHTML = "Your IP: " + httpGet("https://api.ipify.org/")
+httpGet()

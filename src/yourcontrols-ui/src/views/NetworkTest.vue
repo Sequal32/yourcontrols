@@ -142,13 +142,13 @@ interface Data {
     uPnP: string
     direct: string
   },
-  modalText?: {
+  modalText: {
     cloudServer: string
     cloudServerP2P: string
     uPnP: string
     direct: string
   },
-  port: number,
+  port: string,
   modal: boolean
 }
 
@@ -173,7 +173,7 @@ export default Vue.extend({
         uPnP: "",
         direct: ""
       },
-      port: 25071,
+      port: "25071",
       modal: false,
     }
   },
@@ -202,7 +202,7 @@ export default Vue.extend({
   methods: {
     startTest() {
       this.resetData()
-      invoke({cmd:"testNetwork", port: this.port})
+      invoke({cmd:"testNetwork", port: parseInt(this.port)})
     },
     resetData() {
       this.status.cloudServer = STATUS.none
