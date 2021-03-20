@@ -2,6 +2,7 @@
 
 mod app;
 mod clientmanager;
+mod corrector;
 mod definitions;
 mod simconfig;
 mod sync;
@@ -245,6 +246,12 @@ fn main() {
                         warn!("[SIM] SimConnect exception occurred: {}", unsafe {
                             data.dwException
                         });
+
+                        if data.dwException == 31 {
+                            // Client data area was not initialized by the gauge
+                            client.stop("Could not connect to the YourControls gauge. Do you have the community package installed correctly?".to_string());
+                            break;
+                        }
                     }
                     DispatchResult::ClientData(data) => {
                         definitions.process_client_data(&conn, data);
@@ -334,6 +341,9 @@ fn main() {
 
                             let mut is_observer = is_observer;
 
+                            // This should be before the if statement as server_started counts the number of clients connected
+                            clients.add_client(name.clone());
+
                             if client.is_host() {
                                 app_interface.server_started(
                                     clients.get_number_clients() as u16,
@@ -353,7 +363,6 @@ fn main() {
 
                             app_interface.new_connection(&name);
                             app_interface.set_observing(&name, is_observer);
-                            clients.add_client(name.clone());
                             clients.set_server(&name, is_server);
                             clients.set_observer(&name, is_observer);
 
@@ -366,6 +375,10 @@ fn main() {
                         Payloads::Ready => {
                             if control.has_control() {
                                 client.update(definitions.get_all_current(), false);
+                            }
+                            // Request time update to sync
+                            if client.is_host() {
+                                definitions.request_time();
                             }
                         }
                         Payloads::PlayerLeft { name } => {
@@ -715,6 +728,8 @@ fn main() {
                         }
                         Err(_) => {}
                     }
+
+                    app_interface.send_config(&config.get_json_string());
                     // Update version
                     let app_version = updater.get_version();
                     if let Ok(newest_version) = updater.get_latest_version() {
@@ -731,8 +746,6 @@ fn main() {
                     } else {
                         info!("[UPDATER] Version {} in use.", app_version)
                     }
-
-                    app_interface.send_config(&config.get_json_string());
                 }
                 AppMessage::RunUpdater => {
                     match updater.run_installer() {

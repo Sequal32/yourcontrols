@@ -6,9 +6,25 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
-pub struct EventTriggered {
-    pub event_name: String,
-    pub data: u32,
+pub enum Event {
+    JSEvent {
+        name: String,
+    },
+    JSInput {
+        id: String,
+        value: String,
+        instrument: String,
+    },
+    KeyEvent {
+        name: String,
+        value: u32,
+    },
+    Time {
+        hour: u32,
+        minute: u32,
+        day: u32,
+        year: u32,
+    },
 }
 
 #[derive(Debug, Serialize, Deserialize, Copy, Clone, PartialEq, PartialOrd)]
@@ -35,7 +51,8 @@ pub type AVarMap = HashMap<String, VarReaderTypes>;
 // Name of local variable and the value of it
 pub type LVarMap = HashMap<String, f64>;
 // Name of the event the DWORD data associated with it with how many times it got triggered (not a map as the event could've got triggered multiple times before the data could get send)
-pub type EventData = Vec<EventTriggered>;
+pub type EventData = Vec<Event>;
+
 #[derive(Debug, Deserialize, Serialize, Clone, Default)]
 pub struct AllNeedSync {
     pub avars: AVarMap,
@@ -73,28 +90,44 @@ impl AllNeedSync {
     {
         let mut filtered = AllNeedSync::new();
 
-        self.avars.retain(|name, var| {
-            if filter_fn(&name) {
-                return true;
-            }
-            filtered.avars.insert(name.clone(), var.clone());
-            return false;
-        });
+        macro_rules! filter_or_op {
+            ($name: expr, $op: block) => {
+                if filter_fn($name) {
+                    return true;
+                } else {
+                    $op
+                    return false;
+                }
+            };
+        }
 
-        self.lvars.retain(|name, var| {
-            if filter_fn(&name) {
-                return true;
-            }
-            filtered.lvars.insert(name.clone(), var.clone());
-            return false;
-        });
+        macro_rules! filter_or_push {
+            ($name: expr, $map: ident, $value: expr) => {
+                filter_or_op!($name, {
+                    filtered.$map.push($value.clone());
+                })
+            };
+        }
 
-        self.events.retain(|event| {
-            if filter_fn(&event.event_name) {
-                return true;
-            }
-            filtered.events.push(event.clone());
-            return false;
+        macro_rules! filter_or_insert {
+            ($name: expr, $map: ident, $value: expr) => {
+                filter_or_op!($name, {
+                    filtered.$map.insert($name.clone(), $value.clone());
+                })
+            };
+        }
+
+        self.avars
+            .retain(|name, var| filter_or_insert!(name, avars, var));
+
+        self.lvars
+            .retain(|name, var| filter_or_insert!(name, lvars, var));
+
+        self.events.retain(|event| match event {
+            Event::JSEvent { name } => filter_or_push!(name, events, event),
+            Event::JSInput { id, .. } => filter_or_push!(id, events, event),
+            Event::KeyEvent { name, .. } => filter_or_push!(name, events, event),
+            Event::Time { .. } => filter_or_push!("", events, event),
         });
 
         return filtered;

@@ -75,4 +75,25 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
+    
+master:
+  -
+    type: var
+    var_name: A:PLANE HEADING DEGREES GYRO # Drifts for some reason
+    var_units: Degrees
+    var_type: f64
+    interpolate: DefaultConstant
 
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
