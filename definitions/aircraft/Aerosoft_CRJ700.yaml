@@ -1,0 +1,4225 @@
+include: 
+  - definitions/modules/physics.yaml
+
+shared:
+  - 
+    type: var
+    var_name: L:ASCRJ_HGS_COMBINER_SHOW
+  - 
+    type: var
+    var_name: L:ASCRJ_HGS_COMBINER_SET
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKE_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKEC_STICKSHAKER
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKEC_TRIM
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_YOKEC_APDISC_BTN_ANIM
+    target: L:ASCRJ_YOKEC_APDISC
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKEC_RTIC
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKEF_TRIM
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_YOKEF_APDISC_BTN_ANIM
+    target: L:ASCRJ_YOKEF_APDISC
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKEF_RTIC
+  - 
+    type: var
+    var_name: L:ASCRJ_PEDC_RUDDER
+  - 
+    type: var
+    var_name: L:ASCRJ_CPT_ARMREST_UP
+  - 
+    type: var
+    var_name: L:ASCRJ_FO_ARMREST_UP
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_DCSERVICE
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_BATTMASTER
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_GPU_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_GPU
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_GPU_AVAIL
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_GPU_INUSE
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG1_GUARD
+  - 
+    type: var
+    var_name: L:0
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG1_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG1
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG1_DISC
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG1_FAULT
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG2_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG2_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG2
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG2_DISC
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_IDG2_FAULT
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_ACESSXFER_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_ACESSXFER
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_ACESSXFER_ALTN
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_GEN1
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_GEN2
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_APUGEN
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_AUTOXFER1_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_AUTOXFER1
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_AUTOXFER1_OFF
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_AUTOXFER1_FAIL
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_AUTOXFER2_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_AUTOXFER2
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_AUTOXFER2_OFF
+  - 
+    type: var
+    var_name: L:ASCRJ_ELEC_AUTOXFER2_FAIL
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FIRE_TEST_BTN_ANIM
+    target: L:ASCRJ_FIRE_TEST
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV1_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV1_GUARD_LOCK
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV1_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV1
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV1_CLOSED
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV2_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV2_GUARD_LOCK
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV2_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV2
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_SOV2_CLOSED
+  - 
+    type: var
+    var_name: L:ASCRJ_EXTL_NAV
+  - 
+    type: var
+    var_name: L:ASCRJ_EXTL_BEACON
+  - 
+    type: var
+    var_name: L:ASCRJ_EXTL_STROBE
+  - 
+    type: var
+    var_name: L:ASCRJ_EXTL_LOGO
+  - 
+    type: var
+    var_name: L:ASCRJ_EXTL_WING
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_PUMP_L_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_PUMP_L
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_PUMP_L_INOP
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_PUMP_L_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_PUMP_R_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_PUMP_R
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_PUMP_R_INOP
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_PUMP_R_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_GRAVITY_FLOW_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_GRAVITY_FLOW
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_GRAVITY_FLOW_OPEN
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_GRAVITY_FLOW_FAIL
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_L_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_L
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_L_FAIL
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_L_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_R_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_R
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_R_FAIL
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_R_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_OVRD_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_OVRD
+  - 
+    type: var
+    var_name: L:ASCRJ_FUEL_XFLOW_OVRD_MAN
+  - 
+    type: var
+    var_name: L:ASCRJ_AIR_CROSS_BLEED
+  - 
+    type: var
+    var_name: L:ASCRJ_AIR_BLEED_VALVES
+  - 
+    type: var
+    var_name: L:ASCRJ_AIR_BLEED_SOURCE_ISOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AIR_BLEED_SOURCE
+  - 
+    type: var
+    var_name: L:ASCRJ_APU_PWRFUEL_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_APU_PWRFUEL
+  - 
+    type: var
+    var_name: L:ASCRJ_APU_PWRFUEL_SOV
+  - 
+    type: var
+    var_name: L:ASCRJ_APU_PWRFUEL_PUMP
+  - 
+    type: var
+    var_name: L:ASCRJ_APU_STARTSTOP_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_APU_STARTSTOP
+  - 
+    type: var
+    var_name: L:ASCRJ_APU_STARTSTOP_START
+  - 
+    type: var
+    var_name: L:ASCRJ_APU_STARTSTOP_AVAIL
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_START_L_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_START_L
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_START_L_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_START_R_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_START_R
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_START_R_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_STOP_L_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_STOP_L
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_STOP_L_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_STOP_R_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_STOP_R
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_STOP_R_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_CONT_IGN_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_CONT_IGN
+  - 
+    type: var
+    var_name: L:ASCRJ_ENGS_CONT_IGN_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_PUMP_1
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_PUMP_3A
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_PUMP_3B
+  - 
+    type: var
+    var_name: L:ASCRJ_HYDR_PUMP_2
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_LDG_ELEV
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_LDG_ELEV_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_MAN_ALT
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_EMER_DEPRESS_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_EMER_DEPRESS_GUARD_LOCK
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_EMER_DEPRESS_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_EMER_DEPRESS
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_EMER_DEPRESS_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_PRESS_CONT_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_PRESS_CONT
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_PRESS_CONT_MAN
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_PRESS_CONT_FAULT
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_MAN_VS_RATE
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_PACK_L_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_PACK_L
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_PACK_L_OFF
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_PACK_L_FAULT
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_PACK_R_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_PACK_R
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_PACK_R_OFF
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_PACK_R_FAULT
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_RECIRC_FAN
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_RAM_AIR_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_RAM_AIR_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_RAM_AIR
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_RAM_AIR_OPEN
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_HOTCOLD_CKPT
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_HOTCOLD_CABIN
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_MANCTRL_CKPT_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_MANCTRL_CKPT
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_MANCTRL_CKPT_MAN
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_MANCTRL_CABIN_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_MANCTRL_CABIN
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_MANCTRL_CABIN_MAN
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_TEMPCTRL_CKPT
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_TEMPCTRL_CABIN
+  - 
+    type: var
+    var_name: L:ASCRJ_AIRC_AFT_CARGO
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_WING
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_COWL_L
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_COWL_R
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_DETECT_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_DETECT
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_DETECT_ICE
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_WSHLD_L
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_WSHLD_TEST_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_WSHLD_TEST
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_WSHLD_R
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_PHEAT_L
+  - 
+    type: var
+    var_name: L:ASCRJ_AICE_PHEAT_R
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_DOME
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_COMP
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_OVHD
+  - 
+    type: var
+    var_name: L:ASCRJ64_DM_LT_CPT
+  - 
+    type: var
+    var_name: L:ASCRJ64_DM_LT_FO
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_LDG_LEFT
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_LDG_NOSE
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_LDG_RIGHT
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_TAXI
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_ELT
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_OXY_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_OXY_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_OXY
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_OXY_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_NO_SMOKING
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_SEAT_BELTS
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_EMER_LTS
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSC_ROLL_SPLR_BTN_ANIM
+    target: L:ASCRJ_GSC_ROLL_SPLR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_ROLL_SPLR_ROLLSEL
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_ROLL_SPLR_PLTROLL
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSC_MASTER_WARN_BTN_ANIM
+    target: L:ASCRJ_GSC_MASTER_WARN
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_MASTER_WARN
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_MASTER_WARN_ON
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSC_MASTER_CAUT_BTN_ANIM
+    target: L:ASCRJ_GSC_MASTER_CAUT
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_MASTER_CAUT
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_MASTER_CAUT_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_STALL_GUARD
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSC_STALL_BTN_ANIM
+    target: L:ASCRJ_GSC_STALL
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_STALL
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_STALL_BTN_STATE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSC_GPWS_BTN_ANIM
+    target: L:ASCRJ_GSC_GPWS
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_GPWS_GNDPROX
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_ENG_FIRE_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_ENG_FIRE_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_ENG_FIRE
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_ENG_FIRE_ON
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSC_ENG_BOTTLE_BTN_ANIM
+    target: L:ASCRJ_GSC_ENG_BOTTLE
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GSC_ENG_BOTTLE_ON
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSF_ROLL_SPLR_BTN_ANIM
+    target: L:ASCRJ_GSF_ROLL_SPLR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_ROLL_SPLR_ROLLSEL
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_ROLL_SPLR_PLTROLL
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSF_MASTER_WARN_BTN_ANIM
+    target: L:ASCRJ_GSF_MASTER_WARN
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_MASTER_WARN_ON
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSF_MASTER_CAUT_BTN_ANIM
+    target: L:ASCRJ_GSF_MASTER_CAUT
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_MASTER_CAUT_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_STALL_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_STALL_BTN
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSF_STALL_BTN_ANIM
+    target: L:ASCRJ_GSF_STALL
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_STALL_BTN_STATE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSF_GPWS_BTN_ANIM
+    target: L:ASCRJ_GSF_GPWS
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_GPWS_GNDPROX
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_ENG_FIRE_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_ENG_FIRE_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_ENG_FIRE
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_ENG_FIRE_ON
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSF_ENG_BOTTLE_BTN_ANIM
+    target: L:ASCRJ_GSF_ENG_BOTTLE
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_ENG_BOTTLE_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_APU_FIRE_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_APU_FIRE_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_APU_FIRE
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_APU_FIRE_ON
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GSF_APU_BOTTLE_BTN_ANIM
+    target: L:ASCRJ_GSF_APU_BOTTLE
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GSF_APU_BOTTLE_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_TOGA_1
+  - 
+    type: var
+    var_name: L:ASCRJ_FDSYNC_CLICK
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_FD1_BTN_ANIM
+    target: L:ASCRJ_FCP_FD1
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_FD2_BTN_ANIM
+    target: L:ASCRJ_FCP_FD2
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_AP_ENG_BTN_ANIM
+    target: L:ASCRJ_FCP_AP_ENG
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_AP_ENG_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_AP_ENG_LED2
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_AP_DISC
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_XFR_BTN_ANIM
+    target: L:ASCRJ_FCP_XFR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_XFR_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_XFR_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_TURB_BTN_ANIM
+    target: L:ASCRJ_FCP_TURB
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_TURB_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_TURB_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_SPEED_BTN_ANIM
+    target: L:ASCRJ_FCP_SPEED
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_SPEED_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_SPEED_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_APPR_BTN_ANIM
+    target: L:ASCRJ_FCP_APPR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_APPR_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_APPR_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_BC_BTN_ANIM
+    target: L:ASCRJ_FCP_BC
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_BC_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_BC_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_HDG_BTN_ANIM
+    target: L:ASCRJ_FCP_HDG
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_HDG_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_HDG_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_NAV_BTN_ANIM
+    target: L:ASCRJ_FCP_NAV
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_NAV_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_NAV_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_12BANK_BTN_ANIM
+    target: L:ASCRJ_FCP_12BANK
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_12BANK_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_12BANK_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_ALT_BTN_ANIM
+    target: L:ASCRJ_FCP_ALT
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_ALT_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_ALT_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_VS_BTN_ANIM
+    target: L:ASCRJ_FCP_VS
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_VS_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_VS_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_VNAV_BTN_ANIM
+    target: L:ASCRJ_FCP_VNAV
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_VNAV_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_VNAV_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_VNAV_LED2
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_CRS1_DIRECT_BTN_ANIM
+    target: L:ASCRJ_FCP_CRS1_DIRECT
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_CRS2_DIRECT_BTN_ANIM
+    target: L:ASCRJ_FCP_CRS2_DIRECT
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_IAS_MACH_BTN_ANIM
+    target: L:ASCRJ_FCP_IAS_MACH
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_HDG_SYNC_BTN_ANIM
+    target: L:ASCRJ_FCP_HDG_SYNC
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_FCP_ALT_CANCEL_BTN_ANIM
+    target: L:ASCRJ_FCP_ALT_CANCEL
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_CRS1_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_CRS1_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_CRS2_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_CRS2_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_SPEED_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_SPEED_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_HDG_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_HDG_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_ALT_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_ALT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_WHEEL
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_WHEEL_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_MCDU1_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_MCDU1_BRT_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK1L_KEY
+    target: L:ASCRJ_MCDU1_LSK1L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK2L_KEY
+    target: L:ASCRJ_MCDU1_LSK2L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK3L_KEY
+    target: L:ASCRJ_MCDU1_LSK3L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK4L_KEY
+    target: L:ASCRJ_MCDU1_LSK4L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK5L_KEY
+    target: L:ASCRJ_MCDU1_LSK5L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK6L_KEY
+    target: L:ASCRJ_MCDU1_LSK6L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK1R_KEY
+    target: L:ASCRJ_MCDU1_LSK1R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK2R_KEY
+    target: L:ASCRJ_MCDU1_LSK2R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK3R_KEY
+    target: L:ASCRJ_MCDU1_LSK3R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK4R_KEY
+    target: L:ASCRJ_MCDU1_LSK4R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK5R_KEY
+    target: L:ASCRJ_MCDU1_LSK5R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LSK6R_KEY
+    target: L:ASCRJ_MCDU1_LSK6R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_MSG_KEY
+    target: L:ASCRJ_MCDU1_MSG
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_DIR_INTC_KEY
+    target: L:ASCRJ_MCDU1_DIR_INTC
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_FPLN_KEY
+    target: L:ASCRJ_MCDU1_FPLN
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_DEP_ARR_KEY
+    target: L:ASCRJ_MCDU1_DEP_ARR
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_HOLD_KEY
+    target: L:ASCRJ_MCDU1_HOLD
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_UP_KEY
+    target: L:ASCRJ_MCDU1_UP
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_PREV_PAGE_KEY
+    target: L:ASCRJ_MCDU1_PREV_PAGE
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_NEXT_PAGE_KEY
+    target: L:ASCRJ_MCDU1_NEXT_PAGE
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_INDEX_KEY
+    target: L:ASCRJ_MCDU1_INDEX
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_FIX_KEY
+    target: L:ASCRJ_MCDU1_FIX
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_LEGS_KEY
+    target: L:ASCRJ_MCDU1_LEGS
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_SEC_FPLN_KEY
+    target: L:ASCRJ_MCDU1_SEC_FPLN
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_VNAV_KEY
+    target: L:ASCRJ_MCDU1_VNAV
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_DOWN_KEY
+    target: L:ASCRJ_MCDU1_DOWN
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_MCDU_MENU_KEY
+    target: L:ASCRJ_MCDU1_MCDU_MENU
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_EXEC_KEY
+    target: L:ASCRJ_MCDU1_EXEC
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_RADIO_KEY
+    target: L:ASCRJ_MCDU1_RADIO
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_PROG_KEY
+    target: L:ASCRJ_MCDU1_PROG
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_PERF_KEY
+    target: L:ASCRJ_MCDU1_PERF
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_MFD_DATA_KEY
+    target: L:ASCRJ_MCDU1_MFD_DATA
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_MFD_MENU_KEY
+    target: L:ASCRJ_MCDU1_MFD_MENU
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_MFD_ADV_KEY
+    target: L:ASCRJ_MCDU1_MFD_ADV
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_1_KEY
+    target: L:ASCRJ_MCDU1_1
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_2_KEY
+    target: L:ASCRJ_MCDU1_2
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_3_KEY
+    target: L:ASCRJ_MCDU1_3
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_4_KEY
+    target: L:ASCRJ_MCDU1_4
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_5_KEY
+    target: L:ASCRJ_MCDU1_5
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_6_KEY
+    target: L:ASCRJ_MCDU1_6
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_7_KEY
+    target: L:ASCRJ_MCDU1_7
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_8_KEY
+    target: L:ASCRJ_MCDU1_8
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_9_KEY
+    target: L:ASCRJ_MCDU1_9
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_PERIOD_KEY
+    target: L:ASCRJ_MCDU1_PERIOD
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_0_KEY
+    target: L:ASCRJ_MCDU1_0
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_PLUS_KEY
+    target: L:ASCRJ_MCDU1_PLUS
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_A_KEY
+    target: L:ASCRJ_MCDU1_A
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_B_KEY
+    target: L:ASCRJ_MCDU1_B
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_C_KEY
+    target: L:ASCRJ_MCDU1_C
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_D_KEY
+    target: L:ASCRJ_MCDU1_D
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_E_KEY
+    target: L:ASCRJ_MCDU1_E
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_F_KEY
+    target: L:ASCRJ_MCDU1_F
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_G_KEY
+    target: L:ASCRJ_MCDU1_G
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_H_KEY
+    target: L:ASCRJ_MCDU1_H
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_I_KEY
+    target: L:ASCRJ_MCDU1_I
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_J_KEY
+    target: L:ASCRJ_MCDU1_J
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_K_KEY
+    target: L:ASCRJ_MCDU1_K
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_L_KEY
+    target: L:ASCRJ_MCDU1_L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_M_KEY
+    target: L:ASCRJ_MCDU1_M
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_N_KEY
+    target: L:ASCRJ_MCDU1_N
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_O_KEY
+    target: L:ASCRJ_MCDU1_O
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_P_KEY
+    target: L:ASCRJ_MCDU1_P
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_Q_KEY
+    target: L:ASCRJ_MCDU1_Q
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_R_KEY
+    target: L:ASCRJ_MCDU1_R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_S_KEY
+    target: L:ASCRJ_MCDU1_S
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_T_KEY
+    target: L:ASCRJ_MCDU1_T
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_U_KEY
+    target: L:ASCRJ_MCDU1_U
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_V_KEY
+    target: L:ASCRJ_MCDU1_V
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_W_KEY
+    target: L:ASCRJ_MCDU1_W
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_X_KEY
+    target: L:ASCRJ_MCDU1_X
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_Y_KEY
+    target: L:ASCRJ_MCDU1_Y
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_Z_KEY
+    target: L:ASCRJ_MCDU1_Z
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_SP_KEY
+    target: L:ASCRJ_MCDU1_SP
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_DEL_KEY
+    target: L:ASCRJ_MCDU1_DEL
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_SLASH_KEY
+    target: L:ASCRJ_MCDU1_SLASH
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU1_CLR_KEY
+    target: L:ASCRJ_MCDU1_CLR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_MCDU2_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_MCDU2_BRT_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK1L_KEY
+    target: L:ASCRJ_MCDU2_LSK1L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK2L_KEY
+    target: L:ASCRJ_MCDU2_LSK2L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK3L_KEY
+    target: L:ASCRJ_MCDU2_LSK3L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK4L_KEY
+    target: L:ASCRJ_MCDU2_LSK4L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK5L_KEY
+    target: L:ASCRJ_MCDU2_LSK5L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK6L_KEY
+    target: L:ASCRJ_MCDU2_LSK6L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK1R_KEY
+    target: L:ASCRJ_MCDU2_LSK1R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK2R_KEY
+    target: L:ASCRJ_MCDU2_LSK2R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK3R_KEY
+    target: L:ASCRJ_MCDU2_LSK3R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK4R_KEY
+    target: L:ASCRJ_MCDU2_LSK4R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK5R_KEY
+    target: L:ASCRJ_MCDU2_LSK5R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LSK6R_KEY
+    target: L:ASCRJ_MCDU2_LSK6R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_DIR_INTC_KEY
+    target: L:ASCRJ_MCDU2_DIR_INTC
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_MSG_KEY
+    target: L:ASCRJ_MCDU2_MSG
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_FPLN_KEY
+    target: L:ASCRJ_MCDU2_FPLN
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_DEP_ARR_KEY
+    target: L:ASCRJ_MCDU2_DEP_ARR
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_HOLD_KEY
+    target: L:ASCRJ_MCDU2_HOLD
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_UP_KEY
+    target: L:ASCRJ_MCDU2_UP
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_PREV_PAGE_KEY
+    target: L:ASCRJ_MCDU2_PREV_PAGE
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_NEXT_PAGE_KEY
+    target: L:ASCRJ_MCDU2_NEXT_PAGE
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_INDEX_KEY
+    target: L:ASCRJ_MCDU2_INDEX
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_FIX_KEY
+    target: L:ASCRJ_MCDU2_FIX
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_LEGS_KEY
+    target: L:ASCRJ_MCDU2_LEGS
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_SEC_FPLN_KEY
+    target: L:ASCRJ_MCDU2_SEC_FPLN
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_VNAV_KEY
+    target: L:ASCRJ_MCDU2_VNAV
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_DOWN_KEY
+    target: L:ASCRJ_MCDU2_DOWN
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_MCDU_MENU_KEY
+    target: L:ASCRJ_MCDU2_MCDU_MENU
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_EXEC_KEY
+    target: L:ASCRJ_MCDU2_EXEC
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_RADIO_KEY
+    target: L:ASCRJ_MCDU2_RADIO
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_PROG_KEY
+    target: L:ASCRJ_MCDU2_PROG
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_PERF_KEY
+    target: L:ASCRJ_MCDU2_PERF
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_MFD_DATA_KEY
+    target: L:ASCRJ_MCDU2_MFD_DATA
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_MFD_MENU_KEY
+    target: L:ASCRJ_MCDU2_MFD_MENU
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_MFD_ADV_KEY
+    target: L:ASCRJ_MCDU2_MFD_ADV
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_1_KEY
+    target: L:ASCRJ_MCDU2_1
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_2_KEY
+    target: L:ASCRJ_MCDU2_2
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_3_KEY
+    target: L:ASCRJ_MCDU2_3
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_4_KEY
+    target: L:ASCRJ_MCDU2_4
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_5_KEY
+    target: L:ASCRJ_MCDU2_5
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_6_KEY
+    target: L:ASCRJ_MCDU2_6
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_7_KEY
+    target: L:ASCRJ_MCDU2_7
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_8_KEY
+    target: L:ASCRJ_MCDU2_8
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_9_KEY
+    target: L:ASCRJ_MCDU2_9
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_PERIOD_KEY
+    target: L:ASCRJ_MCDU2_PERIOD
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_0_KEY
+    target: L:ASCRJ_MCDU2_0
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_PLUS_KEY
+    target: L:ASCRJ_MCDU2_PLUS
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_A_KEY
+    target: L:ASCRJ_MCDU2_A
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_B_KEY
+    target: L:ASCRJ_MCDU2_B
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_C_KEY
+    target: L:ASCRJ_MCDU2_C
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_D_KEY
+    target: L:ASCRJ_MCDU2_D
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_E_KEY
+    target: L:ASCRJ_MCDU2_E
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_F_KEY
+    target: L:ASCRJ_MCDU2_F
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_G_KEY
+    target: L:ASCRJ_MCDU2_G
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_H_KEY
+    target: L:ASCRJ_MCDU2_H
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_I_KEY
+    target: L:ASCRJ_MCDU2_I
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_J_KEY
+    target: L:ASCRJ_MCDU2_J
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_K_KEY
+    target: L:ASCRJ_MCDU2_K
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_L_KEY
+    target: L:ASCRJ_MCDU2_L
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_M_KEY
+    target: L:ASCRJ_MCDU2_M
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_N_KEY
+    target: L:ASCRJ_MCDU2_N
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_O_KEY
+    target: L:ASCRJ_MCDU2_O
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_P_KEY
+    target: L:ASCRJ_MCDU2_P
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_Q_KEY
+    target: L:ASCRJ_MCDU2_Q
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_R_KEY
+    target: L:ASCRJ_MCDU2_R
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_S_KEY
+    target: L:ASCRJ_MCDU2_S
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_T_KEY
+    target: L:ASCRJ_MCDU2_T
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_U_KEY
+    target: L:ASCRJ_MCDU2_U
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_V_KEY
+    target: L:ASCRJ_MCDU2_V
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_W_KEY
+    target: L:ASCRJ_MCDU2_W
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_X_KEY
+    target: L:ASCRJ_MCDU2_X
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_Y_KEY
+    target: L:ASCRJ_MCDU2_Y
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_Z_KEY
+    target: L:ASCRJ_MCDU2_Z
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_SP_KEY
+    target: L:ASCRJ_MCDU2_SP
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_DEL_KEY
+    target: L:ASCRJ_MCDU2_DEL
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_SLASH_KEY
+    target: L:ASCRJ_MCDU2_SLASH
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MCDU2_CLR_KEY
+    target: L:ASCRJ_MCDU2_CLR
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GEAR_BTMS_RESET_BTN_ANIM
+    target: L:ASCRJ_GEAR_BTMS_RESET
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_HORN_MUTE_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_HORN_MUTE_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_HORN_MUTE
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_HORN_MUTE_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_ANTISKID_ARM
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_MLG_TEST
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_MLG_TEST_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_TEST_FAIL_TEST
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_TEST_FAIL_TEST_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_GEAR_LEVER
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_LOCK_RELEASE
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_LOCK_RELEASE_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_LAMPTEST
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_INDLTS
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_HPSCHED_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_HPSCHED_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_HPSCHED
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_HPSCHED_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_SYNC
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ENG_FDR_EVENT_BTN_ANIM
+    target: L:ASCRJ_ENG_FDR_EVENT
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS_TERR_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS_TERR_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS_TERR
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS_TERR_OFF
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS_FLAP_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS_FLAP_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS_FLAP
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS_FLAP_OVRD
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_GPWS_MECH_BTN_ANIM
+    target: L:ASCRJ_GPWS_MECH
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_GPWS_MECH_CALL
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_PITCH_DISC
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_ROLL_DISC
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_SPLR_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_REV1_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_REV2_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_METRIC_ALT
+  - 
+    type: var
+    var_name: L:ASCRJ_SPOILER_SET
+  - 
+    type: var
+    var_name: L:ASCRJ_SPOILER_START
+  - 
+    type: var
+    var_name: L:ASCRJ_FLAPS_SET
+  - 
+    type: var
+    var_name: L:ASCRJ_FLAPS_START
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_REVERSE_1_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_CUTOFF_1
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_REVERSE_1_START
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_CUTOFF_1_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_TOGA_1_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_REVERSE_2_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_CUTOFF_2
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_REVERSE_2_START
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_CUTOFF_2_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_TOGA_2_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_TOGA_2
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_BRT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_KNOB_INNER
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_KNOB_INNER_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_KNOB_OUTER
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_KNOB_OUTER_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RTU1_IDENT_BTN_ANIM
+    target: L:ASCRJ_RTU1_IDENT
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RTU1_DMEH_BTN_ANIM
+    target: L:ASCRJ_RTU1_DMEH
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RTU1_1_2_BTN_ANIM
+    target: L:ASCRJ_RTU1_1_2
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK1L_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK1L
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK2L_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK2L
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK3L_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK3L
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK4L_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK4L
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK1R_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK1R
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK2R_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK2R
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK3R_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK3R
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK4R_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_LSK4R
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_BRT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_KNOB_INNER
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_KNOB_INNER_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_KNOB_OUTER
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_KNOB_OUTER_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RTU2_IDENT_BTN_ANIM
+    target: L:ASCRJ_RTU2_IDENT
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RTU2_DMEH_BTN_ANIM
+    target: L:ASCRJ_RTU2_DMEH
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RTU2_1_2_BTN_ANIM
+    target: L:ASCRJ_RTU2_1_2
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK1L_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK1L
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK2L_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK2L
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK3L_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK3L
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK4L_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK4L
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK1R_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK1R
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK2R_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK2R
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK3R_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK3R
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK4R_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_LSK4R
+  - 
+    type: var
+    var_name: L:ASCRJ_FDD_LOCK_FAIL
+  - 
+    type: var
+    var_name: L:ASCRJ_FDD_AUTO_UNLK
+  - 
+    type: var
+    var_name: L:ASCRJ_FDD_MODE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_PRI_BTN_ANIM
+    target: L:ASCRJ_ECAM_PRI
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_STAT_BTN_ANIM
+    target: L:ASCRJ_ECAM_STAT
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_ECS_BTN_ANIM
+    target: L:ASCRJ_ECAM_ECS
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_HYD_BTN_ANIM
+    target: L:ASCRJ_ECAM_HYD
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_ELEC_BTN_ANIM
+    target: L:ASCRJ_ECAM_ELEC
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_FUEL_BTN_ANIM
+    target: L:ASCRJ_ECAM_FUEL
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_FCTL_BTN_ANIM
+    target: L:ASCRJ_ECAM_FCTL
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_AICE_BTN_ANIM
+    target: L:ASCRJ_ECAM_AICE
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_DOORS_BTN_ANIM
+    target: L:ASCRJ_ECAM_DOORS
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_CAS_BTN_ANIM
+    target: L:ASCRJ_ECAM_CAS
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_BLANK_BTN_ANIM
+    target: L:ASCRJ_ECAM_BLANK
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_MENU_BTN_ANIM
+    target: L:ASCRJ_ECAM_MENU
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_UP_BTN_ANIM
+    target: L:ASCRJ_ECAM_UP
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_DOWN_BTN_ANIM
+    target: L:ASCRJ_ECAM_DOWN
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ECAM_STEP_BTN_ANIM
+    target: L:ASCRJ_ECAM_STEP
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_ECAM_SEL_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_ECAM_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_VHF1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_VHF1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_VHF2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_VHF2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_INTSVC_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_INTSVC_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_DME1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_DME1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_DME2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_DME2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_ADF1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_ADF1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_ADF2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_ADF2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_NAV1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_NAV1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_NAV2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_NAV2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_MKR1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_MKR1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_MKR2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_MKR2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_SPKR_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_SPKR_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_PA_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_RTIC
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_VOICEBOTH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_MASKBOOM
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_EMERNORM
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_VHF1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_VHF1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_VHF2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_VHF2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_INTSVC_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_INTSVC_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_DME1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_DME1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_DME2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_DME2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_ADF1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_ADF1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_ADF2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_ADF2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_NAV1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_NAV1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_NAV2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_NAV2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_MKR1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_MKR1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_MKR2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_MKR2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_SPKR_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_SPKR_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_PA_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_RTIC
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_VOICEBOTH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_MASKBOOM
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_EMERNORM
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_VHF1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_VHF1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_VHF2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_VHF2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_INTSVC_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_INTSVC_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_DME1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_DME1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_DME2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_DME2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_ADF1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_ADF1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_ADF2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_ADF2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_NAV1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_NAV1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_NAV2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_NAV2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_MKR1_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_MKR1_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_MKR2_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_MKR2_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_SPKR_VOL_PUSH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_SPKR_VOL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_PA_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_RTIC
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_VOICEBOTH
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_MASKBOOM
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_EMERNORM
+  - 
+    type: var
+    var_name: L:ASCRJ_TRIM_AIL_UPR
+  - 
+    type: var
+    var_name: L:ASCRJ_TRIM_AIL_LWR
+  - 
+    type: var
+    var_name: L:ASCRJ_TRIM_RUD
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_DSPL_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_INTEG_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_FLOOD_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_CB_PNL_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_WXR1_GAIN
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR1_GCS_BTN_ANIM
+    target: L:ASCRJ_WXR1_GCS
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_WXR1_TILT
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR1_AUTO_BTN_ANIM
+    target: L:ASCRJ_WXR1_AUTO
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_WXR1_TILT_AUTO
+  - 
+    type: var
+    var_name: L:ASCRJ_WXR1_MODE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR1_SEC_BTN_ANIM
+    target: L:ASCRJ_WXR1_SEC
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR1_XFR_BTN_ANIM
+    target: L:ASCRJ_WXR1_XFR
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR1_STAB_BTN_ANIM
+    target: L:ASCRJ_WXR1_STAB
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_WXR2_GAIN
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR2_GCS_BTN_ANIM
+    target: L:ASCRJ_WXR2_GCS
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_WXR2_TILT
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR2_AUTO_BTN_ANIM
+    target: L:ASCRJ_WXR2_AUTO
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_WXR2_TILT_AUTO
+  - 
+    type: var
+    var_name: L:ASCRJ_WXR2_MODE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR2_SEC_BTN_ANIM
+    target: L:ASCRJ_WXR2_SEC
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR2_XFR_BTN_ANIM
+    target: L:ASCRJ_WXR2_XFR
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_WXR2_STAB_BTN_ANIM
+    target: L:ASCRJ_WXR2_STAB
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_YD_DISC_BTN_ANIM
+    target: L:ASCRJ_YD_DISC
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_YD1_BTN_ANIM
+    target: L:ASCRJ_YD1
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_YD1_BTN_STATE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_YD2_BTN_ANIM
+    target: L:ASCRJ_YD2
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_YD2_BTN_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_PA_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_PA
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_PA_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_CHIME_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_CHIME
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_CHIME_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_CALL_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_CALL
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_CALL_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_EMER_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_EMER
+  - 
+    type: var
+    var_name: L:ASCRJ_CALLS_EMER_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_ATTD_HDG
+  - 
+    type: var
+    var_name: L:ASCRJ_EICAS
+  - 
+    type: var
+    var_name: L:ASCRJ_AIR_DATA
+  - 
+    type: var
+    var_name: L:ASCRJ_DSPL_CONT
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RTU1_INH_BTN_ANIM
+    target: L:ASCRJ_RTU1_INH
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU1_INH_TRIGGER
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RTU2_INH_BTN_ANIM
+    target: L:ASCRJ_RTU2_INH
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RTU2_INH_TRIGGER
+  - 
+    type: var
+    var_name: L:ASCRJ_XPDR_FMSINHIBIT
+  - 
+    type: var
+    var_name: L:ASCRJ_XPDR_ATC_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_XPDR_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_XPDR_COMNAV
+  - 
+    type: var
+    var_name: L:ASCRJ_XPDR_KNOB_INNER
+  - 
+    type: var
+    var_name: L:ASCRJ_XPDR_KNOB_INNER_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_XPDR_KNOB_OUTER
+  - 
+    type: var
+    var_name: L:ASCRJ_XPDR_KNOB_OUTER_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_STAB_TRIM_CH1_BTN_ANIM
+    target: L:ASCRJ_STAB_TRIM_CH1
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_STAB_TRIM_CH1_TRIGGER
+  - 
+    type: var
+    var_name: L:ASCRJ_STAB_TRIM_CH1_BTN_STATE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_STAB_TRIM_CH2_BTN_ANIM
+    target: L:ASCRJ_STAB_TRIM_CH2
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_STAB_TRIM_CH2_TRIGGER
+  - 
+    type: var
+    var_name: L:ASCRJ_STAB_TRIM_CH2_BTN_STATE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_MACH_TRIM_BTN_ANIM
+    target: L:ASCRJ_MACH_TRIM
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_MACH_TRIM_INOP
+  - 
+    type: var
+    var_name: L:ASCRJ_DSPL_FAN
+  - 
+    type: var
+    var_name: L:ASCRJ_AVIONICS_FAN
+  - 
+    type: var
+    var_name: L:ASCRJ_IRS1_KNOB
+  - 
+    type: var
+    var_name: L:ASCRJ_IRS2_KNOB
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_ACT_BTN_ANIM
+    target: L:ASCRJ_HUD_ACT
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_STBY_BTN_ANIM
+    target: L:ASCRJ_HUD_STBY
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_RWY_BTN_ANIM
+    target: L:ASCRJ_HUD_RWY
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_HUD_RWY_LED
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_GS_BTN_ANIM
+    target: L:ASCRJ_HUD_GS
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_HUD_GS_LED
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_CLR_BTN_ANIM
+    target: L:ASCRJ_HUD_CLR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_HUD_CLR_LED
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_BRT_BTN_ANIM
+    target: L:ASCRJ_HUD_BRT
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_DIM_BTN_ANIM
+    target: L:ASCRJ_HUD_DIM
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_1_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_1
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_2_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_2
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_3_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_3
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_4_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_4
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_5_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_5
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_6_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_6
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_7_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_7
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_8_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_8
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_9_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_9
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_ENTER_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_ENTER
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_0_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_0
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_HUD_KEY_TEST_BTN_ANIM
+    target: L:ASCRJ_HUD_KEY_TEST
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_HUD_KEY_TEST_LED
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_FWD_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_FWD_GUARD_LOCK
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_FWD_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_FWD
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_FWD_ARMED
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_AFT_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_AFT_GUARD_LOCK
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_AFT_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_AFT
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_AFT_ARMED
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_ARM_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_ARM
+  - 
+    type: var
+    var_name: L:ASCRJ_CARGO_ARM_LIGHT
+  - 
+    type: var
+    var_name: L:ASCRJ_PARK_BRAKE
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_MAN_REL
+  - 
+    type: var
+    var_name: L:ASCRJ_ADG
+  - 
+    type: var
+    var_name: L:ASCRJ_ADG_TEST
+  - 
+    type: var
+    var_name: L:ASCRJ_ADG_TEST_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_ADG_TEST_LED
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ADG_OVRD_BTN_ANIM
+    target: L:ASCRJ_ADG_OVRD
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_ADG_OVRD_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_EMER_FLAP
+  - 
+    type: var
+    var_name: L:ASCRJ_SKYC_POWER_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_SKYC_VIDEO
+  - 
+    type: var
+    var_name: L:ASCRJ_SKYC_DAYNIGHT_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_OXYC_TEST_LONG_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_OXYC_TEST_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_OXYC_BLINKER
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_NW_STEER
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_DSPL
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_INTEG
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_FLOOD
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_FLOOR
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_WIPER
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_STICK_PUSHER
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_LSP_BRG1_BTN_ANIM
+    target: L:ASCRJ_LSP_BRG1
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_LSP_BRG2_BTN_ANIM
+    target: L:ASCRJ_LSP_BRG2
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_LSP_SEL_BTN_ANIM
+    target: L:ASCRJ_LSP_SEL
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_SPEED_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_SPEED_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_SPEED_SEL_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_SPEED_SET
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_SPEED_SEL_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_LSP_RDR_BTN_ANIM
+    target: L:ASCRJ_LSP_RDR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_FORMAT
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_FORMAT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_RANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_RANGE_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_LSP_TERR_BTN_ANIM
+    target: L:ASCRJ_LSP_TERR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_HEIGHT_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_HEIGHT_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_HEIGHT_SEL_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_HEIGHT_SET
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_HEIGHT_SEL_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_LSP_RA_TEST_BTN_ANIM
+    target: L:ASCRJ_LSP_RA_TEST
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_RA_TEST_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_NAV_SOURCE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_NAV_SOURCE_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_LSP_NAV_SOURCE_XSIDE_BTN_ANIM
+    target: L:ASCRJ_LSP_NAV_SOURCE_XSIDE
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_LSP_HPA_IN_BTN_ANIM
+    target: L:ASCRJ_LSP_HPA_IN
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_BARO_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_BARO_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_LSP_BARO_STD_BTN_ANIM
+    target: L:ASCRJ_LSP_BARO_STD
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_PFD_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_CLCK_ET_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_CLCK_ET
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_CLCK_RST_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_CLCK_RST
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_CLCK_MODE_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_CLCK_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_CLCK_CHR_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_CLCK_CHR
+  - 
+    type: var
+    var_name: L:ASCRJ_SKYF_POWER_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_SKYF_VIDEO
+  - 
+    type: var
+    var_name: L:ASCRJ_SKYF_DAYNIGHT_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_WARN_DCU1_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_WARN_DCU1_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_WARN_DCU1
+  - 
+    type: var
+    var_name: L:ASCRJ_WARN_DCU1_DISABLE
+  - 
+    type: var
+    var_name: L:ASCRJ_WARN_DCU2_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_WARN_DCU2_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_WARN_DCU2
+  - 
+    type: var
+    var_name: L:ASCRJ_WARN_DCU2_DISABLE
+  - 
+    type: var
+    var_name: L:ASCRJ_OXYF_TEST_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_OXYF_TEST_LONG_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_OXYF_BLINKER
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_DSPL
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_INTEG
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_FLOOD
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_FLOOR
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_WIPER
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_STICK_PUSHER
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RSP_BRG1_BTN_ANIM
+    target: L:ASCRJ_RSP_BRG1
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RSP_BRG2_BTN_ANIM
+    target: L:ASCRJ_RSP_BRG2
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RSP_SEL_BTN_ANIM
+    target: L:ASCRJ_RSP_SEL
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_SPEED_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_SPEED_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_SPEED_SEL_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_SPEED_SEL_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RSP_RDR_BTN_ANIM
+    target: L:ASCRJ_RSP_RDR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_FORMAT
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_FORMAT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_RANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_RANGE_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RSP_TERR_BTN_ANIM
+    target: L:ASCRJ_RSP_TERR
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_HEIGHT_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_HEIGHT_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_HEIGHT_SEL_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_HEIGHT_SET
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_HEIGHT_SEL_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RSP_RA_TEST_BTN_ANIM
+    target: L:ASCRJ_RSP_RA_TEST
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_RA_TEST_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_NAV_SOURCE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_NAV_SOURCE_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RSP_NAV_SOURCE_XSIDE_BTN_ANIM
+    target: L:ASCRJ_RSP_NAV_SOURCE_XSIDE
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RSP_HPA_IN_BTN_ANIM
+    target: L:ASCRJ_RSP_HPA_IN
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_BARO_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_BARO_CHANGE
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_RSP_BARO_STD_BTN_ANIM
+    target: L:ASCRJ_RSP_BARO_STD
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_PFD_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_CLCK_ET_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_CLCK_ET
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_CLCK_RST_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_CLCK_RST
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_CLCK_MODE_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_CLCK_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_CLCK_CHR_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_CLCK_CHR
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_CVR_TEST_BTN_ANIM
+    target: L:ASCRJ_CVR_TEST
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_CVR_TEST_BTN
+  - 
+    type: var
+    var_name: L:ASCRJ_CVR_TEST_LED
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_CVR_ERASE_BTN_ANIM
+    target: L:ASCRJ_CVR_ERASE
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_PFDC_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_PFDC_BRT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_MFDC_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_MFDC_BRT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_PFDF_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_PFDF_BRT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_MFDF_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_MFDF_BRT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_EICAS1_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_EICAS1_BRT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_EICAS2_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ_EICAS2_BRT_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_TEST_ANIM_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_TEST_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_BITE_ANIM_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_BITE_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_POWER_GUARD
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_POWER
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_SOV_SW_L
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_SOV_SW_C
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_SOV_SW_R
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_MODE_SEL
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_AMOUNT_ANIM
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_ON_OFF
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_FAULT_LT
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_SOV_CL_L
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_SOV_OP_L
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_SOV_CL_C
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_SOV_OP_C
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_SOV_CL_R
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_SOV_OP_R
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_DET_L
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_DET_C
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_DET_R
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_LBS
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_KG
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ISI_STD_BTN_ANIM
+    target: L:ASCRJ_ISI_STD
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ISI_PLUS_BTN_ANIM
+    target: L:ASCRJ_ISI_PLUS
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ISI_MINUS_BTN_ANIM
+    target: L:ASCRJ_ISI_MINUS
+    loopback: true
+  - 
+    type: LocalVarProxy
+    var_name: L:ASCRJ_ISI_CAGE_BTN_ANIM
+    target: L:ASCRJ_ISI_CAGE
+    loopback: true
+  - 
+    type: var
+    var_name: L:ASCRJ_ISI_KNOB
+  - 
+    type: var
+    var_name: L:ASCRJ_ISI_KNOB_CHANGE
+  - 
+    type: var
+    var_name: L:ASCRJ_MAPLT_L
+  - 
+    type: var
+    var_name: L:ASCRJ_MAPLT_R
+  - 
+    type: var
+    var_name: L:ASCRJ_GEAR_NWS
+  - 
+    type: var
+    var_name: L:ASCRJ_WHEEL_BLOCKS
+  - 
+    type: var
+    var_name: L:ASCRJ_AOA_VANE
+  - 
+    type: var
+    var_name: L:ASCRJ_ADG_PROP_VIS
+  - 
+    type: var
+    var_name: L:ASCRJ_ADG_DISC_VIS
+  - 
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  - 
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKE_VIS
+  - 
+    type: var
+    var_name: L:ASCRJ_TG_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_SKYC_KNOB
+  - 
+    type: var
+    var_name: L:ASCRJ_SKYF_KNOB
+  - 
+    type: var
+    var_name: L:ASCRJ_VC_WSTINT
+  - 
+    type: var
+    var_name: L:ASCRJ_GND_POWER
+  - 
+    type: var
+    var_name: L:ASCRJ_GND_AIR
+  - 
+    type: var
+    var_name: L:ASCRJ_F2C_GPU_TRIGGER
+  - 
+    type: var
+    var_name: L:ASCRJ_F2C_GAU_TRIGGER
+  - 
+    type: var
+    var_name: L:ASCRJ_F2C_CHOCKS_TRIGGER
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_FD_COFFEE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_FD_COUGH
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_FD_DRINK
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_FD_PAGETURN1
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_FD_PAGETURN2
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_FD_PAGETURN3
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_FD_SANDWICH
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_FD_SNEEZE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_AFTER_LANDING
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_AFTER_LANDING_WAIT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_AFTER_LANDING_GATE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_ALL_PAX_LEFT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_CABIN_SANDWICHES
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_CABIN_SECURE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_CLIMB_SEATBELTS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_DES_SEATBELTS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_LANDING_ABORT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_LANDING_DAY
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_LANDING_NIGHT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_PREP_TAKEOFF_DAY
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_PREP_TAKEOFF_NIGHT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_SAFETY
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_SEATBELTS_OFF
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_TAKEOFF_ABORT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_CC_WELCOME
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_TCAS_CLEAR
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_TCAS_CLIMB
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_TCAS_CLIMB_NOW
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_TCAS_DESCENT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_TCAS_DESCENT_NOW
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_TCAS_TRAFFIC
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_TCAS_TEST_COMPLETE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_10
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_20
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_30
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_40
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_50
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_100
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_200
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_300
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_400
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_500
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_1000
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_BANKANGLE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_CAUTION_OBS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_CAUTION_TERR
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_DONTSINK
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_GLIDESLOPE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_MINIMUMS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_SINKRATE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_TERRAIN
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_TERRAIN_INOP
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_TEST
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_TOOLOWFLAPS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_TOOLOWGEAR
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_TOOLOWTERRAIN
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_WARNING
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_WARNING_WINDSHEAR
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_EGPWS_WINDSHEAR
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_CAB_SIGNS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_OVERSPEED
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_OXY_TEST_1
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_OXY_TEST_2
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_PBRK_REL
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_PBRK_SET
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_STICKSHAKER
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_YOKE_APDISC
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_AVIO_FAN
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_AMB_PACKS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_ALT_ALERT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_ANTI_ICE_DUCT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_AP_DISCONNECT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_APU
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_BLEED_AIR_DUCT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_BRAKES
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_C_CHORD
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_CABIN_PRESSURE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_CLACKER
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_CFG_AP
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_CFG_BRK
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_CFG_FLAPS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_CFG_SPLRS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_CFG_TRIM
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_DECOMPRESSION
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_DOOR
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_EFB_BING
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_ENGINE_OIL
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_FIRE_BELL
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_GEAR_BAY_OVHT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_GEAR_DISAGREE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_HORN
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_JETPIPE_OVHT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_NOSE_DOOR
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_SELCAL
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_SINGLE_CHIME
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_SIREN
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_SMOKE
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_TRIPLE_CHIME
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_WARBLER
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_WARN08
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_WARN09
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_WING_OVHT
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_WARN_STARTUP_CHIME
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_APU
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_HYDR_PUMPS
+  - 
+    type: var
+    var_name: L:ASCRJ_SND_ADG
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_SEC_INIT
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_SEC_TO
+  - 
+    type: var
+    var_name: L:ASCRJ_FPNL_BITE
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_THRMODE_1
+  - 
+    type: var
+    var_name: L:ASCRJ_TQ_THRMODE_2
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_L_RUNNING
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_R_RUNNING
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_L_STARTING
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_R_STARTING
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_DEBUG_1
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_DEBUG_2
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_DEBUG_3
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_DEBUG_4
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_DEBUG_5
+  - 
+    type: var
+    var_name: L:ASCRJ_ENG_DEBUG_6
+  - 
+    type: var
+    var_name: L:ASCRJ_OVHD_DOME_VISI
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_OVHD_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ64_DM_LT_CPT_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ64_DM_LT_FO_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_INTEG_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_INTEG_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_INTEG_BRT_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_FLOOD_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_FLOOD_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_FLOOD_BRT_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_FLOOR_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_FLOOR_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_MAPLT_L_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_MAPLT_R_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_INTL_CB_BRT_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_NAV_LIGHTS
+  - 
+    type: var
+    var_name: L:ASCRJ_NAV_LIGHTS_DAY
+  - 
+    type: var
+    var_name: L:ASCRJ_NAV_LIGHTS_NIGHT
+  - 
+    type: var
+    var_name: L:ASCRJ_STROBE_LIGHTS
+  - 
+    type: var
+    var_name: L:ASCRJ_STROBE_LIGHTS_REAR
+  - 
+    type: var
+    var_name: L:ASCRJ_BEACON_LIGHTS_UPPER
+  - 
+    type: var
+    var_name: L:ASCRJ_BEACON_LIGHTS_LOWER
+  - 
+    type: var
+    var_name: L:ASCRJ_LOGO_LIGHT_DAY
+  - 
+    type: var
+    var_name: L:ASCRJ_LOGO_LIGHT_NIGHT
+  - 
+    type: var
+    var_name: L:ASCRJ_LOGO_LIGHT_PREVIEW
+  - 
+    type: var
+    var_name: L:ASCRJ_WING_LIGHTS
+  - 
+    type: var
+    var_name: L:ASCRJ_LDG_LIGHT_NOSE
+  - 
+    type: var
+    var_name: L:ASCRJ_LDG_LIGHT_LEFT
+  - 
+    type: var
+    var_name: L:ASCRJ_LDG_LIGHT_RIGHT
+  - 
+    type: var
+    var_name: L:ASCRJ_TAXI_LIGHT_LEFT
+  - 
+    type: var
+    var_name: L:ASCRJ_TAXI_LIGHT_RIGHT
+  - 
+    type: var
+    var_name: L:ASCRJ_STBY_COMP_OFF
+  - 
+    type: var
+    var_name: L:ASCRJ_STBY_COMP_DIM
+  - 
+    type: var
+    var_name: L:ASCRJ_STBY_COMP_BRT
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_COMP
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_DOME_DOOR
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_DOME_L
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_DOME_R
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_FLOOD_LSP
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_FLOOD_RSP
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_FLOOD_PED_C
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_FLOOD_PED_L
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_FLOOD_PED_R
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_FLOOR_L
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_FLOOR_R
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_MAP_L
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_MAP_R
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_CHARTHLD_CPT
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_CHARTHLD_FO
+  - 
+    type: var
+    var_name: L:ASCRJ64_VCL_PNLFLOOD
+  - 
+    type: var
+    var_name: L:ASCRJ_CABIN_LIGHTS
+  - 
+    type: var
+    var_name: L:ASCRJ_CABIN_LIGHTS_STATE
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_CRS_L_CMD
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_CRS_L_VAL
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_CRS_R_CMD
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_CRS_R_VAL
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_SPD_CMD
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_SPD_VAL
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_MACH_CMD
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_MACH_VAL
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_HDG_CMD
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_HDG_VAL
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_ALT_CMD
+  - 
+    type: var
+    var_name: L:ASCRJ_FS2C_ALT_VAL
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_SPEED_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_SPEED_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_HDG_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_ALT_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_WHEEL_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_FCP_WHEEL_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_MCDU_KYBD_TOGGLE
+  - 
+    type: var
+    var_name: L:ASCRJ_MCDU2_KYBD_TOGGLE
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_LAT_ACTIVE
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_LAT_ARMED
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_VERT_ACTIVE
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_VERT_ARMED
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_VERT_ARMED_2
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_LOC_CAPTURE
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_GS_CAPTURE
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_ALT_HOLD
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_ALT_CAPTURE
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_USE_MACH
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_SELMACH
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_SELIAS
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_SELALT
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_SELVS
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_SELHDG
+  - 
+    type: var
+    var_name: L:ASCRJ_VAR_AP_SPDTREND
+  - 
+    type: var
+    var_name: L:ASCRJ_IAS
+  - 
+    type: var
+    var_name: L:ASCRJ_IAS_TREND
+  - 
+    type: var
+    var_name: L:ASCRJ_IAS_DIFF
+  - 
+    type: var
+    var_name: L:ASCRJ_IAS_DIFF_CHG
+  - 
+    type: var
+    var_name: L:ASCRJ_IAS_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_SEL_VS
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKEC_TRIM1
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKEC_TRIM2
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKEF_TRIM1
+  - 
+    type: var
+    var_name: L:ASCRJ_YOKEF_TRIM2
+  - 
+    type: var
+    var_name: L:ASCRJ_YD1_YD1
+  - 
+    type: var
+    var_name: L:ASCRJ_YD2_YD2
+  - 
+    type: var
+    var_name: L:DEBUG_SPLR_CMD
+  - 
+    type: var
+    var_name: L:DEBUG_SPLR_ICE
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_MAN_ALT_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_EMER_DEPRESS_ON
+  - 
+    type: var
+    var_name: L:ASCRJ_PRESS_LDG_ELEV_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_NW_STEER_TILLER
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_NW_STEER_TILLER_DISP
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_INTSVC_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_INTSVC_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_INTSVC_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_DME1_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_DME1_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_DME1_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_DME2_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_DME2_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_DME2_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_ADF2_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_ADF2_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_ADF2_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_MKR1_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_MKR1_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_MKR1_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_MKR2_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_MKR2_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_MKR2_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO1_SPKR_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO2_SPKR_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_AUDIO3_SPKR_VOL_UPDN
+  - 
+    type: var
+    var_name: L:ASCRJ_FMS_NAV1_FORCE_MAN
+  - 
+    type: var
+    var_name: L:ASCRJ_FMS_NAV2_FORCE_MAN
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_SPEED_SET
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_BRG1_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_BRG1_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_BRG2_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_BRG2_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_FORMAT_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_FORMAT_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_RANGE_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_RANGE_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_NAVSRC_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_NAVSRC_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_REFSPD_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_REFSPD_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_REFALT_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_REFALT_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_BARO_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_BARO_INFO
+  - 
+    type: var
+    var_name: L:ASCRJ_LSP_BARO_VALUE
+  - 
+    type: var
+    var_name: L:ASCRJ_RSP_BARO_VALUE
+  - 
+    type: var
+    var_name: L:ASCRJ_PFDC_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_MFDC_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_EICAS1_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_EICAS2_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_MFDF_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_PFDF_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_MCDU_POPUP_TOGGLE
+  - 
+    type: var
+    var_name: L:ASCRJ_MCDU2_POPUP_TOGGLE
+  - 
+    type: var
+    var_name: L:ASCRJ_DH_CPT
+  - 
+    type: var
+    var_name: L:ASCRJ_DH_FO
+  - 
+    type: var
+    var_name: L:ASCRJ_MDA_CPT
+  - 
+    type: var
+    var_name: L:ASCRJ_MDA_FO
+  - 
+    type: var
+    var_name: L:ASCRJ_TRIM_IND
+  - 
+    type: var
+    var_name: L:ASCRJ_BARO_INHG
+  - 
+    type: var
+    var_name: L:ASCRJ_HGS_VISIBLE
+  - 
+    type: var
+    var_name: L:ASCRJ_HGS_MODE
+  - 
+    type: var
+    var_name: L:ASCRJ_HGS_ARMED

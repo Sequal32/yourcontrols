@@ -9,14 +9,14 @@ use std::mem::swap;
 use std::path::Path;
 use std::time::Instant;
 
-use crate::corrector::Corrector;
-use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType, LVarResult};
+use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType};
 use crate::sync::jscommunicator::{JSCommunicator, JSPayloads};
 use crate::sync::transfer::{AircraftVars, Events, LVarSyncer};
 use crate::syncdefs::{
     CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch,
 };
 use crate::util::{Category, InDataTypes};
+use crate::{corrector::Corrector, syncdefs::LocalVarProxy};
 
 use yourcontrols_types::{AVarMap, AllNeedSync, Error, Event, EventData, LVarMap, VarReaderTypes};
 
@@ -282,6 +282,15 @@ struct CustomCalculatorEntry {
 }
 
 #[derive(Deserialize)]
+struct LocalVarProxyEntry {
+    var_name: String,
+    target: String,
+    #[serde(default)]
+    loopback: bool,
+    conditions: Option<Vec<Condition>>,
+}
+
+#[derive(Deserialize)]
 struct ProgramActionEntry {
     var_name: String,
     var_units: Option<String>,
@@ -533,8 +542,7 @@ impl Definitions {
     ) -> Result<(), Error> {
         let category = get_category_from_string(category)?;
 
-        self.lvarstransfer
-            .add_var(var_name.to_string(), var_units.map(String::from));
+        self.lvarstransfer.add_var(var_name.to_string(), var_units);
         self.categories.insert(var_name.to_string(), category);
 
         Ok(())
@@ -869,6 +877,30 @@ impl Definitions {
         Ok(())
     }
 
+    fn add_local_var_proxy(
+        &mut self,
+        category: &str,
+        var: LocalVarProxyEntry,
+    ) -> Result<(), Error> {
+        let (var_string, _) =
+            self.add_var_string(category, &var.var_name, None, InDataTypes::F64)?;
+
+        let loopback = if var.loopback {
+            Some(var_string.clone())
+        } else {
+            None
+        };
+
+        self.add_mapping(
+            var_string,
+            Mapping {
+                action: ActionType::F64(Box::new(LocalVarProxy::new(var.target, loopback))),
+                condition: var.conditions,
+                ..Default::default()
+            },
+        )
+    }
+
     fn add_program_action(&mut self, category: &str, var: ProgramActionEntry) -> Result<(), Error> {
         let (var_string, _) = self.add_var_string(
             category,
@@ -938,6 +970,7 @@ impl Definitions {
             "NUMDIGITSET" => self.add_num_digit_set(&category, try_cast_yaml!(value))?,
             "CUSTOMCALCULATOR" => self.add_custom_calculator(&category, try_cast_yaml!(value))?,
             "PROGRAMACTION" => self.add_program_action(&category, try_cast_yaml!(value))?,
+            "LOCALVARPROXY" => self.add_local_var_proxy(&category, try_cast_yaml!(value))?,
             "PROGRAMACTIONEVENT" => {
                 self.add_program_action_event(&category, try_cast_yaml!(value))?
             }
@@ -1029,7 +1062,7 @@ impl Definitions {
                     &self.lvarstransfer,
                     &self.avarstransfer,
                     mapping.condition.as_ref(),
-                    &VarReaderTypes::F64(result.var.floating),
+                    &VarReaderTypes::F64(result.value),
                 ) {
                     should_write = false;
                     continue;
@@ -1042,7 +1075,7 @@ impl Definitions {
                 execute_mapping!(
                     new_value,
                     action,
-                    VarReaderTypes::F64(result.var.floating),
+                    VarReaderTypes::F64(result.value),
                     mapping,
                     { action.set_current(new_value) },
                     {},
@@ -1060,7 +1093,7 @@ impl Definitions {
 
         self.current_sync
             .lvars
-            .insert(result.var_name, result.var.floating);
+            .insert(result.var_name, result.value);
     }
 
     // Processes client data and adds to the result queue if it changed
@@ -1069,19 +1102,8 @@ impl Definitions {
         conn: &simconnect::SimConnector,
         data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA,
     ) {
-        // Get var data
-        let lvar = match self.lvarstransfer.process_client_data(conn, data) {
-            Some(var) => var,
-            None => return,
-        };
-
-        match lvar {
-            LVarResult::Single(result) => self.process_local_var(result),
-            LVarResult::Multi(results) => {
-                for result in results {
-                    self.process_local_var(result);
-                }
-            }
+        for value in self.lvarstransfer.process_client_data(conn, data) {
+            self.process_local_var(value);
         }
     }
 

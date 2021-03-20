@@ -346,3 +346,28 @@ impl Syncable<f64> for CustomCalculator {
         transfer.send_raw(conn, &self.set_string);
     }
 }
+
+pub struct LocalVarProxy {
+    target: String,
+    loopback: Option<String>,
+}
+
+impl LocalVarProxy {
+    pub fn new(target: String, loopback: Option<String>) -> Self {
+        Self { target, loopback }
+    }
+}
+
+impl Syncable<f64> for LocalVarProxy {
+    fn set_current(&mut self, _: f64) {}
+
+    fn set_new(&self, new: f64, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
+        let value_string = new.to_string();
+
+        lvar_transfer.set(conn, &self.target, &value_string);
+
+        if let Some(loopback_var) = self.loopback.as_ref() {
+            lvar_transfer.set(conn, loopback_var, &value_string);
+        }
+    }
+}

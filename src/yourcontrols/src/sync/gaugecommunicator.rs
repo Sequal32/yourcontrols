@@ -1,9 +1,9 @@
 use super::memwriter::MemWriter;
 use bimap::{self, BiHashMap};
-use byteorder::{LittleEndian, ReadBytesExt};
 use serde::Deserialize;
 use simconnect::SimConnector;
-use std::{collections::HashMap, io::Cursor};
+use spin_sleep::sleep;
+use std::{collections::HashMap, time::Duration};
 
 #[derive(Debug, Clone)]
 pub struct LVar {
@@ -18,19 +18,22 @@ impl PartialEq for LVar {
 }
 
 #[derive(Debug)]
-#[repr(C)]
 pub struct GetResult {
     pub var_name: String,
-    pub var: LVar,
+    pub value: f64,
+}
+
+#[derive(Debug)]
+struct DatumData {
+    friendly_name: String,
+    calculator: String,
 }
 
 #[repr(C)]
 #[derive(Debug)]
-struct ReceiveData {
-    request_id: u32,
-    i: i32,
-    f: f64,
-    // s: std::ffi::CString
+struct ReturnDatum {
+    id: i32,
+    value: f64,
 }
 
 #[derive(Debug)]
@@ -68,20 +71,14 @@ fn format_get(var_name: &str, var_units: Option<&str>) -> String {
 
 pub struct GaugeCommunicator {
     requests: BiHashMap<String, u32>,
-    datums: Vec<String>,
+    datums: Vec<DatumData>,
     interpolate_datums: HashMap<String, InterpolateMapping>,
     next_request_id: u32,
 }
 
-#[derive(Debug)]
-pub enum LVarResult {
-    Single(GetResult),
-    Multi(Vec<GetResult>),
-}
-
 // SEND/RECEIVE define/client data ids
 const SEND: u32 = 0;
-const RECEIVE: u32 = 1;
+// const RECEIVE: u32 = 1;
 const SEND_MULTIPLE: u32 = 2;
 const RECEIVE_MULTIPLE: u32 = 3;
 const MAP_INTERPOLATE: u32 = 4;
@@ -138,8 +135,6 @@ impl GaugeCommunicator {
             128,
             writer.get_data_location() as *mut std::ffi::c_void,
         );
-
-        writer.deallocate();
     }
 
     pub fn send_raw(&self, conn: &SimConnector, string: &str) {
@@ -155,34 +150,43 @@ impl GaugeCommunicator {
             128,
             writer.get_data_location() as *mut std::ffi::c_void,
         );
-        writer.deallocate();
     }
 
-    pub fn add_definition(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>) {
-        self.add_definition_raw(conn, &format_get(var_name, var_units), var_name);
+    pub fn add_definition(&mut self, var_name: String, var_units: Option<&str>) {
+        self.add_definition_raw(format_get(&var_name, var_units), var_name);
     }
 
-    pub fn add_definition_raw(&mut self, conn: &SimConnector, string: &str, name: &str) {
-        let mut writer = MemWriter::new(128, 4).unwrap();
-        writer.write_str(string);
+    pub fn add_definition_raw(&mut self, calculator: String, name: String) {
+        self.datums.push(DatumData {
+            friendly_name: name,
+            calculator,
+        });
+    }
 
-        self.datums.push(name.to_string());
-        conn.add_to_client_data_definition(
-            RECEIVE_MULTIPLE,
-            (self.datums.len() * 16) as u32,
-            16,
-            0.0,
-            self.datums.len() as u32,
-        );
+    pub fn send_definitions(&mut self, conn: &SimConnector) {
+        for x in 0..(self.datums.len() as f32 / 126 as f32).ceil() as i32 {
+            let mut writer = MemWriter::new(8096, 4).unwrap();
 
-        conn.set_client_data(
-            SEND_MULTIPLE,
-            SEND_MULTIPLE,
-            0,
-            0,
-            128,
-            writer.get_data_location() as *mut std::ffi::c_void,
-        );
+            for i in 0..126 {
+                if let Some(datum_data) = self.datums.get((x * 126 + i) as usize) {
+                    writer.write_str(&datum_data.calculator);
+                    writer.pad(64 - datum_data.calculator.len() as isize);
+                }
+            }
+
+            conn.set_client_data(
+                SEND_MULTIPLE,
+                SEND_MULTIPLE,
+                0,
+                0,
+                8064,
+                writer.get_data_location() as *mut std::ffi::c_void,
+            );
+        }
+    }
+
+    pub fn get_number_defined(&self) -> usize {
+        self.datums.len()
     }
 
     // Aircraft vars only
@@ -239,46 +243,6 @@ impl GaugeCommunicator {
         );
     }
 
-    fn read_multiple_data(
-        &mut self,
-        count: u32,
-        pointer: *const u32,
-    ) -> Result<Vec<GetResult>, std::io::Error> {
-        let mut return_vars = Vec::new();
-
-        unsafe {
-            for i in 0..count {
-                let mut buf = Vec::new();
-                for x in 0..5 {
-                    buf.extend_from_slice(
-                        &pointer.offset((i * 5 + x) as isize).read().to_le_bytes(),
-                    );
-                }
-                //
-
-                let mut cursor = Cursor::new(buf);
-
-                let datum_id = cursor.read_i32::<LittleEndian>()?;
-                let datum_name = match self.datums.get(datum_id as usize) {
-                    Some(s) => s,
-                    None => continue,
-                };
-                // Skip 4 bytes for padding
-                cursor.read_u32::<LittleEndian>().ok();
-
-                return_vars.push(GetResult {
-                    var_name: datum_name.clone(),
-                    var: LVar {
-                        integer: cursor.read_i32::<LittleEndian>()?,
-                        floating: cursor.read_f64::<LittleEndian>()?,
-                    },
-                });
-            }
-        }
-
-        return Ok(return_vars);
-    }
-
     fn do_operation(&self, operation: i32, conn: &SimConnector) {
         let mut writer = MemWriter::new(128, 4).unwrap();
         writer.write_i32(operation);
@@ -300,52 +264,30 @@ impl GaugeCommunicator {
         self.do_operation(-2, conn);
     }
 
-    pub fn fetch_all(&self, conn: &SimConnector) {
-        conn.request_client_data(
-            RECEIVE_MULTIPLE,
-            1,
-            RECEIVE_MULTIPLE,
-            simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ONCE,
-            simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED,
-            0,
-            0,
-            0,
-        );
-    }
-
     pub fn process_client_data(
         &mut self,
-        conn: &simconnect::SimConnector,
         data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA,
-    ) -> Option<LVarResult> {
-        match data._base.dwDefineID {
-            RECEIVE => unsafe {
-                let data: ReceiveData = std::mem::transmute_copy(&data._base.dwData);
-                return Some(LVarResult::Single(GetResult {
-                    var_name: self.get_request_string(data.request_id).clone(),
-                    var: LVar {
-                        integer: data.i,
-                        floating: data.f,
-                        // string: data.s
-                    },
-                }));
-            },
-            RECEIVE_MULTIPLE => {
-                // Was initial fetch done
-                if data._base.dwRequestID == 1 {
-                    conn.request_client_data(RECEIVE_MULTIPLE, 0, RECEIVE_MULTIPLE, simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED, 0, 0, 0);
-                }
+    ) -> Vec<GetResult> {
+        let datums: &'static [ReturnDatum] = unsafe {
+            let pointer = &data._base.dwData as *const u32;
+            let array_pointer = pointer.add(2) as *const ReturnDatum;
+            let length = pointer.read();
 
-                unsafe {
-                    let pointer = &data._base.dwData as *const u32;
-                    match self.read_multiple_data(data._base.dwDefineCount as u32, pointer) {
-                        Ok(d) => Some(LVarResult::Multi(d)),
-                        Err(_) => None,
-                    }
-                }
+            std::slice::from_raw_parts(array_pointer, length as usize)
+        };
+
+        let mut result = Vec::new();
+
+        for datum in datums {
+            if let Some(datum_data) = self.datums.get(datum.id as usize) {
+                result.push(GetResult {
+                    var_name: datum_data.friendly_name.clone(),
+                    value: datum.value,
+                })
             }
-            _ => None,
         }
+
+        result
     }
 
     fn write_interpolate_mapping(&mut self, conn: &SimConnector) {
@@ -381,7 +323,7 @@ impl GaugeCommunicator {
     pub fn on_connected(&mut self, conn: &SimConnector) {
         // Assign named data area to a client id
         conn.map_client_data_name_to_id("YCSEND", SEND);
-        conn.map_client_data_name_to_id("YCRECEIVE", RECEIVE);
+        // conn.map_client_data_name_to_id("YCRECEIVE", RECEIVE);
         conn.map_client_data_name_to_id("YCSENDMULTI", SEND_MULTIPLE);
         conn.map_client_data_name_to_id("YCRECEIVEMULTI", RECEIVE_MULTIPLE);
         conn.map_client_data_name_to_id("YCMAPINTERPOLATE", MAP_INTERPOLATE);
@@ -391,43 +333,28 @@ impl GaugeCommunicator {
         conn.add_to_client_data_definition(SEND, 0, 4, 0.0, 0);
         conn.add_to_client_data_definition(SEND, 4, 124, 0.0, 1);
 
-        conn.add_to_client_data_definition(RECEIVE, 0, 4, 0.0, 0);
-        conn.add_to_client_data_definition(RECEIVE, 4, 4, 0.0, 1);
-        conn.add_to_client_data_definition(RECEIVE, 8, 8, 0.0, 2);
-
-        conn.add_to_client_data_definition(SEND_MULTIPLE, 0, 128, 0.0, 0);
-        conn.add_to_client_data_definition(RECEIVE_MULTIPLE, 0, 16, 0.0, 0);
-
         conn.add_to_client_data_definition(SEND_INTERPOLATE, 0, 8, 0.0, 100);
 
         for i in 0..100 {
             conn.add_to_client_data_definition(MAP_INTERPOLATE, i * 68, 68, 0.0, i);
             conn.add_to_client_data_definition(SEND_INTERPOLATE, i * 8 + 8, 8, 0.0, i);
         }
-        // Listen for data written onto the RECEIVE data area
-        conn.request_client_data(
-            RECEIVE,
-            0,
-            RECEIVE,
-            simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET,
-            0,
-            0,
-            0,
-            0,
-        );
-        conn.request_client_data(
-            RECEIVE_MULTIPLE,
-            0,
-            RECEIVE_MULTIPLE,
-            simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET,
-            simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED
-                | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED,
-            0,
-            0,
-            0,
-        );
+
+        conn.add_to_client_data_definition(RECEIVE_MULTIPLE, 0, 8096, 0.0, 0);
+        conn.add_to_client_data_definition(SEND_MULTIPLE, 0, 8064, 0.0, 0);
         // Clear gauge definitions
         self.clear_definitions(conn);
+
+        conn.request_client_data(
+            RECEIVE_MULTIPLE,
+            1,
+            RECEIVE_MULTIPLE,
+            simconnect::SIMCONNECT_CLIENT_DATA_PERIOD_SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET,
+            0,
+            0,
+            0,
+            0,
+        );
         // Write some data
         self.write_interpolate_mapping(conn);
     }

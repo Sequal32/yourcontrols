@@ -7,7 +7,7 @@ use std::{
 };
 use yourcontrols_types::VarReaderTypes;
 
-use super::gaugecommunicator::{GaugeCommunicator, GetResult, LVarResult};
+use super::gaugecommunicator::{GaugeCommunicator, GetResult};
 
 pub struct Events {
     event_map: BiHashMap<String, u32>,
@@ -78,16 +78,9 @@ impl Events {
         return self.event_map.len();
     }
 }
-
-struct LocalVarEntry {
-    current_value: f64,
-    units: Option<String>,
-    actual_string: Option<String>,
-}
-
 pub struct LVarSyncer {
     pub transfer: GaugeCommunicator,
-    vars: HashMap<String, LocalVarEntry>,
+    current_values: HashMap<String, f64>,
     raw_count: u32,
 }
 
@@ -95,76 +88,43 @@ impl LVarSyncer {
     pub fn new() -> Self {
         Self {
             transfer: GaugeCommunicator::new(),
-            vars: HashMap::new(),
+            current_values: HashMap::new(),
             raw_count: 0,
         }
     }
 
-    pub fn add_var(&mut self, var_name: String, var_units: Option<String>) {
-        if self.vars.contains_key(&var_name) {
-            return;
-        }
-
-        self.vars.insert(
-            var_name,
-            LocalVarEntry {
-                current_value: 0.0,
-                units: var_units,
-                actual_string: None,
-            },
-        );
+    pub fn add_var(&mut self, var_name: String, var_units: Option<&str>) {
+        self.transfer.add_definition(var_name, var_units);
     }
 
-    pub fn add_custom_var(&mut self, var_string: String) -> String {
+    pub fn add_custom_var(&mut self, calculator: String) -> String {
         let custom_var_name = format!("CustomLVar{}", self.raw_count);
 
-        self.vars.insert(
-            custom_var_name.clone(),
-            LocalVarEntry {
-                current_value: 0.0,
-                units: None,
-                actual_string: Some(var_string),
-            },
-        );
-
+        self.transfer
+            .add_definition_raw(calculator, custom_var_name.clone());
         self.raw_count += 1;
 
         return custom_var_name;
-    }
-
-    fn process_single_var(&mut self, data: &GetResult) {
-        if let Some(var) = self.vars.get_mut(&data.var_name) {
-            var.current_value = data.var.floating;
-        }
     }
 
     pub fn process_client_data(
         &mut self,
         conn: &simconnect::SimConnector,
         data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA,
-    ) -> Option<LVarResult> {
-        let data = self.transfer.process_client_data(conn, data);
+    ) -> Vec<GetResult> {
+        let values = self.transfer.process_client_data(data);
 
-        match data.as_ref() {
-            Some(LVarResult::Single(data)) => {
-                self.process_single_var(data);
-            }
-            Some(LVarResult::Multi(datas)) => {
-                for data in datas {
-                    self.process_single_var(data);
-                }
-            }
-            None => {}
+        for value in values.iter() {
+            self.current_values
+                .insert(value.var_name.clone(), value.value);
         }
 
-        return data;
+        return values;
     }
 
+    // FIXME: var_units missing
     pub fn set(&mut self, conn: &SimConnector, var_name: &str, value: &str) {
-        if let Some(var_data) = self.vars.get(var_name) {
-            self.transfer
-                .set(conn, var_name, var_data.units.as_deref(), value);
-        }
+        self.transfer.set(conn, var_name, None, value);
     }
 
     pub fn set_unchecked(
@@ -183,42 +143,26 @@ impl LVarSyncer {
 
     pub fn on_connected(&mut self, conn: &SimConnector) {
         self.transfer.on_connected(conn);
-
-        for (var_name, var_data) in self.vars.iter() {
-            if let Some(raw_string) = var_data.actual_string.as_ref() {
-                self.transfer.add_definition_raw(conn, raw_string, var_name);
-            } else {
-                self.transfer
-                    .add_definition(conn, var_name, var_data.units.as_deref());
-            }
-        }
-
-        self.transfer.fetch_all(conn)
+        self.transfer.send_definitions(conn);
     }
 
     pub fn get_var(&self, var_name: &str) -> Option<f64> {
-        match self.vars.get(var_name) {
-            Some(v) => Some(v.current_value),
+        match self.current_values.get(var_name) {
+            Some(v) => Some(*v),
             None => None,
         }
     }
 
     pub fn get_all_vars(&self) -> HashMap<String, f64> {
-        let mut return_map = HashMap::new();
-
-        for (var_name, value) in self.vars.iter() {
-            return_map.insert(var_name.clone(), value.current_value);
-        }
-
-        return return_map;
+        return self.current_values.clone();
     }
 
     pub fn get_number_defined(&self) -> usize {
-        return self.vars.len();
+        return self.transfer.get_number_defined();
     }
 
     pub fn shrink_maps(&mut self) {
-        self.vars.shrink_to_fit();
+        self.current_values.shrink_to_fit();
     }
 }
 
