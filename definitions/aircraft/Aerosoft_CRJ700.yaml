@@ -1,6 +1,9 @@
-include: 
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
   - definitions/modules/physics.yaml
-
+  - definitions/modules/radios.yaml
 shared:
   - 
     type: var
@@ -52,11 +55,10 @@ shared:
     type: var
     var_name: L:ASCRJ_ELEC_BATTMASTER
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ELEC_GPU_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ELEC_GPU
+    target: L:ASCRJ_ELEC_GPU
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ELEC_GPU_AVAIL
@@ -70,11 +72,10 @@ shared:
     type: var
     var_name: L:0
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ELEC_IDG1_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ELEC_IDG1
+    target: L:ASCRJ_ELEC_IDG1
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ELEC_IDG1_DISC
@@ -85,11 +86,10 @@ shared:
     type: var
     var_name: L:ASCRJ_ELEC_IDG2_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ELEC_IDG2_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ELEC_IDG2
+    target: L:ASCRJ_ELEC_IDG2
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ELEC_IDG2_DISC
@@ -97,11 +97,10 @@ shared:
     type: var
     var_name: L:ASCRJ_ELEC_IDG2_FAULT
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ELEC_ACESSXFER_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ELEC_ACESSXFER
+    target: L:ASCRJ_ELEC_ACESSXFER
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ELEC_ACESSXFER_ALTN
@@ -115,11 +114,10 @@ shared:
     type: var
     var_name: L:ASCRJ_ELEC_APUGEN
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ELEC_AUTOXFER1_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ELEC_AUTOXFER1
+    target: L:ASCRJ_ELEC_AUTOXFER1
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ELEC_AUTOXFER1_OFF
@@ -127,11 +125,10 @@ shared:
     type: var
     var_name: L:ASCRJ_ELEC_AUTOXFER1_FAIL
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ELEC_AUTOXFER2_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ELEC_AUTOXFER2
+    target: L:ASCRJ_ELEC_AUTOXFER2
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ELEC_AUTOXFER2_OFF
@@ -150,11 +147,10 @@ shared:
     type: var
     var_name: L:ASCRJ_HYDR_SOV1_GUARD_LOCK
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_HYDR_SOV1_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_HYDR_SOV1
+    target: L:ASCRJ_HYDR_SOV1
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_HYDR_SOV1_CLOSED
@@ -165,11 +161,10 @@ shared:
     type: var
     var_name: L:ASCRJ_HYDR_SOV2_GUARD_LOCK
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_HYDR_SOV2_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_HYDR_SOV2
+    target: L:ASCRJ_HYDR_SOV2
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_HYDR_SOV2_CLOSED
@@ -189,11 +184,10 @@ shared:
     type: var
     var_name: L:ASCRJ_EXTL_WING
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_FUEL_PUMP_L_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_FUEL_PUMP_L
+    target: L:ASCRJ_FUEL_PUMP_L
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FUEL_PUMP_L_INOP
@@ -201,11 +195,10 @@ shared:
     type: var
     var_name: L:ASCRJ_FUEL_PUMP_L_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_FUEL_PUMP_R_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_FUEL_PUMP_R
+    target: L:ASCRJ_FUEL_PUMP_R
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FUEL_PUMP_R_INOP
@@ -213,11 +206,10 @@ shared:
     type: var
     var_name: L:ASCRJ_FUEL_PUMP_R_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_FUEL_GRAVITY_FLOW_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_FUEL_GRAVITY_FLOW
+    target: L:ASCRJ_FUEL_GRAVITY_FLOW
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FUEL_GRAVITY_FLOW_OPEN
@@ -225,11 +217,10 @@ shared:
     type: var
     var_name: L:ASCRJ_FUEL_GRAVITY_FLOW_FAIL
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_FUEL_XFLOW_L_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_FUEL_XFLOW_L
+    target: L:ASCRJ_FUEL_XFLOW_L
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FUEL_XFLOW_L_FAIL
@@ -237,11 +228,10 @@ shared:
     type: var
     var_name: L:ASCRJ_FUEL_XFLOW_L_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_FUEL_XFLOW_R_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_FUEL_XFLOW_R
+    target: L:ASCRJ_FUEL_XFLOW_R
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FUEL_XFLOW_R_FAIL
@@ -249,11 +239,10 @@ shared:
     type: var
     var_name: L:ASCRJ_FUEL_XFLOW_R_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_FUEL_XFLOW_OVRD_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_FUEL_XFLOW_OVRD
+    target: L:ASCRJ_FUEL_XFLOW_OVRD
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FUEL_XFLOW_OVRD_MAN
@@ -270,11 +259,10 @@ shared:
     type: var
     var_name: L:ASCRJ_AIR_BLEED_SOURCE
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_APU_PWRFUEL_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_APU_PWRFUEL
+    target: L:ASCRJ_APU_PWRFUEL
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_APU_PWRFUEL_SOV
@@ -282,11 +270,10 @@ shared:
     type: var
     var_name: L:ASCRJ_APU_PWRFUEL_PUMP
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_APU_STARTSTOP_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_APU_STARTSTOP
+    target: L:ASCRJ_APU_STARTSTOP
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_APU_STARTSTOP_START
@@ -294,47 +281,42 @@ shared:
     type: var
     var_name: L:ASCRJ_APU_STARTSTOP_AVAIL
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ENGS_START_L_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ENGS_START_L
+    target: L:ASCRJ_ENGS_START_L
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ENGS_START_L_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ENGS_START_R_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ENGS_START_R
+    target: L:ASCRJ_ENGS_START_R
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ENGS_START_R_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ENGS_STOP_L_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ENGS_STOP_L
+    target: L:ASCRJ_ENGS_STOP_L
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ENGS_STOP_L_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ENGS_STOP_R_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ENGS_STOP_R
+    target: L:ASCRJ_ENGS_STOP_R
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ENGS_STOP_R_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ENGS_CONT_IGN_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ENGS_CONT_IGN
+    target: L:ASCRJ_ENGS_CONT_IGN
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ENGS_CONT_IGN_ON
@@ -366,20 +348,18 @@ shared:
     type: var
     var_name: L:ASCRJ_PRESS_EMER_DEPRESS_GUARD_LOCK
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_PRESS_EMER_DEPRESS_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_PRESS_EMER_DEPRESS
+    target: L:ASCRJ_PRESS_EMER_DEPRESS
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_PRESS_EMER_DEPRESS_STATE
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_PRESS_PRESS_CONT_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_PRESS_PRESS_CONT
+    target: L:ASCRJ_PRESS_PRESS_CONT
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_PRESS_PRESS_CONT_MAN
@@ -390,11 +370,10 @@ shared:
     type: var
     var_name: L:ASCRJ_PRESS_MAN_VS_RATE
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_AIRC_PACK_L_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_AIRC_PACK_L
+    target: L:ASCRJ_AIRC_PACK_L
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_AIRC_PACK_L_OFF
@@ -402,11 +381,10 @@ shared:
     type: var
     var_name: L:ASCRJ_AIRC_PACK_L_FAULT
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_AIRC_PACK_R_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_AIRC_PACK_R
+    target: L:ASCRJ_AIRC_PACK_R
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_AIRC_PACK_R_OFF
@@ -420,11 +398,10 @@ shared:
     type: var
     var_name: L:ASCRJ_AIRC_RAM_AIR_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_AIRC_RAM_AIR_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_AIRC_RAM_AIR
+    target: L:ASCRJ_AIRC_RAM_AIR
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_AIRC_RAM_AIR_OPEN
@@ -435,20 +412,18 @@ shared:
     type: var
     var_name: L:ASCRJ_AIRC_HOTCOLD_CABIN
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_AIRC_MANCTRL_CKPT_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_AIRC_MANCTRL_CKPT
+    target: L:ASCRJ_AIRC_MANCTRL_CKPT
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_AIRC_MANCTRL_CKPT_MAN
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_AIRC_MANCTRL_CABIN_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_AIRC_MANCTRL_CABIN
+    target: L:ASCRJ_AIRC_MANCTRL_CABIN
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_AIRC_MANCTRL_CABIN_MAN
@@ -471,11 +446,10 @@ shared:
     type: var
     var_name: L:ASCRJ_AICE_COWL_R
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_AICE_DETECT_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_AICE_DETECT
+    target: L:ASCRJ_AICE_DETECT
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_AICE_DETECT_ICE
@@ -483,11 +457,10 @@ shared:
     type: var
     var_name: L:ASCRJ_AICE_WSHLD_L
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_AICE_WSHLD_TEST_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_AICE_WSHLD_TEST
+    target: L:ASCRJ_AICE_WSHLD_TEST
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_AICE_WSHLD_R
@@ -531,11 +504,10 @@ shared:
     type: var
     var_name: L:ASCRJ_OVHD_OXY_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_OVHD_OXY_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_OVHD_OXY
+    target: L:ASCRJ_OVHD_OXY
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_OVHD_OXY_ON
@@ -610,11 +582,10 @@ shared:
     type: var
     var_name: L:ASCRJ_GSC_ENG_FIRE_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_GSC_ENG_FIRE_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_GSC_ENG_FIRE
+    target: L:ASCRJ_GSC_ENG_FIRE
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_GSC_ENG_FIRE_ON
@@ -679,11 +650,10 @@ shared:
     type: var
     var_name: L:ASCRJ_GSF_ENG_FIRE_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_GSF_ENG_FIRE_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_GSF_ENG_FIRE
+    target: L:ASCRJ_GSF_ENG_FIRE
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_GSF_ENG_FIRE_ON
@@ -699,11 +669,10 @@ shared:
     type: var
     var_name: L:ASCRJ_GSF_APU_FIRE_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_GSF_APU_FIRE_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_GSF_APU_FIRE
+    target: L:ASCRJ_GSF_APU_FIRE
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_GSF_APU_FIRE_ON
@@ -715,9 +684,6 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_GSF_APU_BOTTLE_ON
-  - 
-    type: var
-    var_name: L:ASCRJ_TQ_TOGA_1
   - 
     type: var
     var_name: L:ASCRJ_FDSYNC_CLICK
@@ -1711,11 +1677,10 @@ shared:
     type: var
     var_name: L:ASCRJ_GEAR_HORN_MUTE_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_GEAR_HORN_MUTE_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_GEAR_HORN_MUTE
+    target: L:ASCRJ_GEAR_HORN_MUTE
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_GEAR_HORN_MUTE_ON
@@ -1753,11 +1718,10 @@ shared:
     type: var
     var_name: L:ASCRJ_ENG_HPSCHED_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ENG_HPSCHED_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ENG_HPSCHED
+    target: L:ASCRJ_ENG_HPSCHED
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_ENG_HPSCHED_ON
@@ -1773,11 +1737,10 @@ shared:
     type: var
     var_name: L:ASCRJ_GPWS_TERR_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_GPWS_TERR_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_GPWS_TERR
+    target: L:ASCRJ_GPWS_TERR
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_GPWS_TERR_OFF
@@ -1785,11 +1748,10 @@ shared:
     type: var
     var_name: L:ASCRJ_GPWS_FLAP_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_GPWS_FLAP_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_GPWS_FLAP
+    target: L:ASCRJ_GPWS_FLAP
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_GPWS_FLAP_OVRD
@@ -1832,38 +1794,41 @@ shared:
     type: var
     var_name: L:ASCRJ_FLAPS_START
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_TQ_REVERSE_1_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_TQ_CUTOFF_1
+    target: L:ASCRJ_TQ_REVERSE_1
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_TQ_REVERSE_1_START
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_TQ_CUTOFF_1_ANIM
+    target: L:ASCRJ_TQ_CUTOFF_1
+    loopback: true
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_TQ_TOGA_1_ANIM
+    target: L:ASCRJ_TQ_TOGA_1
+    loopback: true
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_TQ_REVERSE_2_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_TQ_CUTOFF_2
+    target: L:ASCRJ_TQ_REVERSE_2
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_TQ_REVERSE_2_START
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_TQ_CUTOFF_2_ANIM
+    target: L:ASCRJ_TQ_CUTOFF_2
+    loopback: true
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_TQ_TOGA_2_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_TQ_TOGA_2
+    target: L:ASCRJ_TQ_TOGA_2
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_RTU1_BRT
@@ -2111,11 +2076,10 @@ shared:
     target: L:ASCRJ_ECAM_STEP
     loopback: true
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_ECAM_SEL_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_ECAM_SEL
+    target: L:ASCRJ_ECAM_SEL
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_AUDIO1_VHF1_VOL_PUSH
@@ -2494,38 +2458,34 @@ shared:
     type: var
     var_name: L:ASCRJ_YD2_BTN_STATE
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_CALLS_PA_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_CALLS_PA
+    target: L:ASCRJ_CALLS_PA
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_CALLS_PA_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_CALLS_CHIME_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_CALLS_CHIME
+    target: L:ASCRJ_CALLS_CHIME
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_CALLS_CHIME_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_CALLS_CALL_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_CALLS_CALL
+    target: L:ASCRJ_CALLS_CALL
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_CALLS_CALL_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_CALLS_EMER_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_CALLS_EMER
+    target: L:ASCRJ_CALLS_EMER
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_CALLS_EMER_ON
@@ -2737,11 +2697,10 @@ shared:
     type: var
     var_name: L:ASCRJ_CARGO_FWD_GUARD_LOCK
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_CARGO_FWD_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_CARGO_FWD
+    target: L:ASCRJ_CARGO_FWD
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_CARGO_FWD_ARMED
@@ -2752,20 +2711,18 @@ shared:
     type: var
     var_name: L:ASCRJ_CARGO_AFT_GUARD_LOCK
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_CARGO_AFT_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_CARGO_AFT
+    target: L:ASCRJ_CARGO_AFT
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_CARGO_AFT_ARMED
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_CARGO_ARM_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_CARGO_ARM
+    target: L:ASCRJ_CARGO_ARM
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_CARGO_ARM_LIGHT
@@ -2856,11 +2813,10 @@ shared:
     type: var
     var_name: L:ASCRJ_LSP_SPEED_MODE
   - 
-    type: var
-    var_name: L:ASCRJ_LSP_SPEED_SEL
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_LSP_SPEED_SEL_ANIM
+    target: L:ASCRJ_LSP_SPEED_SEL
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_LSP_SPEED_SET
@@ -2893,11 +2849,10 @@ shared:
     type: var
     var_name: L:ASCRJ_LSP_HEIGHT_MODE
   - 
-    type: var
-    var_name: L:ASCRJ_LSP_HEIGHT_SEL
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_LSP_HEIGHT_SEL_ANIM
+    target: L:ASCRJ_LSP_HEIGHT_SEL
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_LSP_HEIGHT_SET
@@ -2979,11 +2934,10 @@ shared:
     type: var
     var_name: L:ASCRJ_WARN_DCU1_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_WARN_DCU1_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_WARN_DCU1
+    target: L:ASCRJ_WARN_DCU1
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_WARN_DCU1_DISABLE
@@ -2991,11 +2945,10 @@ shared:
     type: var
     var_name: L:ASCRJ_WARN_DCU2_GUARD
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_WARN_DCU2_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_WARN_DCU2
+    target: L:ASCRJ_WARN_DCU2
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_WARN_DCU2_DISABLE
@@ -3045,11 +2998,10 @@ shared:
     type: var
     var_name: L:ASCRJ_RSP_SPEED_MODE
   - 
-    type: var
-    var_name: L:ASCRJ_RSP_SPEED_SEL
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RSP_SPEED_SEL_ANIM
+    target: L:ASCRJ_RSP_SPEED_SEL
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_RSP_SPEED_SEL_CHANGE
@@ -3079,11 +3031,10 @@ shared:
     type: var
     var_name: L:ASCRJ_RSP_HEIGHT_MODE
   - 
-    type: var
-    var_name: L:ASCRJ_RSP_HEIGHT_SEL
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RSP_HEIGHT_SEL_ANIM
+    target: L:ASCRJ_RSP_HEIGHT_SEL
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_RSP_HEIGHT_SET
@@ -3205,20 +3156,18 @@ shared:
     type: var
     var_name: L:ASCRJ_EICAS2_BRT_CHANGE
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_FPNL_TEST_ANIM_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_FPNL_TEST_ANIM
+    target: L:ASCRJ_FPNL_TEST_ANIM
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FPNL_ON
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_FPNL_BITE_ANIM_ANIM
-  - 
-    type: var
-    var_name: L:ASCRJ_FPNL_BITE_ANIM
+    target: L:ASCRJ_FPNL_BITE_ANIM
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FPNL_POWER_GUARD
@@ -3238,8 +3187,10 @@ shared:
     type: var
     var_name: L:ASCRJ_FPNL_MODE_SEL
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_FPNL_AMOUNT_ANIM
+    target: L:ASCRJ_FPNL_AMOUNT
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FPNL_ON_OFF
@@ -3317,9 +3268,6 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_WHEEL_BLOCKS
-  - 
-    type: var
-    var_name: L:ASCRJ_AOA_VANE
   - 
     type: var
     var_name: L:ASCRJ_ADG_PROP_VIS
@@ -3688,9 +3636,6 @@ shared:
     var_name: L:ASCRJ_VAR_SEC_TO
   - 
     type: var
-    var_name: L:ASCRJ_FPNL_BITE
-  - 
-    type: var
     var_name: L:ASCRJ_TQ_THRMODE_1
   - 
     type: var
@@ -3707,24 +3652,6 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_ENG_R_STARTING
-  - 
-    type: var
-    var_name: L:ASCRJ_ENG_DEBUG_1
-  - 
-    type: var
-    var_name: L:ASCRJ_ENG_DEBUG_2
-  - 
-    type: var
-    var_name: L:ASCRJ_ENG_DEBUG_3
-  - 
-    type: var
-    var_name: L:ASCRJ_ENG_DEBUG_4
-  - 
-    type: var
-    var_name: L:ASCRJ_ENG_DEBUG_5
-  - 
-    type: var
-    var_name: L:ASCRJ_ENG_DEBUG_6
   - 
     type: var
     var_name: L:ASCRJ_OVHD_DOME_VISI
@@ -4027,12 +3954,6 @@ shared:
     var_name: L:ASCRJ_YD2_YD2
   - 
     type: var
-    var_name: L:DEBUG_SPLR_CMD
-  - 
-    type: var
-    var_name: L:DEBUG_SPLR_ICE
-  - 
-    type: var
     var_name: L:ASCRJ_PRESS_MAN_ALT_MODE
   - 
     type: var
@@ -4223,3 +4144,37 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_HGS_ARMED
+
+master:
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_1_POS
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_2_POS
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_REVERSE_1_POS
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_REVERSE_2_POS
+  -
+    type: var
+    var_name: L:ASCRJ_REVERSER_L_POS
+  -
+    type: var
+    var_name: L:ASCRJ_REVERSER_R_POS
+    
+server:
+  -
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true

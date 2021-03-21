@@ -1,0 +1,555 @@
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/passenger.yaml
+  - definitions/modules/physics.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  -
+    type: var
+    var_name: L:GPS_SWAPCOM
+  -
+    type: var
+    var_name: L:GPS_SWAPNAV
+  -
+    type: var
+    var_name: L:GPS_RNG_UP
+  -
+    type: var
+    var_name: L:GPS_RNG_DOWN
+  -
+    type: var
+    var_name: L:BUFFER_BTN_FMC
+  -
+    type: var
+    var_name: L:GPS_CDI
+  -
+    type: var
+    var_name: L:GPS_OBS
+  -
+    type: var
+    var_name: L:GPS_MSG
+  -
+    type: var
+    var_name: L:GPS_FPL
+  -
+    type: var
+    var_name: L:GPS_VNAV
+  -
+    type: var
+    var_name: L:GPS_PROC
+  -
+    type: var
+    var_name: L:GPS_ENT
+  -
+    type: var
+    var_name: L:GPS_CLR
+  -
+    type: var
+    var_name: L:GPS_MENU
+  -
+    type: var
+    var_name: L:GPS_DIR
+  -
+    type: var
+    var_name: L:STATEVIEW
+  -
+    type: var
+    var_name: L:TimeoutON
+  -
+    type: var
+    var_name: L:SWAPNAVCOM
+  -
+    type: var
+    var_name: L:TimeoutSWAP
+  -
+    type: var
+    var_name: L:GPS_CRSR
+  -
+    type: var
+    var_name: L:GPS_WHOLE
+  -
+    type: var
+    var_name: L:BUFFER_BTN_DIM
+  -
+    type: var
+    var_name: L:GPS_FRAC
+  -
+    type: var
+    var_name: L:GPS_CLICK_FRAC
+  -
+    type: var
+    var_name: L:GPS_GROUPS
+  -
+    type: var
+    var_name: L:GPS_PAGE
+  -
+    type: var
+    var_name: L:NEEDLE_ASI_TAS
+  -
+    type: var
+    var_name: L:GPS_CLICK_PAGE
+  -
+    type: var
+    var_name: L:ASD_KNOB_ADF_KR87_OUTER_SWAP
+  -
+    type: var
+    var_name: L:ASD_KNOB_ADF_KR87_OUTER
+  -
+    type: var
+    var_name: L:ASD_KNOB_ADF_KR87_INNER_SWAP
+  -
+    type: var
+    var_name: L:ASD_KNOB_ADF_KR87_INNER
+  -
+    type: var
+    var_name: L:SWITCH_ADF1_ONOFF
+  -
+    type: var
+    var_name: L:Gauge_TEST_KFC150
+  -
+    type: var
+    var_name: L:Radio_ON_OFF_BTN_ADF
+  -
+    type: var
+    var_name: L:Radio_ON_OFF_BTN_BFO
+  -
+    type: var
+    var_name: L:Radio_ON_OFF_BTN_FLT_ET
+  -
+    type: var
+    var_name: L:TimeClockStartSL
+  -
+    type: var
+    var_name: L:CHONOMETER_MODESL
+  -
+    type: var
+    var_name: L:VarCom2KHz
+  -
+    type: var
+    var_name: L:VarCom2MHz
+  -
+    type: var
+    var_name: L:VarNav2MHz
+  -
+    type: var
+    var_name: L:VarNav2KHz
+  -
+    type: var
+    var_name: L:VarCom1KHz
+  -
+    type: var
+    var_name: L:TABLET_BTN_COPILOT_DOOR
+  -
+    type: var
+    var_name: L:ST_Ventana
+  -
+    type: var
+    var_name: L:Sunvisor1
+  -
+    type: var
+    var_name: L:Sunvisor2
+  -
+    type: var
+    var_name: L:AnimVar_kohlsman
+  -
+    type: var
+    var_name: L:ASD_M20R_DUMMY_DIM_BRT_METAL
+  -
+    type: var
+    var_name: L:PUSH_AM_ANUM_PC12_WARNING
+  -
+    type: var
+    var_name: L:M20R_BTN_TEST_ANNUN
+  -
+    type: var
+    var_name: L:GAUGE_ANUM_MASTER_WARNING
+  -
+    type: var
+    var_name: L:M20R_SWITCH_STANDBY_VACUUM
+  -
+    type: var
+    var_name: L:M20R_SWITCH_BOOST_PUMP
+  -
+    type: var
+    var_name: L:M20R_SWITCH_HIGHT_BOOST
+  -
+    type: var
+    var_name: L:gps_modeCDI
+  -
+    type: var
+    var_name: L:LEVER_CABIN_VENT_M20R
+  -
+    type: var
+    var_name: L:LEVER_CABIN_HEAT_M20R
+  -
+    type: var
+    var_name: L:LEVER_DEFROST_AIR_M20R
+  -
+    type: var
+    var_name: L:LEVER_ALT_AIR_M20R
+  -
+    type: var
+    var_name: L:KNOB_RADIO_VAR
+  -
+    type: var
+    var_name: L:M20R_SWITCH_LGT_BOTPANEL
+  -
+    type: var
+    var_name: L:M20R_SWITCH_XPDR
+  -
+    type: var
+    var_name: L:M20R_SWITCH_OXYGEN
+  -
+    type: var
+    var_name: L:M20R_SWITCH_DUMMY_1_LIGHT
+  -
+    type: var
+    var_name: L:KNOB_FUEL_SELECTOR
+  -
+    type: var
+    var_name: L:M20R_SWITCH_FUEL_SELECTOR
+  -
+    type: var
+    var_name: L:M20R_SWITCH_BAT_SEL
+  -
+    type: var
+    var_name: L:M20R_KNOB_RADIO_LIGHT
+  -
+    type: var
+    var_name: L:M20R_KNOB_INSTRUMENT_GLARESHIELD
+  -
+    type: var
+    var_name: L:M20R_SWITCH_VENT
+  -
+    type: var
+    var_name: L:M20R_SWITCH_PILOT_HEADSET
+  -
+    type: var
+    var_name: L:M20R_SWITCH_COPILOT_HEADSET
+  -
+    type: var
+    var_name: L:M20R_SWITCH_CW_CCW
+  -
+    type: var
+    var_name: L:M20R_SWITCH_FREE_SLAVE
+  -
+    type: var
+    var_name: L:BUTTON_FF_MODE
+  -
+    type: var
+    var_name: L:BUTTON_CLOCK_MODE
+  -
+    type: var
+    var_name: L:TimeClockDig
+  -
+    type: var
+    var_name: L:Clock
+  -
+    type: var
+    var_name: L:Stopwatch
+  -
+    type: var
+    var_name: L:BUTTON_EDM_MODE
+  -
+    type: var
+    var_name: L:POINTER_TCODE
+  -
+    type: var
+    var_name: L:TCODE1
+  -
+    type: var
+    var_name: L:TCODE2
+  -
+    type: var
+    var_name: L:TCODE3
+  -
+    type: var
+    var_name: L:TCODE4
+  -
+    type: var
+    var_name: L:BUTTON_FF_MODE_GAL
+  -
+    type: var
+    var_name: L:FuelTotalRem
+  -
+    type: var
+    var_name: L:M20R_BTN_GAL_USED_REM
+  -
+    type: var
+    var_name: L:M20R_BTN_FULL_ADD_FUEL
+  -
+    type: var
+    var_name: L:M20R_BTN_AP_SYNC
+  -
+    type: var
+    var_name: L:M20R_BTN_CWS
+  -
+    type: var
+    var_name: L:M20R_BTN_GR_SAFETY_BY_PASS
+  -
+    type: var
+    var_name: L:KAS297_ALT_ARM_PUSH
+  -
+    type: var
+    var_name: L:AUTOPILOT
+  -
+    type: var
+    var_name: L:ALT_ARM_SEL_ON
+  -
+    type: var
+    var_name: L:CUSTOM_AUTOPILOT_AIRSPEED_HOLD_ALT
+  -
+    type: var
+    var_name: L:KAS297_ENG_VS_PUSH
+  -
+    type: var
+    var_name: L:ALT_VS_SEL_ON
+  -
+    type: var
+    var_name: L:GAUGE_ALT_ALERT_MODE
+  -
+    type: var
+    var_name: L:VARKNOB_KASVSALT_INNER
+  -
+    type: var
+    var_name: L:VARKNOB_KASVSALT
+  -
+    type: var
+    var_name: L:ARMON
+  -
+    type: var
+    var_name: L:VSMODE
+  -
+    type: var
+    var_name: L:NAV
+  -
+    type: var
+    var_name: L:HDG
+  -
+    type: var
+    var_name: L:ALT
+  -
+    type: var
+    var_name: L:GAUGE_ALT_ALERT_DENTRO
+  -
+    type: var
+    var_name: L:CUSTOM_AP_ALT_VAR_SET_ENGLISH
+  -
+    type: var
+    var_name: L:CUSTOM_AP_ATT_HOLD_ON
+  -
+    type: var
+    var_name: L:CUSTOM_AUTOPILOT_AIRSPEED_HOLD
+  -
+    type: var
+    var_name: L:Trans
+  -
+    type: var
+    var_name: L:ALT_SEL_ON
+  -
+    type: var
+    var_name: L:APOFF
+  -
+    type: var
+    var_name: L:FDOFF
+  -
+    type: var
+    var_name: L:YDOFF
+  -
+    type: var
+    var_name: L:SW_DME_ON
+  -
+    type: var
+    var_name: L:SW_DME_SWAP
+  -
+    type: var
+    var_name: L:M20R_POWER_LIGHTS
+  -
+    type: var
+    var_name: L:BTN_AUDIO_PA
+  -
+    type: var
+    var_name: L:BTN_AUDIO_CREW
+  -
+    type: var
+    var_name: L:BTN_AUDIO_SENS
+  -
+    type: var
+    var_name: L:BTN_COM1_MIC
+  -
+    type: var
+    var_name: L:BTN_COM2_MIC
+  -
+    type: var
+    var_name: L:SWITCH_MUSIC_CREW
+  -
+    type: var
+    var_name: L:SWITCH_BAT1_BAT2
+  -
+    type: var
+    var_name: L:KNOB_VOL1
+  -
+    type: var
+    var_name: L:KNOB_VOL2
+  -
+    type: var
+    var_name: L:KNOB_VOL3
+  -
+    type: var
+    var_name: L:KNOB_DME1
+  -
+    type: var
+    var_name: L:NAV1_RADIO_FRACT_INC
+  -
+    type: var
+    var_name: L:NAV1_RADIO_FRACT_DEC
+  -
+    type: var
+    var_name: L:KNOB_DME2
+  -
+    type: var
+    var_name: L:NAV1_RADIO_WHOLE_INC
+  -
+    type: var
+    var_name: L:NAV1_RADIO_WHOLE_DEC
+  -
+    type: var
+    var_name: L:M20R_BTN_TEST_PUSH_VDC
+  -
+    type: var
+    var_name: L:TABLET_BTN_DONE
+  -
+    type: var
+    var_name: L:TABLET_BTN_READY_FOR_TAKE_OFF
+  -
+    type: var
+    var_name: L:TABLET_BTN_READY_FOR_TAXY
+  -
+    type: var
+    var_name: L:TABLET_BTN_COLD_AND_DARK
+  -
+    type: var
+    var_name: L:TABLET_BTN_COPILOT_VIS
+  -
+    type: var
+    var_name: L:COPILOT_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_PILOT_VIS
+  -
+    type: var
+    var_name: L:PILOT_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_EXT_PWR
+  -
+    type: var
+    var_name: L:TABLET_BTN_STATIC_ELEMENT
+  -
+    type: var
+    var_name: L:COSASBOOL
+  -
+    type: var
+    var_name: L:TABLET_BTN_BAGAGE_DOOR
+  -
+    type: var
+    var_name: L:TABLET_BTN_PILOT_DOOR
+  -
+    type: var
+    var_name: L:TABLET_BTN_TOW_CAR
+  -
+    type: var
+    var_name: L:TABLET_BTN_NEXT
+  -
+    type: var
+    var_name: L:TABLET_PAG
+  -
+    type: var
+    var_name: L:TABLET_BTN_BACK
+  -
+    type: var
+    var_name: L:TABLET
+  -
+    type: var
+    var_name: L:XMLVAR_AlternateAir
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:1
+    var_units: Percent
+    var_type: i32
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:2
+    var_units: Percent
+    var_type: i32
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: event
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  
+server:
+  -
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - AS530_COMSWAP_Push
+  - AS530_NAVSWAP_Push
+  - AS530_LeftLargeKnob_Right
+  - AS530_LeftLargeKnob_Left
+  - AS530_LeftSmallKnob_Right
+  - AS530_LeftSmallKnob_Left
