@@ -136,7 +136,7 @@ impl AllNeedSync {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum InterpolationType {
     Default,
     DefaultConstant,

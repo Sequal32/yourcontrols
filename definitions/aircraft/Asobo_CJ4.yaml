@@ -1,392 +1,84 @@
 include:
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
-  - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
-  - definitions/modules/pressurization.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
-
-shared:
-  - # Comm Power
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:28
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 28
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:30
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 30
-
-  - # Deice
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:1
-    var_units: Bool
-    event_name: ANTI_ICE_TOGGLE_ENG1
-  -
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:2
-    var_units: Bool
-    event_name: ANTI_ICE_TOGGLE_ENG2
-  -
-    type: ToggleSwitch
-    var_name: A:PITOT HEAT
-    var_units: Bool
-    event_name: PITOT_HEAT_TOGGLE
-
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:23
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 23
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:24
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 24
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:39
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:40
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:41
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:42
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:47
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:48
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:49
-    var_units: Bool
-    var_type: bool
-
-  - # Lights
-    type: NumSet
-    var_name: A:LIGHT PANEL
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:1
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 5
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:2
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:6
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 6
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:3
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 3
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:10
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 10
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:11
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 11
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 12
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:13
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 13
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:14
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 14
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:15
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 15
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:16
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 16
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:17
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 17
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:18
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 18
-    index_reversed: true
-
-  - # LVAR Dump (Asobo only)
-    type: var
-    var_name: L:XMLVAR_Essential_Bus_ON
-  -
-    type: var
-    var_name: L:XMLVAR_AVIONICS_IsComposite
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:XMLVAR_PushXFR
-  -
-    type: var
-    var_name: L:CJ4_PFD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_MFD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_FMC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_SAI_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_PFD_State
-  -
-    type: var
-    var_name: L:CJ4_MFD_State
-  -
-    type: var
-    var_name: L:CJ4_FMC_State
-  -
-    type: var
-    var_name: L:CJ4_SAI_State
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_1
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_2
-  -
-    type: var
-    var_name: L:XMLVAR_Airframe_1
-  -
-    type: var
-    var_name: L:XMLVAR_Airframe_2
-  -
-    type: var
-    var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
-  -
-    type: var
-    var_name: L:AIRLINER_FLIGHT_PHASE
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_ForcedToSTD
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
-  -
-    type: var
-    var_name: L:XMLVAR_Mins_Selector_Baro
-  -
-    type: var
-    var_name: L:RADIONAV_SOURCE
-  -
-    type: var
-    var_name: L:CJ4_MAP_SYMBOLS
-  -
-    type: var
-    var_name: L:CJ4_MAP_ZOOM
-  -
-    type: var
-    var_name: L:XMLVAR_TRK_MODE_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
-  -
-    type: var
-    var_name: L:RADIONAV ACTIVE:1
-  -
-    type: var
-    var_name: L:AIRLINER_CRUISE_ALTITUDE
-  -
-    type: var
-    var_name: L:FMC_UPDATE_CURRENT_PAGE
-  -
-    type: var
-    var_name: L:Glasscockpit_MFD_Started
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-
-# - # Don't sync
-#   type: var
-#   var_name: L:XMLVAR_AileronTrim
-# -
-#   type: var
-#   var_name: L:AIRLINER_V1_SPEED
-# -
-#   type: var
-#   var_name: L:AIRLINER_VR_SPEED
-# -
-#   type: var
-#   var_name: L:AIRLINER_V2_SPEED
-# -
-#   type: var
-#   var_name: L:AIRLINER_VREF_SPEED
-# -
-#   type: var
-#   var_name: L:AIRLINER_VX_SPEED
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:AIRLINER_TO_FLEX_TEMP
-# -
-#   type: var
-#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-
+- definitions/modules/autopilot.yaml
+- definitions/modules/electrical.yaml
+- definitions/modules/engines.yaml
+- definitions/modules/fuel.yaml
+- definitions/modules/general.yaml
+- definitions/modules/lights.yaml
+- definitions/modules/navigation.yaml
+- definitions/modules/pressurization.yaml
+- definitions/modules/safety.yaml
+- definitions/modules/transponder.yaml
+- definitions/modules/trim.yaml
 server:
-  - # Payload
-    type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
+- A:FUEL TANK LEFT MAIN LEVEL
+- A:FUEL TANK RIGHT MAIN LEVEL
+shared:
+- A:CIRCUIT SWITCH ON:28
+- A:CIRCUIT SWITCH ON:30
+- A:ENG ANTI ICE:1
+- A:ENG ANTI ICE:2
+- A:PITOT HEAT
+- A:CIRCUIT SWITCH ON:23
+- A:CIRCUIT SWITCH ON:24
+- A:CIRCUIT GENERAL PANEL ON
+- A:CIRCUIT ON:39
+- A:CIRCUIT ON:40
+- A:CIRCUIT ON:41
+- A:CIRCUIT ON:42
+- A:CIRCUIT ON:47
+- A:CIRCUIT ON:48
+- A:CIRCUIT ON:49
+- A:LIGHT PANEL
+- A:LIGHT POTENTIOMETER:3
+- A:LIGHT CABIN:1
+- A:LIGHT POTENTIOMETER:5
+- A:LIGHT CABIN:2
+- A:LIGHT POTENTIOMETER:6
+- A:LIGHT CABIN:3
+- A:LIGHT POTENTIOMETER:4
+- A:LIGHT POTENTIOMETER:10
+- A:LIGHT POTENTIOMETER:11
+- A:LIGHT POTENTIOMETER:12
+- A:LIGHT POTENTIOMETER:13
+- A:LIGHT POTENTIOMETER:14
+- A:LIGHT POTENTIOMETER:15
+- A:LIGHT POTENTIOMETER:16
+- A:LIGHT POTENTIOMETER:17
+- A:LIGHT POTENTIOMETER:18
+- L:XMLVAR_Essential_Bus_ON
+- L:XMLVAR_AVIONICS_IsComposite
+- L:XMLVAR_Autopilot_1_Status
+- L:XMLVAR_PushXFR
+- L:CJ4_PFD_ScreenLuminosity
+- L:CJ4_MFD_ScreenLuminosity
+- L:CJ4_FMC_ScreenLuminosity
+- L:CJ4_SAI_ScreenLuminosity
+- L:CJ4_PFD_State
+- L:CJ4_MFD_State
+- L:CJ4_FMC_State
+- L:CJ4_SAI_State
+- L:XMLVAR_Pitot_1
+- L:XMLVAR_Pitot_2
+- L:XMLVAR_Airframe_1
+- L:XMLVAR_Airframe_2
+- L:XMLVAR_Secondary_ElevatorTrim_Available
+- L:Generic_Master_Caution_Active
+- L:Generic_Master_Warning_Active
+- L:AIRLINER_FLIGHT_PHASE
+- L:XMLVAR_Baro1_ForcedToSTD
+- L:XMLVAR_Baro_Selector_HPA_1
+- L:XMLVAR_Mins_Selector_Baro
+- L:RADIONAV_SOURCE
+- L:CJ4_MAP_SYMBOLS
+- L:CJ4_MAP_ZOOM
+- L:XMLVAR_TRK_MODE_ACTIVE
+- L:XMLVAR_TRK_FPA_MODE_ACTIVE
+- L:XMLVAR_NAV_AID_SWITCH_L1_State
+- L:XMLVAR_NAV_AID_SWITCH_L2_State
+- L:RADIONAV ACTIVE:1
+- L:AIRLINER_CRUISE_ALTITUDE
+- L:FMC_UPDATE_CURRENT_PAGE
+- L:Glasscockpit_MFD_Started
+- L:XMLVAR_IsDeiceAirFrame
+- L:XMLVAR_IsDeiceAirFrame2

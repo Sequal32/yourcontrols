@@ -1,188 +1,48 @@
-include:
-  - definitions/modules/AS1000.yaml
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
-  - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
-  - definitions/modules/physics.yaml
-  - definitions/modules/radios.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
-
-shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:30
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 30
-
-  - # Aux pumps
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:9
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 9
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:10
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 10
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:31
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:32
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:44
-    var_units: Bool
-    var_type: bool
-
-  - # Fuel
-    type: var
-    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_1_IsOpen
-  -
-    type: var
-    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_2_IsOpen
-
-  - # Lights
-    type: NumSet
-    var_name: A:LIGHT PANEL
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD
-    var_units: Bool
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 5
-    index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN:1
-    var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN:2
-    var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:3
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 3
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:3
-    var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 12
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:13
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 13
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:30
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 30
-    index_reversed: true
-
-  - # LVAR Dump
-    type: var
-    var_name: L:XMLVAR_DEICEPump
-  -
-    type: var
-    var_name: L:XMLVAR_IceLightMaxStateEnabled
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_2_Status
-  -
-    type: var
-    var_name: L:XMLVAR_Oxygen
-
-server:
-  - # Payload
-    type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK LEFT AUX LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK RIGHT AUX LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-
 ignore:
-  - AS1000_PFD_BARO_INC
-  - AS1000_PFD_BARO_DEC
+- AS1000_PFD_BARO_INC
+- AS1000_PFD_BARO_DEC
+include:
+- definitions/modules/AS1000.yaml
+- definitions/modules/autopilot.yaml
+- definitions/modules/deice.yaml
+- definitions/modules/electrical.yaml
+- definitions/modules/engines.yaml
+- definitions/modules/fuel.yaml
+- definitions/modules/general.yaml
+- definitions/modules/lights.yaml
+- definitions/modules/navigation.yaml
+- definitions/modules/passenger.yaml
+- definitions/modules/radios.yaml
+- definitions/modules/safety.yaml
+- definitions/modules/transponder.yaml
+- definitions/modules/trim.yaml
+server:
+- A:FUEL TANK LEFT MAIN LEVEL
+- A:FUEL TANK RIGHT MAIN LEVEL
+- A:FUEL TANK LEFT AUX LEVEL
+- A:FUEL TANK RIGHT AUX LEVEL
+shared:
+- A:CIRCUIT SWITCH ON:30
+- A:CIRCUIT SWITCH ON:9
+- A:CIRCUIT SWITCH ON:10
+- A:CIRCUIT GENERAL PANEL ON
+- A:CIRCUIT ON:31
+- A:CIRCUIT ON:32
+- A:CIRCUIT ON:44
+- L:XMLVAR_FUEL_Switch_Off_Blocker_1_IsOpen
+- L:XMLVAR_FUEL_Switch_Off_Blocker_2_IsOpen
+- A:LIGHT PANEL
+- A:LIGHT POTENTIOMETER:3
+- A:LIGHT GLARESHIELD
+- A:LIGHT POTENTIOMETER:5
+- A:LIGHT CABIN:1
+- A:LIGHT CABIN:2
+- A:LIGHT CABIN:3
+- A:LIGHT CABIN POWER SETTING:3
+- A:LIGHT POTENTIOMETER:12
+- A:LIGHT POTENTIOMETER:13
+- A:LIGHT POTENTIOMETER:30
+- L:XMLVAR_DEICEPump
+- L:XMLVAR_IceLightMaxStateEnabled
+- L:XMLVAR_Autopilot_2_Status
+- L:XMLVAR_Oxygen

@@ -3,19 +3,25 @@ use std::collections::HashMap;
 use crate::{DatumKey, DatumValue, InterpolationType, Time};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
-pub enum MappingType {
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "type")]
+pub enum MappingType<P>
+where
+    P: Eq,
+{
     ToggleSwitch {
         event_name: String,
         off_event_name: Option<String>,
         #[serde(default)]
         switch_on: bool,
+        event_param: Option<P>,
     },
     NumSet {
         event_name: String,
         swap_event_name: Option<String>,
         multiply_by: Option<DatumValue>,
         add_by: Option<DatumValue>,
+        event_param: Option<P>,
     },
     NumIncrement {
         up_event_name: String,
@@ -28,11 +34,13 @@ pub enum MappingType {
         inc_events: Vec<String>,
         dec_events: Vec<String>,
     },
+    Event,
     Var,
     // TODO: ProgramAction,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(untagged)]
 pub enum VarType {
     WithUnits {
         name: String,
@@ -48,14 +56,14 @@ pub enum VarType {
     },
 }
 
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq)]
 pub struct SyncPermissionState {
     pub server: bool,
     pub master: bool,
     pub init: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum SyncPermission {
     Shared,
     Master,
@@ -63,7 +71,7 @@ pub enum SyncPermission {
     Init,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ConditionMessage {
     #[serde(default)]
     pub use_var: bool,
@@ -72,29 +80,30 @@ pub struct ConditionMessage {
     pub greater_than: Option<DatumValue>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct InterpolateMessage {
     pub calculator: String,
     pub interpolate_type: InterpolationType,
 }
 
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct DatumMessage {
     pub var: Option<VarType>,
     pub watch_event: Option<String>,       // Event name,
     pub watch_period: Option<WatchPeriod>, // Watch variable
     pub condition: Option<ConditionMessage>,
     pub interpolate: Option<InterpolateMessage>,
-    pub mapping: Option<MappingType>,
+    pub mapping: Option<MappingType<u32>>,
     pub sync_permission: Option<SyncPermission>,
 }
-#[derive(Serialize, Deserialize, Debug)]
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ChangedDatum {
     pub key: DatumKey,
     pub value: DatumValue,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Payloads {
     // Transmit to Sim
     SetDatums {
@@ -127,7 +136,7 @@ pub enum Payloads {
 }
 
 /// Period where a variable becomes "Changed".
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum WatchPeriod {
     Frame,
     Hz16,

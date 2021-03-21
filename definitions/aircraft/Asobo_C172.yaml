@@ -1,203 +1,44 @@
 include:
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
-  - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
-  - definitions/modules/physics.yaml
-  - definitions/modules/radios.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
-
-shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:38
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 38
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:39
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 39
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:40
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 40
-
-  - # Electrical
-    type: var
-    var_name: L:XMLVAR_STBYBattery_Test
-  -
-    type: var
-    var_name: L:XMLVAR_STBYBattery_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT AVIONICS ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:9
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:10
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:38
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:41
-    var_units: Bool
-    var_type: bool
-
-  - # Lights
-    type: NumSet
-    var_name: A:LIGHT PANEL
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:1
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:1
-    var_units: percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:2
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:2
-    var_units: percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 2
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT PEDESTRAL:1
-    var_units: Bool
-    var_type: i32
-    event_name: PEDESTRAL_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT PEDESTRAL POWER SETTING:1
-    var_units: percent
-    var_type: i32
-    event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD:1
-    var_units: Bool
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD POWER SETTING:1
-    var_units: percent
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD:2
-    var_units: Bool
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:7
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 7
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:15
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 15
-    index_reversed: true
-
-master:
-  -
-    type: var
-    var_name: A:PLANE HEADING DEGREES GYRO # Drifts for some reason
-    var_units: Degrees
-    var_type: f64
-    interpolate: DefaultConstant
-
+- definitions/modules/autopilot.yaml
+- definitions/modules/deice.yaml
+- definitions/modules/electrical.yaml
+- definitions/modules/engines.yaml
+- definitions/modules/fuel.yaml
+- definitions/modules/general.yaml
+- definitions/modules/lights.yaml
+- definitions/modules/navigation.yaml
+- definitions/modules/passenger.yaml
+- definitions/modules/radios.yaml
+- definitions/modules/safety.yaml
+- definitions/modules/transponder.yaml
+- definitions/modules/trim.yaml
 server:
-  - # Payload
-    type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
+- A:FUEL TANK LEFT MAIN LEVEL
+- A:FUEL TANK RIGHT MAIN LEVEL
+shared:
+- A:CIRCUIT SWITCH ON:38
+- A:CIRCUIT SWITCH ON:39
+- A:CIRCUIT SWITCH ON:40
+- L:XMLVAR_STBYBattery_Test
+- L:XMLVAR_STBYBattery_IsHeld
+- L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
+- A:CIRCUIT GENERAL PANEL ON
+- A:CIRCUIT AVIONICS ON
+- A:CIRCUIT ON:9
+- A:CIRCUIT ON:10
+- A:CIRCUIT ON:38
+- A:CIRCUIT ON:41
+- A:LIGHT PANEL
+- A:LIGHT CABIN:1
+- A:LIGHT CABIN POWER SETTING:1
+- A:LIGHT CABIN:2
+- A:LIGHT CABIN POWER SETTING:2
+- A:LIGHT PEDESTRAL:1
+- A:LIGHT PEDESTRAL POWER SETTING:1
+- A:LIGHT GLARESHIELD:1
+- A:LIGHT GLARESHIELD POWER SETTING:1
+- A:LIGHT GLARESHIELD:2
+- A:LIGHT POTENTIOMETER:3
+- A:LIGHT POTENTIOMETER:4
+- A:LIGHT POTENTIOMETER:7
+- A:LIGHT POTENTIOMETER:15

@@ -1,28 +1,39 @@
 -
-  type: ToggleSwitch
-  var_name: A:BLEED AIR ENGINE
-  var_units: Bool
-  event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
-  event_param: index
+  var:
+    name: A:BLEED AIR ENGINE
+    units: Bool
+  mapping:
+    type: ToggleSwitch
+    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    event_param: index
 -
-  type: ToggleSwitch
-  var_name: A:BLEED AIR APU
-  var_units: Bool
-  event_name: APU_BLEED_AIR_SOURCE_TOGGLE
+  var:
+    name: A:BLEED AIR APU
+    units: Bool
+  mapping:
+    type: ToggleSwitch
+    event_name: APU_BLEED_AIR_SOURCE_TOGGLE
 -
-  type: NumSet
-  var_name: A:BLEED AIR SOURCE CONTROL
-  var_units: Enum
-  event_name: BLEED_AIR_SOURCE_CONTROL_SET
+  var:
+    name: A:BLEED AIR SOURCE CONTROL
+    units: Enum
+  mapping:
+    type: NumSet
+    event_name: BLEED_AIR_SOURCE_CONTROL_SET
 -
-  type: ToggleSwitch
-  var_name: A:PRESSURIZATION DUMP SWITCH
-  var_units: Bool
-  event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
+  var:
+    name: A:PRESSURIZATION DUMP SWITCH
+    units: Bool
+  mapping:
+    type: ToggleSwitch
+    event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
 -
-  type: NumIncrement
-  var_name: A:PRESSURIZATION CABIN ALTITUDE GOAL
-  var_units: Feet
-  up_event_name: PRESSURIZATION_PRESSURE_ALT_INC
-  down_event_name: PRESSURIZATION_PRESSURE_ALT_DEC
-  increment_by: 53
+  
+  var:
+    name: A:PRESSURIZATION CABIN ALTITUDE GOAL
+    units: Feet
+  mapping:
+    type: NumIncrement
+    up_event_name: PRESSURIZATION_PRESSURE_ALT_INC
+    down_event_name: PRESSURIZATION_PRESSURE_ALT_DEC
+    increment_amount: 53

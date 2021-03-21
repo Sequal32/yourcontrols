@@ -1,38 +1,52 @@
 -
-  type: NumSet
-  var_name: A:KOHLSMAN SETTING MB
-  var_units: Millibars scaler 16
-  event_name: KOHLSMAN_SET
-  event_param: index
+  var:
+    name: A:KOHLSMAN SETTING MB
+    units: Millibars scaler 16
+  mapping:
+    type: NumSet
+    event_name: KOHLSMAN_SET
+    event_param: index
 -
-  type: var
-  var_name: A:AIRSPEED TRUE CALIBRATE
-  var_units: Degrees
+  var:
+    name: A:AIRSPEED TRUE CALIBRATE
+    units: Degrees
+  mapping: 
+    type: Var
 -
-  type: ToggleSwitch
-  var_name: A:ATTITUDE CAGE
-  var_units: Bool
-  event_name: ATTITUDE_CAGE_BUTTON
+  var:
+    name: A:ATTITUDE CAGE
+    units: Bool
+  mapping:
+    type: ToggleSwitch
+    event_name: ATTITUDE_CAGE_BUTTON
 -
-  type: var
-  var_name: A:ATTITUDE BARS POSITION
-  var_units: Percent
+  var:
+    name: A:ATTITUDE BARS POSITION
+    units: Percent
+  mapping: 
+    type: Var
 -
-  type: NumIncrement
-  var_name: A:NAV OBS:1
-  var_units: Degrees
-  up_event_name: VOR1_OBI_INC
-  down_event_name: VOR1_OBI_DEC
-  increment_by: 1
+  var:
+    name: A:NAV OBS:1
+    units: Degrees
+  mapping:
+    type: NumIncrement
+    up_event_name: VOR1_OBI_INC
+    down_event_name: VOR1_OBI_DEC
+    increment_amount: 1
 -
-  type: NumIncrement
-  var_name: A:NAV OBS:2
-  var_units: Degrees
-  up_event_name: VOR2_OBI_INC
-  down_event_name: VOR2_OBI_DEC
-  increment_by: 1
+  var:
+    name: A:NAV OBS:2
+    units: Degrees
+  mapping:
+    type: NumIncrement
+    up_event_name: VOR2_OBI_INC
+    down_event_name: VOR2_OBI_DEC
+    increment_amount: 1
 -
-  type: var
-  var_name: A:PLANE HEADING DEGREES GYRO
-  var_units: Degrees
+  var:
+    name: A:PLANE HEADING DEGREES GYRO
+    units: Degrees
+  mapping:
+    type: Var
   interpolate: DefaultConstant

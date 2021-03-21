@@ -1,266 +1,81 @@
 include:
-  - definitions/modules/AS3000.yaml
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
-  - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
-  - definitions/modules/pressurization.yaml
-  - definitions/modules/radios.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
-
-shared:
-  - # Bleed
-    type: NumSet
-    var_name: A:BLEED AIR SOURCE CONTROL
-    var_units: Enum
-    var_type: i32
-    event_name: BLEED_AIR_SOURCE_CONTROL_SET
-
-  - # Electrical
-    type: ToggleSwitch
-    var_name: GENERAL ENG GENERATOR SWITCH:1
-    var_units: Bool
-    event_name: TOGGLE_ALTERNATOR1
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT AVIONICS ON
-    var_units: Bool
-    var_type: bool
-
-  - # Pressurization
-    type: var
-    var_name: L:EMERGENCY_PUSH_RAMAIR_SwitchState
-  -
-    type: var
-    var_name: L:XMLVAR_MICRO_MASK_COVER
-
-  - # Passenger
-    type: var
-    var_name: L:AC_KNOB_FAN
-  -
-    type: var
-    var_name: L:AC_KNOB_TEMP
-  -
-    type: var
-    var_name: L:HOTAIRFLOW_KNOB
-  -
-    type: var
-    var_name: L:AC_SwitchState
-  -
-    type: var
-    var_name: L:XMLVAR_Deploy
-  -
-    type: var
-    var_name: L:XMLVAR_Oxygen
-
-  - # Lights
-    type: NumSet
-    var_name: A:LIGHT PANEL
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_4_SET
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT PEDESTRAL
-    var_units: Bool
-    var_type: i32
-    event_name: PEDESTRAL_LIGHTS_SET
-  -
-    type: var
-    var_name: L:XMLVAR_PilotLightOn
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:7
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_7_SET
-    index_reversed: true
-  -
-    type: var
-    var_name: L:XMLVAR_CopilotLightOn
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:6
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_6_SET
-    index_reversed: true
-  -
-    type: var
-    var_name: L:XMLVAR_CabinLightOn
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_5_SET
-    index_reversed: true
-  -
-    type: var
-    var_name: L:XMLVAR_AccessLightOn
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:8
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_8_SET
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:9
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_9_SET
-    index_reversed: true
-  -
-    type: var
-    var_name: L:XMLVAR_CircuitBreaker_Light_ON
-
-  - # LVAR Dump (Asobo only)
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-  - # Necessary switch - Do not disable
-    type: var
-    var_name: L:XMLVAR_APTrim
-  -
-    type: var
-    var_name: L:XMLVAR_Gear_Light_Test
-  -
-    type: var
-    var_name: L:XMLVAR_LandingGearLightTesting
-  -
-    type: var
-    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
-  -
-    type: var
-    var_name: L:XMLVAR_Gear_Check_Down
-  -
-    type: var
-    var_name: L:XMLVAR_LightDimmer
-  -
-    type: var
-    var_name: L:XMLVAR_Gear_Check_Down_IsDown
-  -
-    type: var
-    var_name: L:XMLVAR_Gear_Light_Test_IsDown
-  -
-    type: var
-    var_name: L:XMLVAR_Press_DUMP_cover
-  -
-    type: var
-    var_name: L:LEVER_MAN_OVRD
-  -
-    type: var
-    var_name: L:XMLVAR_Starter
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_EndTimeDown
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_Ignition
-  -
-    type: var
-    var_name: L:XMLVAR_FuelSelectorAuto
-  -
-    type: var
-    var_name: L:XMLVAR_BoostFuelPump
-  -
-    type: var
-    var_name: L:_FuelTankShiftPressed
-  -
-    type: var
-    var_name: L:XMLVAR_FORCE_PULSE_ON
-  -
-    type: var
-    var_name: L:XMLVAR_CrashLeverPos
-  -
-    type: var
-    var_name: L:XMLVAR_ElecGen
-  -
-    type: var
-    var_name: L:XMLVAR_ElecSource
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_1
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_2
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:XMLVAR_PushXFR
-  -
-    type: var
-    var_name: L:XMLVAR_InertSep1_Switch
-  -
-    type: var
-    var_name: L:XMLVAR_InertSep1_Deployment
-  -
-    type: var
-    var_name: L:XMLVAR_InertSep1_Active
-  -
-    type: var
-    var_name: L:AS3000_1_Timer_Value
-  -
-    type: var
-    var_name: L:AS3000_TSC_Horizontal_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS3000_TSC_Horizontal_1_State
-  -
-    type: var
-    var_name: L:AS3000_TSC_Horizontal_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS3000_TSC_Horizontal_2_State
-  -
-    type: var
-    var_name: L:AS3000_2_Timer_Value
-
+- definitions/modules/AS3000.yaml
+- definitions/modules/autopilot.yaml
+- definitions/modules/deice.yaml
+- definitions/modules/electrical.yaml
+- definitions/modules/engines.yaml
+- definitions/modules/fuel.yaml
+- definitions/modules/general.yaml
+- definitions/modules/lights.yaml
+- definitions/modules/navigation.yaml
+- definitions/modules/pressurization.yaml
+- definitions/modules/radios.yaml
+- definitions/modules/safety.yaml
+- definitions/modules/transponder.yaml
+- definitions/modules/trim.yaml
 server:
-  - # Payload
-    type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
+- A:FUEL TANK LEFT MAIN LEVEL
+- A:FUEL TANK RIGHT MAIN LEVEL
+shared:
+- A:BLEED AIR SOURCE CONTROL
+- A:GENERAL ENG GENERATOR SWITCH:1
+- A:CIRCUIT GENERAL PANEL ON
+- A:CIRCUIT AVIONICS ON
+- L:EMERGENCY_PUSH_RAMAIR_SwitchState
+- L:XMLVAR_MICRO_MASK_COVER
+- L:AC_KNOB_FAN
+- L:AC_KNOB_TEMP
+- L:HOTAIRFLOW_KNOB
+- L:AC_SwitchState
+- L:XMLVAR_Deploy
+- L:XMLVAR_Oxygen
+- A:LIGHT PANEL
+- A:LIGHT POTENTIOMETER:4
+- A:LIGHT CABIN
+- A:LIGHT PEDESTRAL
+- L:XMLVAR_PilotLightOn
+- A:LIGHT POTENTIOMETER:7
+- L:XMLVAR_CopilotLightOn
+- A:LIGHT POTENTIOMETER:6
+- L:XMLVAR_CabinLightOn
+- A:LIGHT POTENTIOMETER:5
+- L:XMLVAR_AccessLightOn
+- A:LIGHT POTENTIOMETER:8
+- A:LIGHT POTENTIOMETER:9
+- L:XMLVAR_CircuitBreaker_Light_ON
+- L:XMLVAR_IsDeiceAirFrame
+- L:XMLVAR_IsDeiceAirFrame2
+- L:XMLVAR_APTrim
+- L:XMLVAR_Gear_Light_Test
+- L:XMLVAR_LandingGearLightTesting
+- L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
+- L:XMLVAR_Gear_Check_Down
+- L:XMLVAR_LightDimmer
+- L:XMLVAR_Gear_Check_Down_IsDown
+- L:XMLVAR_Gear_Light_Test_IsDown
+- L:XMLVAR_Press_DUMP_cover
+- L:LEVER_MAN_OVRD
+- L:XMLVAR_Starter
+- L:XMLVAR_Starter_EndTimeDown
+- L:XMLVAR_Starter_IsHeld
+- L:XMLVAR_Ignition
+- L:XMLVAR_FuelSelectorAuto
+- L:XMLVAR_BoostFuelPump
+- L:_FuelTankShiftPressed
+- L:XMLVAR_FORCE_PULSE_ON
+- L:XMLVAR_CrashLeverPos
+- L:XMLVAR_ElecGen
+- L:XMLVAR_ElecSource
+- L:XMLVAR_Pitot_1
+- L:XMLVAR_Pitot_2
+- L:XMLVAR_Autopilot_1_Status
+- L:XMLVAR_PushXFR
+- L:XMLVAR_InertSep1_Switch
+- L:XMLVAR_InertSep1_Deployment
+- L:XMLVAR_InertSep1_Active
+- L:AS3000_1_Timer_Value
+- L:AS3000_TSC_Horizontal_1_ScreenLuminosity
+- L:AS3000_TSC_Horizontal_1_State
+- L:AS3000_TSC_Horizontal_2_ScreenLuminosity
+- L:AS3000_TSC_Horizontal_2_State
+- L:AS3000_2_Timer_Value

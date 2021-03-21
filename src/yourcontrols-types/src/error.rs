@@ -21,6 +21,7 @@ pub enum Error {
 
     // Definitions
     YamlError(serde_yaml::Error, String),
+    YamlError2(serde_yaml::Error),
     MissingField(&'static str),
     InvalidSyncType(String),
     InvalidCategory(String),
@@ -65,6 +66,9 @@ impl Display for Error {
             Error::InvalidCategory(s) => write!(f, r#"Invalid category "{}""#, s),
             Error::YamlError(e, file_name) => {
                 write!(f, "Error parsing YAML in {}: {}", file_name, e.to_string())
+            }
+            Error::YamlError2(e) => {
+                write!(f, "Error parsing YAML: {}", e.to_string())
             }
             Error::IncludeError(e_str, e) => write!(f, "{} in {}", e_str, e),
             Error::MissingMapping(mapping_name) => write!(

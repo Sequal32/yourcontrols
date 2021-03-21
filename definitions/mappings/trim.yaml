@@ -1,19 +1,25 @@
 -
-  type: NumSet
-  var_name: A:RUDDER TRIM PCT
-  var_units: Percent scaler 16k
-  event_name: RUDDER_TRIM_SET_EX1
+  var:
+    name: A:RUDDER TRIM PCT
+    units: Percent scaler 16k
+  mapping:
+    type: NumSet
+    event_name: RUDDER_TRIM_SET_EX1
 -
-  type: NumSet
-  var_name: A:ELEVATOR TRIM PCT
-  var_units: Percent scaler 16k
-  event_name: ELEVATOR_TRIM_SET
-  condition:
-    equals: 0.0
+  var:
+    name: A:ELEVATOR TRIM PCT
+    units: Percent scaler 16k
+  mapping:
+    type: NumSet
+    event_name: ELEVATOR_TRIM_SET
+    condition:
+      equals: 0.0
     var_name: AUTOPILOT MASTER
     var_units: Bool
 -
-  type: NumSet
-  var_name: A:AILERON TRIM PCT
-  var_units: Percent scaler 16k
-  event_name: AILERON_TRIM_SET_EX1
+  var:
+    name: A:AILERON TRIM PCT
+    units: Percent scaler 16k
+  mapping:
+    type: NumSet
+    event_name: AILERON_TRIM_SET_EX1

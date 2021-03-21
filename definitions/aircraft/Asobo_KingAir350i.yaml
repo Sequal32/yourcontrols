@@ -1,315 +1,67 @@
 include:
-  - definitions/modules/AS3X.yaml
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
-  - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
-  - definitions/modules/physics.yaml
-  - definitions/modules/pressurization.yaml
-  - definitions/modules/radios.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
-
-shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:26
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 26
-
-  - # Prop Sync
-    type: ToggleSwitch
-    var_name: A:PROP SYNC ACTIVE
-    var_units: Bool
-    event_name: TOGGLE_PROPELLER_SYNC
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:27
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:28
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:29
-    var_units: Bool
-    var_type: bool
-
-  - # Fuel Transfer
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:49
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 49
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:50
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 50
-
-  - # Crossfeed
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:52
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 52
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:53
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 53
-
-  - # Wipers
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:54
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 54
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:55
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 55
-
-  - # Pressurization
-    type: NumIncrement
-    var_name: A:PRESSURIZATION CABIN ALTITUDE GOAL
-    var_units: Feet
-    var_type: f64
-    up_event_name: PRESSURIZATION_PRESSURE_ALT_INC
-    down_event_name: PRESSURIZATION_PRESSURE_ALT_DEC
-    increment_by: 53
-# - # CURRENTLY DOESN'T WORK
-#   type: NumIncrement
-#   var_name: A:PRESSURIZATION CABIN ALTITUDE RATE
-#   var_units: Feet per minute
-#   var_type: f64
-#   up_event_name: PRESSURIZATION_CLIMB_RATE_INC
-#   down_event_name: PRESSURIZATION_CLIMB_RATE_DEC
-#   increment_by: 53
-
-  - # Lights
-    type: ToggleSwitch
-    var_name: A:LIGHT LANDING:2
-    var_units: Bool
-    event_name: LANDING_LIGHTS_TOGGLE
-    event_param: 2
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT PANEL:0
-    var_units: Bool
-    event_name: PANEL_LIGHTS_TOGGLE
-    event_param: 0
-  -
-    type: NumSet
-    var_name: A:LIGHT PANEL:1
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 5
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:6
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 6
-    index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN:1
-    var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:7
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 7
-    index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN:2
-    var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:8
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 8
-    index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT GLARESHIELD:1
-    var_units: Bool
-    event_name: GLARESHIELD_LIGHTS_TOGGLE
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:2
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 2
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:9
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 9
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:10
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 10
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:11
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 11
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 12
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:13
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 13
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:14
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 14
-    index_reversed: true
-
-  - # LVAR Dump (Asobo only)
-    type: var
-    var_name: L:XMLVAR_Pitot_1
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_2
-  -
-    type: var
-    var_name: L:XMLVAR_DEICE_Aircraft_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_Starter1
-  -
-    type: var
-    var_name: L:XMLVAR_Starter1_EndTimeDown
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_1_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_Starter2
-  -
-    type: var
-    var_name: L:XMLVAR_Starter2_EndTimeDown
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_2_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_TANK_QUANTITY_Test_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:XMLVAR_Gear_Light_Test
-
+- definitions/modules/AS3X.yaml
+- definitions/modules/autopilot.yaml
+- definitions/modules/deice.yaml
+- definitions/modules/electrical.yaml
+- definitions/modules/engines.yaml
+- definitions/modules/fuel.yaml
+- definitions/modules/general.yaml
+- definitions/modules/lights.yaml
+- definitions/modules/navigation.yaml
+- definitions/modules/passenger.yaml
+- definitions/modules/pressurization.yaml
+- definitions/modules/radios.yaml
+- definitions/modules/safety.yaml
+- definitions/modules/transponder.yaml
+- definitions/modules/trim.yaml
 server:
-  - # Payload
-    type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK LEFT AUX LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK RIGHT AUX LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
+- A:FUEL TANK LEFT MAIN LEVEL
+- A:FUEL TANK RIGHT MAIN LEVEL
+- A:FUEL TANK LEFT AUX LEVEL
+- A:FUEL TANK RIGHT AUX LEVEL
+shared:
+- A:CIRCUIT SWITCH ON:26
+- A:PROP SYNC ACTIVE
+- A:CIRCUIT GENERAL PANEL ON
+- A:CIRCUIT ON:27
+- A:CIRCUIT ON:28
+- A:CIRCUIT ON:29
+- A:CIRCUIT SWITCH ON:49
+- A:CIRCUIT SWITCH ON:50
+- A:CIRCUIT SWITCH ON:52
+- A:CIRCUIT SWITCH ON:53
+- A:CIRCUIT SWITCH ON:54
+- A:CIRCUIT SWITCH ON:55
+- A:PRESSURIZATION CABIN ALTITUDE GOAL
+- A:LIGHT LANDING:2
+- A:LIGHT PANEL:0
+- A:LIGHT PANEL:1
+- A:LIGHT POTENTIOMETER:3
+- A:LIGHT POTENTIOMETER:4
+- A:LIGHT POTENTIOMETER:5
+- A:LIGHT POTENTIOMETER:6
+- A:LIGHT CABIN:1
+- A:LIGHT POTENTIOMETER:7
+- A:LIGHT CABIN:2
+- A:LIGHT POTENTIOMETER:8
+- A:LIGHT GLARESHIELD:1
+- A:LIGHT POTENTIOMETER:2
+- A:LIGHT POTENTIOMETER:9
+- A:LIGHT POTENTIOMETER:10
+- A:LIGHT POTENTIOMETER:11
+- A:LIGHT POTENTIOMETER:12
+- A:LIGHT POTENTIOMETER:13
+- A:LIGHT POTENTIOMETER:14
+- L:XMLVAR_Pitot_1
+- L:XMLVAR_Pitot_2
+- L:XMLVAR_DEICE_Aircraft_IsHeld
+- L:XMLVAR_IsDeiceAirFrame
+- L:XMLVAR_Starter1
+- L:XMLVAR_Starter1_EndTimeDown
+- L:XMLVAR_Starter_1_IsHeld
+- L:XMLVAR_Starter2
+- L:XMLVAR_Starter2_EndTimeDown
+- L:XMLVAR_Starter_2_IsHeld
+- L:XMLVAR_TANK_QUANTITY_Test_IsHeld
+- L:XMLVAR_Autopilot_1_Status
+- L:XMLVAR_Gear_Light_Test

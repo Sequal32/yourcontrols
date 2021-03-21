@@ -1,173 +1,45 @@
-include:
-  - definitions/modules/AS1000.yaml
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
-  - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
-  - definitions/modules/physics.yaml
-  - definitions/modules/radios.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
-
-shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:23
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 23
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:24
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 24
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:39
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:40
-    var_units: Bool
-    var_type: bool
-
-  - # Lights
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD:1
-    var_units: Bool
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD POWER SETTING:1
-    var_units: Percent
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT PANEL:1
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT PANEL POWER SETTING:1
-    var_units: Percent
-    var_type: i32
-    event_name: PANEL_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN:1
-    var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN:2
-    var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
-    event_param: 2
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN:3
-    var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
-    event_param: 3
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN:4
-    var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
-    event_param: 4
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:5
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 5
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:5
-    var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 5
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 12
-    index_reversed: true
-
-  - # AS1000
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:10
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 10
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:11
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 11
-    index_reversed: true
-
-  - # LVAR Dump (Asobo only)
-    type: var
-    var_name: L:XMLVAR_AudioPanel
-  -
-    type: var
-    var_name: L:XMLVAR_BoostFuelPump
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-
-server:
-  - # Payload
-    type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-
 ignore:
-  - AS1000_PFD_BARO_INC
-  - AS1000_PFD_BARO_DEC
+- AS1000_PFD_BARO_INC
+- AS1000_PFD_BARO_DEC
+include:
+- definitions/modules/AS1000.yaml
+- definitions/modules/autopilot.yaml
+- definitions/modules/deice.yaml
+- definitions/modules/electrical.yaml
+- definitions/modules/engines.yaml
+- definitions/modules/fuel.yaml
+- definitions/modules/general.yaml
+- definitions/modules/lights.yaml
+- definitions/modules/navigation.yaml
+- definitions/modules/passenger.yaml
+- definitions/modules/radios.yaml
+- definitions/modules/safety.yaml
+- definitions/modules/transponder.yaml
+- definitions/modules/trim.yaml
+server:
+- A:FUEL TANK LEFT MAIN LEVEL
+- A:FUEL TANK RIGHT MAIN LEVEL
+shared:
+- A:CIRCUIT SWITCH ON:23
+- A:CIRCUIT SWITCH ON:24
+- A:CIRCUIT GENERAL PANEL ON
+- A:CIRCUIT ON:39
+- A:CIRCUIT ON:40
+- A:LIGHT GLARESHIELD:1
+- A:LIGHT GLARESHIELD POWER SETTING:1
+- A:LIGHT PANEL:1
+- A:LIGHT PANEL POWER SETTING:1
+- A:LIGHT CABIN:1
+- A:LIGHT CABIN:2
+- A:LIGHT CABIN:3
+- A:LIGHT CABIN:4
+- A:LIGHT CABIN:5
+- A:LIGHT CABIN POWER SETTING:5
+- A:LIGHT POTENTIOMETER:12
+- A:LIGHT POTENTIOMETER:10
+- A:LIGHT POTENTIOMETER:11
+- L:XMLVAR_AudioPanel
+- L:XMLVAR_BoostFuelPump
+- L:XMLVAR_IsDeiceAirFrame
+- L:XMLVAR_Autopilot_1_Status
+- L:XMLVAR_IsDeiceAirFrame2

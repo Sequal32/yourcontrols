@@ -1,313 +1,69 @@
 include:
-  - definitions/modules/AS3000.yaml
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
-  - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
-  - definitions/modules/physics.yaml
-  - definitions/modules/pressurization.yaml
-  - definitions/modules/radios.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
-
-shared:
-  - # Electrical
-    type: CustomCalculator
-    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
-    set: 1 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 7 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
-    set: 1 7 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 6 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
-    set: 2 6 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
-    set: 2 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
-    set: 6 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-
-  - # APU
-    type: ToggleSwitch
-    var_name: A:APU SWITCH
-    var_units: Bool
-    event_name: APU_STARTER
-    off_event_name: APU_OFF_SWITCH
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:39
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:40
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:41
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:48
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:49
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:50
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:51
-    var_units: Bool
-    var_type: bool
-
-  - # AutoSpoiler
-    type: ToggleSwitch
-    var_name: A:SPOILERS ARMED
-    var_units: Bool
-    event_name: SPOILERS_ARM_TOGGLE
-
-  - # Lights
-    type: ToggleSwitch
-    var_name: A:LIGHT LANDING:2
-    var_units: Bool
-    event_name: LANDING_LIGHTS_TOGGLE
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT PANEL:1
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT PANEL POWER SETTING:1
-    var_units: Percent
-    var_type: i32
-    event_name: PANEL_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:1
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:1
-    var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:2
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:2
-    var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 2
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:3
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 3
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:3
-    var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:10
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 10
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:11
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 11
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 12
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:15
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 15
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:16
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 16
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:17
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 17
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:18
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 18
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:19
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 19
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:20
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 20
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:30
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 30
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:31
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 31
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:32
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 32
-    index_reversed: true
-
-  - # LVAR Dump (Asobo only)
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:XMLVAR_APU_StarterKnob_Pos
-  -
-    type: var
-    var_name: L:XMLVAR_STBYBattery_Test
-  -
-    type: var
-    var_name: L:XMLVAR_STBYBattery_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_1_State
-  -
-    type: var
-    var_name: L:AS3000_1_Timer_Value
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_2_State
-  -
-    type: var
-    var_name: L:AS3000_2_Timer_Value
-
-# - # Don't sync
-#   type: var
-#   var_name: L:XMLVAR_AileronTrim
-
+- definitions/modules/AS3000.yaml
+- definitions/modules/autopilot.yaml
+- definitions/modules/deice.yaml
+- definitions/modules/electrical.yaml
+- definitions/modules/engines.yaml
+- definitions/modules/fuel.yaml
+- definitions/modules/general.yaml
+- definitions/modules/lights.yaml
+- definitions/modules/navigation.yaml
+- definitions/modules/passenger.yaml
+- definitions/modules/pressurization.yaml
+- definitions/modules/radios.yaml
+- definitions/modules/safety.yaml
+- definitions/modules/transponder.yaml
+- definitions/modules/trim.yaml
 server:
-  - # Payload
-    type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
+- A:FUEL TANK LEFT MAIN LEVEL
+- A:FUEL TANK RIGHT MAIN LEVEL
+shared:
+- PLACEHOLDER FOR CustomCalculator
+- PLACEHOLDER FOR CustomCalculator
+- PLACEHOLDER FOR CustomCalculator
+- PLACEHOLDER FOR CustomCalculator
+- PLACEHOLDER FOR CustomCalculator
+- A:APU SWITCH
+- A:CIRCUIT GENERAL PANEL ON
+- A:CIRCUIT ON:39
+- A:CIRCUIT ON:40
+- A:CIRCUIT ON:41
+- A:CIRCUIT ON:48
+- A:CIRCUIT ON:49
+- A:CIRCUIT ON:50
+- A:CIRCUIT ON:51
+- A:SPOILERS ARMED
+- A:LIGHT LANDING:2
+- A:LIGHT PANEL:1
+- A:LIGHT PANEL POWER SETTING:1
+- A:LIGHT CABIN:1
+- A:LIGHT CABIN POWER SETTING:1
+- A:LIGHT CABIN:2
+- A:LIGHT CABIN POWER SETTING:2
+- A:LIGHT CABIN:3
+- A:LIGHT CABIN POWER SETTING:3
+- A:LIGHT POTENTIOMETER:10
+- A:LIGHT POTENTIOMETER:11
+- A:LIGHT POTENTIOMETER:12
+- A:LIGHT POTENTIOMETER:15
+- A:LIGHT POTENTIOMETER:16
+- A:LIGHT POTENTIOMETER:17
+- A:LIGHT POTENTIOMETER:18
+- A:LIGHT POTENTIOMETER:19
+- A:LIGHT POTENTIOMETER:20
+- A:LIGHT POTENTIOMETER:30
+- A:LIGHT POTENTIOMETER:31
+- A:LIGHT POTENTIOMETER:32
+- L:XMLVAR_IsDeiceAirFrame
+- L:XMLVAR_IsDeiceAirFrame2
+- L:XMLVAR_Autopilot_1_Status
+- L:XMLVAR_APU_StarterKnob_Pos
+- L:XMLVAR_STBYBattery_Test
+- L:XMLVAR_STBYBattery_IsHeld
+- L:XMLVAR_Secondary_ElevatorTrim_Available
+- L:AS3000_TSC_Vertical_1_ScreenLuminosity
+- L:AS3000_TSC_Vertical_1_State
+- L:AS3000_1_Timer_Value
+- L:AS3000_TSC_Vertical_2_ScreenLuminosity
+- L:AS3000_TSC_Vertical_2_State
+- L:AS3000_2_Timer_Value

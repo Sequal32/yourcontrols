@@ -1,59 +1,20 @@
 include:
-  - definitions/modules/deice.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/fuel.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
-  - definitions/modules/radios.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
-
-shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:23
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 23
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:35
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 35
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:36
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 36
-
-  - # Cowl Flap
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:1
-    var_units: Percent
-    var_type: i32
-    event_name: COWLFLAP1_SET
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT NAVCOM1 ON
-    var_units: Bool
-    var_type: bool
-
+- definitions/modules/deice.yaml
+- definitions/modules/engines.yaml
+- definitions/modules/electrical.yaml
+- definitions/modules/fuel.yaml
+- definitions/modules/general.yaml
+- definitions/modules/navigation.yaml
+- definitions/modules/radios.yaml
+- definitions/modules/safety.yaml
+- definitions/modules/transponder.yaml
+- definitions/modules/trim.yaml
 server:
-  - # Payload
-    type: var
-    var_name: FUEL TANK CENTER LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: FUEL TANK CENTER2 LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
+- A:FUEL TANK CENTER LEVEL
+- A:FUEL TANK CENTER2 LEVEL
+shared:
+- A:CIRCUIT SWITCH ON:23
+- A:CIRCUIT SWITCH ON:35
+- A:CIRCUIT SWITCH ON:36
+- A:RECIP ENG COWL FLAP POSITION:1
+- A:CIRCUIT NAVCOM1 ON
