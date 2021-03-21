@@ -57,9 +57,8 @@ impl Corrector {
         }
 
         let is_altitude_corrected = data
-            .get("CORRECTED")
-            .map(|x| *x == VarReaderTypes::Bool(true))
-            .unwrap_or(false);
+            .remove("CORRECTED")
+            .is_some();
 
         if let Some(VarReaderTypes::F64(altitude)) = data.get_mut("PLANE ALTITUDE") {
             if is_altitude_corrected {
