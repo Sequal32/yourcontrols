@@ -94,7 +94,12 @@ impl DatumGenerator {
         sync_permission: SyncPermission,
         definition: Mapping,
     ) -> Result<DatumMessage, Error> {
-        let index = self.get_index_from_var_name(definition.var.get_name());
+        // Check that the mapping explicitly wants an index
+        let index = if definition.mapping.has_index() {
+            self.get_index_from_var_name(definition.var.get_name())
+        } else {
+            None
+        };
 
         let period = if definition.interpolate.is_some() {
             WatchPeriod::Frame
@@ -309,20 +314,28 @@ mod tests {
 
     const PERMISSION: SyncPermission = SyncPermission::Init;
 
-    fn get_test_mapping() -> Mapping {
+    fn get_test_mapping_custom(
+        event_name: &str,
+        var_name: &str,
+        event_param: Option<String>,
+    ) -> Mapping {
         Mapping {
             mapping: MappingType::ToggleSwitch {
-                event_name: "Test".to_string(),
+                event_name: event_name.to_string(),
                 off_event_name: None,
                 switch_on: false,
-                event_param: None,
+                event_param,
             },
             var: VarType::Named {
-                name: "L:Test1:1".to_string(),
+                name: var_name.to_string(),
             },
             condition: None,
             interpolate: Some(InterpolationType::Wrap180),
         }
+    }
+
+    fn get_test_mapping() -> Mapping {
+        get_test_mapping_custom("Test", "L:Test1:1", Some("index".to_string()))
     }
 
     #[test]
@@ -359,6 +372,19 @@ mod tests {
         assert_eq!(result.var.unwrap(), test_mapping.var);
         assert_eq!(result.watch_event, None);
         assert_eq!(result.watch_period.unwrap(), WatchPeriod::Frame); // Is interpolate
+    }
+
+    #[test]
+    fn get_mapping_datum_index_not_defined() {
+        let generator = DatumGenerator::new();
+        let test_mapping = get_test_mapping_custom("Test", "L:Test:1", None);
+        let result = generator
+            .get_mapping_datum(PERMISSION, test_mapping)
+            .unwrap();
+
+        if let Some(MappingType::ToggleSwitch { event_param, .. }) = result.mapping {
+            assert!(event_param.is_none())
+        }
     }
 
     #[test]

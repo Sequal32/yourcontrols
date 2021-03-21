@@ -49,6 +49,14 @@ impl MappingType<String> {
             MappingType::Event => MappingType::Event,
         }
     }
+
+    pub fn has_index(&self) -> bool {
+        match self {
+            MappingType::ToggleSwitch { event_param, .. } => event_param.is_some(),
+            MappingType::NumSet { event_param, .. } => event_param.is_some(),
+            _ => false,
+        }
+    }
 }
 
 impl VarType {
