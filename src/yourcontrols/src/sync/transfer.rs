@@ -109,7 +109,6 @@ impl LVarSyncer {
 
     pub fn process_client_data(
         &mut self,
-        conn: &simconnect::SimConnector,
         data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA,
     ) -> Vec<GetResult> {
         let values = self.transfer.process_client_data(data);

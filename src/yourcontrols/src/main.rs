@@ -1,4 +1,5 @@
 #![windows_subsystem = "windows"]
+#![allow(safe_packed_borrows)]
 
 mod app;
 mod clientmanager;
@@ -243,9 +244,7 @@ fn main() {
                     }
                     // Exception occured
                     DispatchResult::Exception(data) => {
-                        warn!("[SIM] SimConnect exception occurred: {}", unsafe {
-                            data.dwException
-                        });
+                        warn!("[SIM] SimConnect exception occurred: {}", data.dwException);
 
                         if data.dwException == 31 {
                             // Client data area was not initialized by the gauge
@@ -254,7 +253,7 @@ fn main() {
                         }
                     }
                     DispatchResult::ClientData(data) => {
-                        definitions.process_client_data(&conn, data);
+                        definitions.process_client_data(data);
                     }
                     DispatchResult::Event(data) => {
                         definitions.process_event_data(data);

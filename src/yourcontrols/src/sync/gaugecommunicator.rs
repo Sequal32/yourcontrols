@@ -2,8 +2,7 @@ use super::memwriter::MemWriter;
 use bimap::{self, BiHashMap};
 use serde::Deserialize;
 use simconnect::SimConnector;
-use spin_sleep::sleep;
-use std::{collections::HashMap, time::Duration};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 pub struct LVar {
@@ -105,10 +104,6 @@ impl GaugeCommunicator {
             self.next_request_id += 1;
             return id;
         }
-    }
-
-    fn get_request_string(&self, request_id: u32) -> &String {
-        return self.requests.get_by_right(&request_id).unwrap();
     }
 
     pub fn set(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>, val: &str) {

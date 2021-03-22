@@ -1,4 +1,4 @@
-use std::{fmt::Display, io, string::FromUtf8Error};
+use std::{fmt::Display, io};
 
 use crossbeam_channel::TryRecvError;
 

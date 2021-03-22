@@ -1099,12 +1099,8 @@ impl Definitions {
     }
 
     // Processes client data and adds to the result queue if it changed
-    pub fn process_client_data(
-        &mut self,
-        conn: &simconnect::SimConnector,
-        data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA,
-    ) {
-        for value in self.lvarstransfer.process_client_data(conn, data) {
+    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
+        for value in self.lvarstransfer.process_client_data(data) {
             self.process_local_var(value);
         }
     }
