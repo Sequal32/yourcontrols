@@ -1,103 +1,26 @@
 include:
   - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
+  - definitions/modules/electrical.yaml
   - definitions/modules/physics.yaml
-  - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/trim.yaml
 
 shared:
-  -
-    type: var
-    var_name: L:TrimTab
-  -
-    type: var
-    var_name: L:Towbar_anim
   -
     type: var
     var_name: L:Ext_towbar
   -
     type: var
-    var_name: L:Cabin_door
-  -
-    type: var
-    var_name: L:Baggage_door
-  -
-    type: var
-    var_name: L:Oil_door
-  -
-    type: var
-    var_name: L:TieDowns_anim
-  -
-    type: var
     var_name: L:Ext_tiedowns
   -
     type: var
-    var_name: L:Chocks_anim
-  -
-    type: var
-    var_name: L:Pilot_straps
-  -
-    type: var
-    var_name: L:No_pilot_straps
-  -
-    type: var
-    var_name: L:Hide_Pilot
-  -
-    type: var
-    var_name: L:LandingSplash_vis
-  -
-    type: var
-    var_name: L:LandingCone_vis
-  -
-    type: var
-    var_name: L:LandingDefault_vis
-  -
-    type: var
-    var_name: L:ASI_tas_knob
-  -
-    type: var
-    var_name: L:TURN_COORD_flag
-  -
-    type: var
-    var_name: L:HSI_to_flag
-  -
-    type: var
-    var_name: L:HSI_from_flag
-  -
-    type: var
-    var_name: L:HSI_gsi
-  -
-    type: var
-    var_name: L:HSI_cdi
-  -
-    type: var
-    var_name: L:HSI_nav_flag
-  -
-    type: var
-    var_name: L:HSI_hdg_flag
-  -
-    type: var
-    var_name: L:HSI_crs
-  -
-    type: var
-    var_name: L:HSI_hdg_bug
+    var_name: L:ALTIMETER_flag
   -
     type: var
     var_name: L:LEFT_MISC_press_test
   -
     type: var
     var_name: L:LEFT_MISC_lv
-  -
-    type: var
-    var_name: L:LEFT_MISC_window
   -
     type: var
     var_name: L:LEFT_MISC_window_latch
@@ -110,15 +33,6 @@ shared:
   -
     type: var
     var_name: L:AUTOPILOT_hdg
-  -
-    type: var
-    var_name: L:LDG_GEAR_lever
-  -
-    type: var
-    var_name: L:LDG_GEAR_lever_LC
-  -
-    type: var
-    var_name: L:THROTTLE_QUADRANT_mixture_lock
   -
     type: var
     var_name: L:CENTRE_LOWER_bat
@@ -142,82 +56,7 @@ shared:
     var_name: L:CENTRE_LOWER_pitotheat
   -
     type: var
-    var_name: L:VOR1_gsi
-  -
-    type: var
-    var_name: L:VOR1_cdi
-  -
-    type: var
-    var_name: L:VOR1_gsi_flag
-  -
-    type: var
-    var_name: L:VOR1_cdi_flag
-  -
-    type: var
-    var_name: L:VOR1_to_flag
-  -
-    type: var
-    var_name: L:VOR1_from_flag
-  -
-    type: var
-    var_name: L:VOR2_cdi
-  -
-    type: var
-    var_name: L:VOR2_cdi_flag
-  -
-    type: var
-    var_name: L:VOR2_to_flag
-  -
-    type: var
-    var_name: L:VOR2_from_flag
-  -
-    type: var
-    var_name: L:KX170_COMM1_counter1
-  -
-    type: var
-    var_name: L:KX170_COMM1_counter2
-  -
-    type: var
-    var_name: L:KX170_COMM1_counter3
-  -
-    type: var
-    var_name: L:KX170_NAV1_counter1
-  -
-    type: var
-    var_name: L:KX170_NAV1_counter2
-  -
-    type: var
-    var_name: L:KX175_COMM2_counter1
-  -
-    type: var
-    var_name: L:KX175_COMM2_counter2
-  -
-    type: var
-    var_name: L:KX175_COMM2_counter3
-  -
-    type: var
-    var_name: L:KX175_NAV2_counter1
-  -
-    type: var
-    var_name: L:KX175_NAV2_counter2
-  -
-    type: var
-    var_name: L:KT76_dig1_counter
-  -
-    type: var
-    var_name: L:KT76_dig2_counter
-  -
-    type: var
-    var_name: L:KT76_dig3_counter
-  -
-    type: var
-    var_name: L:KT76_dig4_counter
-  -
-    type: var
     var_name: L:KT76_ident_button
-  -
-    type: var
-    var_name: L:UPPER_oat
   -
     type: var
     var_name: L:UPPER_cabin_air
@@ -230,24 +69,6 @@ shared:
   -
     type: var
     var_name: L:YOKE_stsp
-  -
-    type: var
-    var_name: L:YOKE_trim
-  -
-    type: var
-    var_name: L:LeftYoke_vis
-  -
-    type: var
-    var_name: L:RightYoke_vis
-  -
-    type: var
-    var_name: L:YokeLock_vis
-  -
-    type: var
-    var_name: L:LOWER_trim_wheel
-  -
-    type: var
-    var_name: L:STBY_ALTIMETER_baro_scale
   -
     type: var
     var_name: L:STBY_ALTIMETER_flag
@@ -343,25 +164,10 @@ shared:
     var_name: L:CIRCUIT_BREAKERS_radio_lts
   -
     type: var
-    var_name: L:ATTITUDE_INDICATOR_knob
-  -
-    type: var
-    var_name: L:DOOR_door
-  -
-    type: var
     var_name: L:DOOR_lower_latch
   -
     type: var
     var_name: L:DOOR_upper_latch
-  -
-    type: var
-    var_name: L:KR85_dig1_counter
-  -
-    type: var
-    var_name: L:KR85_dig2_counter
-  -
-    type: var
-    var_name: L:KR85_dig3_counter
   -
     type: var
     var_name: L:GPS100_MSG
@@ -421,6 +227,18 @@ shared:
     var_name: L:GPS100_ENT
   -
     type: var
+    var_name: L:EFB_On_Switch
+  -
+    type: var
+    var_name: L:EFB_On
+  -
+    type: var
+    var_name: L:Towbar
+  -
+    type: var
+    var_name: L:HSI_enabled
+  -
+    type: var
     var_name: L:KMA20_VIZ
   -
     type: var
@@ -433,13 +251,13 @@ shared:
     var_name: L:KT76_VIZ
   -
     type: var
+    var_name: L:GPS100_VIZ
+  -
+    type: var
     var_name: L:GTN650_VIZ
   -
     type: var
     var_name: L:GTN750_VIZ
-  -
-    type: var
-    var_name: L:GPS100_VIZ
   -
     type: var
     var_name: L:GNS430_VIZ
@@ -460,10 +278,43 @@ shared:
     var_name: L:RADIO_ANIM_KR85
   -
     type: var
-    var_name: L:EFB_On_Switch
+    var_name: L:GPS100_light_scaler
   -
     type: var
-    var_name: L:EFB_On
+    var_name: L:KN62_light_scaler
+  -
+    type: var
+    var_name: L:GPS100_OFFON
+  -
+    type: var
+    var_name: L:KN62_mode_knob
+  -
+    type: var
+    var_name: L:KN62_power
+  -
+    type: var
+    var_name: L:KN62_outer_knob
+  -
+    type: var
+    var_name: L:KN62_inner_knob
+  -
+    type: var
+    var_name: L:Yoke_light_scaler
+  -
+    type: var
+    var_name: L:Baggage_door
+  -
+    type: var
+    var_name: L:Oil_door
+  -
+    type: var
+    var_name: L:CoPilot_enabled
+  -
+    type: var
+    var_name: L:YOKE_trim
+  -
+    type: var
+    var_name: L:XMLVAR_LeverPropellerHidden1
   -
     type: var
     var_name: L:CustomReg_enabled
@@ -472,7 +323,10 @@ shared:
     var_name: L:Ext_chocks
   -
     type: var
-    var_name: L:CoPilot_enabled
+    var_name: L:Pilot_straps
+  -
+    type: var
+    var_name: L:No_pilot_straps
   -
     type: var
     var_name: L:LEFT_MISC_lv_light
@@ -511,16 +365,7 @@ shared:
     var_name: L:Radio_light_scaler
   -
     type: var
-    var_name: L:KN62_light_scaler
-  -
-    type: var
-    var_name: L:GPS100_light_scaler
-  -
-    type: var
-    var_name: L:Yoke_light_scaler
-  -
-    type: var
-    var_name: L:LEFT_MISC_window_LC
+    var_name: L:THROTTLE_QUADRANT_mixture_lock
   -
     type: var
     var_name: L:THROTTLE_QUADRANT_friction
@@ -530,6 +375,12 @@ shared:
   -
     type: var
     var_name: L:AUTOPILOT_navgps
+  -
+    type: var
+    var_name: L:KX170_COMM1_offon
+  -
+    type: var
+    var_name: L:KX170_NAV1_offon
   -
     type: var
     var_name: L:KX170_COMM1_outer_knob
@@ -556,6 +407,12 @@ shared:
     var_name: L:KX175_NAV2_vol_knob
   -
     type: var
+    var_name: L:KX175_COMM2_offon
+  -
+    type: var
+    var_name: L:KX175_NAV2_offon
+  -
+    type: var
     var_name: L:KX175_COMM2_outer_knob
   -
     type: var
@@ -566,6 +423,39 @@ shared:
   -
     type: var
     var_name: L:KX175_NAV2_inner_knob
+  -
+    type: var
+    var_name: L:KMA20_knob
+  -
+    type: var
+    var_name: L:KMA20_auto
+  -
+    type: var
+    var_name: L:KMA20_com1
+  -
+    type: var
+    var_name: L:KMA20_com2
+  -
+    type: var
+    var_name: L:KMA20_nav1
+  -
+    type: var
+    var_name: L:KMA20_nav2
+  -
+    type: var
+    var_name: L:KMA20_adf
+  -
+    type: var
+    var_name: L:KMA20_dme
+  -
+    type: var
+    var_name: L:KMA20_mkr
+  -
+    type: var
+    var_name: L:KMA20_mkr_hilo
+  -
+    type: var
+    var_name: L:KT76_mode_knob
   -
     type: var
     var_name: L:KT76_dig1_knob
@@ -580,6 +470,9 @@ shared:
     var_name: L:KT76_dig4_knob
   -
     type: var
+    var_name: L:KR85_mode_knob
+  -
+    type: var
     var_name: L:KR85_left_knob
   -
     type: var
@@ -592,28 +485,10 @@ shared:
     var_name: L:KR85_vol_knob
   -
     type: var
-    var_name: L:KN62_outer_knob
+    var_name: L:ASI_tas_knob
   -
     type: var
-    var_name: L:KN62_inner_knob
-  -
-    type: var
-    var_name: L:HSI_CRS_knob
-  -
-    type: var
-    var_name: L:ADF_knob
-  -
-    type: var
-    var_name: L:ALTIMETER_baro_knob
-  -
-    type: var
-    var_name: L:STBY_ALTIMETER_baro_knob
-  -
-    type: var
-    var_name: L:VOR1_knob
-  -
-    type: var
-    var_name: L:VOR2_knob
+    var_name: L:ATTITUDE_INDICATOR_knob
   -
     type: var
     var_name: L:CENTRE_LOWER_nav_light
@@ -622,16 +497,43 @@ shared:
     var_name: L:CENTRE_LOWER_panel_light
   -
     type: var
+    var_name: L:LEFT_MISC_fuel_sel
+  -
+    type: var
+    var_name: L:LOWER_emergency_gear
+  -
+    type: var
+    var_name: L:AUTOPILOT_mode
+  -
+    type: var
     var_name: L:AUTOPILOT_roll
+  -
+    type: var
+    var_name: L:AUTOPILOT_nav
+  -
+    type: var
+    var_name: L:GPS100_ARROWS
+  -
+    type: var
+    var_name: L:LEFT_MISC_elt
+  -
+    type: var
+    var_name: L:RIGHT_LOWER_fan
   -
     type: var
     var_name: L:RIGHT_LOWER_egt_knob
   -
     type: var
-    var_name: L:HSI_enabled
+    var_name: L:XMLVAR_CabinHeat_Position_1
   -
     type: var
-    var_name: L:KT76_ident_light
+    var_name: L:XMLVAR_CabinAir_Position_1
+  -
+    type: var
+    var_name: L:JF_Visor_Position_1
+  -
+    type: var
+    var_name: L:JF_Visor_Position_2
   -
     type: var
     var_name: L:KMA20_mkr_airway
@@ -643,10 +545,213 @@ shared:
     var_name: L:KMA20_mkr_middle
   -
     type: var
-    var_name: L:JF_Visor_Position_1
+    var_name: L:Glasscockpits_FPLHaveOrigin
   -
     type: var
-    var_name: L:JF_Visor_Position_2
+    var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:AS530_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS530_State
+  -
+    type: var
+    var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:AS430_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS430_State
+  -
+    type: var
+    var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+  -
+    type: var
+    var_name: L:KT76_dig1_counter
+  -
+    type: var
+    var_name: L:KT76_dig2_counter
+  -
+    type: var
+    var_name: L:KT76_dig3_counter
+  -
+    type: var
+    var_name: L:KT76_dig4_counter
+  -
+    type: var
+    var_name: L:RIGHT_LOWER_cabin_heat_1
+  -
+    type: var
+    var_name: L:RIGHT_LOWER_cabin_heat_2
+  -
+    type: var
+    var_name: L:LEFT_LOWER_ignition
+  -
+    type: var
+    var_name: L:Icing_active
+  -
+    type: var
+    var_name: L:TrimTab
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_autopilot
+  -
+    type: var
+    var_name: L:StallWarn_avail
+  -
+    type: var
+    var_name: L:PitotCovers_vis
+  -
+    type: var
+    var_name: L:HSI_hdg_flag
+  -
+    type: var
+    var_name: L:HSI_nav_flag
+  -
+    type: var
+    var_name: L:HSI_cdi
+  -
+    type: var
+    var_name: L:HSI_gsi
+  -
+    type: var
+    var_name: L:HSI_to_flag
+  -
+    type: var
+    var_name: L:HSI_from_flag
+  -
+    type: var
+    var_name: L:VOR1_cdi_flag
+  -
+    type: var
+    var_name: L:VOR1_cdi
+  -
+    type: var
+    var_name: L:VOR1_gsi_flag
+  -
+    type: var
+    var_name: L:VOR1_gsi
+  -
+    type: var
+    var_name: L:VOR1_to_flag
+  -
+    type: var
+    var_name: L:VOR1_from_flag
+  -
+    type: var
+    var_name: L:VOR2_cdi
+  -
+    type: var
+    var_name: L:VOR2_cdi_flag
+  -
+    type: var
+    var_name: L:VOR2_to_flag
+  -
+    type: var
+    var_name: L:VOR2_from_flag
+  -
+    type: var
+    var_name: L:sound_GearWarn
+  -
+    type: var
+    var_name: L:LEFT_MISC_boost
+  -
+    type: var
+    var_name: L:sound_FuelSel_CW
+  -
+    type: var
+    var_name: L:LEFT_MISC_window
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_nav_light_on
+  -
+    type: var
+    var_name: L:sound_Switch_Large_Dn
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_panel_light_on
+  -
+    type: var
+    var_name: L:LOWER_rudder_trim
+  -
+    type: var
+    var_name: L:LOWER_trim_wheel
+  -
+    type: var
+    var_name: L:Hide_Pilot
+  -
+    type: var
+    var_name: L:AC_fan
+  -
+    type: var
+    var_name: L:KR85_dig1_counter
+  -
+    type: var
+    var_name: L:KR85_dig2_counter
+  -
+    type: var
+    var_name: L:KR85_dig3_counter
+  -
+    type: var
+    var_name: L:sound_Switch_Small_Up
+  -
+    type: var
+    var_name: L:KX170_COMM1_counter1
+  -
+    type: var
+    var_name: L:KX170_COMM1_counter2
+  -
+    type: var
+    var_name: L:KX170_COMM1_counter3
+  -
+    type: var
+    var_name: L:KX170_NAV1_counter1
+  -
+    type: var
+    var_name: L:KX170_NAV1_counter2
+  -
+    type: var
+    var_name: L:KX175_COMM2_counter1
+  -
+    type: var
+    var_name: L:KX175_COMM2_counter2
+  -
+    type: var
+    var_name: L:KX175_COMM2_counter3
+  -
+    type: var
+    var_name: L:KX175_NAV2_counter1
+  -
+    type: var
+    var_name: L:KX175_NAV2_counter2
+  -
+    type: var
+    var_name: L:AUTOPILOT_roll_tooltip
+  -
+    type: var
+    var_name: L:LEFT_MISC_prime
+  -
+    type: var
+    var_name: L:LOWER_flap_handle_button
+  -
+    type: var
+    var_name: L:LOWER_flap_handle
+  -
+    type: ResetWhenEquals
+    var_name: L:LEFT_MISC_window
+    equals: 
+      - 0.0
+      - 100.0
+    target: L:LEFT_MISC_window_LC
+  -
+    type: ResetWhenEquals
+    var_name: L:Cabin_door
+    equals: 
+      - 11.0
+      - 111.0
+    target: L:DOOR_door
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
@@ -662,6 +767,73 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 0
+
+#general.yaml without flaps
+
+  - # ASOBO_LANDING_GEAR_Lever_Gear_Template (Var to support Up/Off/Down)
+    type: var
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Number
+    var_type: i32
+
+
+  - # ASOBO_LANDING_GEAR_Switch_ParkingBrake_Template
+    type: ToggleSwitch
+    var_name: A:BRAKE PARKING POSITION
+    var_units: Bool
+    event_name: PARKING_BRAKES
+
+  - # YourControls Force Transfer Hotkey
+    type: ProgramActionEvent
+    event_name: TOGGLE_LAUNCH_BAR_SWITCH
+    action: TransferControls
+
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    use_calculator: true
+
+master:
+  - # ASOBO_HANDLING_Yoke_Template
+    type: NumSet
+    var_name: A:YOKE X POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_AILERONS_SET
+    interpolate: InvertConstant
+  -
+    type: NumSet
+    var_name: A:YOKE Y POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_ELEVATOR_SET
+    interpolate: InvertConstant
+  -
+    type: NumSet
+    var_name: A:RUDDER PEDAL POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_RUDDER_SET
+    interpolate: InvertConstant
+  -
+    type: NumSet
+    var_name: A:BRAKE LEFT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    event_name: AXIS_LEFT_BRAKE_SET
+    add_by: -16384
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:BRAKE RIGHT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    event_name: AXIS_RIGHT_BRAKE_SET
+    add_by: -16384
+    unreliable: true
+
 
 server:
   -

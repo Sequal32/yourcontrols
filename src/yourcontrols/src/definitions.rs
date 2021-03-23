@@ -12,6 +12,8 @@ use std::time::Instant;
 use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType};
 use crate::sync::jscommunicator::{JSCommunicator, JSPayloads};
 use crate::sync::transfer::{AircraftVars, Events, LVarSyncer};
+use crate::syncdefs::MultiplyDifferenceLocalVarSet;
+use crate::syncdefs::ResetWhenEquals;
 use crate::syncdefs::{
     CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch,
 };
@@ -287,6 +289,25 @@ struct LocalVarProxyEntry {
     target: String,
     #[serde(default)]
     loopback: bool,
+    conditions: Option<Vec<Condition>>,
+}
+
+#[derive(Deserialize)]
+struct MultiplyDifferenceLocalVarEntry {
+    var_name: String,
+    target: String,
+    multiply_by: f64,
+    max_val: f64,
+    #[serde(default)]
+    loopback: bool,
+    conditions: Option<Vec<Condition>>,
+}
+
+#[derive(Deserialize)]
+struct ResetWhenEqualsEntry {
+    var_name: String,
+    target: String,
+    equals: Vec<f64>,
     conditions: Option<Vec<Condition>>,
 }
 
@@ -901,6 +922,53 @@ impl Definitions {
         )
     }
 
+    fn add_multiply_difference_local_var(
+        &mut self,
+        category: &str,
+        var: MultiplyDifferenceLocalVarEntry,
+    ) -> Result<(), Error> {
+        let (var_string, _) =
+            self.add_var_string(category, &var.var_name, None, InDataTypes::F64)?;
+
+        let loopback = if var.loopback {
+            Some(var_string.clone())
+        } else {
+            None
+        };
+
+        self.add_mapping(
+            var_string,
+            Mapping {
+                action: ActionType::F64(Box::new(MultiplyDifferenceLocalVarSet::new(
+                    var.target,
+                    var.multiply_by,
+                    var.max_val,
+                    loopback,
+                ))),
+                condition: var.conditions,
+                ..Default::default()
+            },
+        )
+    }
+
+    fn add_reset_when_equals(
+        &mut self,
+        category: &str,
+        var: ResetWhenEqualsEntry,
+    ) -> Result<(), Error> {
+        let (var_string, _) =
+            self.add_var_string(category, &var.var_name, None, InDataTypes::F64)?;
+
+        self.add_mapping(
+            var_string,
+            Mapping {
+                action: ActionType::F64(Box::new(ResetWhenEquals::new(var.target, var.equals))),
+                condition: var.conditions,
+                ..Default::default()
+            },
+        )
+    }
+
     fn add_program_action(&mut self, category: &str, var: ProgramActionEntry) -> Result<(), Error> {
         let (var_string, _) = self.add_var_string(
             category,
@@ -971,6 +1039,10 @@ impl Definitions {
             "CUSTOMCALCULATOR" => self.add_custom_calculator(&category, try_cast_yaml!(value))?,
             "PROGRAMACTION" => self.add_program_action(&category, try_cast_yaml!(value))?,
             "LOCALVARPROXY" => self.add_local_var_proxy(&category, try_cast_yaml!(value))?,
+            "RESETWHENEQUALS" => self.add_reset_when_equals(&category, try_cast_yaml!(value))?,
+            "MULTIPLYDIFFERENCELOCALVAR" => {
+                self.add_multiply_difference_local_var(&category, try_cast_yaml!(value))?
+            }
             "PROGRAMACTIONEVENT" => {
                 self.add_program_action_event(&category, try_cast_yaml!(value))?
             }

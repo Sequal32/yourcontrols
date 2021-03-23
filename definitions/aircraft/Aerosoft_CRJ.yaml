@@ -1,9 +1,10 @@
 include:
-  - definitions/modules/autopilot.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
   - definitions/modules/physics.yaml
-  - definitions/modules/radios.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/trim.yaml
+  - definitions/modules/CRJ/autopilotselectors.yaml
 shared:
   - 
     type: var
@@ -333,11 +334,12 @@ shared:
     type: var
     var_name: L:ASCRJ_HYDR_PUMP_2
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_PRESS_LDG_ELEV
-  - 
-    type: var
-    var_name: L:ASCRJ_PRESS_LDG_ELEV_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_PRESS_LDG_ELEV_CHANGE
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_PRESS_MAN_ALT
@@ -861,47 +863,12 @@ shared:
     target: L:ASCRJ_FCP_ALT_CANCEL
     loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_FCP_CRS1_SEL
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_CRS1_CHANGE
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_CRS2_SEL
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_CRS2_CHANGE
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_SPEED_SEL
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_SPEED_CHANGE
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_HDG_SEL
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_HDG_CHANGE
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_ALT_SEL
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_ALT_CHANGE
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_WHEEL
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_WHEEL_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_MCDU1_BRT
-  - 
-    type: var
-    var_name: L:ASCRJ_MCDU1_BRT_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_MCDU1_BRT_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_MCDU1_LSK1L_KEY
@@ -1283,11 +1250,12 @@ shared:
     target: L:ASCRJ_MCDU1_CLR
     loopback: true
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_MCDU2_BRT
-  - 
-    type: var
-    var_name: L:ASCRJ_MCDU2_BRT_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_MCDU2_BRT_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_MCDU2_LSK1L_KEY
@@ -1830,23 +1798,26 @@ shared:
     target: L:ASCRJ_TQ_TOGA_2
     loopback: true
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RTU1_BRT
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RTU1_BRT_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_BRT_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RTU1_KNOB_INNER
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RTU1_KNOB_INNER_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_KNOB_INNER_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RTU1_KNOB_OUTER
-  - 
-    type: var
-    var_name: L:ASCRJ_RTU1_KNOB_OUTER_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RTU1_KNOB_OUTER_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_RTU1_IDENT_BTN_ANIM
@@ -1863,71 +1834,66 @@ shared:
     target: L:ASCRJ_RTU1_1_2
     loopback: true
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU1_LSK1L_BTN
+    target: L:ASCRJ_RTU1_LSK1L
+    loopbacK: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_LSK1L
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU1_LSK2L_BTN
+    target: L:ASCRJ_RTU1_LSK2L
+    loopbacK: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_LSK2L
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU1_LSK3L_BTN
+    target: L:ASCRJ_RTU1_LSK3L
+    loopbacK: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_LSK3L
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU1_LSK4L_BTN
+    target: L:ASCRJ_RTU1_LSK4L
+    loopbacK: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_LSK4L
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU1_LSK1R_BTN
+    target: L:ASCRJ_RTU1_LSK1R
+    loopbacK: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_LSK1R
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU1_LSK2R_BTN
+    target: L:ASCRJ_RTU1_LSK2R
+    loopbacK: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_LSK2R
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU1_LSK3R_BTN
+    target: L:ASCRJ_RTU1_LSK3R
+    loopbacK: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_LSK3R
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU1_LSK4R_BTN
+    target: L:ASCRJ_RTU1_LSK4R
+    loopbacK: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU1_LSK4R
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RTU2_BRT
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RTU2_BRT_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU2_BRT_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RTU2_KNOB_INNER
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RTU2_KNOB_INNER_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU2_KNOB_INNER_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RTU2_KNOB_OUTER
-  - 
-    type: var
-    var_name: L:ASCRJ_RTU2_KNOB_OUTER_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RTU2_KNOB_OUTER_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_RTU2_IDENT_BTN_ANIM
@@ -1944,53 +1910,45 @@ shared:
     target: L:ASCRJ_RTU2_1_2
     loopback: true
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU2_LSK1L_BTN
+    target: L:ASCRJ_RTU2_LSK1L
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU2_LSK1L
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU2_LSK2L_BTN
+    target: L:ASCRJ_RTU2_LSK2L
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU2_LSK2L
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU2_LSK3L_BTN
+    target: L:ASCRJ_RTU2_LSK3L
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU2_LSK3L
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU2_LSK4L_BTN
+    target: L:ASCRJ_RTU2_LSK4L
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU2_LSK4L
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU2_LSK1R_BTN
+    target: L:ASCRJ_RTU2_LSK1R
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU2_LSK1R
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU2_LSK2R_BTN
+    target: L:ASCRJ_RTU2_LSK2R
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU2_LSK2R
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU2_LSK3R_BTN
+    target: L:ASCRJ_RTU2_LSK3R
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RTU2_LSK3R
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RTU2_LSK4R_BTN
-  - 
-    type: var
-    var_name: L:ASCRJ_RTU2_LSK4R
+    target: L:ASCRJ_RTU2_LSK4R
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_FDD_LOCK_FAIL
@@ -2530,36 +2488,32 @@ shared:
     type: var
     var_name: L:ASCRJ_XPDR_COMNAV
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_XPDR_KNOB_INNER
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_XPDR_KNOB_INNER_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_XPDR_KNOB_INNER_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_XPDR_KNOB_OUTER
-  - 
-    type: var
-    var_name: L:ASCRJ_XPDR_KNOB_OUTER_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_XPDR_KNOB_OUTER_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_STAB_TRIM_CH1_BTN_ANIM
-    target: L:ASCRJ_STAB_TRIM_CH1
+    target: L:ASCRJ_STAB_TRIM_CH1_TRIGGER
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_STAB_TRIM_CH1_TRIGGER
   - 
     type: var
     var_name: L:ASCRJ_STAB_TRIM_CH1_BTN_STATE
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_STAB_TRIM_CH2_BTN_ANIM
-    target: L:ASCRJ_STAB_TRIM_CH2
+    target: L:ASCRJ_STAB_TRIM_CH2_TRIGGER
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_STAB_TRIM_CH2_TRIGGER
   - 
     type: var
     var_name: L:ASCRJ_STAB_TRIM_CH2_BTN_STATE
@@ -2815,31 +2769,34 @@ shared:
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_LSP_SPEED_SEL_ANIM
-    target: L:ASCRJ_LSP_SPEED_SEL
+    target: L:ASCRJ_LSP_SPEED_SET
     loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_LSP_SPEED_SET
-  - 
-    type: var
-    var_name: L:ASCRJ_LSP_SPEED_SEL_CHANGE
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_LSP_SPEED_SEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_LSP_SPEED_SEL_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_LSP_RDR_BTN_ANIM
     target: L:ASCRJ_LSP_RDR
     loopback: true
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_LSP_FORMAT
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_LSP_FORMAT_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_LSP_FORMAT_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_LSP_RANGE
-  - 
-    type: var
-    var_name: L:ASCRJ_LSP_RANGE_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_LSP_RANGE_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_LSP_TERR_BTN_ANIM
@@ -2851,14 +2808,15 @@ shared:
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_LSP_HEIGHT_SEL_ANIM
-    target: L:ASCRJ_LSP_HEIGHT_SEL
+    target: L:ASCRJ_LSP_HEIGHT_SET
     loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_LSP_HEIGHT_SET
-  - 
-    type: var
-    var_name: L:ASCRJ_LSP_HEIGHT_SEL_CHANGE
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_LSP_HEIGHT_SEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_LSP_HEIGHT_SEL_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_LSP_RA_TEST_BTN_ANIM
@@ -2868,11 +2826,12 @@ shared:
     type: var
     var_name: L:ASCRJ_LSP_RA_TEST_BTN
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_LSP_NAV_SOURCE
-  - 
-    type: var
-    var_name: L:ASCRJ_LSP_NAV_SOURCE_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_LSP_NAV_SOURCE_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_LSP_NAV_SOURCE_XSIDE_BTN_ANIM
@@ -2884,11 +2843,12 @@ shared:
     target: L:ASCRJ_LSP_HPA_IN
     loopback: true
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_LSP_BARO_SEL
-  - 
-    type: var
-    var_name: L:ASCRJ_LSP_BARO_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_LSP_BARO_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_LSP_BARO_STD_BTN_ANIM
@@ -2898,29 +2858,25 @@ shared:
     type: var
     var_name: L:ASCRJ_LSP_PFD_MODE
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_LSP_CLCK_ET_BTN
+    target: L:ASCRJ_LSP_CLCK_ET
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_LSP_CLCK_ET
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_LSP_CLCK_RST_BTN
+    target: L:ASCRJ_LSP_CLCK_RST
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_LSP_CLCK_RST
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_LSP_CLCK_MODE_BTN
+    target: L:ASCRJ_LSP_CLCK_MODE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_LSP_CLCK_MODE
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_LSP_CLCK_CHR_BTN
-  - 
-    type: var
-    var_name: L:ASCRJ_LSP_CLCK_CHR
+    target: L:ASCRJ_LSP_CLCK_CHR
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_SKYF_POWER_BTN
@@ -2960,9 +2916,6 @@ shared:
     var_name: L:ASCRJ_OXYF_TEST_LONG_BTN
   - 
     type: var
-    var_name: L:ASCRJ_OXYF_BLINKER
-  - 
-    type: var
     var_name: L:ASCRJ_RSP_DSPL
   - 
     type: var
@@ -3000,28 +2953,34 @@ shared:
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_RSP_SPEED_SEL_ANIM
-    target: L:ASCRJ_RSP_SPEED_SEL
+    target: L:ASCRJ_RSP_SPEED_SET
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_RSP_SPEED_SEL_CHANGE
+  -
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_RSP_SPEED_SEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RSP_SPEED_SEL_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_RSP_RDR_BTN_ANIM
     target: L:ASCRJ_RSP_RDR
     loopback: true
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RSP_FORMAT
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RSP_FORMAT_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RSP_FORMAT_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RSP_RANGE
-  - 
-    type: var
-    var_name: L:ASCRJ_RSP_RANGE_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RSP_RANGE_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_RSP_TERR_BTN_ANIM
@@ -3033,14 +2992,15 @@ shared:
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_RSP_HEIGHT_SEL_ANIM
-    target: L:ASCRJ_RSP_HEIGHT_SEL
+    target: L:ASCRJ_RSP_HEIGHT_SET
     loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RSP_HEIGHT_SET
-  - 
-    type: var
-    var_name: L:ASCRJ_RSP_HEIGHT_SEL_CHANGE
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_RSP_HEIGHT_SEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RSP_HEIGHT_SEL_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_RSP_RA_TEST_BTN_ANIM
@@ -3050,11 +3010,12 @@ shared:
     type: var
     var_name: L:ASCRJ_RSP_RA_TEST_BTN
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RSP_NAV_SOURCE
-  - 
-    type: var
-    var_name: L:ASCRJ_RSP_NAV_SOURCE_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RSP_NAV_SOURCE_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_RSP_NAV_SOURCE_XSIDE_BTN_ANIM
@@ -3066,11 +3027,12 @@ shared:
     target: L:ASCRJ_RSP_HPA_IN
     loopback: true
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_RSP_BARO_SEL
-  - 
-    type: var
-    var_name: L:ASCRJ_RSP_BARO_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_RSP_BARO_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_RSP_BARO_STD_BTN_ANIM
@@ -3080,29 +3042,25 @@ shared:
     type: var
     var_name: L:ASCRJ_RSP_PFD_MODE
   - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RSP_CLCK_ET_BTN
+    target: L:ASCRJ_RSP_CLCK_ET
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RSP_CLCK_ET
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RSP_CLCK_RST_BTN
+    target: L:ASCRJ_RSP_CLCK_RST
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RSP_CLCK_RST
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RSP_CLCK_MODE_BTN
+    target: L:ASCRJ_RSP_CLCK_MODE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_RSP_CLCK_MODE
-  - 
-    type: var
+    type: LocalVarProxy
     var_name: L:ASCRJ_RSP_CLCK_CHR_BTN
-  - 
-    type: var
-    var_name: L:ASCRJ_RSP_CLCK_CHR
+    target: L:ASCRJ_RSP_CLCK_CHR
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_CVR_TEST_BTN_ANIM
@@ -3120,41 +3078,47 @@ shared:
     target: L:ASCRJ_CVR_ERASE
     loopback: true
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_PFDC_BRT
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_PFDC_BRT_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_PFDC_BRT_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_MFDC_BRT
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_MFDC_BRT_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_MFDC_BRT_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_PFDF_BRT
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_PFDF_BRT_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_PFDF_BRT_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_MFDF_BRT
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_MFDF_BRT_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_MFDF_BRT_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_EICAS1_BRT
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_EICAS1_BRT_CHANGE
+    loopback: true
   - 
-    type: var
-    var_name: L:ASCRJ_EICAS1_BRT_CHANGE
-  - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_EICAS2_BRT
-  - 
-    type: var
-    var_name: L:ASCRJ_EICAS2_BRT_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_EICAS2_BRT_CHANGE
+    loopback: true
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FPNL_TEST_ANIM_ANIM
@@ -3251,11 +3215,12 @@ shared:
     target: L:ASCRJ_ISI_CAGE
     loopback: true
   - 
-    type: var
+    type: MultiplyDifferenceLocalVar
     var_name: L:ASCRJ_ISI_KNOB
-  - 
-    type: var
-    var_name: L:ASCRJ_ISI_KNOB_CHANGE
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_ISI_KNOB_CHANGE
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_MAPLT_L
@@ -3852,12 +3817,6 @@ shared:
     var_name: L:ASCRJ_FCP_SPEED_MODE
   - 
     type: var
-    var_name: L:ASCRJ_FCP_HDG_INFO
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_ALT_INFO
-  - 
-    type: var
     var_name: L:ASCRJ_FCP_WHEEL_INFO
   - 
     type: var
@@ -3868,54 +3827,6 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_MCDU2_KYBD_TOGGLE
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_LAT_ACTIVE
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_LAT_ARMED
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_VERT_ACTIVE
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_VERT_ARMED
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_VERT_ARMED_2
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_LOC_CAPTURE
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_GS_CAPTURE
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_ALT_HOLD
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_ALT_CAPTURE
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_USE_MACH
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_SELMACH
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_SELIAS
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_SELALT
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_SELVS
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_SELHDG
-  - 
-    type: var
-    var_name: L:ASCRJ_VAR_AP_SPDTREND
   - 
     type: var
     var_name: L:ASCRJ_IAS
@@ -4038,9 +3949,6 @@ shared:
     var_name: L:ASCRJ_FMS_NAV2_FORCE_MAN
   - 
     type: var
-    var_name: L:ASCRJ_RSP_SPEED_SET
-  - 
-    type: var
     var_name: L:ASCRJ_LSP_BRG1_INFO
   - 
     type: var
@@ -4131,9 +4039,6 @@ shared:
     var_name: L:ASCRJ_MDA_FO
   - 
     type: var
-    var_name: L:ASCRJ_TRIM_IND
-  - 
-    type: var
     var_name: L:ASCRJ_BARO_INHG
   - 
     type: var
@@ -4144,8 +4049,6 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_HGS_ARMED
-
-master:
   -
     type: var
     var_name: L:ASCRJ_TQ_THROTTLE_1_POS
@@ -4164,6 +4067,54 @@ master:
   -
     type: var
     var_name: L:ASCRJ_REVERSER_R_POS
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_1_REL
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_1_INPUT
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_1_ACTIVE
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_1_MY
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_1_START
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_REVERSE_1_START
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_CUTOFF_1_ANIM
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_TOGA_1_ANIM
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_2_REL
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_2_INPUT
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_2_ACTIVE
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_2_MY
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_2_START
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_REVERSE_2_START
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_CUTOFF_2_ANIM
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_TOGA_2_ANIM
     
 server:
   -

@@ -7,7 +7,10 @@ use std::{
 use num::{FromPrimitive, ToPrimitive};
 use simconnect;
 
-use crate::{sync::transfer::LVarSyncer, util::NumberDigits};
+use crate::{
+    sync::transfer::LVarSyncer,
+    util::{wrap_diff, NumberDigits},
+};
 
 const GROUP_ID: u32 = 5;
 
@@ -16,7 +19,7 @@ where
     T: Default,
 {
     fn set_current(&mut self, current: T);
-    fn set_new(&self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer);
+    fn set_new(&mut self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer);
 }
 
 pub struct ToggleSwitch {
@@ -70,7 +73,12 @@ impl<'a> Syncable<bool> for ToggleSwitch {
         self.current = current;
     }
 
-    fn set_new(&self, new: bool, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
+    fn set_new(
+        &mut self,
+        new: bool,
+        conn: &simconnect::SimConnector,
+        lvar_transfer: &mut LVarSyncer,
+    ) {
         if self.current == new {
             return;
         }
@@ -166,7 +174,7 @@ where
         self.current = current
     }
 
-    fn set_new(&self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
+    fn set_new(&mut self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
         if new == self.current {
             return;
         }
@@ -245,7 +253,7 @@ where
         self.current = current
     }
 
-    fn set_new(&self, new: T, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
+    fn set_new(&mut self, new: T, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
         let mut working = self.current;
 
         if self.pass_difference {
@@ -301,7 +309,7 @@ impl Syncable<i32> for NumDigitSet {
         self.current = NumberDigits::new(current)
     }
 
-    fn set_new(&self, new: i32, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
+    fn set_new(&mut self, new: i32, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
         let new = NumberDigits::new(new);
 
         for index in 0..self.inc_event_ids.len() {
@@ -339,7 +347,7 @@ impl Syncable<f64> for CustomCalculator {
         self.current = new
     }
 
-    fn set_new(&self, new: f64, conn: &simconnect::SimConnector, transfer: &mut LVarSyncer) {
+    fn set_new(&mut self, new: f64, conn: &simconnect::SimConnector, transfer: &mut LVarSyncer) {
         if self.current == new {
             return;
         }
@@ -349,25 +357,125 @@ impl Syncable<f64> for CustomCalculator {
 
 pub struct LocalVarProxy {
     target: String,
-    loopback: Option<String>,
+    loopback_var: Option<String>,
 }
 
 impl LocalVarProxy {
-    pub fn new(target: String, loopback: Option<String>) -> Self {
-        Self { target, loopback }
+    pub fn new(target: String, loopback_var: Option<String>) -> Self {
+        Self {
+            target,
+            loopback_var,
+        }
     }
 }
 
 impl Syncable<f64> for LocalVarProxy {
     fn set_current(&mut self, _: f64) {}
 
-    fn set_new(&self, new: f64, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
+    fn set_new(
+        &mut self,
+        new: f64,
+        conn: &simconnect::SimConnector,
+        lvar_transfer: &mut LVarSyncer,
+    ) {
         let value_string = new.to_string();
 
         lvar_transfer.set(conn, &self.target, &value_string);
 
-        if let Some(loopback_var) = self.loopback.as_ref() {
+        if let Some(loopback_var) = self.loopback_var.as_ref() {
             lvar_transfer.set(conn, loopback_var, &value_string);
         }
+    }
+}
+
+// Mainly for the Aerosoft CRJ
+pub struct MultiplyDifferenceLocalVarSet {
+    target: String,
+    loopback_var: Option<String>,
+    multiply_by: f64,
+    max_val: f64,
+    current: f64,
+}
+
+impl MultiplyDifferenceLocalVarSet {
+    pub fn new(
+        target: String,
+        multiply_by: f64,
+        max_val: f64,
+        loopback_var: Option<String>,
+    ) -> Self {
+        Self {
+            target,
+            loopback_var,
+            multiply_by,
+            max_val,
+            current: 0.0,
+        }
+    }
+}
+
+impl Syncable<f64> for MultiplyDifferenceLocalVarSet {
+    fn set_current(&mut self, value: f64) {
+        self.current = value;
+    }
+
+    fn set_new(
+        &mut self,
+        new: f64,
+        conn: &simconnect::SimConnector,
+        lvar_transfer: &mut LVarSyncer,
+    ) {
+        let diff = wrap_diff(self.current, new, self.max_val);
+        let change = diff * self.multiply_by;
+
+        lvar_transfer.set(conn, &self.target, &change.to_string());
+
+        if let Some(loopback_var) = self.loopback_var.as_ref() {
+            lvar_transfer.set(conn, loopback_var, &new.to_string());
+        }
+    }
+}
+
+// When incoming value equals equals or equals_2, it will allow the mapping to be triggered again
+pub struct ResetWhenEquals {
+    target: String,
+    equals: Vec<f64>,
+    did_trigger: bool,
+}
+
+impl ResetWhenEquals {
+    pub fn new(target: String, equals: Vec<f64>) -> Self {
+        Self {
+            target,
+            equals,
+            did_trigger: false,
+        }
+    }
+}
+
+impl Syncable<f64> for ResetWhenEquals {
+    fn set_current(&mut self, current: f64) {
+        if self.equals.contains(&current) {
+            self.did_trigger = false;
+        };
+    }
+
+    fn set_new(
+        &mut self,
+        new: f64,
+        conn: &simconnect::SimConnector,
+        lvar_transfer: &mut LVarSyncer,
+    ) {
+        if self.equals.contains(&new) {
+            self.did_trigger = false;
+            return;
+        };
+
+        if self.did_trigger {
+            return;
+        }
+
+        self.did_trigger = true;
+        lvar_transfer.set(conn, &self.target, "1.0");
     }
 }
