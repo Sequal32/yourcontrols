@@ -41,6 +41,8 @@ pub enum Error {
     WebsocketError(tungstenite::Error),
     // Gauge
     VariableInitializeError,
+    // Gauge Scripting
+    RhaiParse(rhai::ParseError),
 
     // Misc
     None,
@@ -95,6 +97,7 @@ impl Display for Error {
             }
 
             Error::VariableInitializeError => write!(f, "Var could not be initialized."),
+            Error::RhaiParse(e) => write!(f, "Could not parse RHAI script: {}", e),
             Error::None => write!(f, "No value returned."),
             Error::NotProcessed => write!(f, "Not processed."),
         }
@@ -152,5 +155,11 @@ impl From<tungstenite::Error> for Error {
 impl From<serde_json::Error> for Error {
     fn from(e: serde_json::Error) -> Self {
         Error::JSONSerializeError(e)
+    }
+}
+
+impl From<rhai::ParseError> for Error {
+    fn from(e: rhai::ParseError) -> Self {
+        Error::RhaiParse(e)
     }
 }

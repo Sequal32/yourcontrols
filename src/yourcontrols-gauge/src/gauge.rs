@@ -3,24 +3,36 @@
 use msfs::sim_connect::{
     client_data_definition, data_definition, ClientDataArea, Period, SimConnect, SimConnectRecv,
 };
-use std::{cell::RefCell, rc::Rc};
+use rhai::AST;
+use std::cell::RefCell;
+use std::collections::HashMap;
+use std::rc::Rc;
 
-use crate::data::datum::{Datum, DatumManager};
+use crate::data::datum::{Datum, DatumManager, MappingArgs};
 use crate::data::watcher::VariableWatcher;
 use crate::data::{EventSet, GenericVariable, KeyEvent, RcSettable, RcVariable, Syncable};
 use crate::interpolation::Interpolation;
-use crate::sync::{Condition, NumDigitSet, NumIncrement, NumSet, ToggleSwitch};
+use crate::sync::SCRIPTING_ENGINE;
+use crate::util::map_ids;
 use crate::util::{GenericResult, DATA_SIZE};
 
 use yourcontrols_types::{
-    DatumMessage, MappingType, MessagePackFragmenter, Payloads, Result, SyncPermissionState,
-    VarType,
+    DatumMessage, Error, EventMessage, MappingType, MessagePackFragmenter, Payloads, Result,
+    ScriptMessage, SyncPermissionState, VarId, VarType,
 };
 
 /// A wrapper struct for an array of size DATA_SIZE bytes
 #[client_data_definition]
 struct ClientData {
     inner: [u8; DATA_SIZE],
+}
+
+impl ClientData {
+    fn new() -> Self {
+        Self {
+            inner: [0; DATA_SIZE],
+        }
+    }
 }
 
 #[data_definition]
@@ -36,6 +48,10 @@ pub struct MainGauge {
     datum_manager: DatumManager,
     sync_permission_state: SyncPermissionState,
     send_data_area: Option<ClientDataArea<ClientData>>,
+
+    // Vars/Events
+    vars: Vec<RcVariable>,
+    events: Vec<RcSettable>,
 }
 
 impl MainGauge {
@@ -45,6 +61,9 @@ impl MainGauge {
             datum_manager: DatumManager::new(),
             sync_permission_state: SyncPermissionState::default(),
             send_data_area: None,
+
+            vars: Vec::new(),
+            events: Vec::new(),
         }
     }
 
@@ -66,13 +85,9 @@ impl MainGauge {
         let area = self.send_data_area.as_ref().unwrap();
 
         for fragment_bytes in self.fragmenter.into_fragmented_message_bytes(&payload)? {
-            let mut client_data = [0; DATA_SIZE];
-
-            for (place, element) in client_data.iter_mut().zip(fragment_bytes.iter()) {
-                *place = *element;
-            }
-
-            simconnect.set_client_data(area, &ClientData { inner: client_data });
+            let mut client_data = ClientData::new();
+            client_data.inner.copy_from_slice(&fragment_bytes);
+            simconnect.set_client_data(area, &client_data);
         }
 
         Ok(())
@@ -90,103 +105,33 @@ impl MainGauge {
         let mut interpolate = None;
         let mut var = None;
 
-        if let Some(message_var) = message.var {
-            let rc_var = Rc::new(RefCell::new(match &message_var {
-                VarType::WithUnits { name, units, index } => {
-                    GenericVariable::new_var(name, units, *index)
-                }
-                VarType::Named { name } => GenericVariable::new_named(name),
-                VarType::Calculator { get, set } => {
-                    GenericVariable::new_calculator(get.clone(), set.clone())
-                }
-            }?));
-
-            watch_data = message
-                .watch_period
-                .map(|period| VariableWatcher::new(rc_var.clone(), period));
-
-            condition = message.condition.map(|x| Condition {
-                var: if x.use_var {
-                    Some(rc_var.clone())
-                } else {
-                    None
-                },
-                equals: x.equals,
-                less_than: x.less_than,
-                greater_than: x.greater_than,
-            });
+        if let Some(var_id) = message.var {
+            let rc_var = self.vars.get(var_id).ok_or(Error::None)?.clone();
 
             interpolate = message
                 .interpolate
                 .map(|x| Interpolation::new(x.interpolate_type, x.calculator));
+            watch_data = message
+                .watch_period
+                .map(|period| VariableWatcher::new(rc_var.clone(), period));
 
-            mapping = message.mapping.map(|x| match x {
-                MappingType::ToggleSwitch {
-                    event_name,
-                    off_event_name,
-                    switch_on,
-                } => Box::new(ToggleSwitch {
-                    var: rc_var.clone(),
-                    event: EventSet::new(event_name).into_rc(),
-                    off_event: off_event_name.map(|x| EventSet::new(x).into_rc()),
-                    switch_on,
-                }) as Box<dyn Syncable>,
-                MappingType::NumSet {
-                    event_name,
-                    swap_event_name,
-                    multiply_by,
-                    add_by,
-                } => Box::new(NumSet {
-                    var: rc_var.clone(),
-                    event: EventSet::new(event_name).into_rc(),
-                    swap_event: swap_event_name.map(|x| EventSet::new(x).into_rc()),
-                    multiply_by,
-                    add_by,
-                }) as Box<dyn Syncable>,
-                MappingType::NumIncrement {
-                    up_event_name,
-                    down_event_name,
-                    increment_amount,
-                    pass_difference,
-                } => Box::new(NumIncrement {
-                    var: rc_var.clone(),
-                    up_event: EventSet::new(up_event_name).into_rc(),
-                    down_event: EventSet::new(down_event_name).into_rc(),
-                    increment_amount,
-                    pass_difference,
-                }) as Box<dyn Syncable>,
-                MappingType::NumDigitSet {
-                    inc_events,
-                    dec_events,
-                } => Box::new(NumDigitSet {
-                    var: rc_var.clone(),
-                    inc_events: inc_events
-                        .into_iter()
-                        .map(|x| EventSet::new(x).into_rc())
-                        .collect(),
-                    dec_events: dec_events
-                        .into_iter()
-                        .map(|x| EventSet::new(x).into_rc())
-                        .collect(),
-                }) as Box<dyn Syncable>,
-                MappingType::Var => Box::new(
-                    match message_var {
-                        VarType::WithUnits { name, units, index } => {
-                            GenericVariable::new_var(&name, &units, index)
-                        }
-                        VarType::Named { name } => GenericVariable::new_named(&name),
-                        VarType::Calculator { get, set } => {
-                            GenericVariable::new_calculator(get, set)
-                        }
-                    }
-                    .unwrap(),
-                ) as Box<dyn Syncable>,
+            var = Some(rc_var)
+        }
+
+        if let Some(mapping_message) = message.mapping {
+            mapping = Some(match mapping_message {
+                MappingType::Event => MappingType::Event,
+                MappingType::Var => MappingType::Var,
+                MappingType::Script(message) => MappingType::Script(MappingArgs {
+                    script_id: message.script_id,
+                    vars: map_ids(&self.vars, message.vars)?,
+                    sets: map_ids(&self.events, message.sets)?,
+                    params: message.params,
+                }),
             });
-        };
+        }
 
-        let watch_event = message
-            .watch_event
-            .map(|event_name| KeyEvent::new(simconnect, event_name));
+        let watch_event = message.watch_event.map(|x| KeyEvent::new(simconnect, x));
 
         let datum = Datum {
             var,
@@ -209,6 +154,66 @@ impl MainGauge {
         }
     }
 
+    fn add_vars(&mut self, datums: Vec<VarType>) -> Result<()> {
+        self.vars.clear();
+        self.events.reserve(datums.len());
+
+        for var in datums {
+            // Create generic vars from message data
+            let var = match &var {
+                VarType::WithUnits { name, units, index } => {
+                    GenericVariable::new_var(name, units, *index)
+                }
+                VarType::Named { name } => GenericVariable::new_named(name),
+                VarType::Calculator { get, set } => {
+                    GenericVariable::new_calculator(get.clone(), set.clone())
+                }
+            }?;
+
+            self.vars.push(Rc::new(var));
+        }
+
+        Ok(())
+    }
+
+    fn add_events(&mut self, datums: Vec<EventMessage>) {
+        self.events.clear();
+        self.events.reserve(datums.len());
+
+        for event in datums {
+            // Create events from message data
+            let event = match event.index {
+                Some(index) => EventSet::new_with_index(event.name, index, event.index_reversed),
+                None => EventSet::new(event.name),
+            };
+
+            self.events.push(event.into_rc());
+        }
+    }
+
+    fn set_scripts(&mut self, scripts: Vec<ScriptMessage>) -> Result<()> {
+        for script in scripts {
+            let lines: Vec<&str> = script.lines.iter().map(String::as_str).collect();
+            let mut add_result = None;
+
+            SCRIPTING_ENGINE.with(|x| {
+                add_result = Some(x.borrow_mut().add_script(&lines));
+            });
+
+            add_result.unwrap()?;
+        }
+
+        Ok(())
+    }
+
+    fn reset(&mut self) {
+        self.datum_manager = DatumManager::new();
+        self.vars.clear();
+        self.events.clear();
+
+        SCRIPTING_ENGINE.with(|x| x.borrow_mut().reset());
+    }
+
     fn process_client_data(
         &mut self,
         simconnect: &mut SimConnect,
@@ -224,9 +229,15 @@ impl MainGauge {
 
             Payloads::SetDatums { datums } => self.add_datums(simconnect, datums),
 
+            Payloads::SetVars { vars } => self.add_vars(vars)?,
+
+            Payloads::SetEvents { events } => self.add_events(events),
+
+            Payloads::SetScripts { scripts } => self.set_scripts(scripts)?,
+
             Payloads::ResetInterpolation => self.datum_manager.reset_interpolate_time(),
 
-            Payloads::ResetAll => self.datum_manager = DatumManager::new(),
+            Payloads::ResetAll => self.reset(),
 
             Payloads::UpdateSyncPermission { new } => self.sync_permission_state = new,
 

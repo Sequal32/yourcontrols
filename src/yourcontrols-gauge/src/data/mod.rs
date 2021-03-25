@@ -78,7 +78,7 @@ impl Variable for GenericVariable {
         0.0
     }
 
-    fn set(&mut self, value: DatumValue) {
+    fn set(&self, value: DatumValue) {
         if let Some(named) = self.named.as_ref() {
             named.set_value(value);
         }
@@ -92,7 +92,7 @@ impl Variable for GenericVariable {
 
 #[cfg(any(target_arch = "wasm32"))]
 impl Syncable for GenericVariable {
-    fn process_incoming(&mut self, value: DatumValue) {
+    fn process_incoming(&self, value: DatumValue) {
         if self.get() == value {
             return;
         }
@@ -157,17 +157,17 @@ impl EventSet {
     }
 
     pub fn into_rc(self) -> RcSettable {
-        Rc::new(RefCell::new(self))
+        Rc::new(self)
     }
 }
 
 #[cfg(any(target_arch = "wasm32"))]
 impl Settable for EventSet {
-    fn set(&mut self) {
+    fn set(&self) {
         execute_calculator_code::<DatumValue>(&format!("(>K:{})", self.event_name));
     }
 
-    fn set_with_value(&mut self, value: DatumValue) {
+    fn set_with_value(&self, value: DatumValue) {
         if let Some(index) = self.event_index {
             self.set_with_value_and_index(value, index);
         } else {
@@ -213,7 +213,7 @@ impl KeyEvent {
 
 #[cfg(any(target_arch = "wasm32"))]
 impl Syncable for KeyEvent {
-    fn process_incoming(&mut self, value: DatumValue) {
+    fn process_incoming(&self, value: DatumValue) {
         execute_calculator_code::<DatumValue>(&format!("{} (>K:{})", value, self.event_name));
     }
 }
@@ -223,18 +223,17 @@ impl Syncable for KeyEvent {
     fn process_incoming(&mut self, value: DatumValue) {}
 }
 
-pub type MultiMutable<T> = Rc<RefCell<T>>;
-/// A clonable, reference counted variable.
-pub type RcVariable = MultiMutable<dyn Variable>;
-/// A clonable, reference counted settable.
-pub type RcSettable = MultiMutable<dyn Settable>;
+/// A reference counted variable.
+pub type RcVariable = Rc<dyn Variable>;
+/// A reference counted settable.
+pub type RcSettable = Rc<dyn Settable>;
 /// Used to execute a task upon receiving a value.
 #[cfg(test)]
 use mockall::automock;
 
 #[cfg_attr(test, automock)]
 pub trait Syncable {
-    fn process_incoming(&mut self, value: DatumValue);
+    fn process_incoming(&self, value: DatumValue);
 }
 
 #[cfg_attr(test, automock)]
@@ -243,10 +242,10 @@ pub trait Variable {
     fn get_bool(&self) -> bool {
         self.get() == 1.0
     }
-    fn set(&mut self, value: DatumValue);
+    fn set(&self, value: DatumValue);
 }
 #[cfg_attr(test, automock)]
 pub trait Settable {
-    fn set(&mut self) {}
-    fn set_with_value(&mut self, value: DatumValue);
+    fn set(&self) {}
+    fn set_with_value(&self, value: DatumValue);
 }

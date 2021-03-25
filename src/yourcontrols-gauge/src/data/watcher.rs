@@ -34,7 +34,7 @@ impl VariableWatcher {
 
     /// Polls var for any changes in its given interval of `WatcherPeriod`.
     pub fn poll(&mut self, tick: Time) -> Option<DatumValue> {
-        let current_value = self.var.borrow().get();
+        let current_value = self.var.get();
         let changed = current_value != self.last_value || self.did_change; // did_change used for if the period is not satisfied yet
 
         if !self.can_process(tick) || !changed {
@@ -53,8 +53,6 @@ impl VariableWatcher {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    use crate::util::test::get_test_variable;
 
     #[test]
     fn test_frame() {

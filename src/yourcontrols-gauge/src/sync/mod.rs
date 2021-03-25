@@ -1,6 +1,7 @@
 mod condition;
-mod defs;
+mod mapping;
+mod scripting;
 mod util;
 
 pub use condition::*;
-pub use defs::*;
+pub use scripting::SCRIPTING_ENGINE;

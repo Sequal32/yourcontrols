@@ -11,10 +11,11 @@ crate-type = ["cdylib"]
 
 [dependencies]
 rmp-serde = "0.15"
-serde = {version = "1.0", features = ["derive"]}
+serde = { version = "1.0", features = ["derive"] }
 msfs = { git = "https://github.com/Sequal32/msfs-rs.git", branch = "main" }
+rhai = "0.19"
 
-yourcontrols-types = {path = "../yourcontrols-types"}
+yourcontrols-types = { path = "../yourcontrols-types" }
 
 [dev-dependencies]
 mockall = "0.9"

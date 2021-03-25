@@ -13,3 +13,5 @@ pub type DatumKey = u32;
 pub type DatumValue = f64;
 /// Time type used for interpolation.
 pub type Time = f64;
+/// Type used foor mapping events/vars
+pub type VarId = usize;

@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
-use crate::{DatumKey, DatumValue, InterpolationType, Time};
+use crate::{DatumKey, DatumValue, InterpolationType, Time, VarId};
+use rhai::Dynamic;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -36,7 +37,7 @@ where
     },
     Event,
     Var,
-    // TODO: ProgramAction,
+    Script(M),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -73,11 +74,8 @@ pub enum SyncPermission {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ConditionMessage {
-    #[serde(default)]
-    pub use_var: bool,
-    pub equals: Option<DatumValue>,
-    pub less_than: Option<DatumValue>,
-    pub greater_than: Option<DatumValue>,
+    pub script_name: String,
+    pub options: Vec<Dynamic>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -88,8 +86,8 @@ pub struct InterpolateMessage {
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct DatumMessage {
-    pub var: Option<VarType>,
-    pub watch_event: Option<String>,       // Event name,
+    pub var: Option<VarId>,
+    pub watch_event: Option<String>,
     pub watch_period: Option<WatchPeriod>, // Watch variable
     pub condition: Option<ConditionMessage>,
     pub interpolate: Option<InterpolateMessage>,
@@ -108,6 +106,15 @@ pub enum Payloads {
     // Transmit to Sim
     SetDatums {
         datums: Vec<DatumMessage>,
+    },
+    SetVars {
+        vars: Vec<VarType>,
+    },
+    SetEvents {
+        events: Vec<EventMessage>,
+    },
+    SetScripts {
+        scripts: Vec<ScriptMessage>,
     },
 
     WatchVariable {},

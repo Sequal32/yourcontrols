@@ -1,16 +1,21 @@
 #[cfg(any(target_arch = "wasm32"))]
 use msfs::legacy::execute_calculator_code;
+use rhai::Dynamic;
 
 use std::collections::HashMap;
 use yourcontrols_types::{
-    ChangedDatum, DatumKey, DatumValue, SyncPermission, SyncPermissionState, Time,
+    ChangedDatum, DatumKey, DatumValue, MappingType, SyncPermission, SyncPermissionState, Time,
+    VarId,
 };
 
-use crate::{interpolation::Interpolation, sync::Condition};
+use crate::{
+    interpolation::Interpolation,
+    sync::{Condition, SCRIPTING_ENGINE},
+};
 
-use super::util::DeltaTimeChange;
 use super::watcher::VariableWatcher;
 use super::KeyEvent;
+use super::{util::DeltaTimeChange, RcSettable};
 use super::{RcVariable, Syncable};
 
 #[cfg_attr(test, mockall::automock)]
@@ -31,7 +36,7 @@ pub struct Datum {
     pub watch_data: Option<VariableWatcher>,
     pub condition: Option<Condition>,
     pub interpolate: Option<Interpolation>,
-    pub mapping: Option<Box<dyn Syncable>>,
+    pub mapping: Option<MappingType<MappingArgs>>,
     pub sync_permission: Option<SyncPermission>,
 }
 
@@ -58,9 +63,24 @@ impl DatumTrait for Datum {
     }
 
     fn execute_mapping(&mut self, incoming_value: DatumValue) -> Option<()> {
-        if self.is_condition_satisifed(incoming_value) {
-            self.mapping.as_mut()?.process_incoming(incoming_value);
+        if !self.is_condition_satisifed(incoming_value) {
+            return None;
+        };
+
+        match self.mapping.as_mut()? {
+            MappingType::Event => self.watch_event.as_ref()?.process_incoming(incoming_value),
+            MappingType::Var => self.var.as_ref()?.set(incoming_value),
+            MappingType::Script(args) => SCRIPTING_ENGINE.with(|x| {
+                x.borrow().run_script(
+                    args.script_id,
+                    incoming_value,
+                    args.vars.clone(),
+                    args.sets.clone(),
+                    args.params.clone(),
+                )
+            }),
         }
+
         Some(())
     }
 
@@ -180,6 +200,13 @@ impl DatumManager {
             value.process_sim_event_id(id);
         }
     }
+}
+
+pub struct MappingArgs {
+    pub script_id: VarId,
+    pub vars: Vec<RcVariable>,
+    pub sets: Vec<RcSettable>,
+    pub params: Vec<Dynamic>,
 }
 
 #[cfg(test)]
