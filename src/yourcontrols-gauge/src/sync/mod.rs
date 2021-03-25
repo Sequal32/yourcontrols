@@ -1,5 +1,4 @@
 mod condition;
-mod mapping;
 mod scripting;
 mod util;
 

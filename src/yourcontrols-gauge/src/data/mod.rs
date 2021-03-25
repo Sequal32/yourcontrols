@@ -220,7 +220,7 @@ impl Syncable for KeyEvent {
 
 #[cfg(not(target_arch = "wasm32"))]
 impl Syncable for KeyEvent {
-    fn process_incoming(&mut self, value: DatumValue) {}
+    fn process_incoming(&self, value: DatumValue) {}
 }
 
 /// A reference counted variable.

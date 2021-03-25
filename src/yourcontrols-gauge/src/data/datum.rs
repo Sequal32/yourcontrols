@@ -77,7 +77,7 @@ impl DatumTrait for Datum {
                     args.vars.clone(),
                     args.sets.clone(),
                     args.params.clone(),
-                )
+                );
             }),
         }
 

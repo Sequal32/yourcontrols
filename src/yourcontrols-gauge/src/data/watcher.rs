@@ -53,29 +53,35 @@ impl VariableWatcher {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::data::MockVariable;
+    use std::rc::Rc;
 
     #[test]
     fn test_frame() {
-        let var = get_test_variable(100.0);
-        let mut watcher = VariableWatcher::new(var.clone(), WatchPeriod::Frame);
+        let mut var = MockVariable::new();
+        var.expect_get().times(2).return_const(100.0); // Init, Not changed
+        var.expect_get().times(1).return_const(50.0); // Changed
+
+        let mut watcher = VariableWatcher::new(Rc::new(var), WatchPeriod::Frame);
 
         // Init
         assert_eq!(watcher.poll(0.0), Some(100.0));
         // Not changed
         assert_eq!(watcher.poll(1.0), None);
         // Changed on every call
-        var.borrow_mut().set_new_value(50.0);
         assert_eq!(watcher.poll(1.0), Some(50.0));
     }
 
     fn test_period(period: WatchPeriod, unchanged_tick: Time, changed_tick: Time) {
-        let var = get_test_variable(100.0);
-        let mut watcher = VariableWatcher::new(var.clone(), period);
+        let mut var = MockVariable::new();
+        var.expect_get().times(1).return_const(100.0); // Init
+        var.expect_get().times(3).return_const(50.0); // Changed but under period, changed, not changed
+
+        let mut watcher = VariableWatcher::new(Rc::new(var), period);
 
         // Init
         assert_eq!(watcher.poll(0.0), Some(100.0));
         // Changed but under period
-        var.borrow_mut().set_new_value(50.0);
         assert_eq!(watcher.poll(unchanged_tick), None);
         // Changed
         assert_eq!(watcher.poll(changed_tick), Some(50.0));
