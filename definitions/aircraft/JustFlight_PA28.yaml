@@ -596,6 +596,13 @@ shared:
   -
     type: var
     var_name: L:TrimTab
+    conditions:
+      - var:
+          var_name: AUTOPILOT MASTER
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: false
   -
     type: var
     var_name: L:CIRCUIT_BREAKERS_autopilot
