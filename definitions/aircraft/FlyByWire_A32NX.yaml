@@ -2,7 +2,6 @@
 
 include:
   - definitions/modules/engines.yaml
-  - definitions/modules/general.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/physics.yaml
 
@@ -1701,6 +1700,84 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COCKPIT_COFFEE_R_HIDDEN
+
+  - # ASOBO_HANDLING_Lever_Flaps_Continuous_Template
+    type: NumSet
+    var_name: A:FLAPS HANDLE PERCENT
+    var_units: Percent scaler 16k
+    var_type: i32
+    event_name: FLAPS_CONTINUOUS_SET
+    use_calculator: true
+
+  - # ASOBO_LANDING_GEAR_Lever_Gear_Template (Var to support Up/Off/Down)
+    type: var
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Number
+    var_type: i32
+
+  - # ASOBO_HANDLING_Lever_Spoilers_Template
+    type: NumSet
+    var_name: A:SPOILERS HANDLE POSITION
+    var_units: Position 16k
+    var_type: i32
+    event_name: SPOILERS_SET
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: L:A32NX_SPOILERS_ARMED
+    event_name: SPOILERS_ARM_ON
+    off_event_name: SPOILERS_ARM_OFF
+    use_calculator: true
+
+  - # ASOBO_LANDING_GEAR_Switch_ParkingBrake_Template
+    type: ToggleSwitch
+    var_name: A:BRAKE PARKING POSITION
+    var_units: Bool
+    event_name: PARKING_BRAKES
+
+  - # YourControls Force Transfer Hotkey
+    type: ProgramActionEvent
+    event_name: TOGGLE_LAUNCH_BAR_SWITCH
+    action: TransferControls
+
+master:
+  - # ASOBO_HANDLING_Yoke_Template
+    type: NumSet
+    var_name: A:YOKE X POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_AILERONS_SET
+    interpolate: InvertConstant
+  -
+    type: NumSet
+    var_name: A:YOKE Y POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_ELEVATOR_SET
+    interpolate: InvertConstant
+  -
+    type: NumSet
+    var_name: A:RUDDER PEDAL POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_RUDDER_SET
+    interpolate: InvertConstant
+  -
+    type: NumSet
+    var_name: A:BRAKE LEFT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    event_name: AXIS_LEFT_BRAKE_SET
+    add_by: -16384
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:BRAKE RIGHT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    event_name: AXIS_RIGHT_BRAKE_SET
+    add_by: -16384
+    unreliable: true
 
 server:
   - # Payload

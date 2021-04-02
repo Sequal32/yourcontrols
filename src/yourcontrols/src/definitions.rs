@@ -639,7 +639,7 @@ impl Definitions {
     ) -> Result<(), Error> {
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
-        let (var_string, _) = self.add_var_string(
+        let (var_string, var_type) = self.add_var_string(
             category,
             &var.var_name,
             var.var_units.as_deref(),
@@ -664,10 +664,15 @@ impl Definitions {
 
         action.set_switch_on(var.switch_on);
 
+        let mapping = match var_type {
+            VarType::AircraftVar => ActionType::Bool(Box::new(action)),
+            VarType::LocalVar => ActionType::F64(Box::new(action)),
+        };
+
         self.add_mapping(
             var_string,
             Mapping {
-                action: ActionType::Bool(Box::new(action)),
+                action: mapping,
                 condition: var.conditions,
                 cancel_h_events: var.cancel_h_events,
             },

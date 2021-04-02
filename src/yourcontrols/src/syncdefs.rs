@@ -107,6 +107,47 @@ impl<'a> Syncable<bool> for ToggleSwitch {
     }
 }
 
+impl<'a> Syncable<f64> for ToggleSwitch {
+    fn set_current(&mut self, current: f64) {
+        self.current = current == 0.0;
+    }
+
+    fn set_new(
+        &mut self,
+        new: f64,
+        conn: &simconnect::SimConnector,
+        lvar_transfer: &mut LVarSyncer,
+    ) {
+        let new = new == 0.0;
+
+        if self.current == new {
+            return;
+        }
+        if !new && self.switch_on {
+            return;
+        }
+
+        if let Some(event_name) = self.event_name.as_ref() {
+            let value_string = match self.event_param {
+                Some(value) => value.to_string(),
+                None => String::new(),
+            };
+
+            lvar_transfer.set_unchecked(conn, event_name, None, &value_string);
+        } else {
+            let event_id = match self.off_event_id {
+                Some(off_event_id) => match new {
+                    true => self.event_id,
+                    false => off_event_id,
+                },
+                None => self.event_id,
+            };
+
+            conn.transmit_client_event(1, event_id, self.event_param.unwrap_or(0), GROUP_ID, 0);
+        }
+    }
+}
+
 #[derive(Default)]
 pub struct NumSet<T> {
     event_id: u32,
