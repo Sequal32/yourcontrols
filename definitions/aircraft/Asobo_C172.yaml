@@ -180,6 +180,14 @@ shared:
     event_param: 15
     index_reversed: true
 
+master:
+  -
+    type: var
+    var_name: A:PLANE HEADING DEGREES GYRO # Drifts for some reason
+    var_units: Degrees
+    var_type: f64
+    interpolate: DefaultConstant
+
 server:
   - # Payload
     type: var
