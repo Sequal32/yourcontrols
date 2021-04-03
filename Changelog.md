@@ -1,10 +1,33 @@
-# Version 2.5.5
+# YourControls Changelog
+
+## Version 2.5.7
+
+* Changed the window title to YourControls vX.X.X
+* Fixed an issue where the heading indicator in the C152/172 would spin in circles
+* Fixed an issue where the plane would jump around in altitude below 1000ft
+* Added Aerosoft CRJ (DISCLAIMER: knobs do not sync well at all, it may be impossible to get the altitude selectors/radios synced)
+* Added support for the Carenado M20R, JustFLight PA28, and mixMugz TBM930 (EFBs do not sync)
+* Rewritten YourControls gauge to support unlimited local variables
+* Support the following pulls/commits in the A32NX Dev/Experimental version:
+  * [flybywiresim/a32nx##3794](https://github.com/flybywiresim/a32nx/pull/3794)
+  * [flybywiresim/a32nx##3930](https://github.com/flybywiresim/a32nx/pull/3930)'
+  * [flybywiresim/a32nx/autopilot](https://github.com/flybywiresim/a32nx/commit/8d09903343552b255be5f68a1ed4fff38af37568)
+
+## Version 2.5.6
+
+* Synced A32NX APU bleed
+* Prepare A32NX for when [flybywiresim/a32nx##3782](https://github.com/flybywiresim/a32nx/pull/3782) is merged
+
+
+## Version 2.5.5
+
 * Support new dev version of A32NX (APU/Electrical button syncage)
 * Fixed an issue where the aircraft would be floating or through the ground on initial connection
 * C152 - attempted to fix heading gyro desync
 * WT CJ4 - fixed various desync
 
-# Version 2.5.4
+## Version 2.5.4
+
 * Fixed an error message when NAV is activated on the CJ4
 * Fixed an issue where brakes would still be depressed for others after releasing them
 * Fixed multiple autopilot definitions conflicts on the WT CJ4
@@ -13,12 +36,14 @@
 
 * Added C208B seatbelt signs/other INOP switches as an optional feature
 
-# Version 2.5.3
+## Version 2.5.3
 
-## New Features
+### New Features
+
 * Added an error message when the community package is not loaded in the simulator
 
-## Fixes
+### Fixes
+
 * Fixed a script error in the frontend UI that would pop up when the external IP could not be fetched
 * Fixed an issue where the number of clients connected would not update
 * Fixed an issue where the UI would be delayed in loading the saved config
@@ -33,10 +58,11 @@
 * Fixed the FLC, HDG, NAV, VNAV, VS on the WT CJ4 where it would not sync properly
 * Fixed nav radios not syncing properly
 
-## Misc
+### Misc
+
 * Completely refactored the JS side of things
 
-## Synced
+### Synced
 * A32NX Coffee
 * A32NX EFB Textboxes (ensure you have the same A32NX version)
 * Time (on initial connection)
@@ -44,14 +70,17 @@
 * Speed when winds are mismatched
 * Altitude when scenery is mismatched
 
-# Version 2.5.1
-## Fixes
+## Version 2.5.1
+
+### Fixes
+
 * Fixed an issue where aircraft movement and throttle would not be synced (removed fuel syncage).
 * Small optimization of net code
 
-# Version 2.5.0
+## Version 2.5.0
 
-## New Features
+### New Features
+
 * Network Stats! See how much network YourControls is using and if there is any packet loss detected.
 * Cloud Host Did port forwarding and Cloud Server not work with you? Well this new option gives you the opportunity to get connected without any other setup! Currently the server resides in the USA so latency is the biggest issue if you choose to use this connection method.
 Note: Currently, the number of connections to the server is capped at 100, and will be increased as we upgrade our server infrastructure. You should always use Cloud P2P and Direct first if you can.
@@ -62,7 +91,8 @@ Note: Currently, the number of connections to the server is capped at 100, and w
 * Streamer Mode - Hides your IP after connecting.
 * New connections as observer - New connections will not be able to manipulate switches.
 
-## Changes
+### Changes
+
 * Reworked interpolation - syncs position/rotation data more reliably
 * UPnP is now it's own setting. Check the `Log.txt` if you need to see if UPnP worked or not and why.
 * The default port has now been changed to 25071.
