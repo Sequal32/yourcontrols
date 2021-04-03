@@ -169,7 +169,7 @@ fn main() {
     // Client stopped, need to stop transfer client
     let mut should_set_none_client = false;
 
-    let app_interface = App::setup(format!("Shared Cockpit v{}", updater.get_version()));
+    let app_interface = App::setup(format!("YourControls v{}", updater.get_version()));
 
     // Transfer
     let mut transfer_client: Option<Box<dyn TransferClient>> = None;
