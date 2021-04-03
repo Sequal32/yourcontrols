@@ -1106,8 +1106,6 @@ impl Definitions {
 
         // Shrink all maps
         self.shrink_maps();
-        // Add corrector thing
-        self.unreliable_vars.insert("CORRECTED".to_string());
 
         Ok(())
     }
