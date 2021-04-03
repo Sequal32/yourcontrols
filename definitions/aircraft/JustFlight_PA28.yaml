@@ -6,6 +6,7 @@ include:
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
 
 shared:
   -
@@ -385,18 +386,6 @@ shared:
     var_name: L:KX170_NAV1_offon
   -
     type: var
-    var_name: L:KX170_COMM1_outer_knob
-  -
-    type: var
-    var_name: L:KX170_COMM1_inner_knob
-  -
-    type: var
-    var_name: L:KX170_NAV1_outer_knob
-  -
-    type: var
-    var_name: L:KX170_NAV1_inner_knob
-  -
-    type: var
     var_name: L:KX170_COMM1_vol_knob
   -
     type: var
@@ -413,18 +402,6 @@ shared:
   -
     type: var
     var_name: L:KX175_NAV2_offon
-  -
-    type: var
-    var_name: L:KX175_COMM2_outer_knob
-  -
-    type: var
-    var_name: L:KX175_COMM2_inner_knob
-  -
-    type: var
-    var_name: L:KX175_NAV2_outer_knob
-  -
-    type: var
-    var_name: L:KX175_NAV2_inner_knob
   -
     type: var
     var_name: L:KMA20_knob
@@ -460,28 +437,7 @@ shared:
     var_name: L:KT76_mode_knob
   -
     type: var
-    var_name: L:KT76_dig1_knob
-  -
-    type: var
-    var_name: L:KT76_dig2_knob
-  -
-    type: var
-    var_name: L:KT76_dig3_knob
-  -
-    type: var
-    var_name: L:KT76_dig4_knob
-  -
-    type: var
     var_name: L:KR85_mode_knob
-  -
-    type: var
-    var_name: L:KR85_left_knob
-  -
-    type: var
-    var_name: L:KR85_right_outer_knob
-  -
-    type: var
-    var_name: L:KR85_right_inner_knob
   -
     type: var
     var_name: L:KR85_vol_knob
@@ -569,18 +525,6 @@ shared:
   -
     type: var
     var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-  -
-    type: var
-    var_name: L:KT76_dig1_counter
-  -
-    type: var
-    var_name: L:KT76_dig2_counter
-  -
-    type: var
-    var_name: L:KT76_dig3_counter
-  -
-    type: var
-    var_name: L:KT76_dig4_counter
   -
     type: var
     var_name: L:RIGHT_LOWER_cabin_heat_1
@@ -692,46 +636,7 @@ shared:
     var_name: L:AC_fan
   -
     type: var
-    var_name: L:KR85_dig1_counter
-  -
-    type: var
-    var_name: L:KR85_dig2_counter
-  -
-    type: var
-    var_name: L:KR85_dig3_counter
-  -
-    type: var
     var_name: L:sound_Switch_Small_Up
-  -
-    type: var
-    var_name: L:KX170_COMM1_counter1
-  -
-    type: var
-    var_name: L:KX170_COMM1_counter2
-  -
-    type: var
-    var_name: L:KX170_COMM1_counter3
-  -
-    type: var
-    var_name: L:KX170_NAV1_counter1
-  -
-    type: var
-    var_name: L:KX170_NAV1_counter2
-  -
-    type: var
-    var_name: L:KX175_COMM2_counter1
-  -
-    type: var
-    var_name: L:KX175_COMM2_counter2
-  -
-    type: var
-    var_name: L:KX175_COMM2_counter3
-  -
-    type: var
-    var_name: L:KX175_NAV2_counter1
-  -
-    type: var
-    var_name: L:KX175_NAV2_counter2
   -
     type: var
     var_name: L:AUTOPILOT_roll_tooltip
@@ -839,7 +744,12 @@ master:
     event_name: AXIS_RIGHT_BRAKE_SET
     add_by: -16384
     unreliable: true
-
+  -
+    type: var
+    var_name: A:PLANE HEADING DEGREES GYRO # Drifts for some reason
+    var_units: Degrees
+    var_type: f64
+    interpolate: DefaultConstant
 
 server:
   -
