@@ -1,7 +1,7 @@
 <template>
   <div class="network-test-view">
     <router-link class="back" :to="{name:'main'}">
-      &#60;  Back
+      <img src="../assets/back.png" alt=""> Back
     </router-link>
     <div class="title">Network Test</div>
     <div class="protocols">
@@ -235,6 +235,11 @@ export default Vue.extend({
   padding: 20px;
   a {
     text-decoration: none;
+    display: flex;
+    height: 20px;
+    width: 50px;
+    justify-content: space-between;
+    align-content: center;
   }
   .title {
     font: normal normal bold 32px/43px Segoe UI;
@@ -282,6 +287,7 @@ export default Vue.extend({
     }
     .start {
       background: #1692FF 0% 0% no-repeat padding-box;
+      background-color: #00404C;
       border-radius: 20px;
       text-align: center;
       font: normal normal bold 15px/20px Segoe UI;
@@ -290,6 +296,9 @@ export default Vue.extend({
       height: 26px;
       padding: 3px;
       cursor: pointer;
+      &:hover {
+        background-color: #005566;
+      }
     }
     .center {
       text-align: center;

@@ -1,7 +1,7 @@
 <template>
   <div class="changelog-view">
     <router-link :to="{name:'main'}">
-      &#60;-  back
+      <img src="../assets/back.png" alt=""> Back
     </router-link>
     <div class="title">Chanelog</div>
     <div class="sub-title">Version {{version}}</div>
@@ -61,6 +61,11 @@ export default Vue.extend({
     text-align: center;
   }
   a {
+    display: flex;
+    height: 20px;
+    width: 50px;
+    justify-content: space-between;
+    align-content: center;
     text-decoration: none;
   }
   .body{
