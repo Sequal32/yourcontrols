@@ -4,12 +4,11 @@ mod state;
 use communicator::{Communicator, HosterPayloads};
 use laminar::{Metrics, Socket};
 use state::ActiveState;
-use std::{
-    collections::HashMap,
-    net::{Ipv4Addr, SocketAddr, SocketAddrV4},
-    thread::sleep,
-    time::{Duration, Instant},
-};
+use std::collections::HashMap;
+use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
+use std::thread::sleep;
+use std::time::{Duration, Instant};
+
 use yourcontrols_net::{get_socket_config, Message, Payloads, SenderReceiver};
 
 const SERVER_TIMEOUT: u64 = 3;

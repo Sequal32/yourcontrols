@@ -71,3 +71,9 @@ impl MemWriter {
         }
     }
 }
+
+impl Drop for MemWriter {
+    fn drop(&mut self) {
+        self.deallocate();
+    }
+}

@@ -9,14 +9,16 @@ use std::mem::swap;
 use std::path::Path;
 use std::time::Instant;
 
-use crate::corrector::Corrector;
-use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType, LVarResult};
+use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType};
 use crate::sync::jscommunicator::{JSCommunicator, JSPayloads};
 use crate::sync::transfer::{AircraftVars, Events, LVarSyncer};
+use crate::syncdefs::MultiplyDifferenceLocalVarSet;
+use crate::syncdefs::ResetWhenEquals;
 use crate::syncdefs::{
     CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch,
 };
 use crate::util::{Category, InDataTypes};
+use crate::{corrector::Corrector, syncdefs::LocalVarProxy};
 
 use yourcontrols_types::{AVarMap, AllNeedSync, Error, Event, EventData, LVarMap, VarReaderTypes};
 
@@ -282,6 +284,34 @@ struct CustomCalculatorEntry {
 }
 
 #[derive(Deserialize)]
+struct LocalVarProxyEntry {
+    var_name: String,
+    target: String,
+    #[serde(default)]
+    loopback: bool,
+    conditions: Option<Vec<Condition>>,
+}
+
+#[derive(Deserialize)]
+struct MultiplyDifferenceLocalVarEntry {
+    var_name: String,
+    target: String,
+    multiply_by: f64,
+    max_val: f64,
+    #[serde(default)]
+    loopback: bool,
+    conditions: Option<Vec<Condition>>,
+}
+
+#[derive(Deserialize)]
+struct ResetWhenEqualsEntry {
+    var_name: String,
+    target: String,
+    equals: Vec<f64>,
+    conditions: Option<Vec<Condition>>,
+}
+
+#[derive(Deserialize)]
 struct ProgramActionEntry {
     var_name: String,
     var_units: Option<String>,
@@ -533,8 +563,7 @@ impl Definitions {
     ) -> Result<(), Error> {
         let category = get_category_from_string(category)?;
 
-        self.lvarstransfer
-            .add_var(var_name.to_string(), var_units.map(String::from));
+        self.lvarstransfer.add_var(var_name.to_string(), var_units);
         self.categories.insert(var_name.to_string(), category);
 
         Ok(())
@@ -610,7 +639,7 @@ impl Definitions {
     ) -> Result<(), Error> {
         let event_id = self.events.get_or_map_event_id(&var.event_name, false);
 
-        let (var_string, _) = self.add_var_string(
+        let (var_string, var_type) = self.add_var_string(
             category,
             &var.var_name,
             var.var_units.as_deref(),
@@ -635,10 +664,15 @@ impl Definitions {
 
         action.set_switch_on(var.switch_on);
 
+        let mapping = match var_type {
+            VarType::AircraftVar => ActionType::Bool(Box::new(action)),
+            VarType::LocalVar => ActionType::F64(Box::new(action)),
+        };
+
         self.add_mapping(
             var_string,
             Mapping {
-                action: ActionType::Bool(Box::new(action)),
+                action: mapping,
                 condition: var.conditions,
                 cancel_h_events: var.cancel_h_events,
             },
@@ -869,6 +903,77 @@ impl Definitions {
         Ok(())
     }
 
+    fn add_local_var_proxy(
+        &mut self,
+        category: &str,
+        var: LocalVarProxyEntry,
+    ) -> Result<(), Error> {
+        let (var_string, _) =
+            self.add_var_string(category, &var.var_name, None, InDataTypes::F64)?;
+
+        let loopback = if var.loopback {
+            Some(var_string.clone())
+        } else {
+            None
+        };
+
+        self.add_mapping(
+            var_string,
+            Mapping {
+                action: ActionType::F64(Box::new(LocalVarProxy::new(var.target, loopback))),
+                condition: var.conditions,
+                ..Default::default()
+            },
+        )
+    }
+
+    fn add_multiply_difference_local_var(
+        &mut self,
+        category: &str,
+        var: MultiplyDifferenceLocalVarEntry,
+    ) -> Result<(), Error> {
+        let (var_string, _) =
+            self.add_var_string(category, &var.var_name, None, InDataTypes::F64)?;
+
+        let loopback = if var.loopback {
+            Some(var_string.clone())
+        } else {
+            None
+        };
+
+        self.add_mapping(
+            var_string,
+            Mapping {
+                action: ActionType::F64(Box::new(MultiplyDifferenceLocalVarSet::new(
+                    var.target,
+                    var.multiply_by,
+                    var.max_val,
+                    loopback,
+                ))),
+                condition: var.conditions,
+                ..Default::default()
+            },
+        )
+    }
+
+    fn add_reset_when_equals(
+        &mut self,
+        category: &str,
+        var: ResetWhenEqualsEntry,
+    ) -> Result<(), Error> {
+        let (var_string, _) =
+            self.add_var_string(category, &var.var_name, None, InDataTypes::F64)?;
+
+        self.add_mapping(
+            var_string,
+            Mapping {
+                action: ActionType::F64(Box::new(ResetWhenEquals::new(var.target, var.equals))),
+                condition: var.conditions,
+                ..Default::default()
+            },
+        )
+    }
+
     fn add_program_action(&mut self, category: &str, var: ProgramActionEntry) -> Result<(), Error> {
         let (var_string, _) = self.add_var_string(
             category,
@@ -938,6 +1043,11 @@ impl Definitions {
             "NUMDIGITSET" => self.add_num_digit_set(&category, try_cast_yaml!(value))?,
             "CUSTOMCALCULATOR" => self.add_custom_calculator(&category, try_cast_yaml!(value))?,
             "PROGRAMACTION" => self.add_program_action(&category, try_cast_yaml!(value))?,
+            "LOCALVARPROXY" => self.add_local_var_proxy(&category, try_cast_yaml!(value))?,
+            "RESETWHENEQUALS" => self.add_reset_when_equals(&category, try_cast_yaml!(value))?,
+            "MULTIPLYDIFFERENCELOCALVAR" => {
+                self.add_multiply_difference_local_var(&category, try_cast_yaml!(value))?
+            }
             "PROGRAMACTIONEVENT" => {
                 self.add_program_action_event(&category, try_cast_yaml!(value))?
             }
@@ -996,6 +1106,8 @@ impl Definitions {
 
         // Shrink all maps
         self.shrink_maps();
+        // Add corrector thing
+        self.unreliable_vars.insert("CORRECTED".to_string());
 
         Ok(())
     }
@@ -1029,7 +1141,7 @@ impl Definitions {
                     &self.lvarstransfer,
                     &self.avarstransfer,
                     mapping.condition.as_ref(),
-                    &VarReaderTypes::F64(result.var.floating),
+                    &VarReaderTypes::F64(result.value),
                 ) {
                     should_write = false;
                     continue;
@@ -1042,7 +1154,7 @@ impl Definitions {
                 execute_mapping!(
                     new_value,
                     action,
-                    VarReaderTypes::F64(result.var.floating),
+                    VarReaderTypes::F64(result.value),
                     mapping,
                     { action.set_current(new_value) },
                     {},
@@ -1060,28 +1172,13 @@ impl Definitions {
 
         self.current_sync
             .lvars
-            .insert(result.var_name, result.var.floating);
+            .insert(result.var_name, result.value);
     }
 
     // Processes client data and adds to the result queue if it changed
-    pub fn process_client_data(
-        &mut self,
-        conn: &simconnect::SimConnector,
-        data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA,
-    ) {
-        // Get var data
-        let lvar = match self.lvarstransfer.process_client_data(conn, data) {
-            Some(var) => var,
-            None => return,
-        };
-
-        match lvar {
-            LVarResult::Single(result) => self.process_local_var(result),
-            LVarResult::Multi(results) => {
-                for result in results {
-                    self.process_local_var(result);
-                }
-            }
+    pub fn process_client_data(&mut self, data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA) {
+        for value in self.lvarstransfer.process_client_data(data) {
+            self.process_local_var(value);
         }
     }
 

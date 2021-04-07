@@ -12,6 +12,19 @@ pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, Error> {
     }
 }
 
+pub fn wrap_diff(from: f64, to: f64, max: f64) -> f64 {
+    let threshold = max * 0.5;
+    if (from - to).abs() > threshold {
+        if from < threshold && to > threshold {
+            let from = from + max;
+            return -(from - to);
+        } else {
+            return to + max - from;
+        }
+    }
+    to - from
+}
+
 #[derive(Eq, PartialEq)]
 pub enum Category {
     Shared,
@@ -108,5 +121,12 @@ mod test {
         assert_eq!(digits.get(2), 5);
         // Simulate padding in thousands place
         assert_eq!(digits.get(3), 0);
+    }
+
+    #[test]
+    fn test_wrap_diff() {
+        assert_eq!(wrap_diff(0.0, 10.0, 360.0), 10.0);
+        assert_eq!(wrap_diff(350.0, 10.0, 360.0), 20.0);
+        assert_eq!(wrap_diff(10.0, 350.0, 360.0), -20.0);
     }
 }
