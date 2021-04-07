@@ -1,5 +1,10 @@
 # YourControls Changelog
 
+## Version 2.5.8
+
+* Added support for the Airbus H135
+* Resynced flaps/spoilers in the A32NX Experimental
+
 ## Version 2.5.7
 
 * Changed the window title to YourControls vX.X.X
