@@ -17,12 +17,13 @@ interface Aircraft {
   installLocked: boolean,
   name: string,
   author: string,
+  selected: boolean
 }
 
 interface InitDataPayload {
   type: string,
   payload: {
-    aircrafts: [Aircraft],
+    aircraft: [Aircraft],
     version: string,
   }
 }
@@ -33,7 +34,10 @@ export default Vue.extend({
     listen('initData', (p: InitDataPayload) => {
       this.showLoadingScreen()
       window.localStorage.setItem("version",p.payload.version)
-      window.localStorage.setItem("airctafts",JSON.stringify(p.payload.aircrafts))
+      p.payload.aircraft.forEach(aircraft => {
+        aircraft.selected = false
+      });
+      window.localStorage.setItem("aircraft",JSON.stringify(p.payload.aircraft))
       window.localStorage.setItem("initData",JSON.stringify(p))
       setTitle("YourControls v" + window.localStorage.getItem('version'))
     })
