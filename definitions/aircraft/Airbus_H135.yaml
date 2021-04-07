@@ -1,0 +1,406 @@
+include:
+  - definitions/modules/AS3000.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/passenger.yaml
+  - definitions/modules/physics.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  -
+    type: var
+    var_name: L:DOORS_LOCKED
+  -
+    type: var
+    var_name: L:DOORS_OPEN_ALL
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_FADEC
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Engine_1
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Engine_2
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_1
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_2
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_3
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_4
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_5
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_6
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_1
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_2
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_3
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_4
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_5
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_6
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_1
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_2
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_3
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_4
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_5
+  # - # 
+  #   type: var
+  #   var_name: L:MFDC_SoftKey_Left_6
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_1
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_2
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_3
+  # - # Handled by ASCommon
+  #   type: var
+  #   var_name: L:MFDC_SoftKey_Right_4
+  # -
+  #   type: var
+  #   var_name: L:MFDC_SoftKey_Right_5
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_6
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_1
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_2
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_3
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_4
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_5
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_6
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_1
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_2
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_3
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_4
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_5
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_6
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_1
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_2
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_3
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_4
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_5
+  # - # Autopilot nav selected
+  #   type: var
+  #   var_name: L:MFDR_SoftKey_Left_6
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Right_1
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Right_2
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Right_3
+  # -  # Handled by ASCommon
+  #   type: var
+  #   var_name: L:MFDR_SoftKey_Right_4
+  # -
+  #   type: var
+  #   var_name: L:MFDR_SoftKey_Right_5
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Right_6
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_1
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_2
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_3
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_4
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_5
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_6
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_1
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_2
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_3
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_4
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_5
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_6
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_1
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_2
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_3
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_4
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_5
+  # - # Autopilot nav selected
+  #   type: var
+  #   var_name: L:MFDL_SoftKey_Left_6
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Right_1
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Right_2
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Right_3
+  # - # Handled by ASCommon
+  #   type: var
+  #   var_name: L:MFDL_SoftKey_Right_4
+  # -
+  #   type: var
+  #   var_name: L:MFDL_SoftKey_Right_5
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Right_6
+  -
+    type: var
+    var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:ROTOR_MODE
+  -
+    type: var
+    var_name: L:ROTOR_ONLINE
+  -
+    type: var
+    var_name: L:ROTOR_FADEC_MODE
+  -
+    type: var
+    var_name: L:ROTOR_COLLECTIVE
+  -
+    type: var
+    var_name: L:SPOTLIGHT_MODE
+  -
+    type: var
+    var_name: L:SPOTLIGHT_ENABLED
+  -
+    type: var
+    var_name: L:DX3000_Brightness
+
+ignore:
+  # Autopilot touchscreen buttons
+
+  - AS3000_PFD_1#783738924
+  - AS3000_PFD_1#1858584647
+  - AS3000_PFD_1#2137048621
+  - AS3000_PFD_1#1014112776
+  - AS3000_PFD_1#-1893834004
+  - AS3000_PFD_1#1396411143
+  - AS3000_PFD_1#2101425854
+  - AS3000_PFD_1#1140372057
+  - AS3000_PFD_1#-599961636
+  - AS3000_PFD_1#-732759049
+  - AS3000_PFD_1#-362296513
+  - AS3000_PFD_1#-1903438744
+  - AS3000_PFD_1#-1351485771
+  - AS3000_PFD_1#-346839325
+  - AS3000_PFD_1#-1598600502
+  - AS3000_PFD_1#-1149620610
+  - AS3000_PFD_1#-169220285
+  - AS3000_PFD_1#1146728838
+  - AS3000_PFD_1#1815781387
+  - AS3000_PFD_1#-772540941
+
+  - AS3000_PFD_2#783738924
+  - AS3000_PFD_2#1858584647
+  - AS3000_PFD_2#2137048621
+  - AS3000_PFD_2#1014112776
+  - AS3000_PFD_2#-1893834004
+  - AS3000_PFD_2#1396411143
+  - AS3000_PFD_2#2101425854
+  - AS3000_PFD_2#1140372057
+  - AS3000_PFD_2#-599961636
+  - AS3000_PFD_2#-732759049
+  - AS3000_PFD_2#-362296513
+  - AS3000_PFD_2#-1903438744
+  - AS3000_PFD_2#-1351485771
+  - AS3000_PFD_2#-346839325
+  - AS3000_PFD_2#-1598600502
+  - AS3000_PFD_2#-1149620610
+  - AS3000_PFD_2#-169220285
+  - AS3000_PFD_2#1146728838
+  - AS3000_PFD_2#1815781387
+  - AS3000_PFD_2#-772540941
+
+  - AS3000_PFD_3#783738924
+  - AS3000_PFD_3#1858584647
+  - AS3000_PFD_3#2137048621
+  - AS3000_PFD_3#1014112776
+  - AS3000_PFD_3#-1893834004
+  - AS3000_PFD_3#1396411143
+  - AS3000_PFD_3#2101425854
+  - AS3000_PFD_3#1140372057
+  - AS3000_PFD_3#-599961636
+  - AS3000_PFD_3#-732759049
+  - AS3000_PFD_3#-362296513
+  - AS3000_PFD_3#-1903438744
+  - AS3000_PFD_3#-1351485771
+  - AS3000_PFD_3#-346839325
+  - AS3000_PFD_3#-1598600502
+  - AS3000_PFD_3#-1149620610
+  - AS3000_PFD_3#-169220285
+  - AS3000_PFD_3#1146728838
+  - AS3000_PFD_3#1815781387
+  - AS3000_PFD_3#-772540941
+
+  # Aircraft systems
+  - AS3000_TSC_Vertical_1#extpwr_btn_indicator
+  - AS3000_TSC_Vertical_1#batt1_btn_indicator
+  - AS3000_TSC_Vertical_1#light_panel_indicator
+  - AS3000_TSC_Vertical_1#light_cabin_indicator
+  - AS3000_TSC_Vertical_1#light_spot_indicator
+  - AS3000_TSC_Vertical_1#light_landing_indicator
+  - AS3000_TSC_Vertical_1#light_taxi_indicator
+  - AS3000_TSC_Vertical_1#light_strobe_indicator
+  - AS3000_TSC_Vertical_1#light_beacon_indicator
+  - AS3000_TSC_Vertical_1#light_nav_indicator
+  - AS3000_TSC_Vertical_1#-2126745694
+  - AS3000_TSC_Vertical_1#-2126745695
+  - AS3000_TSC_Vertical_1#-2126745696
+  - AS3000_TSC_Vertical_1#-2126745697
+  - AS3000_TSC_Vertical_1#-2126745698
+  - AS3000_TSC_Vertical_1#-2126745701
+  - AS3000_TSC_Vertical_1#-2126745700
+  - AS3000_TSC_Vertical_1#-2126745699
+  - AS3000_TSC_Vertical_1#-2126745702
+  - AS3000_TSC_Vertical_1#-2126745703
+
+  - AS3000_TSC_Vertical_2#extpwr_btn_indicator
+  - AS3000_TSC_Vertical_2#batt1_btn_indicator
+  - AS3000_TSC_Vertical_2#light_panel_indicator
+  - AS3000_TSC_Vertical_2#light_cabin_indicator
+  - AS3000_TSC_Vertical_2#light_spot_indicator
+  - AS3000_TSC_Vertical_2#light_landing_indicator
+  - AS3000_TSC_Vertical_2#light_taxi_indicator
+  - AS3000_TSC_Vertical_2#light_strobe_indicator
+  - AS3000_TSC_Vertical_2#light_beacon_indicator
+  - AS3000_TSC_Vertical_2#light_nav_indicator
+  - AS3000_TSC_Vertical_2#-2126745694
+  - AS3000_TSC_Vertical_2#-2126745695
+  - AS3000_TSC_Vertical_2#-2126745696
+  - AS3000_TSC_Vertical_2#-2126745697
+  - AS3000_TSC_Vertical_2#-2126745698
+  - AS3000_TSC_Vertical_2#-2126745701
+  - AS3000_TSC_Vertical_2#-2126745700
+  - AS3000_TSC_Vertical_2#-2126745699
+  - AS3000_TSC_Vertical_2#-2126745702
+  - AS3000_TSC_Vertical_2#-2126745703
+
+  # FADEC Mode
+  - AS3000_TSC_Vertical_1#CasTitle_PFD
+  - AS3000_TSC_Vertical_1#1243912909
+  - AS3000_TSC_Vertical_1#1243912909
+  - AS3000_TSC_Vertical_1#1243912909
+
+  - AS3000_TSC_Vertical_2#CasTitle_PFD
+  - AS3000_TSC_Vertical_2#1243912909
+  - AS3000_TSC_Vertical_2#1243912909
+  - AS3000_TSC_Vertical_2#1243912909
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
