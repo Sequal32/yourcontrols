@@ -109,7 +109,7 @@ impl<'a> Syncable<bool> for ToggleSwitch {
 
 impl<'a> Syncable<f64> for ToggleSwitch {
     fn set_current(&mut self, current: f64) {
-        self.current = current == 0.0;
+        self.current = current == 1.0;
     }
 
     fn set_new(
@@ -118,7 +118,7 @@ impl<'a> Syncable<f64> for ToggleSwitch {
         conn: &simconnect::SimConnector,
         lvar_transfer: &mut LVarSyncer,
     ) {
-        let new = new == 0.0;
+        let new = new == 1.0;
 
         if self.current == new {
             return;
