@@ -8,16 +8,19 @@ pub enum Cmd {
         port: i64
     },
     UiReady,
+    InstallAircraft {
+        names: Vec<String>,
+    },
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct  Aircraft {
-    newest_version: Option<Version>,
-    installed_version: Option<Version>,
-    install_locked: bool,
-    name: String,
-    author: String
+pub struct Aircraft {
+    pub newest_version: Option<Version>,
+    pub installed_version: Option<Version>,
+    pub install_locked: bool,
+    pub name: String,
+    pub author: String
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -28,7 +31,7 @@ pub enum UIEvents {
     },
     InitData {
         version: String,
-        aircrafts: Vec<Aircraft>
+        aircraft: Vec<Aircraft>
     },
     LoadingComplete,
     NetworkTestResult {
@@ -51,4 +54,44 @@ pub enum ResultStatus {
     Pending {},
     Error { reason: String },
     Success {},
+}
+
+
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase", tag="cmd")]
+pub enum GameUiPayloads {
+    Host {
+        port: Option<u16>,
+        username: String,
+    },
+    Join {
+        port: Option<u16>,
+        session_code: Option<String>,
+        server_ip: Option<String>,
+        username: String,
+    },
+    NetworkStatistics {
+        ping: usize,
+        upload: usize,
+        download: usize,
+    },
+    LobbyInfo {
+        session_code: Option<String>,
+        server_ip: Option<String>,
+        clients: Option<Vec<String>>,
+    },
+    LobbySettings {
+        new_connection_as_obs: Option<bool>,
+        co_pilot_throttle_control: Option<bool>,
+        co_pilot_flight_surfaces_control: Option<bool>,
+    },
+    ChatMessage {
+        uuid: Option<String>,
+        client: String,
+        message: String,
+        time: String,
+        pinned: Option<bool>
+    },
+    Connected,
+    Disconnected
 }
