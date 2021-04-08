@@ -94,21 +94,9 @@ shared:
     var_name: A:CIRCUIT ON:49
     var_units: Bool
     var_type: bool
-
   - # Lights
-    type: NumSet
-    var_name: A:LIGHT PANEL
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
-    index_reversed: true
+    type: var
+    var_name: L:LIGHTING_Knob_Master
   -
     type: NumSet
     var_name: A:LIGHT CABIN:1
