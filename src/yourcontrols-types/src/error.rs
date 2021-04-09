@@ -34,6 +34,9 @@ pub enum Error {
     Base64Error(base64::DecodeError),
     UTFError(std::string::FromUtf8Error),
 
+    // Websocket
+    WebsocketError(tungstenite::Error),
+
     // Misc
     NotProcessed,
 }
@@ -78,6 +81,9 @@ impl Display for Error {
             }
             Error::Base64Error(e) => write!(f, "Could not encode/decode base64! Reason: {}", e),
             Error::UTFError(e) => write!(f, "Could not convert UTF to string! Reason: {}", e),
+            Error::WebsocketError(e) => {
+                write!(f, "Could not send message through websocket: {:?}", e)
+            }
 
             Error::NotProcessed => write!(f, "Not processed."),
         }
@@ -123,5 +129,17 @@ impl From<base64::DecodeError> for Error {
 impl From<std::string::FromUtf8Error> for Error {
     fn from(e: std::string::FromUtf8Error) -> Self {
         Error::UTFError(e)
+    }
+}
+
+impl From<tungstenite::Error> for Error {
+    fn from(e: tungstenite::Error) -> Self {
+        Error::WebsocketError(e)
+    }
+}
+
+impl From<serde_json::Error> for Error {
+    fn from(e: serde_json::Error) -> Self {
+        Error::JSONSerializeError(e)
     }
 }

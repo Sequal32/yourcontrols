@@ -2,7 +2,7 @@
 name = "yourcontrols_ui"
 version = "0.1.0"
 description = "A Tauri App"
-authors = [ "you" ]
+authors = ["you"]
 license = ""
 repository = ""
 default-run = "yourcontrols_ui"
@@ -15,17 +15,19 @@ crossbeam-channel = "0.5"
 tungstenite = "0.13"
 simplelog = "0.10"
 serde_repr = "0.1"
-serde = { version = "1.0", features = [ "derive" ] }
-tauri = { version = "0.11", features = [ "all-api" ] }
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "0.11", features = ["all-api"] }
 log = "0.4"
-semver = { version = "0.11", features = [ "serde" ] }
+semver = { version = "0.11", features = ["serde"] }
+
+yourcontrols-types = { path = "../../yourcontrols-types" }
 
 [target."cfg(windows)".build-dependencies]
 winres = "0.1"
 
 [features]
-embedded-server = [ "tauri/embedded-server" ]
-no-server = [ "tauri/no-server" ]
+embedded-server = ["tauri/embedded-server"]
+no-server = ["tauri/no-server"]
 
 [[bin]]
 name = "yourcontrols_ui"

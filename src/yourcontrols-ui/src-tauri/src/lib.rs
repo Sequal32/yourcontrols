@@ -1,14 +1,31 @@
 use cmd::Cmd;
 use cmd::UIEvents;
-use crossbeam_channel::{Receiver, Sender, unbounded};
-use std::{net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpListener, TcpStream}, option::Option, thread::{sleep, spawn}, time::Duration};
+use crossbeam_channel::{unbounded, Receiver, Sender};
+use log::error;
+use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpListener, TcpStream};
+use std::option::Option;
+use std::thread::{sleep, spawn};
+use std::time::Duration;
 use tungstenite::{self, HandshakeError, Message, WebSocket};
-use log::{error};
+use yourcontrols_types::Error;
+
 pub mod cmd;
 pub mod util;
 
 pub use cmd::*;
 pub use util::*;
+
+macro_rules! events {
+    ($V:ident) => {
+        $V!(
+            // CMD Variant, Javascript receive string
+            (StartUpText, startUpText),
+            (InitData, initData),
+            (LoadingComplete, loadingComplete),
+            (NetworkTestResult, networkTestResult),
+        )
+    };
+}
 
 pub struct Ui {
     listener: TcpListener,
@@ -20,7 +37,11 @@ pub struct Ui {
 
 impl Ui {
     pub fn run() -> Self {
-        let listener = TcpListener::bind(SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::new(127, 0, 0, 1), 40121))).unwrap();
+        let listener = TcpListener::bind(SocketAddr::V4(SocketAddrV4::new(
+            Ipv4Addr::new(127, 0, 0, 1),
+            40121,
+        )))
+        .unwrap();
         listener.set_nonblocking(true).ok();
 
         let (ui_tx, ui_rx) = unbounded::<UIEvents>();
@@ -38,59 +59,28 @@ impl Ui {
                     let ui_rx = ui_rx.clone();
                     let mut webview = _webview.as_mut();
                     spawn(move || loop {
-                        match ui_rx.try_recv() {
-                            Ok(event) => match &event {
-                                UIEvents::StartUpText { .. } => {
-                                    match tauri::event::emit(
-                                        &mut webview,
-                                        "startUpText",
-                                        Some(event.clone()),
-                                    ) {
-                                        Ok(_) => {}
-                                        Err(e) => {
-                                            error!(target:"yourcontrols-ui", "{:?}", e)
-                                        }
-                                    };
+
+                        macro_rules! process_event {
+                            ($( ($event_name: ident, $cmd_name: expr), )*) => {
+                                let result = match ui_rx.try_recv() {
+                                    Ok(event) => match &event {
+                                        $(
+                                            UIEvents::$event_name { .. } => {
+                                                tauri::event::emit(&mut webview, "$cmd_name", Some(event))
+                                            }
+                                        )*
+                                    }
+                                    _ => continue
+                                };
+
+                                if let Err(e) = result {
+                                    error!(target: "yourcontrols-ui", "Could not emit event to tauri: {:?}", e)
                                 }
-                                UIEvents::InitData { .. } => {
-                                    match tauri::event::emit(
-                                        &mut webview,
-                                        "initData",
-                                        Some(event.clone()),
-                                    ) {
-                                        Ok(_) => {}
-                                        Err(e) => {
-                                            error!(target:"yourcontrols-ui", "{:?}", e)
-                                        }
-                                    };
-                                }
-                                UIEvents::LoadingComplete => {
-                                    match tauri::event::emit(
-                                        &mut webview,
-                                        "loadingComplete",
-                                        Some(event.clone()),
-                                    ) {
-                                        Ok(_) => {}
-                                        Err(e) => {
-                                            error!(target:"yourcontrols-ui", "{:?}", e)
-                                        }
-                                    };
-                                }
-                                UIEvents::NetworkTestResult { .. } => {
-                                    match tauri::event::emit(
-                                        &mut webview,
-                                        "networkTestResult",
-                                        Some(event.clone()),
-                                    ) {
-                                        Ok(_) => {}
-                                        Err(e) => {
-                                            error!(target:"yourcontrols-ui", "{:?}", e)
-                                        }
-                                    };
-                                }
-                            },
-                            Err(_) => {}
+                            }
                         }
+
+                        events!(process_event);
+
                         sleep(Duration::from_millis(10));
                     });
                 })
@@ -102,7 +92,7 @@ impl Ui {
             app_rx,
             listener,
             active_stream: None,
-            sent_connected: true
+            sent_connected: true,
         }
     }
 
@@ -110,8 +100,12 @@ impl Ui {
         self.ui_tx.send(event).ok();
     }
 
-    pub fn send_message_game_ui(&mut self, payload: GameUiPayloads) {
-        self.active_stream.as_mut().unwrap().write_message(Message::Text(serde_json::to_string(&payload).unwrap())).ok();
+    pub fn send_message_game_ui(&mut self, payload: GameUiPayloads) -> Result<(), Error> {
+        if let Some(active_stream) = self.active_stream.as_mut() {
+            active_stream.write_message(Message::Text(serde_json::to_string(&payload)?))?
+        }
+
+        Ok(())
     }
 
     fn accept_connections(&mut self) {
@@ -123,22 +117,21 @@ impl Ui {
                         self.sent_connected = false;
                         self.active_stream = Some(ws);
                         break;
-                    },
+                    }
                     Err(HandshakeError::Interrupted(hs)) => {
                         handshake_result = hs.handshake();
                     }
-                    _ => break
+                    _ => break,
                 }
-                
+
                 sleep(Duration::from_millis(1))
             }
         }
     }
-    
+
     pub fn get_pending_events_game_ui(&mut self) -> Option<GameUiPayloads> {
         self.accept_connections();
         if let Some(ws) = &mut self.active_stream {
-
             if !self.sent_connected {
                 self.sent_connected = true;
                 return Some(GameUiPayloads::Connected);
@@ -147,16 +140,17 @@ impl Ui {
             return match ws.read_message() {
                 Ok(Message::Text(text)) => match serde_json::from_str(&text) {
                     Ok(payload) => Some(payload),
-                    Err(e) => {error!("{} {:?}", text, e); None}
+                    Err(e) => {
+                        error!("{} {:?}", text, e);
+                        None
+                    }
                 },
-                Err(tungstenite::Error::ConnectionClosed) => {
-                    Some(GameUiPayloads::Disconnected)
-                },
-                _ => None
-            }
+                Err(tungstenite::Error::ConnectionClosed) => Some(GameUiPayloads::Disconnected),
+                _ => None,
+            };
         }
 
-        return None
+        return None;
     }
     pub fn get_pending_events_app(&self) -> Option<Cmd> {
         self.app_rx.try_recv().ok()
