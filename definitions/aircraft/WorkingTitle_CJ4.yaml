@@ -236,20 +236,6 @@ shared:
     var_type: i32
     event_name: AUTOPILOT_DISENGAGE_SET
 
-  - # ASOBO_AUTOPILOT_Knob_Heading_Template
-    type: NumSet
-    var_name: A:AUTOPILOT HEADING LOCK DIR
-    var_units: Degrees
-    var_type: f64
-    event_name: HEADING_BUG_SET
-    event_param: 0
-    conditions:
-      - var: 
-          var_name: L:WT_CJ4_NAV_ON
-          var_type: f64
-        equals:
-          F64: 0.0
-
   - # On LNAV, index 1 is manual tuned heading
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:1
@@ -257,32 +243,12 @@ shared:
     var_type: f64
     event_name: HEADING_BUG_SET
     event_param: 1
-    conditions:
-      - var: 
-          var_name: L:WT_CJ4_NAV_ON
-          var_type: f64
-        equals:
-          F64: 1.0
 
   - # ASOBO_AUTOPILOT_Push_Altitude_Template
     type: ToggleSwitch
     var_name: A:AUTOPILOT ALTITUDE LOCK
     var_units: Bool
     event_name: AP_PANEL_ALTITUDE_HOLD
-
-  - # ASOBO_AUTOPILOT_Knob_Altitude_Template
-    type: NumSet
-    var_name: A:AUTOPILOT ALTITUDE LOCK VAR
-    var_units: Feet
-    var_type: i32
-    event_name: AP_ALT_VAR_SET_ENGLISH
-    event_param: 0
-    conditions:
-      - var: 
-          var_name: L:WT_CJ4_VNAV_ON
-          var_type: f64
-        equals:
-          F64: 0.0
 
   - # On VNAV, index 1 is manual tuned altitude
     type: NumSet
@@ -291,12 +257,6 @@ shared:
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
     event_param: 1
-    conditions:
-      - var: 
-          var_name: L:WT_CJ4_VNAV_ON
-          var_type: f64
-        equals:
-          F64: 1.0
   -
     type: var
     var_name: L:XMLVAR_VNAVButtonValue
