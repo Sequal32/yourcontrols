@@ -1,5 +1,4 @@
 use super::memwriter::MemWriter;
-use bimap::{self, BiHashMap};
 use serde::Deserialize;
 use simconnect::SimConnector;
 use std::collections::HashMap;
@@ -69,10 +68,8 @@ fn format_get(var_name: &str, var_units: Option<&str>) -> String {
 }
 
 pub struct GaugeCommunicator {
-    requests: BiHashMap<String, u32>,
     datums: Vec<DatumData>,
     interpolate_datums: HashMap<String, InterpolateMapping>,
-    next_request_id: u32,
 }
 
 // SEND/RECEIVE define/client data ids
@@ -86,29 +83,14 @@ const SEND_INTERPOLATE: u32 = 5;
 impl GaugeCommunicator {
     pub fn new() -> Self {
         Self {
-            requests: BiHashMap::new(),
             datums: Vec::new(),
             interpolate_datums: HashMap::new(),
-            next_request_id: 0,
         }
     }
 
-    fn map_request(&mut self, var_name: &str) -> u32 {
-        if let Some(id) = self.requests.get_by_left(&var_name.to_string()) {
-            return *id;
-        } else {
-            let id = self.next_request_id;
-
-            self.requests.insert(var_name.to_string(), id);
-
-            self.next_request_id += 1;
-            return id;
-        }
-    }
-
-    pub fn set(&mut self, conn: &SimConnector, var_name: &str, var_units: Option<&str>, val: &str) {
+    pub fn set(&self, conn: &SimConnector, var_name: &str, var_units: Option<&str>, val: &str) {
         let mut writer = MemWriter::new(128, 4).unwrap();
-        writer.write_u32(self.map_request(var_name));
+        writer.write_u32(0);
         writer.pad(4);
 
         if let Some(unit) = var_units {

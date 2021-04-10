@@ -21,11 +21,15 @@ impl Control {
         self.has_control = true;
         self.do_transfer(conn);
         gauge_communicator.stop_interpolation(conn);
+        // A32NX enable FBW
+        gauge_communicator.set(conn, "L:A32NX_EXTERNAL_OVERRIDE", None, "0");
     }
 
-    pub fn lose_control(&mut self, conn: &SimConnector) {
+    pub fn lose_control(&mut self, conn: &SimConnector, gauge_communicator: &GaugeCommunicator) {
         self.has_control = false;
         self.do_transfer(conn);
+        // A32NX disable FBW
+        gauge_communicator.set(conn, "L:A32NX_EXTERNAL_OVERRIDE", None, "1");
     }
 
     pub fn has_control(&self) -> bool {
