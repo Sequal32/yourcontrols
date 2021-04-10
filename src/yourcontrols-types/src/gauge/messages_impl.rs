@@ -1,63 +1,4 @@
-use crate::{MappingType, VarType};
-
-impl MappingType<String> {
-    pub fn index_to_u32(self, index: Option<u32>) -> MappingType<u32> {
-        match self {
-            MappingType::ToggleSwitch {
-                event_name,
-                off_event_name,
-                switch_on,
-                ..
-            } => MappingType::ToggleSwitch {
-                event_name,
-                off_event_name,
-                switch_on,
-                event_param: index,
-            },
-            MappingType::NumSet {
-                event_name,
-                swap_event_name,
-                multiply_by,
-                add_by,
-                ..
-            } => MappingType::NumSet {
-                event_name,
-                swap_event_name,
-                multiply_by,
-                add_by,
-                event_param: index,
-            },
-            MappingType::NumDigitSet {
-                inc_events,
-                dec_events,
-            } => MappingType::NumDigitSet {
-                inc_events,
-                dec_events,
-            },
-            MappingType::NumIncrement {
-                up_event_name,
-                down_event_name,
-                increment_amount,
-                pass_difference,
-            } => MappingType::NumIncrement {
-                up_event_name,
-                down_event_name,
-                increment_amount,
-                pass_difference,
-            },
-            MappingType::Var => MappingType::Var,
-            MappingType::Event => MappingType::Event,
-        }
-    }
-
-    pub fn has_index(&self) -> bool {
-        match self {
-            MappingType::ToggleSwitch { event_param, .. } => event_param.is_some(),
-            MappingType::NumSet { event_param, .. } => event_param.is_some(),
-            _ => false,
-        }
-    }
-}
+use crate::{MappingArgsMessage, VarType};
 
 impl VarType {
     pub fn get_name(&self) -> &String {
@@ -74,6 +15,12 @@ impl VarType {
             VarType::Named { name } => format!("(>{})", name),
             VarType::Calculator { set, .. } => set.clone(),
         }
+    }
+}
+
+impl PartialEq for MappingArgsMessage {
+    fn eq(&self, other: &Self) -> bool {
+        self.script_id == other.script_id
     }
 }
 

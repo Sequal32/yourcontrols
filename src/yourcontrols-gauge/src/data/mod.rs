@@ -29,8 +29,8 @@ pub struct GenericVariable {
 
 #[cfg(any(target_arch = "wasm32"))]
 impl GenericVariable {
-    pub fn new_var(name: &str, units: &str, index: Option<usize>) -> Result<Self> {
-        let index = index.unwrap_or(0);
+    pub fn new_var(name: &str, units: &str, index: Option<&str>) -> Result<Self> {
+        let index = index.unwrap_or("0");
 
         Ok(Self {
             var: Some(
@@ -105,7 +105,7 @@ impl Syncable for GenericVariable {
 #[cfg(any(target_arch = "wasm32"))]
 pub struct EventSet {
     event_name: String,
-    event_index: Option<u32>,
+    event_index: Option<String>,
     index_reversed: bool,
 }
 
@@ -119,7 +119,7 @@ impl EventSet {
         }
     }
 
-    pub fn new_with_index(event_name: String, event_index: u32, index_reversed: bool) -> Self {
+    pub fn new_with_index(event_name: String, event_index: String, index_reversed: bool) -> Self {
         Self {
             event_name,
             event_index: Some(event_index),
@@ -134,7 +134,7 @@ impl EventSet {
     ///
     /// or with index_reversed:
     /// `{index} {value} (>{event_name})`
-    fn set_with_value_and_index(&self, value: DatumValue, index: u32) {
+    fn set_with_value_and_index(&self, value: DatumValue, index: &str) {
         if self.index_reversed {
             execute_calculator_code::<DatumValue>(&format!(
                 "{} {} (>K:2:{})",

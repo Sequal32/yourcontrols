@@ -1,107 +1,274 @@
 mod helpers;
+mod store;
 mod util;
 
-use helpers::{DatumGenerator, MappingDatabase};
-use std::{fs::File, path::Path};
-use util::YamlTopDown;
-use yourcontrols_types::{DatumMessage, Error, SyncPermission};
+use helpers::DatumGenerator;
+use serde::de::DeserializeOwned;
+use serde_yaml::Value;
+use std::collections::HashMap;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+use std::path::Path;
+use store::{map_vec_to_database, DATABASE};
+use yourcontrols_types::{
+    DatumMessage, Error, MappingArgsMessage, MappingType, Result, SyncPermission, VarId,
+    WatchPeriod,
+};
 
+use util::{get_index_from_var_name, merge, FullTemplate, PartialTemplate, Template, YamlTopDown};
+
+type TemplateName = String;
+
+#[derive(Debug)]
+struct Mapping {
+    sync_permission: SyncPermission,
+    template: Template,
+}
+
+#[derive(Debug)]
+pub struct TemplateDatabase {
+    templates: HashMap<TemplateName, Template>,
+    scripts: HashMap<String, (VarId, Vec<String>)>,
+}
+
+impl TemplateDatabase {
+    pub fn new() -> Self {
+        Self {
+            templates: HashMap::new(),
+            scripts: HashMap::new(),
+        }
+    }
+
+    pub fn load_templates(&mut self, templates: Vec<Template>) {
+        for template in templates {
+            self.templates.insert(template.get_name().clone(), template);
+        }
+    }
+
+    pub fn load_script(&mut self, path: impl AsRef<Path>) -> Result<()> {
+        let mut reader = BufReader::new(File::open(&path)?);
+        let mut lines = Vec::new();
+
+        // Read RHAI script lines into a vector
+        loop {
+            let mut buf = String::new();
+            match reader.read_line(&mut buf) {
+                Ok(0) | Err(_) => break,
+                Ok(_) => lines.push(buf),
+            };
+        }
+
+        // Add lines to the database
+        self.scripts.insert(
+            path.as_ref()
+                .file_stem()
+                .unwrap()
+                .to_string_lossy()
+                .to_string(),
+            (self.scripts.len(), lines),
+        );
+
+        Ok(())
+    }
+
+    pub fn get_template(&self, template_name: &str) -> Option<&Template> {
+        self.templates.get(template_name)
+    }
+
+    pub fn get_script_id(&self, script_name: &str) -> Option<usize> {
+        self.scripts.get(script_name).map(|x| x.0.clone())
+    }
+}
+
+#[derive(Debug)]
 pub struct DefinitionsParser {
-    db: MappingDatabase,
-    datums: Vec<DatumMessage>,
+    templates: TemplateDatabase,
+    definitions: Vec<DatumMessage>,
     generator: DatumGenerator,
 }
 
 impl DefinitionsParser {
-    /// Initializes with mappings from file
-    pub fn with_mapping_path(mapping_folder_path: impl AsRef<Path>) -> Result<Self, Error> {
-        Ok(Self::with_mappings(MappingDatabase::from_path(
-            mapping_folder_path,
-        )?))
-    }
-
-    pub fn with_mappings(mappings: MappingDatabase) -> Self {
+    pub fn new() -> Self {
         Self {
-            db: mappings,
-            datums: Vec::new(),
+            templates: TemplateDatabase::new(),
+            definitions: Vec::new(),
             generator: DatumGenerator::new(),
         }
     }
 
-    /// Generates datums based on loaded mappings or the definition strings themselves.
-    fn load_permission_definitions(
+    fn merge_subtemplates(&mut self, partial: PartialTemplate) -> Result<Template> {
+        let mut partial = partial;
+
+        let merging_with = self
+            .templates
+            .get_template(&partial.use_template)
+            .expect("unfinished template");
+
+        let merging_with_value = serde_yaml::to_value(merging_with)?;
+
+        merge(&mut partial.value, &merging_with_value);
+
+        Ok(serde_yaml::from_value(partial.value)?)
+    }
+
+    pub fn get_datum_with_template(
         &mut self,
-        sync_permission: SyncPermission,
-        def: String,
-    ) -> Result<(), Error> {
-        // Def string has mapping defined in a mapping file
-        if let Some(mapping) = self.db.get_mapping_for(&def).cloned() {
-            let datum = self.generator.get_mapping_datum(sync_permission, mapping)?;
-            self.datums.push(datum);
+        template: Template,
+        index: Option<String>,
+    ) -> Result<DatumMessage> {
+        match template {
+            // Recursively combine subtemplates until we obtain a FullTemplate or a OneTemplate
+            Template::PartialTemplate(partial) => {
+                let template = self.merge_subtemplates(partial)?;
+                self.get_datum_with_template(template, index)
+            }
+            // Convert a OneTemplate to a FullTemplate
+            Template::OneTemplate(one) => self.get_datum_with_template(
+                Template::FullTemplate(FullTemplate {
+                    name: one.name,
+                    script: one.script,
+                    vars: vec![one.var],
+                    sets: vec![one.set],
+                    params: one.params,
+                    misc: one.misc,
+                }),
+                index,
+            ),
+            // Create a DatumMessage from a FullTemplate
+            Template::FullTemplate(mut full) => {
+                for set in full.sets.iter_mut() {
+                    match set.param.as_deref() {
+                        Some("index") => set.param = index.clone(),
+                        _ => {}
+                    }
+                }
 
-            return Ok(());
+                // Extra fields
+                let condition = full.get_misc_object("condition");
+                let interpolate = full.get_misc_object("interpolate");
+
+                // Map vars and events to VarIds
+                let vars: Vec<usize> = map_vec_to_database(full.vars, |x| DATABASE.add_var(x));
+                let sets: Vec<usize> = map_vec_to_database(full.sets, |x| DATABASE.add_event(x));
+
+                let watch_var = *vars.get(0).ok_or(Error::None)?;
+
+                let script_id = self
+                    .templates
+                    .get_script_id(&full.script)
+                    .ok_or(Error::None)?;
+
+                let mapping = MappingType::Script(MappingArgsMessage {
+                    script_id,
+                    vars: vars,
+                    sets: sets,
+                    params: full.params,
+                });
+
+                return Ok(DatumMessage {
+                    var: Some(watch_var),
+                    watch_period: Some(WatchPeriod::Hz16),
+                    mapping: Some(mapping),
+                    condition,
+                    interpolate,
+                    ..Default::default()
+                });
+            }
         }
+    }
 
-        // Otherwise, add it as a standalone
-        let prefix = &def[0..2];
-        let def_no_prefix = def[2..].to_string();
+    fn get_datum_from_mapping_and_index(
+        &mut self,
+        name: &str,
+        index: Option<String>,
+    ) -> Result<DatumMessage> {
+        if let Some(mapping) = self.templates.get_template(name).cloned() {
+            self.get_datum_with_template(mapping, index)
+        } else {
+            self.generator.get_generated_from_string(name)
+        }
+    }
 
-        let generator = &self.generator;
+    fn load_sync_templates(
+        &mut self,
+        templates: Vec<Value>,
+        sync_permission: SyncPermission,
+    ) -> Result<()> {
+        for template in templates {
+            let mut datum = match &template {
+                Value::String(name) => {
+                    match get_index_from_var_name(name) {
+                        // Index found, can apply to templates which use event_param: index
+                        Some((name, index)) => {
+                            self.get_datum_from_mapping_and_index(name, Some(index.to_string()))
+                        }
+                        // No index found, will not override event_param
+                        None => self.get_datum_from_mapping_and_index(name, None),
+                    }?
+                }
+                // Datum is definied as a top level template
+                Value::Mapping(_) => {
+                    let template: Template = serde_yaml::from_value(template)?;
+                    self.get_datum_with_template(template, None)?
+                }
+                _ => continue,
+            };
 
-        let var_datum = match prefix {
-            "K:" => generator.get_key_datum(sync_permission, def_no_prefix)?,
-            "B:" => generator.get_bus_toggle(sync_permission, &def_no_prefix)?,
-            "L:" | "E:" => generator.get_local_var(sync_permission, def)?,
-            _ => return Ok(()),
-        };
+            datum.sync_permission = Some(sync_permission.clone());
 
-        self.datums.push(var_datum);
+            self.definitions.push(datum)
+        }
 
         Ok(())
     }
 
-    /// Loads each def individually.
-    fn load_defs(
-        &mut self,
-        sync_permission: SyncPermission,
-        defs: Option<Vec<String>>,
-    ) -> Result<(), Error> {
-        if let Some(defs) = defs {
-            for def in defs {
-                self.load_permission_definitions(sync_permission.clone(), def)?
+    fn load_yaml<T: DeserializeOwned>(path: impl AsRef<Path>) -> Result<T> {
+        let file = File::open(&path)?;
+        Ok(serde_yaml::from_reader(file)
+            .map_err(|x| Error::YamlError(x, path.as_ref().to_string_lossy().to_string()))?)
+    }
+
+    pub fn load_file(&mut self, path: impl AsRef<Path>) -> Result<()> {
+        let yaml: YamlTopDown = Self::load_yaml(path)?;
+
+        if let Some(include) = yaml.include {
+            for include_path in include {
+                self.load_file(include_path)?
+            }
+        }
+
+        if let Some(templates) = yaml.templates {
+            self.templates.load_templates(templates);
+        }
+
+        if let Some(shared) = yaml.shared {
+            self.load_sync_templates(shared, SyncPermission::Shared)?;
+        }
+
+        if let Some(init) = yaml.init {
+            self.load_sync_templates(init, SyncPermission::Init)?;
+        }
+
+        if let Some(server) = yaml.server {
+            self.load_sync_templates(server, SyncPermission::Server)?;
+        }
+
+        Ok(())
+    }
+
+    pub fn load_scripts(&mut self, path: impl AsRef<Path>) -> Result<()> {
+        for dir in std::fs::read_dir(path)? {
+            let path = match dir {
+                Ok(d) => d.path(),
+                Err(_) => continue,
+            };
+
+            // Is rhai script
+            if path.ends_with(".rhai") {
+                self.templates.load_script(path)?;
             }
         }
 
         Ok(())
-    }
-
-    /// Recursively loads includes and definitions by category.
-    fn load_top_down(&mut self, top_down: YamlTopDown) -> Result<(), Error> {
-        if let Some(include) = top_down.include {
-            for file_path in include {
-                self.load_definition_file(file_path)?
-            }
-        }
-
-        self.load_defs(SyncPermission::Server, top_down.server)?;
-        self.load_defs(SyncPermission::Shared, top_down.shared)?;
-        self.load_defs(SyncPermission::Init, top_down.init)?;
-
-        // TODO: ignore category
-
-        Ok(())
-    }
-
-    /// Load all definitions from a file into memory.
-    pub fn load_definition_file(&mut self, file_path: impl AsRef<Path>) -> Result<(), Error> {
-        let file = File::open(&file_path)?;
-        let yaml: YamlTopDown = serde_yaml::from_reader(file)
-            .map_err(|e| Error::YamlError(e, file_path.as_ref().to_string_lossy().to_string()))?;
-
-        self.load_top_down(yaml)
-    }
-
-    pub fn get_datums(&self) -> &Vec<DatumMessage> {
-        &self.datums
     }
 }

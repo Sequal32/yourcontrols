@@ -1,0 +1,26 @@
+# Mapping
+shared:
+  - A:PARKING BRAKE POSITION:1
+# Template
+mappings:
+  
+
+# Template
+# Recurse until getting to type == last_type
+templates:
+  # Mapping specific
+  - name: A:PARKING BRAKE POSITION
+    use_template: ToggleSwitchParam
+    vars:
+      - name: A:PARKING BRAKE POSITION
+        units: Bool
+    sets:
+      - name: SET_PARKING_BRAKE
+  # Template specific
+  - name: ToggleSwitchParam
+    use_template: ToggleSwitch
+    sets:
+      - param: index
+
+  - name: ToggleSwitch
+    script: ToggleSwitch

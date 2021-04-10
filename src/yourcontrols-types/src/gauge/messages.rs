@@ -4,43 +4,41 @@ use crate::{DatumKey, DatumValue, InterpolationType, Time, VarId};
 use rhai::Dynamic;
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq, Eq)]
+pub struct EventMessage {
+    pub name: String,
+    pub param: Option<String>,
+    #[serde(default)]
+    pub param_reversed: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ScriptMessage {
+    pub lines: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum SettableMessage {
+    Event(EventMessage),
+    Var(VarType),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct MappingArgsMessage {
+    pub script_id: VarId,
+    pub vars: Vec<VarId>,
+    pub sets: Vec<VarId>,
+    pub params: Vec<Dynamic>,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(tag = "type")]
-pub enum MappingType<P>
-where
-    P: Eq,
-{
-    ToggleSwitch {
-        event_name: String,
-        off_event_name: Option<String>,
-        #[serde(default)]
-        switch_on: bool,
-        event_param: Option<P>,
-    },
-    NumSet {
-        event_name: String,
-        swap_event_name: Option<String>,
-        multiply_by: Option<DatumValue>,
-        add_by: Option<DatumValue>,
-        event_param: Option<P>,
-    },
-    NumIncrement {
-        up_event_name: String,
-        down_event_name: String,
-        increment_amount: DatumValue,
-        #[serde(default)]
-        pass_difference: bool,
-    },
-    NumDigitSet {
-        inc_events: Vec<String>,
-        dec_events: Vec<String>,
-    },
+pub enum MappingType<M> {
     Event,
     Var,
     Script(M),
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Hash, Eq)]
 #[serde(untagged)]
 pub enum VarType {
     WithUnits {
@@ -72,7 +70,7 @@ pub enum SyncPermission {
     Init,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ConditionMessage {
     pub script_name: String,
     pub options: Vec<Dynamic>,

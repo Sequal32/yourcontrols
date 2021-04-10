@@ -171,3 +171,9 @@ impl From<Box<rhai::EvalAltResult>> for Error {
         Error::RhaiError(e)
     }
 }
+
+impl From<serde_yaml::Error> for Error {
+    fn from(e: serde_yaml::Error) -> Self {
+        Error::YamlError2(e)
+    }
+}

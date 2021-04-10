@@ -1,10 +1,9 @@
+use rhai::packages::{CorePackage, Package};
+use rhai::{Dynamic, Engine, RegisterFn, Scope, AST};
 use std::cell::RefCell;
-use std::rc::Rc;
-
-use rhai::{packages::Package, Dynamic, Engine, RegisterFn, Scope, Shared, AST};
 use yourcontrols_types::{DatumValue, Result};
 
-use crate::data::{RcSettable, RcVariable, Variable};
+use crate::data::{RcSettable, RcVariable};
 
 thread_local! {
     pub static SCRIPTING_ENGINE: RefCell<ScriptingEngine> = RefCell::new(ScriptingEngine::new());
@@ -26,6 +25,8 @@ impl ScriptingEngine {
 
     pub fn setup_engine(&mut self) {
         self.engine
+            .register_global_module(CorePackage::new().as_shared_module());
+        self.engine
             .register_fn("get", |vec: &mut Vec<RcVariable>, index: i64| {
                 vec[index as usize].get()
             });
@@ -38,6 +39,9 @@ impl ScriptingEngine {
             )
             .register_fn("set", |set: &mut Vec<RcSettable>, index: i64| {
                 set[index as usize].set()
+            })
+            .register_fn("exists", |set: &mut Vec<RcSettable>, index: i64| {
+                set.get(index as usize).is_some()
             });
     }
 
@@ -60,17 +64,16 @@ impl ScriptingEngine {
         vars: Vec<RcVariable>,
         sets: Vec<RcSettable>,
         params: Vec<Dynamic>,
-    ) -> Result<()> {
+    ) -> Result<Dynamic> {
         let mut scope: Scope = Scope::new();
         scope.push_constant("incoming_value", incoming_value);
         scope.push_constant("vars", vars);
         scope.push_constant("sets", sets);
         scope.push_constant("params", params);
 
-        self.engine
-            .eval_ast_with_scope::<()>(&mut scope, &self.scripts[script_id])?;
-
-        Ok(())
+        Ok(self
+            .engine
+            .eval_ast_with_scope::<Dynamic>(&mut scope, &self.scripts[script_id])?)
     }
 
     pub fn reset(&mut self) {
@@ -148,5 +151,19 @@ mod tests {
                 vec![Dynamic::from(5.0), Dynamic::from(false)],
             )
             .expect("should run succesfully");
+    }
+
+    #[test]
+    fn test_exists() {
+        let mut engine = get_engine();
+        engine
+            .add_script(&["sets.exists(0) && !sets.exists(1)"])
+            .expect("should add successfully");
+
+        let result = engine
+            .run_script(0, 1.0, vec![], vec![Rc::new(MockSettable::new())], vec![])
+            .expect("should run succesfully");
+
+        assert!(result.as_bool().expect("should be bool"))
     }
 }
