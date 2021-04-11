@@ -1,6 +1,24 @@
 # YourControls Changelog
 
-## Version 2.5.8
+## Version 2.5.12
+
+* Fixed issues with the FBW A32NX experimental throttles desynced, vertical speed mismatched, and rattling sounds
+* Synced emergency light on the WT CJ4
+* Synced doors on the MixMugz TBM930
+* Attempted to fix WT CJ4 FD/Range desync
+* Attempted to fix Airbus H135 starters desync
+
+## Version 2.5.11
+
+* Resynced A32NX spoilers
+* Fix CJ4 autopilot altitude/heading selector issues
+  
+## Version 2.5.10
+
+* Actually fixed A32NX flaps
+* Added new WT CJ4 master light
+
+## Version 2.5.9
 
 * Added support for the Airbus H135
 * Resynced flaps/spoilers in the A32NX Experimental
