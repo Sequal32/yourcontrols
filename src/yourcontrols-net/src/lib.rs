@@ -1,5 +1,6 @@
 mod client;
 mod messages;
+mod new;
 mod server;
 mod util;
 

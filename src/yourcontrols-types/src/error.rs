@@ -16,6 +16,7 @@ pub enum Error {
     LocalAddrNotIPv4(String),
     AddPortError(igd::AddPortError),
 
+    // Crossbeam
     ReadTimeout(TryRecvError),
     // Port forwarding
 
@@ -46,6 +47,9 @@ pub enum Error {
     RhaiError(Box<rhai::EvalAltResult>),
 
     // Misc
+    Base64DecodeError(base64::DecodeError),
+    ConvertToStringError(std::string::FromUtf8Error),
+    AddressParseError(std::net::AddrParseError),
     None,
     NotProcessed,
 }
@@ -100,80 +104,34 @@ impl Display for Error {
             Error::VariableInitializeError => write!(f, "Var could not be initialized."),
             Error::RhaiParse(e) => write!(f, "Could not parse RHAI script: {}", e),
             Error::RhaiError(e) => write!(f, "Could not run RHAI script: {}", e),
+
             Error::None => write!(f, "No value returned."),
             Error::NotProcessed => write!(f, "Not processed."),
+            Error::Base64DecodeError(e) => write!(f, "Could not decode data from base64: {}", e),
+            Error::ConvertToStringError(e) => write!(f, "Could not convert bytes to string: {}", e),
+            Error::AddressParseError(e) => write!(f, "Could not parse socket address: {}", e),
         }
     }
 }
 
-impl From<io::Error> for Error {
-    fn from(e: io::Error) -> Self {
-        Error::IOError(e)
-    }
+macro_rules! from_err {
+    ($from_error: ty, $to_variant: ident) => {
+        impl From<$from_error> for Error {
+            fn from(e: $from_error) -> Self {
+                Error::$to_variant(e)
+            }
+        }
+    };
 }
 
-impl From<laminar::ErrorKind> for Error {
-    fn from(e: laminar::ErrorKind) -> Self {
-        Error::SocketError(e)
-    }
-}
-
-impl From<rmp_serde::decode::Error> for Error {
-    fn from(e: rmp_serde::decode::Error) -> Self {
-        Error::NetDecodeError(e)
-    }
-}
-
-impl From<rmp_serde::encode::Error> for Error {
-    fn from(e: rmp_serde::encode::Error) -> Self {
-        Error::NetEncodeError(e)
-    }
-}
-
-impl From<crossbeam_channel::TryRecvError> for Error {
-    fn from(e: crossbeam_channel::TryRecvError) -> Self {
-        Error::ReadTimeout(e)
-    }
-}
-
-impl From<base64::DecodeError> for Error {
-    fn from(e: base64::DecodeError) -> Self {
-        Error::Base64Error(e)
-    }
-}
-
-impl From<std::string::FromUtf8Error> for Error {
-    fn from(e: std::string::FromUtf8Error) -> Self {
-        Error::UTFError(e)
-    }
-}
-
-impl From<tungstenite::Error> for Error {
-    fn from(e: tungstenite::Error) -> Self {
-        Error::WebsocketError(e)
-    }
-}
-
-impl From<serde_json::Error> for Error {
-    fn from(e: serde_json::Error) -> Self {
-        Error::JSONSerializeError(e)
-    }
-}
-
-impl From<rhai::ParseError> for Error {
-    fn from(e: rhai::ParseError) -> Self {
-        Error::RhaiParse(e)
-    }
-}
-
-impl From<Box<rhai::EvalAltResult>> for Error {
-    fn from(e: Box<rhai::EvalAltResult>) -> Self {
-        Error::RhaiError(e)
-    }
-}
-
-impl From<serde_yaml::Error> for Error {
-    fn from(e: serde_yaml::Error) -> Self {
-        Error::YamlError2(e)
-    }
-}
+from_err!(io::Error, IOError);
+from_err!(laminar::ErrorKind, SocketError);
+from_err!(rmp_serde::decode::Error, NetDecodeError);
+from_err!(rmp_serde::encode::Error, NetEncodeError);
+from_err!(crossbeam_channel::TryRecvError, ReadTimeout);
+from_err!(Box<rhai::EvalAltResult>, RhaiError);
+from_err!(serde_yaml::Error, YamlError2);
+from_err!(base64::DecodeError, Base64DecodeError);
+from_err!(tungstenite::Error, WebsocketError);
+from_err!(std::string::FromUtf8Error, ConvertToStringError);
+from_err!(std::net::AddrParseError, AddressParseError);
