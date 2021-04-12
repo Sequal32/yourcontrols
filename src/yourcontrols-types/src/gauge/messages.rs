@@ -89,7 +89,7 @@ pub struct DatumMessage {
     pub watch_period: Option<WatchPeriod>, // Watch variable
     pub condition: Option<ConditionMessage>,
     pub interpolate: Option<InterpolateMessage>,
-    pub mapping: Option<MappingType<u32>>,
+    pub mapping: Option<MappingType<MappingArgsMessage>>,
     pub sync_permission: Option<SyncPermission>,
 }
 
