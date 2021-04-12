@@ -320,7 +320,8 @@ fn main() {
                             } else {
                                 if from == client.get_server_name() {
                                     app_interface.lose_control();
-                                    control.lose_control( &conn, &definitions.lvarstransfer.transfer);
+                                    control
+                                        .lose_control(&conn, &definitions.lvarstransfer.transfer);
                                 }
                                 info!("[CONTROL] {} is now in control.", to);
                                 app_interface.set_incontrol(&to);
@@ -442,7 +443,8 @@ fn main() {
                                         client.stop("Error starting WS server. Do you have another YourControls open?".to_string())
                                     }
                                     // Freeze aircraft
-                                    control.lose_control( &conn, &definitions.lvarstransfer.transfer);
+                                    control
+                                        .lose_control(&conn, &definitions.lvarstransfer.transfer);
                                 }
                                 Err(e) => {
                                     error!("[DEFINITIONS] Could not load server sent configuration file: {}", e);
