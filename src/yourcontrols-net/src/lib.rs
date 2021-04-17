@@ -1,10 +1,7 @@
-mod client;
-mod messages;
-mod new;
-mod server;
-mod util;
+mod base;
+mod handshake;
+#[cfg(test)]
+mod test;
 
-pub use client::Client;
-pub use messages::{Message, Payloads, SenderReceiver};
-pub use server::Server;
-pub use util::{get_rendezvous_server, get_socket_config, Event, ReceiveMessage, TransferClient};
+use base::BaseSocket;
+use handshake::{DirectHandshake, Handshake, HandshakeConfig, HandshakeFail, SessionHostHandshake};
