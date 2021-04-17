@@ -156,4 +156,8 @@ impl WatchPeriod {
             WatchPeriod::Second => 1.0,
         }
     }
+
+    pub fn default() -> Self {
+        Self::Hz16
+    }
 }

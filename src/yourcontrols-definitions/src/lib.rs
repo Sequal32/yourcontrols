@@ -12,10 +12,9 @@ use std::path::Path;
 use store::{map_vec_to_database, DATABASE};
 use yourcontrols_types::{
     DatumMessage, Error, MappingArgsMessage, MappingType, Result, SyncPermission, VarId,
-    WatchPeriod,
 };
 
-use util::{get_index_from_var_name, merge, FullTemplate, PartialTemplate, Template, YamlTopDown};
+use util::{get_index_from_var_name, merge, PartialTemplate, Template, YamlTopDown};
 
 type TemplateName = String;
 
@@ -123,37 +122,49 @@ impl DefinitionsParser {
                 self.get_datum_with_template(template, index)
             }
             // Create a DatumMessage from a FullTemplate
-            Template::FullTemplate(mut full) => {
-                for set in full.sets.iter_mut() {
-                    match set.param.as_deref() {
-                        Some("index") => set.param = index.clone(),
-                        _ => {}
-                    }
-                }
-
+            Template::FullTemplate(full) => {
                 // Extra fields
                 let condition = full.get_misc_object("condition");
                 let interpolate = full.get_misc_object("interpolate");
 
                 // Map vars and events to VarIds
                 let vars: Vec<usize> = map_vec_to_database(full.vars, |x| DATABASE.add_var(x));
-                let sets: Vec<usize> = map_vec_to_database(full.sets, |x| DATABASE.add_event(x));
+                let watch_var = *vars.get(0).expect("No watch var");
 
-                let watch_var = *vars.get(0).ok_or(Error::None)?;
+                // Get a script mapping
+                let script_id = full
+                    .script
+                    .and_then(|script_name| self.templates.get_script_id(&script_name));
 
-                let mapping = match self.templates.get_script_id(&full.script) {
-                    Some(script_id) => MappingType::Script(MappingArgsMessage {
-                        script_id,
-                        vars: vars,
-                        sets: sets,
-                        params: full.params,
-                    }),
+                let mapping = match script_id {
+                    Some(script_id) => {
+                        // Preprocess sets
+                        let mut sets = full.sets.expect("sets for script");
+
+                        for set in sets.iter_mut() {
+                            match set.param.as_deref() {
+                                Some("index") => set.param = index.clone(),
+                                _ => {}
+                            }
+                        }
+
+                        let set_ids: Vec<usize> =
+                            map_vec_to_database(sets, |x| DATABASE.add_event(x));
+
+                        MappingType::Script(MappingArgsMessage {
+                            script_id,
+                            vars: vars,
+                            sets: set_ids,
+                            params: full.params,
+                        })
+                    }
                     None => MappingType::Var,
                 };
 
+                // Compile all info into a DatumMessage
                 return Ok(DatumMessage {
                     var: Some(watch_var),
-                    watch_period: Some(WatchPeriod::Hz16),
+                    watch_period: Some(full.period),
                     mapping: Some(mapping),
                     condition,
                     interpolate,
@@ -225,6 +236,10 @@ impl DefinitionsParser {
 
         if let Some(templates) = yaml.templates {
             self.templates.load_templates(templates);
+        }
+
+        if let Some(mappings) = yaml.mappings {
+            self.templates.load_templates(mappings);
         }
 
         if let Some(shared) = yaml.shared {
