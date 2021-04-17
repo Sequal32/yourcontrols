@@ -120,7 +120,7 @@ mod test {
 
     #[test]
     fn get_first_var_name() {
-        let template: Template = serde_yaml::from_str(
+        let p: PartialTemplate = serde_yaml::from_str(
             r#"
             name: ToggleSwitch
             vars:
@@ -129,6 +129,8 @@ mod test {
         "#,
         )
         .unwrap();
+
+        let template = Template::PartialTemplate(p);
 
         assert_eq!(template.get_first_var_name(), Some("TestName"))
     }
