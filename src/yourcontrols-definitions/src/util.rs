@@ -31,19 +31,6 @@ pub struct PartialTemplate {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OneTemplate {
-    #[serde(default)]
-    pub name: String,
-    pub script: String,
-    pub var: VarType,
-    pub set: EventMessage,
-    #[serde(default)]
-    pub params: Vec<Dynamic>,
-    #[serde(flatten)]
-    pub misc: Value,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct FullTemplate {
     pub name: String,
     pub script: String,
@@ -100,7 +87,6 @@ pub fn merge(a: &mut Value, b: &Value) {
 #[serde(untagged)]
 pub enum Template {
     FullTemplate(FullTemplate),
-    OneTemplate(OneTemplate),
     PartialTemplate(PartialTemplate),
 }
 
@@ -109,7 +95,6 @@ impl Template {
         match self {
             Template::PartialTemplate(t) => &t.name,
             Template::FullTemplate(t) => &t.name,
-            Template::OneTemplate(t) => &t.name,
         }
     }
 

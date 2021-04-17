@@ -122,18 +122,6 @@ impl DefinitionsParser {
                 let template = self.merge_subtemplates(partial)?;
                 self.get_datum_with_template(template, index)
             }
-            // Convert a OneTemplate to a FullTemplate
-            Template::OneTemplate(one) => self.get_datum_with_template(
-                Template::FullTemplate(FullTemplate {
-                    name: one.name,
-                    script: one.script,
-                    vars: vec![one.var],
-                    sets: vec![one.set],
-                    params: one.params,
-                    misc: one.misc,
-                }),
-                index,
-            ),
             // Create a DatumMessage from a FullTemplate
             Template::FullTemplate(mut full) => {
                 for set in full.sets.iter_mut() {
@@ -153,17 +141,15 @@ impl DefinitionsParser {
 
                 let watch_var = *vars.get(0).ok_or(Error::None)?;
 
-                let script_id = self
-                    .templates
-                    .get_script_id(&full.script)
-                    .ok_or(Error::None)?;
-
-                let mapping = MappingType::Script(MappingArgsMessage {
-                    script_id,
-                    vars: vars,
-                    sets: sets,
-                    params: full.params,
-                });
+                let mapping = match self.templates.get_script_id(&full.script) {
+                    Some(script_id) => MappingType::Script(MappingArgsMessage {
+                        script_id,
+                        vars: vars,
+                        sets: sets,
+                        params: full.params,
+                    }),
+                    None => MappingType::Var,
+                };
 
                 return Ok(DatumMessage {
                     var: Some(watch_var),
@@ -264,7 +250,7 @@ impl DefinitionsParser {
             };
 
             // Is rhai script
-            if path.ends_with(".rhai") {
+            if path.extension().map(|x| x == "rhai").unwrap_or(false) {
                 self.templates.load_script(path)?;
             }
         }
