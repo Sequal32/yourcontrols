@@ -38,11 +38,6 @@ impl RetryHelper {
     pub fn done(&self) -> bool {
         self.current_retry > self.max_retries
     }
-
-    pub fn reset(&mut self) {
-        self.current_retry = 0;
-        self.last_retry = None;
-    }
 }
 
 pub struct DirectHandshake {
@@ -104,8 +99,8 @@ impl Handshake for DirectHandshake {
         // Receive a handshake OK
         for message in self.socket.poll::<HandshakePayloads>() {
             match message {
-                Message::Payload(HandshakePayloads::Hello { .. }) => return Ok(self),
-                Message::Payload(HandshakePayloads::InvalidVersion) => {
+                Message::Payload(HandshakePayloads::Hello { .. }, _) => return Ok(self),
+                Message::Payload(HandshakePayloads::InvalidVersion, _) => {
                     return Err(HandshakeFail::InvalidVersion)
                 }
                 _ => {}
@@ -113,6 +108,10 @@ impl Handshake for DirectHandshake {
         }
 
         Err(HandshakeFail::InProgress(self))
+    }
+
+    fn get_config(&self) -> &HandshakeConfig {
+        &self.config
     }
 }
 
@@ -169,19 +168,22 @@ impl Handshake for PunchthroughHandshake {
         // Receive two ips to attempt connection to using a DirectHandshake
         for message in self.socket.poll::<HandshakePayloads>() {
             match message {
-                Message::Payload(HandshakePayloads::AttemptConnection {
-                    public_ip,
-                    local_ip,
-                }) => {
+                Message::Payload(
+                    HandshakePayloads::AttemptConnection {
+                        public_ip,
+                        local_ip,
+                    },
+                    _,
+                ) => {
                     let (public_ip, local_ip) = Self::get_ips(public_ip, local_ip)
                         .map_err(|_| HandshakeFail::InvalidData)?;
 
-                    return Ok(Box::new(DirectHandshake::new(
+                    return Err(HandshakeFail::InProgress(Box::new(DirectHandshake::new(
                         self.socket,
                         self.config,
                         public_ip,
                         Some(local_ip),
-                    )));
+                    ))));
                 }
                 _ => {}
             }
@@ -189,20 +191,95 @@ impl Handshake for PunchthroughHandshake {
 
         Err(HandshakeFail::InProgress(self))
     }
+
+    fn get_config(&self) -> &HandshakeConfig {
+        &self.config
+    }
+}
+
+pub struct SessionHostHandshake {
+    socket: BaseSocket,
+    config: HandshakeConfig,
+    retry: RetryHelper,
+}
+
+impl SessionHostHandshake {
+    pub fn new(socket: BaseSocket, config: HandshakeConfig) -> Self {
+        Self {
+            socket: socket,
+            retry: RetryHelper::new(config.retry_count),
+            config,
+        }
+    }
+
+    fn request_hosting(&self) {
+        self.socket
+            .send_to(
+                self.config.rendezvous_address,
+                &HandshakePayloads::RequestSession {
+                    self_hosted: self.config.self_hosted,
+                },
+            )
+            .unwrap();
+    }
+}
+
+impl Handshake for SessionHostHandshake {
+    fn handshake(mut self: Box<Self>) -> Result<Box<dyn Handshake>, HandshakeFail> {
+        if self.retry.done() {
+            return Err(HandshakeFail::NoMessage);
+        }
+
+        // Request IP
+        if self.retry.should_retry() {
+            self.request_hosting()
+        }
+
+        // Receive two ips to attempt connection to using a DirectHandshake
+        for message in self.socket.poll::<HandshakePayloads>() {
+            match message {
+                Message::Payload(HandshakePayloads::SessionDetails { session_id }, _) => {
+                    self.config.session_id = session_id;
+                    return Ok(self);
+                }
+                _ => {}
+            }
+        }
+
+        Err(HandshakeFail::InProgress(self))
+    }
+
+    fn get_config(&self) -> &HandshakeConfig {
+        &self.config
+    }
+
+    fn inner(self) -> BaseSocket {
+        self.socket
+    }
 }
 
 pub trait Handshake {
     fn inner(self) -> BaseSocket;
     fn handshake(self: Box<Self>) -> Result<Box<dyn Handshake>, HandshakeFail>;
+    fn get_config(&self) -> &HandshakeConfig;
+    fn get_session_id(&self) -> &String {
+        &self.get_config().session_id
+    }
 }
 
-pub struct SessionHostHandshake {}
+impl std::fmt::Debug for dyn Handshake {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self.get_config())
+    }
+}
 
+#[derive(Debug)]
 pub struct HandshakeConfig {
-    rendezvous_address: SocketAddr,
-    retry_count: u16,
-    version: String,
-    session_id: String,
+    pub rendezvous_address: SocketAddr,
+    pub retry_count: u16,
+    pub version: String,
+    pub session_id: String,
+    pub self_hosted: bool,
 }
 
 impl Default for HandshakeConfig {
@@ -212,13 +289,13 @@ impl Default for HandshakeConfig {
             retry_count: 5,
             version: String::new(),
             session_id: String::new(),
+            self_hosted: false,
         }
     }
 }
 
+#[derive(Debug)]
 pub enum HandshakeFail {
-    Completed,
-    RendezvousFail,
     NoMessage,
     InvalidData,
     InvalidVersion,
@@ -228,6 +305,8 @@ pub enum HandshakeFail {
 #[derive(Serialize, Deserialize)]
 pub enum HandshakePayloads {
     Hello { session_id: String, version: String },
+    RequestSession { self_hosted: bool },
+    SessionDetails { session_id: String },
     AttemptConnection { public_ip: String, local_ip: String }, // Base64 encoded strings
     InvalidSession,
     InvalidVersion,

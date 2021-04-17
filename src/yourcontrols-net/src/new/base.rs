@@ -2,9 +2,9 @@ use crossbeam_channel::{Receiver, Sender};
 use laminar::{Config, Packet, Socket, SocketEvent};
 use rmp_serde;
 use serde::{de::DeserializeOwned, Serialize};
-use std::collections::HashSet;
-use std::net::SocketAddr;
+use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
 use std::time::{Duration, Instant};
+use std::{collections::HashSet, net::ToSocketAddrs};
 use yourcontrols_types::{Error, Result};
 
 pub const HEARTBEAT_INTERVAL: u64 = 500;
@@ -26,7 +26,14 @@ pub struct BaseSocket {
 
 impl BaseSocket {
     pub fn start(port: u16) -> Result<Self> {
-        let socket = Socket::bind_with_config(format!("0.0.0.0:{}", port), get_config())?;
+        Self::start_with_bind_address(SocketAddr::V4(SocketAddrV4::new(
+            Ipv4Addr::new(0, 0, 0, 0),
+            port,
+        )))
+    }
+
+    pub fn start_with_bind_address(address: impl ToSocketAddrs) -> Result<Self> {
+        let socket = Socket::bind_with_config(address, get_config())?;
 
         Ok(Self {
             tx: socket.get_packet_sender(),
@@ -65,7 +72,7 @@ impl BaseSocket {
                     buffer.push(Message::LostConnection(addr));
                 }
                 SocketEvent::Packet(packet) => match rmp_serde::from_read_ref(packet.payload()) {
-                    Ok(p) => buffer.push(Message::Payload(p)),
+                    Ok(p) => buffer.push(Message::Payload(p, packet.addr())),
                     _ => continue,
                 },
                 _ => {}
@@ -116,7 +123,7 @@ impl BaseSocket {
 pub enum Message<T> {
     NewConnection(SocketAddr),
     LostConnection(SocketAddr),
-    Payload(T),
+    Payload(T, SocketAddr),
 }
 
 pub trait Payload {
