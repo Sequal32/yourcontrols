@@ -1,17 +1,15 @@
 <template>
   <div class="main">
-    <img alt="YourControls" src="../assets/logo.png"/>
-    <div class="version">
-      Version {{version}}
-    </div>
+    <img alt="YourControls" src="../assets/logo.png" />
+    <div class="version">Version {{ version }}</div>
     <div class="selector">
-      <router-link class="button aircraft" :to="{name:'aircraft'}">
+      <router-link class="button aircraft" :to="{ name: 'aircraft' }">
         Aircraft
       </router-link>
-      <router-link class="button changelog" :to="{name:'changelog'}">
+      <router-link class="button changelog" :to="{ name: 'changelog' }">
         Changelog
       </router-link>
-      <router-link class="button network" :to="{name:'networkTest'}">
+      <router-link class="button network" :to="{ name: 'networkTest' }">
         Test Network
       </router-link>
     </div>
@@ -23,9 +21,9 @@ import Vue from "vue";
 export default Vue.extend({
   computed: {
     version() {
-      return window.localStorage.getItem("version")
+      return window.localStorage.getItem("version");
     }
-  },
+  }
 });
 </script>
 
@@ -34,21 +32,21 @@ export default Vue.extend({
   text-align: center;
   img {
     margin: 15px;
-    width: 75%; 
+    width: 75%;
   }
-  .version{
+  .version {
     font: normal normal 300 19px/26px Segoe UI;
   }
-  .selector{
+  .selector {
     display: flex;
     width: 75%;
     margin: auto;
     margin-top: 6.5rem;
     justify-content: space-around;
-    .button{
+    .button {
       height: 92px;
       width: 92px;
-      background-color: #00404C;
+      background-color: #00404c;
       text-align: center;
       padding: 8px;
       border-radius: 1rem;
@@ -83,7 +81,7 @@ export default Vue.extend({
         background-color: #005566;
         cursor: pointer;
       }
-      &.min{
+      &.min {
         width: 99px;
         height: 28px;
         font: normal normal bold 17px/22px Segoe UI;
