@@ -19,10 +19,10 @@ macro_rules! events {
     ($V:ident) => {
         $V!(
             // CMD Variant, Javascript receive string
-            (StartUpText, startUpText),
-            (InitData, initData),
-            (LoadingComplete, loadingComplete),
-            (NetworkTestResult, networkTestResult),
+            (StartUpText, "startUpText"),
+            (InitData, "initData"),
+            (LoadingComplete, "loadingComplete"),
+            (NetworkTestResult, "networkTestResult"),
         )
     };
 }
@@ -66,7 +66,7 @@ impl Ui {
                                     Ok(event) => match &event {
                                         $(
                                             UIEvents::$event_name { .. } => {
-                                                tauri::event::emit(&mut webview, "$cmd_name", Some(event))
+                                                tauri::event::emit(&mut webview, $cmd_name, Some(event))
                                             }
                                         )*
                                     }

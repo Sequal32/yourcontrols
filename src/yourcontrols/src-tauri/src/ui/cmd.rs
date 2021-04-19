@@ -1,29 +1,25 @@
-use serde::{Deserialize, Serialize};
 use semver::Version;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(tag = "cmd", rename_all = "camelCase")]
 pub enum Cmd {
-    TestNetwork {
-        port: i64
-    },
+    TestNetwork { port: i64 },
     UiReady,
-    InstallAircraft {
-        names: Vec<String>,
-    },
+    InstallAircraft { names: Vec<String> },
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Aircraft {
     pub newest_version: Option<Version>,
     pub installed_version: Option<Version>,
     pub install_locked: bool,
     pub name: String,
-    pub author: String
+    pub author: String,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(untagged, rename_all = "camelCase")]
 pub enum UIEvents {
     StartUpText {
@@ -31,7 +27,7 @@ pub enum UIEvents {
     },
     InitData {
         version: String,
-        aircraft: Vec<Aircraft>
+        aircraft: Vec<Aircraft>,
     },
     LoadingComplete,
     NetworkTestResult {
@@ -39,7 +35,7 @@ pub enum UIEvents {
         status: ResultStatus,
     },
 }
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub enum TestNetworkResult {
     CloudServer,
@@ -48,7 +44,7 @@ pub enum TestNetworkResult {
     Direct,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub enum ResultStatus {
     Pending {},
@@ -56,9 +52,8 @@ pub enum ResultStatus {
     Success {},
 }
 
-
-#[derive(Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase", tag="cmd")]
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase", tag = "cmd")]
 pub enum GameUiPayloads {
     Host {
         port: Option<u16>,
@@ -90,8 +85,8 @@ pub enum GameUiPayloads {
         client: String,
         message: String,
         time: String,
-        pinned: Option<bool>
+        pinned: Option<bool>,
     },
     Connected,
-    Disconnected
+    Disconnected,
 }
