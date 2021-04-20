@@ -46,10 +46,14 @@ pub enum Error {
     RhaiParse(rhai::ParseError),
     RhaiError(Box<rhai::EvalAltResult>),
 
+    // Networking
+    HttpError(attohttpc::Error),
+
     // Misc
     Base64DecodeError(base64::DecodeError),
     ConvertToStringError(std::string::FromUtf8Error),
     AddressParseError(std::net::AddrParseError),
+    SemverError(semver::SemVerError),
     None,
     NotProcessed,
 }
@@ -110,6 +114,8 @@ impl Display for Error {
             Error::Base64DecodeError(e) => write!(f, "Could not decode data from base64: {}", e),
             Error::ConvertToStringError(e) => write!(f, "Could not convert bytes to string: {}", e),
             Error::AddressParseError(e) => write!(f, "Could not parse socket address: {}", e),
+            Error::HttpError(e) => write!(f, "Could not complete request: {}", e),
+            Error::SemverError(e) => write!(f, "Could not parse version: {}", e),
         }
     }
 }
@@ -137,3 +143,5 @@ from_err!(tungstenite::Error, WebsocketError);
 from_err!(std::string::FromUtf8Error, ConvertToStringError);
 from_err!(std::net::AddrParseError, AddressParseError);
 from_err!(serde_json::Error, JSONSerializeError);
+from_err!(attohttpc::Error, HttpError);
+from_err!(semver::SemVerError, SemverError);

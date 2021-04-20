@@ -9,9 +9,9 @@ pub enum Cmd {
     InstallAircraft { names: Vec<String> },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
 #[serde(rename_all = "camelCase")]
-pub struct Aircraft {
+pub struct AircraftInstallData {
     pub newest_version: Option<Version>,
     pub installed_version: Option<Version>,
     pub install_locked: bool,
@@ -27,7 +27,7 @@ pub enum UIEvents {
     },
     InitData {
         version: String,
-        aircraft: Vec<Aircraft>,
+        aircraft: Vec<AircraftInstallData>,
     },
     LoadingComplete,
     NetworkTestResult {

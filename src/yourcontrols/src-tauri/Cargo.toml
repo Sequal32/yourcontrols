@@ -6,16 +6,17 @@ repository = "https://github.com/Sequal32/yourcontrols"
 edition = "2018"
 
 [dependencies]
+attohttpc = { version = "0.17", features = ["json"] }
 serde_json = "1.0"
 crossbeam-channel = "0.5"
 tungstenite = "0.13"
 simplelog = "0.10"
 serde_repr = "0.1"
+serde_yaml = "0.8"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "0.11", features = ["all-api"] }
 log = "0.4"
 semver = { version = "0.11", features = ["serde"] }
-
 yourcontrols-types = { path = "../../yourcontrols-types" }
 
 [target."cfg(windows)".build-dependencies]
@@ -24,7 +25,3 @@ winres = "0.1"
 [features]
 embedded-server = ["tauri/embedded-server"]
 no-server = ["tauri/no-server"]
-
-[[bin]]
-name = "yourcontrols_ui"
-path = "src/test.rs"
