@@ -1,7 +1,11 @@
 mod base;
 mod handshake;
+mod payloads;
 #[cfg(test)]
 mod test;
 
-use base::BaseSocket;
-use handshake::{DirectHandshake, Handshake, HandshakeConfig, HandshakeFail, SessionHostHandshake};
+pub use base::{BaseSocket, Message};
+pub use handshake::{
+    DirectHandshake, Handshake, HandshakeConfig, HandshakeFail, SessionHostHandshake,
+};
+pub use payloads::MainPayloads;

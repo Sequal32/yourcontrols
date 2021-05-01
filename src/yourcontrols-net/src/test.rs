@@ -43,24 +43,24 @@ impl RendezvousTester {
     }
 
     pub fn poll(&mut self) {
-        for message in self.socket.poll::<HandshakePayloads>() {
+        for message in self.socket.poll::<MainPayloads>() {
             match message {
-                Message::Payload(HandshakePayloads::Hello { .. }, addr) => {
+                Message::Payload(MainPayloads::Hello { .. }, addr) => {
                     self.socket
                         .send_to(
                             addr,
-                            &HandshakePayloads::AttemptConnection {
+                            &MainPayloads::AttemptConnection {
                                 public_ip: self.encode_address(),
                                 local_ip: self.encode_address(),
                             },
                         )
                         .unwrap();
                 }
-                Message::Payload(HandshakePayloads::RequestSession { self_hosted }, addr) => {
+                Message::Payload(MainPayloads::RequestSession { self_hosted }, addr) => {
                     self.socket
                         .send_to(
                             addr,
-                            &HandshakePayloads::SessionDetails {
+                            &MainPayloads::SessionDetails {
                                 session_id: if self_hosted {
                                     SELF_SESSION_ID.to_string()
                                 } else {
@@ -90,10 +90,10 @@ impl DirectTester {
     }
 
     pub fn poll(&mut self) {
-        for message in self.socket.poll::<HandshakePayloads>() {
+        for message in self.socket.poll::<MainPayloads>() {
             match message {
                 Message::Payload(
-                    HandshakePayloads::Hello {
+                    MainPayloads::Hello {
                         session_id,
                         version,
                     },
@@ -103,9 +103,9 @@ impl DirectTester {
                         .send_to(
                             addr,
                             &if self.invalid_version {
-                                HandshakePayloads::InvalidVersion
+                                MainPayloads::InvalidVersion
                             } else {
-                                HandshakePayloads::Hello {
+                                MainPayloads::Hello {
                                     session_id,
                                     version,
                                 }

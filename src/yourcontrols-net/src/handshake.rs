@@ -1,8 +1,7 @@
 use std::{net::SocketAddr, time::Instant};
-
-use laminar::Packet;
-use serde::{Deserialize, Serialize};
 use yourcontrols_types::Error;
+
+use crate::payloads::MainPayloads;
 
 use super::base::{BaseSocket, Message, Payload};
 
@@ -68,7 +67,7 @@ impl DirectHandshake {
         socket
             .send_to(
                 addr,
-                &HandshakePayloads::Hello {
+                &MainPayloads::Hello {
                     session_id: config.session_id.clone(),
                     version: config.version.clone(),
                 },
@@ -97,10 +96,10 @@ impl Handshake for DirectHandshake {
         }
 
         // Receive a handshake OK
-        for message in self.socket.poll::<HandshakePayloads>() {
+        for message in self.socket.poll::<MainPayloads>() {
             match message {
-                Message::Payload(HandshakePayloads::Hello { .. }, _) => return Ok(self),
-                Message::Payload(HandshakePayloads::InvalidVersion, _) => {
+                Message::Payload(MainPayloads::Hello { .. }, _) => return Ok(self),
+                Message::Payload(MainPayloads::InvalidVersion, _) => {
                     return Err(HandshakeFail::InvalidVersion)
                 }
                 _ => {}
@@ -141,7 +140,7 @@ impl PunchthroughHandshake {
         self.socket
             .send_to(
                 self.config.rendezvous_address,
-                &HandshakePayloads::Hello {
+                &MainPayloads::Hello {
                     session_id: self.config.session_id.clone(),
                     version: self.config.version.clone(),
                 },
@@ -166,10 +165,10 @@ impl Handshake for PunchthroughHandshake {
         }
 
         // Receive two ips to attempt connection to using a DirectHandshake
-        for message in self.socket.poll::<HandshakePayloads>() {
+        for message in self.socket.poll::<MainPayloads>() {
             match message {
                 Message::Payload(
-                    HandshakePayloads::AttemptConnection {
+                    MainPayloads::AttemptConnection {
                         public_ip,
                         local_ip,
                     },
@@ -216,7 +215,7 @@ impl SessionHostHandshake {
         self.socket
             .send_to(
                 self.config.rendezvous_address,
-                &HandshakePayloads::RequestSession {
+                &MainPayloads::RequestSession {
                     self_hosted: self.config.self_hosted,
                 },
             )
@@ -236,9 +235,9 @@ impl Handshake for SessionHostHandshake {
         }
 
         // Receive two ips to attempt connection to using a DirectHandshake
-        for message in self.socket.poll::<HandshakePayloads>() {
+        for message in self.socket.poll::<MainPayloads>() {
             match message {
-                Message::Payload(HandshakePayloads::SessionDetails { session_id }, _) => {
+                Message::Payload(MainPayloads::SessionDetails { session_id }, _) => {
                     self.config.session_id = session_id;
                     return Ok(self);
                 }
@@ -300,20 +299,4 @@ pub enum HandshakeFail {
     InvalidData,
     InvalidVersion,
     InProgress(Box<dyn Handshake>),
-}
-
-#[derive(Serialize, Deserialize)]
-pub enum HandshakePayloads {
-    Hello { session_id: String, version: String },
-    RequestSession { self_hosted: bool },
-    SessionDetails { session_id: String },
-    AttemptConnection { public_ip: String, local_ip: String }, // Base64 encoded strings
-    InvalidSession,
-    InvalidVersion,
-}
-
-impl Payload for HandshakePayloads {
-    fn get_packet(&self, addr: SocketAddr, bytes: Vec<u8>) -> laminar::Packet {
-        Packet::reliable_ordered(addr, bytes, None)
-    }
 }
