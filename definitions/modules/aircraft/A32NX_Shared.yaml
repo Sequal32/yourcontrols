@@ -22,65 +22,6 @@ shared:
     event_name: TOGGLE_FLIGHT_DIRECTOR
     event_param: 2
     use_calculator: true
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT HEADING LOCK DIR:1
-    var_units: Degrees
-    var_type: f64
-    event_name: HEADING_BUG_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
-    var_units: Knots
-    var_type: f64
-    event_name: AP_SPD_VAR_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT VERTICAL HOLD VAR:2
-    var_units: Feet per minute
-    var_type: i32
-    event_name: AP_VS_VAR_SET_ENGLISH
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
-    var_units: Feet
-    var_type: i32
-    event_name: AP_ALT_VAR_SET_ENGLISH
-    event_param: 3
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
-    var_units: Bool
-    event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT THROTTLE ARM
-    var_units: Bool
-    event_name: AUTO_THROTTLE_ARM
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
-    var_units: Bool
-    event_name: AUTO_THROTTLE_TO_GA
-  -
-    type: event
-    event_name: AP_APR_HOLD
-  -
-    type: event
-    event_name: AP_APR_HOLD_ON
-  -
-    type: event
-    event_name: AP_LOC_HOLD
-  -
-    type: event
-    event_name: AP_LOC_HOLD_ON
-  -
-    type: event
-    event_name: AP_LOC_HOLD_OFF
-
   - # Bleed
     type: ToggleSwitch
     var_name: A:BLEED AIR ENGINE:1
@@ -173,6 +114,18 @@ shared:
     var_name: A:EXTERNAL POWER ON:1
     var_units: Bool
     event_name: TOGGLE_EXTERNAL_POWER
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ELEC_BAT_1_PB_IS_AUTO
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ELEC_BAT_2_PB_IS_AUTO
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ELEC_BAT_1_PB_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ELEC_BAT_2_PB_HAS_FAULT
   -
     type: var
     var_name: L:A32NX_OVHD_ELEC_BAT_10_PB_IS_AUTO
@@ -620,31 +573,6 @@ shared:
       - equals:
           F64: 1.0
 
-  - # Trim
-    type: NumSet
-    var_name: A:RUDDER TRIM PCT
-    var_units: Percent scaler 16k
-    var_type: f64
-    event_name: RUDDER_TRIM_SET_EX1
-    conditions: 
-      - var:
-          var_name: L:A32NX_AUTOPILOT_ACTIVE
-          var_type: f64
-        equals:
-          F64: 0.0
-  -
-    type: NumSet
-    var_name: A:ELEVATOR TRIM PCT
-    var_units: Percent scaler 16k
-    var_type: f64
-    event_name: ELEVATOR_TRIM_SET
-    conditions: # Because the aircraft is FBW, the trim is constantly adjusted so there's no need to sync this in the air
-      - var:
-          var_name: A:SIM ON GROUND
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: true
   -
     type: NumSet
     var_name: A:AILERON TRIM PCT
@@ -697,15 +625,6 @@ shared:
   -
     type: var
     var_name: L:A32NX_COLD_AND_DARK_SPAWN
-  -
-    type: var
-    var_name: L:A32NX_APU_BLEED_AIR_VALVE_OPEN # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_APU_BLEED_FAULT # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_APU_BLEED_ON # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:A32NX_OVHD_HYD_ENG_1_PUMP_PB_IS_AUTO
@@ -785,24 +704,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_APU_LOW_FUEL_PRESSURE_FAULT
-  -
-    type: var
-    var_name: L:A32NX_APU_MASTER_SW_ACTIVATED # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_APU_MASTER_FAULT # TO BE REMOVED ON NEXT STABLE
   # -
   #   type: var
   #   var_name: L:A32NX_APU_N
-  -
-    type: var
-    var_name: L:A32NX_APU_START_CONTACTOR_ENERGIZED # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_APU_AVAILABLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_APU_START_ACTIVATED # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:A32NX_OVHD_APU_START_PB_IS_ON
@@ -916,12 +820,6 @@ shared:
     var_name: L:A32NX_BARO_BUGS_ACTIVE
   -
     type: var
-    var_name: L:XMLVAR_Momentary_PUSH_OVHD_ELEC_BAT1_Pressed
-  -
-    type: var
-    var_name: L:XMLVAR_Momentary_PUSH_OVHD_ELEC_BAT2_Pressed
-  -
-    type: var
     var_name: L:XMLVAR_Momentary_PUSH_OVHD_ELEC_GEN1_Pressed
   -
     type: var
@@ -968,33 +866,6 @@ shared:
   -
     type: var
     var_name: L:A32NX_OVHD_APU_MASTER_SW_PB_HAS_FAULT
-  -
-    type: var
-    var_name: L:A32NX_ELEC_COMMERCIAL_TOGGLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_ELEC_COMMERCIAL_FAULT # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_ELEC_GALYCAB_TOGGLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_ELEC_GALYCAB_FAULT # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_ELEC_IDG1_FAULT # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_ELEC_IDG2_FAULT # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_ELEC_BUSTIE_TOGGLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_ELEC_ACESSFEED_TOGGLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_ELEC_ACESSFEED_FAULT # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:XMLVAR_Momentary_PUSH_OVHD_APU_MASTERSW_Pressed
@@ -1111,40 +982,10 @@ shared:
     var_name: L:A32NX_EMERELECPWR_MANONLOCK_TOGGLE
   -
     type: var
-    var_name: L:A32NX_HYD_ENG1PUMP_TOGGLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_HYD_ENG1PUMP_FAULT # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_HYD_ENG2PUMP_TOGGLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_HYD_ENG2PUMP_FAULT # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
     var_name: L:A32NX_HYD_RATMANONLOCK_TOGGLE
   -
     type: var
     var_name: L:A32NX_HYD_ELECPUMP_TOGGLE_LOCK
-  -
-    type: var
-    var_name: L:A32NX_HYD_ELECPUMP_TOGGLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_HYD_ELECPUMP_FAULT # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_HYD_PTU_TOGGLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_HYD_PTU_FAULT # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_HYD_ELECPUMPY_TOGGLE # TO BE REMOVED ON NEXT STABLE
-  -
-    type: var
-    var_name: L:A32NX_HYD_ELECPUMPY_FAULT # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:A32NX_AIRCOND_PACK1_TOGGLE
@@ -1325,9 +1166,6 @@ shared:
   -
     type: var
     var_name: L:A32NX_OVHD_HYD_BLUEPUMP_OVRD_LOCK
-  -
-    type: var
-    var_name: L:A32NX_OVHD_HYD_BLUEPUMP_OVRD # TO BE REMOVED ON NEXT STABLE
   -
     type: var
     var_name: L:A32NX_OVHD_HYD_LEAK_MEASUREMENT_G_LOCK
@@ -1619,21 +1457,6 @@ shared:
   -
     type: var
     var_name: L:A32NX_COCKPIT_DOOR_LOCKED
-  - # TO BE REMOVED ON NEXT STABLE
-    type: var
-    var_name: L:PUSH_AUTOPILOT_CHRONO_L
-  - # TO BE REMOVED ON NEXT STABLE
-    type: var
-    var_name: L:PUSH_AUTOPILOT_CHRONO_R
-  - # TO BE REMOVED ON NEXT STABLE
-    type: var
-    var_name: L:PUSH_CHRONO_RST
-  - # TO BE REMOVED ON NEXT STABLE
-    type: var
-    var_name: L:PUSH_CHRONO_CHR
-  - # TO BE REMOVED ON NEXT STABLE
-    type: var
-    var_name: L:PUSH_CHRONO_SET
   -
     type: var
     var_name: L:A32NX_CHRONO_ET_SWITCH_POS
@@ -1704,27 +1527,12 @@ shared:
     type: var
     var_name: L:XMLVAR_COCKPIT_COFFEE_R_HIDDEN
 
-  -
-    type: NumSet
-    var_name: A:FLAPS HANDLE PERCENT
-    var_units: Percent scaler 16k
-    var_type: i32
-    event_name: FLAPS_SET
-    use_calculator: true
-
   - # ASOBO_LANDING_GEAR_Lever_Gear_Template (Var to support Up/Off/Down)
     type: var
     var_name: A:GEAR HANDLE POSITION
     var_units: Number
     var_type: i32
 
-  - # ASOBO_HANDLING_Lever_Spoilers_Template
-    type: NumSet
-    var_name: A:SPOILERS HANDLE POSITION
-    var_units: Position 16k
-    var_type: i32
-    event_name: SPOILERS_SET
-    use_calculator: true
   -
     type: ToggleSwitch
     var_name: L:A32NX_SPOILERS_ARMED
@@ -1837,7 +1645,7 @@ init:
       - XPNDR_1000_DEC
 
 ignore:
-  # Dev
+  # Radios
   - A32NX_RMP_L_OUTER_KNOB_TURNED_CLOCKWISE
   - A32NX_RMP_L_OUTER_KNOB_TURNED_ANTICLOCKWISE
   - A32NX_RMP_L_INNER_KNOB_TURNED_ANTICLOCKWISE
@@ -1848,14 +1656,6 @@ ignore:
   - A32NX_RMP_R_INNER_KNOB_TURNED_ANTICLOCKWISE
   - A32NX_RMP_R_INNER_KNOB_TURNED_CLOCKWISE
   - A32NX_RMP_R_TRANSFER_BUTTON_PRESSED
-  # Stable
-  - A320_Neo_FDW_BTN_L_TRANSFER
-  - A320_Neo_FDW_DIAL_L_DECIMAL_INC
-  - A320_Neo_FDW_DIAL_L_DECIMAL_DEC
-  - A320_Neo_FDW_DIAL_L_INTEGER_INC
-  - A320_Neo_FDW_DIAL_L_INTEGER_DEC
-  - A320_Neo_FDW_BTN_R_TRANSFER
-  - A320_Neo_FDW_DIAL_R_DECIMAL_INC
-  - A320_Neo_FDW_DIAL_R_DECIMAL_DEC
-  - A320_Neo_FDW_DIAL_R_INTEGER_INC
-  - A320_Neo_FDW_DIAL_R_INTEGER_DEC
+
+  # Autopilot
+  

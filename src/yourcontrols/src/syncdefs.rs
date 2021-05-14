@@ -157,6 +157,7 @@ pub struct NumSet<T> {
     multiply_by: Option<T>,
     add_by: Option<T>,
     index_reversed: bool,
+    is_user_event: bool,
 
     current: T,
 }
@@ -180,6 +181,10 @@ where
             },
             None => self.event_name = None,
         }
+    }
+
+    pub fn set_is_user_event(&mut self, is_user_event: bool) {
+        self.is_user_event = is_user_event
     }
 
     pub fn set_swap_event(&mut self, event_id: u32) {
@@ -220,6 +225,8 @@ where
             return;
         }
 
+        let object_id = if self.is_user_event { 0 } else { 1 };
+
         let value = match self.multiply_by.as_ref() {
             Some(multiply_by) => new * multiply_by.clone(),
             None => new,
@@ -245,16 +252,22 @@ where
             lvar_transfer.set_unchecked(conn, event_name, None, &value_string);
         } else {
             conn.transmit_client_event(
-                1,
+                object_id,
                 self.event_id,
                 value.to_i32().unwrap() as u32,
                 GROUP_ID,
-                0,
+                simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
             );
         }
 
         if let Some(swap_event_id) = self.swap_event_id {
-            conn.transmit_client_event(1, swap_event_id, 0, GROUP_ID, 0);
+            conn.transmit_client_event(
+                object_id,
+                swap_event_id,
+                0,
+                GROUP_ID,
+                simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
+            );
         }
     }
 }
@@ -262,6 +275,7 @@ where
 pub struct NumIncrement<T> {
     pub up_event_id: u32,
     pub down_event_id: u32,
+    pub is_user_event: bool,
     pub increment_amount: T,
     pub current: T,
     pub pass_difference: bool,
@@ -269,13 +283,19 @@ pub struct NumIncrement<T> {
 
 impl<T> NumIncrement<T>
 where
-    T: Default,
+    T: Default + ToString,
 {
-    pub fn new(up_event_id: u32, down_event_id: u32, increment_amount: T) -> Self {
+    pub fn new(
+        up_event_id: u32,
+        down_event_id: u32,
+        is_user_event: bool,
+        increment_amount: T,
+    ) -> Self {
         Self {
             up_event_id,
             down_event_id,
             increment_amount,
+            is_user_event,
             current: Default::default(),
             pass_difference: false,
         }
@@ -296,34 +316,47 @@ where
 
     fn set_new(&mut self, new: T, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
         let mut working = self.current;
+        let object_id = if self.is_user_event { 0 } else { 1 };
 
         if self.pass_difference {
             if new > self.current {
                 conn.transmit_client_event(
-                    1,
+                    object_id,
                     self.up_event_id,
                     (new - self.current).to_i32().unwrap() as u32,
                     GROUP_ID,
-                    0,
+                    simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
                 );
             } else if new < self.current {
                 conn.transmit_client_event(
-                    1,
+                    object_id,
                     self.down_event_id,
                     (self.current - new).to_i32().unwrap() as u32,
                     GROUP_ID,
-                    0,
+                    simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
                 );
             }
         } else {
             while working > new {
                 working -= self.increment_amount;
-                conn.transmit_client_event(1, self.down_event_id, 0, GROUP_ID, 0);
+                conn.transmit_client_event(
+                    object_id,
+                    self.down_event_id,
+                    0,
+                    GROUP_ID,
+                    simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
+                );
             }
 
             while working < new {
                 working += self.increment_amount;
-                conn.transmit_client_event(1, self.up_event_id, 0, GROUP_ID, 0);
+                conn.transmit_client_event(
+                    object_id,
+                    self.up_event_id,
+                    0,
+                    GROUP_ID,
+                    simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
+                );
             }
         }
     }

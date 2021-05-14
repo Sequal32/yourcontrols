@@ -1,0 +1,230 @@
+include:
+  - definitions/modules/aircraft/A32NX_Shared.yaml
+
+shared:
+  - # ASOBO_ENGINE_Switch_Master_Template
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
+    var_units: Bool
+    event_name: ENGINE_MASTER_1_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:2
+    var_units: Bool
+    event_name: ENGINE_MASTER_2_TOGGLE
+
+  - # ASOBO_ENGINE_Push_Ignition_Template (Also works for non-EX1)
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET1
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET2
+
+  -
+    type: NumSet
+    var_name: L:A32NX_AUTOPILOT_VS_SELECTED
+    var_type: f64
+    event_name: A32NX.FCU_VS_SET
+    use_calculator: true
+    conditions:
+      -
+        var:
+          var_name: L:A32NX_TRK_FPA_MODE_ACTIVE
+          var_type: f64
+        equals:
+          F64: 0.0
+
+  -
+    type: NumSet
+    var_name: L:A32NX_AUTOPILOT_FPA_SELECTED
+    var_type: f64
+    event_name: A32NX.FCU_VS_SET
+    multiply_by: 10
+    use_calculator: true
+    conditions:
+      -
+        var:
+          var_name: L:A32NX_TRK_FPA_MODE_ACTIVE
+          var_type: f64
+        equals:
+          F64: 1.0
+
+  -
+    type: NumSet
+    var_name: L:A32NX_AUTOPILOT_HEADING_SELECTED
+    var_type: f64
+    event_name: A32NX.FCU_HDG_SET
+    use_calculator: true
+
+
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
+    var_units: Feet
+    var_type: f64
+    event_name: A32NX.FCU_ALT_SET
+    use_calculator: true
+  
+
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: f64
+    event_name: A32NX.FCU_SPD_SET
+    use_calculator: true
+    conditions:
+      - 
+        var:
+          var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+          var_units: Bool
+          var_type: bool
+        equals:
+            Bool: false
+
+  -
+    type: NumSet
+    var_name: L:A32NX_FLAPS_HANDLE_PERCENT
+    var_type: f64
+    event_name: FLAPS_SET
+    use_calculator: true
+    multiply_by: 16192
+
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: ELEVATOR_TRIM_SET
+    is_user_event: true
+    conditions: # Because the aircraft is FBW, the trim is constantly adjusted so there's no need to sync this in the air
+      - var:
+          var_name: A:SIM ON GROUND
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: true
+
+  - # Trim
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: RUDDER_TRIM_SET_EX1
+    is_user_event: true
+    conditions: 
+      - var:
+          var_name: L:A32NX_AUTOPILOT_ACTIVE
+          var_type: f64
+        equals:
+          F64: 0.0
+  
+  - # ASOBO_HANDLING_Lever_Spoilers_Template
+    type: NumSet
+    var_name: L:A32NX_SPOILERS_HANDLE_POSITION
+    var_type: f64
+    event_name: SPOILERS_SET
+    multiply_by: 16384
+    is_user_event: true
+
+master:
+  -
+    type: var
+    var_name: L:A32NX_AUTOTHRUST_TLA:1
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: L:A32NX_AUTOTHRUST_TLA:2
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:TURB ENG N1:1
+    var_units: Percent scaler 16k
+    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:TURB ENG N1:2
+    var_units: Percent scaler 16k
+    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:TURB ENG N2:1
+    var_units: Percent scaler 16k
+    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:TURB ENG N2:2
+    var_units: Percent scaler 16k
+    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:TURB ENG ITT:1
+    var_units: Rankine
+    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:TURB ENG ITT:2
+    var_units: Rankine
+    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:ENG TORQUE:1
+    var_units: Foot pounds
+    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:ENG TORQUE:2
+    var_units: Foot pounds
+    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
+    interpolate: DefaultConstant
+
+  -
+    type: var
+    var_name: A:ELEVATOR POSITION
+    var_units: Position 16k
+    var_type: i32
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:AILERON POSITION
+    var_units: Position 16k
+    var_type: i32
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:RUDDER POSITION
+    var_units: Position 16k
+    var_type: i32
+    interpolate: DefaultConstant
+
+ignore:
+  - A320_Neo_FCU_HDG_INC_HEADING
+  - A320_Neo_FCU_HDG_DEC_HEADING
+  - AP_KNOB_Up
+  - AP_KNOB_Down
+  - A320_Neo_CDU_AP_INC_ALT
+  - A320_Neo_CDU_AP_DEC_ALT
+  - A320_Neo_FCU_VS_INC_VS
+  - A320_Neo_FCU_VS_DEC_VS
+  - A320_Neo_CDU_VS
+  - A320_Neo_FCU_SPEED_INC
+  - A320_Neo_FCU_SPEED_DEC
+  - A320_Neo_FCU_VS_SET
+  - A320_Neo_FCU_HDG_SET
+  - A320_Neo_FCU_SPEED_SET
+  - A320_Neo_FCU_ALT_SET
+  - A320_Neo_FCU_VS_INC_FPA
+  - A320_Neo_FCU_VS_DEC_FPA

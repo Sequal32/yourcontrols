@@ -244,6 +244,8 @@ struct NumSetGenericEntry<T> {
     #[serde(default)]
     use_calculator: bool,
     #[serde(default)]
+    is_user_event: bool,
+    #[serde(default)]
     index_reversed: bool,
     // The event to call after the number is set
     swap_event_name: Option<String>,
@@ -261,6 +263,9 @@ struct NumIncrementEntry<T> {
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
     pass_difference: bool,
+    #[serde(default)]
+    // Whether to transmit the client event as a user/aircraft event
+    is_user_event: bool,
 }
 
 #[derive(Deserialize)]
@@ -738,6 +743,8 @@ impl Definitions {
                 action.set_swap_event(swap_event_id);
             }
 
+            action.set_is_user_event(var.is_user_event);
+
             return Ok((Some(action), var_string));
         }
 
@@ -786,7 +793,7 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_num_increment_generic<T>(
+    fn add_num_increment_generic<T: ToString>(
         &mut self,
         data_type: InDataTypes,
         category: &str,
@@ -801,7 +808,12 @@ impl Definitions {
         let (var_string, _) =
             self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
 
-        let mut mapping = NumIncrement::new(up_event_id, down_event_id, var.increment_by);
+        let mut mapping = NumIncrement::new(
+            up_event_id,
+            down_event_id,
+            var.is_user_event,
+            var.increment_by,
+        );
         mapping.set_pass_difference(var.pass_difference);
 
         Ok((Box::new(mapping), var_string))
