@@ -7,8 +7,11 @@ edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+program = ["attohttpc", "tungstenite"]
+
 [dependencies]
-attohttpc = "0.17"
+attohttpc = { version = "0.17", optional = true }
 base64 = "0.13"
 crossbeam-channel = "0.5"
 igd = "0.12"
@@ -19,4 +22,4 @@ semver = "0.11"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde_yaml = "0.8"
-tungstenite = "0.13"
+tungstenite = { version = "0.13", optional = true }

@@ -6,6 +6,7 @@ pub mod datum;
 pub mod diff;
 mod util;
 pub mod watcher;
+
 #[cfg(any(target_arch = "wasm32"))]
 use msfs::legacy::{
     execute_calculator_code, AircraftVariable, CompiledCalculatorCode, NamedVariable,
@@ -29,8 +30,8 @@ pub struct GenericVariable {
 
 #[cfg(any(target_arch = "wasm32"))]
 impl GenericVariable {
-    pub fn new_var(name: &str, units: &str, index: Option<&str>) -> Result<Self> {
-        let index = index.unwrap_or("0");
+    pub fn new_var(name: &str, units: &str, index: Option<usize>) -> Result<Self> {
+        let index = index.unwrap_or(0);
 
         Ok(Self {
             var: Some(
@@ -168,7 +169,7 @@ impl Settable for EventSet {
     }
 
     fn set_with_value(&self, value: DatumValue) {
-        if let Some(index) = self.event_index {
+        if let Some(index) = self.event_index.as_ref() {
             self.set_with_value_and_index(value, index);
         } else {
             self.set_with_value_only(value);

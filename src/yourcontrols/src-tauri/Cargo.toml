@@ -1,5 +1,5 @@
 [package]
-name = "yourcontrols-ui"
+name = "yourcontrols"
 version = "1.0.0"
 license = "GPL-3.0"
 repository = "https://github.com/Sequal32/yourcontrols"
@@ -7,17 +7,23 @@ edition = "2018"
 
 [dependencies]
 attohttpc = { version = "0.17", features = ["json"] }
-serde_json = "1.0"
+clap = "2.33"
 crossbeam-channel = "0.5"
-tungstenite = "0.13"
-simplelog = "0.10"
+dotenv_codegen = "0.15"
+log = "0.4"
+rmp-serde = "0.15"
+semver = { version = "0.11", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 serde_repr = "0.1"
 serde_yaml = "0.8"
-serde = { version = "1.0", features = ["derive"] }
+simconnect = "0.1"
+simplelog = "0.10"
 tauri = { version = "0.11", features = ["all-api"] }
-log = "0.4"
-semver = { version = "0.11", features = ["serde"] }
-yourcontrols-types = { path = "../../yourcontrols-types" }
+tungstenite = "0.13"
+yourcontrols-definitions = { path = "../../yourcontrols-definitions" }
+yourcontrols-net = { path = "../../yourcontrols-net" }
+yourcontrols-types = { path = "../../yourcontrols-types", features = ["program"] }
 
 [target."cfg(windows)".build-dependencies]
 winres = "0.1"

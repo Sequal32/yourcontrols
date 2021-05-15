@@ -39,6 +39,7 @@ pub enum Error {
     UTFError(std::string::FromUtf8Error),
 
     // Websocket
+    #[cfg(feature = "program")]
     WebsocketError(tungstenite::Error),
     // Gauge
     VariableInitializeError,
@@ -47,6 +48,7 @@ pub enum Error {
     RhaiError(Box<rhai::EvalAltResult>),
 
     // Networking
+    #[cfg(feature = "program")]
     HttpError(attohttpc::Error),
 
     // Misc
@@ -101,6 +103,7 @@ impl Display for Error {
             }
             Error::Base64Error(e) => write!(f, "Could not encode/decode base64! Reason: {}", e),
             Error::UTFError(e) => write!(f, "Could not convert UTF to string! Reason: {}", e),
+            #[cfg(feature = "program")]
             Error::WebsocketError(e) => {
                 write!(f, "Could not send message through websocket: {:?}", e)
             }
@@ -114,6 +117,7 @@ impl Display for Error {
             Error::Base64DecodeError(e) => write!(f, "Could not decode data from base64: {}", e),
             Error::ConvertToStringError(e) => write!(f, "Could not convert bytes to string: {}", e),
             Error::AddressParseError(e) => write!(f, "Could not parse socket address: {}", e),
+            #[cfg(feature = "program")]
             Error::HttpError(e) => write!(f, "Could not complete request: {}", e),
             Error::SemverError(e) => write!(f, "Could not parse version: {}", e),
         }
@@ -139,9 +143,11 @@ from_err!(Box<rhai::EvalAltResult>, RhaiError);
 from_err!(rhai::ParseError, RhaiParse);
 from_err!(serde_yaml::Error, YamlError2);
 from_err!(base64::DecodeError, Base64DecodeError);
+#[cfg(feature = "program")]
 from_err!(tungstenite::Error, WebsocketError);
 from_err!(std::string::FromUtf8Error, ConvertToStringError);
 from_err!(std::net::AddrParseError, AddressParseError);
 from_err!(serde_json::Error, JSONSerializeError);
+#[cfg(feature = "program")]
 from_err!(attohttpc::Error, HttpError);
 from_err!(semver::SemVerError, SemverError);

@@ -149,12 +149,14 @@ impl MainGauge {
     }
 
     fn add_datums(&mut self, simconnect: &mut SimConnect, datums: Vec<DatumMessage>) {
+        println!("Adding {} datums!", datums.len());
         for (index, datum) in datums.into_iter().enumerate() {
             self.add_datum(simconnect, index as u32, datum);
         }
     }
 
     fn add_vars(&mut self, datums: Vec<VarType>) -> Result<()> {
+        println!("Adding {} vars!", datums.len());
         self.vars.clear();
         self.events.reserve(datums.len());
 
@@ -177,13 +179,14 @@ impl MainGauge {
     }
 
     fn add_events(&mut self, datums: Vec<EventMessage>) {
+        println!("Adding {} events!", datums.len());
         self.events.clear();
         self.events.reserve(datums.len());
 
         for event in datums {
             // Create events from message data
-            let event = match event.index {
-                Some(index) => EventSet::new_with_index(event.name, index, event.index_reversed),
+            let event = match event.param {
+                Some(index) => EventSet::new_with_index(event.name, index, event.param_reversed),
                 None => EventSet::new(event.name),
             };
 
@@ -192,6 +195,8 @@ impl MainGauge {
     }
 
     fn set_scripts(&mut self, scripts: Vec<ScriptMessage>) -> Result<()> {
+        println!("Added scripts! {:?}", scripts);
+
         for script in scripts {
             let lines: Vec<&str> = script.lines.iter().map(String::as_str).collect();
             let mut add_result = None;
@@ -219,6 +224,7 @@ impl MainGauge {
         simconnect: &mut SimConnect,
         data: &ClientData,
     ) -> Result<()> {
+        println!("RECEIVED DATA!");
         let payload = self.fragmenter.process_fragment_bytes(&data.inner)?;
 
         match payload {
@@ -264,7 +270,6 @@ impl MainGauge {
         match message {
             SimConnectRecv::Null => {}
             SimConnectRecv::ClientData(e) => {
-                println!("Client data message! {:?}", e);
                 self.process_client_data(simconnect, e.into::<ClientData>(simconnect).unwrap())?
             }
             // Triggered every simulation frame

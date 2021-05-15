@@ -1,7 +1,7 @@
 use rmp_serde::{decode::from_read_ref, encode::to_vec};
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::{Error, FragmentedMessage, MessageFragmenter};
+use crate::{FragmentedMessage, MessageFragmenter};
 
 pub struct MessagePackFragmenter {
     fragmenter: MessageFragmenter,
@@ -14,7 +14,7 @@ impl MessagePackFragmenter {
         }
     }
 
-    pub fn process_fragment_bytes<T>(&mut self, data: &[u8]) -> Result<T, Error>
+    pub fn process_fragment_bytes<T>(&mut self, data: &[u8]) -> Result<T, rmp_serde::decode::Error>
     where
         T: DeserializeOwned,
     {
@@ -23,12 +23,15 @@ impl MessagePackFragmenter {
         let bytes = self
             .fragmenter
             .process_fragment(fragment)
-            .ok_or_else(|| Error::None)?;
+            .ok_or_else(|| rmp_serde::decode::Error::OutOfRange)?;
 
         Ok(from_read_ref(&bytes)?)
     }
 
-    pub fn into_fragmented_message_bytes<T>(&self, data: &T) -> Result<Vec<Vec<u8>>, Error>
+    pub fn into_fragmented_message_bytes<T>(
+        &self,
+        data: &T,
+    ) -> Result<Vec<Vec<u8>>, rmp_serde::encode::Error>
     where
         T: Serialize,
     {
