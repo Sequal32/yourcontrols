@@ -9,9 +9,10 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
-use store::{map_vec_to_database, DATABASE};
+use store::{map_vec_to_database, EventsRef, VarsRef, DATABASE};
 use yourcontrols_types::{
-    DatumMessage, Error, MappingArgsMessage, MappingType, Result, SyncPermission, VarId,
+    DatumMessage, Error, MappingArgsMessage, MappingType, Result, ScriptMessage, SyncPermission,
+    VarId, VarType,
 };
 
 use util::{get_index_from_var_name, merge, PartialTemplate, Template, YamlTopDown};
@@ -77,6 +78,15 @@ impl TemplateDatabase {
     pub fn get_script_id(&self, script_name: &str) -> Option<usize> {
         self.scripts.get(script_name).map(|x| x.0.clone())
     }
+
+    pub fn get_script_messages(&self) -> Vec<ScriptMessage> {
+        self.scripts
+            .iter()
+            .map(|(_, (_, lines))| ScriptMessage {
+                lines: lines.clone(),
+            })
+            .collect()
+    }
 }
 
 #[derive(Debug)]
@@ -101,16 +111,31 @@ impl DefinitionsParser {
         let merging_with = self
             .templates
             .get_template(&partial.use_template)
-            .expect("unfinished template");
+            .expect("missing use template");
 
         let merging_with_value = serde_yaml::to_value(merging_with)?;
 
         merge(&mut partial.value, &merging_with_value);
 
+        if let Some(use_template) = partial
+            .value
+            .get("use_template")
+            .map(|x| x.as_str().unwrap())
+        {
+            // Last chain of use_template - remove so that the template can be parsed as a FullTemplate
+            if use_template == "" {
+                partial
+                    .value
+                    .as_mapping_mut()
+                    .unwrap()
+                    .remove(&Value::String("use_template".to_string()));
+            }
+        }
+
         Ok(serde_yaml::from_value(partial.value)?)
     }
 
-    pub fn get_datum_with_template(
+    fn get_datum_with_template(
         &mut self,
         template: Template,
         index: Option<String>,
@@ -271,5 +296,21 @@ impl DefinitionsParser {
         }
 
         Ok(())
+    }
+
+    pub fn get_parsed_datums(&self) -> &Vec<DatumMessage> {
+        &self.definitions
+    }
+
+    pub fn get_parsed_scripts(&self) -> Vec<ScriptMessage> {
+        self.templates.get_script_messages()
+    }
+
+    pub fn get_parsed_vars(&self) -> VarsRef {
+        DATABASE.get_all_vars()
+    }
+
+    pub fn get_parsed_events(&self) -> EventsRef {
+        DATABASE.get_all_events()
     }
 }

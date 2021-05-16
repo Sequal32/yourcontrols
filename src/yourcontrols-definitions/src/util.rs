@@ -24,7 +24,6 @@ pub struct YamlTopDown {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PartialTemplate {
     pub name: String,
-    #[serde(default)]
     pub use_template: String,
     #[serde(flatten)]
     pub value: Value,
@@ -88,8 +87,8 @@ pub fn merge(a: &mut Value, b: &Value) {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum Template {
-    FullTemplate(FullTemplate),
     PartialTemplate(PartialTemplate),
+    FullTemplate(FullTemplate),
 }
 
 impl Template {
