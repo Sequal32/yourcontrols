@@ -6,7 +6,7 @@ use msfs::sim_connect::{
 
 use std::rc::Rc;
 
-use crate::data::datum::{Datum, DatumManager, MappingArgs};
+use crate::data::datum::{Condition, Datum, DatumManager, MappingArgs};
 use crate::data::watcher::VariableWatcher;
 use crate::data::{EventSet, GenericVariable, KeyEvent, RcSettable, RcVariable};
 use crate::interpolation::Interpolation;
@@ -105,7 +105,7 @@ impl MainGauge {
         let mut mapping = None;
         let mut interpolate = None;
         let mut var = None;
-        let mut condition = None; // TODO: implement
+        let mut conditions = None; // TODO: implement
 
         if let Some(var_id) = message.var {
             let rc_var = self.vars.get(var_id).ok_or(Error::None)?.clone();
@@ -133,13 +133,27 @@ impl MainGauge {
             });
         }
 
+        if let Some(condition_message) = message.conditions {
+            let mut conditions_result = Vec::new();
+
+            for condition_message in condition_message {
+                conditions_result.push(Condition {
+                    script_id: condition_message.script_id,
+                    params: condition_message.params,
+                    vars: map_ids(&self.vars, condition_message.vars)?,
+                });
+            }
+
+            conditions = Some(conditions_result);
+        }
+
         let watch_event = message.watch_event.map(|x| KeyEvent::new(simconnect, x));
 
         let datum = Datum {
             var,
             watch_event,
             watch_data,
-            condition,
+            conditions,
             interpolate,
             mapping,
             sync_permission: message.sync_permission,

@@ -88,8 +88,9 @@ pub enum SyncPermission {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ConditionMessage {
-    pub script_name: String,
-    pub options: Vec<Dynamic>,
+    pub script_id: VarId,
+    pub vars: Vec<VarId>,
+    pub params: Vec<Dynamic>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -103,7 +104,7 @@ pub struct DatumMessage {
     pub var: Option<VarId>,
     pub watch_event: Option<String>,
     pub watch_period: Option<WatchPeriod>, // Watch variable
-    pub condition: Option<ConditionMessage>,
+    pub conditions: Option<Vec<ConditionMessage>>,
     pub interpolate: Option<InterpolateMessage>,
     pub mapping: Option<MappingType<MappingArgsMessage>>,
     pub sync_permission: Option<SyncPermission>,

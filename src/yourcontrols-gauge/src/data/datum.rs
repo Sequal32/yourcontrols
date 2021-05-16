@@ -8,10 +8,8 @@ use yourcontrols_types::{
     VarId,
 };
 
-use crate::{
-    interpolation::Interpolation,
-    sync::{Condition, SCRIPTING_ENGINE},
-};
+use crate::interpolation::Interpolation;
+use crate::sync::SCRIPTING_ENGINE;
 
 use super::watcher::VariableWatcher;
 use super::KeyEvent;
@@ -34,7 +32,7 @@ pub struct Datum {
     pub var: Option<RcVariable>,
     pub watch_event: Option<KeyEvent>,
     pub watch_data: Option<VariableWatcher>,
-    pub condition: Option<Condition>,
+    pub conditions: Option<Vec<Condition>>,
     pub interpolate: Option<Interpolation>,
     pub mapping: Option<MappingType<MappingArgs>>,
     pub sync_permission: Option<SyncPermission>,
@@ -71,7 +69,7 @@ impl DatumTrait for Datum {
             MappingType::Event => self.watch_event.as_ref()?.process_incoming(incoming_value),
             MappingType::Var => self.var.as_ref()?.set(incoming_value),
             MappingType::Script(args) => SCRIPTING_ENGINE.with(|x| {
-                x.borrow().run_script(
+                x.borrow().process_incoming_value(
                     args.script_id,
                     incoming_value,
                     args.vars.clone(),
@@ -85,9 +83,28 @@ impl DatumTrait for Datum {
     }
 
     fn is_condition_satisifed(&self, incoming_value: DatumValue) -> bool {
-        self.condition
-            .as_ref()
-            .map_or(true, |x| x.is_satisfied(incoming_value))
+        let conditions = match self.conditions.as_ref() {
+            Some(c) => c,
+            None => return true,
+        };
+
+        let mut satisfied = false;
+
+        for condition in conditions {
+            SCRIPTING_ENGINE.with(|x| {
+                satisfied &= x
+                    .borrow()
+                    .evaluate_condition(
+                        condition.script_id,
+                        incoming_value,
+                        condition.vars.clone(),
+                        condition.params.clone(),
+                    )
+                    .unwrap_or(false);
+            });
+        }
+
+        return satisfied;
     }
 
     fn can_execute(&self, sync_permission: &SyncPermissionState) -> bool {
@@ -206,6 +223,12 @@ pub struct MappingArgs {
     pub script_id: VarId,
     pub vars: Vec<RcVariable>,
     pub sets: Vec<RcSettable>,
+    pub params: Vec<Dynamic>,
+}
+
+pub struct Condition {
+    pub script_id: VarId,
+    pub vars: Vec<RcVariable>,
     pub params: Vec<Dynamic>,
 }
 

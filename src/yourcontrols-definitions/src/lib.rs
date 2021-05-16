@@ -11,8 +11,8 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 use store::{map_vec_to_database, EventsRef, VarsRef, DATABASE};
 use yourcontrols_types::{
-    DatumMessage, Error, MappingArgsMessage, MappingType, Result, ScriptMessage, SyncPermission,
-    VarId, VarType,
+    ConditionMessage, DatumMessage, Error, MappingArgsMessage, MappingType, Result, ScriptMessage,
+    SyncPermission, VarId, VarType,
 };
 
 use util::{get_index_from_var_name, merge, PartialTemplate, Template, YamlTopDown};
@@ -149,13 +149,45 @@ impl DefinitionsParser {
             // Create a DatumMessage from a FullTemplate
             Template::FullTemplate(full) => {
                 // Extra fields
-                let condition = full.get_misc_object("condition");
                 let interpolate = full.get_misc_object("interpolate");
 
                 // Map vars and events to VarIds
                 let vars: Vec<usize> =
                     map_vec_to_database(full.vars, |x| DATABASE.add_var(x.into()));
                 let watch_var = *vars.get(0).expect("No watch var");
+
+                // Handle conditions
+                let conditions = full.conditions.map(|conditions| {
+                    let mut conditions_result = Vec::new();
+
+                    for condition in conditions {
+                        let mut condition_vars = Vec::new();
+
+                        if condition.include_self {
+                            condition_vars.extend(vars.iter());
+                        }
+
+                        if let Some(vars) = condition.vars {
+                            condition_vars.extend(
+                                map_vec_to_database(vars, |x| DATABASE.add_var(x.into()))
+                                    .into_iter(),
+                            )
+                        }
+
+                        let script_id = self
+                            .templates
+                            .get_script_id(&condition.script)
+                            .expect("script doesn't exist");
+
+                        conditions_result.push(ConditionMessage {
+                            script_id,
+                            vars: condition_vars,
+                            params: condition.params,
+                        });
+                    }
+
+                    return conditions_result;
+                });
 
                 // Get a script mapping
                 let script_id = full
@@ -192,7 +224,7 @@ impl DefinitionsParser {
                     var: Some(watch_var),
                     watch_period: Some(full.period),
                     mapping: Some(mapping),
-                    condition,
+                    conditions,
                     interpolate,
                     ..Default::default()
                 });

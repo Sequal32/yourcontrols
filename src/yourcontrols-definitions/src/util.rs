@@ -35,12 +35,22 @@ pub struct FullTemplate {
     pub vars: Vec<VarTypeUntagged>,
     pub sets: Option<Vec<EventMessage>>,
     pub script: Option<String>,
+    pub conditions: Option<Vec<ConditionMessageScript>>,
     #[serde(default = "WatchPeriod::default")]
     pub period: WatchPeriod,
     #[serde(default)]
     pub params: Vec<Dynamic>,
     #[serde(flatten)]
     pub misc: Value,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ConditionMessageScript {
+    pub script: String,
+    #[serde(default)]
+    pub include_self: bool,
+    pub vars: Option<Vec<VarTypeUntagged>>,
+    pub params: Vec<Dynamic>,
 }
 
 impl FullTemplate {

@@ -57,7 +57,7 @@ impl ScriptingEngine {
         Ok(())
     }
 
-    pub fn run_script(
+    pub fn process_incoming_value(
         &self,
         script_id: usize,
         incoming_value: DatumValue,
@@ -74,6 +74,23 @@ impl ScriptingEngine {
         Ok(self
             .engine
             .eval_ast_with_scope::<Dynamic>(&mut scope, &self.scripts[script_id])?)
+    }
+
+    pub fn evaluate_condition(
+        &self,
+        script_id: usize,
+        incoming_value: DatumValue,
+        vars: Vec<RcVariable>,
+        params: Vec<Dynamic>,
+    ) -> Result<bool> {
+        let mut scope: Scope = Scope::new();
+        scope.push_constant("incoming_value", incoming_value);
+        scope.push_constant("vars", vars);
+        scope.push_constant("params", params);
+
+        Ok(self
+            .engine
+            .eval_ast_with_scope::<bool>(&mut scope, &self.scripts[script_id])?)
     }
 
     pub fn reset(&mut self) {
@@ -133,7 +150,7 @@ mod tests {
 
         // Set with value (param[1] == true)
         engine
-            .run_script(
+            .process_incoming_value(
                 0,
                 1.0,
                 vars.clone(),
@@ -143,7 +160,7 @@ mod tests {
             .expect("should run succesfully");
         // Regular set (param[1] == false)
         engine
-            .run_script(
+            .process_incoming_value(
                 0,
                 1.0,
                 vars.clone(),
@@ -161,7 +178,7 @@ mod tests {
             .expect("should add successfully");
 
         let result = engine
-            .run_script(0, 1.0, vec![], vec![Rc::new(MockSettable::new())], vec![])
+            .process_incoming_value(0, 1.0, vec![], vec![Rc::new(MockSettable::new())], vec![])
             .expect("should run succesfully");
 
         assert!(result.as_bool().expect("should be bool"))
