@@ -86,7 +86,9 @@ impl MainGauge {
 
         for fragment_bytes in self.fragmenter.into_fragmented_message_bytes(&payload)? {
             let mut client_data = ClientData::new();
-            client_data.inner.copy_from_slice(&fragment_bytes);
+            for (index, byte) in fragment_bytes.into_iter().enumerate() {
+                client_data.inner[index] = byte;
+            }
             simconnect.set_client_data(area, &client_data);
         }
 
@@ -151,16 +153,18 @@ impl MainGauge {
     fn add_datums(&mut self, simconnect: &mut SimConnect, datums: Vec<DatumMessage>) {
         println!("Adding {} datums!", datums.len());
         for (index, datum) in datums.into_iter().enumerate() {
-            self.add_datum(simconnect, index as u32, datum);
+            print!("Added success: {:?}", datum,);
+            println!("{:?}", self.add_datum(simconnect, index as u32, datum));
         }
     }
 
     fn add_vars(&mut self, datums: Vec<VarType>) -> Result<()> {
         println!("Adding {} vars!", datums.len());
         self.vars.clear();
-        self.events.reserve(datums.len());
+        self.vars.reserve(datums.len());
 
         for var in datums {
+            println!("{:?}", var);
             // Create generic vars from message data
             let var = match &var {
                 VarType::WithUnits { name, units, index } => {
@@ -224,7 +228,6 @@ impl MainGauge {
         simconnect: &mut SimConnect,
         data: &ClientData,
     ) -> Result<()> {
-        println!("RECEIVED DATA!");
         let payload = self.fragmenter.process_fragment_bytes(&data.inner)?;
 
         match payload {
@@ -276,6 +279,7 @@ impl MainGauge {
             SimConnectRecv::SimObjectData(_) => {
                 let changed = self.datum_manager.poll(&self.sync_permission_state);
                 if changed.len() > 0 {
+                    println!("CHANGED {}", changed.len());
                     self.send_message(simconnect, Payloads::VariableChange { changed });
                 }
             }

@@ -153,7 +153,8 @@ impl DefinitionsParser {
                 let interpolate = full.get_misc_object("interpolate");
 
                 // Map vars and events to VarIds
-                let vars: Vec<usize> = map_vec_to_database(full.vars, |x| DATABASE.add_var(x));
+                let vars: Vec<usize> =
+                    map_vec_to_database(full.vars, |x| DATABASE.add_var(x.into()));
                 let watch_var = *vars.get(0).expect("No watch var");
 
                 // Get a script mapping

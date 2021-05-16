@@ -1,6 +1,6 @@
 # Mapping
 shared:
-  - A:PARKING BRAKE POSITION:1
+  - A:BRAKE PARKING POSITION:1
 # Template
 mappings:
   - name: A:FUEL TANK CENTER LEVEL
@@ -13,10 +13,10 @@ mappings:
 # Recurse until getting to type == last_type
 templates:
   # Mapping specific
-  - name: A:PARKING BRAKE POSITION
+  - name: A:BRAKE PARKING POSITION
     use_template: ToggleSwitchParam
     vars:
-      - name: A:PARKING BRAKE POSITION
+      - name: BRAKE PARKING POSITION
         units: Bool
     sets:
       - name: SET_PARKING_BRAKE

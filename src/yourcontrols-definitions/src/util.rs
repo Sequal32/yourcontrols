@@ -3,7 +3,7 @@ use regex::Regex;
 use rhai::Dynamic;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_yaml::Value;
-use yourcontrols_types::{EventMessage, VarType, WatchPeriod};
+use yourcontrols_types::{EventMessage, VarType, VarTypeUntagged, WatchPeriod};
 
 lazy_static! {
     static ref INDEX_REGEX: Regex = Regex::new(r#"(.+):(\d+)"#).unwrap();
@@ -32,7 +32,7 @@ pub struct PartialTemplate {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct FullTemplate {
     pub name: String,
-    pub vars: Vec<VarType>,
+    pub vars: Vec<VarTypeUntagged>,
     pub sets: Option<Vec<EventMessage>>,
     pub script: Option<String>,
     #[serde(default = "WatchPeriod::default")]
@@ -121,6 +121,7 @@ mod test {
     fn get_first_var_name() {
         let p: PartialTemplate = serde_yaml::from_str(
             r#"
+            use_template: ""
             name: ToggleSwitch
             vars:
                 -   name: TestName
@@ -136,7 +137,8 @@ mod test {
 
     #[test]
     fn get_name() {
-        let template: Template = serde_yaml::from_str("name: ToggleSwitch").unwrap();
+        let template: Template =
+            serde_yaml::from_str("name: ToggleSwitch\nuse_template: \"\"").unwrap();
         assert_eq!(template.get_name(), "ToggleSwitch")
     }
 }

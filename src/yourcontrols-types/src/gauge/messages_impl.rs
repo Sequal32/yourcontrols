@@ -1,4 +1,4 @@
-use crate::{MappingArgsMessage, VarType};
+use crate::{MappingArgsMessage, VarType, VarTypeUntagged};
 
 impl VarType {
     pub fn get_name(&self) -> &String {
@@ -14,6 +14,16 @@ impl VarType {
             VarType::WithUnits { name, units, .. } => format!("(>{}, {})", name, units),
             VarType::Named { name } => format!("(>{})", name),
             VarType::Calculator { set, .. } => set.clone(),
+        }
+    }
+}
+
+impl Into<VarType> for VarTypeUntagged {
+    fn into(self) -> VarType {
+        match self {
+            Self::WithUnits { name, units, index } => VarType::WithUnits { name, units, index },
+            Self::Named { name } => VarType::Named { name },
+            Self::Calculator { get, set } => VarType::Calculator { get, set },
         }
     }
 }

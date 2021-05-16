@@ -40,6 +40,22 @@ pub enum MappingType<M> {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Hash, Eq)]
 #[serde(untagged)]
+pub enum VarTypeUntagged {
+    WithUnits {
+        name: String,
+        units: String,
+        index: Option<usize>,
+    },
+    Named {
+        name: String,
+    },
+    Calculator {
+        get: String,
+        set: String,
+    },
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Hash, Eq)]
 pub enum VarType {
     WithUnits {
         name: String,
