@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use yourcontrols_types::{DatumKey, DatumValue, Time};
+use yourcontrols_types::Time;
 
 pub struct DeltaTimeChange {
     current_time: Time,

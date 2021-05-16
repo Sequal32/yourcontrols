@@ -3,14 +3,12 @@
 use msfs::sim_connect::{
     client_data_definition, data_definition, ClientDataArea, Period, SimConnect, SimConnectRecv,
 };
-use rhai::AST;
-use std::cell::RefCell;
-use std::collections::HashMap;
+
 use std::rc::Rc;
 
 use crate::data::datum::{Datum, DatumManager, MappingArgs};
 use crate::data::watcher::VariableWatcher;
-use crate::data::{EventSet, GenericVariable, KeyEvent, RcSettable, RcVariable, Syncable};
+use crate::data::{EventSet, GenericVariable, KeyEvent, RcSettable, RcVariable};
 use crate::interpolation::Interpolation;
 use crate::sync::SCRIPTING_ENGINE;
 use crate::util::map_ids;
@@ -18,7 +16,7 @@ use crate::util::{GenericResult, DATA_SIZE};
 
 use yourcontrols_types::{
     DatumMessage, Error, EventMessage, MappingType, MessagePackFragmenter, Payloads, Result,
-    ScriptMessage, SyncPermissionState, VarId, VarType,
+    ScriptMessage, SyncPermissionState, VarType,
 };
 
 /// A wrapper struct for an array of size DATA_SIZE bytes
@@ -76,7 +74,7 @@ impl MainGauge {
             Some(simconnect.create_client_data::<ClientData>("YourControlsExternal")?);
 
         // Request "fake" data to be sent every simulation frame. Solely for the purpose of getting a timer every simframe
-        simconnect.request_data_on_sim_object::<AircraftData>(0, 0, Period::SimFrame, false);
+        simconnect.request_data_on_sim_object::<AircraftData>(0, 0, Period::SimFrame, false)?;
 
         Ok(())
     }
@@ -89,7 +87,9 @@ impl MainGauge {
             for (index, byte) in fragment_bytes.into_iter().enumerate() {
                 client_data.inner[index] = byte;
             }
-            simconnect.set_client_data(area, &client_data);
+            simconnect
+                .set_client_data(area, &client_data)
+                .map_err(|_| Error::ClientDataSendError)?;
         }
 
         Ok(())
@@ -102,10 +102,10 @@ impl MainGauge {
         message: DatumMessage,
     ) -> Result<()> {
         let mut watch_data = None;
-        let mut condition = None;
         let mut mapping = None;
         let mut interpolate = None;
         let mut var = None;
+        let mut condition = None; // TODO: implement
 
         if let Some(var_id) = message.var {
             let rc_var = self.vars.get(var_id).ok_or(Error::None)?.clone();

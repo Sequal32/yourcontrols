@@ -43,6 +43,7 @@ pub enum Error {
     WebsocketError(tungstenite::Error),
     // Gauge
     VariableInitializeError,
+    ClientDataSendError,
     // Gauge Scripting
     RhaiParse(rhai::ParseError),
     RhaiError(Box<rhai::EvalAltResult>),
@@ -109,6 +110,7 @@ impl Display for Error {
             }
 
             Error::VariableInitializeError => write!(f, "Var could not be initialized."),
+            Error::ClientDataSendError => write!(f, "ClientData could not be set."),
             Error::RhaiParse(e) => write!(f, "Could not parse RHAI script: {}", e),
             Error::RhaiError(e) => write!(f, "Could not run RHAI script: {}", e),
 

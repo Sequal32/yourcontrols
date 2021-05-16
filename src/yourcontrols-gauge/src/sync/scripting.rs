@@ -1,5 +1,5 @@
 use rhai::packages::{CorePackage, Package};
-use rhai::{Dynamic, Engine, RegisterFn, Scope, AST};
+use rhai::{Dynamic, Engine, Scope, AST};
 use std::cell::RefCell;
 use yourcontrols_types::{DatumValue, Result};
 
