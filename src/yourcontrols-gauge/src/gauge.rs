@@ -45,7 +45,7 @@ struct AircraftData {
 /// The main driver to process and send out messages through SimConnect.
 pub struct MainGauge {
     fragmenter: MessagePackFragmenter,
-    datum_manager: DatumManager,
+    datum_manager: DatumManager<Datum>,
     sync_permission_state: SyncPermissionState,
     send_data_area: Option<ClientDataArea<ClientData>>,
 
@@ -145,7 +145,7 @@ impl MainGauge {
             sync_permission: message.sync_permission,
         };
 
-        self.datum_manager.add_datum(datum_index, Box::new(datum));
+        self.datum_manager.add_datum(datum_index, datum);
 
         Ok(())
     }

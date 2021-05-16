@@ -103,13 +103,13 @@ impl DatumTrait for Datum {
     }
 }
 
-pub struct DatumManager {
-    datums: HashMap<u32, Box<dyn DatumTrait>>,
+pub struct DatumManager<T> {
+    datums: HashMap<u32, T>,
     interpolation_time: Option<DeltaTimeChange>,
     poll_time: DeltaTimeChange,
 }
 
-impl DatumManager {
+impl<T: DatumTrait> DatumManager<T> {
     pub fn new() -> Self {
         Self {
             datums: HashMap::new(),
@@ -134,7 +134,7 @@ impl DatumManager {
     }
 
     /// Adds a datum.
-    pub fn add_datum(&mut self, key: DatumKey, datum: Box<dyn DatumTrait>) {
+    pub fn add_datum(&mut self, key: DatumKey, datum: T) {
         self.datums.insert(key, datum);
     }
 
@@ -239,8 +239,8 @@ mod tests {
         mock.expect_queue_interpolate().once().return_const(None);
         mock.expect_execute_mapping().once().return_const(None);
 
-        let mut manager = DatumManager::new();
-        manager.add_datum(0, Box::new(mock));
+        let mut manager = DatumManager::<MockDatumTrait>::new();
+        manager.add_datum(0, mock);
         manager.process_incoming_data(get_test_incoming(0.0), 0.0, &SyncPermissionState::default());
     }
 
@@ -253,8 +253,8 @@ mod tests {
             .return_const("Test".to_string());
         mock.expect_get_changed_value().once().return_const(1.0);
 
-        let mut manager = DatumManager::new();
-        manager.add_datum(0, Box::new(mock));
+        let mut manager = DatumManager::<MockDatumTrait>::new();
+        manager.add_datum(0, mock);
 
         let changed = manager.poll(&SyncPermissionState::default());
 
