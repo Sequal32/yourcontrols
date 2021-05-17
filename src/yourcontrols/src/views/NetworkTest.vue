@@ -207,48 +207,42 @@ export default Vue.extend({
       modal: false
     };
   },
-  created() {
-    const status: {
-      cloudServer: number;
-      cloudServerP2P: number;
-      uPnP: number;
-      direct: number;
-    } = this.status;
-    const statusText: {
-      cloudServer: string;
-      cloudServerP2P: string;
-      uPnP: string;
-      direct: string;
-    } = this.statusText;
-    const modalText: {
-      cloudServer: string;
-      cloudServerP2P: string;
-      uPnP: string;
-      direct: string;
-    } = this.modalText;
-    listen("networkTestResult", (data: TestData) => {
-      if (data.payload.status.pending) {
-        status[data.payload.test] = STATUS.pending;
-        statusText[data.payload.test] = '<i class="fas fa-ellipsis-h"></i>';
-        modalText[data.payload.test] = "Testing...";
-      }
-      if (data.payload.status.success) {
-        status[data.payload.test] = STATUS.success;
-        statusText[data.payload.test] = '<i class="fas fa-check"></i>';
-        modalText[data.payload.test] = "Success";
-      }
-      if (data.payload.status.error) {
-        status[data.payload.test] = STATUS.error;
-        statusText[data.payload.test] = '<i class="fas fa-times"></i>';
-        modalText[data.payload.test] =
-          "Error: " + data.payload.status.error.reason;
-      }
-    });
+  async created() {
+    const status: any = this.status;
+    const statusText: any = this.statusText;
+    const modalText: any = this.modalText;
+    if (window.__TAURI_INVOKE_HANDLER__) {
+      const { listen } = await import("tauri/api/event");
+      listen("networkTestResult", (data: TestData) => {
+        if (data.payload.status.pending) {
+          status[data.payload.test] = STATUS.pending;
+          statusText[data.payload.test] = '<i class="fas fa-ellipsis-h"></i>';
+          modalText[data.payload.test] = "Testing...";
+        }
+        if (data.payload.status.success) {
+          status[data.payload.test] = STATUS.success;
+          statusText[data.payload.test] = '<i class="fas fa-check"></i>';
+          modalText[data.payload.test] = "Success";
+        }
+        if (data.payload.status.error) {
+          status[data.payload.test] = STATUS.error;
+          statusText[data.payload.test] = '<i class="fas fa-times"></i>';
+          modalText[data.payload.test] =
+            "Error: " + data.payload.status.error.reason;
+        }
+      });
+    } else {
+      console.log("TODO!"); // TODO: Implement ingame pannel logic
+    }
   },
   methods: {
     startTest() {
-      this.resetData();
-      invoke({ cmd: "testNetwork", port: parseInt(this.port) });
+      if (window.__TAURI_INVOKE_HANDLER__) {
+        this.resetData();
+        invoke({ cmd: "testNetwork", port: parseInt(this.port) });
+      } else {
+        console.log("TODO!"); // TODO: Implement ingame pannel logic
+      }
     },
     resetData() {
       this.status.cloudServer = STATUS.none;

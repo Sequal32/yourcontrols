@@ -8,9 +8,7 @@
 </template>
 
 <script lang="ts">
-// import $ from "jquery";
 import Vue from "vue";
-import { listen } from "tauri/api/event";
 
 interface StartUpTextPayload {
   type: string;
@@ -29,10 +27,15 @@ export default Vue.extend({
       text: ""
     };
   },
-  created() {
-    listen("startUpText", (p: StartUpTextPayload) => {
-      this.text = p.payload.text;
-    });
+  async created() {
+    if (window.__TAURI_INVOKE_HANDLER__) {
+      const { listen } = await import("tauri/api/event");
+      listen("startUpText", (p: StartUpTextPayload) => {
+        this.text = p.payload.text;
+      });
+    } else {
+      
+    }
   },
   methods: {}
 });

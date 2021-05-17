@@ -5,9 +5,6 @@
 </template>
 
 <script lang="ts">
-import { listen } from "tauri/api/event";
-import { invoke } from "tauri/api/tauri";
-import { setTitle } from "tauri/api/window";
 import Vue from "vue";
 
 interface Aircraft {
@@ -28,22 +25,29 @@ interface InitDataPayload {
 }
 
 export default Vue.extend({
-  created() {
-    invoke({ cmd: "uiReady" });
-    listen("initData", (p: InitDataPayload) => {
-      this.showLoadingScreen();
-      window.localStorage.setItem("version", p.payload.version);
-      p.payload.aircraft.forEach(aircraft => {
-        aircraft.selected = false;
+  async created() {
+    if (window.__TAURI_INVOKE_HANDLER__) {
+      const { listen } = await import("tauri/api/event");
+      const { invoke } = await import("tauri/api/tauri");
+      const { setTitle } = await import("tauri/api/window");
+      invoke({ cmd: "uiReady" });
+      listen("initData", (p: InitDataPayload) => {
+        this.showLoadingScreen();
+        window.localStorage.setItem("version", p.payload.version);
+        p.payload.aircraft.forEach(aircraft => {
+          aircraft.selected = false;
+        });
+        window.localStorage.setItem(
+          "aircraft",
+          JSON.stringify(p.payload.aircraft)
+        );
+        window.localStorage.setItem("initData", JSON.stringify(p));
+        setTitle("YourControls v" + window.localStorage.getItem("version"));
       });
-      window.localStorage.setItem(
-        "aircraft",
-        JSON.stringify(p.payload.aircraft)
-      );
-      window.localStorage.setItem("initData", JSON.stringify(p));
-      setTitle("YourControls v" + window.localStorage.getItem("version"));
-    });
-    listen("loadingComplete", () => this.showMainScreen());
+      listen("loadingComplete", () => this.showMainScreen());
+    } else {
+      console.log("TODO!"); // TODO: Implement ingame pannel logic
+    }
   },
   methods: {
     showLoadingScreen() {
