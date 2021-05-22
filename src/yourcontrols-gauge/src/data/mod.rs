@@ -92,6 +92,8 @@ impl Variable for GenericVariable {
     }
 }
 
+impl VariableDebug for GenericVariable {}
+
 #[cfg(any(target_arch = "wasm32"))]
 impl Syncable for GenericVariable {
     fn process_incoming(&self, value: DatumValue) {
@@ -178,6 +180,7 @@ impl Settable for EventSet {
     }
 }
 
+impl SettableDebug for EventSet {}
 /// Listens to an `event_name` and keeps track of how many times it was triggered.
 #[derive(Debug)]
 pub struct KeyEvent {
@@ -225,9 +228,18 @@ impl Syncable for KeyEvent {
     fn process_incoming(&self, value: DatumValue) {}
 }
 
+pub trait VariableDebug: Variable + Debug {}
+pub trait SettableDebug: Settable + Debug {}
+
 /// A reference counted variable.
+#[cfg(not(test))]
+pub type RcVariable = Rc<dyn VariableDebug>;
+#[cfg(test)]
 pub type RcVariable = Rc<dyn Variable>;
 /// A reference counted settable.
+#[cfg(not(test))]
+pub type RcSettable = Rc<dyn SettableDebug>;
+#[cfg(test)]
 pub type RcSettable = Rc<dyn Settable>;
 /// Used to execute a task upon receiving a value.
 #[cfg(test)]

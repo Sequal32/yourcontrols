@@ -1,6 +1,6 @@
 use yourcontrols_types::{DatumValue, Time, WatchPeriod};
 
-use super::{RcVariable, Variable};
+use super::{RcVariable};
 
 /// A pollable struct to watch for changes in variables in given intervals of `WatcherPeriod`.
 pub struct VariableWatcher {

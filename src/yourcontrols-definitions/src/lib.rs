@@ -199,6 +199,7 @@ impl DefinitionsParser {
                 let mapping = match script_id {
                     Some(script_id) => {
                         // Preprocess sets
+                        //TODO: param_reveresd
                         let mut sets = full.sets.expect("sets for script");
 
                         for set in sets.iter_mut() {

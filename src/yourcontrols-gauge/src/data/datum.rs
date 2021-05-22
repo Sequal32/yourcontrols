@@ -69,12 +69,15 @@ impl DatumTrait for Datum {
             MappingType::Event => self.watch_event.as_ref()?.process_incoming(incoming_value),
             MappingType::Var => self.var.as_ref()?.set(incoming_value),
             MappingType::Script(args) => SCRIPTING_ENGINE.with(|x| {
-                x.borrow().process_incoming_value(
-                    args.script_id,
-                    incoming_value,
-                    args.vars.clone(),
-                    args.sets.clone(),
-                    args.params.clone(),
+                println!(
+                    "{:?}",
+                    x.borrow().process_incoming_value(
+                        args.script_id,
+                        incoming_value,
+                        args.vars.clone(),
+                        args.sets.clone(),
+                        args.params.clone(),
+                    )
                 );
             }),
         }
@@ -185,7 +188,7 @@ impl<T: DatumTrait> DatumManager<T> {
     /// Incoming data is queued for interpolation or is used to execute datum mappings.
     pub fn process_incoming_data(
         &mut self,
-        data: HashMap<DatumKey, DatumValue>,
+        data: Vec<ChangedDatum>,
         interpolate_tick: Time,
         sync_permission: &SyncPermissionState,
     ) {
@@ -195,14 +198,14 @@ impl<T: DatumTrait> DatumManager<T> {
         }
 
         // Execute stuff
-        for (key, value) in data {
-            if let Some(datum) = self.datums.get_mut(&key) {
+        for new_datum in data {
+            if let Some(datum) = self.datums.get_mut(&new_datum.key) {
                 if !datum.can_execute(sync_permission) {
-                    return;
+                    continue;
                 }
 
-                datum.execute_mapping(value);
-                datum.queue_interpolate(value, interpolate_tick);
+                datum.execute_mapping(new_datum.value);
+                datum.queue_interpolate(new_datum.value, interpolate_tick);
             }
         }
     }
@@ -219,6 +222,7 @@ impl<T: DatumTrait> DatumManager<T> {
     }
 }
 
+#[cfg_attr(not(test), derive(Debug))]
 pub struct MappingArgs {
     pub script_id: VarId,
     pub vars: Vec<RcVariable>,
@@ -236,9 +240,12 @@ pub struct Condition {
 mod tests {
     use super::*;
 
-    fn get_test_incoming(value: DatumValue) -> HashMap<DatumKey, DatumValue> {
-        let mut datums = HashMap::new();
-        datums.insert(0, value);
+    fn get_test_incoming(value: DatumValue) -> Vec<ChangedDatum> {
+        let mut datums = Vec::new();
+        datums.push(ChangedDatum {
+            key: 0,
+            value: value,
+        });
         datums
     }
 

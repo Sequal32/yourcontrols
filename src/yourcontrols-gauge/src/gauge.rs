@@ -219,6 +219,7 @@ impl MainGauge {
 
     fn set_scripts(&mut self, scripts: Vec<ScriptMessage>) -> Result<()> {
         println!("Added scripts! {:?}", scripts);
+        SCRIPTING_ENGINE.with(|x| x.borrow_mut().reset());
 
         for script in scripts {
             let lines: Vec<&str> = script.lines.iter().map(String::as_str).collect();
@@ -298,8 +299,7 @@ impl MainGauge {
             SimConnectRecv::SimObjectData(_) => {
                 let changed = self.datum_manager.poll(&self.sync_permission_state);
                 if changed.len() > 0 {
-                    println!("CHANGED {}", changed.len());
-                    self.send_message(simconnect, Payloads::VariableChange { changed });
+                    self.send_message(simconnect, Payloads::VariableChange { changed })?;
                 }
             }
             _ => {}

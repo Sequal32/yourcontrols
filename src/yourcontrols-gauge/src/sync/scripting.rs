@@ -7,7 +7,7 @@ use yourcontrols_types::DatumValue;
 use crate::data::{RcSettable, RcVariable};
 
 thread_local! {
-    pub static SCRIPTING_ENGINE: RefCell<ScriptingEngine> = RefCell::new(ScriptingEngine::new());
+    pub static SCRIPTING_ENGINE: RefCell<ScriptingEngine> = RefCell::new(ScriptingEngine::new_engine());
     static EMPTY_SCOPE: Scope<'static> = Scope::new();
 }
 
@@ -17,14 +17,18 @@ pub struct ScriptingEngine {
 }
 
 impl ScriptingEngine {
-    pub fn new() -> Self {
-        Self {
+    pub fn new_engine() -> Self {
+        let mut engine = Self {
             scripts: Vec::new(),
             engine: Engine::new_raw(),
-        }
+        };
+
+        engine.setup_engine();
+
+        engine
     }
 
-    pub fn setup_engine(&mut self) {
+    fn setup_engine(&mut self) {
         self.engine
             .register_global_module(CorePackage::new().as_shared_module());
         self.engine
@@ -74,7 +78,7 @@ impl ScriptingEngine {
 
         self.engine
             .eval_ast_with_scope::<Dynamic>(&mut scope, &self.scripts[script_id])
-            .map_err(|_| anyhow::anyhow!("Error running script!"))
+            .map_err(|e| anyhow::anyhow!("Error running script! {}", e.to_string()))
     }
 
     pub fn evaluate_condition(
@@ -113,15 +117,9 @@ mod tests {
         "if params[1] {sets.set(0, test + incoming_value + params[0])} else {sets.set(0)};",
     ];
 
-    fn get_engine() -> ScriptingEngine {
-        let mut engine = ScriptingEngine::new();
-        engine.setup_engine();
-        engine
-    }
-
     #[test]
     fn add_script() {
-        let mut engine = get_engine();
+        let mut engine = ScriptingEngine::new_engine();
 
         assert!(engine.add_script(TEST_SCRIPT).is_ok());
         assert!(engine.scripts.get(0).is_some());
@@ -129,7 +127,7 @@ mod tests {
 
     #[test]
     fn run_calls() {
-        let mut engine = get_engine();
+        let mut engine = ScriptingEngine::new_engine();
         engine
             .add_script(TEST_SCRIPT)
             .expect("should add successfully");
@@ -173,7 +171,7 @@ mod tests {
 
     #[test]
     fn test_exists() {
-        let mut engine = get_engine();
+        let mut engine = ScriptingEngine::new_engine();
         engine
             .add_script(&["sets.exists(0) && !sets.exists(1)"])
             .expect("should add successfully");

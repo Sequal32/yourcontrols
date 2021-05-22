@@ -57,7 +57,6 @@ impl Simulator {
             .unwrap();
 
         for mut fragment in fragments {
-            println!("{}", fragment.len());
             self.connection.set_client_data(
                 SEND_AREA_ID,
                 SEND_AREA_ID,

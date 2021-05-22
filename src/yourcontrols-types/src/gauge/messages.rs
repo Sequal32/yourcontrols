@@ -119,18 +119,10 @@ pub struct ChangedDatum {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Payloads {
     // Transmit to Sim
-    SetDatums {
-        datums: Vec<DatumMessage>,
-    },
-    SetVars {
-        vars: Vec<VarType>,
-    },
-    SetEvents {
-        events: Vec<EventMessage>,
-    },
-    SetScripts {
-        scripts: Vec<ScriptMessage>,
-    },
+    SetDatums { datums: Vec<DatumMessage> },
+    SetVars { vars: Vec<VarType> },
+    SetEvents { events: Vec<EventMessage> },
+    SetScripts { scripts: Vec<ScriptMessage> },
 
     WatchVariable {},
     WatchEvent {},
@@ -138,21 +130,14 @@ pub enum Payloads {
     MultiWatchEvent {},
     ExecuteCalculator {},
     AddMapping {},
-    SendIncomingValues {
-        data: HashMap<DatumKey, DatumValue>,
-        time: Time,
-    },
-    UpdateSyncPermission {
-        new: SyncPermissionState,
-    },
+    SendIncomingValues { data: Vec<ChangedDatum>, time: Time },
+    UpdateSyncPermission { new: SyncPermissionState },
 
     ResetInterpolation,
     Ping,
     ResetAll,
     // Receive from Sim
-    VariableChange {
-        changed: Vec<ChangedDatum>,
-    },
+    VariableChange { changed: Vec<ChangedDatum> },
     EventTriggered {},
     Pong,
 }
