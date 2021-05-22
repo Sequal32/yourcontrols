@@ -1,4 +1,5 @@
-use yourcontrols_types::{Error, Result, VarId};
+use anyhow::Result;
+use yourcontrols_types::VarId;
 
 /// The data size of the ClientDataArea.
 pub const DATA_SIZE: usize = 8192;
@@ -8,7 +9,7 @@ pub type GenericResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 pub fn map_ids<T: Clone>(map: &Vec<T>, ids: Vec<VarId>) -> Result<Vec<T>> {
     let mut vars = Vec::new();
     for id in ids {
-        vars.push(map.get(id).ok_or(Error::None)?.clone())
+        vars.push(map.get(id).ok_or(anyhow::anyhow!("NOP"))?.clone())
     }
     Ok(vars)
 }

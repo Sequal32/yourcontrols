@@ -1,7 +1,9 @@
+mod error;
 mod helpers;
 mod store;
 mod util;
 
+use crate::error::{Error, Result};
 use helpers::DatumGenerator;
 use serde::de::DeserializeOwned;
 use serde_yaml::Value;
@@ -11,8 +13,8 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 use store::{map_vec_to_database, EventsRef, VarsRef, DATABASE};
 use yourcontrols_types::{
-    ConditionMessage, DatumMessage, Error, MappingArgsMessage, MappingType, Result, ScriptMessage,
-    SyncPermission, VarId, VarType,
+    ConditionMessage, DatumMessage, MappingArgsMessage, MappingType, ScriptMessage, SyncPermission,
+    VarId, VarType,
 };
 
 use util::{get_index_from_var_name, merge, PartialTemplate, Template, YamlTopDown};
@@ -280,7 +282,7 @@ impl DefinitionsParser {
     fn load_yaml<T: DeserializeOwned>(path: impl AsRef<Path>) -> Result<T> {
         let file = File::open(&path)?;
         Ok(serde_yaml::from_reader(file)
-            .map_err(|x| Error::YamlError(x, path.as_ref().to_string_lossy().to_string()))?)
+            .map_err(|x| Error::YamlFileError(x, path.as_ref().to_string_lossy().to_string()))?)
     }
 
     pub fn load_file(&mut self, path: impl AsRef<Path>) -> Result<()> {

@@ -1,6 +1,6 @@
+use anyhow::Result;
 use std::net::SocketAddr;
 use yourcontrols_net::{BaseSocket, MainPayloads, Message};
-use yourcontrols_types::Result;
 
 const RENDEZVOUS_SERVER: &str = "127.0.0.1:25070";
 

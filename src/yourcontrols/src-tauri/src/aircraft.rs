@@ -1,15 +1,12 @@
 use crate::ui::AircraftInstallData;
+use anyhow::Result;
 use attohttpc;
 use semver::Version;
 use serde::Deserialize;
 use serde_yaml;
-use std::{
-    collections::hash_map::Entry,
-    fs::File,
-    path::{Path, PathBuf},
-};
-use std::{collections::HashMap, fs::read_dir};
-use yourcontrols_types::Result;
+use std::collections::HashMap;
+use std::fs::{read_dir, File};
+use std::path::PathBuf;
 
 pub const UPDATE_URL: &'static str =
     "https://www.github.com/sequal32/yourcontrols/definitions/aircraft/info.json";

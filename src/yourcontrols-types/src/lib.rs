@@ -1,7 +1,5 @@
-mod error;
 mod gauge;
 
-pub use error::{Error, Result};
 pub use gauge::*;
 
 use serde::{Deserialize, Serialize};

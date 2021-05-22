@@ -7,19 +7,7 @@ edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[features]
-program = ["attohttpc", "tungstenite"]
-
 [dependencies]
-attohttpc = { version = "0.17", optional = true }
-base64 = "0.13"
-crossbeam-channel = "0.5"
-igd = "0.12"
-laminar = { git = "https://github.com/Sequal32/laminar.git" }
-rhai = { version = "0.19", features = ["serde"] }
 rmp-serde = "0.15"
-semver = "0.11"
+rhai = { version = "0.20", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-serde_yaml = "0.8"
-tungstenite = { version = "0.13", optional = true }

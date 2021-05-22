@@ -1,7 +1,8 @@
+use anyhow::Result;
 use rhai::packages::{CorePackage, Package};
 use rhai::{Dynamic, Engine, Scope, AST};
 use std::cell::RefCell;
-use yourcontrols_types::{DatumValue, Result};
+use yourcontrols_types::DatumValue;
 
 use crate::data::{RcSettable, RcVariable};
 
@@ -71,9 +72,9 @@ impl ScriptingEngine {
         scope.push_constant("sets", sets);
         scope.push_constant("params", params);
 
-        Ok(self
-            .engine
-            .eval_ast_with_scope::<Dynamic>(&mut scope, &self.scripts[script_id])?)
+        self.engine
+            .eval_ast_with_scope::<Dynamic>(&mut scope, &self.scripts[script_id])
+            .map_err(|_| anyhow::anyhow!("Error running script!"))
     }
 
     pub fn evaluate_condition(
@@ -88,9 +89,9 @@ impl ScriptingEngine {
         scope.push_constant("vars", vars);
         scope.push_constant("params", params);
 
-        Ok(self
-            .engine
-            .eval_ast_with_scope::<bool>(&mut scope, &self.scripts[script_id])?)
+        self.engine
+            .eval_ast_with_scope::<bool>(&mut scope, &self.scripts[script_id])
+            .map_err(|_| anyhow::anyhow!("Error running script!"))
     }
 
     pub fn reset(&mut self) {

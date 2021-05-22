@@ -1,5 +1,6 @@
+use crate::error::{Error, Result};
 use crate::store::DATABASE;
-use yourcontrols_types::{DatumMessage, Error, MappingType, VarType, WatchPeriod};
+use yourcontrols_types::{DatumMessage, MappingType, VarType, WatchPeriod};
 
 /// A struct that generates DatumMessages from var strings or mappings.
 #[derive(Debug)]
@@ -14,7 +15,7 @@ impl DatumGenerator {
     ///
     /// 1. Listen for when key_event is triggered
     /// 2. Trigger the event when a value is passed to it
-    fn get_key_datum(&self, key_event: String) -> Result<DatumMessage, Error> {
+    fn get_key_datum(&self, key_event: String) -> Result<DatumMessage> {
         // Does not include K:
         Ok(DatumMessage {
             watch_event: Some(key_event),
@@ -27,7 +28,7 @@ impl DatumGenerator {
     ///
     /// 1. Listen for when the bus connection is tripped at 16hz
     /// 2. Toggle the connection when a value is passed into it
-    fn get_bus_toggle(&self, bus_string: &str) -> Result<DatumMessage, Error> {
+    fn get_bus_toggle(&self, bus_string: &str) -> Result<DatumMessage> {
         // Should be a connection index and a bus index seperated by a :
         let mut split = bus_string.split(":");
 
@@ -56,7 +57,7 @@ impl DatumGenerator {
     /// Generates a datum to...
     ///
     /// 1. Listen for changes to the var at 16hz
-    fn get_local_var(&self, var: String) -> Result<DatumMessage, Error> {
+    fn get_local_var(&self, var: String) -> Result<DatumMessage> {
         Ok(DatumMessage {
             var: Some(DATABASE.add_var(VarType::Named { name: var })),
             watch_period: Some(WatchPeriod::Hz16),
@@ -65,7 +66,7 @@ impl DatumGenerator {
         })
     }
 
-    pub fn get_generated_from_string(&self, string: &str) -> Result<DatumMessage, Error> {
+    pub fn get_generated_from_string(&self, string: &str) -> Result<DatumMessage> {
         let prefix = &string[0..2];
         let string_no_prefix = string[2..].to_string();
 

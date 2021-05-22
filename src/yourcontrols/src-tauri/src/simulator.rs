@@ -1,6 +1,7 @@
+use anyhow::Result;
 use simconnect::SimConnector;
 use std::ffi::c_void;
-use yourcontrols_types::{Error, MessagePackFragmenter, Payloads, Result};
+use yourcontrols_types::{MessagePackFragmenter, Payloads};
 
 const SEND_AREA_ID: u32 = 0;
 const RECEIVE_AREA_ID: u32 = 1;
@@ -76,7 +77,7 @@ impl Simulator {
 
                 return Ok(self.fragmenter.process_fragment_bytes(data_bytes)?);
             }
-            _ => return Err(Error::None),
+            _ => return Err(anyhow::anyhow!("NOP")),
         }
     }
 }

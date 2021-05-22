@@ -6,12 +6,13 @@ pub mod diff;
 mod util;
 pub mod watcher;
 
+use anyhow::Result;
 #[cfg(any(target_arch = "wasm32"))]
 use msfs::legacy::{
     execute_calculator_code, AircraftVariable, CompiledCalculatorCode, NamedVariable,
 };
 use msfs::sim_connect::SimConnect;
-use yourcontrols_types::{DatumValue, Error, Result};
+use yourcontrols_types::DatumValue;
 
 /// A wrapper struct for NamedVariable, AircraftVariable, and calculator codes.
 ///
@@ -35,7 +36,7 @@ impl GenericVariable {
         Ok(Self {
             var: Some(
                 AircraftVariable::from(name, units, index)
-                    .map_err(|_| Error::VariableInitializeError)?,
+                    .map_err(|_| anyhow::anyhow!("Could not initialize aircraft variable!"))?,
             ),
             calculator_set: Some(format!("(>A:{}:{}, {})", name, index, units)),
             ..Default::default()
@@ -52,7 +53,8 @@ impl GenericVariable {
     pub fn new_calculator(get: String, set: String) -> Result<Self> {
         Ok(Self {
             calculator_get: Some(
-                CompiledCalculatorCode::new(&get).ok_or(Error::VariableInitializeError)?,
+                CompiledCalculatorCode::new(&get)
+                    .ok_or(anyhow::anyhow!("Could not create calculator code!"))?,
             ),
             calculator_set: Some(set),
             ..Default::default()

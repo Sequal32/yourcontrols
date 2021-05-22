@@ -1,6 +1,6 @@
 use std::{net::SocketAddr, time::Instant};
-use yourcontrols_types::Error;
 
+use crate::error::Error;
 use crate::payloads::MainPayloads;
 
 use super::base::{BaseSocket, Message, Payload};

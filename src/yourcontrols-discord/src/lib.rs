@@ -1,11 +1,11 @@
+mod error;
 mod events;
 
+use crate::error::Result;
 use base64::{decode, encode};
 use discord_game_sdk::{Activity, Discord, UserID};
 use events::YourControlsDiscordEvents;
 use std::{net::SocketAddr, str::FromStr, time::SystemTime};
-
-use yourcontrols_types::Error;
 
 type Secret = String;
 
@@ -31,7 +31,7 @@ impl SecretEncoder {
         encode(session_id.as_bytes())
     }
 
-    pub fn decode_secret(secret: &str) -> Result<JoinMethod, Error> {
+    pub fn decode_secret(secret: &str) -> Result<JoinMethod> {
         let decode_bytes = decode(secret)?;
         let decode_s = String::from_utf8(decode_bytes)?;
 

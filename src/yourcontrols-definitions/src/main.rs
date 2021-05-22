@@ -1,12 +1,11 @@
 use yourcontrols_definitions::DefinitionsParser;
-use yourcontrols_types::Error;
 
-fn main() -> Result<(), Error> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut parser = DefinitionsParser::new();
 
-    parser.load_scripts("definitions/scripts");
-    parser.load_file("definitions/templates/ToggleSwitch.yaml");
-    parser.load_file("definitions/templates/NumSet.yaml");
+    parser.load_scripts("definitions/scripts")?;
+    parser.load_file("definitions/templates/ToggleSwitch.yaml")?;
+    parser.load_file("definitions/templates/NumSet.yaml")?;
 
     println!(
         "{:#?} {:#?} {:#?}",

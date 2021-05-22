@@ -1,5 +1,6 @@
 #![cfg(any(target_arch = "wasm32"))]
 
+use anyhow::Result;
 use msfs::sim_connect::{
     client_data_definition, data_definition, ClientDataArea, Period, SimConnect, SimConnectRecv,
 };
@@ -15,8 +16,8 @@ use crate::util::map_ids;
 use crate::util::{GenericResult, DATA_SIZE};
 
 use yourcontrols_types::{
-    DatumMessage, Error, EventMessage, MappingType, MessagePackFragmenter, Payloads, Result,
-    ScriptMessage, SyncPermissionState, VarType,
+    DatumMessage, EventMessage, MappingType, MessagePackFragmenter, Payloads, ScriptMessage,
+    SyncPermissionState, VarType,
 };
 
 /// A wrapper struct for an array of size DATA_SIZE bytes
@@ -89,7 +90,7 @@ impl MainGauge {
             }
             simconnect
                 .set_client_data(area, &client_data)
-                .map_err(|_| Error::ClientDataSendError)?;
+                .map_err(|_| anyhow::anyhow!("Could not set client data!"))?;
         }
 
         Ok(())
@@ -108,7 +109,11 @@ impl MainGauge {
         let mut conditions = None; // TODO: implement
 
         if let Some(var_id) = message.var {
-            let rc_var = self.vars.get(var_id).ok_or(Error::None)?.clone();
+            let rc_var = self
+                .vars
+                .get(var_id)
+                .ok_or(anyhow::anyhow!("Variable not set prior."))?
+                .clone();
 
             interpolate = message
                 .interpolate

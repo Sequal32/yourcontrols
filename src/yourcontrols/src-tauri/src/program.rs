@@ -1,3 +1,4 @@
+use anyhow::Result;
 use std::fs::read_dir;
 use std::path::{Path, PathBuf};
 
@@ -8,7 +9,7 @@ use crate::ui::Ui;
 use crate::{aircraft::DefinitionsUpdater, ui::GameUiPayloads};
 
 use yourcontrols_definitions::DefinitionsParser;
-use yourcontrols_types::{Payloads, Result};
+use yourcontrols_types::Payloads;
 
 const DEFINITIONS_PATH: &str = "definitions";
 

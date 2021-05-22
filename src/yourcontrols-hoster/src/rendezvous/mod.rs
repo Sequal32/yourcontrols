@@ -2,10 +2,9 @@ mod sessions;
 
 use std::net::SocketAddr;
 
-use laminar::Socket;
+use anyhow::Result;
 use sessions::Sessions;
 use yourcontrols_net::{BaseSocket, MainPayloads};
-use yourcontrols_types::Result;
 
 pub struct RendezvousServer {
     socket: BaseSocket,

@@ -4,9 +4,9 @@ mod util;
 
 use std::{thread::sleep, time::Duration};
 
+use anyhow::Result;
 use dotenv::var;
 use rendezvous::RendezvousServer;
-use yourcontrols_types::Result;
 // use hoster::Hoster;
 // use yourcontrols_net::get_rendezvous_server;
 

@@ -6,6 +6,7 @@ repository = "https://github.com/Sequal32/yourcontrols"
 edition = "2018"
 
 [dependencies]
+anyhow = "1.0"
 attohttpc = { version = "0.17", features = ["json"] }
 clap = "2.33"
 crossbeam-channel = "0.5"
@@ -23,7 +24,7 @@ tauri = { version = "0.11", features = ["all-api"] }
 tungstenite = "0.13"
 yourcontrols-definitions = { path = "../../yourcontrols-definitions" }
 yourcontrols-net = { path = "../../yourcontrols-net" }
-yourcontrols-types = { path = "../../yourcontrols-types", features = ["program"] }
+yourcontrols-types = { path = "../../yourcontrols-types" }
 
 [target."cfg(windows)".build-dependencies]
 winres = "0.1"

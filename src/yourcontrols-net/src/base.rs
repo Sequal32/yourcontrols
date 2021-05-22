@@ -1,3 +1,4 @@
+use crate::error::Result;
 use crossbeam_channel::{Receiver, Sender};
 use laminar::{Config, Packet, Socket, SocketEvent};
 use rmp_serde;
@@ -5,7 +6,6 @@ use serde::{de::DeserializeOwned, Serialize};
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
 use std::time::{Duration, Instant};
 use std::{collections::HashSet, net::ToSocketAddrs};
-use yourcontrols_types::{Error, Result};
 
 pub const HEARTBEAT_INTERVAL: u64 = 500;
 

@@ -1,3 +1,4 @@
+use anyhow::Result;
 use cmd::Cmd;
 use cmd::UIEvents;
 use crossbeam_channel::{unbounded, Receiver, Sender};
@@ -7,7 +8,6 @@ use std::option::Option;
 use std::thread::{sleep, spawn};
 use std::time::Duration;
 use tungstenite::{self, HandshakeError, Message, WebSocket};
-use yourcontrols_types::Error;
 
 pub mod cmd;
 pub mod util;
@@ -100,7 +100,7 @@ impl Ui {
         self.ui_tx.send(event).ok();
     }
 
-    pub fn send_message_game_ui(&mut self, payload: GameUiPayloads) -> Result<(), Error> {
+    pub fn send_message_game_ui(&mut self, payload: GameUiPayloads) -> Result<()> {
         if let Some(active_stream) = self.active_stream.as_mut() {
             active_stream.write_message(Message::Text(serde_json::to_string(&payload)?))?
         }
