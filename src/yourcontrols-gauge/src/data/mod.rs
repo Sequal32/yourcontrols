@@ -92,6 +92,7 @@ impl Variable for GenericVariable {
     }
 }
 
+#[cfg(any(target_arch = "wasm32"))]
 impl VariableDebug for GenericVariable {}
 
 #[cfg(any(target_arch = "wasm32"))]
@@ -180,6 +181,7 @@ impl Settable for EventSet {
     }
 }
 
+#[cfg(any(target_arch = "wasm32"))]
 impl SettableDebug for EventSet {}
 /// Listens to an `event_name` and keeps track of how many times it was triggered.
 #[derive(Debug)]

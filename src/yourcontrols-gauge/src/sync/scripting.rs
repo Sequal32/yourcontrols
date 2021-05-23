@@ -32,22 +32,44 @@ impl ScriptingEngine {
         self.engine
             .register_global_module(CorePackage::new().as_shared_module());
         self.engine
-            .register_fn("get", |vec: &mut Vec<RcVariable>, index: i64| {
-                vec[index as usize].get()
-            });
-        self.engine
-            .register_fn(
-                "set",
-                |set: &mut Vec<RcSettable>, index: i64, value: f64| {
-                    set[index as usize].set_with_value(value)
-                },
-            )
-            .register_fn("set", |set: &mut Vec<RcSettable>, index: i64| {
-                set[index as usize].set()
+            .register_indexer_get(|vec: &mut Vec<RcVariable>, index: i64| {
+                vec.get(index as usize)
+                    .cloned()
+                    .map(Dynamic::from)
+                    .unwrap_or(Dynamic::UNIT)
             })
-            .register_fn("exists", |set: &mut Vec<RcSettable>, index: i64| {
-                set.get(index as usize).is_some()
+            .register_fn("get", |var: &mut RcVariable| var.get());
+        self.engine
+            .register_indexer_get(|vec: &mut Vec<RcSettable>, index: i64| {
+                vec.get(index as usize)
+                    .cloned()
+                    .map(Dynamic::from)
+                    .unwrap_or(Dynamic::UNIT)
+            })
+            .register_fn("set", |set: &mut RcSettable| set.set())
+            .register_fn("set", |set: &mut RcSettable, value: Dynamic| {
+                if let Ok(value) = value.as_int().map(|x| x as f64).or(value.as_float()) {
+                    set.set_with_value(value)
+                }
             });
+
+        // self.engine
+        //     .register_fn("get", |vec: &mut Vec<RcVariable>, index: i64| {
+        //         vec[index as usize].get()
+        //     });
+        // self.engine
+        //     .register_fn(
+        //         "set",
+        //         |set: &mut Vec<RcSettable>, index: i64, value: f64| {
+        //             set[index as usize].set_with_value(value)
+        //         },
+        //     )
+        //     .register_fn("set", |set: &mut Vec<RcSettable>, index: i64| {
+        //         set[index as usize].set()
+        //     })
+        //     .register_fn("exists", |set: &mut Vec<RcSettable>, index: i64| {
+        //         set.get(index as usize).is_some()
+        //     });
     }
 
     pub fn add_script(&mut self, lines: &[&str]) -> Result<()> {
@@ -113,8 +135,8 @@ mod tests {
     use crate::data::{MockSettable, MockVariable};
 
     const TEST_SCRIPT: &[&'static str] = &[
-        "let test = vars.get(0);",
-        "if params[1] {sets.set(0, test + incoming_value + params[0])} else {sets.set(0)};",
+        "let test = vars[0].get();",
+        "if params[1] {sets[0].set(test + incoming_value + params[0])} else {sets[0].set()};",
     ];
 
     #[test]
@@ -173,13 +195,13 @@ mod tests {
     fn test_exists() {
         let mut engine = ScriptingEngine::new_engine();
         engine
-            .add_script(&["sets.exists(0) && !sets.exists(1)"])
+            .add_script(&["return sets[0] != () && sets[1] == ()"])
             .expect("should add successfully");
 
         let result = engine
             .process_incoming_value(0, 1.0, vec![], vec![Rc::new(MockSettable::new())], vec![])
             .expect("should run succesfully");
 
-        assert!(result.as_bool().expect("should be bool"))
+        assert!(result.as_bool().expect("should be bool") == true)
     }
 }
