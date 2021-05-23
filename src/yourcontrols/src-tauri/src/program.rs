@@ -54,6 +54,10 @@ impl Program {
         Ok(())
     }
 
+    pub fn start_server(&mut self) -> Result<()> {
+        self.network.start_direct(27015)
+    }
+
     /// Connects to the simulator and readies the definitions
     pub fn connect_to_simulator(&mut self) -> bool {
         let success = self.simulator.connect("YourControls");
@@ -94,6 +98,7 @@ impl Program {
         };
 
         for event in events {
+            println!("{:?}", event);
             match event {
                 NetworkEvent::SessionReceived { session_id } => {
                     self.ui.send_message_game_ui(GameUiPayloads::LobbyInfo {
@@ -101,6 +106,12 @@ impl Program {
                         server_ip: None,
                         clients: None,
                     })?;
+                }
+                NetworkEvent::Update { changed } => {
+                    self.simulator.send_message(Payloads::SendIncomingValues {
+                        data: changed,
+                        time: 0.0, // TODO:
+                    });
                 }
             }
         }

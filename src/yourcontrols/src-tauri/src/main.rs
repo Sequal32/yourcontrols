@@ -16,6 +16,7 @@ fn main() {
     program
         .load_definitions("aircraft/Asobo_C172.yaml")
         .expect("did not load");
+    program.start_server();
 
     println!("{}", program.connect_to_simulator());
 

@@ -21,11 +21,6 @@ impl RendezvousServer {
 
     pub fn process_payload(&mut self, addr: SocketAddr, message: MainPayloads) -> Result<()> {
         match message {
-            // Unused
-            MainPayloads::SessionDetails { .. } => {}
-            MainPayloads::AttemptConnection { .. } => {}
-            MainPayloads::InvalidSession => {}
-            MainPayloads::InvalidVersion => {}
             // Used
             MainPayloads::Hello {
                 session_id,
@@ -51,6 +46,7 @@ impl RendezvousServer {
                     // Send connection to hoster
                 }
             }
+            _ => {}
         }
 
         Ok(())
