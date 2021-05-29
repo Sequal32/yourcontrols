@@ -1,4 +1,4 @@
-use std::alloc::{Layout, LayoutErr};
+use std::alloc::{Layout, LayoutError};
 
 pub struct MemWriter {
     start_pointer: *mut u8,
@@ -8,7 +8,7 @@ pub struct MemWriter {
 
 #[allow(dead_code)]
 impl MemWriter {
-    pub fn new(size: usize, align: usize) -> Result<Self, LayoutErr> {
+    pub fn new(size: usize, align: usize) -> Result<Self, LayoutError> {
         let layout = Layout::from_size_align(size, align)?;
         let pointer = unsafe { std::alloc::alloc_zeroed(layout) };
         Ok(Self {
