@@ -25,7 +25,6 @@ shared:
     var_units: Enum
     var_type: i32
     event_name: TURBINE_IGNITION_SWITCH_SET2
-
   -
     type: NumSet
     var_name: L:A32NX_AUTOPILOT_VS_SELECTED
@@ -39,7 +38,6 @@ shared:
           var_type: f64
         equals:
           F64: 0.0
-
   -
     type: NumSet
     var_name: L:A32NX_AUTOPILOT_FPA_SELECTED
@@ -54,15 +52,12 @@ shared:
           var_type: f64
         equals:
           F64: 1.0
-
   -
     type: NumSet
     var_name: L:A32NX_AUTOPILOT_HEADING_SELECTED
     var_type: f64
     event_name: A32NX.FCU_HDG_SET
     use_calculator: true
-
-
   -
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
@@ -70,8 +65,6 @@ shared:
     var_type: f64
     event_name: A32NX.FCU_ALT_SET
     use_calculator: true
-  
-
   -
     type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
@@ -87,7 +80,6 @@ shared:
           var_type: bool
         equals:
             Bool: false
-
   -
     type: NumSet
     var_name: L:A32NX_FLAPS_HANDLE_PERCENT
@@ -95,7 +87,6 @@ shared:
     event_name: FLAPS_SET
     use_calculator: true
     multiply_by: 16192
-
   -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
@@ -103,14 +94,6 @@ shared:
     var_type: f64
     event_name: ELEVATOR_TRIM_SET
     is_user_event: true
-    conditions: # Because the aircraft is FBW, the trim is constantly adjusted so there's no need to sync this in the air
-      - var:
-          var_name: A:SIM ON GROUND
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: true
-
   - # Trim
     type: NumSet
     var_name: A:RUDDER TRIM PCT
@@ -132,6 +115,14 @@ shared:
     event_name: SPOILERS_SET
     multiply_by: 16384
     is_user_event: true
+  -
+    type: ToggleSwitch
+    var_name: A:CABIN SEATBELTS ALERT SWITCH
+    var_units: Bool
+    event_name: CABIN_SEATBELTS_ALERT_SWITCH_TOGGLE
+  -
+    type: var
+    var_name: L:A32NX_OVHD_INTLT_ANN
 
 master:
   -
