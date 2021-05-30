@@ -1,6 +1,7 @@
 #![cfg(any(target_arch = "wasm32"))]
 
 use anyhow::Result;
+use msfs::legacy;
 use msfs::sim_connect::{
     client_data_definition, data_definition, ClientDataArea, Period, SimConnect, SimConnectRecv,
 };
@@ -177,12 +178,12 @@ impl MainGauge {
         }
     }
 
-    fn add_vars(&mut self, datums: Vec<VarType>) -> Result<()> {
-        println!("Adding {} vars!", datums.len());
+    fn add_vars(&mut self, vars: Vec<VarType>) -> Result<()> {
+        println!("Adding {} vars!", vars.len());
         self.vars.clear();
-        self.vars.reserve(datums.len());
+        self.vars.reserve(vars.len());
 
-        for var in datums {
+        for var in vars {
             println!("{:?}", var);
             // Create generic vars from message data
             let var = match &var {
@@ -201,12 +202,12 @@ impl MainGauge {
         Ok(())
     }
 
-    fn add_events(&mut self, datums: Vec<EventMessage>) {
-        println!("Adding {} events!", datums.len());
+    fn add_events(&mut self, events: Vec<EventMessage>) {
+        println!("Adding {} events!", events.len());
         self.events.clear();
-        self.events.reserve(datums.len());
+        self.events.reserve(events.len());
 
-        for event in datums {
+        for event in events {
             // Create events from message data
             let event = match event.param {
                 Some(index) => EventSet::new_with_index(event.name, index, event.param_reversed),
@@ -235,6 +236,18 @@ impl MainGauge {
         Ok(())
     }
 
+    fn send_lvars(&self, simconnect: &mut SimConnect) -> Result<()> {
+        let mut lvar_names = Vec::new();
+        let mut id = 0;
+
+        while let Some(lvar) = legacy::get_name_of_named_variable(id) {
+            lvar_names.push(lvar);
+            id += 1;
+        }
+
+        self.send_message(simconnect, Payloads::LVars { data: lvar_names })
+    }
+
     fn reset(&mut self) {
         self.datum_manager = DatumManager::new();
         self.vars.clear();
@@ -252,17 +265,26 @@ impl MainGauge {
 
         match payload {
             // Unused
-            Payloads::VariableChange { .. } | Payloads::EventTriggered {} | Payloads::Pong => {}
+            Payloads::VariableChange { .. }
+            | Payloads::EventTriggered {}
+            | Payloads::Pong
+            | Payloads::LVars { .. } => {}
             // Receiving
             Payloads::Ping => self.send_message(simconnect, Payloads::Pong)?,
 
-            Payloads::SetDatums { datums } => self.add_datums(simconnect, datums),
+            Payloads::SetMappings {
+                vars,
+                events,
+                datums,
+                scripts,
+            } => {
+                self.add_vars(vars)?;
+                self.add_events(events);
+                self.set_scripts(scripts)?;
+                self.add_datums(simconnect, datums);
+            }
 
-            Payloads::SetVars { vars } => self.add_vars(vars)?,
-
-            Payloads::SetEvents { events } => self.add_events(events),
-
-            Payloads::SetScripts { scripts } => self.set_scripts(scripts)?,
+            Payloads::RequestLvarNames => self.send_lvars(simconnect)?,
 
             Payloads::ResetInterpolation => self.datum_manager.reset_interpolate_time(),
 

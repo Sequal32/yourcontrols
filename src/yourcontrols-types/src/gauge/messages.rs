@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use crate::{DatumKey, DatumValue, InterpolationType, Time, VarId};
 use rhai::Dynamic;
 use serde::{Deserialize, Serialize};
@@ -119,10 +117,12 @@ pub struct ChangedDatum {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Payloads {
     // Transmit to Sim
-    SetDatums { datums: Vec<DatumMessage> },
-    SetVars { vars: Vec<VarType> },
-    SetEvents { events: Vec<EventMessage> },
-    SetScripts { scripts: Vec<ScriptMessage> },
+    SetMappings {
+        datums: Vec<DatumMessage>,
+        vars: Vec<VarType>,
+        events: Vec<EventMessage>,
+        scripts: Vec<ScriptMessage>,
+    },
 
     WatchVariable {},
     WatchEvent {},
@@ -130,14 +130,25 @@ pub enum Payloads {
     MultiWatchEvent {},
     ExecuteCalculator {},
     AddMapping {},
-    SendIncomingValues { data: Vec<ChangedDatum>, time: Time },
-    UpdateSyncPermission { new: SyncPermissionState },
+    SendIncomingValues {
+        data: Vec<ChangedDatum>,
+        time: Time,
+    },
+    UpdateSyncPermission {
+        new: SyncPermissionState,
+    },
+    RequestLvarNames,
 
     ResetInterpolation,
     Ping,
     ResetAll,
     // Receive from Sim
-    VariableChange { changed: Vec<ChangedDatum> },
+    LVars {
+        data: Vec<String>,
+    },
+    VariableChange {
+        changed: Vec<ChangedDatum>,
+    },
     EventTriggered {},
     Pong,
 }
