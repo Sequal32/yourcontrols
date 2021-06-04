@@ -257,9 +257,10 @@ impl GaugeCommunicator {
 
         for datum in datums {
             if let Some(datum_data) = self.datums.get(datum.id as usize) {
+                let value = datum.value.clamp(-10e64f64, 10e64f64);
                 result.push(GetResult {
                     var_name: datum_data.friendly_name.clone(),
-                    value: datum.value,
+                    value: value,
                 })
             }
         }
