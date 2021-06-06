@@ -66,17 +66,11 @@ impl Program {
             return false;
         }
 
-        self.simulator.send_message(Payloads::SetScripts {
-            scripts: self.definitions_parser.get_parsed_scripts(),
-        });
-        self.simulator.send_message(Payloads::SetEvents {
-            events: self.definitions_parser.get_parsed_events().clone(),
-        });
-        self.simulator.send_message(Payloads::SetVars {
-            vars: self.definitions_parser.get_parsed_vars().clone(),
-        });
-        self.simulator.send_message(Payloads::SetDatums {
+        self.simulator.send_message(Payloads::SetMappings {
             datums: self.definitions_parser.get_parsed_datums().clone(),
+            vars: self.definitions_parser.get_parsed_vars().clone(),
+            events: self.definitions_parser.get_parsed_events().clone(),
+            scripts: self.definitions_parser.get_parsed_scripts(),
         });
 
         return true;
