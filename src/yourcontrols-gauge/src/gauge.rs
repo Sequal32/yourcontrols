@@ -116,9 +116,7 @@ impl MainGauge {
                 .ok_or(anyhow::anyhow!("Variable not set prior."))?
                 .clone();
 
-            interpolate = message
-                .interpolate
-                .map(|x| Interpolation::new(x.interpolate_type, x.calculator));
+            interpolate = message.interpolate.map(|x| Interpolation::new(x));
             watch_data = message
                 .watch_period
                 .map(|period| VariableWatcher::new(rc_var.clone(), period));

@@ -12,6 +12,12 @@ pub struct Packet {
     pub current: DatumValue,
 }
 
+impl Packet {
+    pub fn interpolate(&mut self, to: DatumValue, at_alpha: f64, with: &InterpolationType) {
+        self.current = interpolate_value(self.value, to, at_alpha, with);
+    }
+}
+
 /// Handles interpolation of `Data` based on `InterpolationType`
 #[derive(Debug)]
 pub struct Interpolation {
@@ -20,12 +26,11 @@ pub struct Interpolation {
 
     current_packet: Packet,
     interpolate_type: InterpolationType,
-    calculator: String,
     queue: VecDeque<Packet>,
 }
 
 impl Interpolation {
-    pub fn new(interpolate_type: InterpolationType, calculator: String) -> Self {
+    pub fn new(interpolate_type: InterpolationType) -> Self {
         Self {
             newest_data_time: Time::default(),
             did_init: false,
@@ -33,7 +38,6 @@ impl Interpolation {
             queue: VecDeque::new(),
             current_packet: Packet::default(),
             interpolate_type,
-            calculator,
         }
     }
 
@@ -70,12 +74,8 @@ impl Interpolation {
                     continue;
                 }
 
-                self.current_packet.current = interpolate_value(
-                    self.current_packet.value,
-                    next_packet.value,
-                    alpha,
-                    &self.interpolate_type,
-                );
+                self.current_packet
+                    .interpolate(next_packet.value, alpha, &self.interpolate_type);
 
                 return;
             }
@@ -83,6 +83,9 @@ impl Interpolation {
 
         // No valid packets found, use very last value
         self.current_packet = self.queue.pop_back().unwrap();
+        // Process InterpolationType
+        self.current_packet
+            .interpolate(self.current_packet.value, 1.0, &self.interpolate_type);
     }
 
     pub fn queue_data(&mut self, data: DatumValue, time: Time) {
@@ -102,7 +105,7 @@ impl Interpolation {
         self.newest_data_time = time;
     }
 
-    pub fn compute_interpolate_code(&mut self, tick: Time) -> Option<String> {
+    pub fn get_value_at(&mut self, tick: Time) -> Option<DatumValue> {
         // No data queued yet
         if !self.did_init {
             return None;
@@ -114,10 +117,7 @@ impl Interpolation {
 
         self.calculate_next_value(tick);
 
-        Some(format!(
-            "{} (>{})",
-            self.current_packet.current, self.calculator
-        ))
+        Some(self.current_packet.current)
     }
 }
 
@@ -127,56 +127,63 @@ mod tests {
 
     #[test]
     fn test_in_sequence() {
-        let mut interpolation = Interpolation::new(
-            InterpolationType::Default,
-            "A:PLANE ALTITUDE, Feet".to_string(),
-        );
+        let mut interpolation = Interpolation::new(InterpolationType::Default);
         interpolation.queue_data(0.0, 0.0);
         interpolation.queue_data(100.0, 1.0);
         interpolation.queue_data(200.0, 2.0);
         interpolation.queue_data(1000.0, 10.0);
         interpolation.queue_data(11000.0, 20.0);
 
-        interpolation.calculate_next_value(0.0);
-        assert_eq!(interpolation.current_packet.current, 0.0);
+        assert_eq!(interpolation.get_value_at(0.0), Some(0.0));
         // Next in sequence
-        interpolation.calculate_next_value(0.5);
-        assert_eq!(interpolation.current_packet.current, 50.0);
-        interpolation.calculate_next_value(1.5);
-        assert_eq!(interpolation.current_packet.current, 150.0);
+        assert_eq!(interpolation.get_value_at(0.5), Some(50.0));
+        assert_eq!(interpolation.get_value_at(1.5), Some(150.0));
         // Skip packets
-        interpolation.calculate_next_value(15.5);
-        assert_eq!(interpolation.current_packet.current, 6500.0);
+        assert_eq!(interpolation.get_value_at(15.5), Some(6500.0));
         // Over time
-        interpolation.calculate_next_value(50.0);
-        assert_eq!(interpolation.current_packet.current, 11000.0);
+        assert_eq!(interpolation.get_value_at(50.0), None);
+    }
+
+    #[test]
+    fn test_constant() {
+        let mut interpolation = Interpolation::new(InterpolationType::DefaultConstant);
+        interpolation.queue_data(0.0, 0.0);
+        interpolation.queue_data(100.0, 1.0);
+
+        assert_eq!(interpolation.get_value_at(0.0), Some(0.0));
+        assert_eq!(interpolation.get_value_at(0.5), Some(50.0));
+        assert_eq!(interpolation.get_value_at(1.0), Some(100.0));
+        assert_eq!(interpolation.get_value_at(2.0), Some(100.0));
+    }
+
+    #[test]
+    fn test_invert_constant() {
+        let mut interpolation = Interpolation::new(InterpolationType::InvertConstant);
+        interpolation.queue_data(0.0, 0.0);
+        interpolation.queue_data(100.0, 1.0);
+
+        assert_eq!(interpolation.get_value_at(0.0), Some(0.0));
+        assert_eq!(interpolation.get_value_at(0.5), Some(-50.0));
+        assert_eq!(interpolation.get_value_at(1.0), Some(-100.0));
+        assert_eq!(interpolation.get_value_at(2.0), Some(-100.0));
+    }
+
+    #[test]
+    fn test_invert() {
+        let mut interpolation = Interpolation::new(InterpolationType::Invert);
+        interpolation.queue_data(0.0, 0.0);
+        interpolation.queue_data(100.0, 1.0);
+
+        assert_eq!(interpolation.get_value_at(0.0), Some(0.0));
+        assert_eq!(interpolation.get_value_at(0.5), Some(-50.0));
+        assert_eq!(interpolation.get_value_at(1.0), Some(-100.0));
+        assert_eq!(interpolation.get_value_at(2.0), None);
     }
 
     #[test]
     fn test_empty_queue() {
-        let mut interpolation = Interpolation::new(
-            InterpolationType::Default,
-            "A:PLANE ALTITUDE, Feet".to_string(),
-        );
+        let mut interpolation = Interpolation::new(InterpolationType::Default);
 
-        assert!(interpolation.compute_interpolate_code(0.0).is_none())
-    }
-
-    #[test]
-    fn test_correct_calculator() {
-        let mut interpolation = Interpolation::new(
-            InterpolationType::Default,
-            "A:PLANE ALTITUDE, Feet".to_string(),
-        );
-
-        interpolation.queue_data(0.0, 0.0);
-        interpolation.queue_data(100.0, 1.0);
-
-        assert_eq!(
-            interpolation
-                .compute_interpolate_code(0.0)
-                .expect("should exist"),
-            "0 (>A:PLANE ALTITUDE, Feet)"
-        )
+        assert!(interpolation.get_value_at(0.0).is_none())
     }
 }

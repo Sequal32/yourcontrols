@@ -91,19 +91,13 @@ pub struct ConditionMessage {
     pub params: Vec<Dynamic>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct InterpolateMessage {
-    pub calculator: String,
-    pub interpolate_type: InterpolationType,
-}
-
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct DatumMessage {
     pub var: Option<VarId>,
     pub watch_event: Option<String>,
     pub watch_period: Option<WatchPeriod>, // Watch variable
     pub conditions: Option<Vec<ConditionMessage>>,
-    pub interpolate: Option<InterpolateMessage>,
+    pub interpolate: Option<InterpolationType>,
     pub mapping: Option<MappingType<MappingArgsMessage>>,
     pub sync_permission: Option<SyncPermission>,
 }

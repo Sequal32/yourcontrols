@@ -19,7 +19,7 @@ use super::{RcVariable, Syncable};
 #[cfg_attr(test, mockall::automock)]
 pub trait DatumTrait {
     fn get_changed_value(&mut self, tick: Time) -> Option<DatumValue>;
-    fn get_interpolation_calculator(&mut self, tick: Time) -> Option<String>;
+    fn interpolate(&mut self, tick: Time) -> Option<()>;
     fn queue_interpolate(&mut self, value: DatumValue, tick: Time) -> Option<()>;
     fn process_sim_event_id(&mut self, id: u32) -> Option<()>;
     fn execute_mapping(&mut self, incoming_value: DatumValue) -> Option<()>;
@@ -43,8 +43,9 @@ impl DatumTrait for Datum {
         self.watch_data.as_mut()?.poll(tick)
     }
 
-    fn get_interpolation_calculator(&mut self, tick: Time) -> Option<String> {
-        self.interpolate.as_mut()?.compute_interpolate_code(tick)
+    fn interpolate(&mut self, tick: Time) -> Option<()> {
+        let new_value = self.interpolate.as_mut()?.get_value_at(tick)?;
+        self.execute_mapping(new_value)
     }
 
     fn queue_interpolate(&mut self, value: DatumValue, tick: Time) -> Option<()> {
@@ -138,14 +139,6 @@ impl<T: DatumTrait> DatumManager<T> {
         }
     }
 
-    #[cfg(any(target_arch = "wasm32"))]
-    fn execute_interpolate_strings(&self, interpolation_strings: Vec<String>) {
-        execute_calculator_code::<()>(&interpolation_strings.join(" "));
-    }
-
-    #[cfg(not(target_arch = "wasm32"))]
-    fn execute_interpolate_strings(&self, _interpolation_strings: Vec<String>) {}
-
     fn get_interpolation_tick(&mut self) -> Time {
         self.interpolation_time
             .as_mut()
@@ -160,16 +153,12 @@ impl<T: DatumTrait> DatumManager<T> {
 
     /// Runs interpolation and watcher tasks for each datum.
     pub fn poll(&mut self, sync_permission: &SyncPermissionState) -> Vec<ChangedDatum> {
-        let mut interpolation_strings = Vec::new();
         let mut changed_datums = Vec::new();
 
         let interpolation_tick = self.get_interpolation_tick();
         // Execute stuff
         for (key, datum) in self.datums.iter_mut() {
-            if let Some(interpolate_string) = datum.get_interpolation_calculator(interpolation_tick)
-            {
-                interpolation_strings.push(interpolate_string);
-            }
+            datum.interpolate(interpolation_tick);
 
             if let Some(value) = datum.get_changed_value(self.poll_time.step()) {
                 // Based on sync permission
@@ -179,8 +168,6 @@ impl<T: DatumTrait> DatumManager<T> {
                 changed_datums.push(ChangedDatum { key: *key, value })
             }
         }
-
-        self.execute_interpolate_strings(interpolation_strings);
 
         changed_datums
     }
@@ -254,7 +241,7 @@ mod tests {
         let mut datum = Datum::default();
 
         assert_eq!(datum.get_changed_value(0.0), None);
-        assert_eq!(datum.get_interpolation_calculator(0.0), None);
+        assert_eq!(datum.interpolate(0.0), None);
         assert_eq!(datum.queue_interpolate(0.0, 0.0), None);
         assert_eq!(datum.process_sim_event_id(0), None);
         assert_eq!(datum.execute_mapping(0.0), None);
@@ -278,10 +265,8 @@ mod tests {
     fn test_poll_calls() {
         let mut mock = MockDatumTrait::new();
         mock.expect_can_execute().once().return_const(true);
-        mock.expect_get_interpolation_calculator()
-            .once()
-            .return_const("Test".to_string());
         mock.expect_get_changed_value().once().return_const(1.0);
+        mock.expect_interpolate().once().return_const(None);
 
         let mut manager = DatumManager::<MockDatumTrait>::new();
         manager.add_datum(0, mock);
