@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::net::SocketAddr;
 use yourcontrols_net::{BaseSocket, MainPayloads, Message};
-use yourcontrols_types::ChangedDatum;
+use yourcontrols_types::{ChangedDatum, Time};
 
 const RENDEZVOUS_SERVER: &str = "127.0.0.1:25070";
 
@@ -38,8 +38,8 @@ impl Network {
             } => {}
             MainPayloads::InvalidSession => {}
             MainPayloads::InvalidVersion => {}
-            MainPayloads::UpdateReliable { changed } => {
-                return Ok(Some(NetworkEvent::Update { changed }))
+            MainPayloads::Update { changed, time, .. } => {
+                return Ok(Some(NetworkEvent::Update { changed, time }))
             }
         }
 
@@ -97,6 +97,11 @@ impl Network {
 
 #[derive(Debug)]
 pub enum NetworkEvent {
-    SessionReceived { session_id: String },
-    Update { changed: Vec<ChangedDatum> },
+    SessionReceived {
+        session_id: String,
+    },
+    Update {
+        changed: Vec<ChangedDatum>,
+        time: Time,
+    },
 }

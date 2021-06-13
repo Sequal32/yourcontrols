@@ -1,14 +1,5 @@
 use semver::Version;
 use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(tag = "cmd", rename_all = "camelCase")]
-pub enum Cmd {
-    TestNetwork { port: i64 },
-    UiReady,
-    InstallAircraft { names: Vec<String> },
-}
-
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct AircraftInstallData {
@@ -20,8 +11,15 @@ pub struct AircraftInstallData {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(untagged, rename_all = "camelCase")]
-pub enum UIEvents {
+#[serde(tag = "cmd", rename_all = "camelCase")]
+pub enum UiEvents {
+    TestNetwork {
+        port: i64,
+    },
+    UiReady,
+    InstallAircraft {
+        names: Vec<String>,
+    },
     StartUpText {
         text: String,
     },
@@ -34,27 +32,6 @@ pub enum UIEvents {
         test: TestNetworkResult,
         status: ResultStatus,
     },
-}
-#[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(rename_all = "camelCase")]
-pub enum TestNetworkResult {
-    CloudServer,
-    CloudServerP2P,
-    UPnP,
-    Direct,
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(rename_all = "camelCase")]
-pub enum ResultStatus {
-    Pending {},
-    Error { reason: String },
-    Success {},
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
-#[serde(rename_all = "camelCase", tag = "cmd")]
-pub enum GameUiPayloads {
     Host {
         port: Option<u16>,
         username: String,
@@ -89,4 +66,21 @@ pub enum GameUiPayloads {
     },
     Connected,
     Disconnected,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub enum TestNetworkResult {
+    CloudServer,
+    CloudServerP2P,
+    UPnP,
+    Direct,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub enum ResultStatus {
+    Pending {},
+    Error { reason: String },
+    Success {},
 }

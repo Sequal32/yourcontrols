@@ -2,26 +2,26 @@ use anyhow::Result;
 use std::fs::read_dir;
 use std::path::{Path, PathBuf};
 
+use crate::aircraft::DefinitionsUpdater;
 use crate::network::{Network, NetworkEvent};
 use crate::simulator::Simulator;
-use crate::ui::cmd::{Cmd, UIEvents};
+use crate::ui::cmd::UiEvents;
 use crate::ui::Ui;
-use crate::{aircraft::DefinitionsUpdater, ui::GameUiPayloads};
 
 use yourcontrols_definitions::DefinitionsParser;
 use yourcontrols_types::Payloads;
 
 const DEFINITIONS_PATH: &str = "definitions";
 
-pub struct Program {
-    ui: Ui,
+pub struct Program<U> {
+    ui: U,
     definitions_parser: DefinitionsParser,
     definitions_updater: DefinitionsUpdater,
     network: Network,
     simulator: Simulator,
 }
 
-impl Program {
+impl<U: Ui> Program<U> {
     pub fn setup() -> Self {
         Self {
             ui: Ui::run(),
@@ -95,16 +95,16 @@ impl Program {
             println!("{:?}", event);
             match event {
                 NetworkEvent::SessionReceived { session_id } => {
-                    self.ui.send_message_game_ui(GameUiPayloads::LobbyInfo {
+                    self.ui.send_message(UiEvents::LobbyInfo {
                         session_code: Some(session_id),
                         server_ip: None,
                         clients: None,
                     })?;
                 }
-                NetworkEvent::Update { changed } => {
+                NetworkEvent::Update { changed, time } => {
                     self.simulator.send_message(Payloads::SendIncomingValues {
                         data: changed,
-                        time: 0.0, // TODO:
+                        time, // TODO: pre-process time
                     });
                 }
             }
@@ -114,29 +114,29 @@ impl Program {
     }
 
     pub fn process_ui_events(&mut self) -> Result<()> {
-        match self.ui.get_pending_events_app() {
-            Some(Cmd::UiReady) => {
-                self.ui.send_message_app(UIEvents::StartUpText {
+        let event = match self.ui.next_event() {
+            Some(e) => e,
+            None => return Ok(()),
+        };
+
+        match event {
+            UiEvents::UiReady => {
+                self.ui.send_message(UiEvents::StartUpText {
                     text: "Starting...".to_string(),
                 });
 
                 // self.definitions_updater.fetch_data().expect("OK"); TODO: update repository then uncomment
 
-                self.ui.send_message_app(UIEvents::InitData {
+                self.ui.send_message(UiEvents::InitData {
                     version: std::env::var("CARGO_PKG_VERSION").unwrap(),
                     aircraft: self.definitions_updater.get_all_aircraft_info(),
                 });
 
-                // SIMULATE TIME LAG
-                self.ui.send_message_app(UIEvents::LoadingComplete);
+                self.ui.send_message(UiEvents::LoadingComplete);
             }
-            Some(Cmd::InstallAircraft { names }) => {}
-            Some(Cmd::TestNetwork { port }) => {}
-            None => {}
-        }
-
-        match self.ui.get_pending_events_game_ui() {
-            Some(GameUiPayloads::Host { port, username }) => {
+            UiEvents::InstallAircraft { names } => {}
+            UiEvents::TestNetwork { port } => {}
+            UiEvents::Host { port, username } => {
                 if let Some(port) = port {
                     self.network.start_direct(port)?;
                 } else {

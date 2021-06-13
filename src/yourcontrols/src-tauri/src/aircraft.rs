@@ -1,4 +1,4 @@
-use crate::ui::AircraftInstallData;
+use crate::ui::cmd::AircraftInstallData;
 use anyhow::Result;
 use attohttpc;
 use semver::Version;

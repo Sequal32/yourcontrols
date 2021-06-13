@@ -3,6 +3,8 @@ use std::time::Duration;
 use clap::Arg;
 use program::Program;
 
+use crate::ui::TauriUI;
+
 mod aircraft;
 mod network;
 mod program;
@@ -12,7 +14,7 @@ mod ui;
 fn main() {
     let matches = clap::App::new("YourControls").get_matches();
 
-    let mut program = Program::setup();
+    let mut program: Program<TauriUI> = Program::setup();
     program
         .load_definitions("aircraft/Asobo_C172.yaml")
         .expect("did not load");
