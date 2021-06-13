@@ -99,7 +99,7 @@ impl<U: Ui> Program<U> {
                         session_code: Some(session_id),
                         server_ip: None,
                         clients: None,
-                    })?;
+                    });
                 }
                 NetworkEvent::Update { changed, time } => {
                     self.simulator.send_message(Payloads::SendIncomingValues {

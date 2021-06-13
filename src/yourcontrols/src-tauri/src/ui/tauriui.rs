@@ -154,8 +154,8 @@ impl Ui for TauriUI {
         }
     }
 
-    fn send_message(&mut self, event: UiEvents) -> Result<()> {
-        self.send_message_to_app(event)
+    fn send_message(&mut self, event: UiEvents) {
+        self.send_message_to_app(event).ok();
     }
 
     fn next_event(&mut self) -> Option<UiEvents> {
