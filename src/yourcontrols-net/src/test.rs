@@ -11,11 +11,20 @@ fn get_socket() -> BaseSocket {
     BaseSocket::start_with_bind_address("127.0.0.1:0").unwrap()
 }
 
+fn poll_server_twice(tester: &mut impl HandshakeTester) {
+    tester.poll();
+    tester.poll();
+}
+
 fn poll_in_progress(handshake: Box<dyn Handshake>) -> Box<dyn Handshake> {
     match handshake.handshake() {
         Err(HandshakeFail::InProgress(h)) => h,
         _ => panic!("in progress"),
     }
+}
+
+trait HandshakeTester {
+    fn poll(&mut self);
 }
 
 struct RendezvousTester {
@@ -41,8 +50,10 @@ impl RendezvousTester {
     fn encode_address(&self) -> String {
         base64::encode(self.target_address.to_string())
     }
+}
 
-    pub fn poll(&mut self) {
+impl HandshakeTester for RendezvousTester {
+    fn poll(&mut self) {
         for message in self.socket.poll::<MainPayloads>() {
             match message {
                 Message::Payload(MainPayloads::Hello { .. }, addr) => {
@@ -88,8 +99,10 @@ impl DirectTester {
             invalid_version,
         }
     }
+}
 
-    pub fn poll(&mut self) {
+impl HandshakeTester for DirectTester {
+    fn poll(&mut self) {
         for message in self.socket.poll::<MainPayloads>() {
             match message {
                 Message::Payload(
@@ -103,7 +116,9 @@ impl DirectTester {
                         .send_to(
                             addr,
                             &if self.invalid_version {
-                                MainPayloads::InvalidVersion
+                                MainPayloads::InvalidVersion {
+                                    server_version: String::new(),
+                                } // FIXME:
                             } else {
                                 MainPayloads::Hello {
                                     session_id,
@@ -134,10 +149,7 @@ fn test_direct_handshake() {
     // Start handshaking to server
     let handshake = poll_in_progress(handshake);
 
-    // Receive client message and send hello back
-    server.poll();
-    // Actually send the message
-    server.poll();
+    poll_server_twice(&mut server);
 
     assert!(handshake.handshake().is_ok(), "should've connected");
 }
@@ -159,10 +171,7 @@ fn test_request_hosting() {
     // Start handshaking to server
     let handshake = poll_in_progress(handshake);
 
-    // Receive message
-    server.poll();
-    // Send message
-    server.poll();
+    poll_server_twice(&mut server);
 
     // Receive session ID
     let handshake = handshake.handshake().expect("completed");
@@ -186,10 +195,7 @@ fn test_self_hosting() {
     // Start handshaking to server
     let handshake = poll_in_progress(handshake);
 
-    // Receive message
-    server.poll();
-    // Send message
-    server.poll();
+    poll_server_twice(&mut server);
 
     // Receive session ID
     let handshake = handshake.handshake().expect("completed");
@@ -216,10 +222,7 @@ fn test_punchthrough_local() {
     let handshake = poll_in_progress(handshake);
     println!("{}", server.socket.get_address());
 
-    // Receive session code
-    server.poll();
-    // Send IPs to attempt to connect to
-    server.poll();
+    poll_server_twice(&mut server);
 
     // Receive connection details
     let handshake = poll_in_progress(handshake);
