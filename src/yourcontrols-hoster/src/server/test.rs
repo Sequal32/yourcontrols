@@ -8,28 +8,25 @@ use super::*;
 use anyhow::Result;
 use yourcontrols_net::{BaseSocket, ControlSurfaces};
 
-struct SocketServerPair {
+const VERSION: &str = "1.0.0";
+
+struct SocketServerTriplet {
     server: SingleServer,
-    socket: BaseSocket,
+    socket_1: BaseSocket,
+    socket_2: BaseSocket,
 }
 
-impl SocketServerPair {
+impl SocketServerTriplet {
     pub fn new() -> Result<Self> {
         Ok(Self {
-            socket: BaseSocket::start_with_bind_address("127.0.0.1:0")?,
+            socket_1: BaseSocket::start_with_bind_address("127.0.0.1:0")?,
+            socket_2: BaseSocket::start_with_bind_address("127.0.0.1:0")?,
             server: SingleServer::start_with_bind_address("127.0.0.1:0")?,
         })
     }
 
-    /// Returns all Payloads
-    pub fn poll_get_socket_messages(&mut self) -> Result<Vec<MainPayloads>> {
-        self.socket.poll_no_receive();
-        // Receive messages
-        self.server.poll()?;
-        // Send messages
-        self.server.poll()?;
-        Ok(self
-            .socket
+    fn get_payloads_from_socket(socket: &mut BaseSocket) -> Result<Vec<MainPayloads>> {
+        Ok(socket
             .poll::<MainPayloads>()
             .into_iter()
             .filter_map(|x| match x {
@@ -39,8 +36,43 @@ impl SocketServerPair {
             .collect())
     }
 
-    pub fn send_socket_message(&mut self, addr: SocketAddr, payload: MainPayloads) -> Result<()> {
-        Ok(self.socket.send_to(addr, &payload)?)
+    fn double_poll_server(&mut self) -> Result<()> {
+        // Receive messages
+        self.server.poll()?;
+        // Send messages
+        self.server.poll()?;
+
+        Ok(())
+    }
+
+    pub fn poll_get_socket_1_messages(&mut self) -> Result<Vec<MainPayloads>> {
+        self.socket_1.poll_no_receive();
+        self.double_poll_server()?;
+        Self::get_payloads_from_socket(&mut self.socket_1)
+    }
+
+    pub fn poll_get_socket_2_messages(&mut self) -> Result<Vec<MainPayloads>> {
+        self.socket_2.poll_no_receive();
+        self.double_poll_server()?;
+        Self::get_payloads_from_socket(&mut self.socket_2)
+    }
+
+    pub fn poll_get_socket_messages(&mut self) -> Result<(Vec<MainPayloads>, Vec<MainPayloads>)> {
+        self.socket_1.poll_no_receive();
+        self.socket_2.poll_no_receive();
+        self.double_poll_server()?;
+        Ok((
+            Self::get_payloads_from_socket(&mut self.socket_1)?,
+            Self::get_payloads_from_socket(&mut self.socket_2)?,
+        ))
+    }
+
+    pub fn send_socket_1_message(&mut self, addr: SocketAddr, payload: MainPayloads) -> Result<()> {
+        Ok(self.socket_1.send_to(addr, &payload)?)
+    }
+
+    pub fn send_socket_2_message(&mut self, addr: SocketAddr, payload: MainPayloads) -> Result<()> {
+        Ok(self.socket_2.send_to(addr, &payload)?)
     }
 
     pub fn server_address(&self) -> SocketAddr {
@@ -48,149 +80,165 @@ impl SocketServerPair {
     }
 }
 
-fn test_name(net: &mut SocketServerPair, with_rendezvous: bool) -> Result<()> {
-    let mut id = 0;
+struct SingleServerTester {
+    net: SocketServerTriplet,
+    rendezvous: RendezvousServer,
+}
 
-    net.send_socket_message(
-        net.server_address(),
-        MainPayloads::Name {
-            name: "TEST".to_string(),
-        },
-    )?;
+impl SingleServerTester {
+    pub fn new() -> Result<Self> {
+        let rendezvous_address: SocketAddr = "127.0.0.1:27050".parse().unwrap();
 
-    // Expect MakeHost payload for first client connecting
-    let messages = net.poll_get_socket_messages()?;
+        let mut net = SocketServerTriplet::new()?;
+        net.server.set_rendezvous_server(rendezvous_address);
+        net.server.set_version(VERSION.to_string());
 
-    // IN SEQUENCE
-    let mut in_sequence_messages = messages.into_iter();
-
-    // Get assigned client id
-    let next_msg = in_sequence_messages.next().unwrap();
-    match next_msg {
-        MainPayloads::Welcome { client_id } => {
-            id = client_id;
-        }
-        _ => panic!("Expected welcome payload, got {:?}", next_msg),
+        Ok(Self {
+            rendezvous: RendezvousServer::start_with_bind_address(rendezvous_address)?,
+            net,
+        })
     }
 
-    // Get assigned host
-    let next_msg = in_sequence_messages.next().unwrap();
-    match next_msg {
-        MainPayloads::MakeHost { client_id } => {
-            if id != client_id {
-                panic!("Wrong client made host")
-            }
-        }
-        _ => panic!("Expected host payload, got {:?}", next_msg),
-    }
+    fn test_name(&mut self, with_rendezvous: bool) -> Result<()> {
+        let mut id = 0;
 
-    // Check session id is sent back and is the same
-    if with_rendezvous {
+        self.net.send_socket_1_message(
+            self.net.server_address(),
+            MainPayloads::Name {
+                name: "TEST".to_string(),
+            },
+        )?;
+
+        // Expect MakeHost payload for first client connecting
+        let messages = self.net.poll_get_socket_1_messages()?;
+
+        // IN SEQUENCE
+        let mut in_sequence_messages = messages.into_iter();
+
+        // Get assigned client id
         let next_msg = in_sequence_messages.next().unwrap();
         match next_msg {
-            MainPayloads::SessionDetails { session_id } => {
-                if net.server.session_id().unwrap() != &session_id {
-                    panic!("Wrong session id!")
+            MainPayloads::Welcome { client_id } => {
+                id = client_id;
+            }
+            _ => panic!("Expected welcome payload, got {:?}", next_msg),
+        }
+
+        // Get assigned host
+        let next_msg = in_sequence_messages.next().unwrap();
+        match next_msg {
+            MainPayloads::MakeHost { client_id } => {
+                if id != client_id {
+                    panic!("Wrong client made host")
                 }
             }
-            _ => panic!("Expected SessionDetails payload, got {:?}", next_msg),
+            _ => panic!("Expected host payload, got {:?}", next_msg),
         }
+
+        // Check session id is sent back and is the same
+        if with_rendezvous {
+            let next_msg = in_sequence_messages.next().unwrap();
+            match next_msg {
+                MainPayloads::SessionDetails { session_id } => {
+                    if self.net.server.session_id().unwrap() != &session_id {
+                        panic!("Wrong session id!")
+                    }
+                }
+                _ => panic!("Expected SessionDetails payload, got {:?}", next_msg),
+            }
+        }
+
+        // All control surfaces should be delegated to this client
+        let next_msg = in_sequence_messages.next().unwrap();
+        match next_msg {
+            MainPayloads::ControlDelegations { delegations } => {
+                assert!(
+                    delegations.len() == ControlSurfaces::all().len(),
+                    "All control surfaces should've been set!"
+                );
+
+                if !delegations.values().all(|x| *x == id) {
+                    panic!("All control delegations should be given to us")
+                }
+            }
+            _ => panic!("Expected ControlDelegations payload, got {:?}", next_msg),
+        };
+
+        // No other clients connected so no other payloads should be sent
+        assert!(in_sequence_messages.next().is_none());
+
+        Ok(())
     }
 
-    // All control surfaces should be delegated to this client
-    let next_msg = in_sequence_messages.next().unwrap();
-    match next_msg {
-        MainPayloads::ControlDelegations { delegations } => {
-            assert!(
-                delegations.len() == ControlSurfaces::all().len(),
-                "All control surfaces should've been set!"
-            );
+    fn test_hello(&mut self, with_rendezvous: bool) -> Result<()> {
+        let session_id = if with_rendezvous {
+            self.net.server.session_id().unwrap().clone()
+        } else {
+            String::new()
+        };
 
-            if !delegations.values().all(|x| *x == id) {
-                panic!("All control delegations should be given to us")
+        let payload = MainPayloads::Hello {
+            session_id,
+            version: VERSION.to_string(),
+        };
+
+        self.net
+            .send_socket_1_message(self.net.server_address(), payload)?;
+
+        // Expect MakeHost payload for first client connecting
+        let messages = self.net.poll_get_socket_1_messages()?;
+
+        // Verify valid version
+        for message in messages.iter() {
+            match message {
+                MainPayloads::InvalidVersion { .. } => {
+                    panic!("Version should've been valid")
+                }
+                MainPayloads::InvalidSession { .. } => {
+                    panic!("Session should've been valid")
+                }
+                _ => {}
             }
         }
-        _ => panic!("Expected ControlDelegations payload, got {:?}", next_msg),
-    };
 
-    // No other clients connected so no other payloads should be sent
-    assert!(in_sequence_messages.next().is_none());
-
-    Ok(())
-}
-
-fn test_hello(net: &mut SocketServerPair, with_rendezvous: bool) -> Result<()> {
-    let session_id = if with_rendezvous {
-        net.server.session_id().unwrap().clone()
-    } else {
-        String::new()
-    };
-
-    let payload = MainPayloads::Hello {
-        session_id,
-        version: String::new(),
-    };
-
-    net.send_socket_message(net.server_address(), payload)?;
-
-    // Expect MakeHost payload for first client connecting
-    let messages = net.poll_get_socket_messages()?;
-
-    // Verify valid version
-    for message in messages.iter() {
-        match message {
-            MainPayloads::InvalidVersion { .. } => {
-                panic!("Version should've been valid")
-            }
-            MainPayloads::InvalidSession { .. } => {
-                panic!("Session should've been valid")
-            }
-            _ => {}
-        }
+        Ok(())
     }
 
-    Ok(())
-}
+    fn test_request_session(&mut self) -> Result<()> {
+        self.net.server.request_session()?;
 
-fn test_request_session(net: &mut SocketServerPair) -> Result<()> {
-    let addr: SocketAddr = "127.0.0.1:25070".parse().unwrap();
+        // Send session message
+        self.net.double_poll_server()?;
+        // Receive messages
+        self.rendezvous.step()?;
+        // Send messages
+        self.rendezvous.step()?;
+        // Receive session id
+        self.net.double_poll_server()?;
 
-    let mut rendezvous = RendezvousServer::start_with_bind_address(addr)?;
+        assert!(self.net.server.session_id().is_some());
 
-    net.server.set_rendezvous_server(addr);
-    net.server.request_session()?;
-
-    // Send session message
-    net.poll_get_socket_messages()?;
-    // Receive messages
-    rendezvous.step()?;
-    // Send messages
-    rendezvous.step()?;
-    // Receive session id
-    net.poll_get_socket_messages()?;
-
-    assert!(net.server.session_id().is_some());
-
-    Ok(())
+        Ok(())
+    }
 }
 
 #[test]
 fn test_sequence() -> Result<()> {
-    let mut net = SocketServerPair::new()?;
+    let mut net = SingleServerTester::new()?;
 
-    test_hello(&mut net, false)?;
-    test_name(&mut net, false)?;
+    net.test_hello(false)?;
+    net.test_name(false)?;
 
     Ok(())
 }
 
 #[test]
 fn test_sequence_with_rendezvous() -> Result<()> {
-    let mut net = SocketServerPair::new()?;
+    let mut net = SingleServerTester::new()?;
 
-    test_request_session(&mut net)?;
-    test_hello(&mut net, true)?;
-    test_name(&mut net, true)?;
+    net.test_request_session()?;
+    net.test_hello(true)?;
+    net.test_name(true)?;
 
     Ok(())
 }
