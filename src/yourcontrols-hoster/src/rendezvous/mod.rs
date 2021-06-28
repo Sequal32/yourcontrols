@@ -1,6 +1,6 @@
 mod sessions;
 
-use std::net::SocketAddr;
+use std::net::{SocketAddr, ToSocketAddrs};
 
 use anyhow::Result;
 use sessions::Sessions;
@@ -12,9 +12,13 @@ pub struct RendezvousServer {
 }
 
 impl RendezvousServer {
-    pub fn new(port: u16) -> Result<Self> {
+    pub fn start(port: u16) -> Result<Self> {
+        Self::start_with_bind_address("0.0.0.0:0")
+    }
+
+    pub fn start_with_bind_address(address: impl ToSocketAddrs) -> Result<Self> {
         Ok(Self {
-            socket: BaseSocket::start(port)?,
+            socket: BaseSocket::start_with_bind_address(address)?,
             sessions: Sessions::new(),
         })
     }

@@ -9,7 +9,7 @@ use crate::ui::cmd::UiEvents;
 use crate::ui::Ui;
 
 use yourcontrols_definitions::DefinitionsParser;
-use yourcontrols_types::Payloads;
+use yourcontrols_types::{ChangedDatum, Payloads, WatchPeriod};
 
 const DEFINITIONS_PATH: &str = "definitions";
 
@@ -77,8 +77,25 @@ impl<U: Ui> Program<U> {
     }
 
     pub fn process_sim_events(&mut self) -> Result<()> {
-        match self.simulator.poll() {
-            Ok(Payloads::VariableChange { changed }) => println!("{:?}", changed),
+        let msg = match self.simulator.poll() {
+            Ok(m) => m,
+            Err(_) => return Ok(()),
+        };
+
+        match msg {
+            Payloads::VariableChange { changed } => {
+                let (unreliable, reliable): (Vec<ChangedDatum>, Vec<ChangedDatum>) =
+                    changed.into_iter().partition(|a| {
+                        self.definitions_parser
+                            .get_parsed_datums()
+                            .get(a.key as usize)
+                            .map(|x| x.watch_period == Some(WatchPeriod::Frame))
+                            .unwrap_or(false)
+                    });
+
+                // self.network
+                //     .send_update(0.0, unreliable, reliable, self.clients.all_addresses());
+            }
             _ => {}
         };
 

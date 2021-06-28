@@ -99,7 +99,7 @@ impl Handshake for DirectHandshake {
         for message in self.socket.poll::<MainPayloads>() {
             match message {
                 Message::Payload(MainPayloads::Hello { .. }, _) => return Ok(self),
-                Message::Payload(MainPayloads::InvalidVersion, _) => {
+                Message::Payload(MainPayloads::InvalidVersion { .. }, _) => {
                     return Err(HandshakeFail::InvalidVersion)
                 }
                 _ => {}

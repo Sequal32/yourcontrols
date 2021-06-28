@@ -153,3 +153,5 @@ impl InterpolationType {
         }
     }
 }
+
+pub type ClientId = u32;

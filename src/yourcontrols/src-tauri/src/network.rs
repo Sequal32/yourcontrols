@@ -37,10 +37,11 @@ impl Network {
                 local_ip,
             } => {}
             MainPayloads::InvalidSession => {}
-            MainPayloads::InvalidVersion => {}
+            MainPayloads::InvalidVersion { server_version } => {}
             MainPayloads::Update { changed, time, .. } => {
                 return Ok(Some(NetworkEvent::Update { changed, time }))
             }
+            _ => {}
         }
 
         Ok(None)
@@ -78,6 +79,44 @@ impl Network {
     pub fn start_direct(&mut self, port: u16) -> Result<()> {
         self.direct_socket = Some(BaseSocket::start(port)?);
         Ok(())
+    }
+
+    fn send_direct_message(&mut self, payload: MainPayloads, to: SocketAddr) {
+        if let Some(direct_socket) = self.direct_socket.as_mut() {
+            direct_socket.send_to(to, &payload);
+        }
+    }
+
+    fn send_direct_message_multi(&mut self, payload: MainPayloads, to: Vec<SocketAddr>) {
+        if let Some(direct_socket) = self.direct_socket.as_mut() {
+            direct_socket.send_to_multiple(to, &payload);
+        }
+    }
+
+    pub fn send_update(
+        &mut self,
+        time: Time,
+        unreliable: Vec<ChangedDatum>,
+        reliable: Vec<ChangedDatum>,
+        to: Vec<SocketAddr>,
+    ) {
+        self.send_direct_message_multi(
+            MainPayloads::Update {
+                is_reliable: false,
+                time,
+                changed: unreliable,
+            },
+            to.clone(),
+        );
+
+        self.send_direct_message_multi(
+            MainPayloads::Update {
+                is_reliable: true,
+                time,
+                changed: reliable,
+            },
+            to,
+        );
     }
 
     pub fn step(&mut self) -> Result<Vec<NetworkEvent>> {

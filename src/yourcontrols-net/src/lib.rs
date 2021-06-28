@@ -10,4 +10,4 @@ pub use error::Error;
 pub use handshake::{
     DirectHandshake, Handshake, HandshakeConfig, HandshakeFail, SessionHostHandshake,
 };
-pub use payloads::MainPayloads;
+pub use payloads::{ControlDelegationsMap, ControlSurfaces, MainPayloads};

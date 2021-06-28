@@ -1,5 +1,6 @@
 // mod hoster;
 mod rendezvous;
+mod server;
 mod util;
 
 use std::{thread::sleep, time::Duration};
@@ -13,7 +14,7 @@ use rendezvous::RendezvousServer;
 fn main() -> Result<()> {
     dotenv::dotenv().expect("env file missing");
 
-    let mut server = RendezvousServer::new(
+    let mut server = RendezvousServer::start(
         var("RENDEZVOUS_PORT")
             .expect("port missing in env")
             .parse()

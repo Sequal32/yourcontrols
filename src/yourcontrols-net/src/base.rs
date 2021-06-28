@@ -55,6 +55,10 @@ impl BaseSocket {
         self.get_messages()
     }
 
+    pub fn poll_no_receive(&mut self) {
+        self.socket.manual_poll(Instant::now());
+    }
+
     fn get_messages<T>(&mut self) -> Vec<Message<T>>
     where
         T: DeserializeOwned,
@@ -120,6 +124,7 @@ impl BaseSocket {
     }
 }
 
+#[derive(Debug, Clone)]
 pub enum Message<T> {
     NewConnection(SocketAddr),
     LostConnection(SocketAddr),
