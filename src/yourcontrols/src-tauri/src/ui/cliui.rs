@@ -142,7 +142,7 @@ impl CliUi {
         }
     }
 
-    fn process_wait(&mut self, input: &str) -> Option<UiEvents> {
+    fn process_new_cmd(&mut self, input: &str) -> Option<UiEvents> {
         let mut cmd: Option<UiEvents> = None;
 
         let new_state = match input {
@@ -161,18 +161,21 @@ impl CliUi {
     fn process_message(&mut self, input: &str) -> Option<UiEvents> {
         let input = input.trim();
 
-        match &mut self.state {
-            CliState::Prompt(prompt) => {
-                if input == "q" {
-                    self.set_state(CliState::Waiting);
-                    return None;
+        if input == "q" {
+            match &mut self.state {
+                CliState::Prompt(_) => self.set_state(CliState::Waiting),
+                CliState::Waiting | CliState::Blocked => std::process::exit(0),
+            };
+            return None;
+        } else {
+            return match &mut self.state {
+                CliState::Prompt(prompt) => {
+                    let prompt = prompt.take().unwrap();
+                    self.process_prompt(input, prompt)
                 }
-
-                let prompt = prompt.take().unwrap();
-                self.process_prompt(input, prompt)
-            }
-            CliState::Waiting => self.process_wait(input),
-            CliState::Blocked => None,
+                CliState::Waiting => self.process_new_cmd(input),
+                CliState::Blocked => None,
+            };
         }
     }
 }
