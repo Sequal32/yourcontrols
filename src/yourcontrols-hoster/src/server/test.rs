@@ -189,17 +189,17 @@ impl SingleServerTester {
         let messages = self.net.poll_get_socket_1_messages()?;
 
         // Verify valid version
-        for message in messages.iter() {
-            match message {
-                MainPayloads::InvalidVersion { .. } => {
-                    panic!("Version should've been valid")
-                }
-                MainPayloads::InvalidSession { .. } => {
-                    panic!("Session should've been valid")
-                }
-                _ => {}
+        let next_msg = messages.into_iter().next().unwrap();
+        match next_msg {
+            MainPayloads::InvalidVersion { .. } => {
+                panic!("Version should've been valid")
             }
-        }
+            MainPayloads::InvalidSession { .. } => {
+                panic!("Session should've been valid")
+            }
+            MainPayloads::Hello { .. } => {}
+            _ => panic!("Expected Hello payload, got {:?}", next_msg),
+        };
 
         Ok(())
     }

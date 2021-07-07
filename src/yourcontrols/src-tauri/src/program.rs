@@ -12,6 +12,7 @@ use yourcontrols_definitions::DefinitionsParser;
 use yourcontrols_types::{ChangedDatum, Payloads, WatchPeriod};
 
 const DEFINITIONS_PATH: &str = "definitions";
+const DEFAULT_SERVER_PORT: u16 = 27015;
 
 pub struct Program<U> {
     ui: U,
@@ -55,7 +56,7 @@ impl<U: Ui> Program<U> {
     }
 
     pub fn start_server(&mut self) -> Result<()> {
-        self.network.start_direct(27015)
+        self.network.start_direct(DEFAULT_SERVER_PORT)
     }
 
     /// Connects to the simulator and readies the definitions
@@ -124,6 +125,7 @@ impl<U: Ui> Program<U> {
                         time, // TODO: pre-process time
                     });
                 }
+                NetworkEvent::Connected => self.ui.send_message(UiEvents::Connected),
             }
         }
 

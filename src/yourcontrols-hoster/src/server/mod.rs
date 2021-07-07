@@ -24,6 +24,10 @@ impl SingleServer {
         Self::start_with_bind_address("0.0.0.0:0")
     }
 
+    pub fn start_with_port(port: u16) -> Result<Self> {
+        Self::start_with_bind_address(format!("0.0.0.0:{}", port))
+    }
+
     pub fn start_with_bind_address(address: impl ToSocketAddrs) -> Result<Self> {
         Ok(Self {
             clients: Clients::new(),
@@ -106,6 +110,15 @@ impl SingleServer {
             .unwrap_or(true)
     }
 
+    fn send_delegations(&self, except_to: &SocketAddr) -> Result<()> {
+        Ok(self.socket.send_to_multiple(
+            self.clients.all_addresses_except(&except_to), // Control delegations will be sent to this client later
+            &MainPayloads::ControlDelegations {
+                delegations: self.clients.delegations().clone(),
+            },
+        )?)
+    }
+
     pub fn process_payload(&mut self, payload: MainPayloads, addr: SocketAddr) -> Result<()> {
         let mut should_relay = false;
 
@@ -129,6 +142,14 @@ impl SingleServer {
                     )?;
                 }
 
+                self.socket.send_to(
+                    addr,
+                    &MainPayloads::Hello {
+                        session_id: self.version.clone().unwrap_or_default(),
+                        version: self.version.clone().unwrap_or_default(),
+                    },
+                )?;
+
                 // Passes all checks, register client
                 self.clients.add(addr, None);
             }
@@ -147,12 +168,7 @@ impl SingleServer {
                 if self.clients.get_host().is_none() {
                     self.set_next_host()?;
                     // Send out new delegations as they might have changed upon the host switch
-                    self.socket.send_to_multiple(
-                        self.clients.all_addresses_except(&addr), // Control delegations will be sent to this client later
-                        &MainPayloads::ControlDelegations {
-                            delegations: self.clients.delegations().clone(),
-                        },
-                    )?;
+                    self.send_delegations(&addr)?;
                 }
 
                 self.send_new_connected_client_info(self.clients.get(&id).unwrap())?;
@@ -163,6 +179,20 @@ impl SingleServer {
             }
             MainPayloads::Update { changed, time, .. } => {
                 should_relay = true;
+            }
+            MainPayloads::TransferControl { delegation, to } => {
+                let has_delegation = self
+                    .clients
+                    .get_current_delegated_client(delegation)
+                    .map_or(false, |current_delegatee| current_delegatee == to);
+
+                if !has_delegation {
+                    // TODO: throw error or something
+                    return Ok(());
+                }
+
+                self.clients.delegate(delegation.clone(), *to);
+                self.send_delegations(&addr)?;
             }
             _ => {}
         }
@@ -200,8 +230,15 @@ impl SingleServer {
             match message {
                 Message::NewConnection(_) => {}
                 Message::LostConnection(addr) => {
-                    self.clients.remove_from_addr(&addr);
-                    self.set_next_host()?;
+                    if let Some(client) = self.clients.remove_from_addr(&addr) {
+                        self.set_next_host()?;
+                        self.send_delegations(&addr)?;
+
+                        self.socket.send_to_multiple(
+                            self.clients.all_addresses(),
+                            &MainPayloads::ClientRemoved { id: client.id },
+                        )?;
+                    }
                 }
                 Message::Payload(payload, addr) => {
                     // Server still starting up

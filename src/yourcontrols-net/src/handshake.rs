@@ -77,7 +77,7 @@ impl DirectHandshake {
 }
 
 impl Handshake for DirectHandshake {
-    fn inner(self) -> BaseSocket {
+    fn inner(self: Box<Self>) -> BaseSocket {
         self.socket
     }
 
@@ -150,7 +150,7 @@ impl PunchthroughHandshake {
 }
 
 impl Handshake for PunchthroughHandshake {
-    fn inner(self) -> BaseSocket {
+    fn inner(self: Box<Self>) -> BaseSocket {
         self.socket
     }
 
@@ -252,13 +252,13 @@ impl Handshake for SessionHostHandshake {
         &self.config
     }
 
-    fn inner(self) -> BaseSocket {
+    fn inner(self: Box<Self>) -> BaseSocket {
         self.socket
     }
 }
 
 pub trait Handshake {
-    fn inner(self) -> BaseSocket;
+    fn inner(self: Box<Self>) -> BaseSocket;
     fn handshake(self: Box<Self>) -> Result<Box<dyn Handshake>, HandshakeFail>;
     fn get_config(&self) -> &HandshakeConfig;
     fn get_session_id(&self) -> &String {

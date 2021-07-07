@@ -62,6 +62,10 @@ impl ControlDelegations {
             .retain(|_, other_id| if other_id == to { false } else { true });
     }
 
+    pub fn get_current_delegated_client(&self, control: &ControlSurfaces) -> Option<&ClientId> {
+        self.map.get(control)
+    }
+
     pub fn inner(&self) -> &ControlDelegationsMap {
         &self.map
     }
@@ -109,13 +113,29 @@ impl Clients {
         return id;
     }
 
-    pub fn remove(&mut self, id: &ClientId) {
-        self.client_map.remove(id);
+    pub fn remove(&mut self, id: &ClientId) -> Option<ClientInfo> {
+        let removed_client = self.client_map.remove(id);
+
+        // Cleanup delegations to the removing client
         self.control_delegations.remove_delegations(id);
+        if let Some(host_id) = self.get_host().map(|x| x.id) {
+            self.control_delegations
+                .set_empty_control_delegations_to(host_id);
+        }
+
+        return removed_client;
     }
 
-    pub fn remove_from_addr(&mut self, addr: &SocketAddr) {
-        self.client_map.retain(|_, x| x.addr != *addr);
+    pub fn remove_from_addr(&mut self, addr: &SocketAddr) -> Option<ClientInfo> {
+        if let Some(client_id) = self
+            .client_map
+            .values()
+            .find(|x| x.addr != *addr)
+            .map(|x| x.id)
+        {
+            return self.remove(&client_id);
+        }
+        None
     }
 
     pub fn all(&self) -> Values<ClientId, ClientInfo> {
@@ -128,11 +148,6 @@ impl Clients {
 
     pub fn make_observer(&mut self, client: &ClientId, observing: bool) -> Option<()> {
         self.client_map.get_mut(client)?.is_observer = observing;
-        Some(())
-    }
-
-    pub fn make_host(&mut self, client: &ClientId) -> Option<()> {
-        self.client_map.get_mut(client)?.is_host = true;
         Some(())
     }
 
@@ -168,6 +183,11 @@ impl Clients {
 
     pub fn delegations(&self) -> &ControlDelegationsMap {
         self.control_delegations.inner()
+    }
+
+    pub fn get_current_delegated_client(&self, control: &ControlSurfaces) -> Option<&ClientId> {
+        self.control_delegations
+            .get_current_delegated_client(control)
     }
 }
 

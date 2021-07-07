@@ -25,7 +25,11 @@ pub struct BaseSocket {
 }
 
 impl BaseSocket {
-    pub fn start(port: u16) -> Result<Self> {
+    pub fn start() -> Result<Self> {
+        Self::start_with_port(0)
+    }
+
+    pub fn start_with_port(port: u16) -> Result<Self> {
         Self::start_with_bind_address(SocketAddr::V4(SocketAddrV4::new(
             Ipv4Addr::new(0, 0, 0, 0),
             port,
