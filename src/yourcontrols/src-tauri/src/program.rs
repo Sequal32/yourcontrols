@@ -159,7 +159,7 @@ impl<U: Ui> Program<U> {
                 if let Some(port) = port {
                     self.network.start_direct(port)?;
                 } else {
-                    self.network.request_session()?;
+                    self.network.start_cloud_p2p()?;
                 }
             }
             _ => {}

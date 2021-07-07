@@ -32,7 +32,7 @@ enum JoinConnectionArgs {
 #[derive(Debug, Clone)]
 enum HostConnectionArgs {
     ServerHost,
-    SelfHost(u16),
+    SelfHost(Option<u16>),
 }
 
 fn get_state_for(prompt: PromptState) -> CliState {
@@ -95,16 +95,17 @@ impl CliUi {
 
                 CliState::Blocked
             }
-            PromptState::HostPort => self
-                .parse_arg(input, "Invalid port.")
-                .map(|port| {
-                    get_state_for(PromptState::HostName(HostConnectionArgs::SelfHost(port)))
-                })
-                .unwrap_or(get_state_for(prompt)),
+            PromptState::HostPort => {
+                let port_option = input.parse::<u16>().ok();
+                // If port_option is Some, direct hosting will be used, otherwise, cloud hole punching
+                get_state_for(PromptState::HostName(HostConnectionArgs::SelfHost(
+                    port_option,
+                )))
+            }
             PromptState::HostName(args) => {
                 let host_payload = match args {
                     HostConnectionArgs::SelfHost(port) => UiEvents::Host {
-                        port: Some(port),
+                        port,
                         username: input.to_string(),
                     },
                     HostConnectionArgs::ServerHost => UiEvents::Host {
@@ -135,7 +136,9 @@ impl CliUi {
                 PromptState::JoinPort(_) => self.write_message("Peer port: "),
                 PromptState::JoinSession => self.write_message("Session Code: "),
                 PromptState::JoinName(_) | PromptState::HostName(_) => self.write_message("Name: "),
-                PromptState::HostPort => self.write_message("Port to host on: "),
+                PromptState::HostPort => {
+                    self.write_message("Port to host on (leave blank to use cloud holepunching): ")
+                }
             },
             CliState::Waiting => self.write_message("Enter a command: "),
             _ => {}

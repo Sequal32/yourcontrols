@@ -9,14 +9,6 @@ use std::{collections::HashSet, net::ToSocketAddrs};
 
 pub const HEARTBEAT_INTERVAL: u64 = 500;
 
-fn get_config() -> Config {
-    Config {
-        receive_buffer_max_size: 65536,
-        heartbeat_interval: Some(Duration::from_millis(HEARTBEAT_INTERVAL)),
-        ..Default::default()
-    }
-}
-
 pub struct BaseSocket {
     socket: Socket,
     tx: Sender<Packet>,
@@ -79,7 +71,7 @@ impl BaseSocket {
                     self.connections.remove(&addr);
                     buffer.push(Message::LostConnection(addr));
                 }
-                SocketEvent::Packet(packet) => match rmp_serde::from_read_ref(packet.payload()) {
+                SocketEvent::Packet(packet) => match read_bytes(packet.payload()) {
                     Ok(p) => buffer.push(Message::Payload(p, packet.addr())),
                     _ => continue,
                 },
@@ -94,7 +86,7 @@ impl BaseSocket {
     where
         S: Serialize + Payload,
     {
-        let packet = payload.get_packet(addr, rmp_serde::to_vec(payload)?);
+        let packet = payload.get_packet(addr, get_bytes(payload)?);
 
         self.tx.send(packet).ok();
 
@@ -137,4 +129,26 @@ pub enum Message<T> {
 
 pub trait Payload {
     fn get_packet(&self, addr: SocketAddr, bytes: Vec<u8>) -> Packet;
+}
+
+fn get_config() -> Config {
+    Config {
+        receive_buffer_max_size: 65536,
+        heartbeat_interval: Some(Duration::from_millis(HEARTBEAT_INTERVAL)),
+        ..Default::default()
+    }
+}
+
+fn get_bytes(payload: &impl Serialize) -> Result<Vec<u8>> {
+    #[cfg(debug_assertions)]
+    return Ok(serde_json::to_vec(payload)?);
+    #[cfg(not(debug_assertions))]
+    return Ok(rmp_serde::to_vec(payload)?);
+}
+
+fn read_bytes<T: DeserializeOwned>(bytes: &[u8]) -> Result<T> {
+    #[cfg(debug_assertions)]
+    return Ok(serde_json::from_slice(bytes)?);
+    #[cfg(not(debug_assertions))]
+    return Ok(rmp_serde::from_read_ref(bytes)?);
 }

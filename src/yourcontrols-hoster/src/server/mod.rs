@@ -128,6 +128,11 @@ impl SingleServer {
                 session_id,
                 version,
             } => {
+                // Multiple hello payloads might've been sent
+                if self.clients.get_id_for(addr).is_some() {
+                    return Ok(());
+                }
+
                 if !self.is_valid_session_id(session_id) {
                     self.socket.send_to(addr, &MainPayloads::InvalidSession)?;
                     return Ok(());
@@ -218,7 +223,7 @@ impl SingleServer {
         Ok(())
     }
 
-    pub fn session_id(&mut self) -> Option<&String> {
+    pub fn session_id(&self) -> Option<&String> {
         self.session_id.as_ref()
     }
 

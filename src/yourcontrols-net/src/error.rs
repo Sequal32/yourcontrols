@@ -6,10 +6,17 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub enum Error {
     #[error("Error occured with the Laminar socket!")]
     SocketError(#[from] laminar::ErrorKind),
+
+    #[cfg(not(debug_assertions))]
     #[error("Error encoding packet!")]
     SerializeError(#[from] rmp_serde::encode::Error),
+    #[cfg(not(debug_assertions))]
     #[error("Error decoding packet!")]
     DeserializeError(#[from] rmp_serde::decode::Error),
+
+    #[cfg(debug_assertions)]
+    #[error("Error encoding packet!")]
+    SerializeError(#[from] serde_json::Error),
     // Decoding IP
     #[error("Invalid base64!")]
     Base64Error(#[from] base64::DecodeError),

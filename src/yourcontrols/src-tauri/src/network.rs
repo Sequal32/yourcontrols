@@ -1,5 +1,5 @@
 use anyhow::{bail, Result};
-use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4};
 use yourcontrols_hoster::SingleServer;
 use yourcontrols_net::{
     BaseSocket, DirectHandshake, Handshake, HandshakeConfig, MainPayloads, Message,
@@ -13,6 +13,7 @@ pub struct Network {
     direct_socket: Option<BaseSocket>,
     server: Option<SingleServer>,
     handshake: Option<Box<dyn Handshake>>,
+    session_id: Option<String>,
 }
 
 impl Network {
@@ -22,6 +23,7 @@ impl Network {
             direct_socket: None,
             server: None,
             handshake: None,
+            session_id: None,
         }
     }
 
@@ -74,26 +76,32 @@ impl Network {
         Ok(())
     }
 
-    pub fn request_session(&mut self) -> Result<()> {
-        self.rendezvous_socket.send_to(
-            RENDEZVOUS_SERVER.parse().expect("bad server address"),
-            &MainPayloads::RequestSession { self_hosted: true },
-        )?;
+    // Returns a local address (127.0.0.1) with the port of the current hosted server
+    fn get_local_server_addr(&self) -> Option<SocketAddr> {
+        let mut addr = self.server.as_ref().unwrap().get_address();
+        addr.set_ip(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        Some(addr)
+    }
+
+    pub fn start_direct(&mut self, port: u16) -> Result<()> {
+        self.server = Some(SingleServer::start_with_port(port)?);
+        self.connect_to_server()?;
 
         Ok(())
     }
 
-    pub fn start_direct(&mut self, port: u16) -> Result<()> {
-        let server = SingleServer::start_with_port(port)?;
-
-        self.connect_to_address(SocketAddr::V4(SocketAddrV4::new(
-            Ipv4Addr::new(127, 0, 0, 1),
-            port,
-        )))?;
+    pub fn start_cloud_p2p(&mut self) -> Result<()> {
+        let mut server = SingleServer::start()?;
+        server.set_rendezvous_server("127.0.0.1:25070".parse().unwrap()); // TODO: temp rendezvous server
+        server.request_session()?;
 
         self.server = Some(server);
 
-        Ok(())
+        self.connect_to_server()
+    }
+
+    fn connect_to_server(&mut self) -> Result<()> {
+        self.connect_to_address(self.get_local_server_addr().unwrap())
     }
 
     pub fn connect_to_address(&mut self, addr: SocketAddr) -> Result<()> {
@@ -187,6 +195,27 @@ impl Network {
 
         if let Some(event) = self.handle_handshake()? {
             events.push(event);
+        }
+
+        if self.session_id.is_none() {
+            if let Some(session_id) = self.server.as_ref().and_then(SingleServer::session_id) {
+                // Tell program we've received session
+                events.push(NetworkEvent::SessionReceived {
+                    session_id: session_id.clone(),
+                });
+                // Begin handshaking to the server
+                self.handshake = Some(Box::new(DirectHandshake::new(
+                    BaseSocket::start()?,
+                    HandshakeConfig {
+                        // version: ,
+                        session_id: session_id.clone(),
+                        ..Default::default()
+                    },
+                    self.get_local_server_addr().unwrap(),
+                    None,
+                )));
+                self.session_id = Some(session_id.clone())
+            }
         }
 
         if let Some(server) = self.server.as_mut() {

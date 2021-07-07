@@ -14,12 +14,14 @@ use rendezvous::RendezvousServer;
 fn main() -> Result<()> {
     dotenv::dotenv().expect("env file missing");
 
-    let mut server = RendezvousServer::start(
-        var("RENDEZVOUS_PORT")
-            .expect("port missing in env")
-            .parse()
-            .expect("not a number"),
-    )?;
+    let port = var("RENDEZVOUS_PORT")
+        .expect("port missing in env")
+        .parse()
+        .expect("not a number");
+
+    let mut server = RendezvousServer::start_with_port(port)?;
+
+    println!("Started rendezvous server on {}!", port);
 
     // Main loop
     loop {

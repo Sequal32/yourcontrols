@@ -87,16 +87,16 @@ struct SingleServerTester {
 
 impl SingleServerTester {
     pub fn new() -> Result<Self> {
-        let rendezvous_address: SocketAddr = "127.0.0.1:27050".parse().unwrap();
+        let rendezvous = RendezvousServer::start()?;
+
+        let mut rendezvous_address = rendezvous.get_address();
+        rendezvous_address.set_ip("127.0.0.1".parse().unwrap());
 
         let mut net = SocketServerTriplet::new()?;
         net.server.set_rendezvous_server(rendezvous_address);
         net.server.set_version(VERSION.to_string());
 
-        Ok(Self {
-            rendezvous: RendezvousServer::start_with_bind_address(rendezvous_address)?,
-            net,
-        })
+        Ok(Self { rendezvous, net })
     }
 
     fn test_name(&mut self, with_rendezvous: bool) -> Result<()> {

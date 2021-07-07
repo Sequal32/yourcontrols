@@ -3,6 +3,7 @@ mod sessions;
 use std::net::{SocketAddr, ToSocketAddrs};
 
 use anyhow::Result;
+use laminar::Socket;
 use sessions::Sessions;
 use yourcontrols_net::{BaseSocket, MainPayloads};
 
@@ -12,15 +13,29 @@ pub struct RendezvousServer {
 }
 
 impl RendezvousServer {
-    pub fn start(port: u16) -> Result<Self> {
-        Self::start_with_bind_address("0.0.0.0:0")
+    pub fn start() -> Result<Self> {
+        Self::start_with_port(0)
+    }
+
+    pub fn start_with_port(port: u16) -> Result<Self> {
+        Ok(Self::start_with_socket(BaseSocket::start_with_port(port)?))
     }
 
     pub fn start_with_bind_address(address: impl ToSocketAddrs) -> Result<Self> {
-        Ok(Self {
-            socket: BaseSocket::start_with_bind_address(address)?,
+        Ok(Self::start_with_socket(
+            BaseSocket::start_with_bind_address(address)?,
+        ))
+    }
+
+    fn start_with_socket(socket: BaseSocket) -> Self {
+        Self {
+            socket,
             sessions: Sessions::new(),
-        })
+        }
+    }
+
+    pub fn get_address(&self) -> SocketAddr {
+        self.socket.get_address()
     }
 
     pub fn process_payload(&mut self, addr: SocketAddr, message: MainPayloads) -> Result<()> {
