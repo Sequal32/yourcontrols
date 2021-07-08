@@ -14,6 +14,7 @@ pub struct Network {
     server: Option<SingleServer>,
     handshake: Option<Box<dyn Handshake>>,
     session_id: Option<String>,
+    connected_remote: Option<SocketAddr>,
 }
 
 impl Network {
@@ -24,6 +25,7 @@ impl Network {
             server: None,
             handshake: None,
             session_id: None,
+            connected_remote: None,
         }
     }
 
@@ -140,6 +142,7 @@ impl Network {
 
         match handshake.handshake() {
             Ok(handshake) => {
+                self.connected_remote = handshake.get_remote();
                 self.direct_socket = Some(handshake.inner());
                 return Ok(Some(NetworkEvent::Connected));
             }
@@ -152,6 +155,13 @@ impl Network {
         }
 
         Ok(None)
+    }
+
+    pub fn send_payload_to_server(&self, payload: MainPayloads) -> Result<()> {
+        if let (Some(addr), Some(socket)) = (self.connected_remote, self.direct_socket.as_ref()) {
+            socket.send_to(addr, &payload)?;
+        }
+        Ok(())
     }
 
     pub fn send_update(

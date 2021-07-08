@@ -106,7 +106,10 @@ impl Clients {
     }
 
     pub fn add(&mut self, addr: SocketAddr, id: Option<ClientId>) -> u32 {
-        let id = id.unwrap_or_else(|| self.id_incrementer.wrapping_add(1));
+        let id = id.unwrap_or_else(|| {
+            self.id_incrementer = self.id_incrementer.wrapping_add(1);
+            self.id_incrementer
+        });
 
         self.client_map.insert(id, ClientInfo::new(addr, id));
 

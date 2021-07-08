@@ -6,6 +6,7 @@ use program::Program;
 use crate::ui::{CliUi, TauriUI};
 
 mod aircraft;
+mod clients;
 mod network;
 mod program;
 mod simulator;

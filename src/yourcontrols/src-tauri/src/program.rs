@@ -1,8 +1,11 @@
 use anyhow::Result;
 use std::fs::read_dir;
+use std::net::SocketAddr;
 use std::path::{Path, PathBuf};
+use yourcontrols_net::MainPayloads;
 
 use crate::aircraft::DefinitionsUpdater;
+use crate::clients::{Clients, SELF_CLIENT};
 use crate::network::{Network, NetworkEvent};
 use crate::simulator::Simulator;
 use crate::ui::cmd::UiEvents;
@@ -20,6 +23,7 @@ pub struct Program<U> {
     definitions_updater: DefinitionsUpdater,
     network: Network,
     simulator: Simulator,
+    clients: Clients,
 }
 
 impl<U: Ui> Program<U> {
@@ -30,6 +34,7 @@ impl<U: Ui> Program<U> {
             definitions_parser: DefinitionsParser::new(),
             definitions_updater: DefinitionsUpdater::new(),
             simulator: Simulator::new(),
+            clients: Clients::new(),
         }
     }
 
@@ -125,7 +130,12 @@ impl<U: Ui> Program<U> {
                         time, // TODO: pre-process time
                     });
                 }
-                NetworkEvent::Connected => self.ui.send_message(UiEvents::Connected),
+                NetworkEvent::Connected => {
+                    self.ui.send_message(UiEvents::Connected);
+                    self.network.send_payload_to_server(MainPayloads::Name {
+                        name: self.clients.get_name(&SELF_CLIENT).unwrap().clone(),
+                    })?;
+                }
             }
         }
 
@@ -155,6 +165,21 @@ impl<U: Ui> Program<U> {
             }
             UiEvents::InstallAircraft { names } => {}
             UiEvents::TestNetwork { port } => {}
+            UiEvents::Join {
+                port,
+                session_code,
+                server_ip,
+                username,
+            } => {
+                self.clients.set_name(&SELF_CLIENT, username);
+
+                if let (Some(port), Some(ip)) = (port, server_ip) {
+                    if let Ok(addr) = format!("{}:{}", ip, port).parse::<SocketAddr>() {
+                        self.network.connect_to_address(addr)?
+                    }
+                } else if let Some(session_code) = session_code {
+                }
+            }
             UiEvents::Host { port, username } => {
                 if let Some(port) = port {
                     self.network.start_direct(port)?;

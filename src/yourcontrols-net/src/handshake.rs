@@ -45,6 +45,7 @@ pub struct DirectHandshake {
     target_address_1: SocketAddr,
     target_address_2: Option<SocketAddr>,
     retry: RetryHelper,
+    connected_remote: Option<SocketAddr>,
 }
 
 impl DirectHandshake {
@@ -60,6 +61,7 @@ impl DirectHandshake {
             target_address_1,
             target_address_2,
             config,
+            connected_remote: None,
         }
     }
 
@@ -98,7 +100,10 @@ impl Handshake for DirectHandshake {
         // Receive a handshake OK
         for message in self.socket.poll::<MainPayloads>() {
             match message {
-                Message::Payload(MainPayloads::Hello { .. }, _) => return Ok(self),
+                Message::Payload(MainPayloads::Hello { .. }, addr) => {
+                    self.connected_remote = Some(addr);
+                    return Ok(self);
+                }
                 Message::Payload(MainPayloads::InvalidVersion { .. }, _) => {
                     return Err(HandshakeFail::InvalidVersion)
                 }
@@ -112,12 +117,17 @@ impl Handshake for DirectHandshake {
     fn get_config(&self) -> &HandshakeConfig {
         &self.config
     }
+
+    fn get_remote(&self) -> Option<SocketAddr> {
+        self.connected_remote
+    }
 }
 
 pub struct PunchthroughHandshake {
     socket: BaseSocket,
     config: HandshakeConfig,
     retry: RetryHelper,
+    connected_remote: Option<SocketAddr>,
 }
 
 impl PunchthroughHandshake {
@@ -126,6 +136,7 @@ impl PunchthroughHandshake {
             socket: socket,
             retry: RetryHelper::new(config.retry_count),
             config,
+            connected_remote: None,
         }
     }
 
@@ -194,12 +205,17 @@ impl Handshake for PunchthroughHandshake {
     fn get_config(&self) -> &HandshakeConfig {
         &self.config
     }
+
+    fn get_remote(&self) -> Option<SocketAddr> {
+        self.connected_remote
+    }
 }
 
 pub struct SessionHostHandshake {
     socket: BaseSocket,
     config: HandshakeConfig,
     retry: RetryHelper,
+    connected_remote: Option<SocketAddr>,
 }
 
 impl SessionHostHandshake {
@@ -208,6 +224,7 @@ impl SessionHostHandshake {
             socket: socket,
             retry: RetryHelper::new(config.retry_count),
             config,
+            connected_remote: None,
         }
     }
 
@@ -237,8 +254,9 @@ impl Handshake for SessionHostHandshake {
         // Receive two ips to attempt connection to using a DirectHandshake
         for message in self.socket.poll::<MainPayloads>() {
             match message {
-                Message::Payload(MainPayloads::SessionDetails { session_id }, _) => {
+                Message::Payload(MainPayloads::SessionDetails { session_id }, addr) => {
                     self.config.session_id = session_id;
+                    self.connected_remote = Some(addr);
                     return Ok(self);
                 }
                 _ => {}
@@ -255,12 +273,17 @@ impl Handshake for SessionHostHandshake {
     fn inner(self: Box<Self>) -> BaseSocket {
         self.socket
     }
+
+    fn get_remote(&self) -> Option<SocketAddr> {
+        self.connected_remote
+    }
 }
 
 pub trait Handshake {
     fn inner(self: Box<Self>) -> BaseSocket;
     fn handshake(self: Box<Self>) -> Result<Box<dyn Handshake>, HandshakeFail>;
     fn get_config(&self) -> &HandshakeConfig;
+    fn get_remote(&self) -> Option<SocketAddr>;
     fn get_session_id(&self) -> &String {
         &self.get_config().session_id
     }
