@@ -1,5 +1,5 @@
 use anyhow::{bail, Result};
-use std::net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use yourcontrols_hoster::SingleServer;
 use yourcontrols_net::{
     BaseSocket, DirectHandshake, Handshake, HandshakeConfig, MainPayloads, Message,
@@ -86,15 +86,14 @@ impl Network {
     }
 
     pub fn start_direct(&mut self, port: u16) -> Result<()> {
-        self.server = Some(SingleServer::start_with_port(port)?);
+        self.server = Some(get_server(port)?);
         self.connect_to_server()?;
 
         Ok(())
     }
 
     pub fn start_cloud_p2p(&mut self) -> Result<()> {
-        let mut server = SingleServer::start()?;
-        server.set_rendezvous_server("127.0.0.1:25070".parse().unwrap()); // TODO: temp rendezvous server
+        let mut server = get_server(0)?;
         server.request_session()?;
 
         self.server = Some(server);
@@ -113,38 +112,24 @@ impl Network {
             addr,
             None,
         )));
+
         Ok(())
     }
 
-    fn send_direct_message(&mut self, payload: MainPayloads, to: SocketAddr) -> Result<()> {
-        if let Some(direct_socket) = self.direct_socket.as_mut() {
-            direct_socket.send_to(to, &payload)?;
-        }
-        Ok(())
-    }
-
-    fn send_direct_message_multi(
-        &mut self,
-        payload: MainPayloads,
-        to: Vec<SocketAddr>,
-    ) -> Result<()> {
-        if let Some(direct_socket) = self.direct_socket.as_mut() {
-            direct_socket.send_to_multiple(to, &payload)?;
-        }
-        Ok(())
-    }
-
-    fn handle_handshake(&mut self) -> Result<Option<NetworkEvent>> {
+    fn handle_handshake(&mut self, events: &mut Vec<NetworkEvent>) -> Result<()> {
         let handshake = match self.handshake.take() {
             Some(h) => h,
-            None => return Ok(None),
+            None => return Ok(()),
         };
 
         match handshake.handshake() {
             Ok(handshake) => {
                 self.connected_remote = handshake.get_remote();
                 self.direct_socket = Some(handshake.inner());
-                return Ok(Some(NetworkEvent::Connected));
+
+                events.push(NetworkEvent::Connected);
+
+                return Ok(());
             }
             Err(e) => match e {
                 yourcontrols_net::HandshakeFail::InProgress(handshake) => {
@@ -154,7 +139,7 @@ impl Network {
             },
         }
 
-        Ok(None)
+        Ok(())
     }
 
     pub fn send_payload_to_server(&self, payload: MainPayloads) -> Result<()> {
@@ -169,25 +154,52 @@ impl Network {
         time: Time,
         unreliable: Vec<ChangedDatum>,
         reliable: Vec<ChangedDatum>,
-        to: Vec<SocketAddr>,
     ) -> Result<()> {
-        self.send_direct_message_multi(
-            MainPayloads::Update {
-                is_reliable: false,
-                time,
-                changed: unreliable,
-            },
-            to.clone(),
-        )?;
+        self.send_payload_to_server(MainPayloads::Update {
+            is_reliable: false,
+            time,
+            changed: unreliable,
+        })?;
 
-        self.send_direct_message_multi(
-            MainPayloads::Update {
-                is_reliable: true,
-                time,
-                changed: reliable,
+        self.send_payload_to_server(MainPayloads::Update {
+            is_reliable: true,
+            time,
+            changed: reliable,
+        })?;
+
+        Ok(())
+    }
+
+    fn check_server_received_session(&mut self, events: &mut Vec<NetworkEvent>) -> Result<()> {
+        // Already received session id
+        if self.session_id.is_some() {
+            return Ok(());
+        }
+
+        // Attempt to get session id from the server
+        let session_id = match self.server.as_ref().and_then(SingleServer::session_id) {
+            Some(it) => it,
+            _ => return Ok(()),
+        };
+
+        // Begin handshaking to the server
+        self.handshake = Some(Box::new(DirectHandshake::new(
+            BaseSocket::start()?,
+            HandshakeConfig {
+                // version: ,
+                session_id: session_id.clone(),
+                ..Default::default()
             },
-            to,
-        )?;
+            self.get_local_server_addr().unwrap(),
+            None,
+        )));
+
+        self.session_id = Some(session_id.clone());
+
+        // Tell program we've received session
+        events.push(NetworkEvent::SessionReceived {
+            session_id: session_id.clone(),
+        });
 
         Ok(())
     }
@@ -202,31 +214,8 @@ impl Network {
         }
 
         self.process_messages(messages, &mut events)?;
-
-        if let Some(event) = self.handle_handshake()? {
-            events.push(event);
-        }
-
-        if self.session_id.is_none() {
-            if let Some(session_id) = self.server.as_ref().and_then(SingleServer::session_id) {
-                // Tell program we've received session
-                events.push(NetworkEvent::SessionReceived {
-                    session_id: session_id.clone(),
-                });
-                // Begin handshaking to the server
-                self.handshake = Some(Box::new(DirectHandshake::new(
-                    BaseSocket::start()?,
-                    HandshakeConfig {
-                        // version: ,
-                        session_id: session_id.clone(),
-                        ..Default::default()
-                    },
-                    self.get_local_server_addr().unwrap(),
-                    None,
-                )));
-                self.session_id = Some(session_id.clone())
-            }
-        }
+        self.handle_handshake(&mut events)?;
+        self.check_server_received_session(&mut events)?;
 
         if let Some(server) = self.server.as_mut() {
             server.poll()?;
@@ -246,4 +235,10 @@ pub enum NetworkEvent {
         changed: Vec<ChangedDatum>,
         time: Time,
     },
+}
+
+fn get_server(port: u16) -> Result<SingleServer> {
+    let mut server = SingleServer::start_with_port(port)?;
+    server.set_rendezvous_server(RENDEZVOUS_SERVER.parse().unwrap()); // TODO: temp rendezvous server
+    Ok(server)
 }

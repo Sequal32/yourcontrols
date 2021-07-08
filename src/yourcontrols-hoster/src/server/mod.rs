@@ -10,6 +10,7 @@ use yourcontrols_net::{BaseSocket, MainPayloads, Message};
 
 use self::clients::ClientInfo;
 
+// TODO: builder pattern
 pub struct SingleServer {
     clients: Clients,
     socket: BaseSocket,
