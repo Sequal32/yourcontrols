@@ -9,7 +9,8 @@ mod traits;
 pub use base::{BaseSocket, Message};
 pub use error::Error;
 pub use handshake::{
-    DirectHandshake, Handshake, HandshakeConfig, HandshakeFail, SessionHostHandshake,
+    DirectHandshake, Handshake, HandshakeConfig, HandshakeFail, PunchthroughHandshake,
+    SessionHostHandshake,
 };
 pub use payloads::{ControlDelegationsMap, MainPayloads};
 pub use traits::StartableNetworkObject;

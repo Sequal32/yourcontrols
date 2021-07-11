@@ -3,7 +3,7 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use yourcontrols_hoster::{ServerMetadata, SingleServer};
 use yourcontrols_net::{
     BaseSocket, DirectHandshake, Handshake, HandshakeConfig, MainPayloads, Message,
-    StartableNetworkObject,
+    PunchthroughHandshake, StartableNetworkObject,
 };
 use yourcontrols_types::{ChangedDatum, ClientId, Time};
 
@@ -92,7 +92,7 @@ impl Network {
     // Returns a local address (127.0.0.1) with the port of the current hosted server
     fn get_local_server_addr(&self) -> Option<SocketAddr> {
         let mut addr = self.server.as_ref().unwrap().get_address();
-        addr.set_ip(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        addr.set_ip(IpAddr::V4(Ipv4Addr::LOCALHOST));
         Some(addr)
     }
 
@@ -122,6 +122,19 @@ impl Network {
             HandshakeConfig::default(),
             addr,
             None,
+        )));
+
+        Ok(())
+    }
+
+    pub fn connect_to_session(&mut self, session_id: String) -> Result<()> {
+        self.handshake = Some(Box::new(PunchthroughHandshake::new(
+            BaseSocket::start()?,
+            HandshakeConfig {
+                rendezvous_address: RENDEZVOUS_SERVER.parse().unwrap(),
+                session_id,
+                ..Default::default()
+            },
         )));
 
         Ok(())

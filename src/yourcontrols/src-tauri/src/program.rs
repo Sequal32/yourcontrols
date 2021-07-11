@@ -325,6 +325,7 @@ impl<U: Ui> Program<U> {
         if let Some(addr) = addr {
             self.network.connect_to_address(addr)?
         } else if let Some(session_code) = session_code {
+            self.network.connect_to_session(session_code)?
         }
 
         Ok(())

@@ -47,6 +47,10 @@ impl SingleServer {
     /// Set the first connected client as a host
     /// Will inform all clients that a new host has been designated, and the session_id will be sent to the host
     fn set_next_host(&mut self) -> Result<()> {
+        if self.clients.get_host().is_some() {
+            return Ok(());
+        }
+
         let target_addrs = self.clients.all_addresses();
 
         // If there are other clients, make the first client the host
@@ -220,9 +224,7 @@ impl SingleServer {
             },
         )?;
 
-        if self.clients.get_host().is_none() {
-            self.set_next_host()?;
-        }
+        self.set_next_host()?;
 
         self.send_new_connected_client_info(self.clients.get(&id).unwrap())
     }
