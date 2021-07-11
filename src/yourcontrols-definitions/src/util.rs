@@ -3,7 +3,7 @@ use regex::Regex;
 use rhai::Dynamic;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_yaml::Value;
-use yourcontrols_types::{EventMessage, VarType, VarTypeUntagged, WatchPeriod};
+use yourcontrols_types::{ControlSurfaces, EventMessage, VarTypeUntagged, WatchPeriod};
 
 lazy_static! {
     static ref INDEX_REGEX: Regex = Regex::new(r#"(.+):(\d+)"#).unwrap();
@@ -36,6 +36,7 @@ pub struct FullTemplate {
     pub sets: Option<Vec<EventMessage>>,
     pub script: Option<String>,
     pub conditions: Option<Vec<ConditionMessageScript>>,
+    pub control_surface: Option<ControlSurfaces>,
     #[serde(default = "WatchPeriod::default")]
     pub period: WatchPeriod,
     #[serde(default)]

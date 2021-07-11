@@ -13,19 +13,13 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 use store::{map_vec_to_database, EventsRef, VarsRef, DATABASE};
 use yourcontrols_types::{
-    ConditionMessage, DatumMessage, MappingArgsMessage, MappingType, ScriptMessage, SyncPermission,
-    VarId, VarType,
+    ConditionMessage, ControlSurfaces, DatumMessage, MappingArgsMessage, MappingType,
+    ScriptMessage, SyncPermission, VarId,
 };
 
 use util::{get_index_from_var_name, merge, PartialTemplate, Template, YamlTopDown};
 
 type TemplateName = String;
-
-#[derive(Debug)]
-struct Mapping {
-    sync_permission: SyncPermission,
-    template: Template,
-}
 
 #[derive(Debug)]
 pub struct TemplateDatabase {
@@ -95,7 +89,7 @@ impl TemplateDatabase {
 pub struct DefinitionsParser {
     templates: TemplateDatabase,
     definitions: Vec<DatumMessage>,
-    permissions: HashMap<VarId, SyncPermission>,
+    metadata: HashMap<VarId, DatumMetadata>,
     generator: DatumGenerator,
 }
 
@@ -104,7 +98,7 @@ impl DefinitionsParser {
         Self {
             templates: TemplateDatabase::new(),
             definitions: Vec::new(),
-            permissions: HashMap::new(),
+            metadata: HashMap::new(),
             generator: DatumGenerator::new(),
         }
     }
@@ -143,7 +137,7 @@ impl DefinitionsParser {
         &mut self,
         template: Template,
         index: Option<String>,
-    ) -> Result<DatumMessage> {
+    ) -> Result<(DatumMessage, DatumMetadata)> {
         match template {
             // Recursively combine subtemplates until we obtain a FullTemplate or a OneTemplate
             Template::PartialTemplate(partial) => {
@@ -225,14 +219,20 @@ impl DefinitionsParser {
                 };
 
                 // Compile all info into a DatumMessage
-                return Ok(DatumMessage {
-                    var: Some(watch_var),
-                    watch_period: Some(full.period),
-                    mapping: Some(mapping),
-                    conditions,
-                    interpolate,
-                    ..Default::default()
-                });
+                return Ok((
+                    DatumMessage {
+                        var: Some(watch_var),
+                        watch_period: Some(full.period),
+                        mapping: Some(mapping),
+                        conditions,
+                        interpolate,
+                        ..Default::default()
+                    },
+                    DatumMetadata {
+                        sync_permission: None,
+                        control_surface: full.control_surface,
+                    },
+                ));
             }
         }
     }
@@ -241,11 +241,13 @@ impl DefinitionsParser {
         &mut self,
         name: &str,
         index: Option<String>,
-    ) -> Result<DatumMessage> {
+    ) -> Result<(DatumMessage, DatumMetadata)> {
         if let Some(mapping) = self.templates.get_template(name).cloned() {
             self.get_datum_with_template(mapping, index)
         } else {
-            self.generator.get_generated_from_string(name)
+            self.generator
+                .get_generated_from_string(name)
+                .map(|x| (x, DatumMetadata::default()))
         }
     }
 
@@ -255,13 +257,14 @@ impl DefinitionsParser {
         sync_permission: SyncPermission,
     ) -> Result<()> {
         for template in templates {
-            let datum = match &template {
+            let (datum, mut meta_data) = match &template {
                 Value::String(name) => {
                     match get_index_from_var_name(name) {
                         // Index found, can apply to templates which use event_param: index
                         Some((name, index)) => {
                             self.get_datum_from_mapping_and_index(name, Some(index.to_string()))
                         }
+
                         // No index found, will not override event_param
                         None => self.get_datum_from_mapping_and_index(name, None),
                     }?
@@ -274,8 +277,8 @@ impl DefinitionsParser {
                 _ => continue,
             };
 
-            self.permissions
-                .insert(self.definitions.len(), sync_permission.clone());
+            meta_data.sync_permission = Some(sync_permission.clone());
+            self.metadata.insert(self.definitions.len(), meta_data);
 
             self.definitions.push(datum)
         }
@@ -352,4 +355,15 @@ impl DefinitionsParser {
     pub fn get_parsed_events(&self) -> EventsRef {
         DATABASE.get_all_events()
     }
+
+    /// Gets metadata associated with the specified datum_id
+    pub fn get_meta_data_for(&self, datum_id: &VarId) -> Option<&DatumMetadata> {
+        self.metadata.get(datum_id)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct DatumMetadata {
+    pub sync_permission: Option<SyncPermission>,
+    pub control_surface: Option<ControlSurfaces>,
 }

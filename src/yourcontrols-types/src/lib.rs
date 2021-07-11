@@ -162,4 +162,17 @@ pub enum SyncPermission {
     Init,
 }
 
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ControlSurfaces {
+    Throttle,
+    Mixture,
+    Yoke,
+}
+
+impl ControlSurfaces {
+    pub fn all() -> Vec<Self> {
+        vec![Self::Throttle, Self::Mixture, Self::Yoke]
+    }
+}
+
 pub type ClientId = u32;
