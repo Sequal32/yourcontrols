@@ -4,9 +4,9 @@ use yourcontrols_types::ClientId;
 
 #[derive(Default)]
 pub struct ClientInfo {
-    pub name: String,
-    pub is_host: bool,
-    pub is_observer: bool,
+    name: String,
+    id: ClientId,
+    is_observer: bool,
 }
 
 impl ClientInfo {
@@ -19,49 +19,60 @@ impl ClientInfo {
     pub fn set_name(&mut self, name: String) {
         self.name = name;
     }
+
+    /// Whether the client is an observer
+    pub fn is_observer(&self) -> bool {
+        self.is_observer
+    }
+
+    /// Set the client info's is observer.
+    pub fn set_observer(&mut self, is_observer: bool) {
+        self.is_observer = is_observer;
+    }
+
+    /// Get a reference to the client info's id.
+    pub fn id(&self) -> &ClientId {
+        &self.id
+    }
+
+    /// Set the client info's id.
+    pub fn set_id(&mut self, id: ClientId) {
+        self.id = id;
+    }
 }
 
 pub struct Clients {
     client_map: HashMap<ClientId, ClientInfo>,
+    self_client: ClientInfo,
     delegations: ControlDelegationsMap,
     host: ClientId,
-    self_id: ClientId,
 }
 
 impl Clients {
     pub fn new() -> Self {
         Self {
             client_map: HashMap::new(),
-            self_id: u32::MAX,
+            self_client: ClientInfo::default(),
             host: u32::MAX,
             delegations: ControlDelegationsMap::new(),
         }
     }
 
-    pub fn get_name(&self, client_id: &ClientId) -> Option<&String> {
-        self.client_map.get(client_id).map(ClientInfo::name)
+    pub fn get_client_mut(&mut self, client_id: &ClientId) -> Option<&mut ClientInfo> {
+        self.client_map.get_mut(client_id)
     }
 
-    pub fn set_name(&mut self, client_id: &ClientId, name: String) {
-        if let Some(client) = self.client_map.get_mut(client_id) {
-            client.set_name(name)
-        }
+    pub fn self_client(&mut self) -> &mut ClientInfo {
+        &mut self.self_client
     }
 
-    pub fn add_client(
-        &mut self,
-        client_id: ClientId,
-        name: String,
-        is_host: bool,
-        is_observer: bool,
-    ) {
+    pub fn add_client(&mut self, client_id: ClientId, name: String, is_observer: bool) {
         self.client_map.insert(
             client_id,
             ClientInfo {
+                id: client_id,
                 name,
-                is_host,
                 is_observer,
-                ..Default::default()
             },
         );
     }
@@ -80,13 +91,5 @@ impl Clients {
 
     pub fn set_control_delegations(&mut self, delegations: ControlDelegationsMap) {
         self.delegations = delegations;
-    }
-
-    pub fn set_self_id(&mut self, client_id: ClientId) {
-        self.self_id = client_id;
-    }
-
-    pub fn self_id(&self) -> &ClientId {
-        &self.self_id
     }
 }

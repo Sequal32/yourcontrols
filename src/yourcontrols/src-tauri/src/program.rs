@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{ensure, Result};
 use std::fs::read_dir;
 use std::net::SocketAddr;
 use std::path::{Path, PathBuf};
@@ -94,8 +94,12 @@ impl<U: Ui> Program<U> {
                             .unwrap_or(false)
                     });
 
-                self.network
-                    .send_update(*self.clients.self_id(), 0.0, unreliable, reliable)?;
+                self.network.send_update(
+                    *self.clients.self_client().id(),
+                    0.0,
+                    unreliable,
+                    reliable,
+                )?;
             }
             _ => {}
         };
@@ -114,8 +118,11 @@ impl<U: Ui> Program<U> {
             match event {
                 // Session Events
                 NetworkEvent::Payload(MainPayloads::Welcome { client_id, name }) => {
-                    self.clients.set_self_id(client_id);
-                    self.clients.add_client(client_id, name, false, false);
+                    ensure!(
+                        *self.clients.self_client().name() == name,
+                        "Bad server Welcome."
+                    );
+                    self.clients.self_client().set_id(client_id);
                 }
                 NetworkEvent::Payload(MainPayloads::MakeHost { client_id }) => {
                     self.clients.set_host(client_id);
@@ -126,7 +133,11 @@ impl<U: Ui> Program<U> {
                     is_observer,
                     name,
                 }) => {
-                    self.clients.add_client(id, name, is_host, is_observer);
+                    self.clients.add_client(id, name, is_observer);
+
+                    if is_host {
+                        self.clients.set_host(id);
+                    }
                 }
                 NetworkEvent::Payload(MainPayloads::ClientRemoved { client_id }) => {
                     self.clients.remove_client(&client_id);
@@ -141,11 +152,7 @@ impl<U: Ui> Program<U> {
                 NetworkEvent::Connected => {
                     self.ui.send_message(UiEvents::Connected);
                     self.network.send_payload_to_server(MainPayloads::Name {
-                        name: self
-                            .clients
-                            .get_name(self.clients.self_id())
-                            .unwrap()
-                            .clone(),
+                        name: self.clients.self_client().name().clone(),
                     })?;
                 }
                 // Game Events
@@ -197,6 +204,8 @@ impl<U: Ui> Program<U> {
                 server_ip,
                 username,
             } => {
+                self.clients.self_client().set_name(username);
+
                 if let (Some(port), Some(ip)) = (port, server_ip) {
                     if let Ok(addr) = format!("{}:{}", ip, port).parse::<SocketAddr>() {
                         self.network.connect_to_address(addr)?
