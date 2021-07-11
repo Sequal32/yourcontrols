@@ -108,7 +108,7 @@ impl DatumTrait for Datum {
 }
 
 pub struct DatumManager<T> {
-    datums: HashMap<u32, T>,
+    datums: HashMap<DatumKey, T>,
     interpolation_time: Option<DeltaTimeChange>,
     poll_time: DeltaTimeChange,
 }

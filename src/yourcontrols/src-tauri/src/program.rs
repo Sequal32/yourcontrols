@@ -162,10 +162,32 @@ impl<U: Ui> Program<U> {
                     time,
                     ..
                 }) => {
-                    self.simulator.send_message(Payloads::SendIncomingValues {
-                        data: changed,
-                        time, // TODO: pre-process time
+                    let should_allow_update = self
+                        .clients
+                        .get_client(&client_id)
+                        .map(|c| !c.is_observer())
+                        .unwrap_or(false);
+
+                    let delegated_controls =
+                        self.clients.get_control_delegations_for_client(&client_id);
+
+                    let definitions_match_client_delegations = changed.iter().all(|datum| {
+                        self.definitions_parser
+                            .get_meta_data_for(&datum.key)
+                            .and_then(|data| {
+                                data.control_surface
+                                    .as_ref()
+                                    .map(|x| delegated_controls.contains(&x))
+                            })
+                            .unwrap_or(true)
                     });
+
+                    if should_allow_update && definitions_match_client_delegations {
+                        self.simulator.send_message(Payloads::SendIncomingValues {
+                            data: changed,
+                            time, // TODO: pre-process time
+                        });
+                    }
                 }
 
                 _ => {}

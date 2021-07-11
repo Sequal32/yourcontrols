@@ -17,8 +17,8 @@ use crate::util::map_ids;
 use crate::util::{GenericResult, DATA_SIZE};
 
 use yourcontrols_types::{
-    DatumMessage, EventMessage, MappingType, MessagePackFragmenter, Payloads, ScriptMessage,
-    VarType,
+    DatumKey, DatumMessage, EventMessage, MappingType, MessagePackFragmenter, Payloads,
+    ScriptMessage, VarType,
 };
 
 /// A wrapper struct for an array of size DATA_SIZE bytes
@@ -98,7 +98,7 @@ impl MainGauge {
     fn add_datum(
         &mut self,
         simconnect: &mut SimConnect,
-        datum_index: u32,
+        datum_index: DatumKey,
         message: DatumMessage,
     ) -> Result<()> {
         let mut watch_data = None;
@@ -169,7 +169,7 @@ impl MainGauge {
         println!("Adding {} datums!", datums.len());
         for (index, datum) in datums.into_iter().enumerate() {
             print!("Added success: {:?}", datum,);
-            println!("{:?}", self.add_datum(simconnect, index as u32, datum));
+            println!("{:?}", self.add_datum(simconnect, index, datum));
         }
     }
 

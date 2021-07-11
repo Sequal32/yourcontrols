@@ -8,7 +8,7 @@ pub use messages::*;
 pub use msgpack::*;
 
 /// Type used for keeping track of vars mapped to values.
-pub type DatumKey = u32;
+pub type DatumKey = usize;
 /// Type used for getting/setting values.
 pub type DatumValue = f64;
 /// Time type used for interpolation.

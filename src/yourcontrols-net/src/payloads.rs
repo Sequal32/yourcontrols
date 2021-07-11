@@ -3,22 +3,9 @@ use std::{collections::HashMap, net::SocketAddr};
 use crate::base::Payload;
 use laminar::Packet;
 use serde::{Deserialize, Serialize};
-use yourcontrols_types::{ChangedDatum, ClientId, Time};
+use yourcontrols_types::{ChangedDatum, ClientId, ControlSurfaces, Time};
 
 pub type ControlDelegationsMap = HashMap<ControlSurfaces, ClientId>;
-
-#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
-pub enum ControlSurfaces {
-    Throttle,
-    Mixture,
-    Yoke,
-}
-
-impl ControlSurfaces {
-    pub fn all() -> Vec<Self> {
-        vec![Self::Throttle, Self::Mixture, Self::Yoke]
-    }
-}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum MainPayloads {

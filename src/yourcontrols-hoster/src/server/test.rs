@@ -6,7 +6,8 @@ use crate::rendezvous::RendezvousServer;
 
 use super::*;
 use anyhow::Result;
-use yourcontrols_net::{BaseSocket, ControlSurfaces};
+use yourcontrols_net::BaseSocket;
+use yourcontrols_types::ControlSurfaces;
 
 const VERSION: &str = "1.0.0";
 

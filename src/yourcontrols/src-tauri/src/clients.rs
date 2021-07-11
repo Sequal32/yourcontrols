@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use yourcontrols_net::ControlDelegationsMap;
-use yourcontrols_types::ClientId;
+use yourcontrols_types::{ClientId, ControlSurfaces};
 
 #[derive(Default)]
 pub struct ClientInfo {
@@ -58,6 +58,12 @@ impl Clients {
         }
     }
 
+    /// Get a reference to the client with the specified id
+    pub fn get_client(&mut self, client_id: &ClientId) -> Option<&ClientInfo> {
+        self.client_map.get(client_id)
+    }
+
+    /// Get a mutating reference to the client with the specified id
     pub fn get_client_mut(&mut self, client_id: &ClientId) -> Option<&mut ClientInfo> {
         self.client_map.get_mut(client_id)
     }
@@ -91,5 +97,19 @@ impl Clients {
 
     pub fn set_control_delegations(&mut self, delegations: ControlDelegationsMap) {
         self.delegations = delegations;
+    }
+
+    /// Get all ControlSurfaces that the client defined by client_id currently has control of
+    pub fn get_control_delegations_for_client(&self, client_id: &ClientId) -> Vec<ControlSurfaces> {
+        self.delegations
+            .iter()
+            .filter_map(|(control_surface, client_delegated_to)| {
+                if client_delegated_to == client_id {
+                    Some(control_surface.clone())
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 }

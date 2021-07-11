@@ -1,7 +1,7 @@
 use std::collections::{hash_map::Values, HashMap};
 use std::net::SocketAddr;
-use yourcontrols_net::{ControlDelegationsMap, ControlSurfaces, MainPayloads};
-use yourcontrols_types::ClientId;
+use yourcontrols_net::{ControlDelegationsMap, MainPayloads};
+use yourcontrols_types::{ClientId, ControlSurfaces};
 
 #[derive(Debug, Clone)]
 pub struct ClientInfo {
