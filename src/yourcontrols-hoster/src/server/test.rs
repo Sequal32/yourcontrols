@@ -94,8 +94,11 @@ impl SingleServerTester {
         rendezvous_address.set_ip("127.0.0.1".parse().unwrap());
 
         let mut net = SocketServerTriplet::new()?;
-        net.server.set_rendezvous_server(rendezvous_address);
-        net.server.set_version(VERSION.to_string());
+        net.server.set_metadata(
+            ServerMetadata::new()
+                .with_rendezvous_server(rendezvous_address)
+                .with_version(VERSION.to_string()),
+        );
 
         Ok(Self { rendezvous, net })
     }

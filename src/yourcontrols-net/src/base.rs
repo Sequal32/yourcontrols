@@ -1,9 +1,9 @@
 use crate::error::Result;
+use crate::StartableNetworkObject;
 use crossbeam_channel::{Receiver, Sender};
 use laminar::{Config, Packet, Socket, SocketEvent};
-use rmp_serde;
 use serde::{de::DeserializeOwned, Serialize};
-use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
+use std::net::SocketAddr;
 use std::time::{Duration, Instant};
 use std::{collections::HashSet, net::ToSocketAddrs};
 
@@ -16,20 +16,9 @@ pub struct BaseSocket {
     connections: HashSet<SocketAddr>,
 }
 
-impl BaseSocket {
-    pub fn start() -> Result<Self> {
-        Self::start_with_port(0)
-    }
-
-    pub fn start_with_port(port: u16) -> Result<Self> {
-        Self::start_with_bind_address(SocketAddr::V4(SocketAddrV4::new(
-            Ipv4Addr::new(0, 0, 0, 0),
-            port,
-        )))
-    }
-
-    pub fn start_with_bind_address(address: impl ToSocketAddrs) -> Result<Self> {
-        let socket = Socket::bind_with_config(address, get_config())?;
+impl StartableNetworkObject<crate::Error> for BaseSocket {
+    fn start_with_bind_address(addr: impl ToSocketAddrs) -> Result<Self> {
+        let socket = Socket::bind_with_config(addr, get_config())?;
 
         Ok(Self {
             tx: socket.get_packet_sender(),
@@ -38,7 +27,9 @@ impl BaseSocket {
             connections: HashSet::new(),
         })
     }
+}
 
+impl BaseSocket {
     pub fn get_address(&self) -> SocketAddr {
         self.socket.local_addr().unwrap()
     }

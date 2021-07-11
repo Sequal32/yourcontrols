@@ -1,8 +1,9 @@
 use anyhow::{bail, Result};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
-use yourcontrols_hoster::SingleServer;
+use yourcontrols_hoster::{ServerMetadata, SingleServer};
 use yourcontrols_net::{
     BaseSocket, DirectHandshake, Handshake, HandshakeConfig, MainPayloads, Message,
+    StartableNetworkObject,
 };
 use yourcontrols_types::{ChangedDatum, ClientId, Time};
 
@@ -247,6 +248,8 @@ pub enum NetworkEvent {
 
 fn get_server(port: u16) -> Result<SingleServer> {
     let mut server = SingleServer::start_with_port(port)?;
-    server.set_rendezvous_server(RENDEZVOUS_SERVER.parse().unwrap()); // TODO: temp rendezvous server
+    server.set_metadata(
+        ServerMetadata::new().with_rendezvous_server(RENDEZVOUS_SERVER.parse().unwrap()), // TODO: temp rendezvous server
+    );
     Ok(server)
 }
