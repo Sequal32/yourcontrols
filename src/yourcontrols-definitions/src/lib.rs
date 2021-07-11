@@ -95,6 +95,7 @@ impl TemplateDatabase {
 pub struct DefinitionsParser {
     templates: TemplateDatabase,
     definitions: Vec<DatumMessage>,
+    permissions: HashMap<VarId, SyncPermission>,
     generator: DatumGenerator,
 }
 
@@ -103,6 +104,7 @@ impl DefinitionsParser {
         Self {
             templates: TemplateDatabase::new(),
             definitions: Vec::new(),
+            permissions: HashMap::new(),
             generator: DatumGenerator::new(),
         }
     }
@@ -253,7 +255,7 @@ impl DefinitionsParser {
         sync_permission: SyncPermission,
     ) -> Result<()> {
         for template in templates {
-            let mut datum = match &template {
+            let datum = match &template {
                 Value::String(name) => {
                     match get_index_from_var_name(name) {
                         // Index found, can apply to templates which use event_param: index
@@ -272,7 +274,8 @@ impl DefinitionsParser {
                 _ => continue,
             };
 
-            datum.sync_permission = Some(sync_permission.clone());
+            self.permissions
+                .insert(self.definitions.len(), sync_permission.clone());
 
             self.definitions.push(datum)
         }

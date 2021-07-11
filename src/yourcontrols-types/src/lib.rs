@@ -154,4 +154,12 @@ impl InterpolationType {
     }
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum SyncPermission {
+    Shared,
+    Master,
+    Server,
+    Init,
+}
+
 pub type ClientId = u32;

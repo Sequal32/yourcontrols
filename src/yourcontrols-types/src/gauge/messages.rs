@@ -69,21 +69,6 @@ pub enum VarType {
     },
 }
 
-#[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq)]
-pub struct SyncPermissionState {
-    pub server: bool,
-    pub master: bool,
-    pub init: bool,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub enum SyncPermission {
-    Shared,
-    Master,
-    Server,
-    Init,
-}
-
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ConditionMessage {
     pub script_id: VarId,
@@ -99,7 +84,6 @@ pub struct DatumMessage {
     pub conditions: Option<Vec<ConditionMessage>>,
     pub interpolate: Option<InterpolationType>,
     pub mapping: Option<MappingType<MappingArgsMessage>>,
-    pub sync_permission: Option<SyncPermission>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -127,9 +111,6 @@ pub enum Payloads {
     SendIncomingValues {
         data: Vec<ChangedDatum>,
         time: Time,
-    },
-    UpdateSyncPermission {
-        new: SyncPermissionState,
     },
     RequestLvarNames,
 

@@ -3,10 +3,7 @@ use msfs::legacy::execute_calculator_code;
 use rhai::Dynamic;
 
 use std::collections::HashMap;
-use yourcontrols_types::{
-    ChangedDatum, DatumKey, DatumValue, MappingType, SyncPermission, SyncPermissionState, Time,
-    VarId,
-};
+use yourcontrols_types::{ChangedDatum, DatumKey, DatumValue, MappingType, Time, VarId};
 
 use crate::interpolation::Interpolation;
 use crate::sync::SCRIPTING_ENGINE;
@@ -24,7 +21,6 @@ pub trait DatumTrait {
     fn process_sim_event_id(&mut self, id: u32) -> Option<()>;
     fn execute_mapping(&mut self, incoming_value: DatumValue) -> Option<()>;
     fn is_condition_satisifed(&self, incoming_value: DatumValue) -> bool;
-    fn can_execute(&self, sync_permission: &SyncPermissionState) -> bool;
 }
 /// A Datum can watch for changes in variables, conditionally execute a mapping (event/setting the variable) or be interpolated to a value every frame.
 #[derive(Default)]
@@ -35,7 +31,6 @@ pub struct Datum {
     pub conditions: Option<Vec<Condition>>,
     pub interpolate: Option<Interpolation>,
     pub mapping: Option<MappingType<MappingArgs>>,
-    pub sync_permission: Option<SyncPermission>,
 }
 
 impl DatumTrait for Datum {
@@ -110,18 +105,6 @@ impl DatumTrait for Datum {
 
         return satisfied;
     }
-
-    fn can_execute(&self, sync_permission: &SyncPermissionState) -> bool {
-        self.sync_permission
-            .as_ref()
-            .map(|x| match x {
-                SyncPermission::Shared => true,
-                SyncPermission::Master => sync_permission.master,
-                SyncPermission::Server => sync_permission.server,
-                SyncPermission::Init => sync_permission.init,
-            })
-            .unwrap_or(true)
-    }
 }
 
 pub struct DatumManager<T> {
@@ -152,7 +135,7 @@ impl<T: DatumTrait> DatumManager<T> {
     }
 
     /// Runs interpolation and watcher tasks for each datum.
-    pub fn poll(&mut self, sync_permission: &SyncPermissionState) -> Vec<ChangedDatum> {
+    pub fn poll(&mut self) -> Vec<ChangedDatum> {
         let mut changed_datums = Vec::new();
 
         let interpolation_tick = self.get_interpolation_tick();
@@ -161,10 +144,6 @@ impl<T: DatumTrait> DatumManager<T> {
             datum.interpolate(interpolation_tick);
 
             if let Some(value) = datum.get_changed_value(self.poll_time.step()) {
-                // Based on sync permission
-                if !datum.can_execute(sync_permission) {
-                    continue;
-                }
                 changed_datums.push(ChangedDatum { key: *key, value })
             }
         }
@@ -173,12 +152,7 @@ impl<T: DatumTrait> DatumManager<T> {
     }
 
     /// Incoming data is queued for interpolation or is used to execute datum mappings.
-    pub fn process_incoming_data(
-        &mut self,
-        data: Vec<ChangedDatum>,
-        interpolate_tick: Time,
-        sync_permission: &SyncPermissionState,
-    ) {
+    pub fn process_incoming_data(&mut self, data: Vec<ChangedDatum>, interpolate_tick: Time) {
         // Set interpolation time
         if self.interpolation_time.is_none() {
             self.interpolation_time = Some(DeltaTimeChange::new(interpolate_tick - 0.05));
@@ -187,10 +161,6 @@ impl<T: DatumTrait> DatumManager<T> {
         // Execute stuff
         for new_datum in data {
             if let Some(datum) = self.datums.get_mut(&new_datum.key) {
-                if !datum.can_execute(sync_permission) {
-                    continue;
-                }
-
                 datum.execute_mapping(new_datum.value);
                 datum.queue_interpolate(new_datum.value, interpolate_tick);
             }
@@ -246,32 +216,29 @@ mod tests {
         assert_eq!(datum.process_sim_event_id(0), None);
         assert_eq!(datum.execute_mapping(0.0), None);
         assert_eq!(datum.is_condition_satisifed(0.0), true);
-        assert_eq!(datum.can_execute(&SyncPermissionState::default()), true);
     }
 
     #[test]
     fn test_incoming_datum() {
         let mut mock = MockDatumTrait::new();
-        mock.expect_can_execute().once().return_const(true);
         mock.expect_queue_interpolate().once().return_const(None);
         mock.expect_execute_mapping().once().return_const(None);
 
         let mut manager = DatumManager::<MockDatumTrait>::new();
         manager.add_datum(0, mock);
-        manager.process_incoming_data(get_test_incoming(0.0), 0.0, &SyncPermissionState::default());
+        manager.process_incoming_data(get_test_incoming(0.0), 0.0);
     }
 
     #[test]
     fn test_poll_calls() {
         let mut mock = MockDatumTrait::new();
-        mock.expect_can_execute().once().return_const(true);
         mock.expect_get_changed_value().once().return_const(1.0);
         mock.expect_interpolate().once().return_const(None);
 
         let mut manager = DatumManager::<MockDatumTrait>::new();
         manager.add_datum(0, mock);
 
-        let changed = manager.poll(&SyncPermissionState::default());
+        let changed = manager.poll();
 
         assert_eq!(changed.get(0).expect("should've returned").value, 1.0);
     }

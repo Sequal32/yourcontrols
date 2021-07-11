@@ -18,7 +18,7 @@ use crate::util::{GenericResult, DATA_SIZE};
 
 use yourcontrols_types::{
     DatumMessage, EventMessage, MappingType, MessagePackFragmenter, Payloads, ScriptMessage,
-    SyncPermissionState, VarType,
+    VarType,
 };
 
 /// A wrapper struct for an array of size DATA_SIZE bytes
@@ -46,7 +46,6 @@ struct AircraftData {
 pub struct MainGauge {
     fragmenter: MessagePackFragmenter,
     datum_manager: DatumManager<Datum>,
-    sync_permission_state: SyncPermissionState,
     send_data_area: Option<ClientDataArea<ClientData>>,
 
     // Vars/Events
@@ -59,7 +58,6 @@ impl MainGauge {
         Self {
             fragmenter: MessagePackFragmenter::new(DATA_SIZE - 16), // Leave 16 bytes free for header
             datum_manager: DatumManager::new(),
-            sync_permission_state: SyncPermissionState::default(),
             send_data_area: None,
 
             vars: Vec::new(),
@@ -160,7 +158,6 @@ impl MainGauge {
             conditions,
             interpolate,
             mapping,
-            sync_permission: message.sync_permission,
         };
 
         self.datum_manager.add_datum(datum_index, datum);
@@ -288,11 +285,9 @@ impl MainGauge {
 
             Payloads::ResetAll => self.reset(),
 
-            Payloads::UpdateSyncPermission { new } => self.sync_permission_state = new,
-
-            Payloads::SendIncomingValues { data, time } => self
-                .datum_manager
-                .process_incoming_data(data, time, &self.sync_permission_state),
+            Payloads::SendIncomingValues { data, time } => {
+                self.datum_manager.process_incoming_data(data, time)
+            }
             // TODO:
             Payloads::WatchVariable {} => {}
             Payloads::WatchEvent {} => {}
@@ -317,7 +312,7 @@ impl MainGauge {
             }
             // Triggered every simulation frame
             SimConnectRecv::SimObjectData(_) => {
-                let changed = self.datum_manager.poll(&self.sync_permission_state);
+                let changed = self.datum_manager.poll();
                 if changed.len() > 0 {
                     self.send_message(simconnect, Payloads::VariableChange { changed })?;
                 }
