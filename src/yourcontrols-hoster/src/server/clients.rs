@@ -25,7 +25,7 @@ impl ClientInfo {
 
     pub fn into_connected_payload(&self) -> MainPayloads {
         MainPayloads::ClientAdded {
-            id: self.id,
+            client_id: self.id,
             is_observer: self.is_observer,
             is_host: self.is_host,
             name: self.name.clone(),

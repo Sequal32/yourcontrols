@@ -43,6 +43,7 @@ pub enum MainPayloads {
     },
     // Main Game Payloads
     Update {
+        client_id: ClientId,
         is_reliable: bool,
         time: Time,
         changed: Vec<ChangedDatum>,
@@ -53,6 +54,7 @@ pub enum MainPayloads {
     // Assign client id
     Welcome {
         client_id: ClientId,
+        name: String,
     },
     MakeHost {
         client_id: ClientId,
@@ -65,13 +67,13 @@ pub enum MainPayloads {
         delegations: ControlDelegationsMap,
     },
     ClientAdded {
-        id: ClientId,
+        client_id: ClientId,
         is_observer: bool,
         is_host: bool,
         name: String,
     },
     ClientRemoved {
-        id: ClientId,
+        client_id: ClientId,
     },
 }
 

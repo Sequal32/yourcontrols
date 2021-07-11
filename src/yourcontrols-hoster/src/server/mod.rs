@@ -168,8 +168,13 @@ impl SingleServer {
                 self.clients.set_name(&id, name.clone());
 
                 // Send id to incoming client
-                self.socket
-                    .send_to(addr, &MainPayloads::Welcome { client_id: id })?;
+                self.socket.send_to(
+                    addr,
+                    &MainPayloads::Welcome {
+                        client_id: id,
+                        name: name.clone(),
+                    },
+                )?;
 
                 if self.clients.get_host().is_none() {
                     self.set_next_host()?;
@@ -242,7 +247,9 @@ impl SingleServer {
 
                         self.socket.send_to_multiple(
                             self.clients.all_addresses(),
-                            &MainPayloads::ClientRemoved { id: client.id },
+                            &MainPayloads::ClientRemoved {
+                                client_id: client.id,
+                            },
                         )?;
                     }
                 }

@@ -118,7 +118,8 @@ impl SingleServerTester {
         // Get assigned client id
         let next_msg = in_sequence_messages.next().unwrap();
         match next_msg {
-            MainPayloads::Welcome { client_id } => {
+            MainPayloads::Welcome { client_id, name } => {
+                assert_eq!(&name, "TEST");
                 id = client_id;
             }
             _ => panic!("Expected welcome payload, got {:?}", next_msg),

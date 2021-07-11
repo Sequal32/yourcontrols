@@ -4,7 +4,7 @@ use yourcontrols_hoster::SingleServer;
 use yourcontrols_net::{
     BaseSocket, DirectHandshake, Handshake, HandshakeConfig, MainPayloads, Message,
 };
-use yourcontrols_types::{ChangedDatum, Time};
+use yourcontrols_types::{ChangedDatum, ClientId, Time};
 
 const RENDEZVOUS_SERVER: &str = "127.0.0.1:25070";
 
@@ -34,28 +34,38 @@ impl Network {
         payload: MainPayloads,
         addr: SocketAddr,
     ) -> Result<Option<NetworkEvent>> {
-        match payload {
-            MainPayloads::Hello {
-                session_id,
-                version,
-            } => {}
-            MainPayloads::RequestSession { self_hosted } => {}
-            MainPayloads::SessionDetails { session_id } => {
-                return Ok(Some(NetworkEvent::SessionReceived { session_id }))
-            }
-            MainPayloads::AttemptConnection {
-                public_ip,
-                local_ip,
-            } => {}
-            MainPayloads::InvalidSession => {}
-            MainPayloads::InvalidVersion { server_version } => {}
-            MainPayloads::Update { changed, time, .. } => {
-                return Ok(Some(NetworkEvent::Update { changed, time }))
-            }
-            _ => {}
-        }
+        // match &payload {
+        //     MainPayloads::Hello {
+        //         session_id,
+        //         version,
+        //     } => {}
+        //     MainPayloads::RequestSession { self_hosted } => {}
+        //     MainPayloads::SessionDetails { session_id } => {
+        //         return Ok(Some(NetworkEvent::SessionReceived { session_id }))
+        //     }
+        //     MainPayloads::AttemptConnection {
+        //         public_ip,
+        //         local_ip,
+        //     } => {}
+        //     MainPayloads::InvalidSession => {}
+        //     MainPayloads::InvalidVersion { server_version } => {}
+        //     MainPayloads::Update {  .. } => {
+        //         return Ok(Some(NetworkEvent::Payload(payload)))
+        //     }
+        //     MainPayloads::MakeHost { client_id } => {}
+        //     MainPayloads::ClientAdded {
+        //         name,
+        //         id,
+        //         is_host,
+        //         is_observer,
+        //     } => {}
+        //     MainPayloads::ClientRemoved { id } => {}
+        //     MainPayloads::ControlDelegations { delegations } => {}
+        //     MainPayloads::Welcome { client_id } => {}
+        //     _ => {}
+        // }
 
-        Ok(None)
+        Ok(Some(NetworkEvent::Payload(payload)))
     }
 
     fn process_messages(
@@ -151,17 +161,20 @@ impl Network {
 
     pub fn send_update(
         &mut self,
+        client_id: ClientId,
         time: Time,
         unreliable: Vec<ChangedDatum>,
         reliable: Vec<ChangedDatum>,
     ) -> Result<()> {
         self.send_payload_to_server(MainPayloads::Update {
+            client_id,
             is_reliable: false,
             time,
             changed: unreliable,
         })?;
 
         self.send_payload_to_server(MainPayloads::Update {
+            client_id,
             is_reliable: true,
             time,
             changed: reliable,
@@ -227,14 +240,9 @@ impl Network {
 
 #[derive(Debug)]
 pub enum NetworkEvent {
-    SessionReceived {
-        session_id: String,
-    },
+    Payload(MainPayloads),
+    SessionReceived { session_id: String },
     Connected,
-    Update {
-        changed: Vec<ChangedDatum>,
-        time: Time,
-    },
 }
 
 fn get_server(port: u16) -> Result<SingleServer> {
