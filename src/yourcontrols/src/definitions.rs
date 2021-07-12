@@ -1348,8 +1348,12 @@ impl Definitions {
         {
             if let ActionType::Event(mapping) = &mapping.action {
                 if mapping.use_calculator {
-                    self.lvarstransfer
-                        .set_unchecked(conn, &format!("K:{}", name), None, "");
+                    self.lvarstransfer.set_unchecked(
+                        conn,
+                        &format!("K:{}", name),
+                        None,
+                        value.to_string().as_str(),
+                    );
                 } else {
                     self.events.trigger_event(conn, &name, value).unwrap();
                 }
