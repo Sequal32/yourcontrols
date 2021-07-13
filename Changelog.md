@@ -1,5 +1,31 @@
 # YourControls Changelog
 
+## Version 2.5.17
+
+* A32NX ADIRS, AP APPR, AP LOC, AP EXPED, AP 1/2, AP ATHR
+* use_calculator on a var: event will now set the parameter as well
+* a custom on_condition can be specified for toggleswitches that use local vars
+
+## Version 2.5.16
+
+* Synchronized A32NX Dev version parking brake, mcdu/dcdu screen brightnesses
+
+## Version 2.5.15
+
+* Fixed a crash that could occur when trying to write a REALLY BIG floating point number
+
+## Version 2.5.14
+
+* Fix A32NX Development seatbelt sign and annunciator lights switch
+* Fix Longitude spoiler arm not syncing
+
+## Version 2.5.13
+
+
+* Fix A32NX Development batteries, spoilers, FCU, flaps, flight controls on ECAM not updating
+* Fixed lights on the DV20
+
+
 ## Version 2.5.12
 
 * Fixed issues with the FBW A32NX experimental throttles desynced, vertical speed mismatched, and rattling sounds
