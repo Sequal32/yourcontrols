@@ -227,6 +227,7 @@ struct ToggleSwitchGenericEntry {
     switch_on: bool,
     #[serde(default)]
     use_calculator: bool,
+    on_condition_value: Option<f64>,
     conditions: Option<Vec<Condition>>,
     #[serde(default)]
     cancel_h_events: bool,
@@ -665,6 +666,10 @@ impl Definitions {
 
         if let Some(event_param) = var.event_param {
             action.set_param(event_param);
+        }
+
+        if let Some(on_condition_value) = var.on_condition_value {
+            action.set_on_condition_value(on_condition_value);
         }
 
         action.set_switch_on(var.switch_on);

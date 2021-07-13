@@ -34,6 +34,8 @@ pub struct ToggleSwitch {
     switch_on: bool,
     // Current value of the switch
     current: bool,
+    // The value to consider the switch "on" (only usable with f64)
+    on_condition_value: f64,
 }
 
 impl ToggleSwitch {
@@ -45,6 +47,7 @@ impl ToggleSwitch {
             event_name: None,
             switch_on: false,
             current: false,
+            on_condition_value: 1.0,
         };
     }
 
@@ -65,6 +68,10 @@ impl ToggleSwitch {
 
     pub fn set_switch_on(&mut self, switch_on: bool) {
         self.switch_on = switch_on
+    }
+
+    pub fn set_on_condition_value(&mut self, value: f64) {
+        self.on_condition_value = value
     }
 }
 
@@ -109,7 +116,7 @@ impl<'a> Syncable<bool> for ToggleSwitch {
 
 impl<'a> Syncable<f64> for ToggleSwitch {
     fn set_current(&mut self, current: f64) {
-        self.current = current == 1.0;
+        self.current = current == self.on_condition_value;
     }
 
     fn set_new(
@@ -118,11 +125,12 @@ impl<'a> Syncable<f64> for ToggleSwitch {
         conn: &simconnect::SimConnector,
         lvar_transfer: &mut LVarSyncer,
     ) {
-        let new = new == 1.0;
+        let new = new == self.on_condition_value;
 
         if self.current == new {
             return;
         }
+
         if !new && self.switch_on {
             return;
         }
