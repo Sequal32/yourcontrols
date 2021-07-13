@@ -152,6 +152,64 @@ shared:
   -
     type: var
     var_name: L:A32NX_MCDU_R_BRIGHTNESS
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ADIRS_IR_1_MODE_SELECTOR_KNOB
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ADIRS_IR_2_MODE_SELECTOR_KNOB
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ADIRS_IR_3_MODE_SELECTOR_KNOB
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ADIRS_IR_1_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ADIRS_IR_2_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ADIRS_IR_3_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_OVHD_ADIRS_ON_BAT_IS_ILLUMINATED
+  -
+    type: var
+    var_name: L:A32NX_AUTOBRAKES_ARMED_MODE
+  -
+    type: var
+    var_name: L:A32NX_AUTOBRAKES_DECEL_LIGHT
+  -
+    type: ToggleSwitch
+    var_name: L:A32NX_AUTOPILOT_1_ACTIVE
+    event_name: A32NX.FCU_AP_1_PUSH
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: L:A32NX_AUTOPILOT_2_ACTIVE
+    event_name: A32NX.FCU_AP_2_PUSH
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: L:A32NX_AUTOTHRUST_STATUS
+    event_name: A32NX.FCU_ATHR_PUSH
+    use_calculator: true
+    on_condition_value: 2.0
+  -
+    type: ToggleSwitch
+    var_name: L:A32NX_FCU_APPR_MODE_ACTIVE
+    event_name: A32NX.FCU_APPR_PUSH
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: L:A32NX_FCU_LOC_MODE_ACTIVE
+    event_name: A32NX.FCU_LOC_PUSH
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: L:A32NX_FMA_EXPEDITE_MODE
+    event_name: A32NX.FCU_EXPED_PUSH
+    use_calculator: true
 
 master:
   -
@@ -248,3 +306,8 @@ ignore:
   - A320_Neo_FCU_ALT_SET
   - A320_Neo_FCU_VS_INC_FPA
   - A320_Neo_FCU_VS_DEC_FPA
+  - A320_Neo_FCU_AP_1_PUSH
+  - A320_Neo_FCU_AP_2_PUSH
+  - A320_Neo_FCU_APPR_PUSH
+  - A320_Neo_FCU_LOC_PUSH
+  - A320_Neo_FCU_EXPED_PUSH
