@@ -286,7 +286,7 @@ impl<U: Ui> Program<U> {
                 self.ui_on_join_request(username, port, server_ip, session_code)?;
             }
             UiEvents::Host { port, username } => {
-                self.ui_on_host_request(port)?;
+                self.ui_on_host_request(port, username)?;
             }
             _ => {}
         }
@@ -332,7 +332,9 @@ impl<U: Ui> Program<U> {
     }
 
     /// Host directly if port is None, otherwise request a session_id and begin hosting
-    fn ui_on_host_request(&mut self, port: Option<u16>) -> Result<()> {
+    fn ui_on_host_request(&mut self, port: Option<u16>, username: String) -> Result<()> {
+        self.clients.self_client().set_name(username);
+
         Ok(if let Some(port) = port {
             self.network.start_direct(port)?;
         } else {
