@@ -158,6 +158,8 @@ impl MainGauge {
             conditions,
             interpolate,
             mapping,
+            last_incoming_value: None,
+            execute_loop_time: None,
         };
 
         self.datum_manager.add_datum(datum_index, datum);

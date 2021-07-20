@@ -13,6 +13,8 @@ use super::KeyEvent;
 use super::{util::DeltaTimeChange, RcSettable};
 use super::{RcVariable, Syncable};
 
+const ENSURE_VALUE_IS_SET_POLL_TIME: f64 = 2.0;
+
 #[cfg_attr(test, mockall::automock)]
 pub trait DatumTrait {
     fn get_changed_value(&mut self, tick: Time) -> Option<DatumValue>;
@@ -20,7 +22,11 @@ pub trait DatumTrait {
     fn queue_interpolate(&mut self, value: DatumValue, tick: Time) -> Option<()>;
     fn process_sim_event_id(&mut self, id: u32) -> Option<()>;
     fn execute_mapping(&mut self, incoming_value: DatumValue) -> Option<()>;
-    fn is_condition_satisifed(&self, incoming_value: DatumValue) -> bool;
+    fn execute_mapping_timed(&mut self, incoming_value: DatumValue) -> Option<()>;
+    fn poll_mapping(&mut self) -> Option<()>;
+    fn are_conditions_satisfied(&self, incoming_value: DatumValue) -> bool;
+    fn has_mapping(&self) -> bool;
+    fn is_interpolated(&self) -> bool;
 }
 /// A Datum can watch for changes in variables, conditionally execute a mapping (event/setting the variable) or be interpolated to a value every frame.
 #[derive(Default)]
@@ -31,6 +37,8 @@ pub struct Datum {
     pub conditions: Option<Vec<Condition>>,
     pub interpolate: Option<Interpolation>,
     pub mapping: Option<MappingType<MappingArgs>>,
+    pub execute_loop_time: Option<DeltaTimeChange>,
+    pub last_incoming_value: Option<DatumValue>,
 }
 
 impl DatumTrait for Datum {
@@ -57,9 +65,11 @@ impl DatumTrait for Datum {
     }
 
     fn execute_mapping(&mut self, incoming_value: DatumValue) -> Option<()> {
-        if !self.is_condition_satisifed(incoming_value) {
+        if !self.are_conditions_satisfied(incoming_value) {
             return None;
         };
+
+        self.last_incoming_value = Some(incoming_value);
 
         match self.mapping.as_mut()? {
             MappingType::Event => self.watch_event.as_ref()?.process_incoming(incoming_value),
@@ -81,7 +91,28 @@ impl DatumTrait for Datum {
         Some(())
     }
 
-    fn is_condition_satisifed(&self, incoming_value: DatumValue) -> bool {
+    /// Executes the mapping and begins the 2 second timer to ensure the value is set
+    fn execute_mapping_timed(&mut self, incoming_value: DatumValue) -> Option<()> {
+        self.execute_loop_time = Some(DeltaTimeChange::new(0.0));
+        self.execute_mapping(incoming_value)
+    }
+
+    /// Determines if the newest value was set within the last 2 seconds, and if so, re-executes the mapping
+    fn poll_mapping(&mut self) -> Option<()> {
+        let should_try_set = self
+            .execute_loop_time
+            .as_mut()
+            .map(|d| d.step() <= ENSURE_VALUE_IS_SET_POLL_TIME)
+            .unwrap_or(false);
+
+        if should_try_set {
+            self.execute_mapping(self.last_incoming_value?)
+        } else {
+            None
+        }
+    }
+
+    fn are_conditions_satisfied(&self, incoming_value: DatumValue) -> bool {
         let conditions = match self.conditions.as_ref() {
             Some(c) => c,
             None => return true,
@@ -104,6 +135,14 @@ impl DatumTrait for Datum {
         }
 
         return satisfied;
+    }
+
+    fn has_mapping(&self) -> bool {
+        self.mapping.is_some()
+    }
+
+    fn is_interpolated(&self) -> bool {
+        self.interpolate.is_some()
     }
 }
 
@@ -160,8 +199,14 @@ impl<T: DatumTrait> DatumManager<T> {
 
         // Execute stuff
         for new_datum in data {
-            if let Some(datum) = self.datums.get_mut(&new_datum.key) {
+            let datum = match self.datums.get_mut(&new_datum.key) {
+                Some(d) => d,
+                None => continue,
+            };
+
+            if datum.has_mapping() {
                 datum.execute_mapping(new_datum.value);
+            } else if datum.is_interpolated() {
                 datum.queue_interpolate(new_datum.value, interpolate_tick);
             }
         }
@@ -215,7 +260,9 @@ mod tests {
         assert_eq!(datum.queue_interpolate(0.0, 0.0), None);
         assert_eq!(datum.process_sim_event_id(0), None);
         assert_eq!(datum.execute_mapping(0.0), None);
-        assert_eq!(datum.is_condition_satisifed(0.0), true);
+        assert_eq!(datum.are_conditions_satisfied(0.0), true);
+        assert_eq!(datum.has_mapping(), false);
+        assert_eq!(datum.is_interpolated(), false);
     }
 
     #[test]
