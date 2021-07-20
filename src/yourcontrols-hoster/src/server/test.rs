@@ -190,7 +190,6 @@ impl SingleServerTester {
         self.net
             .send_socket_1_message(self.net.server_address(), payload)?;
 
-        // Expect MakeHost payload for first client connecting
         let messages = self.net.poll_get_socket_1_messages()?;
 
         // Verify valid version

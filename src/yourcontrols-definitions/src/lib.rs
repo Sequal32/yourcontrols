@@ -229,7 +229,6 @@ impl DefinitionsParser {
                         ..Default::default()
                     },
                     DatumMetadata {
-                        sync_permission: None,
                         control_surface: full.control_surface,
                     },
                 ));
@@ -251,11 +250,7 @@ impl DefinitionsParser {
         }
     }
 
-    fn load_sync_templates(
-        &mut self,
-        templates: Vec<Value>,
-        sync_permission: SyncPermission,
-    ) -> Result<()> {
+    fn load_sync_templates(&mut self, templates: Vec<Value>) -> Result<()> {
         for template in templates {
             let (datum, mut meta_data) = match &template {
                 Value::String(name) => {
@@ -277,7 +272,6 @@ impl DefinitionsParser {
                 _ => continue,
             };
 
-            meta_data.sync_permission = Some(sync_permission.clone());
             self.metadata.insert(self.definitions.len(), meta_data);
 
             self.definitions.push(datum)
@@ -309,16 +303,8 @@ impl DefinitionsParser {
             self.templates.load_templates(mappings);
         }
 
-        if let Some(shared) = yaml.shared {
-            self.load_sync_templates(shared, SyncPermission::Shared)?;
-        }
-
-        if let Some(init) = yaml.init {
-            self.load_sync_templates(init, SyncPermission::Init)?;
-        }
-
-        if let Some(server) = yaml.server {
-            self.load_sync_templates(server, SyncPermission::Server)?;
+        if let Some(definitions) = yaml.definitions {
+            self.load_sync_templates(definitions);
         }
 
         Ok(())
@@ -364,6 +350,5 @@ impl DefinitionsParser {
 
 #[derive(Debug, Default)]
 pub struct DatumMetadata {
-    pub sync_permission: Option<SyncPermission>,
     pub control_surface: Option<ControlSurfaces>,
 }

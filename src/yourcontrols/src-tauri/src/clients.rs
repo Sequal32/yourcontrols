@@ -4,12 +4,20 @@ use yourcontrols_types::{ClientId, ControlSurfaces};
 
 #[derive(Default)]
 pub struct ClientInfo {
-    name: String,
     id: ClientId,
+    name: String,
     is_observer: bool,
 }
 
 impl ClientInfo {
+    pub fn new(id: ClientId, name: String, is_observer: bool) -> Self {
+        Self {
+            id,
+            name,
+            is_observer,
+        }
+    }
+
     /// Get a reference to the client info's name.
     pub fn name(&self) -> &String {
         &self.name
@@ -73,14 +81,8 @@ impl Clients {
     }
 
     pub fn add_client(&mut self, client_id: ClientId, name: String, is_observer: bool) {
-        self.client_map.insert(
-            client_id,
-            ClientInfo {
-                id: client_id,
-                name,
-                is_observer,
-            },
-        );
+        self.client_map
+            .insert(client_id, ClientInfo::new(client_id, name, is_observer));
     }
 
     pub fn remove_client(&mut self, client_id: &ClientId) {
@@ -99,17 +101,64 @@ impl Clients {
         self.delegations = delegations;
     }
 
-    /// Get all ControlSurfaces that the client defined by client_id currently has control of
-    pub fn get_control_delegations_for_client(&self, client_id: &ClientId) -> Vec<ControlSurfaces> {
+    /// Returns true if the client currently has control of the specified delegation
+    pub fn client_has_delegation(
+        &self,
+        client_id: &ClientId,
+        delegation: &ControlSurfaces,
+    ) -> bool {
         self.delegations
-            .iter()
-            .filter_map(|(control_surface, client_delegated_to)| {
-                if client_delegated_to == client_id {
-                    Some(control_surface.clone())
-                } else {
-                    None
-                }
-            })
-            .collect()
+            .get(delegation)
+            .map(|client_with_delegation| client_with_delegation == client_id)
+            .unwrap_or(false)
+    }
+
+    /// Returns true if the self_client currently has control of the specified delegation
+    pub fn self_has_delegation(&self, delegation: &ControlSurfaces) -> bool {
+        self.client_has_delegation(self.self_client.id(), delegation)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    const TEST_SELF_ID: u32 = 0;
+    const TEST_CLIENT2_ID: u32 = 1;
+
+    fn get_test_clients() -> Clients {
+        let mut clients = Clients::new();
+
+        *clients.self_client() = ClientInfo::new(TEST_SELF_ID, "TEST_CLIENT1".to_string(), false);
+        clients.add_client(TEST_CLIENT2_ID, "TEST_CLIENT2".to_string(), false);
+
+        return clients;
+    }
+
+    #[test]
+    fn test_set_host() {
+        let mut clients = get_test_clients();
+        clients.set_host(0);
+        assert!(clients.is_host(&0));
+    }
+
+    #[test]
+    fn test_control_delegations() {
+        let mut delegations = HashMap::new();
+        delegations.insert(ControlSurfaces::Yoke, TEST_SELF_ID);
+        delegations.insert(ControlSurfaces::Throttle, TEST_CLIENT2_ID);
+
+        let mut clients = get_test_clients();
+        clients.set_control_delegations(delegations);
+
+        assert!(clients.client_has_delegation(&TEST_CLIENT2_ID, &ControlSurfaces::Throttle));
+        assert!(!clients.client_has_delegation(&TEST_CLIENT2_ID, &ControlSurfaces::Yoke));
+        // Undelegated
+        assert!(!clients.client_has_delegation(&TEST_CLIENT2_ID, &ControlSurfaces::Mixture));
+
+        assert!(clients.self_has_delegation(&ControlSurfaces::Yoke));
+        assert!(!clients.self_has_delegation(&ControlSurfaces::Throttle));
+        // Undelegated
+        assert!(!clients.self_has_delegation(&ControlSurfaces::Mixture));
     }
 }

@@ -108,7 +108,7 @@ impl<U: Ui> Program<U> {
     /// Splits a vector of ChangedDatum into two based on whether its updating every frame
     fn split_reliable_unreliable(
         &self,
-        changed: Vec<ChangedDatum>,
+        changed: impl IntoIterator<Item = ChangedDatum>,
     ) -> (Vec<ChangedDatum>, Vec<ChangedDatum>) {
         changed
             .into_iter()
@@ -117,6 +117,15 @@ impl<U: Ui> Program<U> {
 
     /// Sends updated vars across the network
     fn sim_on_vars_changed(&mut self, changed: Vec<ChangedDatum>) -> Result<()> {
+        // Filter by ControlSurface
+        let changed = changed.into_iter().filter(|datum| {
+            self.definitions_parser
+                .get_meta_data_for(&datum.key)
+                .and_then(|d| d.control_surface.as_ref())
+                .map(|delegation| self.clients.self_has_delegation(delegation))
+                .unwrap_or(true)
+        });
+        // Split by update period
         let (unreliable, reliable) = self.split_reliable_unreliable(changed);
 
         self.network
@@ -243,16 +252,11 @@ impl<U: Ui> Program<U> {
             .map(|c| !c.is_observer())
             .unwrap_or(false);
 
-        let delegated_controls = self.clients.get_control_delegations_for_client(&client_id);
-
         let definitions_match_client_delegations = changed.iter().all(|datum| {
             self.definitions_parser
                 .get_meta_data_for(&datum.key)
-                .and_then(|data| {
-                    data.control_surface
-                        .as_ref()
-                        .map(|x| delegated_controls.contains(&x))
-                })
+                .and_then(|data| data.control_surface.as_ref())
+                .map(|delegation| self.clients.client_has_delegation(&client_id, delegation))
                 .unwrap_or(true)
         });
 

@@ -14,9 +14,7 @@ lazy_static! {
 pub struct YamlTopDown {
     pub ignore: Option<Vec<String>>,
     pub include: Option<Vec<String>>,
-    pub server: Option<Vec<Value>>,
-    pub shared: Option<Vec<Value>>,
-    pub init: Option<Vec<Value>>,
+    pub definitions: Option<Vec<Value>>,
     pub templates: Option<Vec<Template>>,
     pub mappings: Option<Vec<Template>>,
 }
