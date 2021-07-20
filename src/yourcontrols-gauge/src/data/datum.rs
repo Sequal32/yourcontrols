@@ -3,7 +3,9 @@ use msfs::legacy::execute_calculator_code;
 use rhai::Dynamic;
 
 use std::collections::HashMap;
-use yourcontrols_types::{ChangedDatum, DatumKey, DatumValue, MappingType, Time, VarId};
+use yourcontrols_types::{
+    ChangedDatum, DatumKey, DatumValue, InterpolationType, MappingType, Time, VarId,
+};
 
 use crate::interpolation::Interpolation;
 use crate::sync::SCRIPTING_ENGINE;
@@ -37,8 +39,38 @@ pub struct Datum {
     pub conditions: Option<Vec<Condition>>,
     pub interpolate: Option<Interpolation>,
     pub mapping: Option<MappingType<MappingArgs>>,
-    pub execute_loop_time: Option<DeltaTimeChange>,
-    pub last_incoming_value: Option<DatumValue>,
+    execute_loop_time: Option<DeltaTimeChange>,
+    last_incoming_value: Option<DatumValue>,
+}
+
+impl Datum {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_var(&mut self, var: RcVariable) {
+        self.var = Some(var);
+    }
+
+    pub fn with_watch_event(&mut self, watch_event: KeyEvent) {
+        self.watch_event = Some(watch_event);
+    }
+
+    pub fn with_watch_data(&mut self, watch_data: VariableWatcher) {
+        self.watch_data = Some(watch_data);
+    }
+
+    pub fn with_conditions(&mut self, conditions: Vec<Condition>) {
+        self.conditions = Some(conditions);
+    }
+
+    pub fn with_interpolate(&mut self, interpolate_type: InterpolationType) {
+        self.interpolate = Some(Interpolation::new(interpolate_type));
+    }
+
+    pub fn with_mapping(&mut self, mapping: MappingType<MappingArgs>) {
+        self.mapping = Some(mapping);
+    }
 }
 
 impl DatumTrait for Datum {
@@ -268,7 +300,7 @@ mod tests {
     #[test]
     fn test_incoming_datum() {
         let mut mock = MockDatumTrait::new();
-        mock.expect_queue_interpolate().once().return_const(None);
+        mock.expect_has_mapping().once().return_const(true);
         mock.expect_execute_mapping().once().return_const(None);
 
         let mut manager = DatumManager::<MockDatumTrait>::new();

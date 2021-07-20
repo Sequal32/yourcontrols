@@ -101,11 +101,7 @@ impl MainGauge {
         datum_index: DatumKey,
         message: DatumMessage,
     ) -> Result<()> {
-        let mut watch_data = None;
-        let mut mapping = None;
-        let mut interpolate = None;
-        let mut var = None;
-        let mut conditions = None; // TODO: implement
+        let mut datum = Datum::new();
 
         if let Some(var_id) = message.var {
             let rc_var = self
@@ -114,16 +110,19 @@ impl MainGauge {
                 .ok_or(anyhow::anyhow!("Variable not set prior."))?
                 .clone();
 
-            interpolate = message.interpolate.map(|x| Interpolation::new(x));
-            watch_data = message
-                .watch_period
-                .map(|period| VariableWatcher::new(rc_var.clone(), period));
+            datum.with_var(rc_var.clone());
 
-            var = Some(rc_var)
+            if let Some(interpolate_type) = message.interpolate {
+                datum.with_interpolate(interpolate_type);
+            }
+
+            if let Some(watch_period) = message.watch_period {
+                datum.with_watch_data(VariableWatcher::new(rc_var.clone(), watch_period))
+            }
         }
 
         if let Some(mapping_message) = message.mapping {
-            mapping = Some(match mapping_message {
+            let mapping = match mapping_message {
                 MappingType::Event => MappingType::Event,
                 MappingType::Var => MappingType::Var,
                 MappingType::Script(message) => MappingType::Script(MappingArgs {
@@ -132,35 +131,28 @@ impl MainGauge {
                     sets: map_ids(&self.events, message.sets)?,
                     params: message.params,
                 }),
-            });
+            };
+
+            datum.with_mapping(mapping);
         }
 
         if let Some(condition_message) = message.conditions {
-            let mut conditions_result = Vec::new();
+            let mut conditions = Vec::new();
 
             for condition_message in condition_message {
-                conditions_result.push(Condition {
+                conditions.push(Condition {
                     script_id: condition_message.script_id,
                     params: condition_message.params,
                     vars: map_ids(&self.vars, condition_message.vars)?,
                 });
             }
 
-            conditions = Some(conditions_result);
+            datum.with_conditions(conditions);
         }
 
-        let watch_event = message.watch_event.map(|x| KeyEvent::new(simconnect, x));
-
-        let datum = Datum {
-            var,
-            watch_event,
-            watch_data,
-            conditions,
-            interpolate,
-            mapping,
-            last_incoming_value: None,
-            execute_loop_time: None,
-        };
+        if let Some(watch_event) = message.watch_event {
+            datum.with_watch_event(KeyEvent::new(simconnect, watch_event));
+        }
 
         self.datum_manager.add_datum(datum_index, datum);
 
