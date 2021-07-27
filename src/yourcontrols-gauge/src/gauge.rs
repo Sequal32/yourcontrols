@@ -11,7 +11,6 @@ use std::rc::Rc;
 use crate::data::datum::{Condition, Datum, DatumManager, MappingArgs};
 use crate::data::watcher::VariableWatcher;
 use crate::data::{EventSet, GenericVariable, KeyEvent, RcSettable, RcVariable};
-use crate::interpolation::Interpolation;
 use crate::sync::SCRIPTING_ENGINE;
 use crate::util::map_ids;
 use crate::util::{GenericResult, DATA_SIZE};

@@ -14,7 +14,7 @@ use std::path::Path;
 use store::{map_vec_to_database, EventsRef, VarsRef, DATABASE};
 use yourcontrols_types::{
     ConditionMessage, ControlSurfaces, DatumMessage, MappingArgsMessage, MappingType,
-    ScriptMessage, SyncPermission, VarId,
+    ScriptMessage, VarId,
 };
 
 use util::{get_index_from_var_name, merge, PartialTemplate, Template, YamlTopDown};
@@ -252,7 +252,7 @@ impl DefinitionsParser {
 
     fn load_sync_templates(&mut self, templates: Vec<Value>) -> Result<()> {
         for template in templates {
-            let (datum, mut meta_data) = match &template {
+            let (datum, meta_data) = match &template {
                 Value::String(name) => {
                     match get_index_from_var_name(name) {
                         // Index found, can apply to templates which use event_param: index
@@ -304,7 +304,7 @@ impl DefinitionsParser {
         }
 
         if let Some(definitions) = yaml.definitions {
-            self.load_sync_templates(definitions);
+            self.load_sync_templates(definitions)?;
         }
 
         Ok(())
