@@ -1,5 +1,10 @@
 # YourControls Changelog
 
+## Version 2.5.18
+
+* Updated VCockpit.js for Sim Update V
+* Support latest switch changes to the A32NX Development version
+
 ## Version 2.5.17
 
 * A32NX ADIRS, AP APPR, AP LOC, AP EXPED, AP 1/2, AP ATHR
