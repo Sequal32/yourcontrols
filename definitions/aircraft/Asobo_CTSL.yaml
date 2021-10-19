@@ -1,4 +1,6 @@
 include:
+  - definitions/modules/Aera.yaml
+  - definitions/modules/ASCommon.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
@@ -18,18 +20,16 @@ shared:
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:20
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 20
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:35
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 35
-
-  - # Choke
-    type: var
-    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
 
   - # Failures
     type: var
@@ -47,6 +47,76 @@ shared:
     var_units: Bool
     var_type: bool
 
+# - # LVAR's
+#   type: var
+#   var_name: L:Aera_Brightness
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# - # Spam
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_0
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Auto
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:Aera_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:Aera_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
 server:
   - # Payload
     type: var
@@ -60,3 +130,18 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64

@@ -2,28 +2,32 @@
 
 shared:
   - # ASOBO_ELECTRICAL_Switch_APU_Generator_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:APU GENERATOR SWITCH:1
     var_units: Bool
-    event_name: APU_GENERATOR_SWITCH_TOGGLE
+    var_type: i32
+    event_name: APU_GENERATOR_SWITCH_SET
     event_param: 1
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:APU GENERATOR SWITCH:2
     var_units: Bool
-    event_name: APU_GENERATOR_SWITCH_TOGGLE
+    var_type: i32
+    event_name: APU_GENERATOR_SWITCH_SET
     event_param: 2
 
   - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
     type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_MASTER_BATTERY
     event_param: 1
   -
     type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:2
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_MASTER_BATTERY
     event_param: 2
 
@@ -31,30 +35,46 @@ shared:
     type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:3
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_MASTER_BATTERY
     event_param: 3
 
   - # ASOBO_ELECTRICAL_Switch_Avionics_Master_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:AVIONICS MASTER SWITCH
     var_units: Bool
+    var_type: bool
+    event_name: AVIONICS_MASTER_SET
+  -
+    type: event
     event_name: TOGGLE_AVIONICS_MASTER
 
   - # ASOBO_ELECTRICAL_Switch_Alternator_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 1
+  -
+    type: event
     event_name: TOGGLE_ALTERNATOR1
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:2
     var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 2
+  -
+    type: event
     event_name: TOGGLE_ALTERNATOR2
 
   - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
     type: ToggleSwitch
     var_name: A:EXTERNAL POWER ON:1
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 1
 
@@ -84,12 +104,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Starter_State
-    var_type: f64
   -
     type: var
     var_name: L:XMLVAR_Starter_State_IsDown
-    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State_MinReleaseTime
   -
     type: var
     var_name: L:XMLVAR_Magneto_Starter_IsHeld
-    var_type: f64

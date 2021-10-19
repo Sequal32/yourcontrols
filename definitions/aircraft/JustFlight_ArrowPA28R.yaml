@@ -1,4 +1,6 @@
 include:
+  - definitions/modules/AS430.yaml
+  - definitions/modules/AS530.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
@@ -9,7 +11,49 @@ include:
   - definitions/modules/transponder.yaml
 
 shared:
+  - # Gear
+    type: NumSet
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Number
+    var_type: i32
+    event_name: GEAR_SET
   -
+    type: ToggleSwitch
+    var_name: A:BRAKE PARKING POSITION
+    var_units: Bool
+    var_type: bool
+    event_name: PARKING_BRAKES
+
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    use_calculator: true
+
+  - # Lighting
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 10
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:0
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 0
+
+  - # YourControls Force Transfer Hotkey
+    type: ProgramActionEvent
+    event_name: TOGGLE_LAUNCH_BAR_SWITCH
+    action: TransferControls
+
+  - # LVAR's
     type: var
     var_name: L:Ext_towbar
   -
@@ -507,24 +551,24 @@ shared:
   -
     type: var
     var_name: L:Glasscockpits_FPLHaveDestination
-  -
-    type: var
-    var_name: L:AS530_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS530_State
-  -
-    type: var
-    var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-  -
-    type: var
-    var_name: L:AS430_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS430_State
-  -
-    type: var
-    var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
   -
     type: var
     var_name: L:RIGHT_LOWER_cabin_heat_1
@@ -663,71 +707,26 @@ shared:
       - 11.0
       - 111.0
     target: L:DOOR_door
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:10
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 10
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:0
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 0
-
-#general.yaml without flaps
-
-  - # ASOBO_LANDING_GEAR_Lever_Gear_Template (Var to support Up/Off/Down)
-    type: var
-    var_name: A:GEAR HANDLE POSITION
-    var_units: Number
-    var_type: i32
-
-
-  - # ASOBO_LANDING_GEAR_Switch_ParkingBrake_Template
-    type: ToggleSwitch
-    var_name: A:BRAKE PARKING POSITION
-    var_units: Bool
-    event_name: PARKING_BRAKES
-
-  - # YourControls Force Transfer Hotkey
-    type: ProgramActionEvent
-    event_name: TOGGLE_LAUNCH_BAR_SWITCH
-    action: TransferControls
-
-  -
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:1
-    var_units: Bool
-    event_name: ANTI_ICE_TOGGLE_ENG1
-    use_calculator: true
 
 master:
-  - # ASOBO_HANDLING_Yoke_Template
-    type: NumSet
-    var_name: A:YOKE X POSITION
-    var_units: Position 16k
-    var_type: f64
-    event_name: AXIS_AILERONS_SET
-    interpolate: InvertConstant
   -
-    type: NumSet
-    var_name: A:YOKE Y POSITION
+    type: var
+    var_name: A:ELEVATOR POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: AXIS_ELEVATOR_SET
-    interpolate: InvertConstant
+    interpolate: DefaultConstant
   -
-    type: NumSet
-    var_name: A:RUDDER PEDAL POSITION
+    type: var
+    var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: AXIS_RUDDER_SET
-    interpolate: InvertConstant
+    interpolate: DefaultConstant
+  -
+    type: var
+    var_name: A:RUDDER POSITION
+    var_units: Position 16k
+    var_type: f64
+    interpolate: DefaultConstant
   -
     type: NumSet
     var_name: A:BRAKE LEFT POSITION EX1
@@ -746,10 +745,10 @@ master:
     unreliable: true
   -
     type: var
-    var_name: A:PLANE HEADING DEGREES GYRO # Drifts for some reason
+    var_name: A:PLANE HEADING DEGREES GYRO
     var_units: Degrees
     var_type: f64
-    interpolate: DefaultConstant
+    unreliable: true # Do not use interpolate or will spin and flip at 360 north
 
 server:
   -
@@ -764,17 +763,3 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
-
-ignore:
-  - AS530_COMSWAP_Push
-  - AS530_NAVSWAP_Push
-  - AS530_LeftLargeKnob_Right
-  - AS530_LeftLargeKnob_Left
-  - AS530_LeftSmallKnob_Right
-  - AS530_LeftSmallKnob_Left
-  - AS430_COMSWAP_Push
-  - AS430_NAVSWAP_Push
-  - AS430_LeftLargeKnob_Right
-  - AS430_LeftLargeKnob_Left
-  - AS430_LeftSmallKnob_Right
-  - AS430_LeftSmallKnob_Left

@@ -1,12 +1,11 @@
 include:
-  - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/navcom.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
-  - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
@@ -16,27 +15,37 @@ shared:
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:23
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 23
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:35
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 35
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:36
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 36
 
   - # Cowl Flap
     type: NumSet
     var_name: A:RECIP ENG COWL FLAP POSITION:1
-    var_units: Percent
-    var_type: i32
+    var_units: Position 16k
+    var_type: f64
     event_name: COWLFLAP1_SET
+
+  - # Deice (NO LONGER WORKS)
+    type: NumSet
+    var_name: A:RECIP ENG ALTERNATE AIR POSITION:1
+    var_units: Position
+    var_type: f64
+    event_name: ANTI_ICE_SET_ENG1
 
   - # Failures
     type: var
@@ -57,3 +66,12 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+
+ignore:
+  - TransponderVFR
+  - TransponderSTBY

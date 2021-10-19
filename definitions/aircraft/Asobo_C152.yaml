@@ -19,7 +19,7 @@ shared:
     type: NumSet
     var_name: A:RECIP ENG PRIMER:1
     var_units: percent
-    var_type: i32
+    var_type: f64
     event_name: TOGGLE_PRIMER1
 
   - # Failures
@@ -48,25 +48,18 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Lights
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN
+  - # Lighting
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
     var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
   -
     type: NumSet
-    var_name: A:LIGHT GLARESHIELD
+    var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
-    index_reversed: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
@@ -75,14 +68,96 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
-    
+
+# - # LVAR's
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# - # Spam
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_Hours_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_Minutes_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_Mode
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_ADF
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_0
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Gyro_Drift
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_2
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_GLARESHIELD_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
 master:
   -
     type: var
-    var_name: A:PLANE HEADING DEGREES GYRO # Drifts for some reason
+    var_name: A:PLANE HEADING DEGREES GYRO
     var_units: Degrees
     var_type: f64
-    interpolate: DefaultConstant
+    unreliable: true # Do not use interpolate or will spin and flip at 360 north
 
 server:
   - # Payload
@@ -97,3 +172,13 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64

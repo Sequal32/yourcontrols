@@ -1,58 +1,281 @@
+# Version 0.12.7
+
 include:
   - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
+  - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-  - # Comm Power
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:28
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 28
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:30
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 30
-
-  - # Deice
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:1
-    var_units: Bool
-    event_name: ANTI_ICE_TOGGLE_ENG1
-  -
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:2
-    var_units: Bool
-    event_name: ANTI_ICE_TOGGLE_ENG2
-  -
-    type: ToggleSwitch
-    var_name: A:PITOT HEAT
-    var_units: Bool
-    event_name: PITOT_HEAT_TOGGLE
-
   - # Avionics
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:23
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 23
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:24
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 24
+
+  - # Comm Power
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:28
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 28
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:30
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 30
+
+  - # STBY FTL
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:49
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 49
+
+  - # Autopilot
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT DISENGAGED
+    var_units: Bool
+    var_type: i32
+    event_name: AUTOPILOT_DISENGAGE_SET
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_HEADING_HOLD
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_ALTITUDE_HOLD
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: f64
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_VS_HOLD
+  -
+    type: var
+    var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR
+    var_units: Feet per minute
+    var_type: f64
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 0
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT AIRSPEED HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_SPEED_HOLD
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR
+    var_units: Knots
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+  -
+    type: var
+    var_name: L:XMLVAR_AirSpeedIsInMach
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
+    var_units: Bool
+    var_type: bool
+    event_name: FLIGHT_LEVEL_CHANGE
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT WING LEVELER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_WING_LEVELER_ON
+    off_event_name: AP_WING_LEVELER_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_BC_HOLD
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT PITCH HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PITCH_LEVELER_ON
+    off_event_name: AP_PITCH_LEVELER_OFF
+  -
+    type: var
+    var_name: A:AUTOPILOT PITCH HOLD REF
+    var_units: Feet per minute
+    var_type: f64
+    interpolate: DefaultConstant
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT THROTTLE ARM
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_ARM
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_TO_GA
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MAX BANK ID
+    var_units: Number
+    var_type: f64
+    event_name: AP_MAX_BANK_SET
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT YAW DAMPER
+    var_units: Bool
+    var_type: bool
+    event_name: YAW_DAMPER_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT NAV SELECTED
+    var_units: Number
+    var_type: i32
+    event_name: AP_NAV_SELECT_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:RUDDER TRIM DISABLED
+    var_units: Bool
+    var_type: i32
+    event_name: RUDDER_TRIM_DISABLED_SET
+  -
+    type: NumSet
+    var_name: A:AILERON TRIM DISABLED
+    var_units: Bool
+    var_type: i32
+    event_name: AILERON_TRIM_DISABLED_SET
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM DISABLED
+    var_units: Bool
+    var_type: i32
+    event_name: ELEVATOR_TRIM_DISABLED_SET
+
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:2
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+
+  - # Engines
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET1
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET2
 
   - # Failures
     type: var
@@ -94,9 +317,63 @@ shared:
     var_name: A:CIRCUIT ON:49
     var_units: Bool
     var_type: bool
+
   - # Lights
-    type: var
-    var_name: L:LIGHTING_Knob_Master
+    type: NumSet
+    var_name: A:LIGHT NAV:1
+    var_units: Bool
+    var_type: f64
+    event_name: NAV_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:1
+    var_units: Bool
+    var_type: f64
+    event_name: STROBES_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT LOGO:1
+    var_units: Bool
+    var_type: f64
+    event_name: LOGO_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: f64
+    event_name: BEACON_LIGHTS_SET
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT RECOGNITION
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_RECOGNITION_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING
+    var_units: Bool
+    var_type: bool
+    event_name: LANDING_LIGHTS_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TAXI_LIGHTS
+
+  - # Lighting
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_3_SET
+    index_reversed: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:1
@@ -142,47 +419,8 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
     index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:10
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 10
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:11
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 11
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 12
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:13
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 13
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:14
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 14
-    index_reversed: true
-  -
+
+  - # Glasscockpit
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:15
     var_units: Percent
@@ -215,192 +453,169 @@ shared:
     event_param: 18
     index_reversed: true
 
-  - # Electrical
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:49
-    var_units: Bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 49
-  
-  # Autopilot
-  - # ASOBO_AUTOPILOT_Push_Autopilot_Template
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT MASTER
-    var_units: Bool
-    event_name: AP_MASTER
-
-  - # ASOBO_AUTOPILOT_Push_Disconnect_Template
-    type: NumSet
-    var_name: A:AUTOPILOT DISENGAGED
-    var_units: Bool
-    var_type: i32
-    event_name: AUTOPILOT_DISENGAGE_SET
-
-  - # On LNAV, index 1 is manual tuned heading
-    type: NumSet
-    var_name: A:AUTOPILOT HEADING LOCK DIR:1
-    var_units: Degrees
-    var_type: f64
-    event_name: HEADING_BUG_SET
-    event_param: 1
-
-  - # ASOBO_AUTOPILOT_Push_Altitude_Template
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT ALTITUDE LOCK
-    var_units: Bool
-    event_name: AP_PANEL_ALTITUDE_HOLD
-
-  - # On VNAV, index 1 is manual tuned altitude
-    type: NumSet
-    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
-    var_units: Feet
-    var_type: i32
-    event_name: AP_ALT_VAR_SET_ENGLISH
-    event_param: 1
-  -
-    type: var
-    var_name: L:XMLVAR_VNAVButtonValue
-
-  - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
-    type: NumSet
-    var_name: A:AUTOPILOT VERTICAL HOLD VAR
-    var_units: Feet per minute
-    var_type: i32
-    event_name: AP_VS_VAR_SET_ENGLISH
-    event_param: 0
-  -
-    type: var
-    var_name: L:XMLVAR_AirSpeedIsInMach
-
-  - # ASOBO_AUTOPILOT_Push_Level_Template
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT WING LEVELER
-    var_units: Bool
-    event_name: AP_WING_LEVELER_ON
-    off_event_name: AP_WING_LEVELER_OFF
-
-  - # ASOBO_AUTOPILOT_Push_BackCourse_Template
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT BACKCOURSE HOLD
-    var_units: Bool
-    event_name: AP_BC_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT PITCH HOLD
-    var_units: Bool
-    event_name: AP_PITCH_LEVELER_ON
-    off_event_name: AP_PITCH_LEVELER_OFF
-  
-  - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
-    type: NumSet
-    var_name: A:AUTOPILOT AIRSPEED HOLD VAR
-    var_units: Knots
-    var_type: f64
-    event_name: AP_SPD_VAR_SET
-
-  - # ASOBO_AUTOPILOT_Push_FlightDirector_Template
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
-    var_units: Bool
-    event_name: TOGGLE_FLIGHT_DIRECTOR
-    event_param: 1
-    use_calculator: true
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
-    var_units: Bool
-    event_name: TOGGLE_FLIGHT_DIRECTOR
-    event_param: 2
-    use_calculator: true
-
-  - # ASOBO_AUTOPILOT_Knob_Bank_Limit_Template
-    type: NumIncrement
-    var_name: A:AUTOPILOT MAX BANK
-    var_units: Degrees
-    var_type: f64
-    up_event_name: AP_MAX_BANK_INC
-    down_event_name: AP_MAX_BANK_DEC
-    increment_by: 1
-
-  - # ASOBO_AUTOPILOT_Push_YawDamper_Template
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT YAW DAMPER
-    var_units: Bool
-    event_name: YAW_DAMPER_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:GPS DRIVES NAV1
-    var_units: Bool
-    event_name: TOGGLE_GPS_DRIVES_NAV1
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT NAV SELECTED
-    var_units: Number
-    var_type: i32
-    event_name: AP_NAV_SELECT_SET
-    cancel_h_events: true
-
-  - # LVAR Dump
-    type: var
-    var_name: L:XMLVAR_Essential_Bus_ON
-  -
-    type: var
-    var_name: L:XMLVAR_AVIONICS_IsComposite
-  -
+  - # LVAR's (Asobo)
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
   -
     type: var
-    var_name: L:XMLVAR_PushXFR
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
   -
     type: var
     var_name: L:CJ4_PFD_ScreenLuminosity
   -
     type: var
+    var_name: L:AS3000_Brightness
+    cancel_h_events: true
+  -
+    type: var
     var_name: L:CJ4_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
   -
     type: var
-    var_name: L:CJ4_FMC_ScreenLuminosity
+    var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
   -
     type: var
-    var_name: L:CJ4_SAI_ScreenLuminosity
+    var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
   -
     type: var
-    var_name: L:CJ4_PFD_State
+    var_name: L:DEICE_Airframe_1
   -
     type: var
-    var_name: L:CJ4_MFD_State
+    var_name: L:DEICE_Airframe_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
   -
     type: var
-    var_name: L:CJ4_FMC_State
+    var_name: L:XMLVAR_RudderTrim_Switch_1
   -
     type: var
-    var_name: L:CJ4_SAI_State
+    var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
   -
     type: var
-    var_name: L:XMLVAR_Pitot_1
+    var_name: L:XMLVAR_AileronTrim_Switch_1
   -
     type: var
-    var_name: L:XMLVAR_Pitot_2
+    var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
   -
     type: var
-    var_name: L:XMLVAR_Airframe_1
+    var_name: L:XMLVAR_ElevatorTrim_Switch_PEDESTRAL
   -
     type: var
-    var_name: L:XMLVAR_Airframe_2
+    var_name: L:XMLVAR_ElevatorTrim_PEDESTRAL_SwitchStateTimer
   -
     type: var
-    var_name: L:XMLVAR_Secondary_ElevatorTrim_Available
+    var_name: L:ParkingBrake_Position
+# - # overlaps
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
   -
     type: var
-    var_name: L:Generic_Master_Caution_Active
+    var_name: L:XMLVAR_Essential_Bus_ON
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
   -
     type: var
-    var_name: L:Generic_Master_Warning_Active
+    var_name: L:XMLVAR_PushXFR
+  -
+    type: var
+    var_name: L:RADIONAV_SOURCE
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_LOGO_1
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_RECOGNITION_1
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_15
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_16
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_17
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_18
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_3
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:DEICE_Pitot_2
+  -
+    type: var
+    var_name: L:LIGHTING_WING_1
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
   -
     type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
+  -
+    type: var
+    var_name: L:AIRLINER_V1_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_VR_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_V2_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_VREF_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VX_SPEED
   -
     type: var
     var_name: L:XMLVAR_Baro1_ForcedToSTD
@@ -410,9 +625,24 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Mins_Selector_Baro
-  # -
-  #   type: var
-  #   var_name: L:RADIONAV_SOURCE
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_1
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_2
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:PFD_MapShowCursor
+  -
+    type: var
+    var_name: L:PFD_MapZoomRange
   -
     type: var
     var_name: L:CJ4_MAP_SYMBOLS
@@ -431,33 +661,70 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
   -
     type: var
-    var_name: L:RADIONAV ACTIVE:1
-  # -
-  #   type: var
-  #   var_name: L:AIRLINER_CRUISE_ALTITUDE
-  # -
-  #   type: var
-  #   var_name: L:FMC_UPDATE_CURRENT_PAGE
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:MFD_MapShowCursor
+  -
+    type: var
+    var_name: L:MFD_MapZoomRange
   -
     type: var
     var_name: L:Glasscockpit_MFD_Started
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AIRLINER_TO_FLEX_TEMP
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
+    var_name: L:AIRLINER_CRUISE_ALTITUDE
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
+    var_name: L:FMC_UPDATE_CURRENT_PAGE
   -
     type: var
-    var_name: L:THROTTLE1_MODE
+    var_name: L:RADIONAV ACTIVE:1
+# -
+#   type: var
+#   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
   -
     type: var
-    var_name: L:THROTTLE2_MODE
+    var_name: L:CJ4_PFD_State
   -
     type: var
-    var_name: L:XMLVAR_Baro1_SavedPressure
+    var_name: L:CJ4_MFD_State
+  -
+    type: var
+    var_name: L:CJ4_FMC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_FMC_State
+  -
+    type: var
+    var_name: L:CJ4_SAI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_SAI_State
+
+  - # LVAR's (WT only)
+    type: var
+    var_name: L:WT_CJ4_EMER_LIGHT_ARMED
   -
     type: var
     var_name: L:WT_CJ4_Altitude_Alerter_Active
@@ -466,13 +733,22 @@ shared:
     var_name: L:WT_CJ4_Altitude_Alerter_Cancel
   -
     type: var
-    var_name: L:WT_CJ4_LNAV_MODE
+    var_name: L:WT_CJ4_VNAV_ON
   -
     type: var
     var_name: L:SEATBELT_LIGHT_ON
   -
     type: var
     var_name: L:SAFETY_LIGHT_ON
+  -
+    type: var
+    var_name: L:LIGHTING_Knob_Master
+# -
+#   type: var
+#   var_name: L:Throttle1_Pos
+# -
+#   type: var
+#   var_name: L:Throttle2_Pos
   -
     type: var
     var_name: L:PASSENGER_KNOB_AIR_1
@@ -496,13 +772,100 @@ shared:
     var_name: L:PASSENGER_KNOB_HEAT_2
   -
     type: var
+    var_name: L:XMLVAR_Baro1_SavedPressure
+  -
+    type: var
+    var_name: L:XMLVAR_Baro2_ForcedToSTD
+  -
+    type: var
+    var_name: L:XMLVAR_Baro2_SavedPressure
+  -
+    type: var
+    var_name: L:WT_CJ4_LNAV_MODE
+  -
+    type: var
+    var_name: L:WT_CJ4_HDG_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_NAV_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_FLC_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_VS_ON
+  -
+    type: var
+    var_name: L:FADEC_ACTIVE
+  -
+    type: var
+    var_name: L:THROTTLE1_MODE
+  -
+    type: var
+    var_name: L:THROTTLE2_MODE
+  -
+    type: var
     var_name: L:WT_CJ4_INHIBIT_SEQUENCE
-  # - # Conflicts with H Event
-  #   type: var
-  #   var_name: L:WT_CJ4_BARO_SET
+  -
+    type: var
+    var_name: L:WT_CJ4_TFC_ALT_ABOVE_ENABLED
+  -
+    type: var
+    var_name: L:WT_CJ4_TFC_ALT_BELOW_ENABLED
+# -
+#   type: var
+#   var_name: L:WT_CJ4_V1_ON
+# -
+#   type: var
+#   var_name: L:WT_CJ4_VR_ON
+# -
+#   type: var
+#   var_name: L:WT_CJ4_V2_ON
+# -
+#   type: var
+#   var_name: L:WT_CJ4_VT_ON
+# -
+#   type: var
+#   var_name: L:WT_CJ4_VREF_ON
+# -
+#   type: var
+#   var_name: L:WT_CJ4_VAP_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_MIN_SRC
+# -
+#   type: var
+#   var_name: L:WT_CJ4_DONUT
+# -
+#   type: var
+#   var_name: L:WT_CJ4_VREF_FMCSET
+# -
+#   type: var
+#   var_name: L:WT_CJ4_VAP_FMCSET
+  -
+    type: var
+    var_name: L:WT_CJ4_PFD1_AOA
   -
     type: var
     var_name: L:WT_NAV_TO_NAV_TRANSFER_STATE
+# -
+#   type: var
+#   var_name: L:WT_CJ4_SNOWFLAKE
+# -
+#   type: var
+#   var_name: L:WT_NAV_SENSITIVITY
+  -
+    type: var
+    var_name: L:CJ4_MAP_ZOOM
+  -
+    type: var
+    var_name: L:CJ4_MAP_SYMBOLS
+# -
+#   type: var
+#   var_name: L:WT_CJ4_DTK
+# -
+#   type: var
+#   var_name: L:WT_NAV_HOLD_INDEX
   -
     type: var
     var_name: L:WT.CJ4.BearingPointerMode_1
@@ -512,64 +875,6 @@ shared:
   -
     type: var
     var_name: L:WT_CJ4_WPT_ALERT
-  -
-    type: var
-    var_name: L:WT_CJ4_PFD1_AOA
-  -
-    type: var
-    var_name: L:WT_CJ4_DISPLAY_MSG
-  -
-    type: var
-    var_name: L:WT_CJ4_EMER_LIGHT_ARMED
-
-# - # Don't sync
-#   type: var
-#   var_name: L:Throttle1_Pos
-# -
-#   type: var
-#   var_name: L:Throttle2_Pos
-# -
-#   type: var
-#   var_name: L:WT_CJ4_DONUT
-# -
-#   type: var
-#   var_name: L:WT_CJ4_SNOWFLAKE
-# -
-#   type: var
-#   var_name: L:WT_CJ4_V1_SPEED
-# -
-#   type: var
-#   var_name: L:WT_CJ4_V1_FMCSET
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VR_SPEED
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VR_FMCSET
-# -
-#   type: var
-#   var_name: L:WT_CJ4_V2_SPEED
-# -
-#   type: var
-#   var_name: L:WT_CJ4_V2_FMCSET
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VREF_SPEED
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VRF_FMCSET
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VT_SPEED
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VT_FMCSET
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VAP
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VAP_FMCSET
 # -
 #   type: var
 #   var_name: L:CJ4 FUEL FLOW:1
@@ -578,25 +883,28 @@ shared:
 #   var_name: L:CJ4 FUEL FLOW:2
 # -
 #   type: var
-#   var_name: L:WT_NAV_SENSITIVITY
-# -
-#   type: var
-#   var_name: L:WT_NAV_HOLD_INDEX
-# -
-#   type: var
-#   var_name: L:WT_NAV_SENSITIVITY_SCALAR
-# -
-#   type: var
 #   var_name: L:WT.FlightPlan.Version
+# -
+#   type: var
+#   var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
 # -
 #   type: var
 #   var_name: L:TAKEOFF_TIME
 # -
 #   type: var
 #   var_name: L:LANDING_TIME
+  -
+    type: var
+    var_name: L:WT_CJ4_DISPLAY_MSG
 # -
 #   type: var
-#   var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
+#   var_name: L:WT_CJ4_XTK
+# -
+#   type: var
+#   var_name: L:WT_CJ4_BARO_SET
+  -
+    type: var
+    var_name: L:WT_CJ4_RADIO_SET
 # -
 #   type: var
 #   var_name: L:WT_CJ4_VPATH_ALT_DEV
@@ -606,19 +914,106 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_CJ4_TOD_REMAINING
-# -
-#   type: var
-#   var_name: L:WT_CJ4_DTK
-# -
-#   type: var
-#   var_name: L:WT_CJ4_XTK
+  -
+    type: var
+    var_name: L:WT_CJ4_ALT_HOLD
 # -
 #   type: var
 #   var_name: L:WT_CJ4_IN_DISCONTINUITY
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:WT_NAV_SENSITIVITY_SCALAR
+
+master:
+  - # ASOBO_ENGINE_Lever_Throttle_Template
+    type: var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_units: Position 16k
+    var_type: f64
+    unreliable: true
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+
 ignore:
-  - Generic_Upr_RANGE_DEC
-  - Generic_Upr_RANGE_INC
   - WT_CJ4_AP_FD_TOGGLE

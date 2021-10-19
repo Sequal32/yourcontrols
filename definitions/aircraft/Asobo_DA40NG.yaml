@@ -19,12 +19,14 @@ shared:
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:22
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 22
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:23
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 23
 
@@ -32,6 +34,7 @@ shared:
     type: ToggleSwitch
     var_name: A:PITOT HEAT
     var_units: Bool
+    var_type: bool
     event_name: PITOT_HEAT_TOGGLE
 
   - # Failures
@@ -105,18 +108,21 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 1
   -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:2
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 2
   -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:3
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 3
   -
@@ -152,15 +158,195 @@ shared:
     event_param: 30
     index_reversed: true
 
-  - # LVAR Dump (Asobo only)
+# - # LVAR's
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
     type: var
-    var_name: L:XMLVAR_ENGINE_Switch_Master_Cover_Opened
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
+# - # Spam
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:AS1000_PFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS1000_PFD_Brightness
+  -
+    type: var
+    var_name: L:AS1000_MFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS1000_MFD_Brightness
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
   -
     type: var
     var_name: L:XMLVAR_ElecMaster
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:ELECTRICAL_EssentialBus_2
+  -
+    type: var
+    var_name: L:LIGHTING_GLARESHIELD_1
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_On
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_Off
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:Glasscockpit_Wind_Mode
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsMode
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsValue
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Glasscockpit_MFD_Started
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_State
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   - # Payload
@@ -175,7 +361,28 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
-
-ignore:
-  - AS1000_PFD_BARO_INC
-  - AS1000_PFD_BARO_DEC
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64

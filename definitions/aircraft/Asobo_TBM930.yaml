@@ -23,12 +23,6 @@ shared:
     var_type: i32
     event_name: BLEED_AIR_SOURCE_CONTROL_SET
 
-  - # Electrical
-    type: ToggleSwitch
-    var_name: GENERAL ENG GENERATOR SWITCH:1
-    var_units: Bool
-    event_name: TOGGLE_ALTERNATOR1
-
   - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
@@ -40,31 +34,27 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Pressurization
-    type: var
-    var_name: L:EMERGENCY_PUSH_RAMAIR_SwitchState
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_2_SET
+    index_reversed: true
   -
-    type: var
-    var_name: L:XMLVAR_MICRO_MASK_COVER
-
-  - # Passenger
-    type: var
-    var_name: L:AC_KNOB_FAN
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_3_SET
+    index_reversed: true
   -
-    type: var
-    var_name: L:AC_KNOB_TEMP
-  -
-    type: var
-    var_name: L:HOTAIRFLOW_KNOB
-  -
-    type: var
-    var_name: L:AC_SwitchState
-  -
-    type: var
-    var_name: L:XMLVAR_Deploy
-  -
-    type: var
-    var_name: L:XMLVAR_Oxygen
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_10_SET
+    index_reversed: true
 
   - # Lights
     type: NumSet
@@ -87,23 +77,11 @@ shared:
     event_name: CABIN_LIGHTS_SET
   -
     type: NumSet
-    var_name: A:LIGHT PEDESTRAL
-    var_units: Bool
-    var_type: i32
-    event_name: PEDESTRAL_LIGHTS_SET
-  -
-    type: var
-    var_name: L:XMLVAR_PilotLightOn
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:7
+    var_name: A:LIGHT POTENTIOMETER:5
     var_units: Percent
     var_type: f64
-    event_name: LIGHT_POTENTIOMETER_7_SET
+    event_name: LIGHT_POTENTIOMETER_5_SET
     index_reversed: true
-  -
-    type: var
-    var_name: L:XMLVAR_CopilotLightOn
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
@@ -112,24 +90,11 @@ shared:
     event_name: LIGHT_POTENTIOMETER_6_SET
     index_reversed: true
   -
-    type: var
-    var_name: L:XMLVAR_CabinLightOn
-  -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
+    var_name: A:LIGHT POTENTIOMETER:7
     var_units: Percent
     var_type: f64
-    event_name: LIGHT_POTENTIOMETER_5_SET
-    index_reversed: true
-  -
-    type: var
-    var_name: L:XMLVAR_AccessLightOn
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:8
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_8_SET
+    event_name: LIGHT_POTENTIOMETER_7_SET
     index_reversed: true
   -
     type: NumSet
@@ -139,102 +104,238 @@ shared:
     event_name: LIGHT_POTENTIOMETER_9_SET
     index_reversed: true
   -
-    type: var
-    var_name: L:XMLVAR_CircuitBreaker_Light_ON
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTRAL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_12_SET
+    index_reversed: true
 
-  - # LVAR Dump (Asobo only)
+  - # LVAR's
+    type: var
+    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
+  -
     type: var
     var_name: L:XMLVAR_IsDeiceAirFrame
   -
     type: var
     var_name: L:XMLVAR_IsDeiceAirFrame2
-  - # Necessary switch - Do not disable
-    type: var
-    var_name: L:XMLVAR_APTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# - # Spam
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
   -
     type: var
-    var_name: L:XMLVAR_Gear_Light_Test
+    var_name: L:XMLVAR_AileronTrim_Switch_1
   -
     type: var
-    var_name: L:XMLVAR_LandingGearLightTesting
+    var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
   -
     type: var
-    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
-  -
-    type: var
-    var_name: L:XMLVAR_Gear_Check_Down
-  -
-    type: var
-    var_name: L:XMLVAR_LightDimmer
-  -
-    type: var
-    var_name: L:XMLVAR_Gear_Check_Down_IsDown
-  -
-    type: var
-    var_name: L:XMLVAR_Gear_Light_Test_IsDown
-  -
-    type: var
-    var_name: L:XMLVAR_Press_DUMP_cover
-  -
-    type: var
-    var_name: L:LEVER_MAN_OVRD
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_LandingGearLightBlink
+# -
+#   type: var
+#   var_name: L:XMLVAR_LandingGearLightTesting
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
   -
     type: var
     var_name: L:XMLVAR_Starter
   -
     type: var
-    var_name: L:XMLVAR_Starter_EndTimeDown
+    var_name: L:XMLVAR_Starter_IsHeld
   -
     type: var
-    var_name: L:XMLVAR_Starter_IsHeld
+    var_name: L:XMLVAR_Starter_EndTimeDown
   -
     type: var
     var_name: L:XMLVAR_Ignition
   -
     type: var
-    var_name: L:XMLVAR_FuelSelectorAuto
-  -
-    type: var
     var_name: L:XMLVAR_BoostFuelPump
   -
     type: var
-    var_name: L:_FuelTankShiftPressed
+    var_name: L:XMLVAR_FuelSelectorAuto
   -
     type: var
-    var_name: L:XMLVAR_FORCE_PULSE_ON
-  -
-    type: var
-    var_name: L:XMLVAR_CrashLeverPos
-  -
-    type: var
-    var_name: L:XMLVAR_ElecGen
-  -
-    type: var
-    var_name: L:XMLVAR_ElecSource
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_1
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_2
+    var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:AS3000_Brightness
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
   -
     type: var
     var_name: L:XMLVAR_PushXFR
-  -
-    type: var
-    var_name: L:XMLVAR_InertSep1_Switch
-  -
-    type: var
-    var_name: L:XMLVAR_InertSep1_Deployment
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Deployment
   -
     type: var
     var_name: L:XMLVAR_InertSep1_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
   -
     type: var
-    var_name: L:AS3000_1_Timer_Value
+    var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:LIGHTING_LOGO_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:LIGHTING_WING_1
+  -
+    type: var
+    var_name: L:XMLVAR_Battery_GPU_ON
+  -
+    type: var
+    var_name: L:DEICE_Airframe_1
+  -
+    type: var
+    var_name: L:DEICE_Propeller_1
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:DEICE_Pitot_2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AS3000_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_On
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_Off
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Glasscockpit_Wind_Mode
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:Glasscockpit_AOA_Mode
+# -
+#   type: var
+#   var_name: L:Glasscockpit_SVTTerrain
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:AS3000_1_Timer_Value
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsMode
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsValue
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_IsPositionOverride
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_Current_Map
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_Current_WeatherMap
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_MapRotationMode
+# -
+#   type: var
+#   var_name: L:AS3000_Brightness_Auto
+# -
+#   type: var
+#   var_name: L:AS3000_2_Timer_Value
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
   -
     type: var
     var_name: L:AS3000_TSC_Horizontal_1_ScreenLuminosity
@@ -249,7 +350,40 @@ shared:
     var_name: L:AS3000_TSC_Horizontal_2_State
   -
     type: var
-    var_name: L:AS3000_2_Timer_Value
+    var_name: L:AS3000_PFD_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_PFD_1_State
+  -
+    type: var
+    var_name: L:AS3000_PFD_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_PFD_2_State
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_State
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeBackup_State
+# -
+#   type: var
+#   var_name: L:AS1000_SpeedBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_SpeedBackup_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   - # Payload
@@ -264,3 +398,120 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+
+ignore:
+  - AP_BARO_Up
+  - AP_BARO_Down
+  - AP_KNOB_Up
+  - AP_KNOB_Down
+  - AS3000_TSC_Horizontal_1_TopKnob_Large_INC
+  - AS3000_TSC_Horizontal_1_TopKnob_Large_DEC
+  - AS3000_TSC_Horizontal_1_TopKnob_Small_INC
+  - AS3000_TSC_Horizontal_1_TopKnob_Small_DEC
+  - AS3000_TSC_Horizontal_1_TopKnob_Large_INC
+  - AS3000_TSC_Horizontal_1_TopKnob_Large_DEC
+  - AS3000_TSC_Horizontal_1_TopKnob_Small_INC
+  - AS3000_TSC_Horizontal_1_TopKnob_Small_DEC
+# COM primary
+  - AS3000_TSC_Horizontal_1#Com1Active
+  - AS3000_TSC_Horizontal_1#Com1Stby
+  - AS3000_TSC_Horizontal_1#Com2Active
+  - AS3000_TSC_Horizontal_1#Com2Stby
+  - AS3000_TSC_Horizontal_1#FK_Xfer
+  - AS3000_TSC_Horizontal_1#NKXferButton
+  - AS3000_TSC_Horizontal_2#Com1Active
+  - AS3000_TSC_Horizontal_2#Com1Stby
+  - AS3000_TSC_Horizontal_2#Com2Active
+  - AS3000_TSC_Horizontal_2#Com2Stby
+  - AS3000_TSC_Horizontal_2#FK_Xfer
+  - AS3000_TSC_Horizontal_2#NKXferButton
+# COM1 swap
+  - AS3000_TSC_Horizontal_1#971012391
+  - AS3000_TSC_Horizontal_1#769170470
+  - AS3000_TSC_Horizontal_1#-1054176646
+  - AS3000_TSC_Horizontal_2#971012391
+  - AS3000_TSC_Horizontal_2#769170470
+  - AS3000_TSC_Horizontal_2#-1054176646
+# COM2 swap
+  - AS3000_TSC_Horizontal_1#769170473
+  - AS3000_TSC_Horizontal_1#-1054176643
+  - AS3000_TSC_Horizontal_1#-1135460952
+  - AS3000_TSC_Horizontal_1#-2126745619
+  - AS3000_TSC_Horizontal_2#769170473
+  - AS3000_TSC_Horizontal_2#-1054176643
+  - AS3000_TSC_Horizontal_2#-1135460952
+  - AS3000_TSC_Horizontal_2#-2126745617
+# COM receives/transmits
+  - AS3000_TSC_Horizontal_1#Mic
+  - AS3000_TSC_Horizontal_1#Mon
+  - AS3000_TSC_Horizontal_1#1684040672
+  - AS3000_TSC_Horizontal_1#-957356656
+  - AS3000_TSC_Horizontal_1#1629924333
+  - AS3000_TSC_Horizontal_1#1629924334
+  - AS3000_TSC_Horizontal_1#-260516342
+  - AS3000_TSC_Horizontal_1#-260516341
+  - AS3000_TSC_Horizontal_1#1684040642
+  - AS3000_TSC_Horizontal_1#380867949
+  - AS3000_TSC_Horizontal_1#6085600
+  - AS3000_TSC_Horizontal_1#6085599
+  - AS3000_TSC_Horizontal_2#Mic
+  - AS3000_TSC_Horizontal_2#Mon
+  - AS3000_TSC_Horizontal_2#1684040672
+  - AS3000_TSC_Horizontal_2#-957356659
+  - AS3000_TSC_Horizontal_2#-260516342
+  - AS3000_TSC_Horizontal_2#-957356656
+  - AS3000_TSC_Horizontal_2#1629924334
+  - AS3000_TSC_Horizontal_2#-260516341
+  - AS3000_TSC_Horizontal_2#1684040642
+  - AS3000_TSC_Horizontal_2#189
+  - AS3000_TSC_Horizontal_2#6085600
+  - AS3000_TSC_Horizontal_2#6085599
+# SVT
+  - AS3000_PFD_1_SVTTerrain_Toggle
+  - AS3000_TSC_Horizontal_1#388428289
+  - AS3000_TSC_Horizontal_2#388428289
+# Working Title
+  - AS3000_TSC_Horizontal_1#-158606568
+  - AS3000_PFD_1_BRG2Switch
+  - AS3000_TSC_Horizontal_1#-158606569
+  - AS3000_PFD_1_BRG1Switch

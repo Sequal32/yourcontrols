@@ -5,11 +5,13 @@ shared:
     type: ToggleSwitch
     var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
     var_units: Bool
+    var_type: bool
     event_name: ENGINE_MASTER_1_TOGGLE
   -
     type: ToggleSwitch
     var_name: A:RECIP ENG ENGINE MASTER SWITCH:2
     var_units: Bool
+    var_type: bool
     event_name: ENGINE_MASTER_2_TOGGLE
 
   - # ASOBO_ENGINE_Push_Ignition_Template (Also works for non-EX1)
@@ -53,88 +55,14 @@ shared:
 
 master:
   - # ASOBO_ENGINE_Lever_Throttle_Template
-    type: NumSet
+    type: var
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
     var_units: Position 16k
     var_type: f64
-    event_name: THROTTLE1_SET
-    interpolate: DefaultConstant
+    unreliable: true
   -
-    type: NumSet
+    type: var
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
     var_units: Position 16k
     var_type: f64
-    event_name: THROTTLE2_SET
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:TURB ENG N1:1
-    var_units: Percent scaler 16k
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:TURB ENG N1:2
-    var_units: Percent scaler 16k
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:TURB ENG N2:1
-    var_units: Percent scaler 16k
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:TURB ENG N2:2
-    var_units: Percent scaler 16k
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:TURB ENG ITT:1
-    var_units: Rankine
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:TURB ENG ITT:2
-    var_units: Rankine
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:ENG TORQUE:1
-    var_units: Foot pounds
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:ENG TORQUE:2
-    var_units: Foot pounds
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:GENERAL ENG OIL TEMPERATURE:1
-    var_units: Rankine
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:GENERAL ENG OIL TEMPERATURE:2
-    var_units: Rankine
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:GENERAL ENG OIL PRESSURE:1
-    var_units: Psi
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
-  -
-    type: var
-    var_name: A:GENERAL ENG OIL PRESSURE:2
-    var_units: Psi
-    var_type: i32 # Truncated to i32 to prevent syncing when not changed too much
-    interpolate: DefaultConstant
+    unreliable: true

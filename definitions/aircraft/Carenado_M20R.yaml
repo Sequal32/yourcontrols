@@ -1,4 +1,7 @@
+# Version 1.3.0
+
 include:
+  - definitions/modules/AS530.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -13,15 +16,68 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Fuel
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:1
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_SET
+    event_param: 1
+
+  - # Lighting
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
   -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:1
+    var_units: Percent
+    var_type: i32
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:2
+    var_units: Percent
+    var_type: i32
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+
+  - # Exit
+    type: event
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+
+  - # LVAR's
     type: var
     var_name: L:NAV1_RADIO_WHOLE_INC
-  -
-    type: var
-    var_name: L:NAV1StandbyFreq
-  -
-    type: var
-    var_name: L:NAV1StandbyFreqTemp
   -
     type: var
     var_name: L:NAV1_RADIO_WHOLE_DEC
@@ -31,6 +87,12 @@ shared:
   -
     type: var
     var_name: L:NAV1_RADIO_FRACT_DEC
+  -
+    type: var
+    var_name: L:NAV1StandbyFreq
+  -
+    type: var
+    var_name: L:NAV1StandbyFreqTemp
   -
     type: var
     var_name: L:GAUGE_DME62A1_INIT
@@ -468,9 +530,6 @@ shared:
     var_name: L:TABLET_BTN_BAGAGE_DOOR
   -
     type: var
-    var_name: L:YourControlsPanelId
-  -
-    type: var
     var_name: L:GPS_SWAPCOM
   -
     type: var
@@ -801,6 +860,19 @@ shared:
     var_name: L:XMLVAR_ADFFrequencyToggle
   -
     type: var
+    var_name: L:TABLET_BTN_NEXT
+  -
+    type: var
+    var_name: L:TABLET_BTN_BACK
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+
+  - # Don't sync
+    type: var
     var_name: L:XMLVAR_Magneto_Starter_IsHeld
   -
     type: var
@@ -808,75 +880,7 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_CabinAir_Position_1
-  -
-    type: var
-    var_name: L:TABLET_BTN_NEXT
-  -
-    type: var
-    var_name: L:TABLET_BTN_BACK
-  -
-    type: var
-    var_name: L:AS530_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS530_State
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:1
-    var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:2
-    var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 2
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:1
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:2
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 2
-  -
-    type: event
-    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 5
-    index_reversed: true
-  - # ASOBO_FUEL_Knob_Selector_Template
-    type: NumSet
-    var_name: A:FUEL TANK SELECTOR:1
-    var_units: Enum
-    var_type: i32
-    event_name: FUEL_SELECTOR_SET
-    event_param: 1
-  
+
 server:
   -
     type: var
@@ -890,11 +894,3 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
-
-ignore:
-  - AS530_COMSWAP_Push
-  - AS530_NAVSWAP_Push
-  - AS530_LeftLargeKnob_Right
-  - AS530_LeftLargeKnob_Left
-  - AS530_LeftSmallKnob_Right
-  - AS530_LeftSmallKnob_Left

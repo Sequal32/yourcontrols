@@ -1,5 +1,6 @@
+# Version 0.4.0+dev
+
 include:
-  - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -27,8 +28,117 @@ shared:
     event_name: SET_AUTOBRAKE_CONTROL
 
   - # Autopilot
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER
+
+  - # ASOBO_AUTOPILOT_Push_Disconnect_Template
+    type: NumSet
+    var_name: A:AUTOPILOT DISENGAGED
+    var_units: Bool
+    var_type: i32
+    event_name: AUTOPILOT_DISENGAGE_SET
+
+  - # ASOBO_AUTOPILOT_Knob_Heading_Template
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+  -
     type: event
     event_name: AP_HDG_HOLD_ON
+
+  - # ASOBO_AUTOPILOT_Knob_Altitude_Template
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
+    var_units: Feet
+    var_type: f64
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 3
+
+  - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
+    var_units: Feet/minute
+    var_type: f64
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 1
+
+  - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+    event_param: 1
+
+  - # Approach (Really bugged but works)
+    type: var
+    var_name: A:AUTOPILOT APPROACH HOLD
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:AUTOPILOT GLIDESLOPE HOLD
+    var_units: Bool
+    var_type: bool
+
+  - # ASOBO_AUTOPILOT_Push_BackCourse_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_BC_HOLD
+
+  - # ASOBO_AUTOPILOT_Push_AutoThrottle_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT THROTTLE ARM
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_ARM
+
+  - # ASOBO_ENGINE_SWITCH_TOGA_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_TO_GA
+
+  - # ASOBO_AUTOPILOT_Push_Navigation_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+
+  - # ASOBO_AUTOPILOT_Knob_Bank_Limit_Template (NO LONGER WORKS FOR BOEING//NOW B-EVENT)
+    type: NumSet
+    var_name: A:AUTOPILOT MAX BANK ID
+    var_units: Number
+    var_type: f64
+    event_name: AP_MAX_BANK_SET
+  -
+    type: NumSet
+    var_name: A:RUDDER TRIM DISABLED
+    var_units: Bool
+    var_type: i32
+    event_name: RUDDER_TRIM_DISABLED_SET
+  -
+    type: NumSet
+    var_name: A:AILERON TRIM DISABLED
+    var_units: Bool
+    var_type: i32
+    event_name: AILERON_TRIM_DISABLED_SET
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM DISABLED
+    var_units: Bool
+    var_type: i32
+    event_name: ELEVATOR_TRIM_DISABLED_SET
 
   - # Deice
     type: NumSet
@@ -963,12 +1073,12 @@ shared:
   -
     type: var
     var_name: L:AP_HEADING_HOLD_ACTIVE
-  -
-    type: var
-    var_name: L:AP_LNAV_ARMED
-  -
-    type: var
-    var_name: L:AP_VNAV_ARMED
+# - # H-events
+#   type: var
+#   var_name: L:AP_LNAV_ARMED
+# -
+#   type: var
+#   var_name: L:AP_VNAV_ARMED
   -
     type: var
     var_name: L:AP_SPD_ACTIVE
@@ -1014,9 +1124,9 @@ shared:
   -
     type: var
     var_name: L:AP_VNAV_ACTIVE
-# -
-#   type: var
-#   var_name: L:XMLVAR_AirSpeedIsInMach
+  -
+    type: var
+    var_name: L:XMLVAR_AirSpeedIsInMach
   -
     type: var
     var_name: L:XMLVAR_EICAS_CURRENT_PAGE
@@ -1125,21 +1235,21 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
-  -
-    type: var
-    var_name: L:AIRLINER_V1_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_VR_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_V2_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_V1_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VR_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_V2_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_VREF_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VREF_SPEED
   -
     type: var
     var_name: L:XMLVAR_Baro1_ForcedToSTD
@@ -1279,6 +1389,176 @@ shared:
     type: var
     var_name: L:B747_8_RUDDER_State
 
+  - # LVAR's (Salty only)
+    type: var
+    var_name: L:SALTY_IRS_STATE
+  -
+    type: var
+    var_name: L:747_IRS_KNOB_1
+  -
+    type: var
+    var_name: L:747_IRS_KNOB_2
+  -
+    type: var
+    var_name: L:747_IRS_KNOB_3
+  -
+    type: var
+    var_name: L:SALTY_FUEL_JETTISON_ACTIVE_L
+  -
+    type: var
+    var_name: L:SALTY_FUEL_JETTISON_ACTIVE_R
+  -
+    type: var
+    var_name: L:747_JETTISON_KNOB_POS
+  -
+    type: var
+    var_name: L:747_FUEL_TO_REMAIN
+  -
+    type: var
+    var_name: L:SALTY_ISFD_INIT_DONE
+# - # H-event
+#   type: var
+#   var_name: L:SALTY_VIS_PILOT_0
+# -
+#   type: var
+#   var_name: L:SALTY_VIS_PILOT_1
+  -
+    type: var
+    var_name: L:SALTY_UNIT_IS_METRIC
+  -
+    type: var
+    var_name: L:SALTY_SPEED_RESTRICTION
+  -
+    type: var
+    var_name: L:SALTY_SPEED_RESTRICTION_ALT
+  -
+    type: var
+    var_name: L:747_Aircond_Knob_1
+  -
+    type: var
+    var_name: L:747_Aircond_Knob_2
+  -
+    type: var
+    var_name: L:747_Aircond_Knob_3
+  -
+    type: var
+    var_name: L:SALTY_TAKEOFF_FLAP_VALUE
+  -
+    type: var
+    var_name: L:SALTY_LANDING_FLAP_VALUE
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_SavedPressure
+  -
+    type: var
+    var_name: L:XMLVAR_Baro2_ForcedToSTD
+  -
+    type: var
+    var_name: L:XMLVAR_Baro2_SavedPressure
+# - # H-event
+#   type: var
+#   var_name: L:AP_APP_ARMED
+  -
+    type: var
+    var_name: L:WT_CJ4_VNAV_ON
+# - # H-event
+#   type: var
+#   var_name: L:AP_LOC_ARMED
+  -
+    type: var
+    var_name: L:SALTY_FD_TAKEOFF_PHASE
+  -
+    type: var
+    var_name: L:SALTY_FPV_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_VS_ON
+  -
+    type: var
+    var_name: L:SALTY_MINIMUMS_ALT
+  -
+    type: var
+    var_name: L:SALTY_ALT_ALERT
+# -
+#   type: var
+#   var_name: L:WT_CJ4_XTK
+  -
+    type: var
+    var_name: L:AIRLINER_CRUISE_ALTITUDE
+  -
+    type: var
+    var_name: L:SALTY_IRS_TIME_LEFT
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:WT_CJ4_DTK
+  -
+    type: var
+    var_name: L:AIRLINER_THR_RED_ALT
+  -
+    type: var
+    var_name: L:AIRLINER_THRUST_CLIMB_MODE
+# -
+#   type: var
+#   var_name: L:WT.FlightPlan.Version
+  -
+    type: var
+    var_name: L:AIRLINER_ACC_ALT
+  -
+    type: var
+    var_name: L:SALTY_VREF30
+  -
+    type: var
+    var_name: L:SALTY_ISFD_INIT_TIMER
+  -
+    type: var
+    var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
+# -
+#   type: var
+#   var_name: L:WT_CJ4_VPATH_ALT_DEV
+# -
+#   type: var
+#   var_name: L:WT_CJ4_TOD_DISTANCE
+# -
+#   type: var
+#   var_name: L:WT_CJ4_TOD_REMAINING
+# -
+#   type: var
+#   var_name: L:WT_NAV_HOLD_INDEX
+  -
+    type: var
+    var_name: L:WT_CJ4_ALT_HOLD
+  -
+    type: var
+    var_name: L:WT_CJ4_LNAV_MODE
+# -
+#   type: var
+#   var_name: L:WT_CJ4_DONUT
+# -
+#   type: var
+#   var_name: L:WT_CJ4_SNOWFLAKE
+  -
+    type: var
+    var_name: L:WT_CJ4_WPT_ALERT
+# -
+#   type: var
+#   var_name: L:WT_NAV_SENSITIVITY
+# -
+#   type: var
+#   var_name: L:WT_NAV_SENSITIVITY_SCALAR
+  -
+    type: var
+    var_name: L:FMC_FLIGHT_PLAN_IS_TEMPORARY
+  -
+    type: var
+    var_name: L:BTN_CTR_ACTIVE
+  -
+    type: var
+    var_name: L:SALTY_VREF25
+  -
+    type: var
+    var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+
 master:
   -
     type: var
@@ -1412,10 +1692,6 @@ ignore:
   - B747_8_Com_1_BTN_hf
   - B747_8_Com_2_BTN_hf
   - B747_8_Com_3_BTN_hf
-  - B747_8_FMC_1_AP_VSPEED
-  - B747_8_FMC_1_AP_FLCH
-  - B747_8_FMC_1_AP_HEADING_HOLD
-  - B747_8_FMC_1_AP_ALT_HOLD
   - B747_8_MFD_BTN_TERR
   - B747_8_MFD_BTN_WXR
   - B747_8_PFD_BTN_TERR

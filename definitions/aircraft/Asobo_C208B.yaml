@@ -15,36 +15,20 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Autopilot
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_PushXFR
-    var_type: f64
-
   - # Avionics
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:26
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 26
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:27
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 27
-  -
-    type: var
-    var_name: L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
-    var_type: f64
-
-  - # Bleed
-    type: var
-    var_name: L:XMLVAR_BLEEDAIR_HEAT_POSITION
-    var_type: f64
 
   - # Failures
     type: var
@@ -72,16 +56,12 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Inert Separator
-    type: var
-    var_name: L:XMLVAR_InterSep
-    var_type: f64
-
   - # Lights
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT LANDING:2
     var_units: Bool
-    event_name: LANDING_LIGHTS_TOGGLE
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
     event_param: 2
   -
     type: NumSet
@@ -108,7 +88,7 @@ shared:
     
   - # ASOBO_LIGHTING_Knob_Pedestal_Template
     type: NumSet
-    var_name: A:LIGHT PEDESTRAL
+    var_name: A:LIGHT PEDESTRAL:1
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
@@ -151,16 +131,18 @@ shared:
     event_param: 13
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:3
     var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 3
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:4
     var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 4
   -
     type: NumSet
@@ -202,36 +184,235 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 30
     index_reversed: true
+
+  - # LVAR's
+    type: var
+    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# - # Spam
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverFlapsHidden
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
   -
     type: var
-    var_name: L:SWITCH_LIGHTS_NOSMOKE
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
   -
     type: var
-    var_name: L:SWITCH_LIGHTS_SEATBELT
+    var_name: L:XMLVAR_Starter1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
   -
     type: var
-    var_name: L:SWITCH_ANTIICE_BACKUP
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
   -
     type: var
-    var_name: L:SWITCH_ANTIICE_AWARE
+    var_name: L:DEICE_Airframe_1
   -
     type: var
-    var_name: L:SWITCH_TESTSWITCH_FIREDETECT
+    var_name: L:XMLVAR_IsDeiceAirFrame
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness
   -
     type: var
-    var_name: L:SWITCH_AC_AFT
+    var_name: L:HANDLING_RudderTrim
   -
     type: var
-    var_name: L:SWITCH_AC_LEFT
+    var_name: L:HANDLING_AileronsTrim
   -
     type: var
-    var_name: L:SWITCH_AC_RIGHT
+    var_name: L:XMLVAR_InterSep
   -
     type: var
-    var_name: L:SWITCH_AC_VENTILATE
+    var_name: L:LIGHTING_POTENTIOMETER_3
   -
     type: var
-    var_name: L:SWITCH_POWEROUTLET_CREW
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_PEDESTRAL_1
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_30
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_2
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_WING_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_PushXFR
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_0
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_On
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_Off
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:Glasscockpit_Wind_Mode
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsMode
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsValue
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Glasscockpit_MFD_Started
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_State
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   - # Payload
@@ -246,7 +427,81 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:13
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:14
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:15
+    var_units: Pounds
+    var_type: f64
 
 ignore:
-  - AS1000_PFD_BARO_INC
-  - AS1000_PFD_BARO_DEC
+  - adf_frqTransfert

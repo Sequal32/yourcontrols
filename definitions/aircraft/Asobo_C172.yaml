@@ -1,11 +1,13 @@
 include:
+  - definitions/modules/AS430.yaml
+  - definitions/modules/AS530.yaml
+  - definitions/modules/ASCommon.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
   - definitions/modules/physics.yaml
@@ -15,34 +17,48 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
+  -  # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:11
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 11
+  -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:38
-    var_units: Bool
+    var_units: Boolean
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 38
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:39
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 39
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:40
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 40
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:41
+    var_units: Boolean
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 41
 
-  - # Electrical
-    type: var
-    var_name: L:XMLVAR_STBYBattery_Test
-  -
-    type: var
-    var_name: L:XMLVAR_STBYBattery_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
+  - # EGT Bug
+    type: NumSet
+    var_name: A:ENG EXHAUST GAS TEMPERATURE GES:1
+    var_units: Percent scaler 32k
+    var_type: i32
+    event_name: EGT1_SET
 
   - # Failures
     type: var
@@ -76,6 +92,37 @@ shared:
     var_type: bool
 
   - # Lights
+    type: NumSet
+    var_name: A:LIGHT NAV:0
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: i32
+    event_name: BEACON_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    var_type: i32
+    event_name: TAXI_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:0
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+
+  - # Lighting
     type: NumSet
     var_name: A:LIGHT PANEL
     var_units: Bool
@@ -180,13 +227,180 @@ shared:
     event_param: 15
     index_reversed: true
 
+  - # Water Rudder
+    type: ToggleSwitch
+    var_name: A:WATER RUDDER HANDLE POSITION
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_WATER_RUDDER
+
+  - # LVAR's
+    type: var
+    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_Switch_Yoke
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_Yoke_SwitchStateTimer
+# - # Spam
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+  -
+    type: var
+    var_name: L:XMLVAR_DayNightSwitch
+  -
+    type: var
+    var_name: L:XMLVAR_DayNightSwitch_Timer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:Generic_Gear_Advisory_Active
+  -
+    type: var
+    var_name: L:XMLVAR_DIM_Light_Switch
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_0
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_0
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_0
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Gyro_Drift
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:INSTRUMENT_ADF
+  -
+    type: var
+    var_name: L:LIGHTING_GLARESHIELD_1
+  -
+    type: var
+    var_name: L:LIGHTING_GLARESHIELD_2
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_PEDESTRAL_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:XMLVAR_WarningsAttenuated
+  -
+    type: var
+    var_name: L:XMLVAR_GPS_Approach
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:Generic_Gear_Advisory_Pushed
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
 master:
   -
     type: var
-    var_name: A:PLANE HEADING DEGREES GYRO # Drifts for some reason
+    var_name: A:PLANE HEADING DEGREES GYRO
     var_units: Degrees
     var_type: f64
-    interpolate: DefaultConstant
+    unreliable: true # Do not use interpolate or will spin and flip at 360 north
 
 server:
   - # Payload
@@ -201,3 +415,36 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+
+ignore:
+  - KAP140_Push_AP
+  - KAP140_Knob_Outer_INC
+  - KAP140_Knob_Outer_DEC
+  - KAP140_Knob_Inner_INC
+  - KAP140_Knob_Inner_DEC
+  - adf_frqTransfert
