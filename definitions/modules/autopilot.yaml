@@ -27,6 +27,13 @@ shared:
     var_type: f64
     event_name: HEADING_BUG_SET
     event_param: 1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:3
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 3
 
   - # ASOBO_AUTOPILOT_Push_Altitude_Template
     type: ToggleSwitch
@@ -67,6 +74,13 @@ shared:
     var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
     event_param: 1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:3
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 3
 
   - # ASOBO_AUTOPILOT_Push_Speed_Template
     type: ToggleSwitch
@@ -77,10 +91,11 @@ shared:
 
   - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
     type: NumSet
-    var_name: A:AUTOPILOT AIRSPEED HOLD VAR
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
     var_units: Knots
     var_type: f64
     event_name: AP_SPD_VAR_SET
+    event_param: 1
   -
     type: var
     var_name: L:XMLVAR_SpeedIsManuallySet

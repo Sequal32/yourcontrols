@@ -21,7 +21,7 @@ shared:
     event_name: APU_STARTER
     off_event_name: APU_OFF_SWITCH
 
-  - # AntiSkid
+  - # AntiSkid (no longer moves)
     type: ToggleSwitch
     var_name: A:ANTISKID BRAKES ACTIVE
     var_units: Bool
@@ -1082,6 +1082,20 @@ server:
     var_type: f64
 
 ignore:
+  - AP_KNOB_Up
+  - AP_KNOB_Down
+  - AP_BARO_Up
+  - AP_BARO_Down
+  - A320_Neo_CDU_AP_INC_ALT
+  - A320_Neo_CDU_AP_DEC_ALT
+  - A320_Neo_FCU_VS_INC
+  - A320_Neo_FCU_VS_DEC
+  - A320_Neo_CDU_AP_INC_SPEED
+  - A320_Neo_CDU_AP_DEC_SPEED
+  - A320_Neo_CDU_AP_INC_HEADING
+  - A320_Neo_CDU_AP_DEC_HEADING
+  - A320_Neo_MFD_BTN_TERRONND
+  - A320_Neo_CDU_AP_TRK_FPA
   - A320_Neo_FDW_BTN_L_TRANSFER
   - A320_Neo_FDW_DIAL_L_DECIMAL_INC
   - A320_Neo_FDW_DIAL_L_DECIMAL_DEC
