@@ -1,7 +1,22 @@
 include:
-  - definitions/modules/ASCommon.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
 
 shared:
+  -
+    type: var
+    var_name: L:AS3X_Brightness
+  -
+    type: var
+    var_name: L:AS3X_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3X_1_State
+  -
+    type: var
+    var_name: L:AS3X_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3X_2_State
   -
     type: var
     var_name: L:AS3X_Touch_1_ScreenLuminosity
@@ -26,6 +41,8 @@ shared:
     var_name: L:AS3X_Touch_Brightness_IsAuto
 
 ignore:
+  - AS3X_1_TURN_INC
+  - AS3X_1_TURN_DEC
   - AS3X_Touch_1_Knob_Inner_L_INC
   - AS3X_Touch_1_Knob_Inner_L_DEC
   - AS3X_Touch_1_Knob_Outer_L_INC
