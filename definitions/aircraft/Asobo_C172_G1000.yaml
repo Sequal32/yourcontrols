@@ -1,5 +1,5 @@
 include:
-  - definitions/modules/AS1000.yaml
+  - definitions/modules/Avionics/AS1000.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -170,7 +170,37 @@ shared:
     event_param: 6
     index_reversed: true
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+  -
     type: var
     var_name: L:XMLVAR_STBYBattery_Test
   -
@@ -185,6 +215,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:1
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverMixtureHidden1
@@ -200,7 +233,7 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Yoke_SwitchStateTimer
-# - # Spam
+# -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
   -
@@ -302,6 +335,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -361,13 +400,25 @@ shared:
 #   var_name: L:Glasscockpit_MFD_Started
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
 # -
 #   type: var
-#   var_name: L:AS1000_MFD_State
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:AS1000_PFD_State
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED

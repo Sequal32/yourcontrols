@@ -33,28 +33,28 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_TOGGLE
     event_param: 1
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_TOGGLE
     event_param: 2
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:3
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_TOGGLE
     event_param: 3
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:4
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_TOGGLE
     event_param: 4
@@ -783,7 +783,34 @@ shared:
     event_param: 111
     index_reversed: true
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
     type: var
     var_name: L:XMLVAR_SeatBelts
   -
@@ -791,79 +818,103 @@ shared:
     var_name: L:B747_8_MFD_NAV_MODE
   -
     type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_3
-  -
-    type: var
-    var_name: L:XMLVAR_Mins_Selector_Baro
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_R2_State
-  -
-    type: var
-    var_name: L:B747_8_MFD_Range
-  -
-    type: var
-    var_name: L:BTN_VORD_FILTER_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R_2
-  -
-    type: var
-    var_name: L:BTN_NDB_FILTER_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_2
-  -
-    type: var
-    var_name: L:BTN_WX_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
-  -
-    type: var
-    var_name: L:BTN_WPT_FILTER_ACTIVE
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R1_State
   -
     type: var
     var_name: L:XMLVAR_COM_1_Volume_VHF_L_1
   -
     type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R_3
-  -
-    type: var
-    var_name: L:BTN_ARPT_FILTER_ACTIVE
-  -
-    type: var
-    var_name: L:BTN_TERRONND_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R_1
-  -
-    type: var
-    var_name: L:XMLVAR_COM_Transmit_Channel
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_2
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_3
-  -
-    type: var
-    var_name: L:BTN_CSTR_FILTER_ACTIVE
+    var_name: L:BTN_WPT_FILTER_ACTIVE
   -
     type: var
     var_name: L:XMLVAR_Transponder_Mode
   -
     type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_R1_State
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
+  -
+    type: var
+    var_name: L:AP_HEADING_HOLD_ACTIVE
+  -
+    type: var
+    var_name: L:BTN_NDB_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:AP_SPD_ACTIVE
+# - # H-event
+#   type: var
+#   var_name: L:AP_VNAV_ARMED
+  -
+    type: var
+    var_name: L:AP_VS_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_Mins_Selector_Baro
+  -
+    type: var
+    var_name: L:BTN_WX_ACTIVE
+  -
+    type: var
+    var_name: L:AP_FLCH_ACTIVE
+  -
+    type: var
+    var_name: L:BTN_ARPT_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_3
+  -
+    type: var
+    var_name: L:XMLVAR_COM_Transmit_Channel
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_3
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
+  -
+    type: var
+    var_name: L:B747_8_MFD_Range
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_2
+  -
+    type: var
+    var_name: L:BTN_CSTR_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
+  -
+    type: var
+    var_name: L:BTN_VORD_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_AUTO_THROTTLE_ARM_0_STATE
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R_3
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_2
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R_2
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R_1
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+  -
+    type: var
+    var_name: L:AP_ALT_HOLD_ACTIVE
+# - # H-event
+#   type: var
+#   var_name: L:AP_LNAV_ARMED
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R2_State
+  -
+    type: var
+    var_name: L:BTN_TERRONND_ACTIVE
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -921,9 +972,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COM3_CURRENT_FREQ
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
+  -
+    type: var
+    var_name: L:XMLVAR_LTS_Test
   -
     type: var
     var_name: L:XMLVAR_StandbyPower_Selector
@@ -951,30 +1002,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Autopilot_3_Status
-  -
-    type: var
-    var_name: L:XMLVAR_AUTO_THROTTLE_ARM_0_STATE
-  -
-    type: var
-    var_name: L:AP_FLCH_ACTIVE
-  -
-    type: var
-    var_name: L:AP_ALT_HOLD_ACTIVE
-  -
-    type: var
-    var_name: L:AP_HEADING_HOLD_ACTIVE
-  -
-    type: var
-    var_name: L:AP_LNAV_ARMED
-  -
-    type: var
-    var_name: L:AP_VNAV_ARMED
-  -
-    type: var
-    var_name: L:AP_SPD_ACTIVE
-  -
-    type: var
-    var_name: L:AP_VS_ACTIVE
   -
     type: var
     var_name: L:XMLVAR_Autopilot_Altitude_Increment
@@ -1113,6 +1140,12 @@ shared:
   -
     type: var
     var_name: L:LIGHTING_WING_0
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -1193,10 +1226,40 @@ shared:
     var_name: L:RADIONAV ACTIVE:1
 # -
 #   type: var
+#   var_name: L:HUD_AIRSPEED_WHITE_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_WHITE_END
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_GREEN_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_GREEN_END
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_YELLOW_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_YELLOW_END
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_RED_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_RED_END
+# -
+#   type: var
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
   -
     type: var
     var_name: L:XMLVAR_FPA_MODE_ACTIVE
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
   -
     type: var
     var_name: L:B747_8_PFD_State
@@ -1412,10 +1475,6 @@ ignore:
   - B747_8_Com_1_BTN_hf
   - B747_8_Com_2_BTN_hf
   - B747_8_Com_3_BTN_hf
-  - B747_8_FMC_1_AP_VSPEED
-  - B747_8_FMC_1_AP_FLCH
-  - B747_8_FMC_1_AP_HEADING_HOLD
-  - B747_8_FMC_1_AP_ALT_HOLD
   - B747_8_MFD_BTN_TERR
   - B747_8_MFD_BTN_WXR
   - B747_8_PFD_BTN_TERR

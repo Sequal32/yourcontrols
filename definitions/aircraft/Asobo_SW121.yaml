@@ -1,7 +1,7 @@
 include:
-  - definitions/modules/AS3X.yaml
-  - definitions/modules/AS430.yaml
-  - definitions/modules/ASCommon.yaml
+  - definitions/modules/Avionics/AS3X.yaml
+  - definitions/modules/Avionics/AS330.yaml
+  - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -91,6 +91,36 @@ shared:
 
 # - # LVAR's
 #   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
 # -
 #   type: var
@@ -125,6 +155,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:AS3X_Brightness
   -
     type: var
     var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
@@ -133,7 +166,7 @@ shared:
     var_name: L:DEICE_Pitot_1
   -
     type: var
-    var_name: L:INSTRUMENT_Altimeter_0
+    var_name: L:INSTRUMENT_Altimeter_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_AirSpeedIsInMach
@@ -164,6 +197,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -209,9 +248,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:GNS_Brightness
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:AS3X_1_ScreenLuminosity
@@ -230,6 +278,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS430_State
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+  -
+    type: var
+    var_name: L:LedTrim_ScreenLuminosity
+  -
+    type: var
+    var_name: L:LedTrim_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -260,7 +320,3 @@ server:
     var_name: PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - TransponderVFR
-  - TransponderSTBY

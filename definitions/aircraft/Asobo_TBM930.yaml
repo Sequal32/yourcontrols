@@ -1,5 +1,5 @@
 include:
-  - definitions/modules/AS3000.yaml
+  - definitions/modules/Avionics/AS3000.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -117,7 +117,34 @@ shared:
     event_name: LIGHT_POTENTIOMETER_12_SET
     index_reversed: true
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
     type: var
     var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
   -
@@ -132,7 +159,7 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden2
-# - # Spam
+# -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
   -
@@ -201,12 +228,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_InertSep1_Active
-# -
-#   type: var
-#   var_name: L:Generic_Master_Warning_Active
-# -
-#   type: var
-#   var_name: L:Generic_Master_Caution_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
   -
     type: var
     var_name: L:LANDING_GEAR_Gear
@@ -311,6 +338,12 @@ shared:
 #   var_name: L:AS3000_MinimalsValue
 # -
 #   type: var
+#   var_name: L:AS3000_Brightness_Auto
+# -
+#   type: var
+#   var_name: L:AS3000_2_Timer_Value
+# -
+#   type: var
 #   var_name: L:MFD_MapShowCursor
 # -
 #   type: var
@@ -329,13 +362,19 @@ shared:
 #   var_name: L:AS3000_MFD_MapRotationMode
 # -
 #   type: var
-#   var_name: L:AS3000_Brightness_Auto
-# -
-#   type: var
-#   var_name: L:AS3000_2_Timer_Value
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:AS1000_SpeedBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_SpeedBackup_State
   -
     type: var
     var_name: L:AS3000_TSC_Horizontal_1_ScreenLuminosity
@@ -354,12 +393,6 @@ shared:
   -
     type: var
     var_name: L:AS3000_PFD_1_State
-  -
-    type: var
-    var_name: L:AS3000_PFD_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS3000_PFD_2_State
 # -
 #   type: var
 #   var_name: L:AS3000_MFD_ScreenLuminosity
@@ -372,12 +405,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeBackup_State
-# -
-#   type: var
-#   var_name: L:AS1000_SpeedBackup_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS1000_SpeedBackup_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED

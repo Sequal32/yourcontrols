@@ -1,4 +1,5 @@
 include:
+  - definitions/modules/Avionics/Vigilus.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -47,6 +48,36 @@ shared:
 
 # - # LVAR's
 #   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
 # -
 #   type: var
@@ -71,15 +102,6 @@ shared:
 #   var_name: L:XMLVAR_LTS_Test
   -
     type: var
-    var_name: L:ASVigilus_Brightness
-  -
-    type: var
-    var_name: L:Generic_Gear_Advisory_Active
-  -
-    type: var
-    var_name: L:XMLVAR_DIM_Light_Switch
-  -
-    type: var
     var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
   -
     type: var
@@ -92,22 +114,37 @@ shared:
     var_name: L:LIGHTING_STROBE_1
   -
     type: var
-    var_name: L:INSTRUMENT_Altimeter_0
+    var_name: L:INSTRUMENT_Altimeter_1
   -
     type: var
-    var_name: L:LANDING_GEAR_Gear
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AS_Vigilus_Page
   -
     type: var
-    var_name: L:AS1000_Warnings_Master_Set
+    var_name: L:AS92_ScreenLuminosity
   -
     type: var
-    var_name: L:Generic_Gear_Advisory_Pushed
+    var_name: L:AS92_State
   -
     type: var
-    var_name: L:AS1000_Warnings_WarningIndex
+    var_name: L:LedTrim_ScreenLuminosity
+  -
+    type: var
+    var_name: L:LedTrim_State
+# -
+#   type: var
+#   var_name: L:ASVigilus_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:ASVigilus_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED

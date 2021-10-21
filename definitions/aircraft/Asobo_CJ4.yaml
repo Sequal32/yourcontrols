@@ -205,7 +205,34 @@ shared:
     event_param: 18
     index_reversed: true
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
   -
@@ -217,7 +244,6 @@ shared:
   -
     type: var
     var_name: L:AS3000_Brightness
-    cancel_h_events: true
   -
     type: var
     var_name: L:CJ4_MFD_ScreenLuminosity
@@ -266,12 +292,12 @@ shared:
   -
     type: var
     var_name: L:ParkingBrake_Position
-# - # overlaps
-#   type: var
-#   var_name: L:Generic_Master_Caution_Active
-# -
-#   type: var
-#   var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
   -
     type: var
     var_name: L:XMLVAR_Essential_Bus_ON
@@ -341,6 +367,12 @@ shared:
   -
     type: var
     var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -353,21 +385,21 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
-# -
-#   type: var
-#   var_name: L:AIRLINER_V1_SPEED
-# -
-#   type: var
-#   var_name: L:AIRLINER_VR_SPEED
-# -
-#   type: var
-#   var_name: L:AIRLINER_V2_SPEED
-# -
-#   type: var
-#   var_name: L:AIRLINER_VREF_SPEED
-# -
-#   type: var
-#   var_name: L:AIRLINER_VX_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_V1_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_VR_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_V2_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_VREF_SPEED
+  -
+    type: var
+    var_name: L:AIRLINER_VX_SPEED
   -
     type: var
     var_name: L:XMLVAR_Baro1_ForcedToSTD
@@ -449,12 +481,18 @@ shared:
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
-# -
-#   type: var
-#   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
+  -
+    type: var
+    var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
   -
     type: var
     var_name: L:CJ4_PFD_State
@@ -473,6 +511,12 @@ shared:
   -
     type: var
     var_name: L:CJ4_SAI_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
 
 server:
   - # Payload

@@ -1,5 +1,5 @@
 include:
-  - definitions/modules/AS1000.yaml
+  - definitions/modules/Avionics/AS1000.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -144,7 +144,37 @@ shared:
     event_param: 11
     index_reversed: true
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+  -
     type: var
     var_name: L:XMLVAR_AudioPanel_1
 # -
@@ -264,6 +294,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_AirSpeedIsInMach
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -296,10 +329,10 @@ shared:
 #   var_name: L:PFD_BRG2_Source
 # -
 #   type: var
-#   var_name: L:Glasscockpit_DmeSource
+#   var_name: L:GPS_Current_Phase
 # -
 #   type: var
-#   var_name: L:GPS_Current_Phase
+#   var_name: L:Glasscockpit_DmeSource
 # -
 #   type: var
 #   var_name: L:AS3000_MinimalsMode
@@ -323,67 +356,13 @@ shared:
 #   var_name: L:Glasscockpit_MFD_Started
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
 # -
 #   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:A32NX_EXTERNAL_OVERRIDE
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
-    type: var
-    var_name: L:XMLVAR_BoostFuelPump
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_TEST_TIME
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_STATE
-  -
-    type: var
-    var_name: L:XMLVAR_DayNightSwitch
-# -
-#   type: var
-#   var_name: L:XMLVAR_CabinHeatKnob2
-# -
-#   type: var
-#   var_name: L:XMLVAR_CabinHeatKnob1
-# -
-#   type: var
-#   var_name: L:XMLVAR_CabinAirSwitch1Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_CabinAir_Position_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_CabinHeatSwitch2Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_CabinHeatSwitch1Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_CabinHeat_Position_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_Starter_State_IsDown
-# -
-#   type: var
-#   var_name: L:XMLVAR_Starter_State
-# -
-#   type: var
-#   var_name: L:XMLVAR_SpeedIsManuallySet
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:AS1000_PFD_State
@@ -392,52 +371,10 @@ shared:
 #   var_name: L:AS1000_MFD_State
 # -
 #   type: var
-#   var_name: L:Generic_Master_Warning_Active
+#   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
-#   var_name: L:Generic_Master_Caution_Active
-# -
-#   type: var
-#   var_name: L:AS3000_MFD_IsPositionOverride
-# -
-#   type: var
-#   var_name: L:AS3000_MFD_OverrideLongitude
-# -
-#   type: var
-#   var_name: L:AS3000_MFD_OverrideLatitude
-# -
-#   type: var
-#   var_name: L:AS3000_MFD_Current_WeatherMap
-# -
-#   type: var
-#   var_name: L:AS3000_MFD_Current_Map
-# -
-#   type: var
-#   var_name: L:AS1000_SpeedBackup_State
-# -
-#   type: var
-#   var_name: L:AS1000_SpeedBackup_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS1000_AttitudeBackup_State
-# -
-#   type: var
-#   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:MFD_Main_MapZoomRange
-# -
-#   type: var
-#   var_name: L:MFD_Main_MapShowCursor
-# -
-#   type: var
-#   var_name: L:GPS_TRACK_UP
-# -
-#   type: var
-#   var_name: L:PFD_DME_Displayed
-# -
-#   type: var
-#   var_name: L:Glasscockpit_AOA_Mode
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   - # Payload

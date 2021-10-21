@@ -1,6 +1,6 @@
 include:
-  - definitions/modules/Aera.yaml
-  - definitions/modules/ASCommon.yaml
+  - definitions/modules/Avionics/Aera.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -58,7 +58,40 @@ shared:
 
 # - # LVAR's
 #   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
 #   var_name: L:Aera_Brightness
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:1
 # -
 #   type: var
 #   var_name: L:XMLVAR_Magneto_Starter_IsHeld
@@ -110,12 +143,18 @@ shared:
   -
     type: var
     var_name: L:INSTRUMENT_Altimeter_0
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:Aera_Brightness_Manual
+  -
+    type: var
+    var_name: L:IsChangeDataFieldsMenuOn
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
@@ -127,6 +166,9 @@ shared:
 #   var_name: L:MFD_MapZoomRange
 # -
 #   type: var
+#   var_name: L:Aera_IsPositionOverride
+# -
+#   type: var
 #   var_name: L:Aera_Brightness_Auto
 # -
 #   type: var
@@ -136,13 +178,37 @@ shared:
 #   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:Aera_State
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeBackup_State
+  -
+    type: var
+    var_name: L:AS92_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS92_State
+  -
+    type: var
+    var_name: L:AS21_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS21_State
+  -
+    type: var
+    var_name: L:LedTrim_ScreenLuminosity
+  -
+    type: var
+    var_name: L:LedTrim_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED

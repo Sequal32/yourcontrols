@@ -1,6 +1,7 @@
 include:
-  - definitions/modules/AS430.yaml
-  - definitions/modules/ASCommon.yaml
+  - definitions/modules/Avionics/AS330.yaml
+  - definitions/modules/Avionics/AS430.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -35,6 +36,36 @@ shared:
 
 # - # LVAR's
 #   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
 #   var_name: L:XMLVAR_LTS_Test
 # -
 #   type: var
@@ -42,6 +73,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverPropellerHidden1
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:1
   -
     type: var
     var_name: L:ParkingBrake_Position
@@ -56,13 +90,16 @@ shared:
 #   var_name: L:XMLVAR_Magneto_Starter_IsHeld
   -
     type: var
+    var_name: L:GNS_Brightness
+  -
+    type: var
     var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
-# - # Spam
+# -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
   -
     type: var
-    var_name: L:INSTRUMENT_Altimeter_0
+    var_name: L:INSTRUMENT_Altimeter_1
 # -
 #   type: var
 #   var_name: L:INSTRUMENT_Gyro_Drift
@@ -81,12 +118,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-# -
-#   type: var
-#   var_name: L:AS430_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:AS430_MapZoomRange
+  -
+    type: var
+    var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -98,10 +141,28 @@ shared:
 #   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+  -
+    type: var
+    var_name: L:M803_ScreenLuminosity
+  -
+    type: var
+    var_name: L:M803_State
+# -
+#   type: var
 #   var_name: L:AS430_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS430_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED

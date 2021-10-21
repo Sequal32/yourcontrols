@@ -22,11 +22,11 @@ shared:
 
   - # ASOBO_AUTOPILOT_Knob_Heading_Template
     type: NumSet
-    var_name: A:AUTOPILOT HEADING LOCK DIR
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
     var_units: Degrees
     var_type: f64
     event_name: HEADING_BUG_SET
-    event_param: 0
+    event_param: 1
 
   - # ASOBO_AUTOPILOT_Push_Altitude_Template
     type: ToggleSwitch
@@ -37,11 +37,18 @@ shared:
 
   - # ASOBO_AUTOPILOT_Knob_Altitude_Template
     type: NumSet
-    var_name: A:AUTOPILOT ALTITUDE LOCK VAR
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
     var_units: Feet
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
-    event_param: 0
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 3
 
   - # ASOBO_AUTOPILOT_Push_VerticalSpeed_Template
     type: ToggleSwitch
@@ -55,11 +62,11 @@ shared:
 
   - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
     type: NumSet
-    var_name: A:AUTOPILOT VERTICAL HOLD VAR
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
     var_units: Feet per minute
     var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
-    event_param: 0
+    event_param: 1
 
   - # ASOBO_AUTOPILOT_Push_Speed_Template
     type: ToggleSwitch

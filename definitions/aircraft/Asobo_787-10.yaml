@@ -470,33 +470,90 @@ shared:
     event_param: 75
     index_reversed: true
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
     type: var
     var_name: L:XMLVAR_SeatBelts
   -
     type: var
-    var_name: L:XMLVAR_Mins_Selector_Baro
+    var_name: L:AP_ALT_HOLD_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_MFD_Side_0
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R_2
+  -
+    type: var
+    var_name: L:AP_FLCH_ACTIVE
+  -
+    type: var
+    var_name: L:AP_VS_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_HUD_1_Down
   -
     type: var
     var_name: L:XMLVAR_FPA_MODE_ACTIVE
   -
     type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R_3
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_3
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R_1
-  -
-    type: var
     var_name: L:XMLVAR_Baro_Selector_HPA_1
+# - # H-event
+#   type: var
+#   var_name: L:AP_LNAV_ARMED
   -
     type: var
-    var_name: L:XMLVAR_MFD_Side_0
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_3
+  -
+    type: var
+    var_name: L:AS01B_AUTO_THROTTLE_ARM_STATE
+  -
+    type: var
+    var_name: L:XMLVAR_COM_Transmit_Channel
+  -
+    type: var
+    var_name: L:XMLVAR_Transponder_Mode
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_2
+  -
+    type: var
+    var_name: L:XMLVAR_MFD_Side_1
+  -
+    type: var
+    var_name: L:AP_HEADING_HOLD_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_Mins_Selector_Baro
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
   -
     type: var
     var_name: L:XMLVAR_COM_1_Volume_VHF_L_1
@@ -505,31 +562,25 @@ shared:
     var_name: L:XMLVAR_COM_2_Volume_VHF_C_2
   -
     type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R_1
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+  -
+    type: var
+    var_name: L:AP_SPD_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_3
+# - # H-event
+#   type: var
+#   var_name: L:AP_VNAV_ARMED
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R_3
+  -
+    type: var
     var_name: L:XMLVAR_HUD_2_Down
-  -
-    type: var
-    var_name: L:XMLVAR_MFD_Side_1
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R_2
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_2
-  -
-    type: var
-    var_name: L:XMLVAR_COM_Transmit_Channel
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
-  -
-    type: var
-    var_name: L:XMLVAR_HUD_1_Down
-  -
-    type: var
-    var_name: L:XMLVAR_Transponder_Mode
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_3
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -596,30 +647,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Autopilot_2_Status
-  -
-    type: var
-    var_name: L:AS01B_AUTO_THROTTLE_ARM_STATE
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
-  -
-    type: var
-    var_name: L:AP_FLCH_ACTIVE
-  -
-    type: var
-    var_name: L:AP_ALT_HOLD_ACTIVE
-  -
-    type: var
-    var_name: L:AP_HEADING_HOLD_ACTIVE
-  -
-    type: var
-    var_name: L:AP_LNAV_ARMED
-  -
-    type: var
-    var_name: L:AP_VNAV_ARMED
-  -
-    type: var
-    var_name: L:AP_VS_ACTIVE
   -
     type: var
     var_name: L:Generic_Master_Caution_Active
@@ -737,9 +767,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_SpawnOnRunway
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -782,9 +809,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
-    type: var
-    var_name: L:AP_SPD_ACTIVE
   -
     type: var
     var_name: L:AP_LNAV_ACTIVE
@@ -859,10 +883,46 @@ shared:
     var_name: L:RADIONAV ACTIVE:1
 # -
 #   type: var
+#   var_name: L:HUD_AIRSPEED_WHITE_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_WHITE_END
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_GREEN_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_GREEN_END
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_YELLOW_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_YELLOW_END
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_RED_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_RED_END
+# -
+#   type: var
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
   -
     type: var
     var_name: L:AP_SPEED_INTERVENTION_ACTIVE
+  -
+    type: var
+    var_name: L:SHARED_MINIMUM_REFERENCE_VALUE
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:B787_10_PFD_State
   -
     type: var
     var_name: L:B787_10_MFD_1_State
@@ -935,9 +995,6 @@ shared:
   -
     type: var
     var_name: L:B787_10_HUD_State
-  -
-    type: var
-    var_name: L:B787_10_PFD_State
 
 server:
   - # Payload
@@ -999,12 +1056,6 @@ ignore:
   - AP_BARO_Down
   - AP_KNOB_Up
   - AP_KNOB_Down
-  - AS01B_FMC_1_AP_VSPEED
-  - AS01B_FMC_1_AP_HEADING_HOLD
-  - AS01B_FMC_1_AP_HEADING_SEL
-  - AS01B_FMC_1_AP_ALT_HOLD
-  - AS01B_FMC_1_AP_ALT_INTERVENTION
-  - AS01B_FMC_1_AP_SPD
-  - AS01B_FMC_1_AP_FLCH
   - AS01B_MFD_1_TERR
   - AS01B_MFD_1_WXR
+  - AS01B_MFD_2_EICAS

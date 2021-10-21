@@ -1,5 +1,5 @@
 include:
-  - definitions/modules/AS3000.yaml
+  - definitions/modules/Avionics/AS3000.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
@@ -235,6 +235,36 @@ shared:
 
 # - # LVAR's
 #   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+# -
+#   type: var
+#   var_name: L:XMLVAR_SpeedIsManuallySet
+# -
+#   type: var
 #   var_name: L:AS3000_MFD_ScreenLuminosity
 # -
 #   type: var
@@ -271,13 +301,13 @@ shared:
 #   var_name: L:XMLVAR_VNAVButtonValue
 # -
 #   type: var
-#   var_name: L:XMLVAR_SpeedIsManuallySet
-# -
-#   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden2
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:1
   -
     type: var
     var_name: L:ParkingBrake_Position
@@ -323,12 +353,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Generic_Master_Warning_Active
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Heat_1_Position
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Heat_2_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_Cabin_Heat_1_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_Cabin_Heat_2_Position
 # -
 #   type: var
 #   var_name: L:Control_Panel_InnerMap_MapZoomRange
@@ -413,6 +443,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_EMER_LTS_STATE
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -425,12 +461,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_SyntheticVision_Off
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
@@ -464,6 +494,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpit_SVTTerrain
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_1
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_2
 # -
 #   type: var
 #   var_name: L:PFD_CDI_Source
@@ -502,6 +538,12 @@ shared:
 #   var_name: L:AS3000_MFD_MapRotationMode
 # -
 #   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
 #   var_name: L:AS3000_1_Timer_Value
 # -
 #   type: var
@@ -511,7 +553,13 @@ shared:
 #   var_name: L:AS3000_2_Timer_Value
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:AS3000_PFD_State
@@ -536,6 +584,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeSpeedBackup_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED

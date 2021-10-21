@@ -17,10 +17,13 @@ shared:
     event_param: 2
 
   - # ASOBO_PRESSURIZATION_Switch_APU_Bleed_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:BLEED AIR APU
     var_units: Bool
-    var_type: bool
+    var_type: i32
+    event_name: APU_BLEED_AIR_SOURCE_SET
+  -
+    type: event
     event_name: APU_BLEED_AIR_SOURCE_TOGGLE
 
   - # ASOBO_PRESSURIZATION_Push_Dump_Template

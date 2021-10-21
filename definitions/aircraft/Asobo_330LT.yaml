@@ -1,6 +1,8 @@
 include:
-  - definitions/modules/AS3X.yaml
-  - definitions/modules/AS430.yaml
+  - definitions/modules/Avionics/AS3X.yaml
+  - definitions/modules/Avionics/AS330.yaml
+  - definitions/modules/Avionics/AS430.yaml
+  - definitions/modules/Avionics/Vigilus.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
@@ -39,8 +41,43 @@ shared:
     var_name: A:CIRCUIT ON:37
     var_units: Bool
     var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:39
+    var_units: Bool
+    var_type: bool
 
 # - # LVAR's
+#   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+# -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
 # -
@@ -64,9 +101,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:AS3X_Brightness
   -
     type: var
-    var_name: L:ASVigilus_Brightness
+    var_name: L:GNS_Brightness
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE
@@ -78,7 +118,10 @@ shared:
 #   var_name: L:XMLVAR_LTS_Test
   -
     type: var
-    var_name: L:INSTRUMENT_Altimeter_0
+    var_name: L:INSTRUMENT_Altimeter_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_2
   -
     type: var
     var_name: L:ParkingBrake_Position
@@ -103,9 +146,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AS_Vigilus_Page
   -
     type: var
     var_name: L:AP_NAV_SELECT_TMP
@@ -150,10 +202,16 @@ shared:
 #   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
 # -
 #   type: var
 #   var_name: L:PFD_CDI_Source
+  -
+    type: var
+    var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:AS3X_1_ScreenLuminosity
@@ -166,6 +224,30 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS3X_2_State
+  -
+    type: var
+    var_name: L:LedTrim_ScreenLuminosity
+  -
+    type: var
+    var_name: L:LedTrim_State
+# -
+#   type: var
+#   var_name: L:ASVigilus_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:ASVigilus_State
+  -
+    type: var
+    var_name: L:M803_ScreenLuminosity
+  -
+    type: var
+    var_name: L:M803_State
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
 # -
 #   type: var
 #   var_name: L:AS430_ScreenLuminosity
@@ -208,7 +290,3 @@ server:
     var_name: PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - TransponderVFR
-  - TransponderSTBY

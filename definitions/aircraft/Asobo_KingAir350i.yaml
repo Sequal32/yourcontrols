@@ -1,5 +1,5 @@
 include:
-  - definitions/modules/AS3X.yaml
+  - definitions/modules/Avionics/AS3X.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -239,6 +239,33 @@ shared:
 
 # - # LVAR's
 #   type: var
+#   var_name: L:ASVigilus_Brightness
+# -
+#   type: var
+#   var_name: L:ASVigilus_Temperature_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Fuel_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Pressure_Unit
+# -
+#   type: var
+#   var_name: L:ASVigilus_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:isDataFieldActive
+# -
+#   type: var
+#   var_name: L:isCompassDisplayed
+# -
+#   type: var
+#   var_name: L:Map_BugIndicator_Mode
+# -
+#   type: var
 #   var_name: L:AS3X_Touch_1_ScreenLuminosity
 # -
 #   type: var
@@ -294,19 +321,19 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_TANK_QUANTITY_Test_IsHeld
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden2
+  -
+    type: var
+    var_name: L:Condition_Lever_CutOff_1
+  -
+    type: var
+    var_name: L:Condition_Lever_CutOff_2
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
   -
     type: var
     var_name: L:XMLVAR_Autopilot_Altitude_Increment
-# - # Spam
+# -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
 # -
@@ -327,12 +354,12 @@ shared:
   -
     type: var
     var_name: L:ParkingBrake_Position
-# -
-#   type: var
-#   var_name: L:Generic_Master_Caution_Active
-# -
-#   type: var
-#   var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE
@@ -423,6 +450,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -482,7 +512,13 @@ shared:
 #   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:AS3X_Touch_1_State
@@ -495,6 +531,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeSpeedBackup_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
+  -
+    type: var
+    var_name: L:DigitalOAT_ScreenLuminosity
+  -
+    type: var
+    var_name: L:DigitalOAT_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
