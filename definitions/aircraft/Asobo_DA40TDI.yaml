@@ -39,6 +39,19 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 38
 
+  - # Essential Bus
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
+    set: 2 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
+    set: 3 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
+    set: 3 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
   - # Deice
     type: ToggleSwitch
     var_name: A:PITOT HEAT
