@@ -151,14 +151,14 @@ shared:
     var_name: ADF ACTIVE FREQUENCY:1
     var_units: Frequency ADF BCD32
     var_type: i32
-    event_name: ADF_COMPLETE_SET
+    event_name: ADF_ACTIVE_SET
     swap_event_name: ADF1_RADIO_SWAP
   -
     type: NumSet
     var_name: ADF STANDBY FREQUENCY:1
     var_units: Frequency ADF BCD32
     var_type: i32
-    event_name: ADF_COMPLETE_SET
+    event_name: ADF_STBY_SET
   -
     type: NumSet
     var_name: A:ADF SOUND:1
@@ -167,19 +167,41 @@ shared:
     event_name: RADIO_ADF_IDENT_SET
     event_param: 1
   -
-    type: NumSet
-    var_name: A:ADF SOUND:2
-    var_units: Bool
-    var_type: f64
-    event_name: RADIO_ADF_IDENT_SET
-    event_param: 2
-  -
     type: NumIncrement
     var_name: A:ADF VOLUME:1
     var_units: Percent
     var_type: f64
     up_event_name: ADF_VOLUME_INC
     down_event_name: ADF_VOLUME_DEC
+    increment_by: 1
+
+  - # ADF2
+    type: NumSet
+    var_name: ADF ACTIVE FREQUENCY:2
+    var_units: Frequency ADF BCD32
+    var_type: i32
+    event_name: ADF2_ACTIVE_SET
+    swap_event_name: ADF2_RADIO_SWAP
+  -
+    type: NumSet
+    var_name: ADF STANDBY FREQUENCY:2
+    var_units: Frequency ADF BCD32
+    var_type: i32
+    event_name: ADF2_STBY_SET
+  -
+    type: NumSet
+    var_name: A:ADF SOUND:2
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_ADF2_IDENT_SET
+    event_param: 2
+  -
+    type: NumIncrement
+    var_name: A:ADF VOLUME:2
+    var_units: Percent
+    var_type: f64
+    up_event_name: ADF2_VOLUME_INC
+    down_event_name: ADF2_VOLUME_DEC
     increment_by: 1
 
   - # DME
