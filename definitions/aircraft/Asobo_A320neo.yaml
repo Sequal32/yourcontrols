@@ -3,7 +3,6 @@ include:
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
@@ -215,31 +214,80 @@ shared:
 
   - # Lights
     type: NumSet
+    var_name: A:LIGHT NAV:0
+    var_units: Bool
+    var_type: f64
+    event_name: NAV_LIGHTS_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT BEACON:0
+    var_units: Bool
+    var_type: f64
+    event_name: BEACON_LIGHTS_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:0
+    var_units: Bool
+    var_type: f64
+    event_name: STROBES_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT LOGO:0
+    var_units: Bool
+    var_type: f64
+    event_name: LOGO_LIGHTS_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT WING:0
+    var_units: Bool
+    var_type: f64
+    event_name: WING_LIGHTS_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    var_type: f64
+    event_name: TAXI_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
     var_name: A:LIGHT TAXI:2
     var_units: Percent
-    var_type: i32
-    event_name: TOGGLE_TAXI_LIGHTS
+    var_type: f64
+    event_name: TAXI_LIGHTS_SET
     event_param: 2
   -
     type: NumSet
     var_name: A:LIGHT TAXI:3
     var_units: Percent
-    var_type: i32
-    event_name: TOGGLE_TAXI_LIGHTS
+    var_type: f64
+    event_name: TAXI_LIGHTS_SET
     event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT LANDING:2
     var_units: Percent
-    var_type: i32
-    event_name: LANDING_LIGHTS_TOGGLE
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
     event_param: 2
   -
     type: NumSet
     var_name: A:LIGHT LANDING:3
     var_units: Percent
-    var_type: i32
-    event_name: LANDING_LIGHTS_TOGGLE
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
     event_param: 3
   -
     type: NumSet
@@ -248,7 +296,8 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_24_SET
     index_reversed: true
-  -
+
+  - # Lighting
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
