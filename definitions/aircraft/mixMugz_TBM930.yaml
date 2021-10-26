@@ -1,10 +1,34 @@
+# Version 0.6.1
+
 include:
   - definitions/aircraft/Asobo_TBM930.yaml
 
 shared:
+  - # Exit
+    type: event
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+
+  - # LVAR's (Mugz only)
+    type: var
+    var_name: L:XMLVAR_TBM930_FrontDoor_Unlock
   -
     type: var
-    var_name: L:XMLVAR_TBM930_Table
+    var_name: L:XMLVAR_TBM930_BackDoor_Unlock
+  -
+    type: var
+    var_name: L:XMLVAR_TBM930_FrontDoor_Init
+  -
+    type: var
+    var_name: L:XMLVAR_TBM930_BackDoor_Init
+  -
+    type: var
+    var_name: L:XMLVAR_TBM930_CargoDoor_Init
+# -
+#   type: var
+#   var_name: L:XMLVAR_TBM930_HidePilot
+# -
+#   type: var
+#   var_name: L:XMLVAR_TBM930_HideCoPilot
   -
     type: var
     var_name: L:XMLVAR_SunVisorX_1
@@ -13,10 +37,10 @@ shared:
     var_name: L:XMLVAR_SunVisorY_1
   -
     type: var
-    var_name: L:XMLVAR_SunVisorX_2
+    var_name: L:XMLVAR_SunVisorY_2
   -
     type: var
-    var_name: L:XMLVAR_SunVisorY_2
+    var_name: L:XMLVAR_SunVisorX_2
   -
     type: var
     var_name: L:XMLVAR_TBM930_FrontDoor_State
@@ -25,16 +49,7 @@ shared:
     var_name: L:XMLVAR_TBM930_BackDoor_State
   -
     type: var
-    var_name: L:XMLVAR_TBM930_FrontDoor_Unlock
-  -
-    type: var
-    var_name: L:XMLVAR_TBM930_BackDoor_Unlock
-  -
-    type: var
     var_name: L:XMLVAR_TBM930_CargoDoor_State
   -
     type: var
-    var_name: L:XMLVAR_AS3000_DisplayLightingBool
-  -
-    type: event
-    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    var_name: L:XMLVAR_TBM930_Table
