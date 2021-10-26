@@ -69,6 +69,15 @@ shared:
     event_param: 5
     index_reversed: true
 
+  - # Emissive lights
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+
 # - # LVAR's
 #   type: var
 #   var_name: L:ASVigilus_Brightness
@@ -123,12 +132,12 @@ shared:
   -
     type: var
     var_name: L:ParkingBrake_Position
-  -
-    type: var
-    var_name: L:XMLVAR_Hours_Delta
-  -
-    type: var
-    var_name: L:XMLVAR_Minutes_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_Hours_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_Minutes_Delta
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
