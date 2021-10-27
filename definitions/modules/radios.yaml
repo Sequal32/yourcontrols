@@ -18,14 +18,13 @@ shared:
     var_type: f64
     event_name: RADIO_VOR1_IDENT_SET
   -
-    type: event
-    event_name: RADIO_VOR1_IDENT_TOGGLE
-  -
-    type: NumSet
+    type: NumIncrement
     var_name: A:NAV VOLUME:1
     var_units: Percent
-    var_type: f64
-    event_name: NAV1_VOLUME_SET
+    var_type: i32
+    up_event_name: NAV1_VOLUME_INC
+    down_event_name: NAV1_VOLUME_DEC
+    increment_by: 1
 
   - # NAV2
     type: NumSet
@@ -46,14 +45,13 @@ shared:
     var_type: f64
     event_name: RADIO_VOR2_IDENT_SET
   -
-    type: event
-    event_name: RADIO_VOR2_IDENT_TOGGLE
-  -
-    type: NumSet
+    type: NumIncrement
     var_name: A:NAV VOLUME:2
     var_units: Percent
-    var_type: f64
-    event_name: NAV2_VOLUME_SET
+    var_type: i32
+    up_event_name: NAV2_VOLUME_INC
+    down_event_name: NAV2_VOLUME_DEC
+    increment_by: 1
 
   - # COM1
     type: NumSet
@@ -71,8 +69,14 @@ shared:
     type: NumSet
     var_name: A:COM VOLUME:1
     var_units: Percent
-    var_type: f64
+    var_type: i32
     event_name: COM1_VOLUME_SET
+  -
+    type: ToggleSwitch
+    var_name: A:COM TEST:1
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_COMMNAV1_TEST_TOGGLE
   -
     type: NumSet
     var_name: A:COM SPACING MODE:1
@@ -96,8 +100,14 @@ shared:
     type: NumSet
     var_name: A:COM VOLUME:2
     var_units: Percent
-    var_type: f64
+    var_type: i32
     event_name: COM2_VOLUME_SET
+  -
+    type: ToggleSwitch
+    var_name: A:COM TEST:2
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_COMMNAV2_TEST_TOGGLE
   -
     type: NumSet
     var_name: A:COM SPACING MODE:2
@@ -121,42 +131,78 @@ shared:
     type: NumSet
     var_name: A:COM VOLUME:3
     var_units: Percent
-    var_type: f64
+    var_type: i32
     event_name: COM3_VOLUME_SET
+  -
+    type: ToggleSwitch
+    var_name: A:COM TEST:3
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_COMMNAV3_TEST_TOGGLE
+  -
+    type: NumSet
+    var_name: A:COM SPACING MODE:3
+    var_units: Enum
+    var_type: i32
+    event_name: COM_3_SPACING_MODE_SWITCH
 
   - # ADF
     type: NumSet
-    var_name: ADF ACTIVE FREQUENCY:1 
+    var_name: ADF ACTIVE FREQUENCY:1
     var_units: Frequency ADF BCD32
     var_type: i32
-    event_name: ADF_COMPLETE_SET
+    event_name: ADF_ACTIVE_SET
     swap_event_name: ADF1_RADIO_SWAP
   -
     type: NumSet
     var_name: ADF STANDBY FREQUENCY:1
     var_units: Frequency ADF BCD32
     var_type: i32
-    event_name: ADF_COMPLETE_SET
+    event_name: ADF_STBY_SET
   -
     type: NumSet
     var_name: A:ADF SOUND:1
     var_units: Bool
     var_type: f64
     event_name: RADIO_ADF_IDENT_SET
+    event_param: 1
   -
-    type: event
-    event_name: RADIO_ADF_IDENT_TOGGLE
+    type: NumIncrement
+    var_name: A:ADF VOLUME:1
+    var_units: Percent
+    var_type: f64
+    up_event_name: ADF_VOLUME_INC
+    down_event_name: ADF_VOLUME_DEC
+    increment_by: 1
+
+  - # ADF2
+    type: NumSet
+    var_name: ADF ACTIVE FREQUENCY:2
+    var_units: Frequency ADF BCD32
+    var_type: i32
+    event_name: ADF2_ACTIVE_SET
+    swap_event_name: ADF2_RADIO_SWAP
+  -
+    type: NumSet
+    var_name: ADF STANDBY FREQUENCY:2
+    var_units: Frequency ADF BCD32
+    var_type: i32
+    event_name: ADF2_STBY_SET
   -
     type: NumSet
     var_name: A:ADF SOUND:2
     var_units: Bool
     var_type: f64
-    event_name: KEY_RADIO_VOR2_IDENT_SET
+    event_name: RADIO_ADF2_IDENT_SET
+    event_param: 2
   -
-    type: var
-    var_name: A:ADF VOLUME:1
-    var_units: Percent over 100
+    type: NumIncrement
+    var_name: A:ADF VOLUME:2
+    var_units: Percent
     var_type: f64
+    up_event_name: ADF2_VOLUME_INC
+    down_event_name: ADF2_VOLUME_DEC
+    increment_by: 1
 
   - # DME
     type: NumSet
@@ -165,50 +211,20 @@ shared:
     var_type: f64
     event_name: RADIO_DME1_IDENT_SET
   -
-    type: event
-    event_name: RADIO_DME1_IDENT_TOGGLE
-  -
-    type: event
-    event_name: RADIO_SELECTED_DME_IDENT_TOGGLE
-  -
     type: NumSet
     var_name: A:DME SOUND:2
     var_units: Bool
     var_type: f64
     event_name: RADIO_DME2_IDENT_SET
-  -
-    type: event
-    event_name: RADIO_DME2_IDENT_TOGGLE
 
   - # Audio Panel
     type: NumIncrement
     var_name: A:AUDIO PANEL VOLUME
     var_units: Percent
-    var_type: i32
+    var_type: f64
     up_event_name: AUDIO_PANEL_VOLUME_INC
     down_event_name: AUDIO_PANEL_VOLUME_DEC
     increment_by: 1
-  -
-    type: ToggleSwitch
-    var_name: A:COM TRANSMIT:1
-    var_units: Bool
-    event_name: PILOT_TRANSMITTER_SET
-    switch_on: true
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:COM TRANSMIT:2
-    var_units: Bool
-    event_name: PILOT_TRANSMITTER_SET
-    switch_on: true
-    event_param: 2
-  -
-    type: ToggleSwitch
-    var_name: A:COM TRANSMIT:3
-    var_units: Bool
-    event_name: PILOT_TRANSMITTER_SET
-    switch_on: true
-    event_param: 3
   -
     type: NumSet
     var_name: A:PILOT TRANSMITTER TYPE
@@ -225,35 +241,37 @@ shared:
     type: NumSet
     var_name: A:COM RECIEVE ALL
     var_units: Bool
-    var_type: i32
+    var_type: f64
     event_name: COM_RECEIVE_ALL_SET
   -
-    type: ToggleSwitch
-    var_name: A:COM RECEIVE:1
+    type: NumSet
+    var_name: A:COM RECEIVE EX1:1
     var_units: Bool
+    var_type: f64
     event_name: COM1_RECEIVE_SELECT
-    switch_on: true
   -
-    type: ToggleSwitch
-    var_name: A:COM RECEIVE:2
+    type: NumSet
+    var_name: A:COM RECEIVE EX1:2
     var_units: Bool
+    var_type: f64
     event_name: COM2_RECEIVE_SELECT
-    switch_on: true
   -
-    type: ToggleSwitch
-    var_name: A:COM RECEIVE:3
+    type: NumSet
+    var_name: A:COM RECEIVE EX1:3
     var_units: Bool
+    var_type: f64
     event_name: COM3_RECEIVE_SELECT
-    switch_on: true
   -
     type: ToggleSwitch
     var_name: A:SPEAKER ACTIVE
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_SPEAKER
   -
     type: ToggleSwitch
     var_name: A:INTERCOM SYSTEM ACTIVE
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_ICS
   -
     type: NumSet

@@ -1,10 +1,9 @@
 include:
-  - definitions/modules/AS1000.yaml
+  - definitions/modules/Avionics/AS1000.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
@@ -20,6 +19,7 @@ shared:
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:30
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 30
 
@@ -27,12 +27,14 @@ shared:
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:9
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 9
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:10
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 10
 
@@ -58,15 +60,49 @@ shared:
     var_type: bool
 
   - # Fuel
-    type: var
-    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_1_IsOpen
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP1_SET
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP2_SET
   -
     type: var
-    var_name: L:XMLVAR_FUEL_Switch_Off_Blocker_2_IsOpen
+    var_name: A:FUEL TANK SELECTOR:1
+    var_units: Enum
+    var_type: i32
+  -
+    type: event
+    event_name: FUEL_SELECTOR_LEFT_MAIN
+  -
+    type: event
+    event_name: FUEL_SELECTOR_RIGHT_MAIN
+  -
+    type: event
+    event_name: FUEL_SELECTOR_OFF
+  -
+    type: var
+    var_name: A:FUEL TANK SELECTOR:2
+    var_units: Enum
+    var_type: i32
+  -
+    type: event
+    event_name: FUEL_SELECTOR_2_LEFT_MAIN
+  -
+    type: event
+    event_name: FUEL_SELECTOR_2_RIGHT_MAIN
+  -
+    type: event
+    event_name: FUEL_SELECTOR_2_OFF
 
   - # Lights
     type: NumSet
-    var_name: A:LIGHT PANEL
+    var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
@@ -80,7 +116,7 @@ shared:
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT GLARESHIELD
+    var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
@@ -93,16 +129,18 @@ shared:
     event_param: 5
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 1
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:2
     var_units: Bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 2
   -
     type: NumSet
@@ -144,18 +182,240 @@ shared:
     event_param: 30
     index_reversed: true
 
-  - # LVAR Dump
-    type: var
-    var_name: L:XMLVAR_DEICEPump
+# - # LVAR's
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
   -
     type: var
-    var_name: L:XMLVAR_IceLightMaxStateEnabled
+    var_name: L:XMLVAR_RudderTrim_Switch_1
+  -
+    type: var
+    var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness
   -
     type: var
     var_name: L:XMLVAR_Autopilot_2_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
   -
     type: var
-    var_name: L:XMLVAR_Oxygen
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_GLARESHIELD_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_3
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_1
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_2
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:XMLVAR_DEICE_Pump
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Glasscockpit_MFD_Started
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_On
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_Off
+# -
+#   type: var
+#   var_name: L:Glasscockpit_Wind_Mode
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsMode
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsValue
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_State
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_State
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeBackup_State
+# -
+#   type: var
+#   var_name: L:AS1000_SpeedBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_SpeedBackup_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   - # Payload
@@ -182,7 +442,55 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
 
 ignore:
-  - AS1000_PFD_BARO_INC
-  - AS1000_PFD_BARO_DEC
+  - AP_KNOB
+  - AP_KNOB_Up
+  - AP_KNOB_Down
+  - AP_BARO_Up
+  - AP_BARO_Down

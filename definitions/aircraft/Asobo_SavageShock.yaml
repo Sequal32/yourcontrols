@@ -1,8 +1,10 @@
 include:
+  - definitions/modules/Avionics/Vigilus.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
@@ -15,22 +17,16 @@ shared:
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:14
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 14
-  -
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
-    set: 2 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:35
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 35
-
-  - # Choke
-    type: var
-    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
 
   - # Failures
     type: var
@@ -43,11 +39,91 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Lights
+  - # Water Rudder
     type: ToggleSwitch
-    var_name: A:LIGHT STROBE
+    var_name: A:WATER RUDDER HANDLE POSITION
     var_units: Bool
-    event_name: STROBES_TOGGLE
+    var_type: bool
+    event_name: TOGGLE_WATER_RUDDER
+
+  - # LVAR's
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverFlapsHidden
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+  -
+    type: var
+    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_1
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_1
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AS_Vigilus_Page
+  -
+    type: var
+    var_name: L:AS92_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS92_State
+  -
+    type: var
+    var_name: L:LedTrim_ScreenLuminosity
+  -
+    type: var
+    var_name: L:LedTrim_State
+# -
+#   type: var
+#   var_name: L:ASVigilus_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:ASVigilus_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   - # Payload
@@ -62,3 +138,8 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64

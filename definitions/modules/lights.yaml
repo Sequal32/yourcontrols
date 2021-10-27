@@ -1,58 +1,90 @@
-# This file only supports the basic layout for exterior lights. Be sure to use the appropriate index and event param numbers when building your own profile. Index 1 should work for variables with both no index number and index 0.
+# This file only supports the basic layout for exterior lights. Be sure to use the appropriate index and event param numbers when building your own profile.
 
 shared:
   - # ASOBO_LIGHTING_Switch_Light_Navigation_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT NAV:1
     var_units: Bool
-    event_name: TOGGLE_NAV_LIGHTS
+    var_type: f64
+    event_name: NAV_LIGHTS_SET
     event_param: 1
+  -
+    type: event
+    event_name: TOGGLE_NAV_LIGHTS
 
   - # ASOBO_LIGHTING_Switch_Light_Beacon_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT BEACON:1
     var_units: Bool
-    event_name: TOGGLE_BEACON_LIGHTS
+    var_type: f64
+    event_name: BEACON_LIGHTS_SET
     event_param: 1
+  -
+    type: event
+    event_name: TOGGLE_BEACON_LIGHTS
 
   - # ASOBO_LIGHTING_Switch_Light_Strobe_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT STROBE:1
     var_units: Bool
-    event_name: STROBES_TOGGLE
+    var_type: f64
+    event_name: STROBES_SET
     event_param: 1
+  -
+    type: event
+    event_name: STROBES_TOGGLE
 
   - # ASOBO_LIGHTING_Switch_Light_Recognition_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT RECOGNITION:1
     var_units: Bool
-    event_name: TOGGLE_RECOGNITION_LIGHTS
+    var_type: f64
+    event_name: RECOGNITION_LIGHTS_SET
     event_param: 1
+  -
+    type: event
+    event_name: TOGGLE_RECOGNITION_LIGHTS
 
   - # ASOBO_LIGHTING_Switch_Light_Logo_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT LOGO:1
     var_units: Bool
-    event_name: TOGGLE_LOGO_LIGHTS
+    var_type: f64
+    event_name: LOGO_LIGHTS_SET
     event_param: 1
+  -
+    type: event
+    event_name: TOGGLE_LOGO_LIGHTS
 
   - # ASOBO_LIGHTING_Switch_Light_Wing_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT WING:1
     var_units: Bool
-    event_name: TOGGLE_WING_LIGHTS
+    var_type: f64
+    event_name: WING_LIGHTS_SET
     event_param: 1
+  -
+    type: event
+    event_name: TOGGLE_WING_LIGHTS
 
   - # ASOBO_LIGHTING_Switch_Light_Landing_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT LANDING:1
     var_units: Bool
-    event_name: LANDING_LIGHTS_TOGGLE
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
     event_param: 1
+  -
+    type: event
+    event_name: LANDING_LIGHTS_TOGGLE
 
   - # ASOBO_LIGHTING_Switch_Light_Taxi_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT TAXI:1
     var_units: Bool
-    event_name: TOGGLE_TAXI_LIGHTS
+    var_type: f64
+    event_name: TAXI_LIGHTS_SET
     event_param: 1
+  -
+    type: event
+    event_name: TOGGLE_TAXI_LIGHTS

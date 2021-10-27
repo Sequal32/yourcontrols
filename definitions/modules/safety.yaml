@@ -3,6 +3,7 @@ shared:
     type: ToggleSwitch
     var_name: A:ALTERNATE STATIC SOURCE OPEN
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_ALTERNATE_STATIC
 
   - # ASOBO_SAFETY_Switch_ELT_Template
@@ -11,20 +12,19 @@ shared:
     var_units: Bool
     off_event_name: ELT_OFF
     event_name: ELT_ON
-  -
+
+  - # LVAR's
     type: var
     var_name: L:XMLVAR_ELT_STATE
-    var_type: f64
   -
     type: var
     var_name: L:XMLVAR_ELT_TEST_TIME
-    var_type: f64
   -
     type: var
     var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-    var_type: f64
-
-  - # ASOBO_SAFETY_Indicator_Template
+  -
     type: var
     var_name: L:XMLVAR_LTS_Test
-    var_type: f64
+  -
+    type: var
+    var_name: L:XMLVAR_EMER_LTS_STATE

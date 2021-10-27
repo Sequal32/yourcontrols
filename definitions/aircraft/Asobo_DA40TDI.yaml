@@ -1,4 +1,7 @@
 include:
+  - definitions/modules/Avionics/AS330.yaml
+  - definitions/modules/Avionics/AS430.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
@@ -18,56 +21,43 @@ shared:
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:22
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 22
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:23
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 23
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:38
     var_units: Bool
+    var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 38
+
+  - # Essential Bus
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
+    set: 2 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
+    set: 3 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
+    set: 3 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
   - # Deice
     type: ToggleSwitch
     var_name: A:PITOT HEAT
     var_units: Bool
+    var_type: bool
     event_name: PITOT_HEAT_TOGGLE
-
-  - # Electrical
-    type: var
-    var_name: L:XMLVAR_ElecMaster
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_Electrical_Master_Battery_Turned_ON
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_SAFETY_Panel_Test_Enabled
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_CautionEnabled
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_AcknowledgeTime
-    var_type: f64
-
-  - # Engine
-    type: var
-    var_name: L:XMLVAR_SwitchECUBtn
-    var_type: f64
-  -
-    type: var
-    var_name: L:XMLVAR_SwitchECUSwap
-    var_type: f64
 
   - # Failures
     type: var
@@ -130,18 +120,21 @@ shared:
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:1
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 1
   -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:2
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 2
   -
     type: ToggleSwitch
     var_name: A:LIGHT CABIN:3
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 3
   -
@@ -177,6 +170,166 @@ shared:
     event_param: 12
     index_reversed: true
 
+  - # LVAR's
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:XMLVAR_SwitchECUBtn
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:GNS_Brightness
+  -
+    type: var
+    var_name: L:XMLVAR_ElecMaster
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Electrical_Master_Battery_Turned_ON
+  -
+    type: var
+    var_name: L:XMLVAR_SAFETY_Panel_Test_Enabled
+  -
+    type: var
+    var_name: L:XMLVAR_CautionEnabled
+  -
+    type: var
+    var_name: L:XMLVAR_WarningEnabled
+  -
+    type: var
+    var_name: L:XMLVAR_AcknowledgeTime
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_SwitchECUSwap
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Gyro_Drift
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:ELECTRICAL_EssentialBus_2
+  -
+    type: var
+    var_name: L:LIGHTING_GLARESHIELD_1
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+  -
+    type: var
+    var_name: L:M803_ScreenLuminosity
+  -
+    type: var
+    var_name: L:M803_State
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+  -
+    type: var
+    var_name: L:DA40_MED_ScreenLuminosity
+  -
+    type: var
+    var_name: L:DA40_MED_State
+  -
+    type: var
+    var_name: L:DA40_SED_ScreenLuminosity
+  -
+    type: var
+    var_name: L:DA40_SED_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
+  -
+    type: var
+    var_name: L:ENG_LOAD_Percent
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
 server:
   - # Payload
     type: var
@@ -190,3 +343,28 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64

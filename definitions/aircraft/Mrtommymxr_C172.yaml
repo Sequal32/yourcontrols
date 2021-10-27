@@ -1,7 +1,7 @@
-# Version 0.8.0.3
+# Version 0.2
 
 include:
-  - definitions/aircraft/Asobo_DA40NG.yaml
+  - definitions/aircraft/Asobo_C172_G1000.yaml
 
 shared:
 # -
@@ -10,30 +10,69 @@ shared:
 # -
 #   type: var
 #   var_name: L:ELEC_TARGET_GENALT_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:GLOW_PLUG_ON
+# -
+#   type: var
+#   var_name: L:ELEC_TARGET_BATTERY_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:ELEC_TARGET_BATTERY2_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:ELEC_FAKE_CHARGING_CURRENT1
+# -
+#   type: var
+#   var_name: L:ELEC_FAKE_CHARGING_CURRENT2
+# -
+#   type: var
+#   var_name: L:ELEC_TARGET_FAKE_BATTERY_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:ELEC_TARGET_FAKE_BATTERY2_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:ELEC_FAKE_BATTERY_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:ELEC_FAKE_BATTERY2_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:ELEC_TOTAL_BATTERY_BUS_AMPS
   -
     type: var
     var_name: L:FADEC_MASTER
 # -
 #   type: var
-#   var_name: L:FAIL_WATER
-# -
-#   type: var
 #   var_name: L:ENG_TARGET_RADIATOR_TEMPERATURE
 # -
 #   type: var
-#   var_name: L:FAIL_OIL
-# -
-#   type: var
 #   var_name: L:ENG_TARGET_OIL_TEMPERATURE
-# -
-#   type: var
-#   var_name: L:FAIL_GBOX
 # -
 #   type: var
 #   var_name: L:ENG_TARGET_GBOX_TEMPERATURE
 # -
 #   type: var
 #   var_name: L:ENG_TARGET_OIL_PRESSURE
+# -
+#   type: var
+#   var_name: L:FADEC_POWER_OUTPUT_L
+# -
+#   type: var
+#   var_name: L:PROP_RPM:1
+# -
+#   type: var
+#   var_name: L:ENG_FUEL_FLOW_GPH:1
+# -
+#   type: var
+#   var_name: L:ENG_FUEL_FLOW_DIFF:1
+# -
+#   type: var
+#   var_name: L:FUEL_TANK_LEFT_MAIN_QUANTITY
+# -
+#   type: var
+#   var_name: L:FUEL_TANK_RIGHT_MAIN_QUANTITY
 # -
 #   type: var
 #   var_name: L:TIME_PASSED
@@ -100,15 +139,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:FUEL_TOTALISER
-# -
-#   type: var
-#   var_name: L:FUEL_LEFT_QUANTITY
-# -
-#   type: var
-#   var_name: L:FUEL_RIGHT_QUANTITY
-# -
-#   type: var
-#   var_name: L:DEICE_DEFROST_POWER
+  -
+    type: var
+    var_name: L:XMLVAR_CABINAIR_Position_1
+  -
+    type: var
+    var_name: L:XMLVAR_CABINHEAT_Position_1
+  -
+    type: var
+    var_name: L:DEICE_DEFROST_POWER
 # -
 #   type: var
 #   var_name: L:DEICE_DEFROST_DUTY_CYCLE
@@ -117,19 +156,19 @@ shared:
 #   var_name: L:DEICE_DEFROST_DEBUG
   -
     type: var
-    var_name: L:FADEC_MASTER_TIMER
-  -
-    type: var
-    var_name: L:FADEC_ECUTEST_ACTIVE
-  -
-    type: var
     var_name: L:FADEC_ECUTEST_FAIL_B
   -
     type: var
     var_name: L:FADEC_ECUTEST_FAIL_A
-# -
-#   type: var
-#   var_name: L:ENG_GBOX_TEMPERATURE
+  -
+    type: var
+    var_name: L:FADEC_MASTER_FAKE
+  -
+    type: var
+    var_name: L:FADEC_MASTER_TIMER
+  -
+    type: var
+    var_name: L:FADEC_ECUTEST_ACTIVE
   -
     type: var
     var_name: L:FADEC_ECUTEST_BUTTON
@@ -138,16 +177,7 @@ shared:
 #   var_name: L:Throttle1_Pos
   -
     type: var
-    var_name: L:FADEC_ECU_VOTER
-  -
-    type: var
-    var_name: L:THROTTLE1_MODE
-  -
-    type: var
     var_name: L:FADEC_ECUTEST_TIMER
-  -
-    type: var
-    var_name: L:FADEC_ECUTEST_STEP
   -
     type: var
     var_name: L:FADEC_ECUTEST
@@ -159,13 +189,19 @@ shared:
 #   var_name: L:FADEC_POWER_LEVER
 # -
 #   type: var
-#   var_name: L:FUEL_INVERTED
+#   var_name: L:GLOW_PLUG
 # -
 #   type: var
 #   var_name: L:ELEC_MAIN_BUS_VOLTAGE
 # -
 #   type: var
 #   var_name: L:ELEC_GENALT_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:ELEC_BATTERY_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:ELEC_BATTERY2_BUS_AMPS
 # -
 #   type: var
 #   var_name: L:ENG_OIL_PRESSURE
@@ -177,46 +213,55 @@ shared:
 #   var_name: L:ENG_RADIATOR_TEMPERATURE
 # -
 #   type: var
-#   var_name: L:FADEC_POWER_OUTPUT
-# -
-#   type: var
-#   var_name: L:FAIL_TIMER
-# -
-#   type: var
-#   var_name: L:FAIL_POWER_STRESS
-# -
-#   type: var
-#   var_name: L:FIRE_TIMER
-# -
-#   type: var
-#   var_name: L:ENG_FAILED
-# -
-#   type: var
-#   var_name: L:FAIL_OIL_L
+#   var_name: L:ENG_GBOX_TEMPERATURE
 # -
 #   type: var
 #   var_name: L:FAIL_POWER_TEMP
+# -
+#   type: var
+#   var_name: L:FUEL_INVERTED
 # -
 #   type: var
 #   var_name: L:ALLOW_UNFAIL
 # -
 #   type: var
 #   var_name: L:FAIL_DUTY_CYCLE
-  -
-    type: var
-    var_name: L:FADEC_ECUTEST_BUTTON_IsDown
-  -
-    type: var
-    var_name: L:FADEC_ECUTEST_BUTTON_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:FAIL_POWER_STRESS
+# -
+#   type: var
+#   var_name: L:START_CRANK:1
+# -
+#   type: var
+#   var_name: L:START_CRANK:1_MAX
+# -
+#   type: var
+#   var_name: L:START_OIL:1
+# -
+#   type: var
+#   var_name: L:THROTTLE1_MODE
+# -
+#   type: var
+#   var_name: L:XMLVAR_STBYBattery_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_BatterySTBY_SwitchState
+# -
+#   type: var
+#   var_name: L:XMLVAR_STBYBattery_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
 # -
 #   type: var
-#   var_name: L:ParkingBrake_Position
+#   var_name: L:ENG FUEL VALVE:1
 # -
 #   type: var
-#   var_name: L:HANDLING_ElevatorTrim
+#   var_name: L:XMLVAR_LeverMixtureHidden1
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -225,10 +270,16 @@ shared:
 #   var_name: L:XMLVAR_YokeHidden2
 # -
 #   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_Yoke
 # -
 #   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
+#   var_name: L:XMLVAR_ElevatorTrim_Yoke_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:AS1000_PFD_ScreenLuminosity
@@ -237,31 +288,19 @@ shared:
 #   var_name: L:AS1000_PFD_Brightness
 # -
 #   type: var
+#   var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_Brightness
 # -
 #   type: var
-#   var_name: L:XMLVAR_Autopilot_1_Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElecMaster
+#   var_name: L:XMLVAR_Autopilot_2_Status
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
-# -
-#   type: var
-#   var_name: L:DA40_ShowPilot
-# -
-#   type: var
-#   var_name: L:DA40_ShowCoPilot
-# -
-#   type: var
-#   var_name: L:DEICE_Pitot_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Altimeter_1
 # -
 #   type: var
 #   var_name: L:AS1000_PFD_SelectedNavIndex
@@ -279,6 +318,9 @@ shared:
 #   var_name: L:PFD_InnerMap_MapShowCursor
 # -
 #   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_SelectedNavIndex
 # -
 #   type: var
@@ -291,49 +333,55 @@ shared:
 #   var_name: L:MFD_InnerMap_MapShowCursor
 # -
 #   type: var
-#   var_name: L:XMLVAR_VNAVButtonValue
+#   var_name: L:INSTRUMENT_Altimeter_1
 # -
 #   type: var
-#   var_name: L:ELECTRICAL_EssentialBus_2
-# -
-#   type: var
-#   var_name: L:LIGHTING_GLARESHIELD_1
+#   var_name: L:LIGHTING_POTENTIOMETER_3
 # -
 #   type: var
 #   var_name: L:LIGHTING_PANEL_1
 # -
 #   type: var
-#   var_name: L:LIGHTING_STROBE_1
+#   var_name: L:LIGHTING_PEDESTRAL_1
 # -
 #   type: var
-#   var_name: L:LIGHTING_NAV_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_TAXI_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_LANDING_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_CABIN_1
+#   var_name: L:LIGHTING_POTENTIOMETER_4
 # -
 #   type: var
 #   var_name: L:LIGHTING_CABIN_2
 # -
 #   type: var
-#   var_name: L:LIGHTING_CABIN_3
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_0
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_0
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
 # -
 #   type: var
 #   var_name: L:XMLVAR_IsDeiceAirFrame
 # -
 #   type: var
 #   var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
   -
     type: var
     var_name: L:FADEC_ECUTEST_R
@@ -397,6 +445,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpit_MFD_Started
+# -
+#   type: var
+#   var_name: L:WT1000_VNav_TOD_Leg_Index
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN

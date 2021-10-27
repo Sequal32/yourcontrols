@@ -1,37 +1,12 @@
-# Version 0.61 Stable + Dev (GitHub Feb-14-2021)
+# Version 0.6.5
 
 include:
   - definitions/aircraft/Asobo_BonanzaG36.yaml
 
 shared:
-  - # LVAR Dump (Frett only)
+  -
     type: var
     var_name: L:XMLVAR_BUSES_TIED
-  -
-    type: var
-    var_name: L:XMLVAR_Airco
-  -
-    type: var
-    var_name: L:XMLVAR_PUMPED_FUEL
-  -
-    type: var
-    var_name: L:XMLVAR_Engine_Condition
-  -
-    type: var
-    var_name: L:XMLVAR_Blower
-  -
-    type: var
-    var_name: L:XMLVAR_Vent
-  -
-    type: var
-    var_name: L:XMLVAR_Test
-  -
-    type: var
-    var_name: L:XMLVAR_AlternateAir
-
-# - # Don't sync
-#   type: var
-#   var_name: L:XMLVAR_FUEL_FLOW_TARGET
 # -
 #   type: var
 #   var_name: L:XMLVAR_ALT1_LOAD_TARGET
@@ -44,6 +19,21 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_BUS1_VOLT_TARGET
+  -
+    type: var
+    var_name: L:XMLVAR_Airco
+  -
+    type: var
+    var_name: L:XMLVAR_FUEL_Pump1_High_ON
+# -
+#   type: var
+#   var_name: L:XMLVAR_FUEL_FLOW_TARGET
+  -
+    type: var
+    var_name: L:XMLVAR_PUMPED_FUEL
+# -
+#   type: var
+#   var_name: L:XMLVAR_Engine_Condition
 # -
 #   type: var
 #   var_name: L:XMLVAR_Fuel_Evaporating
@@ -62,3 +52,240 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_FUEL_FLOW_INDICATED
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:XMLVAR_Autopilot_2_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:XMLVAR_Blower
+  -
+    type: var
+    var_name: L:XMLVAR_Vent
+  -
+    type: var
+    var_name: L:XMLVAR_Test
+  -
+    type: var
+    var_name: L:XMLVAR_AlternateAir
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Propeller_1
+# -
+#   type: var
+#   var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_14_Power_Setting
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1_Power_Setting
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1_Power_Setting
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_On
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_Off
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:Glasscockpit_Wind_Mode
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsMode
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsValue
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Glasscockpit_MFD_Started
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:DigitalOAT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:DigitalOAT_State
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_State
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE

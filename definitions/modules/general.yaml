@@ -12,11 +12,12 @@ shared:
     var_type: i32
     event_name: FLAPS_CONTINUOUS_SET
 
-  - # ASOBO_LANDING_GEAR_Lever_Gear_Template (Var to support Up/Off/Down)
-    type: var
+  - # ASOBO_LANDING_GEAR_Lever_Gear_Template
+    type: NumSet
     var_name: A:GEAR HANDLE POSITION
     var_units: Number
     var_type: i32
+    event_name: GEAR_SET
 
   - # ASOBO_HANDLING_Lever_Spoilers_Template
     type: NumSet
@@ -28,13 +29,14 @@ shared:
     type: ToggleSwitch
     var_name: A:SPOILERS ARMED
     var_units: Bool
-    event_name: SPOILERS_ARM_ON
-    off_event_name: SPOILERS_ARM_OFF
+    var_type: bool
+    event_name: SPOILERS_ARM_TOGGLE
 
   - # ASOBO_LANDING_GEAR_Switch_ParkingBrake_Template
     type: ToggleSwitch
     var_name: A:BRAKE PARKING POSITION
     var_units: Bool
+    var_type: bool
     event_name: PARKING_BRAKES
 
   - # YourControls Force Transfer Hotkey
@@ -43,27 +45,24 @@ shared:
     action: TransferControls
 
 master:
-  - # ASOBO_HANDLING_Yoke_Template
-    type: NumSet
-    var_name: A:YOKE X POSITION
+  - # Controls (Sync surfaces, not yoke. Yoke sync only shows half surface deflection and is just for animation. Yoke also still moves.)
+    type: var
+    var_name: A:ELEVATOR POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: AXIS_AILERONS_SET
-    interpolate: InvertConstant
+    interpolate: DefaultConstant
   -
-    type: NumSet
-    var_name: A:YOKE Y POSITION
+    type: var
+    var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: AXIS_ELEVATOR_SET
-    interpolate: InvertConstant
+    interpolate: DefaultConstant
   -
-    type: NumSet
-    var_name: A:RUDDER PEDAL POSITION
+    type: var
+    var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: AXIS_RUDDER_SET
-    interpolate: InvertConstant
+    interpolate: DefaultConstant
   -
     type: NumSet
     var_name: A:BRAKE LEFT POSITION EX1

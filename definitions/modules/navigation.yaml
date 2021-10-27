@@ -22,12 +22,14 @@ shared:
     type: ToggleSwitch
     var_name: A:ATTITUDE CAGE
     var_units: Bool
+    var_type: bool
     event_name: ATTITUDE_CAGE_BUTTON
   -
-    type: var
+    type: NumSet
     var_name: A:ATTITUDE BARS POSITION
     var_units: Percent
     var_type: f64
+    event_name: ATTITUDE_BARS_POSITION_SET
   -
     type: NumIncrement
     var_name: A:NAV OBS:1
@@ -52,10 +54,3 @@ shared:
     up_event_name: ADF_CARD_INC
     down_event_name: ADF_CARD_DEC
     increment_by: 1
-
-#  - # Recommended not to use as this updates constantly, calibrating the heading indicator isn't used often
-#    type: NumSet
-#    var_name: A:PLANE HEADING DEGREES GYRO
-#    var_units: Degrees
-#    var_type: f64
-#    event_name: GYRO_DRIFT_SET

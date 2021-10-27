@@ -2,20 +2,34 @@
 
 shared:
   - # ASOBO_DEICE_Switch_Pitot_Template
-    type: ToggleSwitch
-    var_name: A:PITOT HEAT
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
     var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:2
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 2
+  -
+    type: event
     event_name: PITOT_HEAT_TOGGLE
 
   - # ASOBO_DEICE_Switch_Airframe_Template
     type: ToggleSwitch
     var_name: A:STRUCTURAL DEICE SWITCH
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_STRUCTURAL_DEICE
   -
     type: ToggleSwitch
     var_name: A:WINDSHIELD DEICE SWITCH
     var_units: Bool
+    var_type: bool
     event_name: WINDSHIELD_DEICE_TOGGLE
 
   - # ASOBO_DEICE_Lever_Engine_Template (Works for both ENG ANTI ICE toggle and RECIP ENG ALTERNATE position. Makes no sense, I know)
@@ -35,11 +49,13 @@ shared:
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:1
     var_units: Bool
+    var_type: bool
     event_name: ANTI_ICE_TOGGLE_ENG1
   -
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:2
     var_units: Bool
+    var_type: bool
     event_name: ANTI_ICE_TOGGLE_ENG2
 
   - # ASOBO_ENGINE_Switch_AlternateAir_Template (Var cause event conflict with above)
@@ -57,11 +73,13 @@ shared:
     type: ToggleSwitch
     var_name: A:PROP DEICE SWITCH:1
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_PROPELLER_DEICE
     event_param: 1
   -
     type: ToggleSwitch
     var_name: A:PROP DEICE SWITCH:2
     var_units: Bool
+    var_type: bool
     event_name: TOGGLE_PROPELLER_DEICE
     event_param: 2
