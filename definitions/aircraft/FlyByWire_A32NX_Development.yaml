@@ -3,7 +3,6 @@
 include:
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/transponder.yaml
 
 shared:
   - # Autopilot
@@ -489,6 +488,12 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 97
     index_reversed: true
+
+  - # Transponder
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: Enum
+    var_type: f64 # Must be f64 - throttles shoot to CL with i32
 
   - # Lights
     type: NumSet
@@ -2969,18 +2974,18 @@ shared:
   -
     type: var
     var_name: L:A32NX_DEV_RADIO_RECEIVER_LOC_IS_VALID
-#  -
-#    type: var
-#    var_name: L:A32NX_DEV_RADIO_RECEIVER_LOC_DEVIATION
-#  -
-#    type: var
-#    var_name: L:A32NX_DEV_RADIO_RECEIVER_LOC_DISTANCE
+# -
+#   type: var
+#   var_name: L:A32NX_DEV_RADIO_RECEIVER_LOC_DEVIATION
+# -
+#   type: var
+#   var_name: L:A32NX_DEV_RADIO_RECEIVER_LOC_DISTANCE
   -
     type: var
     var_name: L:A32NX_DEV_RADIO_RECEIVER_GS_IS_VALID
-#  -
-#    type: var
-#    var_name: L:A32NX_DEV_RADIO_RECEIVER_GS_DEVIATION
+# -
+#   type: var
+#   var_name: L:A32NX_DEV_RADIO_RECEIVER_GS_DEVIATION
   -
     type: var
     var_name: L:A320_Neo_FCU_SPEED_SET_DATA
@@ -4119,6 +4124,23 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ELT_TEST_TIME
+
+init:
+  -
+    type: NumDigitSet
+    var_name: A:TRANSPONDER CODE:1
+    var_units: Number
+    var_type: i32
+    up_event_names:
+      - XPNDR_1_INC
+      - XPNDR_10_INC
+      - XPNDR_100_INC
+      - XPNDR_1000_INC
+    down_event_names:
+      - XPNDR_1_DEC
+      - XPNDR_10_DEC
+      - XPNDR_100_DEC
+      - XPNDR_1000_DEC
 
 master:
   - # Controls
