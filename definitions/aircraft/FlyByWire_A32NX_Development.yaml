@@ -493,7 +493,7 @@ shared:
     type: var
     var_name: A:TRANSPONDER STATE:1
     var_units: Enum
-    var_type: f64 # Must be f64
+    var_type: f64 # Must be f64 or else throttles shoot to CLIMB
 
   - # Lights
     type: NumSet
@@ -617,34 +617,25 @@ shared:
     var_units: Percent scaler 16k
     var_type: i32
     event_name: RUDDER_TRIM_SET_EX1
-    interpolate: Default
-    condition:
-      var:
-        var_name: L:A32NX_AUTOPILOT_ACTIVE
-        var_units: Bool
-        var_type: bool
-      equals:
-        Bool: false
+    unreliable: true
   -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
     var_units: Percent scaler 16k
     var_type: i32
     event_name: ELEVATOR_TRIM_SET
-    interpolate: Default
-    condition:
-      var:
-        var_name: L:A32NX_AUTOPILOT_ACTIVE
-        var_units: Bool
-        var_type: bool
-      equals:
-        Bool: false
+    unreliable: true
   -
     type: NumSet
     var_name: A:AILERON TRIM PCT
     var_units: Percent scaler 16k
     var_type: i32
     event_name: AILERON_TRIM_SET_EX1
+
+  - # YourControls Force Transfer Hotkey
+    type: ProgramActionEvent
+    event_name: TOGGLE_LAUNCH_BAR_SWITCH
+    action: TransferControls
 
   - # Take control priority
     type: ProgramAction
@@ -1592,8 +1583,10 @@ shared:
 #   type: var
 #   var_name: L:XMLVAR_LeverFlapsHidden
   -
-    type: var
+    type: ToggleSwitch
     var_name: L:A32NX_SPOILERS_ARMED
+    event_name: SPOILERS_ARM_TOGGLE
+    use_calculator: true
   -
     type: NumSet
     var_name: L:A32NX_SPOILERS_HANDLE_POSITION
@@ -1616,9 +1609,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_SIDESTICK_POSITION_Y
-# -
-#   type: var
-#   var_name: L:A32NX_AUTOPILOT_ACTIVE
+  -
+    type: var
+    var_name: L:A32NX_AUTOPILOT_ACTIVE
 # -
 #   type: var
 #   var_name: L:A32NX_PRIORITY_TAKEOVER:1
@@ -2513,9 +2506,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_ADIRS_ADR_1_MACH
-  -
-    type: var
-    var_name: L:A32NX_SPEEDS_VMAX
+# -
+#   type: var
+#   var_name: L:A32NX_SPEEDS_VMAX
   -
     type: var
     var_name: L:A32NX_FMA_VERTICAL_ARMED
@@ -2699,9 +2692,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_PERFORMANCE_WARNING_ACTIVE
-  -
-    type: var
-    var_name: L:A32NX_EXTERNAL_OVERRIDE
+# -
+#   type: var
+#   var_name: L:A32NX_EXTERNAL_OVERRIDE
   -
     type: var
     var_name: L:A32NX_FMA_LATERAL_MODE
@@ -2986,15 +2979,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_DEV_RADIO_RECEIVER_GS_DEVIATION
-  -
-    type: var
-    var_name: L:A320_Neo_FCU_SPEED_SET_DATA
-  -
-    type: var
-    var_name: L:A320_Neo_FCU_HDG_SET_DATA
-  -
-    type: var
-    var_name: L:A320_Neo_FCU_VS_SET_DATA
+# -
+#   type: var
+#   var_name: L:A320_Neo_FCU_SPEED_SET_DATA
+# -
+#   type: var
+#   var_name: L:A320_Neo_FCU_HDG_SET_DATA
+# -
+#   type: var
+#   var_name: L:A320_Neo_FCU_VS_SET_DATA
   -
     type: var
     var_name: L:A32NX_ELEC_AC_GND_FLT_SVC_BUS_IS_POWERED
@@ -3884,24 +3877,24 @@ shared:
   -
     type: var
     var_name: L:A32NX_PAX_TOTAL_ROWS_22_29
-  -
-    type: var
-    var_name: L:A32NX_SPEEDS_VS
-  -
-    type: var
-    var_name: L:A32NX_SPEEDS_F
-  -
-    type: var
-    var_name: L:A32NX_SPEEDS_S
-  -
-    type: var
-    var_name: L:A32NX_SPEEDS_GD
-  -
-    type: var
-    var_name: L:A32NX_SPEEDS_LANDING_CONF3
-  -
-    type: var
-    var_name: L:A32NX_SPEEDS_VFEN
+# -
+#   type: var
+#   var_name: L:A32NX_SPEEDS_VS
+# -
+#   type: var
+#   var_name: L:A32NX_SPEEDS_F
+# -
+#   type: var
+#   var_name: L:A32NX_SPEEDS_S
+# -
+#   type: var
+#   var_name: L:A32NX_SPEEDS_GD
+# -
+#   type: var
+#   var_name: L:A32NX_SPEEDS_LANDING_CONF3
+# -
+#   type: var
+#   var_name: L:A32NX_SPEEDS_VFEN
 # -
 #   type: var
 #   var_name: L:A32NX_SPEEDS_ALPHA_PROTECTION_CALC
@@ -3941,18 +3934,18 @@ shared:
   -
     type: var
     var_name: L:A32NX_BOARDING_STARTED_BY_USR
-  -
-    type: var
-    var_name: L:A32NX_FLAPS_IN_MOTION
+# -
+#   type: var
+#   var_name: L:A32NX_FLAPS_IN_MOTION
   -
     type: var
     var_name: L:A32NX_MCDU_MASK_OPACITY
-  -
-    type: var
-    var_name: L:A32NX_ALT_DEVIATION_SHORT
-  -
-    type: var
-    var_name: L:A32NX_ALT_DEVIATION
+# -
+#   type: var
+#   var_name: L:A32NX_ALT_DEVIATION_SHORT
+# -
+#   type: var
+#   var_name: L:A32NX_ALT_DEVIATION
   -
     type: var
     var_name: L:FMC_UPDATE_CURRENT_PAGE
