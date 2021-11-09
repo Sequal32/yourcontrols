@@ -121,8 +121,20 @@ shared:
     var_name: A:AUTOPILOT WING LEVELER
     var_units: Bool
     var_type: bool
-    event_name: AP_WING_LEVELER_ON
-    off_event_name: AP_WING_LEVELER_OFF
+    event_name: AP_WING_LEVELER
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT PITCH HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PITCH_LEVELER
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT PITCH HOLD REF
+    var_units: Radians
+    var_type: f64
+    event_name: AP_PITCH_REF_SET
+    unreliable: true
 
   - # ASOBO_AUTOPILOT_Push_BackCourse_Template
     type: ToggleSwitch
@@ -130,19 +142,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_BC_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT PITCH HOLD
-    var_units: Bool
-    var_type: bool
-    event_name: AP_PITCH_LEVELER_ON
-    off_event_name: AP_PITCH_LEVELER_OFF
-  -
-    type: var
-    var_name: A:AUTOPILOT PITCH HOLD REF
-    var_units: Feet per minute
-    var_type: f64
-    interpolate: DefaultConstant
 
   - # ASOBO_AUTOPILOT_Push_FlightDirector_Template
     type: ToggleSwitch
