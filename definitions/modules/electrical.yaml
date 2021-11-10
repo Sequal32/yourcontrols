@@ -79,16 +79,20 @@ shared:
     event_param: 1
 
   - # ASOBO_ELECTRICAL_Push_Starter_Template
-    type: NumSet
+    type: var
     var_name: A:GENERAL ENG STARTER:1
-    var_units: Bool
+    var_units: Number
     var_type: i32
+  -
+    type: event
     event_name: SET_STARTER1_HELD
   -
-    type: NumSet
+    type: var
     var_name: A:GENERAL ENG STARTER:2
-    var_units: Bool
+    var_units: Number
     var_type: i32
+  -
+    type: event
     event_name: SET_STARTER2_HELD
   -
     type: var
