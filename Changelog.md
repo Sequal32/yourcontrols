@@ -45,7 +45,6 @@
 * Updated FBW A32NX to 0.8.0-dev. Temporarily removed outdated stable till next update.
   - AP buttons/knobs resynced. Managed speed unsyncable without overshoot (no variable). Either use selected speed or person in control set managed speed knob and remain in control for flight.
   - Added brake temp sync.
-- Known issues:
   - Strobe light doesn't like turning off. (FBW issue)
   - Printer sometimes causes sim crash. (FBW issue)
 * Updated Salty 747 to v0.4.0+dev.
