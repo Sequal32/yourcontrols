@@ -3,13 +3,14 @@
 ## Version 2.6.1
 
 * Added PMDG DC-6A/B (beta) profile.
-  - Note there are a few control knobs and multi-position switches that will physically move but won't sync the cooresponding event to client aircraft. We are working on how to send events that require multiple values.
+  - Note there are a few control knobs and multi-position switches that will physically move but won't sync the corresponding event(s) to client aircraft. We are working on how to send events that require multiple values.
   - For best sync possible, start Cold and Dark.
   - Ground power unit (GPU) sometimes despawns when connecting to host. To resync, simply toggle off and then on again with EFB (tablet).
   - Flaps sometimes fully extend for client when connecting to an already powered aircraft despite lever in same position.
-  - Gyropilot is sensitive and sometimes fails for client aircraft in aggressive turns or weather. Recommend leveling out and resetting gyropilot switches in this case.
-  - Gyropilot mode knob will NOT move to Approach for client aircraft. (May fix at later date).
-  - Windshield deice, once activated, client will always remain ON despite physically knob switched OFF. (This is currently a workaround, may fix at later date).
+  - Gyropilot is sensitive and will fail for client aircraft in aggressive turns or weather. Recommend leveling out and resetting gyropilot switches in this case.
+  - Gyropilot for client pretends to follow GPS route but will drift if control handed over.
+  - Gyropilot with altitude control ON will sometimes start porposing after control transfer but eventually stabilizes.
+  - Windshield deice, once activated, client will always remain ON despite physically knob switched OFF. This is currently a workaround, and will try to fix at later date.
   - Fuel is unsynced, but payload and passengers is. Fill up tanks accordingly before start.
 * Added Carenado PA-34T Seneca V profile.
   - For best sync possible, start Cold and Dark.
@@ -18,11 +19,12 @@
 * Added A32NX Experimental profile.
 * Added support for aircraft slewing.
 * Added sync of G-force.
-* Fixed magneto switch sync when flying with someone using a physical yoke.
-* Fixed blue propeller and red mixture levers.
+* Re-added missing control transfer hotkey (launch bar) to A32NX.
 * Fixed A32NX spoiler arm not always working.
 * Fixed A32NX control transfer death spiral by improperly synced trim.
-* Re-added missing control transfer hotkey (launch bar) to A32NX.
+* Fixed wheel spinning and launching forward on ground caused by glitchy physics corrector.
+* Fixed magneto switch sync when flying with someone using a physical yoke.
+* Fixed blue propeller and red mixture levers.
 
 ## Version 2.6.0
 
