@@ -10,8 +10,8 @@
   - Gyropilot is sensitive and will fail for client aircraft in aggressive turns or weather. Recommend leveling out and resetting gyropilot switches in this case.
   - Gyropilot for client pretends to follow GPS route but will drift if control handed over.
   - Gyropilot with altitude control ON will sometimes start porposing after control transfer but eventually stabilizes.
-  - Windshield deice, once activated, client will always remain ON despite physically knob switched OFF. This is currently a workaround, and will try to fix at later date.
-  - Fuel is unsynced, but payload and passengers is. Fill up tanks accordingly before start.
+  - Windshield deice, once activated, client will always remain ON despite physical knob switched OFF. This is currently a workaround, and will try to fix at later date.
+  - Fuel is currently unsynced, but payload and passengers is. Fill up tanks accordingly before start.
 * Added Carenado PA-34T Seneca V profile.
   - For best sync possible, start Cold and Dark.
   - Autopilot buttons use B-event toggle so 60% of the time, they work every time.
@@ -23,7 +23,7 @@
 * Fixed A32NX spoiler arm not always working.
 * Fixed A32NX control transfer death spiral by improperly synced trim.
 * Fixed wheel spinning and launching forward on ground caused by glitchy physics corrector.
-* Fixed magneto switch sync when flying with someone using a physical yoke.
+* Fixed magneto sync when pairing with someone using a physical yoke.
 * Fixed blue propeller and red mixture levers.
 
 ## Version 2.6.0
