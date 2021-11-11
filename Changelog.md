@@ -1,5 +1,60 @@
 # YourControls Changelog
 
+## Version 2.6.1
+
+* Added PMDG DC-6A/B (beta) profile. Please note there are a few control knobs and multi-position switches that will physically move but won't sync the cooresponding event to client aircraft. We are working on how to send events that require multiple values.
+  -- For best sync possible, start Cold and Dark.
+-- Known issues:
+  -- Ground power unit (GPU) sometimes despawns when connecting to host. To resync, simply toggle off and then on again with EFB (tablet).
+  -- Flaps sometimes fully extend for client when connecting to an already powered aircraft despite lever in same position.
+  -- Gyropilot is sensitive and sometimes fails for client aircraft in aggressive turns or weather. Recommend leveling out and resetting gyropilot switches in this case.
+  -- Gyropilot mode knob will NOT move to Approach for client aircraft. (May fix at later date).
+  -- Windshield deice, once activated, client will always remain ON despite physically knob switched OFF. (This is currently a workaround, may fix at later date).
+  -- Fuel is unsynced, but payload and passengers is. Fill up tanks accordingly before start.
+* Added Carenado PA-34T Seneca V profile.
+  -- For best sync possible, start Cold and Dark.
+-- Known issues:
+  -- Autopilot buttons use B-event toggle so 60% of the time, they work every time.
+  -- Propeller deice switch does not physically move for client but event still syncs.
+* Added A32NX Experimental profile.
+* Added support for aircraft slewing.
+* Added sync of G-force.
+* Fixed magneto switch sync when flying with someone using a physical yoke.
+* Fixed blue propeller and red mixture levers.
+* Fixed A32NX spoiler arm not always working.
+* Fixed A32NX control transfer death spiral by improperly synced trim.
+* Re-added missing control transfer hotkey (launch bar) to A32NX.
+
+## Version 2.6.0
+
+* All 30 ASOBO aircraft definition profiles updated for Sim Update 5 + brief updates for Sim Update 6.
+* Added payload weight to all 30 ASOBO aircraft. Payload menu in sim is broken (SimConnect issue), however, weight values set by server host are still transferred to all clients even though clients won't "see" the change in value.
+* Added payload weight to A32NX, Salty 747, WorkingTitle CJ4, and JPL C152. (same thing above applies).
+* Added new Lvars for Garmin avionics since SU5.
+* Added water rudder and gear handle to aircraft with floats and skis.
+* Added missing pitch hold reference for VNAV flight director.
+* Corrected all COM, NAV, ADF frequency overshoots. Boeing 787 STBY STEP buttons not fixable, please type frequency manually.
+* Corrected COM1/2 event names and added COM3. All 3 radios should now work mostly as expected. (current B-event limitations).
+* Corrected ADF event names and added ADF2.
+* Corrected physics units from Degrees to Radians.
+* Corrected(?) trim death dive after control transfer with AP on.
+* Corrected gyro jumping and spinning.
+* Removed glitchy engine statistics sync. May add back at later date.
+* Removed YOKE sync, replaced with flight control surfaces for more accurate external visuals. Yoke sync only showed 60% surface deflection for clients.
+* Changed throttle levers to vars. Constant interp sync is unnecessary.
+* Moved all Lvars for Garmin 330, 430, 530, Aera, and Vigilus to their own module definitions.
+* Updated FBW A32NX to 0.8.0-dev. Temporarily removed outdated stable till next update.
+  -- AP buttons/knobs resynced. Managed speed unsyncable without overshoot (no variable). Either use selected speed or person in control set managed speed knob and remain in control for flight.
+  -- Added brake temp sync.
+-- Known issues:
+  -- Strobe light doesn't like turning off. (FBW issue)
+  -- Printer sometimes causes sim crash. (FBW issue)
+* Updated Salty 747 to v0.4.0+dev.
+* Updated WorkingTItle CJ4 to v0.12.8.
+* Updated JPLogistics C152 to v1.0.0-beta9.
+* Added Heavy-Division 787 (78XH) profile.
+* Added Mrtommymxr C172 profile.
+
 ## Version 2.5.18
 
 * Updated VCockpit.js for Sim Update V
