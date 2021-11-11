@@ -49,35 +49,36 @@ shared:
 
 master:
   - # Controls (Sync surfaces and yoke will sync with them)
-    type: NumSet
+    type: var
     var_name: A:ELEVATOR POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: AXIS_ELEVATOR_SET
-    interpolate: Invert
+    interpolate: DefaultConstant
   -
-    type: NumSet
+    type: var
     var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
+    interpolate: DefaultConstant
   -
-    type: NumSet
+    type: var
     var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: AXIS_RUDDER_SET
-    interpolate: Invert
+    interpolate: DefaultConstant
   -
     type: NumSet
     var_name: A:BRAKE LEFT POSITION EX1
     var_units: Position 32k
     var_type: i32
     event_name: AXIS_LEFT_BRAKE_SET
-    interpolate: Default
+    add_by: -16384
+    unreliable: true
   -
     type: NumSet
     var_name: A:BRAKE RIGHT POSITION EX1
     var_units: Position 32k
     var_type: i32
     event_name: AXIS_RIGHT_BRAKE_SET
-    interpolate: Default
+    add_by: -16384
+    unreliable: true
