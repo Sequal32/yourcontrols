@@ -2,9 +2,9 @@
 
 ## Version 2.6.1
 
-* Added PMDG DC-6A/B (beta) profile. Please note there are a few control knobs and multi-position switches that will physically move but won't sync the cooresponding event to client aircraft. We are working on how to send events that require multiple values.
+* Added PMDG DC-6A/B (beta) profile.
+  - Note there are a few control knobs and multi-position switches that will physically move but won't sync the cooresponding event to client aircraft. We are working on how to send events that require multiple values.
   - For best sync possible, start Cold and Dark.
-- Known issues:
   - Ground power unit (GPU) sometimes despawns when connecting to host. To resync, simply toggle off and then on again with EFB (tablet).
   - Flaps sometimes fully extend for client when connecting to an already powered aircraft despite lever in same position.
   - Gyropilot is sensitive and sometimes fails for client aircraft in aggressive turns or weather. Recommend leveling out and resetting gyropilot switches in this case.
@@ -13,7 +13,6 @@
   - Fuel is unsynced, but payload and passengers is. Fill up tanks accordingly before start.
 * Added Carenado PA-34T Seneca V profile.
   - For best sync possible, start Cold and Dark.
-- Known issues:
   - Autopilot buttons use B-event toggle so 60% of the time, they work every time.
   - Propeller deice switch does not physically move for client but event still syncs.
 * Added A32NX Experimental profile.
