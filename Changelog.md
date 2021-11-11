@@ -12,6 +12,7 @@
   - Gyropilot with altitude control ON will sometimes start porposing after control transfer but eventually stabilizes.
   - Windshield deice, once activated, client will always remain ON despite physical knob switched OFF. This is currently a workaround, and will try to fix at later date.
   - Fuel is currently unsynced, but payload and passengers is. Fill up tanks accordingly before start.
+  - Beacon and Nav lights do not turn on despite switches ON. Hit 'L' on keyboard. (Asobo issue)
 * Added Carenado PA-34T Seneca V profile.
   - For best sync possible, start Cold and Dark.
   - Autopilot buttons use B-event toggle so 60% of the time, they work every time.
