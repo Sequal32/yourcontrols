@@ -1316,17 +1316,19 @@ shared:
 
 master:
   -
-    type: var
+    type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
     var_units: Position 16k
     var_type: f64
-    unreliable: true
+    event_name: THROTTLE3_SET
+    interpolate: Default
   -
-    type: var
+    type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:4
     var_units: Position 16k
     var_type: f64
-    unreliable: true
+    event_name: THROTTLE4_SET
+    interpolate: Default
 
 server:
   - # Payload

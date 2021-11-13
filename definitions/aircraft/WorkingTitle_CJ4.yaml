@@ -796,12 +796,12 @@ shared:
   -
     type: var
     var_name: L:FADEC_ACTIVE
-  -
-    type: var
-    var_name: L:THROTTLE1_MODE
-  -
-    type: var
-    var_name: L:THROTTLE2_MODE
+# -
+#   type: var
+#   var_name: L:THROTTLE1_MODE
+# -
+#   type: var
+#   var_name: L:THROTTLE2_MODE
   -
     type: var
     var_name: L:WT_CJ4_INHIBIT_SEQUENCE
@@ -928,17 +928,19 @@ shared:
 
 master:
   - # ASOBO_ENGINE_Lever_Throttle_Template
-    type: var
+    type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
     var_units: Position 16k
     var_type: f64
-    unreliable: true
+    event_name: THROTTLE1_SET
+    interpolate: Default
   -
-    type: var
+    type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
     var_units: Position 16k
     var_type: f64
-    unreliable: true
+    event_name: THROTTLE2_SET
+    interpolate: Default
 
 server:
   - # Payload
