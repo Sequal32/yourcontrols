@@ -2,7 +2,7 @@
 
 ## Version 2.6.1
 
-# Profiles
+### Profiles
 * Added A32NX Experimental profile.
 * Added PMDG DC-6A/B (beta) profile.
   - Note there are a few control knobs and multi-position switches that will physically move but won't sync the corresponding event(s) to client aircraft. We are working on how to send events that require multiple values.
@@ -25,7 +25,7 @@
   - Starter switches are buggy when ramp starting. May have to switch them up and down a few times for client to properly start.
   - Throttle collective does not sync properly. Engines will remain idle for client. (They can throttle up themselves but person-in-control overrides position/altitude.
 
-# Changes
+### Changes
 * Added support for aircraft slewing.
 * Added sync of G-force.
 * Re-added missing control transfer hotkey (launch bar) to A32NX.
@@ -38,7 +38,7 @@
 
 ## Version 2.6.0
 
-# Profiles
+### Profiles
 * Updated FBW A32NX to 0.8.0-dev. Temporarily removed outdated stable till next update.
   - AP buttons/knobs resynced. Managed speed unsyncable without overshoot (no variable). Either use selected speed or person in control set managed speed knob and remain in control for flight.
   - Added brake temp sync.
@@ -50,7 +50,7 @@
 * Added Heavy-Division 787 (78XH) profile.
 * Added Mrtommymxr C172 profile.
 
-# Changes
+### Changes
 * All 30 ASOBO aircraft definition profiles updated for Sim Update 5 + brief updates for Sim Update 6.
 * Added payload weight to all 30 ASOBO aircraft. Payload menu in sim is broken (SimConnect issue), however, weight values set by server host are still transferred to all clients even though clients won't "see" the change in value.
 * Added payload weight to A32NX, Salty 747, WorkingTitle CJ4, and JPL C152. (same thing above applies).
