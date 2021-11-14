@@ -23,14 +23,14 @@
 * Renamed and updated HypePerformanceGroup H135 to v1.4.3.
   - Recommend using L2: Basic flight model.
   - Starter switches are buggy when ramp starting. May have to switch them up and down a few times for client to properly start.
-  - Throttle collective does not sync properly. Engines will remain idle for client. (They can throttle up themselves but person-in-control overrides position/altitude.
+  - Throttle collective does not sync properly. Engines will remain idle for client. (They can throttle up themselves but person-in-control overrides position/altitude)
 
 ### Changes
 * Added support for aircraft slewing.
 * Added sync of G-force.
-* Re-added missing control transfer hotkey (launch bar) to A32NX.
 * Fixed A32NX spoiler arm not always working.
 * Fixed A32NX control transfer death spiral by improperly synced trim.
+* Fixed missing control transfer hotkey (launch bar) to A32NX.
 * Fixed wheel spinning and launching forward on ground caused by glitchy physics corrector.
 * Fixed magneto sync when pairing with someone using a physical yoke.
 * Fixed throttle levers not syncing for modded aircraft using local vars as throttle position. (WT CJ4 and DA-62X)
@@ -53,18 +53,18 @@
 ### Changes
 * All 30 ASOBO aircraft definition profiles updated for Sim Update 5 + brief updates for Sim Update 6.
 * Added payload weight to all 30 ASOBO aircraft. Payload menu in sim is broken (SimConnect issue), however, weight values set by server host are still transferred to all clients even though clients won't "see" the change in value.
-* Added payload weight to A32NX, Salty 747, WorkingTitle CJ4, and JPL C152. (same thing above applies).
+* Added payload weight to A32NX, Salty 747, WorkingTitle CJ4, and JPL C152. (same thing above applies)
 * Added new Lvars for Garmin avionics since SU5.
 * Added water rudder and gear handle to aircraft with floats and skis.
 * Added missing pitch hold reference for VNAV flight director.
 * Corrected all COM, NAV, ADF frequency overshoots. Boeing 787 STBY STEP buttons not fixable, please type frequency manually.
-* Corrected COM1/2 event names and added COM3. All 3 radios should now work mostly as expected. (current B-event limitations).
+* Corrected COM1/2 event names and added COM3. All 3 radios should now work mostly as expected. (current B-event limitations)
 * Corrected ADF event names and added ADF2.
 * Corrected physics units from Degrees to Radians.
 * Corrected(?) trim death dive after control transfer with AP on.
 * Corrected gyro jumping and spinning.
 * Removed glitchy engine statistics sync. May add back at later date.
-* Removed YOKE sync, replaced with flight control surfaces for more accurate external visuals. Yoke sync only showed 60% surface deflection for clients.
+* Removed yoke sync, replaced with flight control surfaces for more accurate external visuals. Yoke sync only showed 60% surface deflection for clients.
 * Changed throttle levers to vars. Constant interp sync is unnecessary.
 * Moved all Lvars for Garmin 330, 430, 530, Aera, and Vigilus to their own module definitions.
 
