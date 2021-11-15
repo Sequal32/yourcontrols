@@ -616,21 +616,33 @@ shared:
     type: NumSet
     var_name: A:RUDDER TRIM PCT
     var_units: Percent scaler 16k
-    var_type: i32
+    var_type: f64
     event_name: RUDDER_TRIM_SET_EX1
-    unreliable: true
+    conditions:
+      - var:
+          var_name: L:A32NX_AUTOPILOT_ACTIVE
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: false
   -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
     var_units: Percent scaler 16k
-    var_type: i32
+    var_type: f64
     event_name: ELEVATOR_TRIM_SET
-    unreliable: true
+    conditions:
+      - var:
+          var_name: L:A32NX_AUTOPILOT_ACTIVE
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: false
   -
     type: NumSet
     var_name: A:AILERON TRIM PCT
     var_units: Percent scaler 16k
-    var_type: i32
+    var_type: f64
     event_name: AILERON_TRIM_SET_EX1
 
   - # YourControls Force Transfer Hotkey
@@ -3206,15 +3218,15 @@ shared:
   -
     type: var
     var_name: L:A32NX_FG_AVAIL
-  -
-    type: var
-    var_name: L:A32NX_FG_CROSS_TRACK_ERROR
-  -
-    type: var
-    var_name: L:A32NX_FG_TRACK_ANGLE_ERROR
-  -
-    type: var
-    var_name: L:A32NX_FG_PHI_COMMAND
+# -
+#   type: var
+#   var_name: L:A32NX_FG_CROSS_TRACK_ERROR
+# -
+#   type: var
+#   var_name: L:A32NX_FG_TRACK_ANGLE_ERROR
+# -
+#   type: var
+#   var_name: L:A32NX_FG_PHI_COMMAND
   -
     type: var
     var_name: L:A32NX_SELECTED_WAYPOINT
@@ -4130,19 +4142,19 @@ master:
     var_name: A:ELEVATOR POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    interpolate: Default
   -
     type: var
     var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    interpolate: Default
   -
     type: var
     var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    interpolate: Default
   -
     type: var
     var_name: L:A32NX_RUDDER_PEDAL_POSITION
