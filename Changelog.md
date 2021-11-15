@@ -9,11 +9,12 @@
   - For best sync possible, start Cold and Dark.
   - Ground power unit (GPU) sometimes despawns when connecting to host. To resync, simply toggle off and then on again with EFB (tablet).
   - Flaps sometimes fully extend for client when connecting to an already powered aircraft despite lever in same position.
-  - Gyropilot is sensitive and will fail for client aircraft in aggressive turns or weather. Recommend leveling out and resetting gyropilot switches in this case.
+  - Gyropilot is very sensitive and will fail for client aircraft in aggressive turns or weather. Recommend avoiding steep turns when using gyropilot turn knob and level out before resetting gyropilot switches.
   - Gyropilot for client pretends to follow GPS route but will drift if control handed over.
   - Gyropilot with altitude control ON will sometimes start porposing after control transfer but eventually stabilizes.
   - Windshield deice, once activated, client will always remain ON despite physical knob switched OFF. This is currently a workaround and will try to fix at later date.
   - Fuel is currently unsynced, but payload and passengers is. Fill up tanks accordingly before start.
+  - Maintenance manager (EFB) is unsynced. Repair and service aircraft before start.
   - Beacon and Nav lights do not turn on despite switches ON. Hit 'L' on keyboard. (Asobo issue)
   - Cargo/Exit doors and stairs use special events and will get out of sync if a change is made while co-pilot not connected.
 * Added Carenado PA-34T Seneca V profile.
