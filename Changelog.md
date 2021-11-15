@@ -26,6 +26,8 @@
   - Recommend using L2: Basic flight model.
   - Starter switches are buggy when ramp starting. May have to switch them up and down a few times for client to properly start.
   - Throttle collective does not sync properly. Engines will remain idle for client. (They can throttle up themselves but person-in-control overrides position/altitude)
+* Quick patch of Aerosoft CRJ profile for 550-1000 family update. Full profile redo is planned for later.
+  - Simulator fuel menu and payload now synced, EFB tablet is not.
 
 ### Changes
 * Added support for aircraft slewing.
