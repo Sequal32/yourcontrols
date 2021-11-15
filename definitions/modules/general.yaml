@@ -49,23 +49,26 @@ shared:
 
 master:
   - # Controls (Sync surfaces and yoke will sync with them)
-    type: var
+    type: NumSet
     var_name: A:ELEVATOR POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    event_name: ELEVATOR_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    event_name: AILERON_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    event_name: RUDDER_SET
+    interpolate: Invert
   -
     type: NumSet
     var_name: A:BRAKE LEFT POSITION EX1
