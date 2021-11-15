@@ -4,6 +4,7 @@
 
 ### Profiles
 * Added A32NX Experimental profile.
+  - Due to a recent FBW change, client throttles now shoot to CL when connecting to server. (Both Dev&Exp)
 * Added PMDG DC-6A/B (beta) profile.
   - Note there are a few control knobs and multi-position switches that will physically move but won't sync the corresponding event(s) to client aircraft. We are working on how to send events that require multiple values.
   - For best sync possible, start Cold and Dark.
