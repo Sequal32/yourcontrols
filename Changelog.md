@@ -15,6 +15,7 @@
   - Fuel is currently unsynced, but payload and passengers is. Fill up tanks accordingly before start.
   - Maintenance manager (EFB) is unsynced. Repair and service aircraft before start.
   - Beacon and Nav lights do not turn on despite switches ON. Hit 'L' on keyboard. (Asobo issue)
+  - Since all switches are synced, AFE should only be used by one person at a time, or at least until his actions are finished.
   - Cargo/Exit doors and stairs use special events and will get out of sync if a change is made while co-pilot not connected.
 * Added Carenado PA-34T Seneca V profile.
   - For best sync possible, start Cold and Dark.
