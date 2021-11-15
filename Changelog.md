@@ -3,8 +3,6 @@
 ## Version 2.6.1
 
 ### Profiles
-* Added A32NX Experimental profile.
-  - Due to a recent FBW change, client throttles now shoot to CL when connecting to server. (Both Dev&Exp)
 * Added PMDG DC-6A/B (beta) profile.
   - Note there are a few control knobs and multi-position switches that will physically move but won't sync the corresponding event(s) to client aircraft. We are working on how to send events that require multiple values.
   - For best sync possible, start Cold and Dark.
@@ -22,6 +20,8 @@
   - For best sync possible, start Cold and Dark.
   - Autopilot buttons use B-event toggle so 60% of the time, they work every time.
   - Propeller deice switch does not physically move for client but event still syncs.
+* Added A32NX Experimental profile.
+  - Due to a recent FBW change, client throttles now shoot to CL when connecting to server. (Both Dev&Exp)
 * Renamed and updated HypePerformanceGroup H135 to v1.4.3.
   - Recommend using L2: Basic flight model.
   - Starter switches are buggy when ramp starting. May have to switch them up and down a few times for client to properly start.
