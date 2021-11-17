@@ -2,6 +2,8 @@
 
 ## Version 2.6.1
 
+"Probably the most stable YourControls build to date."
+
 ### Profiles
 * Added PMDG DC-6A/B (beta) profile.
   - Note there are a few control knobs and multi-position switches that will physically move but won't sync the corresponding event(s) to client aircraft. We are working on how to send events that require multiple values.
@@ -33,10 +35,14 @@
 ### Changes
 * Added support for aircraft slewing.
 * Added sync of G-force.
+* Added sync of delta heading rate.
 * Fixed A32NX spoiler arm not always working.
-* Fixed A32NX control transfer death spiral by improperly synced trim.
+* Fixed A32NX control transfer death spiral.
 * Fixed missing control transfer hotkey (launch bar) to A32NX.
-* Fixed wheel spinning and launching forward on ground caused by glitchy physics corrector.
+* Fixed warp crashing into ocean after control transfer.
+* Fixed glitching around 360 degrees North.
+* Fixed wheel spinning and launching forward on ground caused by faulty physics corrector.
+* Fixed excessive aileron/rudder drift with autopilot ON caused by AP not knowing how fast you are moving around the planet.
 * Fixed magneto sync when pairing with someone using a physical yoke.
 * Fixed throttle levers not syncing for modded aircraft using local vars as throttle position. (WT CJ4 and DA-62X)
 * Fixed blue propeller and red mixture levers.
@@ -50,7 +56,7 @@
   - Strobe light doesn't like turning off. (FBW issue)
   - Printer sometimes causes sim crash. (FBW issue)
 * Updated Salty 747 to v0.4.0+dev.
-* Updated WorkingTItle CJ4 to v0.12.8.
+* Updated WorkingTitle CJ4 to v0.12.8.
 * Updated JPLogistics C152 to v1.0.0-beta9.
 * Added Heavy-Division 787 (78XH) profile.
 * Added Mrtommymxr C172 profile.
