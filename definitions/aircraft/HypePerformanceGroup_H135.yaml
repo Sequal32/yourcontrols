@@ -1050,26 +1050,26 @@ shared:
 #   var_name: L:HX1_DBG_Y
 
 master:
-  -
+  - # Controls
     type: NumSet
     var_name: A:ELEVATOR POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: ELEVATOR_SET
+    event_name: AXIS_ELEVATOR_SET
     interpolate: Invert
   -
     type: NumSet
     var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: AILERON_SET
+    event_name: AXIS_AILERONS_SET
     interpolate: Invert
   -
     type: NumSet
     var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
-    event_name: RUDDER_SET
+    event_name: AXIS_RUDDER_SET
     interpolate: Invert
   -
     type: NumSet

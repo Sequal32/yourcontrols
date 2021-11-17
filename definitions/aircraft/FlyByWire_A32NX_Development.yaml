@@ -4223,23 +4223,26 @@ init:
 
 master:
   - # Controls
-    type: var
+    type: NumSet
     var_name: A:ELEVATOR POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: Default
+    event_name: AXIS_ELEVATOR_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: Default
+    event_name: AXIS_AILERONS_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: Default
+    event_name: AXIS_RUDDER_SET
+    interpolate: Invert
   -
     type: var
     var_name: L:A32NX_RUDDER_PEDAL_POSITION
