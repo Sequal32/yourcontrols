@@ -1,4 +1,4 @@
-# Version 0.8.0-exp (November 15, 2021)
+# Version 0.8.0-exp (November 17, 2021)
 
 include:
   - definitions/modules/physics.yaml
@@ -4137,31 +4137,46 @@ init:
       - XPNDR_1000_DEC
 
 master:
-  - # Controls
+  - # Stick
     type: NumSet
-    var_name: A:ELEVATOR POSITION
-    var_units: Position 16k
-    var_type: f64
-    event_name: AXIS_ELEVATOR_SET
-    interpolate: Invert
-  -
-    type: NumSet
-    var_name: A:AILERON POSITION
+    var_name: A:YOKE X POSITION
     var_units: Position 16k
     var_type: f64
     event_name: AXIS_AILERONS_SET
     interpolate: Invert
   -
     type: NumSet
-    var_name: A:RUDDER POSITION
+    var_name: A:YOKE Y POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_ELEVATOR_SET
+    interpolate: Invert
+  -
+    type: NumSet
+    var_name: A:RUDDER PEDAL POSITION
     var_units: Position 16k
     var_type: f64
     event_name: AXIS_RUDDER_SET
     interpolate: Invert
+
+  - # Surfaces
+    type: var
+    var_name: A:ELEVATOR POSITION
+    var_units: Position 16k
+    var_type: f64
+    interpolate: Default
   -
     type: var
-    var_name: L:A32NX_RUDDER_PEDAL_POSITION
-    unreliable: true
+    var_name: A:AILERON POSITION
+    var_units: Position 16k
+    var_type: f64
+    interpolate: Default
+  -
+    type: var
+    var_name: A:RUDDER POSITION
+    var_units: Position 16k
+    var_type: f64
+    interpolate: Default
   -
     type: var
     var_name: L:A32NX_LEFT_BRAKE_PEDAL_INPUT

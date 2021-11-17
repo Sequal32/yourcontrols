@@ -2,8 +2,6 @@
 
 ## Version 2.6.1
 
-"Probably the most stable YourControls build to date."
-
 ### Profiles
 * Added PMDG DC-6A/B (beta) profile.
   - Note there are a few control knobs and multi-position switches that will physically move but won't sync the corresponding event(s) to client aircraft. We are working on how to send events that require multiple values.
@@ -36,6 +34,7 @@
 * Added support for aircraft slewing.
 * Added sync of G-force.
 * Added sync of delta heading rate.
+* Fixed A32NX sync of control stick and pedals.
 * Fixed A32NX spoiler arm not always working.
 * Fixed A32NX control transfer death spiral.
 * Fixed missing control transfer hotkey (launch bar) to A32NX.
