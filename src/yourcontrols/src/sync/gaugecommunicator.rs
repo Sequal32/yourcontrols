@@ -275,8 +275,8 @@ impl GaugeCommunicator {
             let interpolation_type_int = match datum.interpolation_type {
                 InterpolationType::Default => 0,
                 InterpolationType::Wrap180 => 1,
-                InterpolationType::Wrap90 => 2,
-                InterpolationType::Wrap360 => 3,
+                InterpolationType::Wrap360 => 2,
+                InterpolationType::Wrap90 => 3,
                 InterpolationType::Invert => 4,
                 InterpolationType::DefaultConstant => 5,
                 InterpolationType::InvertConstant => 6,
