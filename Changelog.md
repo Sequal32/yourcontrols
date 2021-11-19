@@ -22,19 +22,29 @@
   - Autopilot buttons use B-event toggle so 60% of the time, they work every time.
   - Propeller deice switch does not physically move for client but event still syncs.
 * Added A32NX Experimental profile.
-  - Due to a recent FBW change, client throttles now shoot to CL when connecting to server. (Both Dev&Exp)
+  - For some reason client throttles now shoot to CL when connecting to host. (All versions)
 * Renamed and updated HypePerformanceGroup H135 to v1.4.3.
   - Recommend using L2: Basic flight model.
   - Starter switches are buggy when ramp starting. May have to switch them up and down a few times for client to properly start.
   - Throttle collective does not sync properly. Engines will remain idle for client. (They can throttle up themselves but person-in-control overrides position/altitude)
 * Quick patch of Aerosoft CRJ profile for 550-1000 family update. Full profile redo is planned for later.
   - Simulator fuel menu and payload now synced, EFB tablet is not.
+* Added Asobo F/A-18E Super Hornet.
+  - Many things don't sync because of B-events.
+  - Cold start results in flap system issue. (Asobo issue)
+* Added Asobo PC-6 Porter.
+  - Many things don't sync because of B-events.
+  - ADF swap is borked. Fast clicking swap will help correct frequencies.
+* Added Asobo VoloCity helicopter.
+* Added S-1S changes to Pitts profile.
+* Renamed XCub profile to X_NXCub.
 
 ### Changes
 * Added support for aircraft slewing.
+* Added support for TACAN channels.
 * Added sync of G-force.
 * Added sync of delta heading rate.
-* Fixed A32NX sync of control stick and pedals.
+* Fixed A32NX sync of control stick, rudder pedals, and toe brakes.
 * Fixed A32NX spoiler arm not always working.
 * Fixed A32NX control transfer death spiral.
 * Fixed missing control transfer hotkey (launch bar) to A32NX.
