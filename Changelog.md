@@ -26,7 +26,7 @@
 * Renamed and updated HypePerformanceGroup H135 to v1.4.3.
   - Recommend using L2: Basic flight model.
   - Starter switches are buggy when ramp starting. May have to switch them up and down a few times for client to properly start.
-  - Throttle collective does not sync properly. Engines will remain idle for client. (They can throttle up themselves but person-in-control overrides position/altitude)
+  - Throttle collective does not sync properly. Engines will remain in high-idle for client. (They can throttle up themselves but person-in-control overrides position/altitude)
 * Quick patch of Aerosoft CRJ profile for 550-1000 family update. Full profile redo is planned for later.
   - Simulator fuel menu and payload now synced, EFB tablet is not.
 * Added Asobo F/A-18E Super Hornet.
@@ -51,7 +51,7 @@
 * Fixed warp crashing into ocean after control transfer.
 * Fixed glitching around 360 degrees North.
 * Fixed wheel spinning and launching forward on ground caused by faulty physics corrector.
-* Fixed excessive aileron/rudder drift with autopilot ON caused by AP not knowing how fast you are moving around the planet.
+* Fixed excessive aileron/rudder/FD drift with autopilot ON caused by AP not knowing how fast you are moving around the planet.
 * Fixed magneto sync when pairing with someone using a physical yoke.
 * Fixed throttle levers not syncing for modded aircraft using local vars as throttle position. (WT CJ4 and DA-62X)
 * Fixed blue propeller and red mixture levers.
