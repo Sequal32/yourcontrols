@@ -43,7 +43,7 @@ shared:
     type: NumSet
     var_name: A:AVIONICS MASTER SWITCH
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: AVIONICS_MASTER_SET
   -
     type: event
@@ -71,12 +71,15 @@ shared:
     event_name: TOGGLE_ALTERNATOR2
 
   - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:EXTERNAL POWER ON:1
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
+    var_type: i32
+    event_name: SET_EXTERNAL_POWER
     event_param: 1
+  -
+    type: event
+    event_name: TOGGLE_EXTERNAL_POWER
 
   - # ASOBO_ELECTRICAL_Push_Starter_Template
     type: var

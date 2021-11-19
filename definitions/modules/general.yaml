@@ -36,10 +36,13 @@ shared:
     event_name: SPOILERS_ARM_TOGGLE
 
   - # Parking Brake
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:BRAKE PARKING POSITION
     var_units: Bool
-    var_type: bool
+    var_type: i32
+    event_name: PARKING_BRAKES_SET
+  -
+    type: event
     event_name: PARKING_BRAKES
 
   - # YourControls Force Transfer Hotkey
