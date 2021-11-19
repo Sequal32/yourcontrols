@@ -4178,13 +4178,21 @@ master:
     var_type: f64
     interpolate: Default
   -
-    type: var
+    type: NumSet
     var_name: L:A32NX_LEFT_BRAKE_PEDAL_INPUT
-    unreliable: true
+    var_type: f64
+    event_name: AXIS_LEFT_BRAKE_SET
+    multiply_by: 327.68
+    add_by: -16384
+    use_calculator: true
   -
-    type: var
+    type: NumSet
     var_name: L:A32NX_RIGHT_BRAKE_PEDAL_INPUT
-    unreliable: true
+    var_type: f64
+    event_name: AXIS_RIGHT_BRAKE_SET
+    multiply_by: 327.68
+    add_by: -16384
+    use_calculator: true
 
   - # Engines
     type: var
