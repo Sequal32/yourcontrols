@@ -3,7 +3,7 @@
 ## Version 2.6.1
 
 ### Profiles
-* Added PMDG DC-6A/B (beta) profile.
+* Added PMDG DC-6A/B (beta).
   - Note there are a few control knobs and multi-position switches that will physically move but won't sync the corresponding event(s) to client aircraft. We are working on how to send events that require multiple values.
   - For best sync possible, start Cold and Dark.
   - Ground power unit (GPU) sometimes despawns when connecting to host. To resync, simply toggle off and then on again with EFB (tablet).
@@ -17,17 +17,16 @@
   - Beacon and Nav lights do not turn on despite switches ON. Hit 'L' on keyboard. (Asobo issue)
   - Since all switches are synced, AFE should only be used by one person at a time, or at least until his actions are finished.
   - Cargo/Exit doors and stairs use special events and will get out of sync if a change is made while co-pilot not connected.
-* Added Carenado PA-34T Seneca V profile.
+* Added Carenado PA-34T Seneca V.
   - For best sync possible, start Cold and Dark.
   - Autopilot buttons use B-event toggle so 60% of the time, they work every time.
   - Propeller deice switch does not physically move for client but event still syncs.
-* Added A32NX Experimental profile.
-  - For some reason client throttles now shoot to CL when connecting to host. (All versions)
+* Added A32NX Experimental.
 * Renamed and updated HypePerformanceGroup H135 to v1.4.3.
   - Recommend using L2: Basic flight model.
   - Starter switches are buggy when ramp starting. May have to switch them up and down a few times for client to properly start.
   - Throttle collective does not sync properly. Engines will remain in high-idle for client. (They can throttle up themselves but person-in-control overrides position/altitude)
-* Quick patch of Aerosoft CRJ profile for 550-1000 family update. Full profile redo is planned for later.
+* Quick patch of Aerosoft CRJ for 550-1000 family update. Full profile redo is planned for later.
   - Simulator fuel menu and payload now synced, EFB tablet is not.
 * Added Asobo F/A-18E Super Hornet.
   - Many things don't sync because of B-events.
@@ -36,8 +35,8 @@
   - Many things don't sync because of B-events.
   - ADF swap is borked. Fast clicking swap will help correct frequencies.
 * Added Asobo VoloCity helicopter.
-* Added S-1S changes to Pitts profile.
-* Renamed XCub profile to X_NXCub.
+* Added S-1S changes to Asobo_Pitts.
+* Renamed XCub to X_NXCub.
 
 ### Changes
 * Added support for aircraft slewing.
