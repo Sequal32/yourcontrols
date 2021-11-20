@@ -9,7 +9,6 @@ include:
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -28,7 +27,7 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
@@ -318,9 +317,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_AileronTrim_Switch_Yoke
-  -
-    type: var
-    var_name: L:XMLVAR_AileronTrim_Yoke_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_Yoke_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_Gear_Light_Test

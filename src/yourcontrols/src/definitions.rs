@@ -1273,14 +1273,14 @@ impl Definitions {
     // Process changed aircraft variables and update SyncActions related to it
     #[allow(unused_variables)]
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
-        self.physics_corrector.process_sim_object_data(data);
+        // self.physics_corrector.process_sim_object_data(data);
         if self.avarstransfer.define_id != data.dwDefineID {
             return;
         }
         // Data might be bad/config files don't line up
         if let Ok(mut data) = self.avarstransfer.read_vars(data) {
             // Remove some computed components
-            self.physics_corrector.remove_components(&mut data);
+            // self.physics_corrector.remove_components(&mut data);
             // Update all syncactions with the changed values
             for (var_name, value) in data {
                 // Determine if this variable should be updated
@@ -1473,7 +1473,7 @@ impl Definitions {
 
         let mut data = data;
         // Add some local computed components
-        self.physics_corrector.add_components(&mut data);
+        // self.physics_corrector.add_components(&mut data);
 
         // Only sync vars that are defined as so
         for (var_name, data) in data {
@@ -1611,7 +1611,7 @@ impl Definitions {
             .filter(|(x, _)| !self.do_not_sync.contains(x))
             .collect();
 
-        self.physics_corrector.remove_components(&mut avars);
+        // self.physics_corrector.remove_components(&mut avars);
 
         AllNeedSync {
             avars,

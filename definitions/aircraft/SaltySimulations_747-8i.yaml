@@ -6,7 +6,6 @@ include:
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/trim.yaml
@@ -206,18 +205,18 @@ shared:
     event_name: ANTI_ICE_TOGGLE_ENG4
 
   - # Bleed
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:BLEED AIR ENGINE:3
     var_units: Bool
-    var_type: bool
-    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    var_type: i32
+    event_name: ENGINE_BLEED_AIR_SOURCE_SET
     event_param: 3
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:BLEED AIR ENGINE:4
     var_units: Bool
-    var_type: bool
-    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    var_type: i32
+    event_name: ENGINE_BLEED_AIR_SOURCE_SET
     event_param: 4
 
   - # Electrical
@@ -259,11 +258,11 @@ shared:
     event_name: ALTERNATOR_SET
     event_param: 4
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:EXTERNAL POWER ON:2
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
+    var_type: i32
+    event_name: SET_EXTERNAL_POWER
     event_param: 2
 
   - # Engines
@@ -1064,15 +1063,15 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_2
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_2_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_2_SwitchStateTimer
   -
     type: var
     var_name: L:ParkingBrake_Position
@@ -1094,15 +1093,15 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_RudderTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_AileronTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_COM1_CURRENT_FREQ
@@ -1575,17 +1574,19 @@ shared:
 
 master:
   -
-    type: var
+    type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
     var_units: Position 16k
     var_type: f64
-    unreliable: true
+    event_name: THROTTLE3_SET
+    interpolate: Default
   -
-    type: var
+    type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:4
     var_units: Position 16k
     var_type: f64
-    unreliable: true
+    event_name: THROTTLE4_SET
+    interpolate: Default
 
 server:
   - # Payload

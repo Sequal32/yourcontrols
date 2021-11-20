@@ -5,7 +5,6 @@ include:
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -137,27 +136,26 @@ shared:
     var_name: A:AUTOPILOT WING LEVELER
     var_units: Bool
     var_type: bool
-    event_name: AP_WING_LEVELER_ON
-    off_event_name: AP_WING_LEVELER_OFF
+    event_name: AP_WING_LEVELER
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT PITCH HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PITCH_LEVELER
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT PITCH HOLD REF
+    var_units: Radians
+    var_type: f64
+    event_name: AP_PITCH_REF_SET
+    unreliable: true
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT BACKCOURSE HOLD
     var_units: Bool
     var_type: bool
     event_name: AP_BC_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT PITCH HOLD
-    var_units: Bool
-    var_type: bool
-    event_name: AP_PITCH_LEVELER_ON
-    off_event_name: AP_PITCH_LEVELER_OFF
-  -
-    type: var
-    var_name: A:AUTOPILOT PITCH HOLD REF
-    var_units: Feet per minute
-    var_type: f64
-    interpolate: DefaultConstant
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
@@ -240,14 +238,14 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
@@ -478,9 +476,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
   -
     type: var
     var_name: L:DEICE_Airframe_1
@@ -496,21 +494,21 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_RudderTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_AileronTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_PEDESTRAL
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_PEDESTRAL_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_PEDESTRAL_SwitchStateTimer
   -
     type: var
     var_name: L:ParkingBrake_Position
@@ -797,12 +795,12 @@ shared:
   -
     type: var
     var_name: L:FADEC_ACTIVE
-  -
-    type: var
-    var_name: L:THROTTLE1_MODE
-  -
-    type: var
-    var_name: L:THROTTLE2_MODE
+# -
+#   type: var
+#   var_name: L:THROTTLE1_MODE
+# -
+#   type: var
+#   var_name: L:THROTTLE2_MODE
   -
     type: var
     var_name: L:WT_CJ4_INHIBIT_SEQUENCE
@@ -929,17 +927,19 @@ shared:
 
 master:
   - # ASOBO_ENGINE_Lever_Throttle_Template
-    type: var
+    type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
     var_units: Position 16k
     var_type: f64
-    unreliable: true
+    event_name: THROTTLE1_SET
+    interpolate: Default
   -
-    type: var
+    type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
     var_units: Position 16k
     var_type: f64
-    unreliable: true
+    event_name: THROTTLE2_SET
+    interpolate: Default
 
 server:
   - # Payload

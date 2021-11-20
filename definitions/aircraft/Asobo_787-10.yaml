@@ -6,7 +6,6 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
@@ -72,18 +71,18 @@ shared:
     event_name: ALTERNATOR_SET
     event_param: 4
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:EXTERNAL POWER ON:2
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
+    var_type: i32
+    event_name: SET_EXTERNAL_POWER
     event_param: 2
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:EXTERNAL POWER ON:3
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
+    var_type: i32
+    event_name: SET_EXTERNAL_POWER
     event_param: 3
 
   - # Failures
@@ -563,18 +562,18 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_2
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_2_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_2_SwitchStateTimer
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverSpoilersHidden
@@ -593,9 +592,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_RudderTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_Starter1

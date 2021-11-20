@@ -1,6 +1,7 @@
 include:
   - definitions/modules/Avionics/AS1000.yaml
   - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -8,7 +9,6 @@ include:
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
@@ -42,13 +42,6 @@ shared:
     type: CustomCalculator
     get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
     set: 3 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-
-  - # Deice
-    type: ToggleSwitch
-    var_name: A:PITOT HEAT
-    var_units: Bool
-    var_type: bool
-    event_name: PITOT_HEAT_TOGGLE
 
   - # Failures
     type: var
@@ -189,9 +182,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim

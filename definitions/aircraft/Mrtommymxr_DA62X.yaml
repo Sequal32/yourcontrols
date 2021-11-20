@@ -1,10 +1,195 @@
-# Version 0.5.0.2
+# Version 0.6
 
 include:
-  - definitions/aircraft/Asobo_DA62.yaml
+  - definitions/modules/Avionics/AS1000.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/passenger.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
 
 shared:
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:30
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 30
+
+  - # Aux pumps
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:9
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 9
   -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:10
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 10
+
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:31
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:32
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:44
+    var_units: Bool
+    var_type: bool
+
+  - # Fuel
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP1_SET
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP2_SET
+  -
+    type: var
+    var_name: A:FUEL TANK SELECTOR:1
+    var_units: Enum
+    var_type: i32
+  -
+    type: event
+    event_name: FUEL_SELECTOR_LEFT_MAIN
+  -
+    type: event
+    event_name: FUEL_SELECTOR_RIGHT_MAIN
+  -
+    type: event
+    event_name: FUEL_SELECTOR_OFF
+  -
+    type: var
+    var_name: A:FUEL TANK SELECTOR:2
+    var_units: Enum
+    var_type: i32
+  -
+    type: event
+    event_name: FUEL_SELECTOR_2_LEFT_MAIN
+  -
+    type: event
+    event_name: FUEL_SELECTOR_2_RIGHT_MAIN
+  -
+    type: event
+    event_name: FUEL_SELECTOR_2_OFF
+
+  - # Lighting
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:3
+    var_units: Percent
+    var_type: i32
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:13
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 13
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:30
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 30
+    index_reversed: true
+
+  - # LVAR's
     type: var
     var_name: L:DA62_ECU_L
   -
@@ -301,9 +486,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:Throttle1_Pos
-  -
-    type: var
-    var_name: L:THROTTLE1_MODE
+# -
+#   type: var
+#   var_name: L:THROTTLE1_MODE
   -
     type: var
     var_name: L:FADEC_ECUB_RUNNING_L
@@ -349,12 +534,12 @@ shared:
   -
     type: var
     var_name: L:FADEC_ECUTEST_R
-  -
-    type: var
-    var_name: L:FADEC_POWER_LEVER_L
-  -
-    type: var
-    var_name: L:FADEC_POWER_LEVER_R
+# -
+#   type: var
+#   var_name: L:FADEC_POWER_LEVER_L
+# -
+#   type: var
+#   var_name: L:FADEC_POWER_LEVER_R
 # -
 #   type: var
 #   var_name: L:ELEC_MAIN_BUS_VOLTAGE_1
@@ -379,6 +564,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:ENG_RADIATOR_TEMPERATURE_2
+  -
+    type: var
+    var_name: L:KONAMI_STEP
+  -
+    type: var
+    var_name: L:LIGMA_BALLS
 # -
 #   type: var
 #   var_name: L:FAIL_STRESS_L
@@ -405,10 +596,10 @@ shared:
 #   var_name: L:FAILED_R
   -
     type: var
-    var_name: L:FADEC_ECUSWAP_SPUTTER_L
+    var_name: L:START_CRANK:1
   -
     type: var
-    var_name: L:FADEC_ECUSWAP_SPUTTER_R
+    var_name: L:START_CRANK:2
 # -
 #   type: var
 #   var_name: L:FAIL_POWER_TEMP_L
@@ -427,12 +618,78 @@ shared:
 # -
 #   type: var
 #   var_name: L:FAIL_DUTY_CYCLE_R
+  -
+    type: var
+    var_name: L:START_CRANK:1_MAX
+  -
+    type: var
+    var_name: L:START_OIL:1
+  -
+    type: var
+    var_name: L:FILTER_ICE
+  -
+    type: var
+    var_name: L:START_CRANK:2_MAX
+  -
+    type: var
+    var_name: L:START_OIL:2
+# -
+#   type: var
+#   var_name: L:ESP_TIMER
+  -
+    type: var
+    var_name: L:ESP_ON
+  -
+    type: var
+    var_name: L:GEAR_FIRE_TEST
+# -
+#   type: var
+#   var_name: L:ESP_AVAILABLE
+# -
+#   type: var
+#   var_name: L:ESP_ACTIVE_ROLL
+# -
+#   type: var
+#   var_name: L:ESP_TIMER_ROLL
+# -
+#   type: var
+#   var_name: L:ESP_RECOVER_ROLL
+# -
+#   type: var
+#   var_name: L:ESP_ACTIVE_PITCH
+# -
+#   type: var
+#   var_name: L:ESP_TIMER_PITCH
+# -
+#   type: var
+#   var_name: L:ESP_USP_AVAILABLE
+# -
+#   type: var
+#   var_name: L:ESP_AIRSPEED_ACTIVE
+# -
+#   type: var
+#   var_name: L:ESP_USP_ACTIVE
+# -
+#   type: var
+#   var_name: L:ESP_RECOVER_PITCH
+  -
+    type: var
+    var_name: L:FLUTTER_STEP
+  -
+    type: var
+    var_name: L:FLUTTER_INTENSITY
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden2
+  -
+    type: var
+    var_name: L:FADEC_ECUSWAP_SPUTTER_L
+  -
+    type: var
+    var_name: L:FADEC_ECUSWAP_SPUTTER_R
   -
     type: var
     var_name: L:FADEC_ECUTEST_BUTTON_L_IsDown
@@ -453,9 +710,6 @@ shared:
     var_name: L:FADEC_ECUTEST_BUTTON_B_MinReleaseTime
   -
     type: var
-    var_name: L:GEAR_FIRE_TEST
-  -
-    type: var
     var_name: L:GEAR_FIRE_TEST_IsDown
   -
     type: var
@@ -469,15 +723,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden2
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:XMLVAR_Starter_State
@@ -487,9 +741,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_Starter_State_MinReleaseTime
-# -
-#   type: var
-#   var_name: L:XMLVAR_DEICEPump
+  -
+    type: var
+    var_name: L:DA62_ANTI-ICE_SWITCH
+  -
+    type: var
+    var_name: L:XMLVAR_DEICE_Windshield_PumpActive
+  -
+    type: var
+    var_name: L:XMLVAR_DEICEPump
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
@@ -508,9 +768,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_Brightness
-# -
-#   type: var
-#   var_name: L:XMLVAR_Autopilot_2_Status
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
@@ -523,48 +783,48 @@ shared:
 # -
 #   type: var
 #   var_name: L:DA62_ShowCoPilot
-# -
-#   type: var
-#   var_name: L:LIGHTING_STROBE_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_NAV_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_LANDING_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_TAXI_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_PANEL_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_GLARESHIELD_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_CABIN_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_CABIN_2
-# -
-#   type: var
-#   var_name: L:LIGHTING_CABIN_3
-# -
-#   type: var
-#   var_name: L:HANDLING_RudderTrim
-# -
-#   type: var
-#   var_name: L:LANDING_GEAR_Gear
-# -
-#   type: var
-#   var_name: L:ELECTRICAL_Starter_1
-# -
-#   type: var
-#   var_name: L:ELECTRICAL_Starter_2
-# -
-#   type: var
-#   var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_GLARESHIELD_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_3
+  -
+    type: var
+    var_name: L:HANDLING_RudderTrim
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_1
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_2
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
 # -
 #   type: var
 #   var_name: L:AS1000_PFD_SelectedNavIndex
@@ -600,13 +860,19 @@ shared:
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
 # -
 #   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
-# -
-#   type: var
 #   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  -
+    type: var
+    var_name: L:FADEC_ECUTEST
+# -
+#   type: var
+#   var_name: L:THROTTLE2_MODE
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
@@ -649,12 +915,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:PFD_BRG2_Source
-  -
-    type: var
-    var_name: L:LIGMA_BALLS
-  -
-    type: var
-    var_name: L:KONAMI_STEP
 # -
 #   type: var
 #   var_name: L:GPS_Current_Phase
@@ -667,6 +927,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS3000_MinimalsValue
+  -
+    type: var
+    var_name: L:WT1000_VNav_TOD_Leg_Index
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
@@ -676,12 +939,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-  -
-    type: var
-    var_name: L:FADEC_ECUTEST
-  -
-    type: var
-    var_name: L:THROTTLE2_MODE
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_State
@@ -712,3 +969,86 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+
+ignore:
+  - AP_KNOB
+  - AP_KNOB_Up
+  - AP_KNOB_Down
+  - AP_BARO_Up
+  - AP_BARO_Down

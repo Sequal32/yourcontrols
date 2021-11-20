@@ -43,7 +43,7 @@ shared:
     type: NumSet
     var_name: A:AVIONICS MASTER SWITCH
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: AVIONICS_MASTER_SET
   -
     type: event
@@ -71,12 +71,15 @@ shared:
     event_name: TOGGLE_ALTERNATOR2
 
   - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:EXTERNAL POWER ON:1
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
+    var_type: i32
+    event_name: SET_EXTERNAL_POWER
     event_param: 1
+  -
+    type: event
+    event_name: TOGGLE_EXTERNAL_POWER
 
   - # ASOBO_ELECTRICAL_Push_Starter_Template
     type: var
@@ -94,13 +97,6 @@ shared:
   -
     type: event
     event_name: SET_STARTER2_HELD
-
-  - # ASOBO_ELECTRICAL_Switch_Magneto_Template
-    type: event
-    event_name: MAGNETO1_SET
-  -
-    type: event
-    event_name: MAGNETO2_SET
   -
     type: var
     var_name: L:XMLVAR_Starter_State
@@ -113,6 +109,37 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Starter_IsHeld
+
+  - # ASOBO_ELECTRICAL_Switch_Magneto_Template
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_RIGHT
+  -
+    type: event
+    event_name: MAGNETO1_SET # backup for position
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:2
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO2_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:2
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO2_RIGHT
+  -
+    type: event
+    event_name: MAGNETO2_SET # backup for position
   -
     type: var
     var_name: L:XMLVAR_Magneto_Starter_IsHeld

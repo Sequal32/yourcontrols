@@ -1,11 +1,52 @@
 include:
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/trim.yaml
-  - definitions/modules/CRJ/autopilotselectors.yaml
+
 shared:
+  - 
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_FCP_CRS1_SEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_FCP_CRS1_CHANGE
+    loopback: true
+  - 
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_FCP_CRS2_SEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_FCP_CRS2_CHANGE
+    loopback: true
+  - 
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_FCP_SPEED_SEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_FCP_SPEED_CHANGE
+    loopback: true
+  - 
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_FCP_HDG_SEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_FCP_HDG_CHANGE
+    loopback: true
+  - 
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_FCP_ALT_SEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_FCP_ALT_CHANGE
+    loopback: true
+  - 
+    type: MultiplyDifferenceLocalVar
+    var_name: L:ASCRJ_FCP_WHEEL
+    max_val: 360.0
+    multiply_by: 0.1
+    target: L:ASCRJ_FCP_WHEEL_CHANGE
+    loopback: true
   - 
     type: var
     var_name: L:ASCRJ_HGS_COMBINER_SHOW
@@ -40,9 +81,9 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_YOKEF_RTIC
-  - 
-    type: var
-    var_name: L:ASCRJ_PEDC_RUDDER
+# -
+#   type: var
+#   var_name: L:ASCRJ_PEDC_RUDDER
   - 
     type: var
     var_name: L:ASCRJ_CPT_ARMREST_UP
@@ -704,12 +745,12 @@ shared:
     var_name: L:ASCRJ_FCP_AP_ENG_BTN_ANIM
     target: L:ASCRJ_FCP_AP_ENG
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_AP_ENG_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_AP_ENG_LED2
+# -
+#   type: var
+#   var_name: L:ASCRJ_FCP_AP_ENG_LED
+# -
+#   type: var
+#   var_name: L:ASCRJ_FCP_AP_ENG_LED2
   - 
     type: var
     var_name: L:ASCRJ_FCP_AP_DISC
@@ -718,111 +759,111 @@ shared:
     var_name: L:ASCRJ_FCP_XFR_BTN_ANIM
     target: L:ASCRJ_FCP_XFR
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_XFR_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_XFR_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_XFR_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_XFR_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_TURB_BTN_ANIM
     target: L:ASCRJ_FCP_TURB
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_TURB_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_TURB_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_TURB_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_TURB_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_SPEED_BTN_ANIM
     target: L:ASCRJ_FCP_SPEED
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_SPEED_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_SPEED_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_SPEED_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_SPEED_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_APPR_BTN_ANIM
     target: L:ASCRJ_FCP_APPR
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_APPR_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_APPR_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_APPR_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_APPR_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_BC_BTN_ANIM
     target: L:ASCRJ_FCP_BC
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_BC_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_BC_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_BC_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_BC_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_HDG_BTN_ANIM
     target: L:ASCRJ_FCP_HDG
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_HDG_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_HDG_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_HDG_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_HDG_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_NAV_BTN_ANIM
     target: L:ASCRJ_FCP_NAV
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_NAV_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_NAV_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_NAV_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_NAV_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_12BANK_BTN_ANIM
     target: L:ASCRJ_FCP_12BANK
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_12BANK_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_12BANK_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_12BANK_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_12BANK_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_ALT_BTN_ANIM
     target: L:ASCRJ_FCP_ALT
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_ALT_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_ALT_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_ALT_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_ALT_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_VS_BTN_ANIM
     target: L:ASCRJ_FCP_VS
     loopback: true
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_VS_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_VS_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_VS_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_VS_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_VNAV_BTN_ANIM
@@ -831,12 +872,12 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_FCP_VNAV_VISIBLE
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_VNAV_LED
-  - 
-    type: var
-    var_name: L:ASCRJ_FCP_VNAV_LED2
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_VNAV_LED
+# - 
+#   type: var
+#   var_name: L:ASCRJ_FCP_VNAV_LED2
   - 
     type: LocalVarProxy
     var_name: L:ASCRJ_FCP_CRS1_DIRECT_BTN_ANIM
@@ -3227,10 +3268,10 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_MAPLT_R
-  - 
-    type: var
-    var_name: L:ASCRJ_GEAR_NWS
-  - 
+# -
+#   type: var
+#   var_name: L:ASCRJ_GEAR_NWS
+  -
     type: var
     var_name: L:ASCRJ_WHEEL_BLOCKS
   - 
@@ -3875,10 +3916,10 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_LSP_NW_STEER_TILLER
-  - 
-    type: var
-    var_name: L:ASCRJ_LSP_NW_STEER_TILLER_DISP
-  - 
+# -
+#   type: var
+#   var_name: L:ASCRJ_LSP_NW_STEER_TILLER_DISP
+  -
     type: var
     var_name: L:ASCRJ_AUDIO1_INTSVC_VOL_UPDN
   - 
@@ -4049,12 +4090,12 @@ shared:
   - 
     type: var
     var_name: L:ASCRJ_HGS_ARMED
-  -
-    type: var
-    var_name: L:ASCRJ_TQ_THROTTLE_1_POS
-  -
-    type: var
-    var_name: L:ASCRJ_TQ_THROTTLE_2_POS
+# -
+#   type: var
+#   var_name: L:ASCRJ_TQ_THROTTLE_1_POS
+# -
+#   type: var
+#   var_name: L:ASCRJ_TQ_THROTTLE_2_POS
   -
     type: var
     var_name: L:ASCRJ_TQ_REVERSE_1_POS
@@ -4115,8 +4156,36 @@ shared:
   -
     type: var
     var_name: L:ASCRJ_TQ_TOGA_2_ANIM
-    
+
+master:
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_1_POS
+    unreliable: true
+  -
+    type: var
+    var_name: L:ASCRJ_TQ_THROTTLE_2_POS
+    unreliable: true
+  -
+    type: var
+    var_name: L:ASCRJ_PEDC_RUDDER
+    unreliable: true
+  -
+    type: var
+    var_name: L:ASCRJ_PEDF_RUDDER
+    unreliable: true
+  -
+    type: var
+    var_name: L:ASCRJ_RUDDER
+    unreliable: true
+
 server:
+  -
+    type: var
+    var_name: FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
   -
     type: var
     var_name: FUEL TANK LEFT MAIN LEVEL
@@ -4129,3 +4198,58 @@ server:
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64

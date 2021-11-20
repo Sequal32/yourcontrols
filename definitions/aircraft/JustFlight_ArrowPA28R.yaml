@@ -8,6 +8,7 @@ include:
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
+  - definitions/modules/slew.yaml
   - definitions/modules/transponder.yaml
 
 shared:
@@ -709,24 +710,27 @@ shared:
     target: L:DOOR_door
 
 master:
-  -
-    type: var
+  - # Controls
+    type: NumSet
     var_name: A:ELEVATOR POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    event_name: AXIS_ELEVATOR_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    event_name: AXIS_AILERONS_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    event_name: AXIS_RUDDER_SET
+    interpolate: Invert
   -
     type: NumSet
     var_name: A:BRAKE LEFT POSITION EX1
@@ -743,12 +747,6 @@ master:
     event_name: AXIS_RIGHT_BRAKE_SET
     add_by: -16384
     unreliable: true
-  -
-    type: var
-    var_name: A:PLANE HEADING DEGREES GYRO
-    var_units: Degrees
-    var_type: f64
-    unreliable: true # Do not use interpolate or will spin and flip at 360 north
 
 server:
   -

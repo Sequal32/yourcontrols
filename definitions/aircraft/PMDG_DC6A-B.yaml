@@ -1,0 +1,5833 @@
+# Version 2.0.37
+
+include:
+  - definitions/modules/Avionics/AS430.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+
+shared:
+  - # GPS
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+
+  - # Engines
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_RIGHT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:2
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO2_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:2
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO2_RIGHT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:3
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO3_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:3
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO3_RIGHT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:4
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO4_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:4
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO4_RIGHT
+
+  - # Trim
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: Percent
+    var_type: f64
+    event_name: RUDDER_TRIM_SET
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: ELEVATOR_TRIM_SET
+    conditions:
+      - var:
+          var_name: AUTOPILOT MASTER
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: false
+  -
+    type: NumSet
+    var_name: A:AILERON TRIM PCT
+    var_units: Percent
+    var_type: f64
+    event_name: AILERON_TRIM_SET
+
+  - # LVAR's
+    type: var
+    var_name: L:GPSandRadioOptions
+  -
+    type: var
+    var_name: L:GPSDrivesNav1Check
+  -
+    type: var
+    var_name: L:TabletInit
+  -
+    type: var
+    var_name: L:TabletOnOff
+  -
+    type: var
+    var_name: L:BrightInit
+  -
+    type: var
+    var_name: L:TabletSensor
+  -
+    type: var
+    var_name: L:AutoBright
+  -
+    type: var
+    var_name: L:NosewheelSteerAngle
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:FrontExitTimer
+  - # Front Door Stairs
+    type: CustomCalculator
+    get: (L:dc6_447_obj)
+    set: 4 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
+  - # Front Door Stairs Status
+    type: var
+    var_name: L:dc6_447_obj
+# -
+#   type: var
+#   var_name: L:AirStairsTimer
+# -
+#   type: var
+#   var_name: L:cockpit_stairs_deploy
+# -
+#   type: var
+#   var_name: L:cockpit_stairs_retract
+# -
+#   type: var
+#   var_name: L:outside_stairs_deploy
+# -
+#   type: var
+#   var_name: L:outside_stairs_retract
+  - # Front Door Open
+    type: CustomCalculator
+    get: (L:dc6_446_obj)
+    set: 2 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
+  - # Front Door Status
+    type: var
+    var_name: L:dc6_446_obj
+# -
+#   type: var
+#   var_name: L:cockpit_door_open
+# -
+#   type: var
+#   var_name: L:cockpit_door_close
+# -
+#   type: var
+#   var_name: L:outside_door_open
+# -
+#   type: var
+#   var_name: L:outside_door_close
+  - # Cargo Hold
+    type: CustomCalculator
+    get: (L:dc6_448_obj)
+    set: 3 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
+  -
+    type: var
+    var_name: L:dc6_448_obj
+# -
+#   type: var
+#   var_name: L:LowerCargoDoorsTimer
+# -
+#   type: var
+#   var_name: L:inside_lower_cargo_door_open
+# -
+#   type: var
+#   var_name: L:inside_lower_cargo_door_close
+# -
+#   type: var
+#   var_name: L:outside_lower_cargo_door_open
+# -
+#   type: var
+#   var_name: L:outside_lower_cargo_door_close
+  - # Cargo Entrance
+    type: CustomCalculator
+    get: (L:dc6_453_obj)
+    set: 1 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
+  -
+    type: var
+    var_name: L:dc6_453_obj
+# -
+#   type: var
+#   var_name: L:CargoEntranceTimer
+# -
+#   type: var
+#   var_name: L:passenger_door_open
+# -
+#   type: var
+#   var_name: L:passenger_door_closed
+  - # Main Cargo Doors
+    type: CustomCalculator
+    get: (L:dc6_454_obj)
+    set: 7 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
+  -
+    type: var
+    var_name: L:dc6_454_obj
+# -
+#   type: var
+#   var_name: L:CargoDoorsTimer
+# -
+#   type: var
+#   var_name: L:inside_cargo_start
+# -
+#   type: var
+#   var_name: L:inside_cargo_end
+# -
+#   type: var
+#   var_name: L:outside_cargo_start
+# -
+#   type: var
+#   var_name: L:outside_cargo_end
+# -
+#   type: var
+#   var_name: L:inside_cargo_loop
+# -
+#   type: var
+#   var_name: L:outside_cargo_loop
+# -
+#   type: var
+#   var_name: L:AfeBeforeStart
+  - # Towbar and Tractor
+    type: var
+    var_name: L:dc6_455_obj
+  -
+    type: var
+    var_name: L:TractorTowBar
+  - # Wheel Chocks
+    type: var
+    var_name: L:dc6_456_obj
+  -
+    type: var
+    var_name: L:WheelChocks
+  - # Pitot Covers
+    type: var
+    var_name: L:dc6_457_obj
+  -
+    type: var
+    var_name: L:PitotCovers
+  - # Engine Oil Pans
+    type: var
+    var_name: L:dc6_458_obj
+  -
+    type: var
+    var_name: L:EngOilPans
+  - # Mechanic Stands
+    type: var
+    var_name: L:dc6_459_obj
+  -
+    type: var
+    var_name: L:MechStands
+  - # CPT Window
+    type: var
+    var_name: L:window_ca
+  - # FO Window
+    type: var
+    var_name: L:window_fo
+  -
+    type: var
+    var_name: L:InitSWitches
+  - # Landing Lights Position Control Switch
+    type: var
+    var_name: L:dc6_122_obj
+  - # Intercom Mode Switch
+    type: var
+    var_name: L:dc6_579_obj
+  -
+    type: var
+    var_name: L:CheckExit
+  - # Radio Settings
+    type: var
+    var_name: L:InitChannelSpacing
+# -
+#   type: var
+#   var_name: L:InitChannelSpacingTimer
+  -
+    type: var
+    var_name: L:SpeakerCheck
+# -
+#   type: var
+#   var_name: L:SpeakerCheckTimer
+  -
+    type: var
+    var_name: L:XPDRSwitchOn
+# -
+#   type: var
+#   var_name: L:XpdrOnTimer
+  - # CPT XPNDR Mode
+    type: var
+    var_name: L:dc6_550_obj
+# -
+#   type: var
+#   var_name: L:DcInstrumentsPowered
+  - # FO XPNDR Mode
+    type: var
+    var_name: L:dc6_970_obj
+  -
+    type: var
+    var_name: L:DMESwitchOn
+# -
+#   type: var
+#   var_name: L:DMEOnTimer
+  - # DME Mode
+    type: var
+    var_name: L:dc6_271_obj
+  -
+    type: var
+    var_name: L:StopWatchStart
+  -
+    type: var
+    var_name: L:DFCStart
+    unreliable: true
+  -
+    type: var
+    var_name: L:DFCElapsed
+    unreliable: true
+  -
+    type: var
+    var_name: L:AudioPnlSndInit
+  -
+    type: var
+    var_name: L:dc6_561_obj
+  -
+    type: var
+    var_name: L:AudioPnloldPos
+  -
+    type: var
+    var_name: L:GPS_CB_State
+# -
+#   type: var
+#   var_name: L:GPSPower
+# -
+#   type: var
+#   var_name: L:dc6_141_obj
+  -
+    type: var
+    var_name: L:WindowCAoldPos
+  -
+    type: var
+    var_name: L:window_ca_sliding
+  -
+    type: var
+    var_name: L:window_handle_ca_click
+  -
+    type: var
+    var_name: L:window_ca_stop
+  -
+    type: var
+    var_name: L:window_ca_latch
+  - # CPT Window Handle
+    type: var
+    var_name: L:window_handle_ca
+  - # CPT Window Latch
+    type: CustomCalculator
+    get: (L:window_handle_ca)
+    set: 5 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
+  -
+    type: var
+    var_name: L:window_latch_ca_click
+# -
+#   type: var
+#   var_name: L:window_ca_closetimer
+  -
+    type: var
+    var_name: L:WindowFOoldPos
+  -
+    type: var
+    var_name: L:window_fo_sliding
+  -
+    type: var
+    var_name: L:window_handle_fo_click
+  -
+    type: var
+    var_name: L:window_fo_stop
+  -
+    type: var
+    var_name: L:window_fo_latch
+  - # FO Window Handle
+    type: var
+    var_name: L:window_handle_fo
+  - # FO Window Latch
+    type: CustomCalculator
+    get: (L:window_handle_fo)
+    set: 6 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
+  -
+    type: var
+    var_name: L:window_latch_fo_click
+# -
+#   type: var
+#   var_name: L:window_fo_closetimer
+  - # FE Jump Seat
+    type: var
+    var_name: L:FEJumpSeat
+  -
+    type: var
+    var_name: L:FEJumpSeatDown
+  -
+    type: var
+    var_name: L:FEJumpSeatUp
+  - # CPT Left Arm Rest
+    type: var
+    var_name: L:PICSeatLeftRest
+  -
+    type: var
+    var_name: L:PICSeatLeftRestDown
+  -
+    type: var
+    var_name: L:PICSeatLeftRestUp
+  - # CPT Right Arm Rest
+    type: var
+    var_name: L:PICSeatRightRest
+  -
+    type: var
+    var_name: L:PICSeatRightRestDown
+  -
+    type: var
+    var_name: L:PICSeatRightRestUp
+  - # FO Left Arm Rest
+    type: var
+    var_name: L:FOSeatLeftRest
+  -
+    type: var
+    var_name: L:FOSeatLeftRestDown
+  -
+    type: var
+    var_name: L:FOSeatLeftRestUp
+  - # FO Right Arm Rest
+    type: var
+    var_name: L:FOSeatRightRest
+  -
+    type: var
+    var_name: L:FOSeatRightRestDown
+  -
+    type: var
+    var_name: L:FOSeatRightRestUp
+# -
+#   type: var
+#   var_name: L:Prop1Stop
+# -
+#   type: var
+#   var_name: L:Prop2Stop
+# -
+#   type: var
+#   var_name: L:Prop3Stop
+# -
+#   type: var
+#   var_name: L:Prop4Stop
+  -
+    type: var
+    var_name: L:InitXPDR
+# -
+#   type: var
+#   var_name: L:XpdrInitTimer
+  -
+    type: var
+    var_name: L:XPNDR_Init
+  -
+    type: var
+    var_name: L:TransponderCACode1000
+  -
+    type: var
+    var_name: L:TransponderCACode100
+  -
+    type: var
+    var_name: L:TransponderCACode10
+  -
+    type: var
+    var_name: L:TransponderCACode1
+  -
+    type: var
+    var_name: L:TransponderFOCode1000
+  -
+    type: var
+    var_name: L:TransponderFOCode100
+  -
+    type: var
+    var_name: L:TransponderFOCode10
+  -
+    type: var
+    var_name: L:TransponderFOCode1
+  - # XPDNR 1/2 Switch
+    type: NumSet
+    var_name: L:dc6_270_obj
+    var_units: Number
+    var_type: f64
+    add_by: 27001
+    event_name: ROTOR_BRAKE
+    use_calculator: true  
+  -
+    type: var
+    var_name: L:XpdrChk
+# -
+#   type: var
+#   var_name: L:XpdrChkTimer
+  -
+    type: var
+    var_name: L:TransponderCACode
+  -
+    type: var
+    var_name: L:TransponderFOCode
+# -
+#   type: var
+#   var_name: L:ELVTrim
+  -
+    type: var
+    var_name: L:InitFlood
+# -
+#   type: var
+#   var_name: L:InitFloodTimer
+  - # Cockpit Lighting
+    type: var
+    var_name: L:CockpitLighting
+  - # Set Cockpit Lighting
+    type: var
+    var_name: L:SetCockpitLights
+  -
+    type: var
+    var_name: L:InitLights
+# -
+#   type: var
+#   var_name: L:voltreg_indicator_dim
+# -
+#   type: var
+#   var_name: L:wing_illum_dim
+# -
+#   type: var
+#   var_name: L:wheel_well_dim
+# -
+#   type: var
+#   var_name: L:ground_power_dim
+# -
+#   type: var
+#   var_name: L:emerg_exit_dim
+# -
+#   type: var
+#   var_name: L:supercharger_oil_temp_dim
+# -
+#   type: var
+#   var_name: L:supercharger_oil_press_dim
+# -
+#   type: var
+#   var_name: L:fuel_pressure_low_dim
+# -
+#   type: var
+#   var_name: L:oil_pressure_low_dim
+# -
+#   type: var
+#   var_name: L:dc6_299_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_300_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_301_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_379_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_380_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_381_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_313_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_314_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_315_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_316_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_443_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_444_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_524_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_525_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_526_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_527_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_528_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_529_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_530_obj_dim
+# -
+#   type: var
+#   var_name: L:dc6_531_obj_dim
+# -
+#   type: var
+#   var_name: L:LeftLLBrightness
+# -
+#   type: var
+#   var_name: L:RightLLBrightness
+  - # Radio Backlighting
+    type: var
+    var_name: L:RadioBL
+  - # Cockpit Flood White
+    type: var
+    var_name: L:dc6_174_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:1
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 1
+    index_reversed: true
+  - # Entrance Lights
+    type: var
+    var_name: L:dc6_036_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
+  - # 3rd Crew Member Map Light White
+    type: var
+    var_name: L:dc6_007_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  - # Upper Switch & Instru Panel Red
+    type: var
+    var_name: L:dc6_048_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+  - # Upper Switch & Instru Panel Red
+    type: var
+    var_name: L:dc6_058_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  - # CPT Map White
+    type: var
+    var_name: L:dc6_707_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
+  - # FO Map White
+    type: var
+    var_name: L:dc6_709_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 7
+    index_reversed: true
+  - # Main J Box Flood
+    type: var
+    var_name: L:dc6_037_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:8
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 8
+    index_reversed: true
+  - # CPT Inst Red
+    type: var
+    var_name: L:dc6_708_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:21
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 21
+    index_reversed: true
+  - # FO's Flight Instruments Light Red
+    type: var
+    var_name: L:dc6_699_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:22
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 22
+    index_reversed: true
+  - # Main Instru Panel White
+    type: var
+    var_name: L:dc6_049_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:23
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 23
+    index_reversed: true
+  - # Engine Inst Panel Lights Red
+    type: var
+    var_name: L:dc6_043_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:24
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 24
+    index_reversed: true
+  - # Magnetic Compass Red
+    type: var
+    var_name: L:dc6_050_obj
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:25
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 25
+    index_reversed: true
+  - # Beacon
+    type: var
+    var_name: L:dc6_041_obj
+# -
+#   type: var
+#   var_name: L:lights_beacon
+# -
+#   type: var
+#   var_name: L:BeaconLightTimer
+  -
+    type: var
+    var_name: L:InitPosFlash
+  - # Position / Nav
+    type: var
+    var_name: L:dc6_040_obj
+# -
+#   type: var
+#   var_name: L:NavLightTimer
+# -
+#   type: var
+#   var_name: L:lights_nav
+# -
+#   type: var
+#   var_name: L:LandingLightPos
+# -
+#   type: var
+#   var_name: L:dc6_610_obj
+# -
+#   type: var
+#   var_name: L:dc6_611_obj
+# -
+#   type: var
+#   var_name: L:LLExtRet
+# -
+#   type: var
+#   var_name: L:LandLightsRfT
+# -
+#   type: var
+#   var_name: L:LandLightsCaD
+  - # Landing Light Lamps Switches
+    type: var
+    var_name: L:dc6_121_obj
+  -
+    type: var
+    var_name: L:LeftLL_CB_State
+# -
+#   type: var
+#   var_name: L:LeftLandLight
+# -
+#   type: var
+#   var_name: L:SetLeftLL
+  -
+    type: var
+    var_name: L:RightLL_CB_State
+# -
+#   type: var
+#   var_name: L:RightLandLight
+# -
+#   type: var
+#   var_name: L:SetRightLL
+  -
+    type: var
+    var_name: L:dc6_478_obj
+  - # Voltage Reg Overheat Annunciator Test Switch
+    type: var
+    var_name: L:voltreg_indicator_switch
+# - # Voltage Reg Overheat Annunciator
+#    type: var
+#    var_name: L:VoltRegAnnuciator
+  - # GPU
+    type: var
+    var_name: L:dc6_892_obj
+# -
+#   type: var
+#   var_name: L:dc6_077_obj
+# -
+#   type: var
+#   var_name: L:PlaneBattAnnuciator
+  - # Ground Power Annunciator Test Switch
+    type: var
+    var_name: L:ground_power_switch
+# -
+#   type: var
+#   var_name: L:PlaneBattAnnuciatorTest
+  - # Wing Illumination
+    type: var
+    var_name: L:dc6_042_obj
+  - # Wing Illumination Annunciator Test Switch
+    type: var
+    var_name: L:wing_illum_switch
+  -
+    type: var
+    var_name: L:WingIllum_CB_State
+# -
+#   type: var
+#   var_name: L:WingIllumAnnuciator
+# -
+#   type: var
+#   var_name: L:light_wing_illum_vis
+  - # Wheel Well
+    type: var
+    var_name: L:dc6_067_obj
+  - # Wheel Well Annunciator Test Switch
+    type: var
+    var_name: L:wheel_well_switch
+  -
+    type: var
+    var_name: L:WheelWell_CB_State
+# -
+#   type: var
+#   var_name: L:WheelWellAnnuciator
+  - # LANDING GEAR Lever
+    type: var
+    var_name: L:dc6_405_obj
+# -
+#   type: var
+#   var_name: L:light_wheelwell_vis
+  - # Emergency Exit Lights
+    type: var
+    var_name: L:dc6_092_obj
+  -
+    type: var
+    var_name: L:emerg_exit_switch
+# -
+#   type: var
+#   var_name: L:EmerExitAnnuciator
+# -
+#   type: var
+#   var_name: L:dc6_108_obj
+  - # Cabin Supercharger Oil Temp Low Annunciator Test
+    type: var
+    var_name: L:supercharger_oil_temp_switch
+# -
+#   type: var
+#   var_name: L:SuperChargerOilTempAnnuciator
+# -
+#   type: var
+#   var_name: L:dc6_109_obj
+  - # Cabin Supercharger Oil Pressure Low Annunciator Test
+    type: var
+    var_name: L:supercharger_oil_press_switch
+# -
+#   type: var
+#   var_name: L:SuperChargerOilPressAnnuciator
+# -
+#   type: var
+#   var_name: L:dc6_1545_obj
+  - # Fuel Pressure Low Annunciator Test Switch
+    type: var
+    var_name: L:fuel_pressure_low_switch
+# -
+#   type: var
+#   var_name: L:FuelPressureLowAnnunciator
+# -
+#   type: var
+#   var_name: L:dc6_1547_obj
+  - # Oil Pressure Low Annunciator Test Switch
+    type: var
+    var_name: L:oil_pressure_low_switch
+# -
+#   type: var
+#   var_name: L:OilPressureLowAnnunciator
+# -
+#   type: var
+#   var_name: L:dc6_313_obj
+  - # Water Pressure ENG 1 Annunciator Test Switch
+    type: var
+    var_name: L:dc6_313_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_313_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_314_obj
+  - # Water Pressure ENG 2 Annunciator Test Switch
+    type: var
+    var_name: L:dc6_314_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_314_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_315_obj
+  - # Water Pressure ENG 3 Annunciator Test Switch
+    type: var
+    var_name: L:dc6_315_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_315_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_316_obj
+  - # Water Pressure ENG 4 Annunciator Test Switch
+    type: var
+    var_name: L:dc6_316_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_316_obj_annunciator
+  - # CPT Outer Marker Annunciator Test Switch
+    type: var
+    var_name: L:dc6_299_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_299_obj_annunciator
+  - # CPT Middle Marker Annunciator Test Switch
+    type: var
+    var_name: L:dc6_300_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_300_obj_annunciator
+  - # CPT Inner Marker Annunciator Test Switch
+    type: var
+    var_name: L:dc6_301_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_301_obj_annunciator
+  - # FO Outer Marker Annunciator Test Switch
+    type: var
+    var_name: L:dc6_379_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_379_obj_annunciator
+  - # FO Middle Marker Annunciator Test Switch
+    type: var
+    var_name: L:dc6_380_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_380_obj_annunciator
+  - # FO Inner Marker Annunciator Test Switch
+    type: var
+    var_name: L:dc6_381_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_381_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_443_obj
+  -
+    type: var
+    var_name: L:dc6_443_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_443_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_444_obj
+  -
+    type: var
+    var_name: L:dc6_444_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_444_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_524_obj
+  - # Prop 1 Reverser Annunciator Test Switch
+    type: var
+    var_name: L:dc6_524_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_524_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_525_obj
+  - # Prop 2 Reverser Annunciator Test Switch
+    type: var
+    var_name: L:dc6_525_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_525_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_526_obj
+  - # Prop 3 Reverser Annunciator Test Switch
+    type: var
+    var_name: L:dc6_526_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_526_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_527_obj
+  - # Prop 4 Reverser Annunciator Test Switch
+    type: var
+    var_name: L:dc6_527_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_527_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_528_obj
+  - # ENG 1 Governor Annunciator Test Switch
+    type: var
+    var_name: L:dc6_528_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_528_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_529_obj
+  - # ENG 2 Governor Annunciator Test Switch
+    type: var
+    var_name: L:dc6_529_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_529_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_530_obj
+  - # ENG 3 Governor Annunciator Test Switch
+    type: var
+    var_name: L:dc6_530_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_530_obj_annunciator
+# -
+#   type: var
+#   var_name: L:dc6_531_obj
+  - # ENG 4 Governor Annunciator Test Switch
+    type: var
+    var_name: L:dc6_531_obj_switch
+# -
+#   type: var
+#   var_name: L:dc6_531_obj_annunciator
+# -
+#   type: var
+#   var_name: L:EmerExitTimer
+  -
+    type: var
+    var_name: L:RadioBacklighting
+  - # Cabin & Cockpit Door Warning Light
+    type: var
+    var_name: L:dc6_251_obj
+  - # Belly Door Warning Light
+    type: var
+    var_name: L:dc6_253_obj
+  - # ADF On/Off Button
+    type: var
+    var_name: L:dc6_138_obj
+  -
+    type: var
+    var_name: L:ADF1_CB_State
+# -
+#   type: var
+#   var_name: L:ADFPower
+# -
+#   type: var
+#   var_name: L:ADFoldPos
+# -
+#   type: var
+#   var_name: L:DC6Airborne
+  -
+    type: var
+    var_name: L:FLTimerStart
+    unreliable: true
+  -
+    type: var
+    var_name: L:FLTimer
+    unreliable: true
+  -
+    type: var
+    var_name: L:SETRST
+  -
+    type: var
+    var_name: L:ELTimerStart
+    unreliable: true
+  -
+    type: var
+    var_name: L:ELTimer
+    unreliable: true
+  -
+    type: var
+    var_name: L:ADFFreqChk
+  - # ADF1 Stby
+    type: var
+    var_name: L:ADFStbyFreq
+  - # ADF1 Active
+    type: var
+    var_name: L:ADFActiveFreq
+  -
+    type: var
+    var_name: L:ADF2FreqChk
+  - # ADF2 Stby
+    type: var
+    var_name: L:ADF2StbyFreq
+  - # ADF2 Active
+    type: var
+    var_name: L:ADF2ActiveFreq
+  - # ADF Mode Button
+    type: var
+    var_name: L:dc6_133_obj
+  - # ADF FLT Mode
+    type: var
+    var_name: L:FRQ_FLT_ET_Mode
+  - # ADF BFO Button
+    type: var
+    var_name: L:dc6_134_obj
+  -
+    type: var
+    var_name: L:DME_CB_State
+  - # Com2 On/Off
+    type: var
+    var_name: L:dc6_163_obj
+  -
+    type: var
+    var_name: L:NavCom2_CB_State
+# -
+#   type: var
+#   var_name: L:NavCom2Power
+  - # Nav2 On/Off
+    type: var
+    var_name: L:dc6_168_obj
+  - # CPT XPNDR Ident
+    type: var
+    var_name: L:XpndrCAIdent
+  -
+    type: var
+    var_name: L:XPDR1_CB_State
+# -
+#   type: var
+#   var_name: L:XPDRReplyTimer
+# -
+#   type: var
+#   var_name: L:XPDRLightCA
+  - # FO XPNDR Ident
+    type: var
+    var_name: L:XpndrFOIdent
+  -
+    type: var
+    var_name: L:XPDR2_CB_State
+# -
+#   type: var
+#   var_name: L:XPDRFOReplyTimer
+# -
+#   type: var
+#   var_name: L:XPDRLightFO
+# -
+#   type: var
+#   var_name: L:ADFOuterDecrease
+# -
+#   type: var
+#   var_name: L:ADFOuterDecrOldPos
+# -
+#   type: var
+#   var_name: L:ADFFreqSwap
+# -
+#   type: var
+#   var_name: L:ADF2FreqSwap
+# -
+#   type: var
+#   var_name: L:ADFOuterIncrease
+# -
+#   type: var
+#   var_name: L:ADFOuterIncrOldPos
+# -
+#   type: var
+#   var_name: L:ADFInnerDecrease
+# -
+#   type: var
+#   var_name: L:ADFInnerDecrOldPos
+# -
+#   type: var
+#   var_name: L:ADFInnerIncrease
+# -
+#   type: var
+#   var_name: L:ADFInnerIncrOldPos
+# -
+#   type: var
+#   var_name: L:ADFFreqXfer
+# -
+#   type: var
+#   var_name: L:ADFFreqXferOldPos
+# -
+#   type: var
+#   var_name: L:XPDRThousandsDecr
+# -
+#   type: var
+#   var_name: L:XPDRThousandsDecrOldPos
+# -
+#   type: var
+#   var_name: L:XPDRThousandsIncr
+# -
+#   type: var
+#   var_name: L:XPDRThousandsIncrOldPos
+# -
+#   type: var
+#   var_name: L:XPDRHundredsDecr
+# -
+#   type: var
+#   var_name: L:XPDRHundredsDecrOldPos
+# -
+#   type: var
+#   var_name: L:XPDRHundredsIncr
+# -
+#   type: var
+#   var_name: L:XPDRHundredsIncrOldPos
+# -
+#   type: var
+#   var_name: L:XPDRTensDecr
+# -
+#   type: var
+#   var_name: L:XPDRTensDecrOldPos
+# -
+#   type: var
+#   var_name: L:XPDRTensIncr
+# -
+#   type: var
+#   var_name: L:XPDRTensIncrOldPos
+# -
+#   type: var
+#   var_name: L:XPDROnesDecr
+# -
+#   type: var
+#   var_name: L:XPDROnesDecrOldPos
+# -
+#   type: var
+#   var_name: L:XPDROnesIncr
+# -
+#   type: var
+#   var_name: L:XPDROnesIncrOldPos
+# -
+#   type: var
+#   var_name: L:FOXPDRThousandsDecr
+# -
+#   type: var
+#   var_name: L:FOXPDRThousandsDecrOldPos
+# -
+#   type: var
+#   var_name: L:FOXPDRThousandsIncr
+# -
+#   type: var
+#   var_name: L:FOXPDRThousandsIncrOldPos
+# -
+#   type: var
+#   var_name: L:FOXPDRHundredsDecr
+# -
+#   type: var
+#   var_name: L:FOXPDRHundredsDecrOldPos
+# -
+#   type: var
+#   var_name: L:FOXPDRHundredsIncr
+# -
+#   type: var
+#   var_name: L:FOXPDRHundredsIncrOldPos
+# -
+#   type: var
+#   var_name: L:FOXPDRTensDecr
+# -
+#   type: var
+#   var_name: L:FOXPDRTensDecrOldPos
+# -
+#   type: var
+#   var_name: L:FOXPDRTensIncr
+# -
+#   type: var
+#   var_name: L:FOXPDRTensIncrOldPos
+# -
+#   type: var
+#   var_name: L:FOXPDROnesDecr
+# -
+#   type: var
+#   var_name: L:FOXPDROnesDecrOldPos
+# -
+#   type: var
+#   var_name: L:FOXPDROnesIncr
+# -
+#   type: var
+#   var_name: L:FOXPDROnesIncrOldPos
+  - # Emergency Deice Switches
+    type: NumSet
+    var_name: L:dc6_003_obj
+    var_units: Number
+    var_type: f64
+    add_by: 301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Emergency Deice Switch Guard
+    type: NumSet
+    var_name: L:dc6_004_obj
+    var_units: Number
+    var_type: f64
+    add_by: 401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine Spark Advance Switch
+    type: NumSet
+    var_name: L:dc6_017_obj
+    var_units: Number
+    var_type: f64
+    add_by: 1701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine Spark Advance Switch Guard
+    type: NumSet
+    var_name: L:dc6_018_obj
+    var_units: Number
+    var_type: f64
+    add_by: 1801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Oil Dilution 1 Switch
+    type: NumSet
+    var_name: L:dc6_019_obj
+    var_units: Number
+    var_type: f64
+    add_by: 1901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Oil Dilution 2 Switch
+    type: NumSet
+    var_name: L:dc6_020_obj
+    var_units: Number
+    var_type: f64
+    add_by: 2001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Oil Dilution 3 Switch
+    type: NumSet
+    var_name: L:dc6_021_obj
+    var_units: Number
+    var_type: f64
+    add_by: 2101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Oil Dilution 4 Switch
+    type: NumSet
+    var_name: L:dc6_022_obj
+    var_units: Number
+    var_type: f64
+    add_by: 2201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Water Injection Pump 1 Switch
+    type: NumSet
+    var_name: L:dc6_023_obj
+    var_units: Number
+    var_type: f64
+    add_by: 2301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Water Injection Pump 2 Switch
+    type: NumSet
+    var_name: L:dc6_024_obj
+    var_units: Number
+    var_type: f64
+    add_by: 2401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Water Injection Pump 3 Switch
+    type: NumSet
+    var_name: L:dc6_025_obj
+    var_units: Number
+    var_type: f64
+    add_by: 2501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Water Injection Pump 4 Switch
+    type: NumSet
+    var_name: L:dc6_026_obj
+    var_units: Number
+    var_type: f64
+    add_by: 2601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 1 Main Fuel Booster Pump CB Switch
+    type: var
+    var_name: L:dc6_027_obj
+  - # ENG 2 Main Fuel Booster Pump CB Switch
+    type: var
+    var_name: L:dc6_028_obj
+  - # ENG 3 Main Fuel Booster Pump CB Switch
+    type: var
+    var_name: L:dc6_029_obj
+  - # ENG 4 Main Fuel Booster Pump CB Switch
+    type: var
+    var_name: L:dc6_030_obj
+  - # ENG 1 Alt Fuel Booster Pump CB Switch
+    type: var
+    var_name: L:dc6_031_obj
+  - # ENG 2 Alt Fuel Booster Pump CB Switch
+    type: var
+    var_name: L:dc6_032_obj
+  - # ENG 3 Alt Fuel Booster Pump CB Switch
+    type: var
+    var_name: L:dc6_033_obj
+  - # ENG 4 Alt Fuel Booster Pump CB Switch
+    type: var
+    var_name: L:dc6_034_obj
+  - # No Smoking
+    type: var
+    var_name: L:dc6_038_obj
+  - # Seat Belts
+    type: var
+    var_name: L:dc6_039_obj
+  - # ENG 1 Auto Feather Test
+    type: NumSet
+    var_name: L:dc6_044_obj
+    var_units: Number
+    var_type: f64
+    add_by: 4401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 2 Auto Feather Test
+    type: NumSet
+    var_name: L:dc6_045_obj
+    var_units: Number
+    var_type: f64
+    add_by: 4501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 3 Auto Feather Test
+    type: NumSet
+    var_name: L:dc6_090_obj
+    var_units: Number
+    var_type: f64
+    add_by: 9001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 4 Auto Feather Test
+    type: NumSet
+    var_name: L:dc6_091_obj
+    var_units: Number
+    var_type: f64
+    add_by: 9101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 1 Feather
+    type: var
+    var_name: L:dc6_046_obj
+  - # ENG 2 Feather
+    type: var
+    var_name: L:dc6_047_obj
+  - # ENG 3 Feather
+    type: var
+    var_name: L:dc6_088_obj
+  - # ENG 4 Feather
+    type: var
+    var_name: L:dc6_089_obj
+  - # Automatic Feathering
+    type: var
+    var_name: L:dc6_051_obj
+# - # Magneto 1
+#   type: var
+#   var_name: L:dc6_052_obj
+# - # Magneto 2
+#   type: var
+#   var_name: L:dc6_053_obj
+# - # Magneto 3
+#   type: var
+#   var_name: L:dc6_054_obj
+# - # Magneto 4
+#   type: var
+#   var_name: L:dc6_055_obj
+  - # Aux Blower
+    type: NumSet
+    var_name: L:dc6_066_obj
+    var_units: Number
+    var_type: f64
+    add_by: 6601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Inverter handle
+    type: var
+    var_name: L:dc6_062_obj
+  - # ENG 1 Main Fuel Booster Pump Low
+    type: NumSet
+    var_name: L:dc6_069_obj
+    var_units: Number
+    var_type: f64
+    add_by: 6901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 1 Main Fuel Booster Pump High
+    type: NumSet
+    var_name: L:dc6_069_2_obj
+    var_units: Number
+    var_type: f64
+    add_by: 6901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 2 Main Fuel Booster Pump Low
+    type: NumSet
+    var_name: L:dc6_070_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 2 Main Fuel Booster Pump High
+    type: NumSet
+    var_name: L:dc6_070_2_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 3 Main Fuel Booster Pump Low
+    type: NumSet
+    var_name: L:dc6_071_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 3 Main Fuel Booster Pump High
+    type: NumSet
+    var_name: L:dc6_071_2_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 4 Main Fuel Booster Pump Low
+    type: NumSet
+    var_name: L:dc6_072_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 4 Main Fuel Booster Pump High
+    type: NumSet
+    var_name: L:dc6_072_2_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 1 Alt Fuel Booster Pump Low
+    type: NumSet
+    var_name: L:dc6_073_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 1 Alt Fuel Booster Pump High
+    type: NumSet
+    var_name: L:dc6_073_2_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 2 Alt Fuel Booster Pump Low
+    type: NumSet
+    var_name: L:dc6_074_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 2 Alt Fuel Booster Pump High
+    type: NumSet
+    var_name: L:dc6_074_2_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 3 Alt Fuel Booster Pump Low
+    type: NumSet
+    var_name: L:dc6_075_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 3 Alt Fuel Booster Pump High
+    type: NumSet
+    var_name: L:dc6_075_2_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 4 Alt Fuel Booster Pump Low
+    type: NumSet
+    var_name: L:dc6_076_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 4 Alt Fuel Booster Pump High
+    type: NumSet
+    var_name: L:dc6_076_2_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Plane Battery Ground Power Switch
+    type: NumSet
+    var_name: L:dc6_078_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Emergency Instrument Power and Inst. Lighting Switch
+    type: NumSet
+    var_name: L:dc6_080_obj
+    var_units: Number
+    var_type: f64
+    add_by: 8001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Inverter Standby CB
+    type: NumSet
+    var_name: L:dc6_731_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Battery and Ground Power Switch
+    type: NumSet
+    var_name: L:dc6_082_obj
+    var_units: Number
+    var_type: f64
+    add_by: 8201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Generator 1
+    type: NumSet
+    var_name: L:dc6_083_obj
+    var_units: Number
+    var_type: f64
+    add_by: 8301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Generator 2
+    type: NumSet
+    var_name: L:dc6_084_obj
+    var_units: Number
+    var_type: f64
+    add_by: 8401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Generator 3
+    type: NumSet
+    var_name: L:dc6_085_obj
+    var_units: Number
+    var_type: f64
+    add_by: 8501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Generator 4
+    type: NumSet
+    var_name: L:dc6_086_obj
+    var_units: Number
+    var_type: f64
+    add_by: 8601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Emergency Exit Lights Guard
+    type: var
+    var_name: L:dc6_093_obj
+  - # Pitot & Scoop Heater
+    type: NumSet
+    var_name: L:dc6_096_obj
+    var_units: Number
+    var_type: f64
+    add_by: 9601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fuel Quantity Indicator Test
+    type: NumSet
+    var_name: L:dc6_107_obj
+    var_units: Enum
+    var_type: f64
+    add_by: 10702
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Eng 1 Supercharger
+    type: NumSet
+    var_name: L:dc6_1281_obj
+    var_units: Number
+    var_type: f64
+    add_by: 128101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Eng 2 Supercharger
+    type: NumSet
+    var_name: L:dc6_1282_obj
+    var_units: Number
+    var_type: f64
+    add_by: 128201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Eng 3 Supercharger
+    type: NumSet
+    var_name: L:dc6_1283_obj
+    var_units: Number
+    var_type: f64
+    add_by: 128301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Eng 4 Supercharger
+    type: NumSet
+    var_name: L:dc6_1284_obj
+    var_units: Number
+    var_type: f64
+    add_by: 128401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # CO2 Bottle Selector
+    type: NumSet
+    var_name: L:dc6_195_obj
+    var_units: Number
+    var_type: f64
+    add_by: 19501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Htr Fuel Cross Feed
+    type: NumSet
+    var_name: L:dc6_205_obj
+    var_units: Number
+    var_type: f64
+    add_by: 20501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Htr Fuel & Ign Sel Cabin
+    type: NumSet
+    var_name: L:dc6_206_obj
+    var_units: Number
+    var_type: f64
+    add_by: 20601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Htr Fuel & Ign Sel Tail
+    type: NumSet
+    var_name: L:dc6_207_obj
+    var_units: Number
+    var_type: f64
+    add_by: 20701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Htr Fuel & Ign Sel L. Wing
+    type: NumSet
+    var_name: L:dc6_208_obj
+    var_units: Number
+    var_type: f64
+    add_by: 20801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Htr Fuel & Ign Sel R. Wing
+    type: NumSet
+    var_name: L:dc6_209_obj
+    var_units: Number
+    var_type: f64
+    add_by: 20901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Htr Ign Sel Cabin Check
+    type: NumSet
+    var_name: L:dc6_210_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Htr Ign Sel Tail Check
+    type: NumSet
+    var_name: L:dc6_211_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Htr Ign Sel L. Wing Check
+    type: NumSet
+    var_name: L:dc6_212_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Htr Ign Sel R. Wing Check
+    type: NumSet
+    var_name: L:dc6_213_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cab Htr Master
+    type: NumSet
+    var_name: L:dc6_214_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cab & Airfoil Htr Master Guard
+    type: NumSet
+    var_name: L:dc6_215_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Airfoil Htr Master
+    type: NumSet
+    var_name: L:dc6_216_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop De-Icer
+    type: NumSet
+    var_name: L:dc6_217_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Carb De-icer Eng 1
+    type: NumSet
+    var_name: L:dc6_218_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Carb De-icer Eng 2
+    type: NumSet
+    var_name: L:dc6_219_obj
+    var_units: Number
+    var_type: f64
+    add_by: 21901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Carb De-icer Eng 3
+    type: NumSet
+    var_name: L:dc6_220_obj
+    var_units: Number
+    var_type: f64
+    add_by: 22001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Carb De-icer Eng 4
+    type: NumSet
+    var_name: L:dc6_221_obj
+    var_units: Number
+    var_type: f64
+    add_by: 22101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cabin Pressure Manual Inc/Dec Switch
+    type: var
+    var_name: L:dc6_254_obj
+  - # Cabin Pressure Manual Auto/Manual Guard
+    type: NumSet
+    var_name: L:dc6_256_obj
+    var_units: Number
+    var_type: f64
+    add_by: 25601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cooling Turbine
+    type: NumSet
+    var_name: L:dc6_589_obj
+    var_units: Number
+    var_type: f64
+    add_by: 58901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # CO2 Left Bank Discharge Switch
+    type: NumSet
+    var_name: L:dc6_259_obj
+    var_units: Number
+    var_type: f64
+    add_by: 25901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # CO2 ENG 1 Discharge Switch
+    type: NumSet
+    var_name: L:dc6_262_obj
+    var_units: Number
+    var_type: f64
+    add_by: 26201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # CO2 ENG 2 Discharge Switch
+    type: NumSet
+    var_name: L:dc6_263_obj
+    var_units: Number
+    var_type: f64
+    add_by: 26301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # CO2 ENG 3 Discharge Switch
+    type: NumSet
+    var_name: L:dc6_265_obj
+    var_units: Number
+    var_type: f64
+    add_by: 26501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # CO2 ENG 4 Discharge Switch
+    type: NumSet
+    var_name: L:dc6_266_obj
+    var_units: Number
+    var_type: f64
+    add_by: 26601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # CO2 Right Bank Discharge Switch
+    type: NumSet
+    var_name: L:dc6_269_obj
+    var_units: Number
+    var_type: f64
+    add_by: 26901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Gyro Heading Switch
+    type: var
+    var_name: L:dc6_303_obj
+  - # Slaving Cutoff Switch
+    type: NumSet
+    var_name: L:dc6_304_obj
+    var_units: Number
+    var_type: f64
+    add_by: 30401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Gust Lock
+    type: NumSet
+    var_name: L:dc6_398_obj
+    var_units: Number
+    var_type: f64
+    add_by: 39801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Mixture Lock
+    type: NumSet
+    var_name: L:dc6_399_obj
+    var_units: Number
+    var_type: f64
+    add_by: 39901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Mixture ENG 1
+    type: var
+    var_name: L:dc6_400_obj
+  - # Mixture ENG 2
+    type: var
+    var_name: L:dc6_401_obj
+  - # Mixture ENG 3
+    type: var
+    var_name: L:dc6_402_obj
+  - # Mixture ENG 4
+    type: var
+    var_name: L:dc6_403_obj
+  - # Carb Air 1
+    type: var
+    var_name: L:dc6_411_obj
+  - # Carb Air 2
+    type: var
+    var_name: L:dc6_412_obj
+  - # Carb Air 3
+    type: var
+    var_name: L:dc6_413_obj
+  - # Carb Air 4
+    type: var
+    var_name: L:dc6_414_obj
+  - # HYD Sys Bypass
+    type: NumSet
+    var_name: L:dc6_415_obj
+    var_units: Number
+    var_type: f64
+    add_by: 41501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Emergency Hydraulic Pump Guard
+    type: NumSet
+    var_name: L:dc6_418_obj
+    var_units: Number
+    var_type: f64
+    add_by: 41801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Flap Lever
+    type: var
+    var_name: L:dc6_419_obj
+  - # Gyropilot Toggle
+    type: NumSet
+    var_name: L:dc6_434_obj
+    var_units: Number
+    var_type: f64
+    add_by: 43401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Gyropilot Alt Hold Switch
+    type: NumSet
+    var_name: L:dc6_436_obj
+    var_units: Number
+    var_type: f64
+    add_by: 43601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Throttle Lock
+    type: NumSet
+    var_name: L:dc6_517_obj
+    var_units: Number
+    var_type: f64
+    add_by: 51701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop pitch lever
+    type: var
+    var_name: L:dc6_518_obj
+  - # Tank 1 Fuel Selector
+    type: var
+    var_name: L:dc6_520_obj
+  - # Tank 2 Fuel Selector
+    type: var
+    var_name: L:dc6_521_obj
+  - # Tank 3 Fuel Selector
+    type: var
+    var_name: L:dc6_522_obj
+  - # Tank 4 Fuel Selector
+    type: var
+    var_name: L:dc6_523_obj
+  - # ENG 1 Prop Pitch
+    type: var
+    var_name: L:dc6_532_obj
+  - # ENG 2 Prop Pitch
+    type: var
+    var_name: L:dc6_533_obj
+  - # ENG 3 Prop Pitch
+    type: var
+    var_name: L:dc6_534_obj
+  - # ENG 4 Prop Pitch
+    type: var
+    var_name: L:dc6_535_obj
+  - # Reverser
+    type: var
+    var_name: L:dc6_538_obj
+  - # Left Hand Crossfeed Selector
+    type: var
+    var_name: L:dc6_539_obj
+  - # Right Hand Crossfeed Selector
+    type: var
+    var_name: L:dc6_540_obj
+  - # Fuel Dump Tank 1
+    type: var
+    var_name: L:dc6_941_obj
+  - # Fuel Dump Tank 2
+    type: var
+    var_name: L:dc6_942_obj
+  - # Fuel Dump Tank 3
+    type: var
+    var_name: L:dc6_943_obj
+  - # Fuel Dump Tank 4
+    type: var
+    var_name: L:dc6_944_obj
+  - # Fuel Dump Lid
+    type: var
+    var_name: L:dc6_945_obj
+# -
+#   type: var
+#   var_name: L:ParkBrakeSet
+# -
+#   type: var
+#   var_name: L:ParkBrakeRelease
+  - # COM1 Volume Knob
+    type: var
+    var_name: L:dc6_466_obj
+  -
+    type: var
+    var_name: L:NavCom1_CB_State
+# -
+#   type: var
+#   var_name: L:NavCom1Power
+  -
+    type: var
+    var_name: L:Com1Init
+# -
+#   type: var
+#   var_name: L:COM1oldPos
+  -
+    type: var
+    var_name: L:Com1OnTimer
+  - # NAV1 On/Off
+    type: var
+    var_name: L:dc6_472_obj
+  -
+    type: var
+    var_name: L:NAV1oldPos
+  - # NAV1 Volume Knob
+    type: var
+    var_name: L:dc6_472a_obj
+  -
+    type: var
+    var_name: L:Nav1Init
+  -
+    type: var
+    var_name: L:Nav1OnTimer
+  -
+    type: var
+    var_name: L:StartEngines
+# -
+#   type: var
+#   var_name: L:StartEngTimer
+  -
+    type: var
+    var_name: L:KillEngines
+# -
+#   type: var
+#   var_name: L:LocalKillTimerStart
+# -
+#   type: var
+#   var_name: L:KillEngTimer
+# -
+#   type: var
+#   var_name: L:TabletBootTimer
+  -
+    type: var
+    var_name: L:TabletPower
+  -
+    type: var
+    var_name: L:TabletHasBooted
+  -
+    type: var
+    var_name: L:FuelLoadHelp
+  - # Set Lower Cargo
+    type: CustomCalculator
+    get: (L:LowerCargoLBS)
+    set: 31 (>K:ROTOR_BRAKE)
+  -
+    type: var
+    var_name: L:LowerCargoLBS
+  - # Set Main Cargo
+    type: CustomCalculator
+    get: (L:MainCargoLBS)
+    set: 31 (>K:ROTOR_BRAKE)
+  -
+    type: var
+    var_name: L:MainCargoLBS
+# - # Artifical Flight Engineer
+#   type: var
+#   var_name: L:AFEMode
+# -
+#   type: var
+#   var_name: L:AfeAfterStart
+# -
+#   type: var
+#   var_name: L:AfeBeforeTakeoff
+# -
+#   type: var
+#   var_name: L:AfeTakeoffDry
+# -
+#   type: var
+#   var_name: L:AfeTakeoffWet
+# -
+#   type: var
+#   var_name: L:AfeCruise
+# -
+#   type: var
+#   var_name: L:AfeDescent
+# -
+#   type: var
+#   var_name: L:AfeInrange
+# -
+#   type: var
+#   var_name: L:AfeBeforeLanding
+# -
+#   type: var
+#   var_name: L:AfeAfterLanding
+# -
+#   type: var
+#   var_name: L:AfeParking
+# -
+#   type: var
+#   var_name: L:Engine1Health
+# -
+#   type: var
+#   var_name: L:Engine2Health
+# -
+#   type: var
+#   var_name: L:Engine3Health
+# -
+#   type: var
+#   var_name: L:Engine4Health
+# -
+#   type: var
+#   var_name: L:Engine1Hours
+# -
+#   type: var
+#   var_name: L:Engine2Hours
+# -
+#   type: var
+#   var_name: L:Engine3Hours
+# -
+#   type: var
+#   var_name: L:Engine4Hours
+# -
+#   type: var
+#   var_name: L:Propeller1Hours
+# -
+#   type: var
+#   var_name: L:Propeller2Hours
+# -
+#   type: var
+#   var_name: L:Propeller3Hours
+# -
+#   type: var
+#   var_name: L:Propeller4Hours
+# -
+#   type: var
+#   var_name: L:Eng1OilQty
+# -
+#   type: var
+#   var_name: L:Eng2OilQty
+# -
+#   type: var
+#   var_name: L:Eng3OilQty
+# -
+#   type: var
+#   var_name: L:Eng4OilQty
+# -
+#   type: var
+#   var_name: L:Adi1WaterQty
+# -
+#   type: var
+#   var_name: L:Adi2WaterQty
+# -
+#   type: var
+#   var_name: L:Adi3WaterQty
+# -
+#   type: var
+#   var_name: L:Adi4WaterQty
+# -
+#   type: var
+#   var_name: L:AuxOilQty
+# -
+#   type: var
+#   var_name: L:AntiIceQty
+# -
+#   type: var
+#   var_name: L:AirframeHrs
+  -
+    type: var
+    var_name: L:EngineDamage
+  -
+    type: var
+    var_name: L:RealisticStart
+  -
+    type: var
+    var_name: L:CarbIcing
+  -
+    type: var
+    var_name: L:CBFailure
+  -
+    type: var
+    var_name: L:APDiscSound
+  -
+    type: var
+    var_name: L:RealAPEngage
+# -
+#   type: var
+#   var_name: L:TimeAccel
+# -
+#   type: var
+#   var_name: L:Overboost_Eng1
+# -
+#   type: var
+#   var_name: L:Overboost_Eng2
+# -
+#   type: var
+#   var_name: L:Overboost_Eng3
+# -
+#   type: var
+#   var_name: L:Overboost_Eng4
+# -
+#   type: var
+#   var_name: L:MixtureTooLean_Eng1
+# -
+#   type: var
+#   var_name: L:MixtureTooLean_Eng2
+# -
+#   type: var
+#   var_name: L:MixtureTooLean_Eng3
+# -
+#   type: var
+#   var_name: L:MixtureTooLean_Eng4
+# -
+#   type: var
+#   var_name: L:ExcessiveRPM_Eng1
+# -
+#   type: var
+#   var_name: L:ExcessiveRPM_Eng2
+# -
+#   type: var
+#   var_name: L:ExcessiveRPM_Eng3
+# -
+#   type: var
+#   var_name: L:ExcessiveRPM_Eng4
+# -
+#   type: var
+#   var_name: L:CylinderHeadTemp_Eng1
+# -
+#   type: var
+#   var_name: L:CylinderHeadTemp_Eng2
+# -
+#   type: var
+#   var_name: L:CylinderHeadTemp_Eng3
+# -
+#   type: var
+#   var_name: L:CylinderHeadTemp_Eng4
+# -
+#   type: var
+#   var_name: L:CarbTemp_Eng1
+# -
+#   type: var
+#   var_name: L:CarbTemp_Eng2
+# -
+#   type: var
+#   var_name: L:CarbTemp_Eng3
+# -
+#   type: var
+#   var_name: L:CarbTemp_Eng4
+# -
+#   type: var
+#   var_name: L:OilTemp_Eng1
+# -
+#   type: var
+#   var_name: L:OilTemp_Eng2
+# -
+#   type: var
+#   var_name: L:OilTemp_Eng3
+# -
+#   type: var
+#   var_name: L:OilTemp_Eng4
+# -
+#   type: var
+#   var_name: L:OilPress_Eng1
+# -
+#   type: var
+#   var_name: L:OilPress_Eng2
+# -
+#   type: var
+#   var_name: L:OilPress_Eng3
+# -
+#   type: var
+#   var_name: L:OilPress_Eng4
+  -
+    type: var
+    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverFlapsHidden
+  -
+    type: var
+    var_name: L:XMLVAR_APTrim
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Light_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_LandingGearLightTesting
+# -
+#   type: var
+#   var_name: L:XMLVAR_LandingGearLightBlink
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Check_Down
+  -
+    type: var
+    var_name: L:XMLVAR_LightDimmer
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Check_Down_IsDown
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Check_Down_MinReleaseTime
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Light_Test_IsDown
+  -
+    type: var
+    var_name: L:XMLVAR_Gear_Light_Test_MinReleaseTime
+  -
+    type: var
+    var_name: L:XMLVAR_Press_DUMP_cover
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePos_XAxis
+  -
+    type: var
+    var_name: L:LEVER_MAN_OVRD
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePos_YAxis
+  -
+    type: var
+    var_name: L:XMLVAR_Starter
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_EndTimeDown
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Ignition
+  -
+    type: var
+    var_name: L:XMLVAR_FuelSelectorAuto
+  -
+    type: var
+    var_name: L:XMLVAR_BoostFuelPump
+# -
+#   type: var
+#   var_name: L:_FuelTankShiftPressed
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_FORCE_PULSE_ON
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_CrashLeverPos
+  -
+    type: var
+    var_name: L:XMLVAR_ElecGen
+  -
+    type: var
+    var_name: L:XMLVAR_ElecSource
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_1
+  -
+    type: var
+    var_name: L:XMLVAR_Pitot_2
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:XMLVAR_PushXFR
+  -
+    type: var
+    var_name: L:XMLVAR_InertSep1_Switch
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Deployment
+  -
+    type: var
+    var_name: L:XMLVAR_InertSep1_Active
+# -
+#   type: var
+#   var_name: L:AS3000_Brightness
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AS3000_Brightness_Manual
+  -
+    type: var
+    var_name: L:AirStairRails
+  -
+    type: var
+    var_name: L:AirStairRailsShow
+  -
+    type: var
+    var_name: L:FrontCabinDoor
+  -
+    type: var
+    var_name: L:AirStairs
+  -
+    type: var
+    var_name: L:CargoMainDoor
+  - # Main Cabin Exit
+    type: CustomCalculator
+    get: (L:dc6_451_obj)
+    set: 1 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
+  -
+    type: var
+    var_name: L:dc6_451_obj
+  -
+    type: var
+    var_name: L:MainCabinDoor
+# -
+#   type: var
+#   var_name: L:MainCabinDoorTimer
+  - # Main Cabin Exit Stairs
+    type: var
+    var_name: L:dc6_452_obj
+  -
+    type: var
+    var_name: L:MainStairs
+  -
+    type: var
+    var_name: L:NavComInit
+# -
+#   type: var
+#   var_name: L:NavComOnTimer
+  -
+    type: var
+    var_name: L:COM2oldPos
+  -
+    type: var
+    var_name: L:NAV2oldPos
+  -
+    type: var
+    var_name: L:ADFSndInit
+  -
+    type: var
+    var_name: L:CargoDoors
+  -
+    type: var
+    var_name: L:CargoEntrance
+  - # Set Baggage Weight
+    type: CustomCalculator
+    get: (L:TotalBaggageLBS)
+    set: 31 (>K:ROTOR_BRAKE)
+  -
+    type: var
+    var_name: L:TotalBaggageLBS
+  - # Set Passenger Weight
+    type: CustomCalculator
+    get: (L:NumberOfPax)
+    set: 30 (>K:ROTOR_BRAKE)
+  -
+    type: var
+    var_name: L:NumberOfPax
+# - # high pressure exhaust flame effect engine 1
+#   type: var
+#   var_name: L:dc6_953_obj
+# - # high pressure exhaust flame effect engine 2
+#   type: var
+#   var_name: L:dc6_954_obj
+# - # high pressure exhaust flame effect engine 3
+#   type: var
+#   var_name: L:dc6_955_obj
+# - # high pressure exhaust flame effect engine 4
+#   type: var
+#   var_name: L:dc6_956_obj
+# - # low pressure exhaust effect engine 1
+#   type: var
+#   var_name: L:dc6_959_obj
+# - # low pressure exhaust effect engine 2
+#   type: var
+#   var_name: L:dc6_960_obj
+# - # low pressure exhaust effect engine 3
+#   type: var
+#   var_name: L:dc6_961_obj
+# - # low pressure exhaust effect engine 4
+#   type: var
+#   var_name: L:dc6_962_obj
+# - # cargo pax lower 50
+#   type: var
+#   var_name: L:dc6_877_obj
+# - # cargo pax lower 100
+#   type: var
+#   var_name: L:dc6_878_obj
+# - # WA Tank Engine 1 Needle
+#   type: var
+#   var_name: L:dc6_1031_obj
+# - # WA Tank Engine 2 Needle
+#   type: var
+#   var_name: L:dc6_1032_obj
+# - # WA Tank Engine 3 Needle
+#   type: var
+#   var_name: L:dc6_1041_obj
+# - # WA Tank Engine 4 Needle
+#   type: var
+#   var_name: L:dc6_1042_obj
+# - # Water Pressure Eng 1
+#   type: var
+#   var_name: L:dc6_351_obj
+# - # Water Pressure Eng 2
+#   type: var
+#   var_name: L:dc6_352_obj
+# - # Water Pressure Eng 3
+#   type: var
+#   var_name: L:dc6_353_obj
+# - # Water Pressure Eng 4
+#   type: var
+#   var_name: L:dc6_354_obj
+  -
+    type: var
+    var_name: L:dc6_5321_obj
+  -
+    type: var
+    var_name: L:dc6_5323_obj
+  -
+    type: var
+    var_name: L:dc6_5331_obj
+  -
+    type: var
+    var_name: L:dc6_5333_obj
+  -
+    type: var
+    var_name: L:dc6_5341_obj
+  -
+    type: var
+    var_name: L:dc6_5343_obj
+  -
+    type: var
+    var_name: L:dc6_5351_obj
+  -
+    type: var
+    var_name: L:dc6_5353_obj
+# -
+#   type: var
+#   var_name: L:Prop1Feather
+# -
+#   type: var
+#   var_name: L:Prop2Feather
+# -
+#   type: var
+#   var_name: L:Prop3Feather
+# -
+#   type: var
+#   var_name: L:Prop4Feather
+  - # ENG 1 Feather Annunciator
+    type: var
+    var_name: L:dc6_476_obj
+  - # ENG 2 Feather Annunciator
+    type: var
+    var_name: L:dc6_471_obj
+  - # ENG 3 Feather Annunciator
+    type: var
+    var_name: L:dc6_881_obj
+  - # ENG 2 Feather Annunciator
+    type: var
+    var_name: L:dc6_891_obj
+  - # ENG 1 AUTOFEATHER
+    type: var
+    var_name: L:dc6_921_obj
+  - # ENG 2 AUTOFEATHER
+    type: var
+    var_name: L:dc6_922_obj
+  - # ENG 3 AUTOFEATHER
+    type: var
+    var_name: L:dc6_923_obj
+  - # ENG 4 AUTOFEATHER
+    type: var
+    var_name: L:dc6_924_obj
+  - # Prop Sync Auto Manual Switch
+    type: NumSet
+    var_name: L:dc6_537_obj
+    var_units: enum
+    var_type: f64
+    add_by: 53701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop Resync Switch
+    type: NumSet
+    var_name: L:dc6_536_obj
+    var_units: Number
+    var_type: f64
+    add_by: 53601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop Deice Ammeter Selector
+    type: var
+    var_name: L:dc6_460_obj
+# - # Prop Deice Ammeter Needle
+#   type: var
+#   var_name: L:dc6_002_obj
+# - # CABIN RATE VS Needle
+#   type: var
+#   var_name: L:dc6_252_obj
+# - # Cabin Differential Pressure needle
+#   type: var
+#   var_name: L:dc6_239_obj
+  - # Cabin Press Cabin Needle
+    type: var
+    var_name: L:dc6_248_obj
+  - # Cabin Press Flight Needle
+    type: var
+    var_name: L:dc6_247_obj
+  - # Cabin Press Start Marker Needle
+    type: var
+    var_name: L:dc6_2472_obj
+  - # Cabin Pressure Control Start Marker Knob
+    type: var
+    var_name: L:dc6_2471_obj
+  - # Cabin Pressure Control Hand Knob
+    type: var
+    var_name: L:dc6_2473_obj
+  - # Cabin Pressure Manual Auto/Manual Switch
+    type: NumSet
+    var_name: L:dc6_255_obj
+    var_units: Number
+    var_type: f64
+    add_by: 25501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+# - # CABIN ALTIMETER HUNDRED needle
+#   type: var
+#   var_name: L:dc6_242_obj
+# - # CABIN ALTIMETER 1 THOUSAND needle
+#   type: var
+#   var_name: L:dc6_241_obj
+# - # CABIN ALTIMETER 10 THOUSAND needle
+#   type: var
+#   var_name: L:dc6_240_obj
+# - # SUPERCHARGER AIRFLOW RATE 1 needle
+#   type: var
+#   var_name: L:dc6_249_obj
+# - # SUPERCHARGER AIRFLOW RATE 2 needle
+#   type: var
+#   var_name: L:dc6_250_obj
+# - # Cabin Supercharger Gearbox 1 Oil Temp Needle
+#   type: var
+#   var_name: L:dc6_106_obj
+# - # Cabin Supercharger Gearbox 2 Oil Temp Needle
+#   type: var
+#   var_name: L:dc6_105_obj
+# - # Cabin Supercharger Gearbox 1 Oil Press Needle
+#   type: var
+#   var_name: L:dc6_111_obj
+# - # Cabin Supercharger Gearbox 2 Oil Press Needle
+#   type: var
+#   var_name: L:dc6_110_obj
+  - # Pressurization Altimeter Kohlsman Disc
+    type: var
+    var_name: L:dc6_243_obj
+  -
+    type: var
+    var_name: L:PressKillOn
+# - # Needle Shake
+#   type: var
+#   var_name: L:dc6_706_obj
+# - # Oil Pressure Eng 1
+#   type: var
+#   var_name: L:dc6_333_obj
+# - # Oil Pressure Eng 2
+#   type: var
+#   var_name: L:dc6_334_obj
+# - # Oil Pressure Eng 3
+#   type: var
+#   var_name: L:dc6_335_obj
+# - # Oil Pressure Eng 4
+#   type: var
+#   var_name: L:dc6_336_obj
+# - # Oil Temp Eng 1
+#   type: var
+#   var_name: L:dc6_343_obj
+# - # Oil Temp Eng 2
+#   type: var
+#   var_name: L:dc6_344_obj
+# - # Oil Temp Eng 3
+#   type: var
+#   var_name: L:dc6_345_obj
+# - # Oil Temp Eng 4
+#   type: var
+#   var_name: L:dc6_346_obj
+  - # Aux Oil Tank Selector
+    type: var
+    var_name: L:dc6_005_obj
+  - # Auxiliary Oil Transfer Switch
+    type: var
+    var_name: L:dc6_006_obj
+# - # Auxiliary Oil Needle
+#   type: var
+#   var_name: L:dc6_100_obj
+# - # Oil Qty Engine 1 Needle
+#   type: var
+#   var_name: L:dc6_991_obj
+# - # Oil Qty Engine 2 Needle
+#   type: var
+#   var_name: L:dc6_992_obj
+# - # Oil Qty Engine 3 Needle
+#   type: var
+#   var_name: L:dc6_1011_obj
+# - # Oil Qty Engine 4 Needle
+#   type: var
+#   var_name: L:dc6_1012_obj
+# - # Captain VOR1 NAV Annunciator
+#   type: var
+#   var_name: L:dc6_295_obj
+# - # Captain VOR1 VLOC Annunciator
+#   type: var
+#   var_name: L:dc6_296_obj
+# - # Captain VOR1 GPS Annunciator
+#   type: var
+#   var_name: L:dc6_297_obj
+# - # Captain ADF A ADF1 Needle
+#   type: var
+#   var_name: L:dc6_283_obj
+# - # Captain ADF A ADF2 Needle
+#   type: var
+#   var_name: L:dc6_284_obj
+# - # Captain ADF A ADF Card
+#   type: var
+#   var_name: L:dc6_285_obj
+# - # Captain VOR A VOR1 Needle
+#   type: var
+#   var_name: L:dc6_307_obj
+# - # Captain VOR A VOR2 Needle
+#   type: var
+#   var_name: L:dc6_306_obj
+# - # Captain VOR A Card
+#   type: var
+#   var_name: L:dc6_305_obj
+# - # FO ADF A ADF1 Needle
+#   type: var
+#   var_name: L:dc6_383_obj
+# - # FO ADF A ADF2 Needle
+#   type: var
+#   var_name: L:dc6_384_obj
+# - # FO ADF A ADF Card
+#   type: var
+#   var_name: L:dc6_382_obj
+# - # FO VOR A VOR1 Needle
+#   type: var
+#   var_name: L:dc6_386_obj
+# - # FO VOR A VOR2 Needle
+#   type: var
+#   var_name: L:dc6_387_obj
+# - # FO VOR A Card
+#   type: var
+#   var_name: L:dc6_385_obj
+# - # Captain ADF B Card
+#   type: var
+#   var_name: L:dc6_308_obj
+# - # Captain ADF B Needle
+#   type: var
+#   var_name: L:dc6_309_obj
+# - # FO ADF B Card
+#   type: var
+#   var_name: L:dc6_388_obj
+# - # FO ADF B Needle
+#   type: var
+#   var_name: L:dc6_389_obj
+# - # Captain VOR1 Card
+#   type: var
+#   var_name: L:dc6_289_obj
+# - # Captain VOR1 LOC Needle
+#   type: var
+#   var_name: L:dc6_291_obj
+# - # Captain VOR1 GS Needle
+#   type: var
+#   var_name: L:dc6_292_obj
+# - # Captain VOR1 GS Flag
+#   type: var
+#   var_name: L:dc6_293_obj
+# - # Captain VOR1 TO FROM Indicators
+#   type: var
+#   var_name: L:dc6_294_obj
+# - # Captain VOR1 NAV Flag
+#   type: var
+#   var_name: L:dc6_290_obj
+# - # FO VOR1 Card
+#   type: var
+#   var_name: L:dc6_372_obj
+# - # FO VOR1 LOC Needle
+#   type: var
+#   var_name: L:dc6_373_obj
+# - # FO VOR2 GS Needle
+#   type: var
+#   var_name: L:dc6_374_obj
+# - # FO VOR2 GS Flag
+#   type: var
+#   var_name: L:dc6_375_obj
+# - # FO VOR2 NAV Flag
+#   type: var
+#   var_name: L:dc6_376_obj
+# - # CA OM ANNUNCIATOR
+#   type: var
+#   var_name: L:dc6_299_obj
+# - # CA MM ANNUNCIATOR
+#   type: var
+#   var_name: L:dc6_300_obj
+# - # CA IM ANNUNCIATOR
+#   type: var
+#   var_name: L:dc6_301_obj
+# - # FO OM ANNUNCIATOR
+#   type: var
+#   var_name: L:dc6_379_obj
+# - # FO MM ANNUNCIATOR
+#   type: var
+#   var_name: L:dc6_380_obj
+# - # FO IM ANNUNCIATOR
+#   type: var
+#   var_name: L:dc6_381_obj
+  - # Marker Beacon On/Off Switch
+    type: var
+    var_name: L:dc6_541_obj
+  - # Marker Beacon High/Low Switch
+    type: var
+    var_name: L:dc6_542_obj
+# - # FLAP INDICATOR Needle
+#   type: var
+#   var_name: L:dc6_341_obj
+# - # GEAR UNSAFE Light
+#   type: var
+#   var_name: L:dc6_394_obj
+# - # LEFT MAIN GEAR Light
+#   type: var
+#   var_name: L:dc6_395_obj
+# - # NOSE GEAR Light
+#   type: var
+#   var_name: L:dc6_396_obj
+# - # RIGHT MAIN GEAR Light
+#   type: var
+#   var_name: L:dc6_397_obj
+  - # PARK BRAKE lever
+    type: var
+    var_name: L:dc6_549_obj
+# - # Hydraulic Reservoir Needle
+#   type: var
+#   var_name: L:dc6_102_obj
+  - # EMERGENCY AIR BRAKE CONTROL Lever
+    type: var
+    var_name: L:dc6_258_obj
+# - # Hydraulic System Pressure gauge
+#   type: var
+#   var_name: L:dc6_580_obj
+  - # Emergency Air Brakes Pressure gauge
+    type: var
+    var_name: L:dc6_581_obj
+  - # EMERGENCY HYDRAULIC PUMP Switch
+    type: var
+    var_name: L:dc6_417_obj
+  - # EMG HYD Sys Selector
+    type: var
+    var_name: L:dc6_420_obj
+# - # Left Wiper
+#   type: var
+#   var_name: L:dc6_930_obj
+# - # Right Wiper
+#   type: var
+#   var_name: L:dc6_931_obj
+  - # PIC WINDSHIELD WIPER switch
+    type: var
+    var_name: L:dc6_582_obj
+  -
+    type: var
+    var_name: L:dc6_932_obj
+  -
+    type: var
+    var_name: L:dc6_933_obj
+  -
+    type: NumSet
+    var_name: L:dc6_408_obj
+    var_units: Number
+    var_type: f64
+    add_by: 40801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+# -
+#   type: var
+#   var_name: L:GearWarnSound
+# -
+#   type: var
+#   var_name: L:BrakesLoud
+# -
+#   type: var
+#   var_name: L:BrakesSoft
+# -
+#   type: var
+#   var_name: L:wipers_slow
+# -
+#   type: var
+#   var_name: L:wipers_fast
+# - # Fuel Flow Eng 1
+#   type: var
+#   var_name: L:dc6_329_obj
+# - # Fuel Flow Eng 2
+#   type: var
+#   var_name: L:dc6_330_obj
+# - # Fuel Flow Eng 3
+#   type: var
+#   var_name: L:dc6_331_obj
+# - # Fuel Flow Eng 4
+#   type: var
+#   var_name: L:dc6_332_obj
+# - # MAIN 1 Fuel Qty Needle
+#   type: var
+#   var_name: L:dc6_116_obj
+# - # ALT 1 Fuel Qty Needle
+#   type: var
+#   var_name: L:dc6_115_obj
+# - # MAIN 2 Fuel Qty Needle
+#   type: var
+#   var_name: L:dc6_117_obj
+# - # ALT 2 Fuel Qty Needle
+#   type: var
+#   var_name: L:dc6_114_obj
+# - # MAIN 3 Fuel Qty Needle
+#   type: var
+#   var_name: L:dc6_118_obj
+# - # ALT 3 Fuel Qty Needle
+#   type: var
+#   var_name: L:dc6_113_obj
+# - # MAIN 4 Fuel Qty Needle
+#   type: var
+#   var_name: L:dc6_119_obj
+# - # ALT 4 Fuel Qty Needle
+#   type: var
+#   var_name: L:dc6_112_obj
+# - # Fuel Pressure Eng 1
+#   type: var
+#   var_name: L:dc6_321_obj
+# - # Fuel Pressure Eng 2
+#   type: var
+#   var_name: L:dc6_322_obj
+# - # Fuel Pressure Eng 3
+#   type: var
+#   var_name: L:dc6_323_obj
+# - # Fuel Pressure Eng 4
+#   type: var
+#   var_name: L:dc6_324_obj
+  -
+    type: var
+    var_name: L:dc6_946_obj
+  - # fuel dump chute engine 1
+    type: var
+    var_name: L:dc6_865_obj
+  - # fuel dump chute engine 2
+    type: var
+    var_name: L:dc6_866_obj
+  - # fuel dump chute engine 3
+    type: var
+    var_name: L:dc6_867_obj
+  - # fuel dump chute engine 4
+    type: var
+    var_name: L:dc6_868_obj
+  - # fuel dump effect engine 1
+    type: var
+    var_name: L:dc6_461_obj
+  - # fuel dump effect engine 2
+    type: var
+    var_name: L:dc6_462_obj
+  - # fuel dump effect engine 3
+    type: var
+    var_name: L:dc6_463_obj
+  - # fuel dump effect engine 4
+    type: var
+    var_name: L:dc6_464_obj
+# - # Whiskey Compass
+#   type: var
+#   var_name: L:dc6_571_obj
+# - # Captain IAS
+#   type: var
+#   var_name: L:dc6_273_obj
+# - # FO IAS
+#   type: var
+#   var_name: L:dc6_360_obj
+# - # Captain Attitude Indicator Pitch
+#   type: var
+#   var_name: L:dc6_2740_obj
+# - # Captain Attitude Indicator Bank
+#   type: var
+#   var_name: L:dc6_274_obj
+  - # Captain Attitude Bars
+    type: var
+    var_name: L:dc6_275_obj
+  - # Captain Attitude Bars Adjust Knob
+    type: var
+    var_name: L:dc6_276_obj
+# - # FO Attitude Indicator Pitch
+#   type: var
+#   var_name: L:dc6_3610_obj
+# - # FO Attitude Indicator Bank
+#   type: var
+#   var_name: L:dc6_361_obj
+  - # FO Attitude Bars
+    type: var
+    var_name: L:dc6_362_obj
+  - # FO Attitude Bars Adjust Knob
+    type: var
+    var_name: L:dc6_363_obj
+# -
+#   type: var
+#   var_name: L:dc6_277_obj
+# -
+#   type: var
+#   var_name: L:dc6_278_obj
+# -
+#   type: var
+#   var_name: L:dc6_279_obj
+  - # Kohlsman 1
+    type: var
+    var_name: L:dc6_280_obj
+  -
+    type: var
+    var_name: L:dc6_28011_obj
+  -
+    type: var
+    var_name: L:dc6_2801_obj
+  - # CPT Baro Knob
+    type: var
+    var_name: L:dc6_282_obj
+# -
+#   type: var
+#   var_name: L:dc6_364_obj
+# -
+#   type: var
+#   var_name: L:dc6_365_obj
+# -
+#   type: var
+#   var_name: L:dc6_366_obj
+  - # Kohlsman 2
+    type: var
+    var_name: L:dc6_367_obj
+  -
+    type: var
+    var_name: L:dc6_3671_obj
+  -
+    type: var
+    var_name: L:dc6_369_obj
+# -
+#   type: var
+#   var_name: L:dc6_286_obj
+# -
+#   type: var
+#   var_name: L:dc6_370_obj
+# -
+#   type: var
+#   var_name: L:dc6_287_obj
+# -
+#   type: var
+#   var_name: L:dc6_371_obj
+# -
+#   type: var
+#   var_name: L:dc6_298_obj
+# -
+#   type: var
+#   var_name: L:dc6_378_obj
+# -
+#   type: var
+#   var_name: L:dc6_311_obj
+# -
+#   type: var
+#   var_name: L:dc6_391_obj
+# - # Yokes F/B
+#   type: var
+#   var_name: L:dc6_612_obj
+# - # Yokes L/R
+#   type: var
+#   var_name: L:dc6_613_obj
+# -
+#   type: var
+#   var_name: L:dc6_614_obj
+  -
+    type: var
+    var_name: L:dc6_616_obj
+  -
+    type: var
+    var_name: L:dc6_617_obj
+  - # ELEVATOR TRIM Wheel
+    type: var
+    var_name: L:dc6_515_obj
+# - # ELEVATOR TRIM NEEDLE
+#   type: var
+#   var_name: L:dc6_516_obj
+  - # AILERON TRIM Wheel
+    type: var
+    var_name: L:dc6_406_obj
+# - # AILERON TRIM NEEDLE
+#   type: var
+#   var_name: L:dc6_407_obj
+  - # RUDDER TRIM Wheel
+    type: var
+    var_name: L:dc6_2640_obj
+# - # RUDDER TAB NOSE
+#   type: var
+#   var_name: L:dc6_264_obj
+# -
+#   type: var
+#   var_name: L:RudderPos
+# -
+#   type: var
+#   var_name: L:AileronPos
+# -
+#   type: var
+#   var_name: L:ElevatorPos
+  -
+    type: var
+    var_name: L:dc6_949_obj
+  -
+    type: var
+    var_name: L:dc6_950_obj
+  -
+    type: var
+    var_name: L:dc6_951_obj
+  -
+    type: var
+    var_name: L:dc6_952_obj
+  -
+    type: var
+    var_name: L:dc6_700_obj
+  - # THROTTLE INTERLOCK Selector
+    type: var
+    var_name: L:dc6_940_obj
+  -
+    type: var
+    var_name: L:dc6_2591_obj
+  - # FWD Baggage Fire Annunciator
+    type: var
+    var_name: L:dc6_2601_obj
+  - # HYD Acc Fire Annunciator
+    type: var
+    var_name: L:dc6_2611_obj
+  - # ENG 1 Fire Annunciator
+    type: var
+    var_name: L:dc6_2621_obj
+  - # ENG 2 Fire Annunciator
+    type: var
+    var_name: L:dc6_2631_obj
+  - # ENG 3 Fire Annunciator
+    type: var
+    var_name: L:dc6_2651_obj
+  - # ENG 4 Fire Annunciator
+    type: var
+    var_name: L:dc6_2661_obj
+  - # HTR Comp Fire Annunciator
+    type: var
+    var_name: L:dc6_2671_obj
+  - # AFT Baggage Fire Annunciator
+    type: var
+    var_name: L:dc6_2681_obj
+  -
+    type: var
+    var_name: L:dc6_2691_obj
+  - # L. Wing Fire Annunciator
+    type: var
+    var_name: L:dc6_190_obj
+  - # R. Wing Fire Annunciator
+    type: var
+    var_name: L:dc6_191_obj
+  - # Cabin Fire Annunciator
+    type: var
+    var_name: L:dc6_192_obj
+  - # Tail Fire Annunciator
+    type: var
+    var_name: L:dc6_193_obj
+  - # Zone 1 Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_175_obj
+    var_units: Number
+    var_type: f64
+    add_by: 17501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Zone 2 & 3 Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_176_obj
+    var_units: Number
+    var_type: f64
+    add_by: 17601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # FWD Baggage Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_177_obj
+    var_units: Number
+    var_type: f64
+    add_by: 17701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Hyd Acc Comp Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_178_obj
+    var_units: Number
+    var_type: f64
+    add_by: 17801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Heater Comp Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_179_obj
+    var_units: Number
+    var_type: f64
+    add_by: 17901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # AFT Baggage Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_180_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Left Wing Htr Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_181_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Right Wing Htr Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_182_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cabin Htr Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_183_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Tail Htr Fire Detection Test
+    type: NumSet
+    var_name: L:dc6_184_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fire Extinguisher Selector Guard
+    type: NumSet
+    var_name: L:dc6_185_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # L. Wing Fire Extinguisher
+    type: NumSet
+    var_name: L:dc6_186_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # R. Wing Fire Extinguisher
+    type: NumSet
+    var_name: L:dc6_187_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cabin Fire Extinguisher
+    type: NumSet
+    var_name: L:dc6_188_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Tail Fire Extinguisher
+    type: NumSet
+    var_name: L:dc6_189_obj
+    var_units: Number
+    var_type: f64
+    add_by: 18901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Wing Heaters Discharge
+    type: NumSet
+    var_name: L:dc6_194_obj
+    var_units: Number
+    var_type: f64
+    add_by: 19401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cabin & Tail Heaters Discharge
+    type: NumSet
+    var_name: L:dc6_196_obj
+    var_units: Number
+    var_type: f64
+    add_by: 19601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+# - # Anti Icing Fluid Needle
+#   type: var
+#   var_name: L:dc6_098_obj
+  - # Carb Air Temp Eng 1
+    type: var
+    var_name: L:dc6_355_obj
+    unreliable: true
+  - # Carb Air Temp Eng 2
+    type: var
+    var_name: L:dc6_356_obj
+    unreliable: true
+  - # Carb Air Temp Eng 3
+    type: var
+    var_name: L:dc6_357_obj
+    unreliable: true
+  - # Carb Air Temp Eng 4
+    type: var
+    var_name: L:dc6_358_obj
+    unreliable: true
+  - # Pitot & Scoop Heater Ammeter Selector
+    type: var
+    var_name: L:dc6_095_obj
+# - # Pitot and Scoop Heater Ammeter Needle
+#   type: var
+#   var_name: L:dc6_097_obj
+  - # Windshield Heat & Radome Anti-Icing
+    type: NumSet
+    var_name: L:dc6_173_obj
+    var_units: Number
+    var_type: f64
+    add_by: 17301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  -
+    type: var
+    var_name: L:dc6_173_obj
+# - # Cabin Heater Temp Celcius
+#   type: var
+#   var_name: L:dc6_197_obj
+# - # Tail Heater Temp Celcius
+#   type: var
+#   var_name: L:dc6_198_obj
+# - # Left Wing Heater Temp Celcius
+#   type: var
+#   var_name: L:dc6_199_obj
+# - # Right Wing Heater Temp Celcius
+#   type: var
+#   var_name: L:dc6_200_obj
+  - # Cockpit Temp Knob
+    type: var
+    var_name: L:dc6_172_obj
+  - # Temp Control Knob
+    type: var
+    var_name: L:dc6_222_obj
+# - # Cabin Temp Fahrenheit
+#   type: var
+#   var_name: L:dc6_223_obj
+# - # Cabin Temp Mix Valve Position
+#   type: var
+#   var_name: L:dc6_224_obj
+# - # Cabin Heater Fuel Pressure
+#   type: var
+#   var_name: L:dc6_201_obj
+# - # Tail Heater Fuel Pressure
+#   type: var
+#   var_name: L:dc6_202_obj
+# - # Left Wing Heater Fuel Pressure
+#   type: var
+#   var_name: L:dc6_203_obj
+# - # Right Wing Heater Fuel Pressure
+#   type: var
+#   var_name: L:dc6_204_obj
+  - # AP Manual Disconnect Lever
+    type: NumSet
+    var_name: L:dc6_404_obj
+    var_units: Number
+    var_type: f64
+    add_by: 40401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Gyropilot Mode Switch
+    type: var
+    var_name: L:dc6_445_obj
+  - # Gyropilot Alt Dial
+    type: var
+    var_name: L:dc6_440_obj
+  - # Gyropilot Turn Dial
+    type: var
+    var_name: L:dc6_442_obj
+  - # AP Aileron Trim
+    type: var
+    var_name: L:dc6_435_obj
+  - # Gyropilot Re-center Button
+    type: NumSet
+    var_name: L:dc6_957_obj
+    var_units: Number
+    var_type: f64
+    add_by: 95701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+# - # RUDDER TRIM NEEDLE
+#   type: var
+#   var_name: L:dc6_437_obj
+# - # AILERON TRIM NEEDLE
+#   type: var
+#   var_name: L:dc6_438_obj
+# - # ELEVATOR TRIM NEEDLE
+#   type: var
+#   var_name: L:dc6_439_obj
+# -
+#   type: var
+#   var_name: L:APDiscSoundTrigger
+# -
+#   type: var
+#   var_name: L:dc6_7061_obj
+# -
+#   type: var
+#   var_name: L:dc6_7062_obj
+# -
+#   type: var
+#   var_name: L:dc6_7063_obj
+# -
+#   type: var
+#   var_name: L:dc6_7064_obj
+# - # Manifold Pressure Eng 1
+#   type: var
+#   var_name: L:dc6_325_obj
+# - # Manifold Pressure Eng 2
+#   type: var
+#   var_name: L:dc6_326_obj
+# - # Manifold Pressure Eng 3
+#   type: var
+#   var_name: L:dc6_327_obj
+# - # Manifold Pressure Eng 4
+#   type: var
+#   var_name: L:dc6_328_obj
+# - # Manifold press 1 gauge
+#   type: var
+#   var_name: L:dc6_237_obj
+# - # Manifold press 2 gauge
+#   type: var
+#   var_name: L:dc6_238_obj
+# - # Engine RPM Eng 1
+#   type: var
+#   var_name: L:dc6_337_obj
+# - # Engine RPM Eng 2
+#   type: var
+#   var_name: L:dc6_338_obj
+# - # Engine RPM Eng 3
+#   type: var
+#   var_name: L:dc6_339_obj
+# - # Engine RPM Eng 4
+#   type: var
+#   var_name: L:dc6_340_obj
+# - # Cylinder Head Temp Eng 1
+#   type: var
+#   var_name: L:dc6_347_obj
+# - # Cylinder Head Temp Eng 2
+#   type: var
+#   var_name: L:dc6_348_obj
+# - # Cylinder Head Temp Eng 3
+#   type: var
+#   var_name: L:dc6_349_obj
+# - # Cylinder Head Temp Eng 4
+#   type: var
+#   var_name: L:dc6_350_obj
+# - # BMEP Eng 1
+#   type: var
+#   var_name: L:dc6_317_obj
+# - # BMEP Eng 2
+#   type: var
+#   var_name: L:dc6_318_obj
+# - # BMEP Eng 3
+#   type: var
+#   var_name: L:dc6_319_obj
+# - # BMEP Eng 4
+#   type: var
+#   var_name: L:dc6_320_obj
+  - # Cowl Flaps Eng 1
+    type: var
+    var_name: L:dc6_124_obj
+  - # Cowl Flaps Eng 2
+    type: var
+    var_name: L:dc6_125_obj
+  - # Cowl Flaps Eng 3
+    type: var
+    var_name: L:dc6_126_obj
+  - # Cowl Flaps Eng 4
+    type: var
+    var_name: L:dc6_127_obj
+# - # THROTTLE LEVER Eng 1-1
+#   type: var
+#   var_name: L:dc6_511_obj
+# - # THROTTLE LEVER Eng 2-1
+#   type: var
+#   var_name: L:dc6_512_obj
+# - # THROTTLE LEVER Eng 3-1
+#   type: var
+#   var_name: L:dc6_513_obj
+# - # THROTTLE LEVER Eng 4-1
+#   type: var
+#   var_name: L:dc6_514_obj
+# - # THROTTLE LEVER Eng 1-2
+#   type: var
+#   var_name: L:dc6_5111_obj
+# - # THROTTLE LEVER Eng 2-2
+#   type: var
+#   var_name: L:dc6_5121_obj
+# - # THROTTLE LEVER Eng 3-2
+#   type: var
+#   var_name: L:dc6_5131_obj
+# - # THROTTLE LEVER Eng 4-2
+#   type: var
+#   var_name: L:dc6_5141_obj
+  - # Engine Start Selector
+    type: var
+    var_name: L:dc6_061_obj
+  - # Prime Switch
+    type: NumSet
+    var_name: L:dc6_601_obj
+    var_units: Number
+    var_type: f64
+    add_by: 60101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Boost Switch
+    type: NumSet
+    var_name: L:dc6_602_obj
+    var_units: Number
+    var_type: f64
+    add_by: 60201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Start Switch
+    type: NumSet
+    var_name: L:dc6_060_obj
+    var_units: Number
+    var_type: f64
+    add_by: 6001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine Start Safety Switch
+    type: var # keep var
+    var_name: L:dc6_059_obj
+# -
+#   type: var
+#   var_name: L:Prop1Start
+# -
+#   type: var
+#   var_name: L:Prop2Start
+# -
+#   type: var
+#   var_name: L:Prop3Start
+# -
+#   type: var
+#   var_name: L:Prop4Start
+# -
+#   type: var
+#   var_name: L:dc6_342_obj
+# -
+#   type: var
+#   var_name: L:cbp_amps
+# -
+#   type: var
+#   var_name: L:cbp_batt
+# - Volts AC needle
+#   type: var
+#   var_name: L:dc6_234_obj
+# - # Volts DC needle
+#   type: var
+#   var_name: L:dc6_235_obj
+  - # DC VOLTMETER Selector Switch
+    type: var
+    var_name: L:dc6_236_obj
+  - # AC VOLTMETER ENG INST Selector Switch
+    type: var
+    var_name: L:dc6_233_obj
+  - # Inverter 1 Switch
+    type: var
+    var_name: L:dc6_063_obj
+  - # Inverter 2 Switch
+    type: var
+    var_name: L:dc6_064_obj
+  - # Engine Instruments Inverter
+    type: var
+    var_name: L:dc6_065_obj
+  - # Power Crash Bar
+    type: NumSet
+    var_name: L:dc6_087_obj
+    var_units: Number
+    var_type: f64
+    add_by: 8701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+# - # DC AMPs Gen1 needle
+#   type: var
+#   var_name: L:dc6_229_obj
+# - # DC AMPs Gen2 needle
+#   type: var
+#   var_name: L:dc6_230_obj
+# - # DC AMPs Gen3 needle
+#   type: var
+#   var_name: L:dc6_231_obj
+# - # DC AMPs Gen4 needle
+#   type: var
+#   var_name: L:dc6_232_obj
+# - # CA FLT. INSTRUMENT POWER FAILURE ANNUNCIATOR
+#   type: var
+#   var_name: L:dc6_272_obj
+# - # FO FLT. INSTRUMENT POWER FAILURE ANNUNCIATOR
+#   type: var
+#   var_name: L:dc6_359_obj
+  - # ENG 1 FUEL AND OIL PRESS. WARNING ISOLATION SWITCH
+    type: NumSet
+    var_name: L:dc6_545_obj
+    var_units: Number
+    var_type: f64
+    add_by: 54501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 2 FUEL AND OIL PRESS. WARNING ISOLATION SWITCH
+    type: NumSet
+    var_name: L:dc6_546_obj
+    var_units: Number
+    var_type: f64
+    add_by: 54601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 3 FUEL AND OIL PRESS. WARNING ISOLATION SWITCH
+    type: NumSet
+    var_name: L:dc6_547_obj
+    var_units: Number
+    var_type: f64
+    add_by: 54701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ENG 4 FUEL AND OIL PRESS. WARNING ISOLATION SWITCH
+    type: NumSet
+    var_name: L:dc6_548_obj
+    var_units: Number
+    var_type: f64
+    add_by: 54801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fuel Pump CB Guard
+    type: NumSet
+    var_name: L:dc6_035_obj
+    var_units: Number
+    var_type: f64
+    add_by: 3501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cabin Attendant's Call
+    type: NumSet
+    var_name: L:dc6_056_obj
+    var_units: Number
+    var_type: f64
+    add_by: 5601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Mechanic's Call
+    type: NumSet
+    var_name: L:dc6_057_obj
+    var_units: Number
+    var_type: f64
+    add_by: 5701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  -
+    type: var
+    var_name: L:dc6_kill_ramp_gpu
+  -
+    type: var
+    var_name: L:ADF2_CB_State
+# -
+#   type: var
+#   var_name: L:CBSoundOn
+# -
+#   type: var
+#   var_name: L:CBSoundOff
+  -
+    type: NumSet
+    var_name: L:dc6_710_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Generator Field 1 CB
+    type: NumSet
+    var_name: L:dc6_711_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Generator Field 2 CB
+    type: NumSet
+    var_name: L:dc6_712_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Generator Field 3 CB
+    type: NumSet
+    var_name: L:dc6_713_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Generator Field 4 CB
+    type: NumSet
+    var_name: L:dc6_714_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Emer Hyd Pump Power CB
+    type: NumSet
+    var_name: L:dc6_715_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Emer Hyd Pump Control CB
+    type: NumSet
+    var_name: L:dc6_716_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Auto Feath CB
+    type: NumSet
+    var_name: L:dc6_717_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop 1 Feather Control CB
+    type: NumSet
+    var_name: L:dc6_718_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop 2 Feather Control CB
+    type: NumSet
+    var_name: L:dc6_719_obj
+    var_units: Number
+    var_type: f64
+    add_by: 71901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop 3 Feather Control CB
+    type: NumSet
+    var_name: L:dc6_720_obj
+    var_units: Number
+    var_type: f64
+    add_by: 72001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop 4 Feather Control CB
+    type: NumSet
+    var_name: L:dc6_721_obj
+    var_units: Number
+    var_type: f64
+    add_by: 72101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop 2&3 Reverse Indicator CB
+    type: NumSet
+    var_name: L:dc6_722_obj
+    var_units: Number
+    var_type: f64
+    add_by: 72201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop 1&4 Reverse Indicator CB
+    type: NumSet
+    var_name: L:dc6_723_obj
+    var_units: Number
+    var_type: f64
+    add_by: 72301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop 2&3 Reverse Control CB
+    type: NumSet
+    var_name: L:dc6_724_obj
+    var_units: Number
+    var_type: f64
+    add_by: 72401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop 1&4 Reverse Control CB
+    type: NumSet
+    var_name: L:dc6_725_obj
+    var_units: Number
+    var_type: f64
+    add_by: 72501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop Gov Sync CB
+    type: NumSet
+    var_name: L:dc6_726_obj
+    var_units: Number
+    var_type: f64
+    add_by: 72601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Prop Gov Man CB
+    type: NumSet
+    var_name: L:dc6_727_obj
+    var_units: Number
+    var_type: f64
+    add_by: 72701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  -
+    type: var
+    var_name: L:dc6_728_obj
+  - # Master Radio CB
+    type: NumSet
+    var_name: L:dc6_729_obj
+    var_units: Number
+    var_type: f64
+    add_by: 72901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Master Radio CB
+    type: NumSet
+    var_name: L:dc6_730_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Inverter No 1 CB
+    type: NumSet
+    var_name: L:dc6_732_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Inverter No 2 CB
+    type: NumSet
+    var_name: L:dc6_733_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fuel Pumps 4 & 1 CB
+    type: NumSet
+    var_name: L:dc6_734_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fuel Pumps 3 & 2 CB
+    type: NumSet
+    var_name: L:dc6_735_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Gen Control Panel Gen 1 CB
+    type: NumSet
+    var_name: L:dc6_736_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Gen Control Panel Gen 2 CB
+    type: NumSet
+    var_name: L:dc6_737_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Gen Control Panel Gen 3 CB
+    type: NumSet
+    var_name: L:dc6_738_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Gen Control Panel Gen 4 CB
+    type: NumSet
+    var_name: L:dc6_739_obj
+    var_units: Number
+    var_type: f64
+    add_by: 73901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Water Injection Pump Eng 1 CB
+    type: NumSet
+    var_name: L:dc6_740_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Water Injection Pump Eng 2 CB
+    type: NumSet
+    var_name: L:dc6_741_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Water Injection Pump Eng 3 CB
+    type: NumSet
+    var_name: L:dc6_742_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Water Injection Pump Eng 4 CB
+    type: NumSet
+    var_name: L:dc6_743_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Takeoff Warn Horn CB
+    type: NumSet
+    var_name: L:dc6_744_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Ldg Gear Warn Horn CB
+    type: NumSet
+    var_name: L:dc6_745_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Door Warn CB
+    type: NumSet
+    var_name: L:dc6_746_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Temp & Inv Warn Lights CB
+    type: NumSet
+    var_name: L:dc6_747_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Capt 24v Utility Outlets CB
+    type: NumSet
+    var_name: L:dc6_748_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fo 24v Utility Outlets CB
+    type: NumSet
+    var_name: L:dc6_749_obj
+    var_units: Number
+    var_type: f64
+    add_by: 74901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Man Control Warn Lights CB
+    type: NumSet
+    var_name: L:dc6_750_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Auto Control Warn Lights CB
+    type: NumSet
+    var_name: L:dc6_751_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Aft Water Heater CB
+    type: NumSet
+    var_name: L:dc6_752_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fwd Water Heater CB
+    type: NumSet
+    var_name: L:dc6_753_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cont Airscoop Heater CB
+    type: NumSet
+    var_name: L:dc6_754_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Wing & Cabin Airscoop Heater CB
+    type: NumSet
+    var_name: L:dc6_755_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Power Control Cabin Heater CB
+    type: NumSet
+    var_name: L:dc6_756_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Control Cabin Heater CB
+    type: NumSet
+    var_name: L:dc6_757_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Main Airfoil Heater CB
+    type: NumSet
+    var_name: L:dc6_758_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Tail Airfoil Heater CB
+    type: NumSet
+    var_name: L:dc6_759_obj
+    var_units: Number
+    var_type: f64
+    add_by: 75901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # L & R Wing Airfoil Heater CB
+    type: NumSet
+    var_name: L:dc6_760_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Main Heater Fuel Pumps CB
+    type: NumSet
+    var_name: L:dc6_761_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Airfoil Heater Fuel Pumps CB
+    type: NumSet
+    var_name: L:dc6_762_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cabin Heater Fuel Pumps CB
+    type: NumSet
+    var_name: L:dc6_763_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Ldg Gear Ground Control Relay CB
+    type: NumSet
+    var_name: L:dc6_764_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Airfoil & Cabin Heater Blower Cont CB
+    type: NumSet
+    var_name: L:dc6_765_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Airfoil Htr Grd Blower Cont CB
+    type: NumSet
+    var_name: L:dc6_766_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Airfoil Htrs Grd Blower CB
+    type: NumSet
+    var_name: L:dc6_767_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine 1 Supercharger Control Motors CB
+    type: NumSet
+    var_name: L:dc6_768_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine 2 Supercharger Control Motors CB
+    type: NumSet
+    var_name: L:dc6_769_obj
+    var_units: Number
+    var_type: f64
+    add_by: 76901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine 3 Supercharger Control Motors CB
+    type: NumSet
+    var_name: L:dc6_770_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine 4 Supercharger Control Motors CB
+    type: NumSet
+    var_name: L:dc6_771_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine 1 Oil Temperature Control Actuator CB
+    type: NumSet
+    var_name: L:dc6_772_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine 2 Oil Temperature Control Actuator CB
+    type: NumSet
+    var_name: L:dc6_773_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine 3 Oil Temperature Control Actuator CB
+    type: NumSet
+    var_name: L:dc6_774_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Engine 4 Oil Temperature Control Actuator CB
+    type: NumSet
+    var_name: L:dc6_775_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Start Primer & Ind Vib CB
+    type: NumSet
+    var_name: L:dc6_776_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Spark Advance CB
+    type: NumSet
+    var_name: L:dc6_777_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Oil Dil Sol Valve CB
+    type: NumSet
+    var_name: L:dc6_778_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Aux Oil Pump Contr & Qty CB
+    type: NumSet
+    var_name: L:dc6_779_obj
+    var_units: Number
+    var_type: f64
+    add_by: 77901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Super Chgr Oil Carb Air & Eng Oil Temp CB
+    type: NumSet
+    var_name: L:dc6_780_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Free Air Carb Air & Eng Oil Temp CB
+    type: NumSet
+    var_name: L:dc6_781_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Alcohol Hyd Oil Water Inject CB
+    type: NumSet
+    var_name: L:dc6_782_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Emer Lights CB
+    type: NumSet
+    var_name: L:dc6_783_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # pass Warn Signs CB
+    type: NumSet
+    var_name: L:dc6_784_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Supercharger Oil Press Warn CB
+    type: NumSet
+    var_name: L:dc6_785_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fuel & Oil Press Warn CB
+    type: NumSet
+    var_name: L:dc6_786_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Lead Edge Lights CB
+    type: NumSet
+    var_name: L:dc6_787_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Wheel Well Lighs CB
+    type: NumSet
+    var_name: L:dc6_788_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Nav Lights CB
+    type: NumSet
+    var_name: L:dc6_789_obj
+    var_units: Number
+    var_type: f64
+    add_by: 78901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Map & Spot Lights CB
+    type: NumSet
+    var_name: L:dc6_790_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Capt & U Inst Lights CB
+    type: NumSet
+    var_name: L:dc6_791_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Eng Inst Red Lights CB
+    type: NumSet
+    var_name: L:dc6_792_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Panel Switch White Lights CB
+    type: NumSet
+    var_name: L:dc6_793_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # MDome Light Contr CB
+    type: NumSet
+    var_name: L:dc6_794_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Aft Cabin Dome Lights CB
+    type: NumSet
+    var_name: L:dc6_795_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fwd Cabin Dome Lights CB
+    type: NumSet
+    var_name: L:dc6_796_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # L Fwd Cabin Dome Lights CB
+    type: NumSet
+    var_name: L:dc6_797_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fire Warn Bell CB
+    type: NumSet
+    var_name: L:dc6_798_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Heater Fire Ext CB
+    type: NumSet
+    var_name: L:dc6_799_obj
+    var_units: Number
+    var_type: f64
+    add_by: 79901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fire Detector Fwd Bag CB
+    type: NumSet
+    var_name: L:dc6_800_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fire Detector Aft Bag CB
+    type: NumSet
+    var_name: L:dc6_801_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fire Detector Hyd Acc CB
+    type: NumSet
+    var_name: L:dc6_802_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fire Detector Heat Compt CB
+    type: NumSet
+    var_name: L:dc6_803_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Heater Fire Detector CB
+    type: NumSet
+    var_name: L:dc6_804_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Eng Zone 1 Fire Detector CB
+    type: NumSet
+    var_name: L:dc6_805_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Eng & Bav Zone 2 & 3 Fire Detectors CB
+    type: NumSet
+    var_name: L:dc6_806_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Razor Invert CB
+    type: NumSet
+    var_name: L:dc6_807_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Waste Water Heaters CB
+    type: NumSet
+    var_name: L:dc6_808_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flap Motor 1 CB
+    type: NumSet
+    var_name: L:dc6_809_obj
+    var_units: Number
+    var_type: f64
+    add_by: 80901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flap Motor 2 CB
+    type: NumSet
+    var_name: L:dc6_810_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flap Motor 3 CB
+    type: NumSet
+    var_name: L:dc6_811_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flap Motor 4 CB
+    type: NumSet
+    var_name: L:dc6_812_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flap Motor Control 1 CB
+    type: NumSet
+    var_name: L:dc6_813_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flap Motor Control 2 CB
+    type: NumSet
+    var_name: L:dc6_814_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flap Motor Control 3 CB
+    type: NumSet
+    var_name: L:dc6_815_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flap Motor Control 4 CB
+    type: NumSet
+    var_name: L:dc6_816_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # 1st Off Static Vent & Pitot Heaters CB
+    type: NumSet
+    var_name: L:dc6_817_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Capt Off Static Vent & Pitot Heaters CB
+    type: NumSet
+    var_name: L:dc6_818_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Sol Valve Windshield & Carb Deicer CB
+    type: NumSet
+    var_name: L:dc6_819_obj
+    var_units: Number
+    var_type: f64
+    add_by: 81901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Capt Pump Windshield & Carb Deicer CB
+    type: NumSet
+    var_name: L:dc6_820_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Timer Prop Deicer Control CB
+    type: NumSet
+    var_name: L:dc6_821_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Man Prop Deicer Control CB
+    type: NumSet
+    var_name: L:dc6_822_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Wind Drain & Spltr Heaters CB
+    type: NumSet
+    var_name: L:dc6_823_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Interphone Heaters CB
+    type: NumSet
+    var_name: L:dc6_824_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Stewardess Call CB
+    type: NumSet
+    var_name: L:dc6_825_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fwd 7 Aft Cabin Call CB
+    type: NumSet
+    var_name: L:dc6_826_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Rh Landing Light Control CB
+    type: NumSet
+    var_name: L:dc6_827_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Lh Landing Light Control CB
+    type: NumSet
+    var_name: L:dc6_828_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Rh Landing Light CB
+    type: NumSet
+    var_name: L:dc6_829_obj
+    var_units: Number
+    var_type: f64
+    add_by: 82901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Lh Landing Light CB
+    type: NumSet
+    var_name: L:dc6_830_obj
+    var_units: Number
+    var_type: f64
+    add_by: 83001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cabin Aisle Lights CB
+    type: NumSet
+    var_name: L:dc6_831_obj
+    var_units: Number
+    var_type: f64
+    add_by: 83101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Lower Compts Lights CB
+    type: NumSet
+    var_name: L:dc6_832_obj
+    var_units: Number
+    var_type: f64
+    add_by: 83201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Aft Cabin Reading Lights CB
+    type: NumSet
+    var_name: L:dc6_833_obj
+    var_units: Number
+    var_type: f64
+    add_by: 83301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # R Fwd Cabin Reading Lights CB
+    type: NumSet
+    var_name: L:dc6_834_obj
+    var_units: Number
+    var_type: f64
+    add_by: 83401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # L Fwd Cabin Reading Lights CB
+    type: NumSet
+    var_name: L:dc6_835_obj
+    var_units: Number
+    var_type: f64
+    add_by: 83501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Anti Collision Light CB
+    type: NumSet
+    var_name: L:dc6_836_obj
+    var_units: Number
+    var_type: f64
+    add_by: 83601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Fwd Compt Lights CB
+    type: NumSet
+    var_name: L:dc6_837_obj
+    var_units: Number
+    var_type: f64
+    add_by: 83701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  -
+    type: var
+    var_name: L:dc6_838_obj
+  - # Mjb Lights CB
+    type: NumSet
+    var_name: L:dc6_839_obj
+    var_units: Number
+    var_type: f64
+    add_by: 83901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # R Lav & Closet Tail Compartment CB
+    type: NumSet
+    var_name: L:dc6_840_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Radio & Nav Lights CB
+    type: NumSet
+    var_name: L:dc6_841_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # A-12 Ap Auto Approach CB
+    type: NumSet
+    var_name: L:dc6_842_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # A-12 Ap Motor Gen CB
+    type: NumSet
+    var_name: L:dc6_843_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # A-12 Ap Filament CB
+    type: NumSet
+    var_name: L:dc6_844_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # A-12 Ap Interlock CB
+    type: NumSet
+    var_name: L:dc6_845_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # A-12 Ap Warn Light CB
+    type: NumSet
+    var_name: L:dc6_846_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Gyro Compass CB
+    type: NumSet
+    var_name: L:dc6_847_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Radio Cb's On Tripped Master Switch CB
+    type: NumSet
+    var_name: L:dc6_848_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # XPNDR 1 CB
+    type: NumSet
+    var_name: L:dc6_849_obj
+    var_units: Number
+    var_type: f64
+    add_by: 84901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ADF 1 CB
+    type: NumSet
+    var_name: L:dc6_850_obj
+    var_units: Number
+    var_type: f64
+    add_by: 85001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Com1 CB
+    type: NumSet
+    var_name: L:dc6_851_obj
+    var_units: Number
+    var_type: f64
+    add_by: 85101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # GPS CB
+    type: NumSet
+    var_name: L:dc6_852_obj
+    var_units: Number
+    var_type: f64
+    add_by: 85201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # XPNDR2 CB
+    type: NumSet
+    var_name: L:dc6_853_obj
+    var_units: Number
+    var_type: f64
+    add_by: 85301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # DME CB
+    type: NumSet
+    var_name: L:dc6_854_obj
+    var_units: Number
+    var_type: f64
+    add_by: 85401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Com2 CB
+    type: NumSet
+    var_name: L:dc6_855_obj
+    var_units: Number
+    var_type: f64
+    add_by: 85501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ADF2 CB
+    type: NumSet
+    var_name: L:dc6_856_obj
+    var_units: Number
+    var_type: f64
+    add_by: 85601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  -
+    type: var
+    var_name: L:dc6_1551_obj
+  -
+    type: var
+    var_name: L:dc6_2711_obj
+  -
+    type: var
+    var_name: L:dc6_1331_obj
+  -
+    type: var
+    var_name: L:dc6_1341_obj
+  -
+    type: var
+    var_name: L:dc6_1351_obj
+  -
+    type: var
+    var_name: L:dc6_1361_obj
+  -
+    type: var
+    var_name: L:dc6_1371_obj
+  -
+    type: var
+    var_name: L:dc6_1391_obj
+  -
+    type: var
+    var_name: L:dc6_1401_obj
+  -
+    type: var
+    var_name: L:dc6_1411_obj
+  -
+    type: var
+    var_name: L:dc6_1421_obj
+  -
+    type: var
+    var_name: L:dc6_1431_obj
+  -
+    type: var
+    var_name: L:dc6_1442_obj
+  -
+    type: var
+    var_name: L:dc6_1443_obj
+  -
+    type: var
+    var_name: L:dc6_1451_obj
+  -
+    type: var
+    var_name: L:dc6_1461_obj
+  -
+    type: var
+    var_name: L:dc6_1471_obj
+  -
+    type: var
+    var_name: L:dc6_1481_obj
+  -
+    type: var
+    var_name: L:dc6_1491_obj
+  -
+    type: var
+    var_name: L:dc6_1501_obj
+  -
+    type: var
+    var_name: L:dc6_1511_obj
+  -
+    type: var
+    var_name: L:dc6_1521_obj
+  -
+    type: var
+    var_name: L:dc6_1532_obj
+  -
+    type: var
+    var_name: L:dc6_1533_obj
+  -
+    type: var
+    var_name: L:dc6_1541_obj
+  -
+    type: var
+    var_name: L:dc6_1552_obj
+  -
+    type: var
+    var_name: L:dc6_1561_obj
+  -
+    type: var
+    var_name: L:dc6_1571_obj
+  -
+    type: var
+    var_name: L:dc6_1603_obj
+  -
+    type: var
+    var_name: L:dc6_1613_obj
+  -
+    type: var
+    var_name: L:dc6_4671_obj
+  -
+    type: var
+    var_name: L:dc6_4681_obj
+  -
+    type: var
+    var_name: L:dc6_4691_obj
+  -
+    type: var
+    var_name: L:dc6_4721_obj
+  -
+    type: var
+    var_name: L:dc6_4731_obj
+  -
+    type: var
+    var_name: L:dc6_4741_obj
+  -
+    type: var
+    var_name: L:dc6_4751_obj
+  -
+    type: var
+    var_name: L:dc6_1641_obj
+  -
+    type: var
+    var_name: L:dc6_1651_obj
+  -
+    type: var
+    var_name: L:dc6_1661_obj
+  -
+    type: var
+    var_name: L:dc6_1681_obj
+  -
+    type: var
+    var_name: L:dc6_1691_obj
+  -
+    type: var
+    var_name: L:dc6_1701_obj
+  -
+    type: var
+    var_name: L:dc6_1711_obj
+  -
+    type: var
+    var_name: L:dc6_5501_obj
+  -
+    type: var
+    var_name: L:dc6_5521_obj
+  -
+    type: var
+    var_name: L:dc6_5571_obj
+  -
+    type: var
+    var_name: L:dc6_5581_obj
+  -
+    type: var
+    var_name: L:dc6_5591_obj
+  -
+    type: var
+    var_name: L:dc6_5601_obj
+  -
+    type: var
+    var_name: L:dc6_9701_obj
+  -
+    type: var
+    var_name: L:dc6_9721_obj
+  -
+    type: var
+    var_name: L:dc6_9771_obj
+  -
+    type: var
+    var_name: L:dc6_9781_obj
+  -
+    type: var
+    var_name: L:dc6_9791_obj
+  -
+    type: var
+    var_name: L:dc6_9801_obj
+  -
+    type: var
+    var_name: L:dc6_5611_obj
+  -
+    type: var
+    var_name: L:dc6_5621_obj
+  -
+    type: var
+    var_name: L:dc6_5631_obj
+  -
+    type: var
+    var_name: L:dc6_5641_obj
+  -
+    type: var
+    var_name: L:dc6_5651_obj
+  -
+    type: var
+    var_name: L:dc6_5661_obj
+  -
+    type: var
+    var_name: L:dc6_5671_obj
+  -
+    type: var
+    var_name: L:dc6_5681_obj
+  -
+    type: var
+    var_name: L:dc6_5691_obj
+  -
+    type: var
+    var_name: L:dc6_5701_obj
+  -
+    type: var
+    var_name: L:dc6_5781_obj
+  -
+    type: var
+    var_name: L:dc6_5791_obj
+  -
+    type: var
+    var_name: L:dc6_2641_obj
+  -
+    type: var
+    var_name: L:dc6_2761_obj
+  -
+    type: var
+    var_name: L:dc6_2821_obj
+  -
+    type: var
+    var_name: L:dc6_2881_obj
+  -
+    type: var
+    var_name: L:dc6_3101_obj
+  -
+    type: var
+    var_name: L:dc6_5151_obj
+  -
+    type: var
+    var_name: L:dc6_4061_obj
+  -
+    type: var
+    var_name: L:dc6_5181_obj
+  -
+    type: var
+    var_name: L:dc6_5491_obj
+  -
+    type: var
+    var_name: L:dc6_5801_obj
+  -
+    type: var
+    var_name: L:dc6_5811_obj
+  -
+    type: var
+    var_name: L:dc6_5821_obj
+  -
+    type: var
+    var_name: L:dc6_5831_obj
+  -
+    type: var
+    var_name: L:dc6_4111_obj
+  -
+    type: NumSet
+    var_name: L:dc6_477_obj
+    var_units: Number
+    var_type: f64
+    add_by: 47701
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  -
+    type: var
+    var_name: L:dc6_449_obj
+  -
+    type: var
+    var_name: L:dc6_450_obj
+# -
+#   type: var
+#   var_name: L:InverterWarnSound
+  - # Tablet Page
+    type: var
+    var_name: L:TabletMode
+  -
+    type: var
+    var_name: L:TabletPowerButton
+# -
+#   type: var
+#   var_name: L:DC6AircraftState
+  -
+    type: var
+    var_name: L:IncTT
+  - # Tablet Position
+    type: var
+    var_name: L:dc6_tab_drag_h
+# -
+#   type: var
+#   var_name: L:mpos
+# -
+#   type: var
+#   var_name: L:SwitchID
+  - # Take Off Cabin Low Press Warning Cutout
+    type: NumSet
+    var_name: L:dc6_079_obj
+    var_units: Number
+    var_type: f64
+    add_by: 7901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # ADF XFR Button
+    type: var
+    var_name: L:dc6_135_obj
+  - # ADF FLT Button
+    type: var
+    var_name: L:dc6_136_obj
+  - # ADF RST Button
+    type: var
+    var_name: L:dc6_137_obj
+  - # ADF FRQ Outer
+    type: var
+    var_name: L:dc6_139_obj
+  - # ADF FRQ Inner
+    type: var
+    var_name: L:dc6_140_obj
+  - # Com2 XFR Button
+    type: var
+    var_name: L:dc6_164_obj
+  - # Com2 FRQ Outer
+    type: var
+    var_name: L:dc6_165_obj
+  - # Com2 FRQ Inner
+    type: var
+    var_name: L:dc6_166_obj
+  - # Nav2 XFR Button
+    type: var
+    var_name: L:dc6_169_obj
+  - # Nav2 FRQ Outer
+    type: var
+    var_name: L:dc6_170_obj
+  - # Nav2 FRQ Inner
+    type: var
+    var_name: L:dc6_171_obj
+  - # Com1 XFR Button
+    type: var
+    var_name: L:dc6_467_obj
+  - # Com1 FRQ Outer
+    type: var
+    var_name: L:dc6_468_obj
+  - # Com1 FRQ Inner
+    type: var
+    var_name: L:dc6_469_obj
+  - # Nav1 XFR Button
+    type: var
+    var_name: L:dc6_473_obj
+  - # Nav1 FRQ Outer
+    type: var
+    var_name: L:dc6_474_obj
+  - # Nav1 FRQ Inner
+    type: var
+    var_name: L:dc6_475_obj
+# - # Rudder Trim Wheel
+#   type: var
+#   var_name: L:RudderTrimWheel
+  -
+    type: var
+    var_name: L:dc6_282_obj_old
+  -
+    type: var
+    var_name: L:IncrCAKohlsman
+  - # Captain Garmin VOR1 knob
+    type: var
+    var_name: L:dc6_288_obj
+  - # Captain ADF Card knob
+    type: var
+    var_name: L:dc6_310_obj
+  -
+    type: var
+    var_name: L:dc6_369_obj_old
+  -
+    type: var
+    var_name: L:IncrFOKohlsman
+  - # FO VOR2 knob
+    type: var
+    var_name: L:dc6_377_obj
+  - # FO ADF Card knob
+    type: var
+    var_name: L:dc6_390_obj
+# - # Aileron Trim Wheel
+#   type: var
+#   var_name: L:AileronTrimWheel
+# - # Elevator Trim Wheel
+#   type: var
+#   var_name: L:ElevTrimWheel
+  - # Capt IDENT Button
+    type: var
+    var_name: L:dc6_552_obj
+  - # CPT XPNDR 1000's Knob
+    type: var
+    var_name: L:dc6_557_obj
+  - # CPT XPNDR 100's Knob
+    type: var
+    var_name: L:dc6_558_obj
+  - # CPT XPNDR 10's Knob
+    type: var
+    var_name: L:dc6_559_obj
+  - # CPT XPNDR 1's Knob
+    type: var
+    var_name: L:dc6_560_obj
+  - # COM1 Sound Toggle
+    type: var
+    var_name: L:dc6_562_obj
+  - # COM2 Sound Toggle
+    type: var
+    var_name: L:dc6_563_obj
+  - # NAV1 Sound Toggle
+    type: var
+    var_name: L:dc6_564_obj
+  - # NAV2 Sound Toggle
+    type: var
+    var_name: L:dc6_565_obj
+  - # DME Sound Toggle
+    type: var
+    var_name: L:dc6_566_obj
+  - # MKR Sound Toggle
+    type: var
+    var_name: L:dc6_567_obj
+  - # ADF1 Sound Toggle
+    type: var
+    var_name: L:dc6_568_obj
+  - # ADF2 Sound Toggle
+    type: var
+    var_name: L:dc6_569_obj
+  - # COM BOTH Sound Toggle
+    type: var
+    var_name: L:dc6_570_obj
+  - # SPKR Sound Toggle
+    type: var
+    var_name: L:dc6_578_obj
+  - # FO IDENT Button
+    type: var
+    var_name: L:dc6_972_obj
+  - # FO XPNDR 1000's Knob
+    type: var
+    var_name: L:dc6_977_obj
+  - # FO XPNDR 100's Knob
+    type: var
+    var_name: L:dc6_978_obj
+  - # FO XPNDR 10's Knob
+    type: var
+    var_name: L:dc6_979_obj
+  - # FO XPNDR 1's Knob
+    type: var
+    var_name: L:dc6_980_obj
+  -
+    type: var
+    var_name: L:StopwatchMode
+  -
+    type: var
+    var_name: L:ZuluTime
+  -
+    type: var
+    var_name: L:dc6_clock_left_knob
+  -
+    type: var
+    var_name: L:dc6_clock_right_knob
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+# -
+#   type: var
+#   var_name: L:DC6Variant
+# -
+#   type: var
+#   var_name: L:prop_start_vis
+# - # small low pressure exhaust effect engine 1
+#   type: var
+#   var_name: L:dc6_981_obj
+# - # small low pressure exhaust effect engine 2
+#   type: var
+#   var_name: L:dc6_982_obj
+# - # small low pressure exhaust effect engine 3
+#   type: var
+#   var_name: L:dc6_983_obj
+# - # small low pressure exhaust effect engine 4
+#   type: var
+#   var_name: L:dc6_984_obj
+# - # cargo boxes 25
+#   type: var
+#   var_name: L:dc6_871_obj
+# - # cargo boxes 50
+#   type: var
+#   var_name: L:dc6_872_obj
+# - # cargo boxes 75
+#   type: var
+#   var_name: L:dc6_873_obj
+# - # cargo boxes 100
+#   type: var
+#   var_name: L:dc6_874_obj
+# - # cargo lower 50
+#   type: var
+#   var_name: L:dc6_875_obj
+# - # cargo lower 100
+#   type: var
+#   var_name: L:dc6_876_obj
+  - # DC Power Source Knob
+    type: var
+    var_name: L:dc6_001_obj
+  - # Performance Table Popup Switch
+    type: NumSet
+    var_name: L:dc6_008_obj
+    var_units: Percent
+    var_type: f64
+    add_by: 801
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Oil Cooler Door 1 Switch
+    type: NumSet
+    var_name: L:dc6_009_obj
+    var_units: Percent
+    var_type: f64
+    add_by: 901
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Oil Cooler Door 2 Switch
+    type: NumSet
+    var_name: L:dc6_010_obj
+    var_units: Percent
+    var_type: f64
+    add_by: 1001
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Oil Cooler Door 3 Switch
+    type: NumSet
+    var_name: L:dc6_011_obj
+    var_units: Percent
+    var_type: f64
+    add_by: 1101
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Oil Cooler Door 4 Switch
+    type: NumSet
+    var_name: L:dc6_012_obj
+    var_units: Percent
+    var_type: f64
+    add_by: 1201
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flaps Eng 1 Switch
+    type: NumSet
+    var_name: L:dc6_013_obj
+    var_units: Percent
+    var_type: f64
+    add_by: 101301
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flaps Eng 2 Switch
+    type: NumSet
+    var_name: L:dc6_014_obj
+    var_units: Percent
+    var_type: f64
+    add_by: 101401
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flaps Eng 3 Switch
+    type: NumSet
+    var_name: L:dc6_015_obj
+    var_units: Percent
+    var_type: f64
+    add_by: 101501
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Cowl Flaps Eng 4 Switch
+    type: NumSet
+    var_name: L:dc6_016_obj
+    var_units: Percent
+    var_type: f64
+    add_by: 101601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  - # Pressurization Altimeter InHg Disc
+    type: var
+    var_name: L:dc6_244_obj
+  - # Cooling Turbine Switch
+    type: var
+    var_name: L:dc6_257_obj
+# - # Captain Compass Reciprocal Card
+#   type: var
+#   var_name: L:dc6_312_obj
+  - # Manifold Pressure Eng1 AFE
+    type: var
+    var_name: L:dc6_3251_obj
+  - # Manifold Pressure Eng2 AFE
+    type: var
+    var_name: L:dc6_3261_obj
+  - # Manifold Pressure Eng3 AFE
+    type: var
+    var_name: L:dc6_3271_obj
+  - # Manifold Pressure Eng4 AFE
+    type: var
+    var_name: L:dc6_3281_obj
+  - # Engine RPM Eng1 AFE
+    type: var
+    var_name: L:dc6_3371_obj
+  - # Engine RPM Eng2 AFE
+    type: var
+    var_name: L:dc6_3381_obj
+  - # Engine RPM Eng3 AFE
+    type: var
+    var_name: L:dc6_3391_obj
+  - # Engine RPM Eng4 AFE
+    type: var
+    var_name: L:dc6_3401_obj
+# - # FLAP INDICATOR Needle
+#   type: var
+#   var_name: L:dc6_3410_obj
+  - # FUEL DUMP CONTROLS Lid
+    type: NumSet
+    var_name: L:dc6_416_obj
+    var_units: Number
+    var_type: f64
+    add_by: 41601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+  -
+    type: var
+    var_name: L:PICYokeUpDown
+  -
+    type: var
+    var_name: L:CPYokeUpDown
+  - # EMER HYD PUMP Switch
+    type: NumSet
+    var_name: L:dc6_586_obj
+    var_units: Number
+    var_type: f64
+    add_by: 58601
+    event_name: ROTOR_BRAKE
+    use_calculator: true
+# - # VC Shake
+#   type: var
+#   var_name: L:dc6_7065_obj
+  -
+    type: var
+    var_name: L:light_capt_flood
+  -
+    type: var
+    var_name: L:light_instrument_flood
+  -
+    type: var
+    var_name: L:light_fo_flood
+  -
+    type: var
+    var_name: L:light_full_flood
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:firebell
+  -
+    type: var
+    var_name: L:DamageAlerts
+  -
+    type: var
+    var_name: L:HeadShake
+  -
+    type: var
+    var_name: L:PedestalSwap
+  -
+    type: var
+    var_name: L:RevThrottleAxis
+  -
+    type: var
+    var_name: L:PMDGMouse
+  -
+    type: var
+    var_name: L:IsF1430Installed
+  -
+    type: var
+    var_name: L:IsF1650Installed
+  -
+    type: var
+    var_name: L:IsRXPInstalled
+  -
+    type: var
+    var_name: L:VoiceVolume
+  -
+    type: var
+    var_name: L:CockpitVolume
+
+master:
+  - # Throttle 1
+    type: var
+    var_name: L:dc6_511_obj
+    unreliable: true
+  - # Throttle 2
+    type: var
+    var_name: L:dc6_512_obj
+    unreliable: true
+  - # Throttle 3
+    type: var
+    var_name: L:dc6_513_obj
+    unreliable: true
+  - # Throttle 4
+    type: var
+    var_name: L:dc6_514_obj
+    unreliable: true
+
+server:
+  - # Fuel (for reference-doesn't sync-overridden by EFB)
+    type: var
+    var_name: FUEL TANK CENTER LEVEL # ALT TANK 2
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK CENTER2 LEVEL # ALT TANK 3
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL # MAIN TANK 2
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL # MAIN TANK 3
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT AUX LEVEL # ALT TANK 1
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT AUX LEVEL # ALT TANK 4
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT TIP LEVEL # MAIN TANK 1
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT TIP LEVEL # MAIN TANK 4
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+
+  - # Payload
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64

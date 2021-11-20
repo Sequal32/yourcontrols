@@ -8,7 +8,6 @@ include:
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
@@ -100,7 +99,7 @@ shared:
     type: event
     event_name: FUEL_SELECTOR_2_OFF
 
-  - # Lights
+  - # Lighting
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -194,9 +193,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_RudderTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -206,9 +205,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:ParkingBrake_Position

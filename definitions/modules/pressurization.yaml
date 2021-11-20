@@ -2,19 +2,22 @@
 
 shared:
   - # ASOBO_PRESSURIZATION_Switch_Engine_Bleed_Template
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:BLEED AIR ENGINE:1
     var_units: Bool
-    var_type: bool
-    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    var_type: i32
+    event_name: ENGINE_BLEED_AIR_SOURCE_SET
     event_param: 1
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:BLEED AIR ENGINE:2
     var_units: Bool
-    var_type: bool
-    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    var_type: i32
+    event_name: ENGINE_BLEED_AIR_SOURCE_SET
     event_param: 2
+  -
+    type: event
+    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
 
   - # ASOBO_PRESSURIZATION_Switch_APU_Bleed_Template
     type: NumSet

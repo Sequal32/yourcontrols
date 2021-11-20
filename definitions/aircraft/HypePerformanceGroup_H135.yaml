@@ -1,0 +1,1227 @@
+# Version 1.4.3
+
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/physics.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/slew.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:AVIONICS MASTER SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: AVIONICS_MASTER_1_SET
+  -
+    type: NumSet
+    var_name: A:AVIONICS MASTER SWITCH:2
+    var_units: Bool
+    var_type: i32
+    event_name: AVIONICS_MASTER_2_SET
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR2
+  -
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT ON:50
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:65
+    var_units: Bool
+    var_type: bool
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:3
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 4
+
+  - # FUEL PRIME
+    type: event
+    event_name: FUELSYSTEM_PUMP_ON
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT NAV
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_NAV_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT BEACON
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_BEACON_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT STROBE
+    var_units: Bool
+    var_type: bool
+    event_name: STROBES_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING
+    var_units: Bool
+    var_type: bool
+    event_name: LANDING_LIGHTS_TOGGLE
+
+  - # Lighting
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_TOGGLE 
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
+
+  - # Brake
+    type: ToggleSwitch
+    var_name: A:BRAKE PARKING POSITION
+    var_units: Bool
+    var_type: bool
+    event_name: PARKING_BRAKES
+
+  - # YourControls Force Transfer Hotkey
+    type: ProgramActionEvent
+    event_name: TOGGLE_LAUNCH_BAR_SWITCH
+    action: TransferControls
+
+  - # LVAR's
+    type: var
+    var_name: L:DOORS_OFF
+  -
+    type: var
+    var_name: L:TOGGLE_DOOR_FRONT_RIGHT
+  -
+    type: var
+    var_name: L:TOGGLE_DOOR_FRONT_LEFT
+  -
+    type: var
+    var_name: L:APCP_ATRIM
+  -
+    type: var
+    var_name: L:APCP_BACKUP
+  -
+    type: var
+    var_name: L:APCP_AP1
+  -
+    type: var
+    var_name: L:APCP_AP2
+  -
+    type: var
+    var_name: L:REAR_TABLET
+  -
+    type: var
+    var_name: L:EPU_MODEL_INHIBIT
+  -
+    type: var
+    var_name: L:TABLET_OPEN
+  -
+    type: var
+    var_name: L:Warning_MouseWheel
+  -
+    type: var
+    var_name: L:Engine1_Up
+  -
+    type: var
+    var_name: L:Engine1_Down
+  -
+    type: var
+    var_name: L:Engine2_Up
+  -
+    type: var
+    var_name: L:Engine2_Down
+  -
+    type: var
+    var_name: L:PTSG_SYSTEM0
+  -
+    type: var
+    var_name: L:PTSG_SYSTEM1
+  -
+    type: var
+    var_name: L:TURBO_MODE
+  -
+    type: var
+    var_name: L:PIC_FRAME_PLACARD
+# -
+#   type: var
+#   var_name: L:SHOW_CYCLIC
+  -
+    type: var
+    var_name: L:SUN_SHADES
+  -
+    type: var
+    var_name: L:ROTOR_BRAKE_ENABLED
+  -
+    type: var
+    var_name: L:HEAT_KNOB
+  -
+    type: var
+    var_name: L:HEAT_AIR_KNOB
+  -
+    type: var
+    var_name: L:HEADSET_HOLDER
+  -
+    type: var
+    var_name: L:ALT_STATIC
+  -
+    type: var
+    var_name: L:ENG1_PRIME
+  -
+    type: var
+    var_name: L:ENG2_PRIME
+  -
+    type: var
+    var_name: L:ENG1_FIRE_TEST
+  -
+    type: var
+    var_name: L:ENG2_FIRE_TEST
+  -
+    type: var
+    var_name: L:WARNIGNS_TEST_ON
+  -
+    type: var
+    var_name: L:OH_LT_EMER
+  -
+    type: var
+    var_name: L:OH_INV
+  -
+    type: var
+    var_name: L:AIR_COND
+  -
+    type: var
+    var_name: L:OH_DC_RECEPT
+  -
+    type: var
+    var_name: L:ENG_CHIP_DETECTED1
+  -
+    type: var
+    var_name: L:ENG_CHIP_DETECTED2
+  -
+    type: var
+    var_name: L:OH_FUZZ_BURN
+  -
+    type: var
+    var_name: L:GTN_LEFT_ON
+  -
+    type: var
+    var_name: L:GTN_RIGHT_ON
+  -
+    type: var
+    var_name: L:DISPLAY_RIGHT_ON
+  -
+    type: var
+    var_name: L:DISPLAY_LEFT_ON
+  -
+    type: var
+    var_name: L:DISPLAY_CENTER_ON
+  -
+    type: var
+    var_name: L:SPOTLIGHT_ENABLED
+  -
+    type: var
+    var_name: L:SPOTLIGHT_MODE
+  -
+    type: var
+    var_name: L:TOGGLE_DOOR_MIDDLE_RIGHT
+  -
+    type: var
+    var_name: L:TOGGLE_DOOR_MIDDLE_LEFT
+  -
+    type: var
+    var_name: L:TOGGLE_DOOR_BACK
+  -
+    type: var
+    var_name: L:Bright_Up
+  -
+    type: var
+    var_name: L:Bright_Down
+  -
+    type: var
+    var_name: L:MFDL_Knob_Up
+  -
+    type: var
+    var_name: L:MFDL_Knob_Down
+  -
+    type: var
+    var_name: L:MFDL_Knob_Click
+  -
+    type: var
+    var_name: L:MFDC_Knob_Up
+  -
+    type: var
+    var_name: L:MFDC_Knob_Down
+  -
+    type: var
+    var_name: L:MFDC_Knob_Click
+  -
+    type: var
+    var_name: L:MFDR_Knob_Up
+  -
+    type: var
+    var_name: L:MFDR_Knob_Down
+  -
+    type: var
+    var_name: L:MFDR_Knob_Click
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_1
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_2
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_3
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_4
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_5
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Top_6
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_1
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_2
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_3
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_4
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_5
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Bottom_6
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_1
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_2
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_3
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_4
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_5
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Left_6
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_1
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_2
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_3
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_4
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_5
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_Right_6
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_1
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_2
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_3
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_4
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_5
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Top_6
+# -
+#   type: var
+#   var_name: L:MFDR_SoftKey_Bottom_1
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_2
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_3
+# -
+#   type: var
+#   var_name: L:MFDR_SoftKey_Bottom_4
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_5
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Bottom_6
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_1
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_2
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_3
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_4
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_5
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Left_6
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Right_1
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Right_2
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Right_3
+# -
+#   type: var
+#   var_name: L:MFDR_SoftKey_Right_4
+# -
+#   type: var
+#   var_name: L:MFDR_SoftKey_Right_5
+  -
+    type: var
+    var_name: L:MFDR_SoftKey_Right_6
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_1
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_2
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_3
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_4
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_5
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Top_6
+# -
+#   type: var
+#   var_name: L:MFDL_SoftKey_Bottom_1
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_2
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_3
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_4
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_5
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Bottom_6
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_1
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_2
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_3
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_4
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_5
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Left_6
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Right_1
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Right_2
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Right_3
+# -
+#   type: var
+#   var_name: L:MFDL_SoftKey_Right_4
+# -
+#   type: var
+#   var_name: L:MFDL_SoftKey_Right_5
+  -
+    type: var
+    var_name: L:MFDL_SoftKey_Right_6
+  -
+    type: var
+    var_name: L:DX3000_Brightness
+  -
+    type: var
+    var_name: L:HX1_NO_LSMFD
+  -
+    type: var
+    var_name: L:HX1_NO_LMFD
+  -
+    type: var
+    var_name: L:HX1_NO_RMFD
+  -
+    type: var
+    var_name: L:HX1_NO_PICFRAME
+  -
+    type: var
+    var_name: L:EMER_ENG2_SHUTOFF
+  -
+    type: var
+    var_name: L:EMER_ENG1_SHUTOFF
+  -
+    type: var
+    var_name: L:EMER_ENG1_SHUTOFF_GUARD
+  -
+    type: var
+    var_name: L:EMER_ENG2_SHUTOFF_GUARD
+  -
+    type: var
+    var_name: L:PANEL_DIMMER
+  -
+    type: var
+    var_name: L:X_AP_ALT_HOLD
+# -
+#   type: var
+#   var_name: L:PILOT_0_SHOW
+# -
+#   type: var
+#   var_name: L:PILOT_1_SHOW
+  -
+    type: var
+    var_name: L:MASTER_WARNING_1
+  -
+    type: var
+    var_name: L:MASTER_WARNING_2
+  -
+    type: var
+    var_name: L:MASTER_WARNING_3
+  -
+    type: var
+    var_name: L:MASTER_WARNING_4
+  -
+    type: var
+    var_name: L:MASTER_WARNING_5
+  -
+    type: var
+    var_name: L:MASTER_WARNING_6
+  -
+    type: var
+    var_name: L:MASTER_WARNING_7
+  -
+    type: var
+    var_name: L:MASTER_WARNING_8
+  -
+    type: var
+    var_name: L:MASTER_WARNING_9
+  -
+    type: var
+    var_name: L:MASTER_WARNING_10
+  -
+    type: var
+    var_name: L:MASTER_WARNING_ENG1_Active
+  -
+    type: var
+    var_name: L:MASTER_WARNING_ENG2_Active
+# -
+#   type: var
+#   var_name: L:ROTOR_XML_RPM
+# -
+#   type: var
+#   var_name: L:V2_ROTOR_INC
+# -
+#   type: var
+#   var_name: L:V2_ROTOR_ANIM
+# -
+#   type: var
+#   var_name: L:ROTOR_COLLECTIVE
+  -
+    type: var
+    var_name: L:WINDSHIELD_DISABLE
+# -
+#   type: var
+#   var_name: L:EXT_DOOR_0x0002
+# -
+#   type: var
+#   var_name: L:EXT_DOOR_0x0004
+# -
+#   type: var
+#   var_name: L:EXT_DOOR_0x0008
+# -
+#   type: var
+#   var_name: L:EXT_DOOR_0x0010
+  -
+    type: var
+    var_name: L:EXT_DOOR_0x0020
+  -
+    type: var
+    var_name: L:EXT_PART_0x0001
+  -
+    type: var
+    var_name: L:EXT_PART_0x0002
+  -
+    type: var
+    var_name: L:EXT_PART_0x0004
+  -
+    type: var
+    var_name: L:EXT_PART_0x0008
+  -
+    type: var
+    var_name: L:EXT_PART_0x0010
+  -
+    type: var
+    var_name: L:EXT_PART_0x0020
+  -
+    type: var
+    var_name: L:EXT_PART_0x0040
+  -
+    type: var
+    var_name: L:EXT_PART_0x0080
+  -
+    type: var
+    var_name: L:EMER_ENG1_GUARD_OPEN
+  -
+    type: var
+    var_name: L:ROTOR_FADEC_MODE
+  -
+    type: var
+    var_name: L:EMER_ENG2_GUARD_OPEN
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:HOV_LAT
+  -
+    type: var
+    var_name: L:ROTOR_TRIM_RELEASED
+# -
+#   type: var
+#   var_name: L:CYCLIC_BEEP_UP
+# -
+#   type: var
+#   var_name: L:CYCLIC_BEEP_DOWN
+# -
+#   type: var
+#   var_name: L:CYCLIC_BEEP_RIGHT
+# -
+#   type: var
+#   var_name: L:CYCLIC_BEEP_LEFT
+# -
+#   type: var
+#   var_name: L:COLLECTIVE_BEEP_UP
+# -
+#   type: var
+#   var_name: L:COLLECTIVE_BEEP_DOWN
+# -
+#   type: var
+#   var_name: L:COLLECTIVE_BEEP_RIGHT
+# -
+#   type: var
+#   var_name: L:COLLECTIVE_BEEP_LEFT
+  -
+    type: var
+    var_name: L:HOV_LON
+  -
+    type: var
+    var_name: L:HOV_ALT
+  -
+    type: var
+    var_name: L:ROTOR_MODE
+  -
+    type: var
+    var_name: L:ROTOR_ONLINE
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningCount
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningMax
+# -
+#   type: var
+#   var_name: L:Sounds.Rain1.Volume
+# -
+#   type: var
+#   var_name: L:Sounds.Rain2.Volume
+# -
+#   type: var
+#   var_name: L:Sounds.Rain3.Volume
+# -
+#   type: var
+#   var_name: L:TIME OF DAY
+# -
+#   type: var
+#   var_name: L:Sounds.EPU.Volume
+# -
+#   type: var
+#   var_name: L:Sounds.EPUExt.Volume
+# -
+#   type: var
+#   var_name: L:Sounds.AIRCOND.Volume
+# -
+#   type: var
+#   var_name: L:Sounds.AVIONICS.Volume
+# -
+#   type: var
+#   var_name: L:Sounds.AmbientSunrise.Volume
+# -
+#   type: var
+#   var_name: L:Sounds.AmbientDay.Volume
+# -
+#   type: var
+#   var_name: L:Sounds.AmbientNight.Volume
+  -
+    type: var
+    var_name: L:SPOTLIGHT_X
+  -
+    type: var
+    var_name: L:SPOTLIGHT_Y
+  -
+    type: var
+    var_name: L:EXT_WIRE_CUTTERS_TOP
+  -
+    type: var
+    var_name: L:EXT_WIRE_CUTTERS_BOTTOM
+  -
+    type: var
+    var_name: L:EXT_SKID_WIRE_CUTTERS
+  -
+    type: var
+    var_name: L:EXT_SKID_PADS
+  -
+    type: var
+    var_name: L:EXT_SKID_PADS_2
+  -
+    type: var
+    var_name: L:EXT_RADOME
+  -
+    type: var
+    var_name: L:EXT_RADOME_2
+  -
+    type: var
+    var_name: L:EXT_ENDPLATES
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+  -
+    type: var
+    var_name: L:DX3000_BaroMode
+  -
+    type: var
+    var_name: L:AS3000_PFD_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_PFD_2_State
+  -
+    type: var
+    var_name: L:Glasscockpit_Wind_Mode
+  -
+    type: var
+    var_name: L:Glasscockpit_HSI_Arc
+  -
+    type: var
+    var_name: L:Glasscockpit_SVTTerrain
+  -
+    type: var
+    var_name: L:GPS_Current_Phase
+  -
+    type: var
+    var_name: L:PFD_BRG1_Source
+  -
+    type: var
+    var_name: L:PFD_BRG2_Source
+  -
+    type: var
+    var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:AS3000_2_Timer_Value
+  -
+    type: var
+    var_name: L:ROTOR_IS_AUTO
+  -
+    type: var
+    var_name: L:HOV_Y
+  -
+    type: var
+    var_name: L:HOV_X
+  -
+    type: var
+    var_name: L:EICAS_ACK
+  -
+    type: var
+    var_name: L:MFDL_HX_MAP_RANGE_INC
+  -
+    type: var
+    var_name: L:MFDL_HX_MAP_RANGE_DEC
+  -
+    type: var
+    var_name: L:AS3000_PFD_3_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_PFD_3_State
+# -
+#   type: var
+#   var_name: L:AS3000_3_Timer_Value
+  -
+    type: var
+    var_name: L:WATER_RUDD
+# -
+#   type: var
+#   var_name: L:DEBUG_SURFACE_TYPE
+  -
+    type: var
+    var_name: L:EMER_ENG1_SHUTOFF_ACTIVE
+  -
+    type: var
+    var_name: L:EMER_ENG2_SHUTOFF_ACTIVE
+  -
+    type: var
+    var_name: L:MFDC_SoftKey_FADEC
+  -
+    type: var
+    var_name: L:MFDC_HX_MAP_RANGE_INC
+  -
+    type: var
+    var_name: L:MFDC_HX_MAP_RANGE_DEC
+  -
+    type: var
+    var_name: L:AS3000_PFD_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_PFD_1_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AS3000_1_Timer_Value
+  -
+    type: var
+    var_name: L:MFDR_HX_MAP_RANGE_INC
+  -
+    type: var
+    var_name: L:MFDR_HX_MAP_RANGE_DEC
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:ROTOR_INIT_COLLECTIVE
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_4_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_4_State
+  -
+    type: var
+    var_name: L:GTN750_INT_ScreenLuminosity
+  -
+    type: var
+    var_name: L:GTN750_INT_State
+  -
+    type: var
+    var_name: L:AS3000_MinimalsMode
+  -
+    type: var
+    var_name: L:AS3000_MinimalsValue
+# -
+#   type: var
+#   var_name: L:ROTOR_DEBUG_FUEL_VALVE_6
+# -
+#   type: var
+#   var_name: L:ROTOR_DEBUG_FUEL_VALVE_7
+# -
+#   type: var
+#   var_name: L:ROTOR_DEBUG_LEFT_LEVEL
+# -
+#   type: var
+#   var_name: L:ROTOR_DEBUG_RIGHT_LEVEL
+# -
+#   type: var
+#   var_name: L:ROTOR_RPM_PCT
+# -
+#   type: var
+#   var_name: L:ROTOR_LOAD1
+# -
+#   type: var
+#   var_name: L:ROTOR_LOAD2
+  -
+    type: var
+    var_name: L:AIRLINER_FLIGHT_PHASE
+# -
+#   type: var
+#   var_name: L:AS3000_4_Timer_Value
+  -
+    type: var
+    var_name: L:AS1000_AttitudeSpeedBackup_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS1000_AttitudeSpeedBackup_State
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_2_State
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_1_State
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:ROTOR_STATUS_ENG1
+# -
+#   type: var
+#   var_name: L:ROTOR_STATUS_ENG2
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+# -
+#   type: var
+#   var_name: L:DBG_WIND_X
+# -
+#   type: var
+#   var_name: L:DBG_WIND_Z
+# -
+#   type: var
+#   var_name: L:DBG_WIND
+# -
+#   type: var
+#   var_name: L:ROTOR_GF_SCALAR
+# -
+#   type: var
+#   var_name: L:DBG_WV_PWR
+# -
+#   type: var
+#   var_name: L:HX1_DBG_Y
+
+master:
+  - # Controls
+    type: NumSet
+    var_name: A:ELEVATOR POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_ELEVATOR_SET
+    interpolate: Invert
+  -
+    type: NumSet
+    var_name: A:AILERON POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_AILERONS_SET
+    interpolate: Invert
+  -
+    type: NumSet
+    var_name: A:RUDDER POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_RUDDER_SET
+    interpolate: Invert
+  -
+    type: NumSet
+    var_name: L:ROTOR_COLLECTIVE
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE_AXIS_SET_EX1
+    interpolate: Default
+
+server:
+  - # Payload
+    type: var
+    var_name: FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK CENTER2 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+
+ignore:
+# Flight mode
+  - AS3000_TSC_Vertical_4#CasTitle
+  - AS3000_TSC_Vertical_4#939506462
+  - AS3000_TSC_Vertical_4#492882367
+# Autopilot
+  - AS3000_TSC_Vertical_4#APMasterButton
+  - AS3000_TSC_Vertical_4#APMasterButtonText
+  - AS3000_TSC_Vertical_4#ApModesText
+  - AS3000_TSC_Vertical_4#AP_Modes
+  - AS3000_TSC_Vertical_4#AP
+  - AS3000_TSC_Vertical_4#1411119452
+  - AS3000_TSC_Vertical_4#756931106
+  - AS3000_TSC_Vertical_4#1792823858
+  - AS3000_TSC_Vertical_4#883364728
+  - AS3000_TSC_Vertical_4#-678330952
+  - AS3000_TSC_Vertical_4#-2105843918
+# MICS
+  - AS3000_TSC_Vertical_1#Mic
+  - AS3000_TSC_Vertical_1#Mon
+  - AS3000_TSC_Vertical_1#-278181930
+  - AS3000_TSC_Vertical_1#-381849816
+  - AS3000_TSC_Vertical_1#-278181958
+  - AS3000_TSC_Vertical_1#-1610666930
+  - AS3000_TSC_Vertical_1#-1610666929
+  - AS3000_TSC_Vertical_1#-645636810
+  - AS3000_TSC_Vertical_1#-645636809
+  - AS3000_TSC_Vertical_1#-381849815
+  - AS3000_TSC_Vertical_1#-957356736
+  - AS3000_TSC_Vertical_1#-957356707
+  - AS3000_TSC_Vertical_1#355770354
+  - AS3000_TSC_Vertical_1#355770355
+  - AS3000_TSC_Vertical_2#Mic
+  - AS3000_TSC_Vertical_2#Mon
+  - AS3000_TSC_Vertical_2#-278181930
+  - AS3000_TSC_Vertical_2#-381849816
+  - AS3000_TSC_Vertical_2#-278181958
+  - AS3000_TSC_Vertical_2#-1610666930
+  - AS3000_TSC_Vertical_2#-1610666929
+  - AS3000_TSC_Vertical_2#-645636810
+  - AS3000_TSC_Vertical_2#-645636809
+  - AS3000_TSC_Vertical_2#-381849815
+  - AS3000_TSC_Vertical_2#-957356736
+  - AS3000_TSC_Vertical_2#-957356707
+  - AS3000_TSC_Vertical_2#355770354
+  - AS3000_TSC_Vertical_2#355770355
+  - AS3000_TSC_Vertical_4#Mic
+  - AS3000_TSC_Vertical_4#Mon
+  - AS3000_TSC_Vertical_4#-278181930
+  - AS3000_TSC_Vertical_4#-381849816
+  - AS3000_TSC_Vertical_4#-278181958
+  - AS3000_TSC_Vertical_4#-1610666930
+  - AS3000_TSC_Vertical_4#-1610666929
+  - AS3000_TSC_Vertical_4#-645636810
+  - AS3000_TSC_Vertical_4#-645636809
+  - AS3000_TSC_Vertical_4#-381849815
+  - AS3000_TSC_Vertical_4#-957356736
+  - AS3000_TSC_Vertical_4#-957356707
+  - AS3000_TSC_Vertical_4#355770354
+  - AS3000_TSC_Vertical_4#355770355
+# COM1
+  - AS3000_TSC_Vertical_1#-1054176649
+  - AS3000_TSC_Vertical_1#971012390
+  - AS3000_TSC_Vertical_1#769170469
+  - AS3000_TSC_Vertical_2#-1054176649
+  - AS3000_TSC_Vertical_2#971012390
+  - AS3000_TSC_Vertical_2#769170469
+  - AS3000_TSC_Vertical_4#-1054176649
+  - AS3000_TSC_Vertical_4#971012390
+  - AS3000_TSC_Vertical_4#769170469
+# COM2
+  - AS3000_TSC_Vertical_1#-1054176648
+  - AS3000_TSC_Vertical_1#971012391
+  - AS3000_TSC_Vertical_1#769170470
+  - AS3000_TSC_Vertical_2#-1054176648
+  - AS3000_TSC_Vertical_2#971012391
+  - AS3000_TSC_Vertical_2#769170470
+  - AS3000_TSC_Vertical_4#-1054176648
+  - AS3000_TSC_Vertical_4#971012391
+  - AS3000_TSC_Vertical_4#769170470

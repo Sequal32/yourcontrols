@@ -8,7 +8,6 @@ include:
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -47,7 +46,7 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
   -
@@ -293,27 +292,27 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_1_Secondary
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_1_Secondary_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_Secondary_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_RudderTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_AileronTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE

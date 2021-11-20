@@ -8,7 +8,6 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -56,7 +55,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_10_SET
     index_reversed: true
 
-  - # Lights
+  - # Lighting
     type: NumSet
     var_name: A:LIGHT PANEL
     var_units: Bool
@@ -95,6 +94,13 @@ shared:
     var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_7_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:8
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_8_SET
     index_reversed: true
   -
     type: NumSet
@@ -138,9 +144,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_AileronTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:ParkingBrake_Position

@@ -148,14 +148,14 @@ shared:
 
   - # ADF
     type: NumSet
-    var_name: ADF ACTIVE FREQUENCY:1
+    var_name: A:ADF ACTIVE FREQUENCY:1
     var_units: Frequency ADF BCD32
     var_type: i32
     event_name: ADF_ACTIVE_SET
     swap_event_name: ADF1_RADIO_SWAP
   -
     type: NumSet
-    var_name: ADF STANDBY FREQUENCY:1
+    var_name: A:ADF STANDBY FREQUENCY:1
     var_units: Frequency ADF BCD32
     var_type: i32
     event_name: ADF_STBY_SET
@@ -177,14 +177,14 @@ shared:
 
   - # ADF2
     type: NumSet
-    var_name: ADF ACTIVE FREQUENCY:2
+    var_name: A:ADF ACTIVE FREQUENCY:2
     var_units: Frequency ADF BCD32
     var_type: i32
     event_name: ADF2_ACTIVE_SET
     swap_event_name: ADF2_RADIO_SWAP
   -
     type: NumSet
-    var_name: ADF STANDBY FREQUENCY:2
+    var_name: A:ADF STANDBY FREQUENCY:2
     var_units: Frequency ADF BCD32
     var_type: i32
     event_name: ADF2_STBY_SET
@@ -203,6 +203,70 @@ shared:
     up_event_name: ADF2_VOLUME_INC
     down_event_name: ADF2_VOLUME_DEC
     increment_by: 1
+
+  - # TACAN
+    type: NumSet
+    var_name: A:TACAN ACTIVE CHANNEL:1
+    var_units: Number
+    var_type: i32
+    event_name: TACAN1_CHANNEL_SET
+    swap_event_name: TACAN1_RADIO_SWAP
+  -
+    type: NumSet
+    var_name: A:TACAN STANDBY CHANNEL:1
+    var_units: Number
+    var_type: i32
+    event_name: TACAN1_STBY_CHANNEL_SET
+  -
+    type: NumSet
+    var_name: A:TACAN SOUND:1
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_TACAN1_IDENT_SET
+  -
+    type: NumSet
+    var_name: A:TACAN VOLUME:1
+    var_units: Percent
+    var_type: f64
+    event_name: TACAN1_VOLUME_SET
+  -
+    type: NumSet
+    var_name: A:TACAN XY BAND:1
+    var_units: Enum
+    var_type: i32
+    event_name: TACAN1_XY_BAND_SET
+
+  - # TACAN2
+    type: NumSet
+    var_name: A:TACAN ACTIVE CHANNEL:2
+    var_units: Number
+    var_type: i32
+    event_name: TACAN2_CHANNEL_SET
+    swap_event_name: TACAN2_RADIO_SWAP
+  -
+    type: NumSet
+    var_name: A:TACAN STANDBY CHANNEL:2
+    var_units: Number
+    var_type: i32
+    event_name: TACAN2_STBY_CHANNEL_SET
+  -
+    type: NumSet
+    var_name: A:TACAN SOUND:2
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_TACAN2_IDENT_SET
+  -
+    type: NumSet
+    var_name: A:TACAN VOLUME:2
+    var_units: Percent
+    var_type: f64
+    event_name: TACAN2_VOLUME_SET
+  -
+    type: NumSet
+    var_name: A:TACAN XY BAND:2
+    var_units: Enum
+    var_type: i32
+    event_name: TACAN2_XY_BAND_SET
 
   - # DME
     type: NumSet

@@ -14,10 +14,11 @@ shared:
     event_name: KOHLSMAN_SET
     event_param: 2
   -
-    type: var
+    type: NumSet
     var_name: A:AIRSPEED TRUE CALIBRATE
     var_units: Degrees
     var_type: f64
+    event_name: TRUE_AIRSPEED_CAL_SET
   -
     type: ToggleSwitch
     var_name: A:ATTITUDE CAGE
@@ -31,26 +32,34 @@ shared:
     var_type: f64
     event_name: ATTITUDE_BARS_POSITION_SET
   -
-    type: NumIncrement
+    type: NumSet
     var_name: A:NAV OBS:1
     var_units: Degrees
     var_type: i32
-    up_event_name: VOR1_OBI_INC
-    down_event_name: VOR1_OBI_DEC
-    increment_by: 1
+    event_name: VOR1_SET
   -
-    type: NumIncrement
+    type: NumSet
     var_name: A:NAV OBS:2
     var_units: Degrees
     var_type: i32
-    up_event_name: VOR2_OBI_INC
-    down_event_name: VOR2_OBI_DEC
-    increment_by: 1
+    event_name: VOR2_SET
   -
-    type: NumIncrement
-    var_name: ADF CARD
+    type: NumSet
+    var_name: A:ADF CARD
     var_units: Degrees
     var_type: i32
-    up_event_name: ADF_CARD_INC
-    down_event_name: ADF_CARD_DEC
-    increment_by: 1
+    event_name: ADF_CARD_SET
+
+master:
+  -
+    type: var
+    var_name: A:PLANE HEADING DEGREES GYRO
+    var_units: Degrees
+    var_type: f64
+    unreliable: true # Do not use interpolate or will spin and flip at 360 north
+  -
+    type: var
+    var_name: A:DELTA HEADING RATE
+    var_units: Radians per second
+    var_type: f64
+    unreliable: true

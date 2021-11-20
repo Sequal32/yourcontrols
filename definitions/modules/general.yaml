@@ -1,25 +1,28 @@
+include:
+  - definitions/modules/physics.yaml
+  - definitions/modules/slew.yaml
+
 shared:
-  - # ASOBO_HANDLING_Lever_Flaps_Template
+  - # Flaps
     type: var
     var_name: A:FLAPS HANDLE INDEX
     var_units: Number
     var_type: i32
-
-  - # ASOBO_HANDLING_Lever_Flaps_Continuous_Template
+  -
     type: NumSet
     var_name: A:FLAPS HANDLE PERCENT
-    var_units: Percent scaler 16k
+    var_units: Position 16k
     var_type: i32
     event_name: FLAPS_CONTINUOUS_SET
 
-  - # ASOBO_LANDING_GEAR_Lever_Gear_Template
+  - # Gear
     type: NumSet
     var_name: A:GEAR HANDLE POSITION
     var_units: Number
     var_type: i32
     event_name: GEAR_SET
 
-  - # ASOBO_HANDLING_Lever_Spoilers_Template
+  - # Spoilers
     type: NumSet
     var_name: A:SPOILERS HANDLE POSITION
     var_units: Position 16k
@@ -32,11 +35,14 @@ shared:
     var_type: bool
     event_name: SPOILERS_ARM_TOGGLE
 
-  - # ASOBO_LANDING_GEAR_Switch_ParkingBrake_Template
-    type: ToggleSwitch
+  - # Parking Brake
+    type: NumSet
     var_name: A:BRAKE PARKING POSITION
     var_units: Bool
-    var_type: bool
+    var_type: i32
+    event_name: PARKING_BRAKES_SET
+  -
+    type: event
     event_name: PARKING_BRAKES
 
   - # YourControls Force Transfer Hotkey
@@ -45,24 +51,27 @@ shared:
     action: TransferControls
 
 master:
-  - # Controls (Sync surfaces, not yoke. Yoke sync only shows half surface deflection and is just for animation. Yoke also still moves.)
-    type: var
+  - # Controls (Sync surfaces and yoke will sync with them)
+    type: NumSet
     var_name: A:ELEVATOR POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    event_name: AXIS_ELEVATOR_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    event_name: AXIS_AILERONS_SET
+    interpolate: Invert
   -
-    type: var
+    type: NumSet
     var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
-    interpolate: DefaultConstant
+    event_name: AXIS_RUDDER_SET
+    interpolate: Invert
   -
     type: NumSet
     var_name: A:BRAKE LEFT POSITION EX1

@@ -6,7 +6,6 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -47,14 +46,14 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
@@ -229,9 +228,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
   -
     type: var
     var_name: L:DEICE_Airframe_1
@@ -247,21 +246,21 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_RudderTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_AileronTrim_Switch_1
-  -
-    type: var
-    var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_PEDESTRAL
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_PEDESTRAL_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_PEDESTRAL_SwitchStateTimer
   -
     type: var
     var_name: L:ParkingBrake_Position
@@ -454,9 +453,9 @@ shared:
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
-  -
-    type: var
-    var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
+# -
+#   type: var
+#   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
