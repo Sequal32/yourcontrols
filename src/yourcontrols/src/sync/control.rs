@@ -29,6 +29,7 @@ impl Control {
         self.has_control = false;
         self.do_transfer(conn);
         // A32NX disable FBW
+        gauge_communicator.stop_interpolation(conn);
         gauge_communicator.set(conn, "L:A32NX_EXTERNAL_OVERRIDE", None, "1");
     }
 

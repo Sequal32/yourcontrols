@@ -117,7 +117,7 @@ fn write_update_data(
     definitions: &mut Definitions,
     client: &mut Box<dyn TransferClient>,
     permission: &SyncPermission,
-    log_sent: bool
+    log_sent: bool,
 ) {
     let (unreliable, reliable) = definitions.get_need_sync(permission);
 
@@ -127,7 +127,7 @@ fn write_update_data(
 
     if let Some(data) = reliable {
         if log_sent {
-        info!("[PACKET] SENT {:?}", data);
+            info!("[PACKET] SENT {:?}", data);
         }
 
         client.update(data, false);

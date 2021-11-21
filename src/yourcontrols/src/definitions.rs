@@ -1633,6 +1633,7 @@ impl Definitions {
 
     pub fn reset_sync(&mut self) {
         self.current_sync.clear();
+        self.last_written.clear();
     }
 
     pub fn get_number_avars(&self) -> usize {
