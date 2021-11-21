@@ -1074,10 +1074,12 @@ master:
   -
     type: NumSet
     var_name: L:ROTOR_COLLECTIVE
-    var_units: Position 16k
     var_type: f64
     event_name: THROTTLE_AXIS_SET_EX1
-    interpolate: Default
+    multiply_by: 327.68
+    add_by: -16384
+    use_calculator: true
+    unreliable: true
 
 server:
   - # Payload
