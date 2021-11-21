@@ -1214,6 +1214,17 @@ impl Definitions {
                     value,
                     instrument: message.instrument_name,
                 }),
+                JSPayloads::Time {
+                    hour,
+                    minute,
+                    day,
+                    year,
+                } => self.current_sync.events.push(Event::Time {
+                    hour,
+                    minute,
+                    day,
+                    year,
+                }),
                 _ => {}
             }
         };
