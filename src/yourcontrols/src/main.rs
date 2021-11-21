@@ -117,6 +117,7 @@ fn write_update_data(
     definitions: &mut Definitions,
     client: &mut Box<dyn TransferClient>,
     permission: &SyncPermission,
+    log_sent: bool
 ) {
     let (unreliable, reliable) = definitions.get_need_sync(permission);
 
@@ -125,7 +126,10 @@ fn write_update_data(
     }
 
     if let Some(data) = reliable {
+        if log_sent {
         info!("[PACKET] SENT {:?}", data);
+        }
+
         client.update(data, false);
     }
 }
@@ -287,7 +291,7 @@ fn main() {
                             time,
                         } => {
                             // Not non high updating packets for debugging
-                            if !is_unreliable {
+                            if !is_unreliable && config.enable_log {
                                 info!("[PACKET] {:?}", data)
                             }
 
@@ -538,7 +542,7 @@ fn main() {
                             is_init: false,
                         };
 
-                        write_update_data(&mut definitions, client, &permission);
+                        write_update_data(&mut definitions, client, &permission, config.enable_log);
 
                         update_rate_instant = Instant::now();
                     }

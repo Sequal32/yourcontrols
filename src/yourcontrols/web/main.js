@@ -22,6 +22,7 @@ var name_input_join = document.getElementById("name-input-join")
 var theme_selector = document.getElementById("theme-select")
 var streamer_mode = document.getElementById("streamer-mode")
 var use_upnp = document.getElementById("use-upnp")
+var enable_log = document.getElementById("enable-log")
 
 var update_rate_input = document.getElementById("update-rate-input")
 var timeout_input = document.getElementById("timeout-input")
@@ -208,6 +209,7 @@ function LoadSettings(newSettings) {
     theme_selector.checked = newSettings.ui_dark_theme
     use_upnp.checked = newSettings.use_upnp
     start_observer.checked = newSettings.start_observer
+    enable_log.checked = newSettings.enable_log
 
     setTheme(newSettings.ui_dark_theme)
 
@@ -424,6 +426,7 @@ $("#settings-form").submit(function(e) {
     newSettings.streamer_mode = streamer_mode.checked
     newSettings.use_upnp = use_upnp.checked
     newSettings.start_observer = start_observer.checked
+    newSettings.enable_log = enable_log.checked
 
     for (key in newSettings) {
         if (newSettings[key] === null) {return}
