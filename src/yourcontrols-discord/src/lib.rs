@@ -130,10 +130,10 @@ mod test {
     #[test]
     fn test_encode_decode() {
         let encoded = SecretEncoder::encode_session_id("test".to_string());
-        let output = JoinMethod::SessionCode("test".to_string());
+        let _output = JoinMethod::SessionCode("test".to_string());
         assert!(std::matches!(
             SecretEncoder::decode_secret(&encoded),
-            Ok(output)
+            Ok(_output)
         ));
     }
 
@@ -141,10 +141,10 @@ mod test {
     fn test_encode_decode_ip() {
         let addr: SocketAddr = "127.0.0.1:23213".parse().unwrap();
         let encoded = SecretEncoder::encode_ip(addr);
-        let output = JoinMethod::Ip(addr);
+        let _output = JoinMethod::Ip(addr);
         assert!(std::matches!(
             SecretEncoder::decode_secret(&encoded),
-            Ok(output)
+            Ok(_output)
         ));
     }
 }

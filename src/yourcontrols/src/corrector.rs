@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use simconnect::SimConnector;
 use yourcontrols_types::{AVarMap, VarReaderTypes};
 

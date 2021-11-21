@@ -62,7 +62,7 @@ impl MemWriter {
     }
 
     pub fn get_data_location(&self) -> *const u8 {
-        return self.start_pointer;
+        self.start_pointer
     }
 
     pub fn deallocate(&mut self) {

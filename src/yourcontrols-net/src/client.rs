@@ -87,7 +87,7 @@ impl TransferStruct {
                 self.net.send_message(Payloads::InitHandshake {
                     name: self.name.clone(),
                     version: self.version.clone(),
-                }, addr.clone()).ok();
+                }, addr).ok();
 
                 info!("[NETWORK] Established connection with port {} on {}!", addr.port(), session_id);
 
@@ -97,7 +97,7 @@ impl TransferStruct {
                 self.session_id = session_id.clone();
             }
             Payloads::AttemptConnection { peer } => {
-                self.received_address = Some(peer.clone())
+                self.received_address = Some(*peer)
             }
         }
 
@@ -286,12 +286,7 @@ impl Client {
                 // Send a handshake to rendezvous to resolve session id with an ip address
                 transfer
                     .net
-                    .send_message(
-                        Payloads::Handshake {
-                            session_id: session_id.clone(),
-                        },
-                        rendezvous,
-                    )
+                    .send_message(Payloads::Handshake { session_id }, rendezvous)
                     .ok();
             } else {
                 transfer
@@ -307,7 +302,7 @@ impl Client {
                     Payloads::Handshake {
                         session_id: String::new(),
                     },
-                    addr.clone(),
+                    addr,
                 )
                 .ok();
         }
@@ -381,23 +376,23 @@ impl Client {
 
 impl TransferClient for Client {
     fn is_host(&self) -> bool {
-        return self.is_host;
+        self.is_host
     }
 
     fn get_transmitter(&self) -> &ClientSender {
-        return &self.client_tx;
+        &self.client_tx
     }
 
     fn get_server_transmitter(&self) -> &ServerSender {
-        return &self.server_tx;
+        &self.server_tx
     }
 
     fn get_receiver(&self) -> &ServerReceiver {
-        return &self.server_rx;
+        &self.server_rx
     }
 
     fn get_server_name(&self) -> &str {
-        return &self.username;
+        &self.username
     }
 
     fn get_session_id(&self) -> Option<String> {

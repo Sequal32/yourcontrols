@@ -1,6 +1,5 @@
 use derive_more::{Display, From};
 use serde::{Deserialize, Serialize};
-use serde_json;
 use std::io::Write;
 use std::{convert::AsRef, fs::File, io};
 

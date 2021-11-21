@@ -28,7 +28,7 @@ impl Events {
         let next_event_id = self.event_map.len() as u32;
 
         if let Some(event_id) = self.event_map.get_by_left(&event_name.to_string()) {
-            return *event_id;
+            *event_id
         } else {
             self.event_map.insert(event_name.to_string(), next_event_id);
 
@@ -36,12 +36,12 @@ impl Events {
                 self.should_notify.insert(next_event_id);
             }
 
-            return next_event_id;
+            next_event_id
         }
     }
 
     pub fn match_event_id(&self, event_id: u32) -> Option<&String> {
-        return self.event_map.get_by_right(&event_id);
+        self.event_map.get_by_right(&event_id)
     }
 
     pub fn trigger_event(
@@ -75,7 +75,7 @@ impl Events {
     }
 
     pub fn get_number_defined(&self) -> usize {
-        return self.event_map.len();
+        self.event_map.len()
     }
 }
 pub struct LVarSyncer {
@@ -104,7 +104,7 @@ impl LVarSyncer {
             .add_definition_raw(calculator, custom_var_name.clone());
         self.raw_count += 1;
 
-        return custom_var_name;
+        custom_var_name
     }
 
     pub fn process_client_data(
@@ -118,7 +118,7 @@ impl LVarSyncer {
                 .insert(value.var_name.clone(), value.value);
         }
 
-        return values;
+        values
     }
 
     // FIXME: var_units missing
@@ -146,18 +146,15 @@ impl LVarSyncer {
     }
 
     pub fn get_var(&self, var_name: &str) -> Option<f64> {
-        match self.current_values.get(var_name) {
-            Some(v) => Some(*v),
-            None => None,
-        }
+        self.current_values.get(var_name).copied()
     }
 
     pub fn get_all_vars(&self) -> HashMap<String, f64> {
-        return self.current_values.clone();
+        self.current_values.clone()
     }
 
     pub fn get_number_defined(&self) -> usize {
-        return self.transfer.get_number_defined();
+        self.transfer.get_number_defined()
     }
 
     pub fn shrink_maps(&mut self) {
@@ -209,21 +206,21 @@ impl AircraftVars {
     ) -> Result<SimValue, io::Error> {
         let vars = match self
             .reader
-            .read_from_bytes(data.dwDefineCount, unsafe { &data.dwData as *const u32 })
+            .read_from_bytes(data.dwDefineCount, &data.dwData as *const u32)
         {
             Ok(v) => v,
             Err(e) => return Err(e),
         };
 
         for (var_name, value) in vars.iter() {
-            self.current_values.insert(var_name.clone(), value.clone());
+            self.current_values.insert(var_name.clone(), *value);
         }
 
-        return Ok(vars);
+        Ok(vars)
     }
 
     pub fn get_all_vars(&self) -> &SimValue {
-        return &self.current_values;
+        &self.current_values
     }
 
     pub fn set_vars(&self, conn: &SimConnector, data: &SimValue) {
@@ -270,7 +267,7 @@ impl AircraftVars {
     }
 
     pub fn get_number_defined(&self) -> usize {
-        return self.vars.len();
+        self.vars.len()
     }
 
     pub fn shrink_maps(&mut self) {

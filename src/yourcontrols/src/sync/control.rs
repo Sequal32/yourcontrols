@@ -33,7 +33,7 @@ impl Control {
     }
 
     pub fn has_control(&self) -> bool {
-        return self.has_control;
+        self.has_control
     }
 
     pub fn on_connected(&mut self, conn: &SimConnector) {

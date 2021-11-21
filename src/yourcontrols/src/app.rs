@@ -1,5 +1,5 @@
 use crate::simconfig;
-use base64;
+
 use crossbeam_channel::{unbounded, Receiver, TryRecvError};
 use laminar::Metrics;
 use serde::{Deserialize, Serialize};
@@ -144,17 +144,17 @@ impl App {
         // Run
         Self {
             app_handle: handle,
-            exited: exited,
+            exited,
             rx,
         }
     }
 
     pub fn exited(&self) -> bool {
-        return self.exited.load(SeqCst);
+        self.exited.load(SeqCst)
     }
 
     pub fn get_next_message(&self) -> Result<AppMessage, TryRecvError> {
-        return self.rx.try_recv();
+        self.rx.try_recv()
     }
 
     pub fn invoke(&self, type_string: &str, data: Option<&str>) {
@@ -208,7 +208,7 @@ impl App {
     pub fn server_started(&self, client_count: u16, session_id: Option<&str>) {
         let session_id = session_id.unwrap_or("");
 
-        let connected_string = if session_id == "" {
+        let connected_string = if session_id.is_empty() {
             format!("{} clients connected.", client_count)
         } else {
             format!(

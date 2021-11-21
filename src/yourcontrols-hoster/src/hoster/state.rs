@@ -17,6 +17,7 @@ pub struct ServerState {
     pub created_at: Instant,
 }
 
+#[allow(dead_code)]
 impl ServerState {
     pub fn new() -> Self {
         Self {
@@ -51,10 +52,10 @@ impl ServerState {
 
         self.clients.retain(|name, client| {
             if client.addr != *addr {
-                return true;
+                true
             } else {
                 removed_name = Some(name.clone());
-                return false;
+                false
             }
         });
 
@@ -170,13 +171,11 @@ impl ServerState {
 
                 return;
             }
-            Payloads::TransferControl { from, to } => {
+            Payloads::TransferControl { to, .. } => {
                 self.in_control = to.clone();
             }
             Payloads::SetObserver {
-                from,
-                to,
-                is_observer,
+                to, is_observer, ..
             } => {
                 if let Some(client) = self.clients.get_mut(to) {
                     client.is_observer = *is_observer;
@@ -190,7 +189,7 @@ impl ServerState {
 
                 return;
             }
-            Payloads::Handshake { session_id } => {
+            Payloads::Handshake { .. } => {
                 net.send_message(payload, addr).ok();
 
                 return;
@@ -206,6 +205,7 @@ pub struct ActiveState {
     server_states: HashMap<String, ServerState>,
 }
 
+#[allow(dead_code)]
 impl ActiveState {
     pub fn new() -> Self {
         Self {
@@ -215,8 +215,7 @@ impl ActiveState {
     }
 
     pub fn add_server(&mut self, session_id: String) {
-        self.server_states
-            .insert(session_id.clone(), ServerState::new());
+        self.server_states.insert(session_id, ServerState::new());
     }
 
     pub fn remove_server(&mut self, session_id: &str) {
@@ -252,7 +251,7 @@ impl ActiveState {
         let mut removed = Vec::new();
 
         self.server_states.retain(|session_id, state| {
-            if state.clients.len() == 0 && state.created_at.elapsed().as_secs() > 60 {
+            if !state.clients.is_empty() && state.created_at.elapsed().as_secs() > 60 {
                 removed.push(session_id.clone());
                 false
             } else {

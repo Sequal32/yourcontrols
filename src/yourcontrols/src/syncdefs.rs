@@ -5,11 +5,10 @@ use std::{
 };
 
 use num::{FromPrimitive, ToPrimitive};
-use simconnect;
 
 use crate::{
     sync::transfer::LVarSyncer,
-    util::{wrap_diff, NumberDigits},
+    util::{float_eq, wrap_diff, NumberDigits},
 };
 
 const GROUP_ID: u32 = 5;
@@ -40,15 +39,15 @@ pub struct ToggleSwitch {
 
 impl ToggleSwitch {
     pub fn new(event_id: u32) -> Self {
-        return Self {
-            event_id: event_id,
+        Self {
+            event_id,
             off_event_id: None,
             event_param: None,
             event_name: None,
             switch_on: false,
             current: false,
             on_condition_value: 1.0,
-        };
+        }
     }
 
     pub fn set_off_event(&mut self, off_event_id: u32) {
@@ -116,7 +115,7 @@ impl<'a> Syncable<bool> for ToggleSwitch {
 
 impl<'a> Syncable<f64> for ToggleSwitch {
     fn set_current(&mut self, current: f64) {
-        self.current = current == self.on_condition_value;
+        self.current = float_eq(&current, &self.on_condition_value);
     }
 
     fn set_new(
@@ -125,7 +124,7 @@ impl<'a> Syncable<f64> for ToggleSwitch {
         conn: &simconnect::SimConnector,
         lvar_transfer: &mut LVarSyncer,
     ) {
-        let new = new == self.on_condition_value;
+        let new = float_eq(&new, &self.on_condition_value);
 
         if self.current == new {
             return;
@@ -175,10 +174,10 @@ where
     T: Default,
 {
     pub fn new(event_id: u32) -> Self {
-        return Self {
-            event_id: event_id,
+        Self {
+            event_id,
             ..Default::default()
-        };
+        }
     }
 
     pub fn set_calculator_event_name(&mut self, event_name: Option<&str>, with_param: bool) {
@@ -236,12 +235,12 @@ where
         let object_id = if self.is_user_event { 0 } else { 1 };
 
         let value = match self.multiply_by.as_ref() {
-            Some(multiply_by) => new * multiply_by.clone(),
+            Some(multiply_by) => new * *multiply_by,
             None => new,
         };
 
         let value = match self.add_by.as_ref() {
-            Some(add_by) => value + add_by.clone(),
+            Some(add_by) => value + *add_by,
             None => value,
         };
 
@@ -430,7 +429,7 @@ impl Syncable<f64> for CustomCalculator {
     }
 
     fn set_new(&mut self, new: f64, conn: &simconnect::SimConnector, transfer: &mut LVarSyncer) {
-        if self.current == new {
+        if float_eq(&self.current, &new) {
             return;
         }
         transfer.send_raw(conn, &self.set_string);

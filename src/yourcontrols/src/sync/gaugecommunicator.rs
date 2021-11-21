@@ -141,7 +141,7 @@ impl GaugeCommunicator {
     }
 
     pub fn send_definitions(&mut self, conn: &SimConnector) {
-        for x in 0..(self.datums.len() as f32 / 126 as f32).ceil() as i32 {
+        for x in 0..(self.datums.len() as f32 / 126_f32).ceil() as i32 {
             let mut writer = MemWriter::new(8096, 4).unwrap();
 
             for i in 0..126 {
@@ -193,7 +193,7 @@ impl GaugeCommunicator {
         &self,
         conn: &SimConnector,
         time: f64,
-        data: &Vec<InterpolateData>,
+        data: &[InterpolateData],
     ) {
         let mut writer = MemWriter::new(2048, 8).unwrap();
         let mut count = 0;
@@ -260,7 +260,7 @@ impl GaugeCommunicator {
                 let value = datum.value.clamp(-10e64f64, 10e64f64);
                 result.push(GetResult {
                     var_name: datum_data.friendly_name.clone(),
-                    value: value,
+                    value,
                 })
             }
         }

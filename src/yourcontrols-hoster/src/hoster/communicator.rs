@@ -19,7 +19,7 @@ impl Communicator {
     }
 
     fn is_established(&self) -> bool {
-        return self.stream.is_some();
+        self.stream.is_some()
     }
 
     fn establish_connection(&mut self) {

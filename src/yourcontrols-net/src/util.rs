@@ -38,8 +38,8 @@ pub fn get_bind_address(is_ipv6: bool, port: Option<u16>) -> SocketAddr {
 
 pub fn match_ip_address_to_socket_addr(ip: IpAddr, port: u16) -> SocketAddr {
     match ip {
-        IpAddr::V4(ip) => return SocketAddr::V4(SocketAddrV4::new(ip, port)),
-        IpAddr::V6(ip) => return SocketAddr::V6(SocketAddrV6::new(ip, port, 0, 0)),
+        IpAddr::V4(ip) => SocketAddr::V4(SocketAddrV4::new(ip, port)),
+        IpAddr::V6(ip) => SocketAddr::V6(SocketAddrV6::new(ip, port, 0, 0)),
     }
 }
 
@@ -67,10 +67,10 @@ pub fn get_socket_config(timeout: u64) -> laminar::Config {
 }
 
 pub fn get_seconds() -> f64 {
-    return SystemTime::now()
+    SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
-        .as_secs_f64();
+        .as_secs_f64()
 }
 
 #[derive(Debug)]
@@ -149,7 +149,7 @@ pub trait TransferClient {
                 Payloads::SetObserver {
                     from: self.get_server_name().to_string(),
                     to: target,
-                    is_observer: is_observer,
+                    is_observer,
                 },
                 None,
             ))

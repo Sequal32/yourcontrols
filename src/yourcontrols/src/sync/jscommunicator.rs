@@ -76,7 +76,7 @@ impl JSCommunicator {
         self.accept_connections();
         self.read_messages();
 
-        return self.incoming_payloads.pop_front();
+        self.incoming_payloads.pop_front()
     }
 
     fn write_message_to_instrument(&mut self, message: Message, instrument: &str) {
@@ -110,7 +110,7 @@ impl JSCommunicator {
                     match result {
                         Ok(stream) => {
                             self.streams.push(StreamInfo {
-                                stream: stream,
+                                stream,
                                 name: String::new(),
                             });
 
@@ -132,12 +132,9 @@ impl JSCommunicator {
             match info.stream.read_message() {
                 Ok(Message::Text(text)) => match serde_json::from_str(&text) {
                     Ok(payload) => {
-                        match &payload {
-                            JSPayloads::Handshake { name } => {
-                                info!("[JS] Panel gauge connected: {}", name);
-                                info.name = name.clone();
-                            }
-                            _ => {}
+                        if let JSPayloads::Handshake { name } = &payload {
+                            info!("[JS] Panel gauge connected: {}", name);
+                            info.name = name.clone();
                         }
 
                         incoming_payloads.push_back(JSMessage {
@@ -159,7 +156,7 @@ impl JSCommunicator {
                 _ => {}
             }
 
-            return true;
+            true
         });
     }
 }
