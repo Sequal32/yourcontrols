@@ -1,5 +1,11 @@
 # YourControls Changelog
 
+## Version 2.6.2
+
+### Changes
+* Fixed time sync on initial connect to host.
+* Fixed H135 throttle collective.
+
 ## Version 2.6.1
 
 ### Profiles
