@@ -127,7 +127,6 @@ function OnConnected() {
     joinIpInput.disabled = true
     joinPortInput.disabled = true
 
-    cacheIpInput = joinIpInput.value
     if (streamer_mode.checked) {
         externalIp.hidden = true
         joinIpInput.value = joinIpInput.value.split(/\d/).join("X")
@@ -480,6 +479,8 @@ $("#main-form-join").submit(function(e) {
         method: method,
         isipv6: session_ip6radio.checked
     }
+
+    cacheIpInput = joinIpInput.value
 
     if (joinConnectDirect.checked) {
         if (ValidateIp(joinIpInput)) {
