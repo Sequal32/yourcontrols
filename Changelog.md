@@ -2,6 +2,10 @@
 
 ## Version 2.6.2
 
+### Profiles
+* Added RotorSimPilot Robinson R44 Raven II.
+  - All pilots need to have flight model loaded with AirlandFS tool if transferring controls.
+
 ### Changes
 * Fixed time sync on initial connect to host.
 * Fixed H135 throttle collective.
