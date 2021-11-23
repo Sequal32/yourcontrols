@@ -3,6 +3,8 @@
 ## Version 2.6.2
 
 ### Profiles
+* Added Headwind A330-900neo.
+  - EFB not synced.
 * Added RotorSimPilot Robinson R44 Raven II.
   - All pilots need to have flight model loaded with AirlandFS tool if transferring controls.
 
