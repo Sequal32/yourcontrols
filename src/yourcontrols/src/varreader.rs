@@ -42,7 +42,7 @@ impl VarReader {
             data_name: data_name.to_string(),
         });
 
-        return datum_id;
+        datum_id
     }
 
     pub fn read_from_bytes(
@@ -107,7 +107,7 @@ impl VarReader {
             }
         }
 
-        return Ok(return_data);
+        Ok(return_data)
     }
 
     pub fn write_to_data(&self, data: &HashMap<String, VarReaderTypes>) -> Vec<u8> {
@@ -126,12 +126,12 @@ impl VarReader {
             };
         }
 
-        return buf;
+        buf
     }
 
     #[cfg(test)]
     pub fn get_number_definitions(&self) -> u32 {
-        return self.data_map.len() as u32;
+        self.data_map.len() as u32
     }
 }
 

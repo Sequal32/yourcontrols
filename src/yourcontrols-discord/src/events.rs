@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::{DiscordEvent, SecretEncoder};
 use crossbeam_channel::{unbounded, Receiver, Sender};
 
@@ -38,11 +40,7 @@ impl EventHandler for YourControlsDiscordEvents {
         self.tx.send(DiscordEvent::Join { method: secret }).ok();
     }
 
-    fn on_activity_join_request(
-        &mut self,
-        discord: &Discord<'_, Self>,
-        user: &discord_game_sdk::User,
-    ) {
+    fn on_activity_join_request(&mut self, _: &Discord<'_, Self>, user: &discord_game_sdk::User) {
         self.tx
             .send(DiscordEvent::AskedToJoin { user_id: user.id() })
             .ok();
@@ -50,9 +48,9 @@ impl EventHandler for YourControlsDiscordEvents {
 
     fn on_activity_invite(
         &mut self,
-        discord: &Discord<'_, Self>,
-        kind: discord_game_sdk::Action,
-        user: &discord_game_sdk::User,
+        _: &Discord<'_, Self>,
+        _: discord_game_sdk::Action,
+        _: &discord_game_sdk::User,
         activity: &discord_game_sdk::Activity,
     ) {
         self.tx

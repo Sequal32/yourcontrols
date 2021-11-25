@@ -28,7 +28,7 @@ macro_rules! check_and_return_field {
         match $var[$field_name].as_str() {
             Some(s) => s,
             None => return Err(Error::MissingField($field_name)),
-        };
+        }
     };
 
     ($field_name:expr, $var:ident, i64) => {
@@ -114,7 +114,7 @@ fn evalute_condition_values(condition: &Condition, value: &VarReaderTypes) -> bo
         return *value < data;
     }
 
-    return false;
+    false
 }
 
 fn evalute_condition(
@@ -441,15 +441,15 @@ fn get_category_from_string(category: &str) -> Result<Category, Error> {
         "master" => Ok(Category::Master),
         "server" => Ok(Category::Server),
         "init" => Ok(Category::Init),
-        _ => return Err(Error::InvalidCategory(category.to_string())),
+        _ => Err(Error::InvalidCategory(category.to_string())),
     }
 }
 
 fn get_real_var_name(var_name: &str) -> String {
     if var_name.as_bytes()[1] == b':' {
-        return var_name[2..].to_string();
+        var_name[2..].to_string()
     } else {
-        return var_name.to_string();
+        var_name.to_string()
     }
 }
 
@@ -587,7 +587,7 @@ impl Definitions {
             // Keep var_name with L: in it to pass to execute_calculator code
             self.add_local_variable(category, var_name, var_units)?;
 
-            return Ok((var_name.to_string(), VarType::LocalVar));
+            Ok((var_name.to_string(), VarType::LocalVar))
         } else {
             let actual_var_name = get_real_var_name(var_name);
 
@@ -597,7 +597,7 @@ impl Definitions {
                 return Err(Error::MissingField("var_units"));
             }
 
-            return Ok((actual_var_name, VarType::AircraftVar));
+            Ok((actual_var_name, VarType::AircraftVar))
         }
     }
 
@@ -691,6 +691,7 @@ impl Definitions {
         Ok(())
     }
 
+    #[allow(clippy::type_complexity)]
     fn add_num_set_generic<T>(
         &mut self,
         data_type: InDataTypes,
@@ -753,7 +754,7 @@ impl Definitions {
             return Ok((Some(action), var_string));
         }
 
-        return Ok((None, var_string));
+        Ok((None, var_string))
     }
 
     fn add_num_set(&mut self, category: &str, var: Value) -> Result<(), Error> {
@@ -1073,7 +1074,7 @@ impl Definitions {
 
         self.add_to_buffer(category, value_clone);
 
-        return Ok(());
+        Ok(())
     }
 
     fn shrink_maps(&mut self) {
@@ -1131,7 +1132,7 @@ impl Definitions {
     pub fn load_config(&mut self, path: impl AsRef<Path> + Display) -> Result<(), Error> {
         let path_string = path.to_string();
 
-        let file = File::open(path).map_err(|e| Error::IOError(e))?;
+        let file = File::open(path).map_err(Error::IOError)?;
 
         let yaml: IndexMap<String, Vec<Value>> =
             serde_yaml::from_reader(file).map_err(|e| Error::YamlError(e, path_string.clone()))?;
@@ -1141,7 +1142,7 @@ impl Definitions {
 
     pub fn load_config_from_bytes(&mut self, bytes: Box<[u8]>) -> Result<(), Error> {
         let yaml: IndexMap<String, Vec<Value>> =
-            rmp_serde::from_slice(&bytes).map_err(|e| Error::NetDecodeError(e))?;
+            rmp_serde::from_slice(&bytes).map_err(Error::NetDecodeError)?;
 
         self.parse_yaml(yaml)
     }
@@ -1213,6 +1214,17 @@ impl Definitions {
                     value,
                     instrument: message.instrument_name,
                 }),
+                JSPayloads::Time {
+                    hour,
+                    minute,
+                    day,
+                    year,
+                } => self.current_sync.events.push(Event::Time {
+                    hour,
+                    minute,
+                    day,
+                    year,
+                }),
                 _ => {}
             }
         };
@@ -1278,7 +1290,7 @@ impl Definitions {
             return;
         }
         // Data might be bad/config files don't line up
-        if let Ok(mut data) = self.avarstransfer.read_vars(data) {
+        if let Ok(data) = self.avarstransfer.read_vars(data) {
             // Remove some computed components
             // self.physics_corrector.remove_components(&mut data);
             // Update all syncactions with the changed values
@@ -1349,7 +1361,7 @@ impl Definitions {
         for mapping in self
             .mappings
             .get(&name)
-            .ok_or(Error::MissingMapping(name.clone()))?
+            .ok_or_else(|| Error::MissingMapping(name.clone()))?
         {
             if let ActionType::Event(mapping) = &mapping.action {
                 if mapping.use_calculator {
@@ -1440,29 +1452,23 @@ impl Definitions {
             Some(regular)
         };
 
-        return (unreliable, regular);
+        (unreliable, regular)
     }
 
     fn can_sync(&self, var_name: &str, sync_permission: &SyncPermission) -> bool {
         // Check categories
-        if let Some(category) = self.categories.get(var_name) {
-            if *category == Category::Server && sync_permission.is_server {
-                return true;
-            } else if *category == Category::Shared {
-                return true;
-            } else if *category == Category::Master && sync_permission.is_master {
-                return true;
-            } else if *category == Category::Init && sync_permission.is_init {
-                return true;
-            }
-            return false;
+        match self.categories.get(var_name) {
+            Some(Category::Shared) => true,
+            Some(Category::Master) => sync_permission.is_master,
+            Some(Category::Server) => sync_permission.is_server,
+            Some(Category::Init) => sync_permission.is_init,
+            _ => true,
         }
-        return true;
     }
 
     #[allow(unused_variables)]
     fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64) {
-        if data.len() == 0 {
+        if data.is_empty() {
             return;
         }
 
@@ -1471,7 +1477,7 @@ impl Definitions {
 
         let mut interpolation_data = Vec::new();
 
-        let mut data = data;
+        let data = data;
         // Add some local computed components
         // self.physics_corrector.add_components(&mut data);
 
@@ -1498,7 +1504,7 @@ impl Definitions {
                                 });
                             } else {
                                 // Set data right away
-                                to_sync.insert(var_name.clone(), data.clone());
+                                to_sync.insert(var_name.clone(), data);
                             }
                         },
                         {}
@@ -1507,7 +1513,7 @@ impl Definitions {
             }
         }
 
-        if interpolation_data.len() > 0 {
+        if !interpolation_data.is_empty() {
             self.lvarstransfer.transfer.send_new_interpolation_data(
                 conn,
                 time,
@@ -1515,7 +1521,7 @@ impl Definitions {
             );
         }
 
-        if to_sync.len() > 0 {
+        if !to_sync.is_empty() {
             self.avarstransfer.set_vars(conn, &to_sync);
         }
     }
@@ -1603,7 +1609,7 @@ impl Definitions {
     }
 
     pub fn get_all_current(&self) -> AllNeedSync {
-        let mut avars = self
+        let avars = self
             .avarstransfer
             .get_all_vars()
             .clone()
@@ -1627,24 +1633,23 @@ impl Definitions {
 
     pub fn reset_sync(&mut self) {
         self.current_sync.clear();
+        self.last_written.clear();
     }
 
     pub fn get_number_avars(&self) -> usize {
-        return self.avarstransfer.get_number_defined();
+        self.avarstransfer.get_number_defined()
     }
 
     pub fn get_number_events(&self) -> usize {
-        return self.events.get_number_defined();
+        self.events.get_number_defined()
     }
 
     pub fn get_number_lvars(&self) -> usize {
-        return self.lvarstransfer.get_number_defined();
+        self.lvarstransfer.get_number_defined()
     }
 
     pub fn get_next_pending_action(&mut self) -> Option<ProgramAction> {
-        if self.pending_action.is_none() {
-            return None;
-        }
+        self.pending_action.as_ref()?;
 
         let mut next_action = None;
         swap(&mut self.pending_action, &mut next_action);

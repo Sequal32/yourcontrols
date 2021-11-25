@@ -10,7 +10,7 @@
 
 &nbsp;
 
-[![Documentation](/assets/Documentation.png)](https://docs.yourcontrols.xyz)
+[![Documentation](/assets/Documentation.png)](https://docs.yourcontrols.one)
 
 &nbsp;
 

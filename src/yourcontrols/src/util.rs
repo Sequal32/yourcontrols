@@ -3,7 +3,7 @@ use std::{net::IpAddr, ops::Add, ops::Sub};
 use yourcontrols_types::Error;
 
 pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, Error> {
-    match dns_lookup::lookup_host(&hostname)?
+    match dns_lookup::lookup_host(hostname)?
         .into_iter()
         .find(|&x| x.is_ipv6() && isipv6 || x.is_ipv4() && !isipv6)
     {
@@ -64,7 +64,7 @@ impl NumberDigits {
         if index + 1 > self.digits.len() {
             return 0;
         }
-        return self.digits[index];
+        self.digits[index]
     }
 }
 
@@ -109,6 +109,10 @@ impl Default for Vector3 {
     }
 }
 
+pub fn float_eq(lhs: &f64, rhs: &f64) -> bool {
+    (rhs - lhs).abs() < f64::EPSILON
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -125,8 +129,8 @@ mod test {
 
     #[test]
     fn test_wrap_diff() {
-        assert_eq!(wrap_diff(0.0, 10.0, 360.0), 10.0);
-        assert_eq!(wrap_diff(350.0, 10.0, 360.0), 20.0);
-        assert_eq!(wrap_diff(10.0, 350.0, 360.0), -20.0);
+        assert!(float_eq(&wrap_diff(0.0, 10.0, 360.0), &10.0));
+        assert!(float_eq(&wrap_diff(350.0, 10.0, 360.0), &20.0));
+        assert!(float_eq(&wrap_diff(10.0, 350.0, 360.0), &-20.0));
     }
 }

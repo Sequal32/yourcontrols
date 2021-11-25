@@ -1,5 +1,17 @@
 # YourControls Changelog
 
+## Version 2.6.2
+
+### Profiles
+* Added Headwind A330-900neo.
+  - EFB not synced.
+* Added RotorSimPilot Robinson R44 Raven II.
+  - All pilots need to have flight model loaded with AirlandFS tool if transferring controls.
+
+### Changes
+* Fixed time sync on initial connect to host.
+* Fixed H135 throttle collective.
+
 ## Version 2.6.1
 
 ### Profiles

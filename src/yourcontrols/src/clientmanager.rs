@@ -26,7 +26,7 @@ impl ClientManager {
         if let Some(client_name) = self.current_control.as_ref() {
             return name == client_name;
         }
-        return false;
+        false
     }
 
     pub fn set_client_control(&mut self, name: String) -> Option<String> {
@@ -37,7 +37,7 @@ impl ClientManager {
 
             return previous_name;
         }
-        return None;
+        None
     }
 
     pub fn get_client_in_control(&self) -> Option<&String> {
@@ -61,7 +61,7 @@ impl ClientManager {
 
         if let Some(next_control) = self.next_control.as_ref() {
             if next_control == name {
-                self.next_control = self.clients.keys().into_iter().next().map(|x| x.clone());
+                self.next_control = self.clients.keys().into_iter().next().cloned();
             }
         }
     }
@@ -74,7 +74,7 @@ impl ClientManager {
         if let Some(client) = self.clients.get(name) {
             return client.observer_mode;
         }
-        return false;
+        false
     }
 
     pub fn set_observer(&mut self, name: &str, is_observer: bool) {
@@ -93,7 +93,7 @@ impl ClientManager {
         if let Some(client) = self.clients.get(name) {
             return client.is_server;
         }
-        return false;
+        false
     }
 
     pub fn reset(&mut self) {

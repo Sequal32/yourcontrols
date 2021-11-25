@@ -1,4 +1,3 @@
-use attohttpc;
 use semver::Version;
 use serde_json::Value;
 use std::env;
@@ -6,7 +5,6 @@ use std::{
     fs,
     io::{copy, Cursor},
 };
-use zip;
 
 const RELEASE_DIRECT_URL: &str =
     "https://github.com/sequal32/yourcontrolsinstaller/releases/latest/download/installer.zip";
@@ -62,7 +60,7 @@ impl Updater {
 
         match response.json() {
             Ok(data) => Ok(data),
-            Err(e) => return Err(DownloadInstallerError::RequestFailed(e)),
+            Err(e) => Err(DownloadInstallerError::RequestFailed(e)),
         }
     }
 
@@ -76,7 +74,7 @@ impl Updater {
         match response.bytes() {
             Ok(bytes) => {
                 // Cache
-                self.latest_installer_bytes = Some(bytes.clone());
+                self.latest_installer_bytes = Some(bytes);
                 Ok(self.latest_installer_bytes.as_ref().unwrap())
             }
             Err(e) => Err(DownloadInstallerError::RequestFailed(e)),
@@ -120,7 +118,7 @@ impl Updater {
 
         match process.spawn() {
             Ok(_) => Ok(()),
-            Err(e) => return Err(DownloadInstallerError::IOError(e)),
+            Err(e) => Err(DownloadInstallerError::IOError(e)),
         }
     }
 

@@ -8,7 +8,6 @@ include:
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
 
 shared:
   - # APU
@@ -486,6 +485,28 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 77
     index_reversed: true
+
+  - # Trim (autotrim)
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: RUDDER_TRIM_SET_EX1
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: ELEVATOR_TRIM_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AILERON TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: AILERON_TRIM_SET_EX1
+    unreliable: true
 
   - # LVAR's
     type: var

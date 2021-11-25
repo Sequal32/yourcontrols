@@ -494,7 +494,7 @@ shared:
     type: var
     var_name: A:TRANSPONDER STATE:1
     var_units: Enum
-    var_type: f64 # Must be f64 or else throttles shoot to CL (Was a temporary fix, now not anymore)
+    var_type: f64
 
   - # Lights
     type: NumSet
@@ -618,32 +618,21 @@ shared:
     var_units: Percent scaler 16k
     var_type: f64
     event_name: RUDDER_TRIM_SET_EX1
-    conditions:
-      - var:
-          var_name: L:A32NX_AUTOPILOT_ACTIVE
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: false
+    unreliable: true
   -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
     var_units: Percent scaler 16k
     var_type: f64
     event_name: ELEVATOR_TRIM_SET
-    conditions:
-      - var:
-          var_name: L:A32NX_AUTOPILOT_ACTIVE
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: false
+    unreliable: true
   -
     type: NumSet
     var_name: A:AILERON TRIM PCT
     var_units: Percent scaler 16k
     var_type: f64
     event_name: AILERON_TRIM_SET_EX1
+    unreliable: true
 
   - # YourControls Force Transfer Hotkey
     type: ProgramActionEvent
@@ -2570,9 +2559,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_FMA_LATERAL_MODE
-  -
-    type: var
-    var_name: L:A32NX_AUTOTHRUST_MODE_MESSAGE
+# -
+#   type: var
+#   var_name: L:A32NX_AUTOTHRUST_MODE_MESSAGE
   -
     type: var
     var_name: L:A32NX_BC3Message
@@ -3422,39 +3411,39 @@ shared:
   -
     type: var
     var_name: L:A32NX_ELEC_CONTACTOR_15XE2_IS_CLOSED
-  -
-    type: var
-    var_name: L:A32NX_ELEC_AC_STAT_INV_BUS_POTENTIAL_NORMAL
-  -
-    type: var
-    var_name: L:A32NX_ELEC_AC_GND_FLT_SVC_BUS_POTENTIAL_NORMAL
+# -
+#   type: var
+#   var_name: L:A32NX_ELEC_AC_STAT_INV_BUS_POTENTIAL_NORMAL
+# -
+#   type: var
+#   var_name: L:A32NX_ELEC_AC_GND_FLT_SVC_BUS_POTENTIAL_NORMAL
   -
     type: var
     var_name: L:A32NX_ELEC_CONTACTOR_12XN_IS_CLOSED
-  -
-    type: var
-    var_name: L:A32NX_ELEC_DC_1_BUS_POTENTIAL_NORMAL
+# -
+#   type: var
+#   var_name: L:A32NX_ELEC_DC_1_BUS_POTENTIAL_NORMAL
   -
     type: var
     var_name: L:A32NX_ELEC_CONTACTOR_1PC1_IS_CLOSED
-  -
-    type: var
-    var_name: L:A32NX_ELEC_DC_2_BUS_POTENTIAL_NORMAL
+# -
+#   type: var
+#   var_name: L:A32NX_ELEC_DC_2_BUS_POTENTIAL_NORMAL
   -
     type: var
     var_name: L:A32NX_ELEC_CONTACTOR_1PC2_IS_CLOSED
-  -
-    type: var
-    var_name: L:A32NX_ELEC_DC_BAT_BUS_POTENTIAL_NORMAL
-  -
-    type: var
-    var_name: L:A32NX_ELEC_DC_ESS_BUS_POTENTIAL_NORMAL
+# -
+#   type: var
+#   var_name: L:A32NX_ELEC_DC_BAT_BUS_POTENTIAL_NORMAL
+# -
+#   type: var
+#   var_name: L:A32NX_ELEC_DC_ESS_BUS_POTENTIAL_NORMAL
   -
     type: var
     var_name: L:A32NX_ELEC_CONTACTOR_4PC_IS_CLOSED
-  -
-    type: var
-    var_name: L:A32NX_ELEC_DC_ESS_SHED_BUS_POTENTIAL_NORMAL
+# -
+#   type: var
+#   var_name: L:A32NX_ELEC_DC_ESS_SHED_BUS_POTENTIAL_NORMAL
   -
     type: var
     var_name: L:A32NX_ELEC_CONTACTOR_8PH_IS_CLOSED
@@ -3758,9 +3747,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_PRESS_EXCESS_CAB_ALT
-  -
-    type: var
-    var_name: L:A32NX_PRESS_EXCESS_RESIDUAL_PR
+# -
+#   type: var
+#   var_name: L:A32NX_PRESS_EXCESS_RESIDUAL_PR
   -
     type: var
     var_name: L:A32NX_PRESS_LOW_DIFF_PR

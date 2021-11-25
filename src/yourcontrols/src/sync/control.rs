@@ -29,11 +29,12 @@ impl Control {
         self.has_control = false;
         self.do_transfer(conn);
         // A32NX disable FBW
+        gauge_communicator.stop_interpolation(conn);
         gauge_communicator.set(conn, "L:A32NX_EXTERNAL_OVERRIDE", None, "1");
     }
 
     pub fn has_control(&self) -> bool {
-        return self.has_control;
+        self.has_control
     }
 
     pub fn on_connected(&mut self, conn: &SimConnector) {

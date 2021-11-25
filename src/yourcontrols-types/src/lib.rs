@@ -66,7 +66,7 @@ impl AllNeedSync {
     }
 
     pub fn is_empty(&self) -> bool {
-        return self.avars.len() == 0 && self.lvars.len() == 0 && self.events.len() == 0;
+        self.avars.len() == 0 && self.lvars.len() == 0 && self.events.len() == 0
     }
 
     pub fn clear(&mut self) {
@@ -130,6 +130,6 @@ impl AllNeedSync {
             Event::Time { .. } => filter_or_push!("", events, event),
         });
 
-        return filtered;
+        filtered
     }
 }

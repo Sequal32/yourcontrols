@@ -1,6 +1,5 @@
 use derive_more::{Display, From};
 use serde::{Deserialize, Serialize};
-use serde_json;
 use std::io::Write;
 use std::{convert::AsRef, fs::File, io};
 
@@ -22,6 +21,7 @@ pub struct Config {
     pub streamer_mode: bool,
     pub use_upnp: bool,
     pub start_observer: bool,
+    pub enable_log: bool
 }
 
 impl Default for Config {
@@ -37,6 +37,7 @@ impl Default for Config {
             streamer_mode: false,
             use_upnp: true,
             start_observer: false,
+            enable_log: true
         }
     }
 }

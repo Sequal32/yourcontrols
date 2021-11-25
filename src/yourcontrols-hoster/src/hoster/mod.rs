@@ -78,7 +78,7 @@ impl Hoster {
 
                     if let Some(name) = state.remove_client_by_addr(&addr) {
                         // If was in control... need to transfer it to someone else if they're still in
-                        if state.clients.len() > 0 {
+                        if !state.clients.is_empty() {
                             if name == state.in_control {
                                 let next = state.clients.iter().next().unwrap().0.clone();
                                 state.set_host(next, &mut self.net);
@@ -98,7 +98,6 @@ impl Hoster {
                 Message::Metrics(addr, metrics) => {
                     self.metrics_data.insert(addr, metrics);
                 }
-                _ => {}
             }
         }
     }
@@ -108,9 +107,8 @@ impl Hoster {
             Ok(HosterPayloads::HostingRequested { session_id }) => {
                 self.servers.add_server(session_id.clone());
 
-                self.communicator.send_message(HosterPayloads::SessionOpen {
-                    session_id: session_id,
-                });
+                self.communicator
+                    .send_message(HosterPayloads::SessionOpen { session_id });
             }
             Ok(HosterPayloads::ClientConnecting { session_id, addr }) => {
                 self.servers.add_client(addr, session_id);

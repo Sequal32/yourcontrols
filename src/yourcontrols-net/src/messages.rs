@@ -142,7 +142,7 @@ impl SenderReceiver {
         let payload_bytes = self.decompressor.decompress(packet.payload(), 131072)?;
         // Decode to struct
         let payload = rmp_serde::from_slice(&payload_bytes)?;
-        return Ok(Message::Payload(packet.addr(), payload));
+        Ok(Message::Payload(packet.addr(), payload))
     }
 
     pub fn poll(&mut self) {
@@ -153,7 +153,7 @@ impl SenderReceiver {
         // Struct to MessagePack
         let payload = rmp_serde::to_vec(&message)?;
         // Compress payload
-        return Ok(self.compressor.compress(&payload, 0)?);
+        Ok(self.compressor.compress(&payload, 0)?)
     }
 
     pub fn send_message(&mut self, message: Payloads, target: SocketAddr) -> Result<(), Error> {

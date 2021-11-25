@@ -1,7 +1,7 @@
 use crossbeam_channel::unbounded;
 use igd::{search_gateway, PortMappingProtocol, SearchOptions};
 use laminar::{Metrics, Socket};
-use local_ipaddress;
+
 use log::info;
 use mem::drop;
 use retain_mut::RetainMut;
@@ -68,14 +68,14 @@ impl TransferStruct {
                 }
             }
 
-            to_send.push(client.addr.clone());
+            to_send.push(client.addr);
         }
 
         self.net.send_message_to_multiple(payload, to_send).ok();
     }
 
     fn handle_handshake(&mut self) {
-        if self.clients_to_holepunch.len() == 0 {
+        if self.clients_to_holepunch.is_empty() {
             return;
         }
 
@@ -94,7 +94,7 @@ impl TransferStruct {
                 Payloads::Handshake {
                     session_id: session_id.clone(),
                 },
-                session.addr.clone(),
+                session.addr,
             ));
             // Reset second timer
             session.retries += 1;
@@ -111,7 +111,7 @@ impl TransferStruct {
                 session.retries
             );
 
-            return true;
+            true
         });
 
         for (payload, addr) in to_send {
@@ -200,7 +200,7 @@ impl TransferStruct {
                 self.clients.insert(
                     name.clone(),
                     Client {
-                        addr: addr.clone(),
+                        addr,
                         is_observer: false,
                     },
                 );
@@ -265,8 +265,7 @@ impl TransferStruct {
             }
             Payloads::AttemptConnection { peer } => {
                 info!("[NETWORK] Port {} attempting connection.", peer.port());
-                self.clients_to_holepunch
-                    .push(HolePunchSession::new(peer.clone()));
+                self.clients_to_holepunch.push(HolePunchSession::new(*peer));
                 should_relay = false;
             }
         }
@@ -282,11 +281,8 @@ impl TransferStruct {
 
     fn handle_app_message(&mut self) {
         while let Ok((payload, target)) = self.client_rx.try_recv() {
-            match &payload {
-                Payloads::TransferControl { from: _, to } => {
-                    self.in_control = to.clone();
-                }
-                _ => {}
+            if let Payloads::TransferControl { from: _, to } = &payload {
+                self.in_control = to.clone();
             }
 
             if let Some(target) = target {
@@ -335,7 +331,7 @@ impl TransferStruct {
                 removed_client_name = Some(name.clone());
                 return false;
             }
-            return true;
+            true
         });
 
         info!(
@@ -345,7 +341,7 @@ impl TransferStruct {
         );
 
         if let Some(name) = removed_client_name {
-            let player_left_payload = Payloads::PlayerLeft { name: name.clone() };
+            let player_left_payload = Payloads::PlayerLeft { name };
 
             self.send_to_all(None, player_left_payload.clone());
             self.number_connections.fetch_sub(1, SeqCst);
@@ -371,7 +367,7 @@ struct HolePunchSession {
 impl HolePunchSession {
     pub fn new(addr: SocketAddr) -> Self {
         Self {
-            addr: addr,
+            addr,
             timer: None,
             retries: 0,
         }
@@ -405,7 +401,7 @@ impl Server {
         let (client_tx, client_rx) = unbounded();
         let (server_tx, server_rx) = unbounded();
 
-        return Self {
+        Self {
             number_connections: Arc::new(AtomicU16::new(0)),
 
             last_port_forward_result: None,
@@ -418,7 +414,7 @@ impl Server {
             username,
             version,
             timeout,
-        };
+        }
     }
 
     fn port_forward(&self, port: u16) -> Result<(), Error> {
@@ -538,7 +534,7 @@ impl Server {
                         }
                         Message::ConnectionClosed(addr) => {
                             // Could not reach rendezvous
-                            if transfer.session_id == ""
+                            if transfer.session_id.is_empty()
                                 && rendezvous.is_some()
                                 && rendezvous.unwrap() == addr
                             {
@@ -582,19 +578,19 @@ impl TransferClient for Server {
     }
 
     fn get_transmitter(&self) -> &ClientSender {
-        return &self.client_tx;
+        &self.client_tx
     }
 
     fn get_server_transmitter(&self) -> &ServerSender {
-        return &self.server_tx;
+        &self.server_tx
     }
 
     fn get_receiver(&self) -> &ServerReceiver {
-        return &self.server_rx;
+        &self.server_rx
     }
 
     fn get_server_name(&self) -> &str {
-        return &self.username;
+        &self.username
     }
 
     fn transfer_control(&self, target: String) {
@@ -628,7 +624,7 @@ impl TransferClient for Server {
                 Payloads::SetObserver {
                     from: self.get_server_name().to_string(),
                     to: target,
-                    is_observer: is_observer,
+                    is_observer,
                 },
                 None,
             ))
@@ -639,7 +635,7 @@ impl TransferClient for Server {
         if let Some(transfer) = self.transfer.as_ref() {
             return Some(transfer.lock().unwrap().session_id.clone());
         }
-        return None;
+        None
     }
 
     fn stop(&mut self, reason: String) {

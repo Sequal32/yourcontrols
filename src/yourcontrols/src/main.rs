@@ -1,5 +1,5 @@
 #![cfg_attr(not(test), windows_subsystem = "windows")]
-#![allow(safe_packed_borrows)]
+#![allow(unaligned_references)]
 
 mod app;
 mod clientmanager;
@@ -18,7 +18,7 @@ use definitions::{Definitions, ProgramAction, SyncPermission};
 use log::{error, info, warn};
 use simconfig::Config;
 use simconnect::{DispatchResult, SimConnector};
-use simplelog;
+
 use spin_sleep::sleep;
 use std::{
     env,
@@ -75,6 +75,7 @@ fn calculate_update_rate(update_rate: u16) -> f64 {
     1.0 / update_rate as f64
 }
 
+#[allow(clippy::too_many_arguments)]
 fn start_client(
     timeout: u64,
     username: String,
@@ -116,6 +117,7 @@ fn write_update_data(
     definitions: &mut Definitions,
     client: &mut Box<dyn TransferClient>,
     permission: &SyncPermission,
+    log_sent: bool,
 ) {
     let (unreliable, reliable) = definitions.get_need_sync(permission);
 
@@ -124,7 +126,10 @@ fn write_update_data(
     }
 
     if let Some(data) = reliable {
-        info!("[PACKET] SENT {:?}", data);
+        if log_sent {
+            info!("[PACKET] SENT {:?}", data);
+        }
+
         client.update(data, false);
     }
 }
@@ -188,7 +193,7 @@ fn main() {
     // Helper closures
     let get_config_path = |config_name: &str| -> PathBuf {
         let mut path = PathBuf::from(AIRCRAFT_DEFINITIONS_PATH);
-        path.push(config_name.clone());
+        path.push(config_name);
         path
     };
     // Load defintions
@@ -213,7 +218,7 @@ fn main() {
 
         info!("[DEFINITIONS] {} loaded successfully.", config_to_load);
 
-        return true;
+        true
     };
 
     let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions| {
@@ -229,7 +234,7 @@ fn main() {
             app_interface.error("Could not connect to SimConnect! Is the sim running?");
         };
 
-        return connected;
+        connected
     };
 
     loop {
@@ -286,7 +291,7 @@ fn main() {
                             time,
                         } => {
                             // Not non high updating packets for debugging
-                            if !is_unreliable {
+                            if !is_unreliable && config.enable_log {
                                 info!("[PACKET] {:?}", data)
                             }
 
@@ -515,11 +520,9 @@ fn main() {
                             if let Some(next_control) = clients.get_next_client_for_control() {
                                 client.transfer_control(next_control.clone())
                             }
-                        } else {
-                            if let Some(in_control) = clients.get_client_in_control() {
-                                control.take_control(&conn, &definitions.lvarstransfer.transfer);
-                                client.take_control(in_control.clone());
-                            }
+                        } else if let Some(in_control) = clients.get_client_in_control() {
+                            control.take_control(&conn, &definitions.lvarstransfer.transfer);
+                            client.take_control(in_control.clone());
                         }
                     }
                 }
@@ -539,7 +542,7 @@ fn main() {
                             is_init: false,
                         };
 
-                        write_update_data(&mut definitions, client, &permission);
+                        write_update_data(&mut definitions, client, &permission, config.enable_log);
 
                         update_rate_instant = Instant::now();
                     }
@@ -558,8 +561,8 @@ fn main() {
         }
 
         // GUI
-        match app_interface.get_next_message() {
-            Ok(msg) => match msg {
+        if let Ok(msg) = app_interface.get_next_message() {
+            match msg {
                 AppMessage::StartServer {
                     username,
                     port,
@@ -569,7 +572,7 @@ fn main() {
                 } => {
                     let connected = connect_to_sim(&mut conn, &mut definitions);
 
-                    if config_to_load == "" {
+                    if config_to_load.is_empty() {
                         app_interface.server_fail("Select an aircraft config first!");
                     } else if !load_definitions(&mut definitions, &mut config_to_load) {
                         app_interface.error(
@@ -716,18 +719,15 @@ fn main() {
                 }
                 AppMessage::Startup => {
                     // List aircraft
-                    match get_aircraft_configs() {
-                        Ok(configs) => {
-                            info!(
-                                "[DEFINITIONS] Found {} configuration file(s).",
-                                configs.len()
-                            );
+                    if let Ok(configs) = get_aircraft_configs() {
+                        info!(
+                            "[DEFINITIONS] Found {} configuration file(s).",
+                            configs.len()
+                        );
 
-                            for aircraft_config in configs {
-                                app_interface.add_aircraft(&aircraft_config);
-                            }
+                        for aircraft_config in configs {
+                            app_interface.add_aircraft(&aircraft_config);
                         }
-                        Err(_) => {}
                     }
 
                     app_interface.send_config(&config.get_json_string());
@@ -773,8 +773,7 @@ fn main() {
                         }
                     }
                 }
-            },
-            Err(_) => {}
+            }
         }
 
         if should_set_none_client {
