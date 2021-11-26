@@ -11,6 +11,11 @@
 ### Changes
 * Fixed time sync on initial connect to host.
 * Fixed H135 throttle collective.
+* Attempted to fix random warping on control transfer.
+* Attempted to fix low FPS on long flights even without using YourControls.
+* More instantaneous control transfer.
+* New option to disable verbose logging sent/received packets to reduce log file size.
+* Fixed an issue where the hostname/IP would disappear upon a failed connection.
 
 ## Version 2.6.1
 
