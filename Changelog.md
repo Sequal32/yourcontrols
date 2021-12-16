@@ -2,27 +2,27 @@
 
 ## Version 2.6.4
 
-### Profiles
+#### Profiles
 * Added SimSkunkWorks TF-104G Starfighter.
 
-### Changes
+#### Changes
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Fixed Porter profile error.
 
 ## Version 2.6.3
 
-### Changes
+#### Changes
 * Attempt to fix cloud connection issues by changing the domain name to an IP address.
 
 ## Version 2.6.2
 
-### Profiles
+#### Profiles
 * Added Headwind A330-900neo.
   - EFB not synced.
 * Added RotorSimPilot Robinson R44 Raven II.
   - All pilots need to have flight model loaded with AirlandFS tool if transferring controls.
 
-### Changes
+#### Changes
 * Fixed time sync on initial connect to host.
 * Fixed H135 throttle collective.
 * Attempted to fix random warping on control transfer.
@@ -33,7 +33,7 @@
 
 ## Version 2.6.1
 
-### Profiles
+#### Profiles
 * Added PMDG DC-6A/B (beta).
   - Note there are a few control knobs and multi-position switches that will physically move but won't sync the corresponding event(s) to client aircraft. We are working on how to send events that require multiple values.
   - For best sync possible, start Cold and Dark.
@@ -69,7 +69,7 @@
 * Added S-1S changes to Asobo_Pitts.
 * Renamed XCub to X_NXCub.
 
-### Changes
+#### Changes
 * Added support for aircraft slewing.
 * Added support for TACAN channels.
 * Added sync of G-force.
@@ -88,7 +88,7 @@
 
 ## Version 2.6.0
 
-### Profiles
+#### Profiles
 * Updated FBW A32NX to 0.8.0-dev. Temporarily removed outdated stable till next update.
   - AP buttons/knobs resynced. Managed speed unsyncable without overshoot (no variable). Either use selected speed or person in control set managed speed knob and remain in control for flight.
   - Added brake temp sync.
@@ -100,7 +100,7 @@
 * Added Heavy-Division 787 (78XH) profile.
 * Added Mrtommymxr C172 profile.
 
-### Changes
+#### Changes
 * All 30 ASOBO aircraft definition profiles updated for Sim Update 5 + brief updates for Sim Update 6.
 * Added payload weight to all 30 ASOBO aircraft. Payload menu in sim is broken (SimConnect issue), however, weight values set by server host are still transferred to all clients even though clients won't "see" the change in value.
 * Added payload weight to A32NX, Salty 747, WorkingTitle CJ4, and JPL C152. (same thing above applies)
@@ -120,5 +120,6 @@
 
 ## Version 2.5.18
 
+#### Changes
 * Updated VCockpit.js for Sim Update V
 * Support latest switch changes to the A32NX Development version
