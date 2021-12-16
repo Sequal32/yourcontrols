@@ -14,6 +14,8 @@
 ### Changes
 * Attempt to fix cloud connection issues by changing the domain name to an IP address.
 
+## Version 2.6.2
+
 ### Profiles
 * Added Headwind A330-900neo.
   - EFB not synced.
