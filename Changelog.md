@@ -9,10 +9,12 @@
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Fixed Porter profile error.
 
+
 ## Version 2.6.3
 
 #### Changes
 * Attempt to fix cloud connection issues by changing the domain name to an IP address.
+
 
 ## Version 2.6.2
 
@@ -30,6 +32,7 @@
 * More instantaneous control transfer.
 * New option to disable verbose logging sent/received packets to reduce log file size.
 * Fixed an issue where the hostname/IP would disappear upon a failed connection.
+
 
 ## Version 2.6.1
 
@@ -86,6 +89,7 @@
 * Fixed throttle levers not syncing for modded aircraft using local vars as throttle position. (WT CJ4 and DA-62X)
 * Fixed blue propeller and red mixture levers.
 
+
 ## Version 2.6.0
 
 #### Profiles
@@ -117,6 +121,7 @@
 * Removed yoke sync, replaced with flight control surfaces for more accurate external visuals. Yoke sync only showed 60% surface deflection for clients.
 * Changed throttle levers to vars. Constant interp sync is unnecessary.
 * Moved all Lvars for Garmin 330, 430, 530, Aera, and Vigilus to their own module definitions.
+
 
 ## Version 2.5.18
 
