@@ -6,9 +6,9 @@
 * Added SimSkunkWorks TF-104G Starfighter.
 
 #### Changes
-* Added missing support for non-G950 Asobo PC-6 Porter.
 * Fixed parking brake event name for Sim Update 7. (Spelling error/SDK was wrong)
 * Fixed Porter profile error. (Can now be used)
+* Added missing support for non-G950 Asobo PC-6 Porter.
 
 
 ## Version 2.6.3
