@@ -66,6 +66,56 @@ shared:
     var_type: f64
     event_name: MAGNETO4_RIGHT
 
+  - # Main Cabin Exit
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:0
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  - # Front Cabin Exit
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:1
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+  - # Cargo Holds
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:2
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+  - # Front Cabin Exit Air Stairs
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:3
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+  - # CA Window
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:4
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 5
+  - # FO Window
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:5
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 6
+  - # Cargo Doors/Main Cabin Exit
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:6
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 7
+
   - # Trim
     type: NumSet
     var_name: A:RUDDER TRIM PCT
@@ -120,10 +170,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:FrontExitTimer
-  - # Front Door Stairs
-    type: CustomCalculator
-    get: (L:dc6_447_obj)
-    set: 4 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
   - # Front Door Stairs Status
     type: var
     var_name: L:dc6_447_obj
@@ -142,10 +188,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:outside_stairs_retract
-  - # Front Door Open
-    type: CustomCalculator
-    get: (L:dc6_446_obj)
-    set: 2 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
   - # Front Door Status
     type: var
     var_name: L:dc6_446_obj
@@ -161,11 +203,7 @@ shared:
 # -
 #   type: var
 #   var_name: L:outside_door_close
-  - # Cargo Hold
-    type: CustomCalculator
-    get: (L:dc6_448_obj)
-    set: 3 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
-  -
+  - # Cargo Hold Status
     type: var
     var_name: L:dc6_448_obj
 # -
@@ -183,11 +221,7 @@ shared:
 # -
 #   type: var
 #   var_name: L:outside_lower_cargo_door_close
-  - # Cargo Entrance
-    type: CustomCalculator
-    get: (L:dc6_453_obj)
-    set: 1 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
-  -
+  - # Cargo Entrance Status
     type: var
     var_name: L:dc6_453_obj
 # -
@@ -199,11 +233,7 @@ shared:
 # -
 #   type: var
 #   var_name: L:passenger_door_closed
-  - # Main Cargo Doors
-    type: CustomCalculator
-    get: (L:dc6_454_obj)
-    set: 7 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
-  -
+  - # Main Cargo Doors Status
     type: var
     var_name: L:dc6_454_obj
 # -
@@ -361,10 +391,6 @@ shared:
   - # CPT Window Handle
     type: var
     var_name: L:window_handle_ca
-  - # CPT Window Latch
-    type: CustomCalculator
-    get: (L:window_handle_ca)
-    set: 5 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
   -
     type: var
     var_name: L:window_latch_ca_click
@@ -389,10 +415,6 @@ shared:
   - # FO Window Handle
     type: var
     var_name: L:window_handle_fo
-  - # FO Window Latch
-    type: CustomCalculator
-    get: (L:window_handle_fo)
-    set: 6 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
   -
     type: var
     var_name: L:window_latch_fo_click
@@ -2581,11 +2603,7 @@ shared:
   -
     type: var
     var_name: L:CargoMainDoor
-  - # Main Cabin Exit
-    type: CustomCalculator
-    get: (L:dc6_451_obj)
-    set: 1 (>K:TOGGLE_AIRCRAFT_EXIT_FAST)
-  -
+  - # Main Cabin Exit Status
     type: var
     var_name: L:dc6_451_obj
   -
