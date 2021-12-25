@@ -4,10 +4,12 @@
 
 #### Profiles
 * Added SimSkunkWorks TF-104G Starfighter.
+* Added SimWorks Studios Kodiak 100
 
 #### Changes
 * Fixed parking brake event name for Sim Update 7. (Spelling error)
 * Fixed Porter profile error. (Can now be used)
+* Fixed initial sync of DC-6 doors and exits.
 * Added missing support for non-G950 Asobo PC-6 Porter.
 
 
