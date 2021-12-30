@@ -8,6 +8,7 @@ include:
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
   - definitions/modules/radios.yaml
@@ -47,31 +48,19 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Lights
-    type: ToggleSwitch
-    var_name: A:LIGHT NAV:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_NAV_LIGHTS
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT LANDING
-    var_units: Bool
-    var_type: bool
-    event_name: LANDING_LIGHTS_TOGGLE
-  -
-    type: ToggleSwitch
+  - # Lighting
+    type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
-    var_type: bool
-    event_name: PANEL_LIGHTS_TOGGLE
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
     event_param: 1
   -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
   -
     type: NumSet
     var_name: A:LIGHT PANEL:2
@@ -79,6 +68,14 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
   -
     type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING:2
