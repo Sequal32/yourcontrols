@@ -10,6 +10,7 @@
 * Fixed parking brake event name for Sim Update 7. (Spelling error)
 * Fixed Porter profile error. (Can now be used)
 * Fixed initial sync of DC-6 doors and exits.
+* Fixed standby radio menu not opening on Longitude.
 * Added missing support for non-G950 Asobo PC-6 Porter.
 
 
