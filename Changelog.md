@@ -13,6 +13,7 @@
 * Fixed initial sync of DC-6 doors and exits.
 * Fixed standby radio menu not opening on Longitude displays.
 * Fixed SVT terrain toggle on Asobo Longitude and TBM930.
+* Fixed G1000 COM frequency desync when turning large knob clockwise.
 
 
 ## Version 2.6.3
