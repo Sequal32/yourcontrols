@@ -5,6 +5,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_MASTER
+    use_calculator: true
 
   - # ASOBO_AUTOPILOT_Push_Disconnect_Template
     type: NumSet
@@ -19,6 +20,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_PANEL_HEADING_HOLD
+    use_calculator: true
 
   - # ASOBO_AUTOPILOT_Knob_Heading_Template
     type: NumSet
@@ -63,6 +65,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_PANEL_VS_HOLD
+    use_calculator: true
   -
     type: var
     var_name: L:XMLVAR_VNAVButtonValue
@@ -115,6 +118,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: FLIGHT_LEVEL_CHANGE
+    use_calculator: true
 
   - # ASOBO_AUTOPILOT_Push_Level_Template
     type: ToggleSwitch
@@ -122,12 +126,14 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_WING_LEVELER
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT PITCH HOLD
     var_units: Bool
     var_type: bool
     event_name: AP_PITCH_LEVELER
+    use_calculator: true
   -
     type: NumSet
     var_name: A:AUTOPILOT PITCH HOLD REF
@@ -142,6 +148,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_BC_HOLD
+    use_calculator: true
 
   - # ASOBO_AUTOPILOT_Push_FlightDirector_Template
     type: ToggleSwitch
@@ -160,9 +167,13 @@ shared:
     event_param: 2
     use_calculator: true
 
-  - # Approach (switch events only/var conflict)
-    type: event
+  - # ASOBO_AUTOPILOT_Push_Approach_Template
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT APPROACH HOLD
+    var_units: Bool
+    var_type: bool
     event_name: AP_APR_HOLD
+    use_calculator: true
   -
     type: event
     event_name: AP_LOC_HOLD
@@ -187,6 +198,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_NAV1_HOLD
+    use_calculator: true
 
   - # ASOBO_AUTOPILOT_Knob_Bank_Limit_Template (NO LONGER WORKS FOR BOEING//NOW B-EVENT)
     type: NumSet
@@ -207,6 +219,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_GPS_DRIVES_NAV1
+    use_calculator: true
     cancel_h_events: true
   -
     type: NumSet
@@ -214,6 +227,7 @@ shared:
     var_units: Number
     var_type: i32
     event_name: AP_NAV_SELECT_SET
+    use_calculator: true
     cancel_h_events: true
   -
     type: NumSet
