@@ -6,6 +6,7 @@
 * Added SimSkunkWorks TF-104G Starfighter.
 * Added SimWorks Studios Kodiak 100
 * Added missing support for non-G950 Asobo PC-6 Porter.
+* Updated Mrtommymxr_DA62X to v0.6.1
 
 #### Changes
 * Fixed parking brake event name for Sim Update 7. (Spelling error)
@@ -14,6 +15,7 @@
 * Fixed standby radio menu not opening on Longitude displays.
 * Fixed SVT terrain toggle on Asobo Longitude and TBM930.
 * Fixed G1000 COM frequency desync when turning large knob clockwise.
+* Fixed Avionics Master switch on Tommy DA-62X.
 
 
 ## Version 2.6.3

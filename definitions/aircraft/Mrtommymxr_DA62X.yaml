@@ -1,4 +1,4 @@
-# Version 0.6
+# Version 0.6.1
 
 include:
   - definitions/modules/Avionics/AS1000.yaml
@@ -15,14 +15,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:30
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 30
-
   - # Aux pumps
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:9
@@ -396,6 +388,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE
+  -
+    type: var
+    var_name: L:FUEL_TOT_RST
 # -
 #   type: var
 #   var_name: L:FUEL_GAL_USED
@@ -438,12 +433,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:DEICE_WINDSHIELD_TIMER
-  -
-    type: var
-    var_name: L:XMLVAR_CABINAIR_Position_1
-  -
-    type: var
-    var_name: L:XMLVAR_CABINHEAT_Position_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_CABINAIR_Position_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_CABINHEAT_Position_1
 # -
 #   type: var
 #   var_name: L:DEICE_DEFROST_POWER
@@ -570,6 +565,43 @@ shared:
   -
     type: var
     var_name: L:LIGMA_BALLS
+  -
+    type: var
+    var_name: L:ELE_LSTART
+  -
+    type: var
+    var_name: L:ELE_LFADEC-MAIN
+  -
+    type: var
+    var_name: L:ELE_RSTART
+  -
+    type: var
+    var_name: L:ELE_RFADEC-MAIN
+  -
+    type: var
+    var_name: L:ELE_LALT
+  -
+    type: var
+    var_name: L:ELE_LFADEC-BATT
+  -
+    type: var
+    var_name: L:ELE_LPUMP-RFADEC
+  -
+    type: var
+    var_name: L:ELE_RALT
+  -
+    type: var
+    var_name: L:ELE_RFADEC-BATT
+  -
+    type: var
+    var_name: L:ELE_RPUMP-LFADEC
+  -
+    type: var
+    var_name: L:GEAR_EMERGENCY
+  -
+    type: var
+    var_name: L:PITOT_OVERHEAT
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:FAIL_STRESS_L
@@ -626,6 +658,9 @@ shared:
     var_name: L:START_OIL:1
   -
     type: var
+    var_name: L:FILTER_RESRTICTION
+  -
+    type: var
     var_name: L:FILTER_ICE
   -
     type: var
@@ -633,6 +668,18 @@ shared:
   -
     type: var
     var_name: L:START_OIL:2
+  -
+    type: var
+    var_name: L:GEAR_FIRE_TEST_IsDown
+# -
+#   type: var
+#   var_name: L:SOUND_GEAR_FIRE
+# -
+#   type: var
+#   var_name: L:SOUND_STALL_WARNING
+  -
+    type: var
+    var_name: L:ENGINE_ALTERNATE_AIR
 # -
 #   type: var
 #   var_name: L:ESP_TIMER
@@ -678,6 +725,16 @@ shared:
   -
     type: var
     var_name: L:FLUTTER_INTENSITY
+  -
+    type: var
+    var_name: L:STALL_OVERHEATED
+  -
+    type: var
+    var_name: L:STALL_OVERHEAT
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:ELEC_MD302_TIMER
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
@@ -710,10 +767,13 @@ shared:
     var_name: L:FADEC_ECUTEST_BUTTON_B_MinReleaseTime
   -
     type: var
-    var_name: L:GEAR_FIRE_TEST_IsDown
+    var_name: L:GEAR_FIRE_TEST_MinReleaseTime
   -
     type: var
-    var_name: L:GEAR_FIRE_TEST_MinReleaseTime
+    var_name: L:FUEL_TOT_RST_IsDown
+  -
+    type: var
+    var_name: L:FUEL_TOT_RST_MinReleaseTime
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
@@ -863,12 +923,6 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
-    type: var
     var_name: L:FADEC_ECUTEST
 # -
 #   type: var
@@ -917,6 +971,12 @@ shared:
 #   var_name: L:PFD_BRG2_Source
 # -
 #   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
 #   var_name: L:GPS_Current_Phase
 # -
 #   type: var
@@ -927,9 +987,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS3000_MinimalsValue
-  -
-    type: var
-    var_name: L:WT1000_VNav_TOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WT1000_VNav_TOD_Leg_Index
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
