@@ -4,10 +4,10 @@
 
 #### Profiles
 * Added SimSkunkWorks TF-104G Starfighter.
-* Added SimWorks Studios Kodiak 100
+* Added SimWorks Studios Kodiak 100.
 * Added experimental support for Working Title G1000 NXi.
 * Added missing support for non-G950 Asobo PC-6 Porter.
-* Updated Mrtommymxr_DA62X to v0.6.1
+* Updated Mrtommymxr_DA62X to v0.6.1.
 
 #### Changes
 * Fixed parking brake event name for Sim Update 7. (Spelling error)
