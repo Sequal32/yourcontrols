@@ -15,21 +15,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:22
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 22
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:23
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 23
-
   - # Essential Bus
     type: CustomCalculator
     get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
@@ -76,7 +61,7 @@ shared:
 
   - # Lights
     type: NumSet
-    var_name: A:LIGHT PANEL
+    var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
@@ -98,7 +83,7 @@ shared:
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT GLARESHIELD
+    var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET

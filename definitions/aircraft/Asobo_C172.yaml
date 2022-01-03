@@ -4,7 +4,6 @@ include:
   - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -16,20 +15,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
+  - # Avionics Bus
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:11
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 11
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:38
-    var_units: Boolean
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 38
   -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:39
@@ -44,13 +36,60 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 40
-  -
+
+  - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:41
-    var_units: Boolean
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
     var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 41
+    event_name: TOGGLE_MASTER_BATTERY
+
+  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+
+  - # ASOBO_ELECTRICAL_Push_Starter_Template
+    type: var
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Number
+    var_type: i32
+  -
+    type: event
+    event_name: SET_STARTER1_HELD
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State_IsDown
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State_MinReleaseTime
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_IsHeld
+
+  - # ASOBO_ELECTRICAL_Switch_Magneto_Template
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_RIGHT
+  -
+    type: event
+    event_name: MAGNETO1_SET # backup for position
+  -
+    type: var
+    var_name: L:XMLVAR_Magneto_Starter_IsHeld
 
   - # EGT Bug
     type: NumSet
