@@ -5,9 +5,11 @@
 #### Profiles
 * Added SimWorks Studios Kodiak 100.
 * Added SimSkunkWorks TF-104G Starfighter.
-* Added experimental support for Working Title G1000 NXi.
+* Added experimental support for G1000 NXi by Working Title.
+* Added experimental support for GTN750 by PMS50.
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Updated Mrtommymxr DA62X to v0.6.1.
+* Updated RotorSimPilot R44 to v1.1a.
 * Updated more Asobo planes for Sim Update 7.
 
 #### Changes
