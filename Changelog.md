@@ -16,7 +16,7 @@
 * Fixed standby radio menu not opening on Longitude displays.
 * Fixed SVT terrain toggle on Asobo Longitude and TBM930.
 * Fixed G1000 COM frequency desync when turning large knob clockwise.
-* Fixed Avionics Master switch on Tommy DA-62X.
+* Fixed Avionics Master switch on Asobo DA-62 and Tommy DA-62X.
 * Fixed autopilot automatically leveling off during VS climb/descent.
 * Fixed vertical pitch reference on Working Title CJ4.
 
