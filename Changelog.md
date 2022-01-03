@@ -17,6 +17,8 @@
 * Fixed SVT terrain toggle on Asobo Longitude and TBM930.
 * Fixed G1000 COM frequency desync when turning large knob clockwise.
 * Fixed Avionics Master switch on Tommy DA-62X.
+* Fixed autopilot automatically leveling off during VS climb/descent.
+* Fixed vertical pitch reference on Working Title CJ4.
 
 
 ## Version 2.6.3
