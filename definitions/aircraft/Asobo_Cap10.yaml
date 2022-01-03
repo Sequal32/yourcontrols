@@ -8,6 +8,7 @@ include:
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
   - definitions/modules/radios.yaml
@@ -17,13 +18,6 @@ include:
 
 shared:
   - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:20
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 20
-  -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:34
     var_units: Bool
@@ -37,6 +31,10 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 35
+  - # Aerobatics Trim Flap
+    type: CustomCalculator
+    get: -1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:5, Bool)
+    set: 5 -1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
   - # Failures
     type: var
@@ -61,7 +59,7 @@ shared:
 
   - # Lights
     type: NumSet
-    var_name: A:LIGHT PANEL
+    var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET

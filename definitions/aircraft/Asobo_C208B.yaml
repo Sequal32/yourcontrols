@@ -2,7 +2,6 @@ include:
   - definitions/modules/Avionics/AS1000.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -14,20 +13,79 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
+  - # Avionics 1
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:26
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 26
-  -
+  - # Avionics 2
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:27
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 27
+  - # Bus Tie
+    type: CustomCalculator
+    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
+    set: 9 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # Standby
+    type: CustomCalculator
+    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
+    set: 11 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+
+  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR2
+    event_param: 2
+
+  - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
+
+  - # ASOBO_ELECTRICAL_Push_Starter_Template
+    type: var
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Number
+    var_type: i32
+  -
+    type: event
+    event_name: SET_STARTER1_HELD
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State_IsDown
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State_MinReleaseTime
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_IsHeld
 
   - # Failures
     type: var

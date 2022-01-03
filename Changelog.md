@@ -8,6 +8,7 @@
 * Added experimental support for Working Title G1000 NXi.
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Updated Mrtommymxr_DA62X to v0.6.1.
+* Updated more Asobo planes for Sim Update 7.
 
 #### Changes
 * Fixed parking brake event name for Sim Update 7. (Spelling error)
@@ -16,9 +17,10 @@
 * Fixed standby radio menu not opening on Longitude displays.
 * Fixed SVT terrain toggle on Asobo Longitude and TBM930.
 * Fixed G1000 COM frequency desync when turning large knob clockwise.
-* Fixed Avionics Master switch on Asobo DA-62 and Tommy DA-62X.
+* Fixed Avionics Master switches on all aircraft having issues.
 * Fixed autopilot automatically leveling off during VS climb/descent.
 * Fixed vertical pitch reference on Working Title CJ4.
+* Fixed external lights on Asobo Cap10.
 
 
 ## Version 2.6.3
