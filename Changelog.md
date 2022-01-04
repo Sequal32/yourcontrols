@@ -6,6 +6,7 @@
 * Added SimWorks Studios Kodiak 100.
 * Added SimSkunkWorks TF-104G Starfighter.
 * Added experimental support for G1000 NXi by Working Title.
+  - Approach and Leveler modes currently do not sync.
 * Added experimental support for GTN750 by PMS50.
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Updated Mrtommymxr DA62X to v0.6.1.
