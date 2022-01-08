@@ -9,7 +9,7 @@
   - Approach and Leveler modes currently do not sync.
 * Added experimental support for GTN750 by PMS50.
 * Added missing support for non-G950 Asobo PC-6 Porter.
-* Updated Mrtommymxr DA62X to v0.6.1.
+* Updated Mrtommymxr DA62X to v0.6.2.
 * Updated RotorSimPilot R44 to v1.1a.
 * Updated more Asobo planes for Sim Update 7.
 
@@ -24,6 +24,7 @@
 * Fixed autopilot automatically leveling off during VS climb/descent.
 * Fixed vertical pitch reference on Working Title CJ4.
 * Fixed missing external lights on Asobo Cap10.
+* Fixed exit doors on Mugz TBM930.
 
 
 ## Version 2.6.3
