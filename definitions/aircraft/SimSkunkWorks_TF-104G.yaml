@@ -1,4 +1,4 @@
-# Version 2.0
+# Version 3.0
 
 include:
   - definitions/modules/engines.yaml
@@ -417,51 +417,6 @@ shared:
     var_name: L:lgear_light_vis_tag
   -
     type: var
-    var_name: L:hydraulic_door
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_4
-  -
-    type: var
-    var_name: L:rat_out
-  -
-    type: var
-    var_name: L:windmilling
-  -
-    type: var
-    var_name: L:wing_flag_mouvers
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_3
-# -
-#   type: var
-#   var_name: L:apc_vanes
-  -
-    type: var
-    var_name: L:CHUTE_BAY
-# -
-#   type: var
-#   var_name: L:NOZZLE_POS
-  -
-    type: var
-    var_name: L:aeroelastic_tips
-  -
-    type: var
-    var_name: L:breakers_door
-  -
-    type: var
-    var_name: L:tailhook_pos
-  -
-    type: var
-    var_name: L:rat_spinning
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_1
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_2
-  -
-    type: var
     var_name: L:com1_function_mode
   -
     type: var
@@ -489,6 +444,9 @@ shared:
     var_name: L:nasarr15_clplane_tens
   -
     type: var
+    var_name: L:rat_out
+  -
+    type: var
     var_name: L:com1_MHz
 # -
 #   type: var
@@ -496,6 +454,9 @@ shared:
   -
     type: var
     var_name: L:lights_flood_switch
+  -
+    type: var
+    var_name: L:windmilling
 # -
 #   type: var
 #   var_name: L:needle_fuel_flow
@@ -535,6 +496,9 @@ shared:
   -
     type: var
     var_name: L:yaw_damper_cover
+# -
+#   type: var
+#   var_name: L:nozzle_pos
   -
     type: var
     var_name: L:canopy_handle
@@ -759,10 +723,40 @@ shared:
 #   var_name: L:needle_kcas
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
+    var_name: L:hydraulic_door
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_4
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
+    var_name: L:wing_flag_mouvers
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_3
+# -
+#   type: var
+#   var_name: L:apc_vanes
+  -
+    type: var
+    var_name: L:CHUTE_BAY
+  -
+    type: var
+    var_name: L:aeroelastic_tips
+  -
+    type: var
+    var_name: L:breakers_door
+  -
+    type: var
+    var_name: L:tailhook_pos
+  -
+    type: var
+    var_name: L:rat_spinning
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_1
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -903,6 +897,12 @@ shared:
     var_name: L:panic_autopilot
   -
     type: var
+    var_name: L:master_caution_reset
+  -
+    type: var
+    var_name: L:master_failures
+  -
+    type: var
     var_name: L:iff_squack_switch
   -
     type: var
@@ -1019,5 +1019,15 @@ server:
   -
     type: var
     var_name: PAYLOAD STATION WEIGHT:17
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:18
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: PAYLOAD STATION WEIGHT:19
     var_units: Pounds
     var_type: f64
