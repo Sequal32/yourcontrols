@@ -2,6 +2,7 @@ include:
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/Avionics/KAP140.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
@@ -37,21 +38,19 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 40
 
-  - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
+  - # Electrical
     type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_MASTER_BATTERY
-
-  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+  -
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
     var_type: i32
     event_name: ALTERNATOR_SET
-
-  - # ASOBO_ELECTRICAL_Push_Starter_Template
+  -
     type: var
     var_name: A:GENERAL ENG STARTER:1
     var_units: Number
@@ -60,19 +59,6 @@ shared:
     type: event
     event_name: SET_STARTER1_HELD
   -
-    type: var
-    var_name: L:XMLVAR_Starter_State
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_IsDown
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_MinReleaseTime
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_IsHeld
-
-  - # ASOBO_ELECTRICAL_Switch_Magneto_Template
     type: NumSet
     var_name: A:RECIP ENG LEFT MAGNETO:1
     var_units: Bool
@@ -87,9 +73,6 @@ shared:
   -
     type: event
     event_name: MAGNETO1_SET # backup for position
-  -
-    type: var
-    var_name: L:XMLVAR_Magneto_Starter_IsHeld
 
   - # EGT Bug
     type: NumSet
@@ -278,9 +261,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_AudioPanel_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Magneto_Starter_IsHeld
   -
     type: var
     var_name: L:ENG FUEL VALVE:1
@@ -317,9 +300,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_DayNightSwitch
-  -
-    type: var
-    var_name: L:XMLVAR_DayNightSwitch_Timer
+# -
+#   type: var
+#   var_name: L:XMLVAR_DayNightSwitch_Timer
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE
@@ -347,9 +330,6 @@ shared:
   -
     type: var
     var_name: L:INSTRUMENT_Altimeter_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Gyro_Drift
   -
     type: var
     var_name: L:INSTRUMENT_Course_1
@@ -398,12 +378,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -440,12 +414,12 @@ shared:
   -
     type: var
     var_name: L:KT76C_State
-  -
-    type: var
-    var_name: L:KAP140_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
   -
     type: var
     var_name: L:AutopilotPreflightCheckCompleted
@@ -475,13 +449,13 @@ shared:
     var_name: L:M803_State
 # -
 #   type: var
+#   var_name: L:KAP140_BARO_Display
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
-    type: var
-    var_name: L:KAP140_BARO_Display
 
 server:
   - # Payload
@@ -523,9 +497,4 @@ server:
     var_type: f64
 
 ignore:
-  - KAP140_Push_AP
-  - KAP140_Knob_Outer_INC
-  - KAP140_Knob_Outer_DEC
-  - KAP140_Knob_Inner_INC
-  - KAP140_Knob_Inner_DEC
   - adf_frqTransfert

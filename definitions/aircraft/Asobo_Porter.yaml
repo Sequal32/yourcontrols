@@ -4,6 +4,7 @@ include:
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/AS1000.yaml
   - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/Avionics/KAP140.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -626,12 +627,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_State
-  -
-    type: var
-    var_name: L:KAP140_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
   -
     type: var
     var_name: L:AutopilotPreflightCheckCompleted
@@ -708,9 +709,4 @@ server:
     var_type: f64
 
 ignore:
-  - KAP140_Push_AP
-  - KAP140_Knob_Outer_INC
-  - KAP140_Knob_Outer_DEC
-  - KAP140_Knob_Inner_INC
-  - KAP140_Knob_Inner_DEC
   - adf_frqTransfert

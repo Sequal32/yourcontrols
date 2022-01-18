@@ -29,7 +29,7 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 25
 
-  - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
+  - # Electrical
     type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: Bool
@@ -43,15 +43,13 @@ shared:
     var_type: bool
     event_name: TOGGLE_MASTER_BATTERY
     event_param: 2
-
-  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
+  -
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
     var_type: i32
     event_name: ALTERNATOR_SET
-
-  - # ASOBO_ELECTRICAL_Push_Starter_Template
+  -
     type: var
     var_name: A:GENERAL ENG STARTER:1
     var_units: Number
@@ -60,19 +58,6 @@ shared:
     type: event
     event_name: SET_STARTER1_HELD
   -
-    type: var
-    var_name: L:XMLVAR_Starter_State
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_IsDown
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_MinReleaseTime
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_IsHeld
-
-  - # ASOBO_ELECTRICAL_Switch_Magneto_Template
     type: NumSet
     var_name: A:RECIP ENG LEFT MAGNETO:1
     var_units: Bool
@@ -87,9 +72,6 @@ shared:
   -
     type: event
     event_name: MAGNETO1_SET # backup for position
-  -
-    type: var
-    var_name: L:XMLVAR_Magneto_Starter_IsHeld
 
   - # Failures
     type: var
@@ -243,9 +225,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_STBYBattery_IsHeld
-# -
-#   type: var
-#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Magneto_Starter_IsHeld
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
@@ -369,12 +351,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -407,6 +383,12 @@ shared:
 #   var_name: L:PFD_BRG2_Source
 # -
 #   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
 #   var_name: L:GPS_Current_Phase
 # -
 #   type: var
@@ -419,12 +401,6 @@ shared:
 #   var_name: L:AS3000_MinimalsValue
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
 #   var_name: L:MFD_MapShowCursor
 # -
 #   type: var
@@ -432,6 +408,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpit_MFD_Started
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
