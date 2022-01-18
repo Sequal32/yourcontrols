@@ -10,7 +10,7 @@
 * Added experimental support for GTN750 by PMS50.
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Updated Mrtommymxr DA62X to v0.6.2.
-* Updated RotorSimPilot R44 to v1.1a.
+* Updated RotorSimPilot R44 to v1.2.
 * Updated more Asobo planes for Sim Update 7.
 
 #### Changes
