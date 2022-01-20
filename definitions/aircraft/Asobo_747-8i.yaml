@@ -1,5 +1,5 @@
 include:
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/autopilot_airliner.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -24,10 +24,6 @@ shared:
     var_units: Number
     var_type: f64
     event_name: SET_AUTOBRAKE_CONTROL
-
-  - # Autopilot
-    type: event
-    event_name: AP_HDG_HOLD_ON
 
   - # Deice
     type: NumSet
@@ -804,8 +800,10 @@ shared:
     type: var
     var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
   -
-    type: var
+    type: ToggleSwitch
     var_name: L:AP_HEADING_HOLD_ACTIVE
+    event_name: AP_HDG_HOLD_ON
+    use_calculator: true
   -
     type: var
     var_name: L:BTN_NDB_FILTER_ACTIVE
