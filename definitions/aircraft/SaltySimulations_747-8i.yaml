@@ -32,15 +32,29 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_MASTER
-
-  - # ASOBO_AUTOPILOT_Push_Disconnect_Template
+  -
     type: NumSet
     var_name: A:AUTOPILOT DISENGAGED
     var_units: Bool
     var_type: i32
     event_name: AUTOPILOT_DISENGAGE_SET
-
-  - # ASOBO_AUTOPILOT_Knob_Heading_Template
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
+    use_calculator: true
+  -
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:1
     var_units: Degrees
@@ -48,34 +62,27 @@ shared:
     event_name: HEADING_BUG_SET
     event_param: 1
   -
-    type: event
-    event_name: AP_HDG_HOLD_ON
-
-  - # ASOBO_AUTOPILOT_Knob_Altitude_Template
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
     var_units: Feet
     var_type: f64
     event_name: AP_ALT_VAR_SET_ENGLISH
     event_param: 3
-
-  - # ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template
+  -
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
     var_units: Feet per minute
     var_type: f64
     event_name: AP_VS_VAR_SET_ENGLISH
     event_param: 1
-
-  - # ASOBO_AUTOPILOT_Knob_SpeedMach_Template
+  -
     type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
     var_units: Knots
     var_type: f64
     event_name: AP_SPD_VAR_SET
     event_param: 1
-
-  - # Approach (Really bugged but works)
+  -
     type: var
     var_name: A:AUTOPILOT APPROACH HOLD
     var_units: Bool
@@ -85,36 +92,31 @@ shared:
     var_name: A:AUTOPILOT GLIDESLOPE HOLD
     var_units: Bool
     var_type: bool
-
-  - # ASOBO_AUTOPILOT_Push_BackCourse_Template
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT BACKCOURSE HOLD
     var_units: Bool
     var_type: bool
     event_name: AP_BC_HOLD
-
-  - # ASOBO_AUTOPILOT_Push_AutoThrottle_Template
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM
     var_units: Bool
     var_type: bool
     event_name: AUTO_THROTTLE_ARM
-
-  - # ASOBO_ENGINE_SWITCH_TOGA_Template
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
     var_units: Bool
     var_type: bool
     event_name: AUTO_THROTTLE_TO_GA
-
-  - # ASOBO_AUTOPILOT_Push_Navigation_Template
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT NAV1 LOCK
     var_units: Bool
     var_type: bool
     event_name: AP_NAV1_HOLD
-
-  - # ASOBO_AUTOPILOT_Knob_Bank_Limit_Template (NO LONGER WORKS FOR BOEING//NOW B-EVENT)
+  -
     type: NumSet
     var_name: A:AUTOPILOT MAX BANK ID
     var_units: Number
@@ -1010,8 +1012,10 @@ shared:
     type: var
     var_name: L:BTN_VORD_FILTER_ACTIVE
   -
-    type: var
+    type: ToggleSwitch
     var_name: L:AP_HEADING_HOLD_ACTIVE
+    event_name: AP_HDG_HOLD_ON
+    use_calculator: true
   -
     type: var
     var_name: L:XMLVAR_COM_1_Volume_VHF_L_3
@@ -1713,3 +1717,4 @@ ignore:
   - B747_8_PFD_BTN_WXR
   - B747_8_PFD_BARO_INC
   - B747_8_PFD_BARO_DEC
+  - B747_8_FMC_1_AP_FD_TOGGLE
