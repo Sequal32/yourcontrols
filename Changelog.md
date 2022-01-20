@@ -5,8 +5,11 @@
 #### Profiles
 * Added SimWorks Studios Kodiak 100.
 * Added SimSkunkWorks TF-104G Starfighter.
+* Added Aerosoft DHC6 Twin Otter.
+  - Nearly every switch uses a B-event. They won't physically move for clients but the associated events still sync.
 * Added experimental support for G1000 NXi by Working Title.
-  - Approach and Leveler modes currently do not sync.
+  - APR/LOC works but when switching from NAV/LOC to APR, untoggle NAV and then toggle APR.
+  - LOC currently gets lost for client during intersection of ILS but recovers itself the moment glideslope is reached.
 * Added experimental support for GTN750 by PMS50.
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Updated Mrtommymxr DA62X to v0.6.2.
@@ -25,6 +28,7 @@
 * Fixed vertical pitch reference on Working Title CJ4.
 * Fixed missing external lights on Asobo Cap10.
 * Fixed exit doors on Mugz TBM930.
+* Fixed flight director switches on Salty 747.
 
 
 ## Version 2.6.3
