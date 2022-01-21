@@ -51,7 +51,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Lights
+  - # Lighting
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -88,25 +88,25 @@ shared:
     event_param: 5
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 1
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:2
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 2
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:3
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 3
   -
     type: NumSet
@@ -195,9 +195,6 @@ shared:
   -
     type: var
     var_name: L:INSTRUMENT_Course_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Gyro_Drift
   -
     type: var
     var_name: L:INSTRUMENT_Altimeter_1
@@ -240,12 +237,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId

@@ -60,7 +60,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Lights
+  - # Lighting
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -97,25 +97,25 @@ shared:
     event_param: 5
     index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 1
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:2
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 2
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:3
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
     event_param: 3
   -
     type: NumSet
@@ -270,12 +270,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -306,6 +300,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:GPS_Current_Phase

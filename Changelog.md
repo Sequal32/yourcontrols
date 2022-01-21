@@ -12,9 +12,10 @@
   - LOC currently gets lost for client during intersection of ILS but recovers itself the moment glideslope is reached.
 * Added experimental support for GTN750 by PMS50.
 * Added missing support for non-G950 Asobo PC-6 Porter.
-* Updated Mrtommymxr DA62X to v0.6.2.
-* Updated RotorSimPilot R44 to v1.2.
 * Updated more Asobo planes for Sim Update 7.
+* Updated Mrtommymxr DA62X to v0.6.2.
+* Updated Mrtommymxr DA40NGX to v0.8.6.
+* Updated RotorSimPilot R44 to v1.2.
 
 #### Changes
 * Fixed parking brake event name for Sim Update 7. (Spelling error)
