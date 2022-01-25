@@ -18,14 +18,17 @@
 * Updated RotorSimPilot R44 to v1.2.
 
 #### Changes
-* Fixed parking brake event name for Sim Update 7. (Spelling error)
-* Fixed Porter profile error. (Can now be used)
+* Fixed Asobo Porter profile error.
+* Fixed parking brake event name spelling error.
 * Fixed initial sync of DC-6 doors and exits.
 * Fixed standby radio menu not opening on Longitude displays.
 * Fixed SVT terrain toggle on Asobo Longitude and TBM930.
+* Fixed H-event cancellations for KAP140 buttons and knobs.
 * Fixed G1000 COM frequency desync when turning large knob clockwise.
+* Fixed G3000 (horizontal) H-event cancellations for co-pilot knobs.
+* Fixed G3000 (horizontal) standby radio blue highlight selection.
 * Fixed avionics master switches on all aircraft having issues.
-* Fixed autopilot automatically leveling off during VS climb/descent.
+* Fixed autopilot automatically leveling off when using V/S and FLC.
 * Fixed vertical pitch reference on Working Title CJ4.
 * Fixed missing external lights on Asobo Cap10.
 * Fixed exit doors on Mugz TBM930.
