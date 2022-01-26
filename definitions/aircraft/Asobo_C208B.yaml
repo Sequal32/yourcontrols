@@ -14,6 +14,39 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR2
+  -
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
+  -
+    type: var
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Number
+    var_type: i32
+  -
+    type: event
+    event_name: SET_STARTER1_HELD
   - # Avionics 1
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:26
@@ -36,55 +69,6 @@ shared:
     type: CustomCalculator
     get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
     set: 11 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-
-  - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL MASTER BATTERY:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_MASTER_BATTERY
-    event_param: 1
-
-  - # ASOBO_ELECTRICAL_Switch_Alternator_Template
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_ALTERNATOR1
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_ALTERNATOR2
-
-  - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
-    type: ToggleSwitch
-    var_name: A:EXTERNAL POWER ON:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
-
-  - # ASOBO_ELECTRICAL_Push_Starter_Template
-    type: var
-    var_name: A:GENERAL ENG STARTER:1
-    var_units: Number
-    var_type: i32
-  -
-    type: event
-    event_name: SET_STARTER1_HELD
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_IsDown
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_MinReleaseTime
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_IsHeld
 
   - # Failures
     type: var
@@ -121,7 +105,7 @@ shared:
     event_param: 2
   -
     type: NumSet
-    var_name: A:LIGHT PANEL
+    var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
@@ -141,8 +125,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
-
-  - # ASOBO_LIGHTING_Knob_Pedestal_Template
+  -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL:1
     var_units: Bool
@@ -403,9 +386,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:MFD_InnerMap_MapShowCursor
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -436,6 +416,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:GPS_Current_Phase
