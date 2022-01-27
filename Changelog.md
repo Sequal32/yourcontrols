@@ -12,6 +12,7 @@
   - LOC currently gets lost for client during intersection of ILS but recovers itself the moment glideslope is reached.
 * Added experimental support for GTN750 by PMS50.
 * Added missing support for non-G950 Asobo PC-6 Porter.
+* Added RotorSimPilot H125.
 * Updated more Asobo planes for Sim Update 7.
 * Updated Mrtommymxr DA62X to v0.6.2.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
@@ -21,14 +22,14 @@
 * Fixed Asobo Porter profile error.
 * Fixed parking brake event name spelling error.
 * Fixed initial sync of DC-6 doors and exits.
+* Fixed avionics master switches on all aircraft having issues.
+* Fixed autopilot automatically leveling off when using V/S and FLC.
 * Fixed standby radio menu not opening on Longitude displays.
 * Fixed SVT terrain toggle on Asobo Longitude and TBM930.
 * Fixed H-event cancellations for KAP140 buttons and knobs.
 * Fixed G1000 COM frequency desync when turning large knob clockwise.
 * Fixed G3000 (horizontal) H-event cancellations for co-pilot knobs.
 * Fixed G3000 (horizontal) standby radio blue highlight selection.
-* Fixed avionics master switches on all aircraft having issues.
-* Fixed autopilot automatically leveling off when using V/S and FLC.
 * Fixed vertical pitch reference on Working Title CJ4.
 * Fixed missing external lights on Asobo Cap10.
 * Fixed exit doors on Mugz TBM930.
