@@ -36,6 +36,7 @@
 * Fixed missing external lights on Asobo Cap10.
 * Fixed exit doors on Mugz TBM930.
 * Fixed flight director switches on Salty 747.
+* Fixed autopilot toggle buttons on H135 tablet.
 
 
 ## Version 2.6.3
