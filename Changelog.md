@@ -11,6 +11,7 @@
   - APR/LOC works but when switching from NAV/LOC to APR, untoggle NAV and then toggle APR.
   - LOC currently gets lost for client during intersection of ILS but recovers itself the moment glideslope is reached.
 * Added experimental support for GTN750 by PMS50.
+  - If using a G1000 replacement package, only change radio frequency with the PFD. For now.
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added RotorSimPilot H125.
 * Updated more Asobo planes for Sim Update 7.
