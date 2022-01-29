@@ -1,8 +1,8 @@
-# Version 1.4.3
+# Version 1.4.4
 
 include:
   - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/autopilot_heli.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
@@ -677,33 +677,33 @@ shared:
 # -
 #   type: var
 #   var_name: L:EXT_DOOR_0x0010
-  -
-    type: var
-    var_name: L:EXT_DOOR_0x0020
-  -
-    type: var
-    var_name: L:EXT_PART_0x0001
-  -
-    type: var
-    var_name: L:EXT_PART_0x0002
-  -
-    type: var
-    var_name: L:EXT_PART_0x0004
-  -
-    type: var
-    var_name: L:EXT_PART_0x0008
-  -
-    type: var
-    var_name: L:EXT_PART_0x0010
-  -
-    type: var
-    var_name: L:EXT_PART_0x0020
-  -
-    type: var
-    var_name: L:EXT_PART_0x0040
-  -
-    type: var
-    var_name: L:EXT_PART_0x0080
+# -
+#   type: var
+#   var_name: L:EXT_DOOR_0x0020
+# -
+#   type: var
+#   var_name: L:EXT_PART_0x0001
+# -
+#   type: var
+#   var_name: L:EXT_PART_0x0002
+# -
+#   type: var
+#   var_name: L:EXT_PART_0x0004
+# -
+#   type: var
+#   var_name: L:EXT_PART_0x0008
+# -
+#   type: var
+#   var_name: L:EXT_PART_0x0010
+# -
+#   type: var
+#   var_name: L:EXT_PART_0x0020
+# -
+#   type: var
+#   var_name: L:EXT_PART_0x0040
+# -
+#   type: var
+#   var_name: L:EXT_PART_0x0080
   -
     type: var
     var_name: L:EMER_ENG1_GUARD_OPEN
@@ -715,10 +715,13 @@ shared:
     var_name: L:EMER_ENG2_GUARD_OPEN
 # -
 #   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
 #   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:HOV_LAT
+# -
+#   type: var
+#   var_name: L:HOV_LAT
   -
     type: var
     var_name: L:ROTOR_TRIM_RELEASED
@@ -746,12 +749,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:COLLECTIVE_BEEP_LEFT
-  -
-    type: var
-    var_name: L:HOV_LON
-  -
-    type: var
-    var_name: L:HOV_ALT
+# -
+#   type: var
+#   var_name: L:HOV_LON
+# -
+#   type: var
+#   var_name: L:HOV_ALT
   -
     type: var
     var_name: L:ROTOR_MODE
@@ -827,9 +830,6 @@ shared:
   -
     type: var
     var_name: L:EXT_ENDPLATES
-# -
-#   type: var
-#   var_name: L:PMS50_GTN750_INSTALLED
   -
     type: var
     var_name: L:DX3000_BaroMode
@@ -866,12 +866,12 @@ shared:
   -
     type: var
     var_name: L:ROTOR_IS_AUTO
-  -
-    type: var
-    var_name: L:HOV_Y
-  -
-    type: var
-    var_name: L:HOV_X
+# -
+#   type: var
+#   var_name: L:HOV_Y
+# -
+#   type: var
+#   var_name: L:HOV_X
   -
     type: var
     var_name: L:EICAS_ACK
@@ -937,6 +937,24 @@ shared:
     var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
+    var_name: L:HX2_GTN_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HX2_GTN_2_State
+  -
+    type: var
+    var_name: L:HX2_GTN_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HX2_GTN_1_State
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_4_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Vertical_4_State
+  -
+    type: var
     var_name: L:AS1000_Warnings_Master_Set
   -
     type: var
@@ -944,12 +962,6 @@ shared:
   -
     type: var
     var_name: L:ROTOR_INIT_COLLECTIVE
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_4_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_4_State
 # -
 #   type: var
 #   var_name: L:GTN750_INT_ScreenLuminosity
@@ -989,6 +1001,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS3000_4_Timer_Value
+# -
+#   type: var
+#   var_name: L:ROTOR_STATUS_ENG1
+# -
+#   type: var
+#   var_name: L:ROTOR_STATUS_ENG2
   -
     type: var
     var_name: L:WasmInstrument_ScreenLuminosity
@@ -1001,24 +1019,6 @@ shared:
   -
     type: var
     var_name: L:AS1000_AttitudeSpeedBackup_State
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_2_State
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_1_State
-# -
-#   type: var
-#   var_name: L:ROTOR_STATUS_ENG1
-# -
-#   type: var
-#   var_name: L:ROTOR_STATUS_ENG2
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -1143,82 +1143,31 @@ server:
     var_type: f64
 
 ignore:
-# Flight mode
-  - AS3000_TSC_Vertical_4#CasTitle
-  - AS3000_TSC_Vertical_4#939506462
-  - AS3000_TSC_Vertical_4#492882367
-# Autopilot
   - AS3000_TSC_Vertical_4#APMasterButton
   - AS3000_TSC_Vertical_4#APMasterButtonText
-  - AS3000_TSC_Vertical_4#ApModesText
   - AS3000_TSC_Vertical_4#AP_Modes
-  - AS3000_TSC_Vertical_4#AP
-  - AS3000_TSC_Vertical_4#1411119452
-  - AS3000_TSC_Vertical_4#756931106
-  - AS3000_TSC_Vertical_4#1792823858
-  - AS3000_TSC_Vertical_4#883364728
-  - AS3000_TSC_Vertical_4#-678330952
-  - AS3000_TSC_Vertical_4#-2105843918
-# MICS
-  - AS3000_TSC_Vertical_1#Mic
-  - AS3000_TSC_Vertical_1#Mon
-  - AS3000_TSC_Vertical_1#-278181930
-  - AS3000_TSC_Vertical_1#-381849816
-  - AS3000_TSC_Vertical_1#-278181958
-  - AS3000_TSC_Vertical_1#-1610666930
-  - AS3000_TSC_Vertical_1#-1610666929
-  - AS3000_TSC_Vertical_1#-645636810
-  - AS3000_TSC_Vertical_1#-645636809
-  - AS3000_TSC_Vertical_1#-381849815
-  - AS3000_TSC_Vertical_1#-957356736
-  - AS3000_TSC_Vertical_1#-957356707
-  - AS3000_TSC_Vertical_1#355770354
-  - AS3000_TSC_Vertical_1#355770355
-  - AS3000_TSC_Vertical_2#Mic
-  - AS3000_TSC_Vertical_2#Mon
-  - AS3000_TSC_Vertical_2#-278181930
-  - AS3000_TSC_Vertical_2#-381849816
-  - AS3000_TSC_Vertical_2#-278181958
-  - AS3000_TSC_Vertical_2#-1610666930
-  - AS3000_TSC_Vertical_2#-1610666929
-  - AS3000_TSC_Vertical_2#-645636810
-  - AS3000_TSC_Vertical_2#-645636809
-  - AS3000_TSC_Vertical_2#-381849815
-  - AS3000_TSC_Vertical_2#-957356736
-  - AS3000_TSC_Vertical_2#-957356707
-  - AS3000_TSC_Vertical_2#355770354
-  - AS3000_TSC_Vertical_2#355770355
+
+  - AS3000_TSC_Vertical_4#FlightModeToggleButton
+  - AS3000_TSC_Vertical_4#CasTitle
+
   - AS3000_TSC_Vertical_4#Mic
   - AS3000_TSC_Vertical_4#Mon
-  - AS3000_TSC_Vertical_4#-278181930
-  - AS3000_TSC_Vertical_4#-381849816
-  - AS3000_TSC_Vertical_4#-278181958
-  - AS3000_TSC_Vertical_4#-1610666930
-  - AS3000_TSC_Vertical_4#-1610666929
-  - AS3000_TSC_Vertical_4#-645636810
-  - AS3000_TSC_Vertical_4#-645636809
-  - AS3000_TSC_Vertical_4#-381849815
-  - AS3000_TSC_Vertical_4#-957356736
-  - AS3000_TSC_Vertical_4#-957356707
-  - AS3000_TSC_Vertical_4#355770354
-  - AS3000_TSC_Vertical_4#355770355
-# COM1
-  - AS3000_TSC_Vertical_1#-1054176649
-  - AS3000_TSC_Vertical_1#971012390
-  - AS3000_TSC_Vertical_1#769170469
-  - AS3000_TSC_Vertical_2#-1054176649
-  - AS3000_TSC_Vertical_2#971012390
-  - AS3000_TSC_Vertical_2#769170469
-  - AS3000_TSC_Vertical_4#-1054176649
-  - AS3000_TSC_Vertical_4#971012390
-  - AS3000_TSC_Vertical_4#769170469
-# COM2
-  - AS3000_TSC_Vertical_1#-1054176648
-  - AS3000_TSC_Vertical_1#971012391
-  - AS3000_TSC_Vertical_1#769170470
-  - AS3000_TSC_Vertical_2#-1054176648
-  - AS3000_TSC_Vertical_2#971012391
-  - AS3000_TSC_Vertical_2#769170470
-  - AS3000_TSC_Vertical_4#-1054176648
-  - AS3000_TSC_Vertical_4#971012391
-  - AS3000_TSC_Vertical_4#769170470
+  - AS3000_TSC_Vertical_4#Com1Active
+# - AS3000_TSC_Vertical_4#Com1Stby
+  - AS3000_TSC_Vertical_4#Com2Active
+# - AS3000_TSC_Vertical_4#Com2Stby
+  - AS3000_TSC_Vertical_4#Com1_MicActive
+  - AS3000_TSC_Vertical_4#Com1_MonActive
+  - AS3000_TSC_Vertical_4#Com2_MicActive
+  - AS3000_TSC_Vertical_4#Com2_MonActive
+  - AS3000_TSC_Vertical_4#FK_Xfer
+
+  - AS3000_TSC_Vertical_4#collective_beep_up
+  - AS3000_TSC_Vertical_4#collective_beep_down
+  - AS3000_TSC_Vertical_4#collective_beep_left
+  - AS3000_TSC_Vertical_4#collective_beep_right
+
+  - AS3000_TSC_Vertical_4#cyclic_beep_up
+  - AS3000_TSC_Vertical_4#cyclic_beep_down
+  - AS3000_TSC_Vertical_4#cyclic_beep_left
+  - AS3000_TSC_Vertical_4#cyclic_beep_right

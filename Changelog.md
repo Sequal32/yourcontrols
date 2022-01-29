@@ -17,6 +17,7 @@
 * Updated Mrtommymxr DA62X to v0.6.2.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
 * Updated RotorSimPilot R44 to v1.2.
+* Updated HPG H135 to v1.4.4.
 
 #### Changes
 * Fixed Asobo Porter profile error.
