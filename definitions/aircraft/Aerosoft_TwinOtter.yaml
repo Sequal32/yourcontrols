@@ -1,4 +1,4 @@
-# Version 1.0.0
+# Version 1.0.1.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -6,6 +6,7 @@ include:
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/KAP140.yaml
   - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -49,7 +50,7 @@ shared:
     var_name: L:DHC6_RELEASE_PARK_BRK_BY_TOE_BRAKES
   -
     type: var
-    var_name: L:DHC6_GUSTLOCK_HIDDEN
+    var_name: L:DHC6_GUSTLOCK_VISIBLE
   -
     type: var
     var_name: L:DHC6_FUEL_SELECTOR_1
@@ -74,6 +75,9 @@ shared:
   -
     type: var
     var_name: L:DHC6_PAX_DOOR
+  -
+    type: var
+    var_name: L:DHC6_PAX_DOOR_SN
   -
     type: var
     var_name: L:DHC6_SVC_DOOR
@@ -158,6 +162,9 @@ shared:
   -
     type: var
     var_name: L:DHC6_CABIN_VENT_FAN_OFF
+  -
+    type: var
+    var_name: L:DHC6_AP_DISC_SOUND
   -
     type: var
     var_name: L:DHC6_BATT_TEMP_TEST
@@ -302,6 +309,9 @@ shared:
   -
     type: var
     var_name: L:DHC6_FQTY_IND_TEST
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
   -
     type: var
     var_name: L:DHC6_PWR_LVR_TEST
@@ -320,6 +330,9 @@ shared:
   -
     type: var
     var_name: L:DHC6_ALT_ALERT_LIGHT
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_INHIBIT
   -
     type: var
     var_name: L:DHC6_HYD_CB_TEST
@@ -406,6 +419,9 @@ shared:
     var_name: L:DHC6_BOOST_PUMP_SOUND_4
   -
     type: var
+    var_name: L:HANDLING_RudderTrim
+  -
+    type: var
     var_name: L:XMLVAR_DHC6_FIRE_BELL_MUTE_guard
   -
     type: var
@@ -431,9 +447,9 @@ shared:
   -
     type: var
     var_name: L:DHC6_BETA_RANGE_TEST
-  -
-    type: var
-    var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
   -
     type: var
     var_name: L:DHC6_STARTER
@@ -476,9 +492,6 @@ shared:
   -
     type: var
     var_name: L:DHC6_BUS_TIE
-  -
-    type: var
-    var_name: L:DEICE_Propeller_1
   -
     type: var
     var_name: L:DHC6_DEICE_BOOTS
@@ -598,28 +611,22 @@ shared:
     var_name: L:DHC6_ALT_ALERT_RESET
 # -
 #   type: var
-#   var_name: L:AS530_HIDDEN
-# -
-#   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
 # -
 #   type: var
 #   var_name: L:AS530_Default_MapShowCursor
 # -
 #   type: var
-#   var_name: L:AS430_HIDDEN
-# -
-#   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
