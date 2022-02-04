@@ -3,18 +3,19 @@
 ## Version 2.6.4
 
 #### Profiles
-* Added SimWorks Studios Kodiak 100.
-* Added SimSkunkWorks TF-104G Starfighter.
-* Added Aerosoft DHC6 Twin Otter.
+* Added SimWorks Studios Kodiak 100 (v1.0.0).
+* Added SimSkunkWorks TF-104G Starfighter (v3.0).
+* Added Aerosoft DHC6 Twin Otter (v1.0.1).
   - Nearly every switch uses a B-event. They won't physically move for clients but the associated events still sync.
-* Added experimental support for G1000 NXi by Working Title.
+* Added experimental support for G1000 NXi (v0.10.1) by Working Title.
   - APR/LOC works but when switching from NAV/LOC to APR, untoggle NAV and then toggle APR.
   - LOC currently gets lost for client during intersection of ILS but recovers itself the moment glideslope is reached.
-* Added experimental support for GTN750 by PMS50.
+* Added experimental support for GTN750 (Free) by PMS50 (v2.1.4).
   - If using a G1000 replacement package, only change radio frequency with the PFD. For now.
 * Added missing support for non-G950 Asobo PC-6 Porter.
-* Added RotorSimPilot H125.
+* Added RotorSimPilot H125 (v1.3.4).
 * Updated more Asobo planes for Sim Update 7.
+* Updated Carenado Seneca V to v1.4.0.
 * Updated Mrtommymxr DA62X to v0.6.2.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
 * Updated RotorSimPilot R44 to v1.2.
