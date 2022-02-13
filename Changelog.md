@@ -3,10 +3,13 @@
 ## Version 2.6.4
 
 #### Profiles
+* Added Aerosoft DHC6 Twin Otter (v1.0.3.0).
+  - Nearly every switch uses a B-event. They won't physically move for clients but the associated legacy events still sync.
+* Added Aeroplane Heaven Electra-10A (v1.2.1).
+* Added IRIS Simulations G115 Tutor T.1 (v2.2.5).
+* Added IRIS Simulations J160/J170 Jabiru (v1.5.6).
 * Added SimWorks Studios Kodiak 100 (v1.0.0).
 * Added SimSkunkWorks TF-104G Starfighter (v3.0).
-* Added Aerosoft DHC6 Twin Otter (v1.0.1).
-  - Nearly every switch uses a B-event. They won't physically move for clients but the associated events still sync.
 * Added experimental support for G1000 NXi (v0.10.1) by Working Title.
   - APR/LOC works but when switching from NAV/LOC to APR, untoggle NAV and then toggle APR.
   - LOC currently gets lost for client during intersection of ILS but recovers itself the moment glideslope is reached.
