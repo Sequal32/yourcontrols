@@ -3,11 +3,12 @@
 ## Version 2.6.4
 
 #### Profiles
+* Added Aeroplane Heaven Electra-10A (v1.2.1).
 * Added Aerosoft DHC6 Twin Otter (v1.0.3.0).
   - Nearly every switch uses a B-event. They won't physically move for clients but the associated legacy events still sync.
-* Added Aeroplane Heaven Electra-10A (v1.2.1).
 * Added IRIS Simulations G115 Tutor T.1 (v2.2.5).
 * Added IRIS Simulations J160/J170 Jabiru (v1.5.6).
+* Added Milviz PC-6 Turbo Porter (v1.0.8).
 * Added SimWorks Studios Kodiak 100 (v1.0.0).
 * Added SimSkunkWorks TF-104G Starfighter (v3.0).
 * Added experimental support for G1000 NXi (v0.10.1) by Working Title.
@@ -17,7 +18,7 @@
   - If using a G1000 replacement package, only change radio frequency with the PFD. For now.
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added RotorSimPilot H125 (v1.3.4).
-* Updated more Asobo planes for Sim Update 7.
+* Updated Asobo planes for Sim Update 8.
 * Updated Carenado Seneca V to v1.4.0.
 * Updated Mrtommymxr DA62X to v0.6.2.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
@@ -25,7 +26,7 @@
 * Updated HPG H135 to v1.4.4.
 
 #### Changes
-* Fixed Asobo Porter profile error.
+* Fixed multiple issues with Asobo Porter profile.
 * Fixed parking brake event name spelling error.
 * Fixed initial sync of DC-6 doors and exits.
 * Fixed avionics master switches on all aircraft having issues.
@@ -41,6 +42,7 @@
 * Fixed exit doors on Mugz TBM930.
 * Fixed flight director switches on Salty 747.
 * Fixed autopilot toggle buttons on H135 tablet.
+* Fixed attitude indicator bar calibration.
 
 
 ## Version 2.6.3
