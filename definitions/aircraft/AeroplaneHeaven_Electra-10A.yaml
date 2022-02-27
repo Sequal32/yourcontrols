@@ -16,6 +16,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Ignition
+    type: ToggleSwitch
+    var_name: A:MASTER IGNITION SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_IGNITION_SWITCH
+
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
@@ -85,9 +92,9 @@ shared:
   -
     type: var
     var_name: L:starterrighton
-  -
-    type: var
-    var_name: L:fakestart1init
+# -
+#   type: var
+#   var_name: L:fakestart1init
 # -
 #   type: var
 #   var_name: L:prop0anim
@@ -100,15 +107,15 @@ shared:
   -
     type: var
     var_name: L:SWITCH_primer
-  -
-    type: var
-    var_name: L:fakestart2init
-  -
-    type: var
-    var_name: L:prop1anim
-  -
-    type: var
-    var_name: L:prop1animscalar
+# -
+#   type: var
+#   var_name: L:fakestart2init
+# -
+#   type: var
+#   var_name: L:prop1anim
+# -
+#   type: var
+#   var_name: L:prop1animscalar
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
@@ -274,12 +281,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:oiltemp2
-  -
-    type: var
-    var_name: L:magpos
-  -
-    type: var
-    var_name: L:magpos2
+# -
+#   type: var
+#   var_name: L:magpos
+# -
+#   type: var
+#   var_name: L:magpos2
   -
     type: var
     var_name: L:vibecount
