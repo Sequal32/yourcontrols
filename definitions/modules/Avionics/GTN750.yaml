@@ -1,6 +1,30 @@
-# Version 2.1.4 - Unofficial addon by PMS50
+# Version 2.1.14 - Un-official addon by PMS50
 
 shared:
+  -
+    type: var
+    var_name: L:GTN650_Vol
+  -
+    type: var
+    var_name: L:GTN650_INT_ScreenLuminosity
+  -
+    type: var
+    var_name: L:GTN650_INT_State
+  -
+    type: var
+    var_name: L:GTN650_INT_HIDDEN
+  -
+    type: var
+    var_name: L:GTN650_INT_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:GTN650_INT_2_State
+  -
+    type: var
+    var_name: L:GTN650_INT_2_HIDDEN
+  -
+    type: var
+    var_name: L:GTN750_Vol
   -
     type: var
     var_name: L:GTN750_INT_ScreenLuminosity
@@ -76,7 +100,22 @@ shared:
   -
     type: var
     var_name: L:PMS50_GTN750_MSG_VCALC_ARR
-# - # Ignore these for now
+# - # Ignore these
+#   type: var
+#   var_name: L:PMS50_GTN650_RUNNING
+# -
+#   type: var
+#   var_name: L:PMS50_GTN650_INSTALLED
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_RUNNING
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:WT1000_AP_G1000_INSTALLED
+# -
 #   type: var
 #   var_name: L:Generic_Master_Warning_Active
 # -
@@ -84,164 +123,41 @@ shared:
 #   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
-#   var_name: L:PMS50_GTN750_INSTALLED
+#   var_name: L:Glasscockpits_FPLHaveOrigin
 # -
 #   type: var
-#   var_name: L:PMS50_GTN750_RUNNING
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
-#   var_name: L:WT1000_AP_G1000_INSTALLED
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
 
 ignore:
-  - GTN650_VolInc
-  - GTN650_VolDec
-  - GTN650_KnobSmallInc
-  - GTN650_KnobSmallDec
-  - GTN650_KnobLargeInc
-  - GTN650_KnobLargeDec
-  - GTN650_INT#ComActiveFreq
-  - GTN650_INT#ComActiveFreqName
-  - GTN650_INT#ComActiveButton
-# - GTN650_INT#ComStandbyFreq
-# - GTN650_INT#ComStandbyFreqName
+  - GTN650_INT#ComStandbyFreq
+  - GTN650_INT#ComStandbyFreqName
   - GTN650_INT#ComStandbyButton
-  - GTN650_INT#NavActiveFreq
-  - GTN650_INT#NavActiveFreqName
-  - GTN650_INT#NavActiveButton
-# - GTN650_INT#NavStandbyFreq
+  - GTN650_INT#NavStandbyFreq
   - GTN650_INT#NavStandbyButton
-  - GTN650_INT#StaticImgFrequencyKeyboardXfer
 
-  - GTN750_VolInc
-  - GTN750_VolDec
-  - GTN750_KnobSmallInc
-  - GTN750_KnobSmallDec
-  - GTN750_KnobLargeInc
-  - GTN750_KnobLargeDec
-  - GTN750_INT#Mic1
-  - GTN750_INT#Mic2
-  - GTN750_INT#Mon1
-  - GTN750_INT#Mon2
-  - GTN750_INT#MicButton
-  - GTN750_INT#MonButton
-  - GTN750_INT#MicIndicators
-  - GTN750_INT#MonIndicators
-  - GTN750_INT#ComActiveFreq
-  - GTN750_INT#ComActiveFreqName
-  - GTN750_INT#ComActiveButton
-# - GTN750_INT#ComStandbyFreq
-# - GTN750_INT#ComStandbyFreqName
+  - GTN750_INT#ComStandbyFreq
+  - GTN750_INT#ComStandbyFreqName
   - GTN750_INT#ComStandbyButton
-  - GTN750_INT#NavActiveFreq
-  - GTN750_INT#NavActiveFreqName
-  - GTN750_INT#NavActiveButton
-# - GTN750_INT#NavStandbyFreq
+  - GTN750_INT#NavStandbyFreq
   - GTN750_INT#NavStandbyButton
-  - GTN750_INT#FK_Xfer
-# - GTN750_INT#AudioPanelButton
-  - GTN750_INT#IntercomButton
-  - GTN750_INT#audioMicCom1
-  - GTN750_INT#audioMicCom2
-  - GTN750_INT#audioMonitorCom1
-  - GTN750_INT#audioMonitorCom2
-  - GTN750_INT#audioMonitorNav1
-  - GTN750_INT#audioMonitorNav2
-  - GTN750_INT#audioMonitorDme
-  - GTN750_INT#audioMonitorAdf
 
-  - GTN750_INT_1#Mic1
-  - GTN750_INT_1#Mic2
-  - GTN750_INT_1#Mon1
-  - GTN750_INT_1#Mon2
-  - GTN750_INT_1#MicButton
-  - GTN750_INT_1#MonButton
-  - GTN750_INT_1#MicIndicators
-  - GTN750_INT_1#MonIndicators
-  - GTN750_INT_1#ComActiveFreq
-  - GTN750_INT_1#ComActiveFreqName
-  - GTN750_INT_1#ComActiveButton
-# - GTN750_INT_1#ComStandbyFreq
-# - GTN750_INT_1#ComStandbyFreqName
+  - GTN750_INT_1#ComStandbyFreq
+  - GTN750_INT_1#ComStandbyFreqName
   - GTN750_INT_1#ComStandbyButton
-  - GTN750_INT_1#NavActiveFreq
-  - GTN750_INT_1#NavActiveFreqName
-  - GTN750_INT_1#NavActiveButton
-# - GTN750_INT_1#NavStandbyFreq
+  - GTN750_INT_1#NavStandbyFreq
   - GTN750_INT_1#NavStandbyButton
-  - GTN750_INT_1#FK_Xfer
-# - GTN750_INT_1#AudioPanelButton
-  - GTN750_INT_1#IntercomButton
-  - GTN750_INT_1#audioMicCom1
-  - GTN750_INT_1#audioMicCom2
-  - GTN750_INT_1#audioMonitorCom1
-  - GTN750_INT_1#audioMonitorCom2
-  - GTN750_INT_1#audioMonitorNav1
-  - GTN750_INT_1#audioMonitorNav2
-  - GTN750_INT_1#audioMonitorDme
-  - GTN750_INT_1#audioMonitorAdf
 
-  - GTN750_INT_2#Mic1
-  - GTN750_INT_2#Mic2
-  - GTN750_INT_2#Mon1
-  - GTN750_INT_2#Mon2
-  - GTN750_INT_2#MicButton
-  - GTN750_INT_2#MonButton
-  - GTN750_INT_2#MicIndicators
-  - GTN750_INT_2#MonIndicators
-  - GTN750_INT_2#ComActiveFreq
-  - GTN750_INT_2#ComActiveFreqName
-  - GTN750_INT_2#ComActiveButton
-# - GTN750_INT_2#ComStandbyFreq
-# - GTN750_INT_2#ComStandbyFreqName
+  - GTN750_INT_2#ComStandbyFreq
+  - GTN750_INT_2#ComStandbyFreqName
   - GTN750_INT_2#ComStandbyButton
-  - GTN750_INT_2#NavActiveFreq
-  - GTN750_INT_2#NavActiveFreqName
-  - GTN750_INT_2#NavActiveButton
-# - GTN750_INT_2#NavStandbyFreq
+  - GTN750_INT_2#NavStandbyFreq
   - GTN750_INT_2#NavStandbyButton
-  - GTN750_INT_2#FK_Xfer
-# - GTN750_INT_2#AudioPanelButton
-  - GTN750_INT_2#IntercomButton
-  - GTN750_INT_2#audioMicCom1
-  - GTN750_INT_2#audioMicCom2
-  - GTN750_INT_2#audioMonitorCom1
-  - GTN750_INT_2#audioMonitorCom2
-  - GTN750_INT_2#audioMonitorNav1
-  - GTN750_INT_2#audioMonitorNav2
-  - GTN750_INT_2#audioMonitorDme
-  - GTN750_INT_2#audioMonitorAdf
 
-# - AS1000_MFD_FMS_Upper_INC
-# - AS1000_MFD_FMS_Upper_DEC
-# - AS1000_MFD_FMS_Lower_INC
-# - AS1000_MFD_FMS_Lower_DEC
-  - AS1000_MFD#Mic1
-  - AS1000_MFD#Mic2
-  - AS1000_MFD#Mon1
-  - AS1000_MFD#Mon2
-  - AS1000_MFD#MicButton
-  - AS1000_MFD#MonButton
-  - AS1000_MFD#MicIndicators
-  - AS1000_MFD#MonIndicators
-  - AS1000_MFD#ComActiveFreq
-  - AS1000_MFD#ComActiveFreqName
-  - AS1000_MFD#ComActiveButton
-# - AS1000_MFD#ComStandbyFreq
-# - AS1000_MFD#ComStandbyFreqName
+  - AS1000_MFD#ComStandbyFreq
+  - AS1000_MFD#ComStandbyFreqName
   - AS1000_MFD#ComStandbyButton
-  - AS1000_MFD#NavActiveFreq
-  - AS1000_MFD#NavActiveFreqName
-  - AS1000_MFD#NavActiveButton
-# - AS1000_MFD#NavStandbyFreq
+  - AS1000_MFD#NavStandbyFreq
   - AS1000_MFD#NavStandbyButton
-  - AS1000_MFD#FK_Xfer
-# - AS1000_MFD#AudioPanelButton
-  - AS1000_MFD#IntercomButton
-  - AS1000_MFD#audioMicCom1
-  - AS1000_MFD#audioMicCom2
-  - AS1000_MFD#audioMonitorCom1
-  - AS1000_MFD#audioMonitorCom2
-  - AS1000_MFD#audioMonitorNav1
-  - AS1000_MFD#audioMonitorNav2
-  - AS1000_MFD#audioMonitorDme
-  - AS1000_MFD#audioMonitorAdf
