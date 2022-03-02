@@ -1,4 +1,4 @@
-# Version 0.4.0 stable+dev (October 24, 2021)
+# Version 0.4.0 stable+dev (February 25, 2022)
 
 include:
   - definitions/modules/electrical.yaml
@@ -8,6 +8,8 @@ include:
   - definitions/modules/navigation.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -44,16 +46,18 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
-    event_param: 1
+    cancel_h_events: true
     use_calculator: true
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
-    event_param: 2
+    cancel_h_events: true
     use_calculator: true
+    event_param: 2
   -
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:1
@@ -67,6 +71,7 @@ shared:
     var_units: Feet
     var_type: f64
     event_name: AP_ALT_VAR_SET_ENGLISH
+    cancel_h_events: true
     event_param: 3
   -
     type: NumSet
@@ -943,12 +948,12 @@ shared:
   -
     type: var
     var_name: L:SALTY_ISFD_INIT_DONE
-# - # H-events
-#   type: var
-#   var_name: L:SALTY_VIS_PILOT_0
-# -
-#   type: var
-#   var_name: L:SALTY_VIS_PILOT_1
+  -
+    type: var
+    var_name: L:SALTY_VIS_PILOT_0
+  -
+    type: var
+    var_name: L:SALTY_VIS_PILOT_1
   -
     type: var
     var_name: L:SALTY_UNIT_IS_METRIC
@@ -975,43 +980,34 @@ shared:
     var_name: L:SALTY_LANDING_FLAP_VALUE
   -
     type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_R1_State
+    var_name: L:BTN_WX_ACTIVE
   -
     type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R_1
+    var_name: L:XMLVAR_Mins_Selector_Baro
   -
     type: var
     var_name: L:BTN_TERRONND_ACTIVE
-# -
-#   type: var
-#   var_name: L:AP_LNAV_ARMED
-  -
-    type: var
-    var_name: L:B747_8_MFD_Range
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_3
-  -
-    type: var
-    var_name: L:BTN_CSTR_FILTER_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R_3
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_1
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_R2_State
   -
     type: var
     var_name: L:XMLVAR_AUTO_THROTTLE_ARM_0_STATE
   -
     type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R_1
   -
     type: var
-    var_name: L:BTN_VORD_FILTER_ACTIVE
+    var_name: L:XMLVAR_COM_Transmit_Channel
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_2
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+  -
+    type: var
+    var_name: L:XMLVAR_Transponder_Mode
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_2
   -
     type: ToggleSwitch
     var_name: L:AP_HEADING_HOLD_ACTIVE
@@ -1019,46 +1015,55 @@ shared:
     use_calculator: true
   -
     type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_3
-  -
-    type: var
-    var_name: L:XMLVAR_Transponder_Mode
-  -
-    type: var
-    var_name: L:XMLVAR_COM_Transmit_Channel
-  -
-    type: var
     var_name: L:BTN_NDB_FILTER_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_Mins_Selector_Baro
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_2
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_2
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
   -
     type: var
     var_name: L:BTN_ARPT_FILTER_ACTIVE
   -
     type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
+    var_name: L:AP_LNAV_ARMED
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R_3
+  -
+    type: var
+    var_name: L:BTN_VORD_FILTER_ACTIVE
   -
     type: var
     var_name: L:BTN_WPT_FILTER_ACTIVE
   -
     type: var
-    var_name: L:BTN_WX_ACTIVE
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_3
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_1
+  -
+    type: var
+    var_name: L:B747_8_MFD_Range
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R1_State
+  -
+    type: var
+    var_name: L:BTN_CSTR_FILTER_ACTIVE
   -
     type: var
     var_name: L:XMLVAR_COM_3_Volume_VHF_R_2
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_R2_State
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_3
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -1116,9 +1121,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COM3_CURRENT_FREQ
-  -
-    type: var
-    var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
   -
     type: var
     var_name: L:XMLVAR_StandbyPower_Selector
@@ -1131,12 +1136,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_DeiceAirFrame_Auto
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
   -
     type: var
     var_name: L:XMLVAR_Baro1_ForcedToSTD
@@ -1158,9 +1157,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Autopilot_3_Status
-# -
-#   type: var
-#   var_name: L:AP_APP_ARMED
+  -
+    type: var
+    var_name: L:AP_APP_ARMED
   -
     type: var
     var_name: L:AP_FLCH_ACTIVE
@@ -1170,12 +1169,12 @@ shared:
   -
     type: var
     var_name: L:AP_ALT_HOLD_ACTIVE
-# -
-#   type: var
-#   var_name: L:AP_VNAV_ARMED
-# -
-#   type: var
-#   var_name: L:AP_LOC_ARMED
+  -
+    type: var
+    var_name: L:AP_VNAV_ARMED
+  -
+    type: var
+    var_name: L:AP_LOC_ARMED
   -
     type: var
     var_name: L:AP_SPD_ACTIVE
@@ -1197,6 +1196,18 @@ shared:
   -
     type: var
     var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Value
   -
     type: var
     var_name: L:ELECTRICAL_APU_Bleed
@@ -1320,12 +1331,6 @@ shared:
   -
     type: var
     var_name: L:LIGHTING_WING_0
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -1344,12 +1349,12 @@ shared:
   -
     type: var
     var_name: L:SALTY_FPV_ON
-  -
-    type: var
-    var_name: L:WT_CJ4_VS_ON
-  -
-    type: var
-    var_name: L:AIRLINER_FLIGHT_PHASE
+# -
+#   type: var
+#   var_name: L:WT_CJ4_VS_ON
+# -
+#   type: var
+#   var_name: L:AIRLINER_FLIGHT_PHASE
   -
     type: var
     var_name: L:AIRLINER_V1_SPEED
@@ -1368,9 +1373,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
-    type: var
-    var_name: L:SALTY_MINIMUMS_ALT
+# -
+#   type: var
+#   var_name: L:SALTY_MINIMUMS_ALT
   -
     type: var
     var_name: L:SALTY_ALT_ALERT
@@ -1395,10 +1400,9 @@ shared:
   -
     type: var
     var_name: L:FMC_UPDATE_CURRENT_PAGE
-  -
-    type: var
-    var_name: L:SALTY_IRS_TIME_LEFT
-    unreliable: true
+# -
+#   type: var
+#   var_name: L:SALTY_IRS_TIME_LEFT
   -
     type: var
     var_name: L:XMLVAR_TRK_MODE_ACTIVE
@@ -1419,13 +1423,19 @@ shared:
     var_name: L:AS1000_Warnings_Master_Set
   -
     type: var
-    var_name: L:AS1000_Warnings_WarningIndex
+    var_name: L:Generic_Master_Warning_Active
   -
     type: var
-    var_name: L:AIRLINER_THR_RED_ALT
-  -
-    type: var
-    var_name: L:AIRLINER_THRUST_CLIMB_MODE
+    var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:AIRLINER_THR_RED_ALT
+# -
+#   type: var
+#   var_name: L:AIRLINER_THRUST_CLIMB_MODE
   -
     type: var
     var_name: L:B747_8_EICAS_2_ScreenLuminosity
@@ -1444,9 +1454,9 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_ACC_ALT
-  -
-    type: var
-    var_name: L:SALTY_VREF30
+# -
+#   type: var
+#   var_name: L:SALTY_VREF30
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
@@ -1455,10 +1465,16 @@ shared:
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
   -
     type: var
-    var_name: L:XMLVAR_FPA_MODE_ACTIVE
+    var_name: L:74S_ALREADY_PAUSED
+# -
+#   type: var
+#   var_name: L:WT_CJ4_TOD_REMAINING
   -
     type: var
-    var_name: L:SALTY_ISFD_INIT_TIMER
+    var_name: L:XMLVAR_FPA_MODE_ACTIVE
+# -
+#   type: var
+#   var_name: L:SALTY_ISFD_INIT_TIMER
   -
     type: var
     var_name: L:B747_8_SAI_State
@@ -1471,9 +1487,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_CJ4_TOD_DISTANCE
-# -
-#   type: var
-#   var_name: L:WT_CJ4_TOD_REMAINING
 # -
 #   type: var
 #   var_name: L:WT_NAV_HOLD_INDEX
@@ -1489,30 +1502,48 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_CJ4_SNOWFLAKE
-  -
-    type: var
-    var_name: L:AIRLINER_THRUST_TAKEOFF_MODE
-  -
-    type: var
-    var_name: L:WT_CJ4_WPT_ALERT
+# -
+#   type: var
+#   var_name: L:AIRLINER_THRUST_TAKEOFF_MODE
+# -
+#   type: var
+#   var_name: L:WT_CJ4_WPT_ALERT
 # -
 #   type: var
 #   var_name: L:WT_NAV_SENSITIVITY
 # -
 #   type: var
 #   var_name: L:WT_NAV_SENSITIVITY_SCALAR
-  -
-    type: var
-    var_name: L:FMC_FLIGHT_PLAN_IS_TEMPORARY
+# -
+#   type: var
+#   var_name: L:FMC_FLIGHT_PLAN_IS_TEMPORARY
   -
     type: var
     var_name: L:BTN_CTR_ACTIVE
-  -
-    type: var
-    var_name: L:SALTY_VREF25
+# -
+#   type: var
+#   var_name: L:SALTY_VREF25
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+  -
+    type: var
+    var_name: L:B747_8_ATC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_ATC_State
+  -
+    type: var
+    var_name: L:B747_8_RUDDER_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_RUDDER_State
+  -
+    type: var
+    var_name: L:EFB_TEMPLATE_ScreenLuminosity
+  -
+    type: var
+    var_name: L:EFB_TEMPLATE_State
   -
     type: var
     var_name: L:B747_8_FMC_ScreenLuminosity
@@ -1564,18 +1595,6 @@ shared:
   -
     type: var
     var_name: L:B747_8_SAI_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_ATC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_ATC_State
-  -
-    type: var
-    var_name: L:B747_8_RUDDER_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_RUDDER_State
 
 master:
   -
@@ -1699,23 +1718,11 @@ server:
     var_type: f64
 
 ignore:
-  - AP_KNOB_Up
-  - AP_KNOB_Down
-  - AP_BARO_Up
-  - AP_BARO_Down
-  - B747_8_Com_1_BTN_swap
-  - B747_8_Com_2_BTN_swap
-  - B747_8_Com_3_BTN_swap
-  - B747_8_Com_1_BTN_vhf
-  - B747_8_Com_2_BTN_vhf
-  - B747_8_Com_3_BTN_vhf
-  - B747_8_Com_1_BTN_hf
-  - B747_8_Com_2_BTN_hf
-  - B747_8_Com_3_BTN_hf
+  - B747_8_FMC_1_AP_APP_ARMED
+  - B747_8_FMC_1_AP_LOC_ARMED
+  - B747_8_FMC_1_AP_LNAV
+  - B747_8_FMC_1_AP_VNAV
   - B747_8_MFD_BTN_TERR
   - B747_8_MFD_BTN_WXR
   - B747_8_PFD_BTN_TERR
   - B747_8_PFD_BTN_WXR
-  - B747_8_PFD_BARO_INC
-  - B747_8_PFD_BARO_DEC
-  - B747_8_FMC_1_AP_FD_TOGGLE
