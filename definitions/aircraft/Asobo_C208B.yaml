@@ -28,17 +28,34 @@ shared:
     var_type: bool
     event_name: TOGGLE_ALTERNATOR1
   -
-    type: ToggleSwitch
+    type: var
     var_name: A:GENERAL ENG MASTER ALTERNATOR:2
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_ALTERNATOR2
+  -
+    type: event
+    event_name: ALTERNATOR_ON
+  -
+    type: event
+    event_name: ALTERNATOR_OFF
   -
     type: ToggleSwitch
     var_name: A:EXTERNAL POWER ON:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
+  -
+    type: CustomCalculator
+    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 12 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
+    set: 11 12 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
+    set: 11 1 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
   -
     type: var
     var_name: A:GENERAL ENG STARTER:1
@@ -61,11 +78,11 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 27
-  - # Bus Tie
+  - # Avionics Bus Tie
     type: CustomCalculator
     get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
     set: 9 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # Standby
+  - # Avionics STBY
     type: CustomCalculator
     get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
     set: 11 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
@@ -281,6 +298,9 @@ shared:
 #   var_name: L:XMLVAR_AirSpeedIsInMach
   -
     type: var
+    var_name: L:XMLVAR_DeiceWindshield_1
+  -
+    type: var
     var_name: L:DEICE_Airframe_1
   -
     type: var
@@ -293,10 +313,16 @@ shared:
 #   var_name: L:AS1000_PFD_Brightness
 # -
 #   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
   -
     type: var
     var_name: L:HANDLING_RudderTrim
@@ -306,6 +332,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_InterSep
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:LIGHTING_POTENTIOMETER_3
@@ -377,6 +409,9 @@ shared:
 #   var_name: L:PFD_InnerMap_MapShowCursor
 # -
 #   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_SelectedNavIndex
 # -
 #   type: var
@@ -408,6 +443,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:Annunciations_Manager_Initialized
 # -
 #   type: var
 #   var_name: L:Glasscockpit_HSI_Arc
@@ -461,9 +499,6 @@ shared:
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
-#   var_name: L:AS1000_PFD_State
-# -
-#   type: var
 #   var_name: L:AS1000_MFD_State
   -
     type: var
@@ -477,6 +512,9 @@ shared:
   -
     type: var
     var_name: L:HourMeter_State
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
