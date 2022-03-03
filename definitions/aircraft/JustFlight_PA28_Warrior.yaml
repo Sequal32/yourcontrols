@@ -1,4 +1,4 @@
-# Version 0.3.1
+# Version 0.3.3
 
 include:
   - definitions/modules/Avionics/AS430.yaml
@@ -50,13 +50,10 @@ shared:
 #   var_name: L:TrimTab
   -
     type: var
-    var_name: L:Ext_chocks
+    var_name: L:Hide_Pilot
   -
     type: var
     var_name: L:Ext_towbar
-  -
-    type: var
-    var_name: L:Ext_tiedowns
   -
     type: var
     var_name: L:ALTIMETER_flag
@@ -281,6 +278,9 @@ shared:
     var_name: L:EFB_On
   -
     type: var
+    var_name: L:AUTOPILOT_nav
+  -
+    type: var
     var_name: L:AUTOPILOT_apr
   -
     type: var
@@ -306,6 +306,12 @@ shared:
   -
     type: var
     var_name: L:CustomReg_enabled
+  -
+    type: var
+    var_name: L:Ext_tiedowns
+  -
+    type: var
+    var_name: L:Ext_chocks
 # -
 #   type: var
 #   var_name: L:LEFT_MISC_lv_light
@@ -512,22 +518,10 @@ shared:
     var_name: L:KR85_vol_knob
   -
     type: var
-    var_name: L:KN62_outer_knob
-  -
-    type: var
-    var_name: L:KN62_inner_knob
-  -
-    type: var
     var_name: L:KN62_mode_knob
   -
     type: var
     var_name: L:KN62_power
-# -
-#   type: var
-#   var_name: L:HSI_CRS_knob
-# -
-#   type: var
-#   var_name: L:DIRECTION_INDICATOR_card_knob
   -
     type: var
     var_name: L:ASI_tas_knob
@@ -567,9 +561,6 @@ shared:
   -
     type: var
     var_name: L:AUTOPILOT_roll
-  -
-    type: var
-    var_name: L:AUTOPILOT_nav
   -
     type: var
     var_name: L:GPS100_OFFON
@@ -632,9 +623,6 @@ shared:
     var_name: L:CoPilot_enabled
   -
     type: var
-    var_name: L:Hide_Pilot
-  -
-    type: var
     var_name: L:Pilot_straps
   -
     type: var
@@ -660,13 +648,25 @@ shared:
     target: L:LEFT_MISC_window_LC
   -
     type: var
+    var_name: L:KN62_outer_knob
+  -
+    type: var
     var_name: L:KN62_inner_knob_Push
+  -
+    type: var
+    var_name: L:KN62_inner_knob
 # -
 #   type: var
 #   var_name: L:HSI_heading_knob
 # -
 #   type: var
+#   var_name: L:HSI_CRS_knob
+# -
+#   type: var
 #   var_name: L:Dir_ind_bug_knob
+# -
+#   type: var
+#   var_name: L:DIRECTION_INDICATOR_card_knob
   -
     type: var
     var_name: L:CENTRE_LOWER_nav_light_bounce
@@ -735,13 +735,7 @@ shared:
     var_name: L:RIGHT_LOWER_cabin_heat_1
   -
     type: var
-    var_name: L:RIGHT_LOWER_cabin_heat_1_calc
-  -
-    type: var
     var_name: L:RIGHT_LOWER_cabin_heat_2
-  -
-    type: var
-    var_name: L:RIGHT_LOWER_cabin_heat_2_calc
   -
     type: var
     var_name: L:ALT_baro_scale_vis
@@ -763,6 +757,78 @@ shared:
   -
     type: var
     var_name: L:GPS100_BLANKING_VIZ
+  -
+    type: var
+    var_name: L:TDS_GTN750_VIZ
+  -
+    type: var
+    var_name: L:TDS_GTN650_VIZ
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_LKnobInc
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_LKnobDec
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_LKnobCRSR
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_RKnobInnerInc
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_RKnobInnerDec
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_RKnobCRSR
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_RKnobOuterInc
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_RKnobOuterDec
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_HomeKey
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_DTOKey
+  -
+    type: var
+    var_name: L:TDSGTNXI750U1_NavSrc
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_LKnobInc
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_LKnobDec
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_LKnobCRSR
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_RKnobInnerInc
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_RKnobInnerDec
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_RKnobCRSR
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_RKnobOuterInc
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_RKnobOuterDec
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_HomeKey
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_DTOKey
+  -
+    type: var
+    var_name: L:TDSGTNXI650U2_NavSrc
 # -
 #   type: var
 #   var_name: L:AS430_MapZoomRange
@@ -793,10 +859,7 @@ shared:
     var_name: L:Baggage_door
 # -
 #   type: var
-#   var_name: L:PMS50_GTN750_INSTALLED
-# -
-#   type: var
-#   var_name: L:PMS50_GTN650_INSTALLED
+#   var_name: L:RIGHT_MISC_datcon_dig3
 # -
 #   type: var
 #   var_name: L:KR85_dig2_counter
@@ -812,6 +875,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:HSI_cdi
+  -
+    type: var
+    var_name: L:TDSGTNXI_ACTIVE
+  -
+    type: var
+    var_name: L:TDSGTNXI_InstrumentPanelSelfTest
+  -
+    type: var
+    var_name: L:TDSGTNXI_GlidePathValueActive
+  -
+    type: var
+    var_name: L:TDSGTNXI_GlidePathValueAngle
 # -
 #   type: var
 #   var_name: L:VOR1_gsi
@@ -827,12 +902,21 @@ shared:
 # -
 #   type: var
 #   var_name: L:KX170_COMM1_counter3
+# -
+#   type: var
+#   var_name: L:RPM_dig_5
   -
     type: var
     var_name: L:RADIO_ANIM_KN62
+  -
+    type: var
+    var_name: L:TDSGTNXI_ToFromFlag
 # -
 #   type: var
 #   var_name: L:HSI_to_flag
+# -
+#   type: var
+#   var_name: L:RPM_dig_1
 # -
 #   type: var
 #   var_name: L:KX170_NAV1_counter1
@@ -845,6 +929,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:HSI_from_flag
+# -
+#   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig4
+# -
+#   type: var
+#   var_name: L:RPM_dig_2
 # -
 #   type: var
 #   var_name: L:HSI_crs
@@ -862,6 +952,9 @@ shared:
 #   var_name: L:KX175_NAV2_counter2
 # -
 #   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig5
+# -
+#   type: var
 #   var_name: L:LEFT_LOWER_fuel_press
 # -
 #   type: var
@@ -872,6 +965,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:DIRECTION_INDICATOR_card
+# -
+#   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig6
 # -
 #   type: var
 #   var_name: L:KX170_COMM1_counter1
@@ -905,6 +1001,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:ALTIMETER_10000
+  -
+    type: var
+    var_name: L:TDSGTNXI_LateralValueActive
 # -
 #   type: var
 #   var_name: L:HSI_nav_flag
@@ -958,6 +1057,9 @@ shared:
 #   var_name: L:VOR1_cdi
 # -
 #   type: var
+#   var_name: L:RPM_dig_3
+# -
+#   type: var
 #   var_name: L:VOR2_cdi
 # -
 #   type: var
@@ -978,6 +1080,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:ATTITUDE_INDICATOR_bank
+# -
+#   type: var
+#   var_name: L:RPM_dig_4
 # -
 #   type: var
 #   var_name: L:KT76_dig1_counter
@@ -1004,7 +1109,16 @@ shared:
     var_name: L:HSI_gsi
 # -
 #   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig2
+# -
+#   type: var
 #   var_name: L:TURN_COORD_indicator
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:PMS50_GTN650_INSTALLED
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -1050,6 +1164,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:PMS50_AUTOPILOT_INSTALLED
   -
     type: var
     var_name: L:EGT_red_needle
@@ -1104,6 +1221,9 @@ shared:
   -
     type: var
     var_name: L:AC_fan
+# -
+#   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig1
   -
     type: var
     var_name: L:sound_Switch_Small_Up
