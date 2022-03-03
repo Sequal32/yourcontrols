@@ -4,45 +4,54 @@
 
 #### Profiles
 * Added Aeroplane Heaven Electra-10A (v1.2.1).
-* Added Aerosoft DHC6 Twin Otter (v1.0.3.0).
-  - Nearly every switch uses a B-event. They won't physically move for clients but the associated legacy events still sync.
-* Added IRIS Simulations G115 Tutor T.1 (v2.2.5).
+* Added Aerosoft DHC6 Twin Otter (v1.0.4.0).
+  - All switches and levers using B-events won't physically move for clients but the associated events still sync.
+* Added IRIS Simulations G115 Tutor T.1 (v2.3.5).
 * Added IRIS Simulations J160/J170 Jabiru (v1.5.6).
+* Added JustFlight PA-28 Warrior II (v0.3.3).
+* Added JustFlight PA-28R Turbo Arrow III/IV (v0.5.3).
 * Added Milviz PC-6 Turbo Porter (v1.0.8).
+* Added RotorSimPilot H125 (v1.3.8).
 * Added SimWorks Studios Kodiak 100 (v1.0.0).
 * Added SimSkunkWorks TF-104G Starfighter (v3.0).
-* Added experimental support for G1000 NXi (v0.10.1) by Working Title.
-  - APR/LOC works but when switching from NAV/LOC to APR, untoggle NAV and then toggle APR.
-  - LOC currently gets lost for client during intersection of ILS but recovers itself the moment glideslope is reached.
-* Added experimental support for GTN750 (Free) by PMS50 (v2.1.4).
-  - If using a G1000 replacement package, only change radio frequency with the PFD. For now.
+* Added C208B EX Improvement mod by Magraina (v2203.1.2).
+* Added experimental support for G1000 NXi by Working Title (v0.10.1).
+* Added experimental support for GNS530 by PMS50 (v1.0.48).
+* Added experimental support for GTN750 (Free) by PMS50 (v2.1.14).
 * Added missing support for non-G950 Asobo PC-6 Porter.
-* Added RotorSimPilot H125 (v1.3.4).
 * Updated Asobo planes for Sim Update 8.
+* Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
+* Updated JustFlight Arrow III to v0.10.3.
 * Updated Mrtommymxr DA62X to v0.6.2.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
-* Updated RotorSimPilot R44 to v1.2.
+* Updated RotorSimPilot R44 to v1.2.8.
 * Updated HPG H135 to v1.4.4.
 
 #### Changes
+* Fixed all autopilot and radio button/knob desync by blanket-ignoring all associated H-events.
+  Includes:
+  - KAP140, AS3X, AS225, AS430, AS530, AS1000, AS3000, GNS530, GTN650/750.
+  - AS3X, AS3000, GTN650/750 standby frequency page is now ignored because it won't close. (For now)
+* Fixed inaccurate G1000 COM/NAV volume level percentage.
+* Fixed NAV/ADF volume knobs jumping back and forth.
+* Fixed ADF frequency not always swapping.
+* Fixed master caution/warning acknowledge events for SU8.
 * Fixed multiple issues with Asobo Porter profile.
 * Fixed parking brake event name spelling error.
 * Fixed initial sync of DC-6 doors and exits.
 * Fixed avionics master switches on all aircraft having issues.
 * Fixed autopilot automatically leveling off when using V/S and FLC.
-* Fixed standby radio menu not opening on Longitude displays.
 * Fixed SVT terrain toggle on Asobo Longitude and TBM930.
-* Fixed H-event cancellations for KAP140 buttons and knobs.
-* Fixed G1000 COM frequency desync when turning large knob clockwise.
-* Fixed G3000 (horizontal) H-event cancellations for co-pilot knobs.
-* Fixed G3000 (horizontal) standby radio blue highlight selection.
 * Fixed vertical pitch reference on Working Title CJ4.
 * Fixed missing external lights on Asobo Cap10.
-* Fixed exit doors on Mugz TBM930.
+* Fixed exit doors on Mugz TBM930 and Carenado M20R.
 * Fixed flight director switches on Salty 747.
-* Fixed autopilot toggle buttons on H135 tablet.
 * Fixed attitude indicator bar calibration.
+* Fixed annunciator test light switch event.
+* Fixed WX brightness knob on Asobo 320neo.
+* Fixed interior and exterior lights on M20R.
+* Fixed external power BUS and STBY alternator on C208.
 
 
 ## Version 2.6.3
