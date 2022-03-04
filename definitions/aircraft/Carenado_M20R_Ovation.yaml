@@ -79,6 +79,21 @@ shared:
     event_param: 4
   -
     type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
     var_units: Percent
     var_type: f64
@@ -114,6 +129,12 @@ shared:
     var_type: f64
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 5
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
 
 # - # LVAR's
 #   type: var
@@ -169,12 +190,12 @@ shared:
   -
     type: var
     var_name: L:Clock Stopwatch
-  -
-    type: var
-    var_name: L:Stopwatch Last Abs Time
-  -
-    type: var
-    var_name: L:Stopwatch Seconds Elapsed
+# -
+#   type: var
+#   var_name: L:Stopwatch Last Abs Time
+# -
+#   type: var
+#   var_name: L:Stopwatch Seconds Elapsed
   -
     type: var
     var_name: L:M20R_BTN_TOGGLE_VDCAMPS
@@ -928,15 +949,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_AP_PITCH_REF_ANIM_TIMER
-  -
-    type: var
-    var_name: L:XMLVAR_AP_PITCH_REF_ANIM
+# -
+#   type: var
+#   var_name: L:XMLVAR_AP_PITCH_REF_ANIM
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
-  -
-    type: var
-    var_name: L:AP_DUMMY_ROCKET_SWITCH_SOUND
+# -
+#   type: var
+#   var_name: L:AP_DUMMY_ROCKET_SWITCH_SOUND
   -
     type: var
     var_name: L:M20R_btn_safety_by_pass
