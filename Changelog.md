@@ -11,6 +11,7 @@
 * Added JustFlight PA-28 Warrior II (v0.3.3).
 * Added JustFlight PA-28R Turbo Arrow III/IV (v0.5.3).
 * Added Milviz PC-6 Turbo Porter (v1.0.8).
+* Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
 * Added RotorSimPilot H125 (v1.3.8).
 * Added SimWorks Studios Kodiak 100 (v1.0.0).
 * Added SimSkunkWorks TF-104G Starfighter (v3.0).
