@@ -3,18 +3,18 @@
 ## Version 2.6.4
 
 #### Profiles
-* Added Aeroplane Heaven Electra-10A (v1.2.1).
-* Added Aerosoft DHC6 Twin Otter (v1.0.4.0).
+* Added Electra-10A by Aeroplane Heaven (v1.2.1).
+* Added DHC6 Twin Otter by Aerosoft (v1.0.4.0).
   - All switches and levers using B-events won't physically move for clients but the associated events still sync.
-* Added IRIS Simulations G115 Tutor T.1 (v2.3.5).
-* Added IRIS Simulations J160/J170 Jabiru (v1.5.6).
-* Added JustFlight PA-28 Warrior II (v0.3.3).
-* Added JustFlight PA-28R Turbo Arrow III/IV (v0.5.3).
-* Added Milviz PC-6 Turbo Porter (v1.0.8).
+* Added G115 Tutor T.1 by IRIS Simulations (v2.3.5).
+* Added J160/J170 Jabiru by IRIS Simulations (v1.5.6).
+* Added PA-28 Warrior II by JustFlight (v0.3.3).
+* Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
+* Added PC-6 Turbo Porter by Milviz (v1.0.8).
 * Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
-* Added RotorSimPilot H125 (v1.3.8).
-* Added SimWorks Studios Kodiak 100 (v1.0.0).
-* Added SimSkunkWorks TF-104G Starfighter (v3.0).
+* Added Airbus H125 by RotorSimPilot (v1.3.8).
+* Added Kodiak 100 by SimWorks Studios (v1.0.0).
+* Added TF-104G Starfighter by SimSkunkWorks (v3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.1.2).
 * Added experimental support for G1000 NXi by Working Title (v0.10.1).
 * Added experimental support for GNS530 by PMS50 (v1.0.48).
@@ -32,7 +32,7 @@
 #### Changes
 * Fixed all autopilot and radio button/knob desync by blanket-ignoring all associated H-events.
   Includes:
-  - KAP140, AS3X, AS225, AS430, AS530, AS1000, AS3000, GNS530, GTN650/750.
+  - AS3X, AS225, AS430, AS530, AS1000, AS3000, GNS530, GTN650/750, KAP140.
   - AS3X, AS3000, GTN650/750 standby frequency page is now ignored because it won't close. (For now)
 * Fixed inaccurate G1000 COM/NAV volume level percentage.
 * Fixed NAV/ADF volume knobs jumping back and forth.
@@ -46,7 +46,7 @@
 * Fixed SVT terrain toggle on Asobo Longitude and TBM930.
 * Fixed vertical pitch reference on Working Title CJ4.
 * Fixed missing external lights on Asobo Cap10.
-* Fixed exit doors on Mugz TBM930 and Carenado M20R.
+* Fixed exit doors on Mugz TBM930, Carenado M20R, RSP R44.
 * Fixed flight director switches on Salty 747.
 * Fixed attitude indicator bar calibration.
 * Fixed annunciator test light switch event.
