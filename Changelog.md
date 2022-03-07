@@ -16,10 +16,10 @@
 * Added Kodiak 100 by SimWorks Studios (v1.0.0).
 * Added TF-104G Starfighter by SimSkunkWorks (v3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.1.2).
-* Added experimental support for G1000 NXi by Working Title (v0.10.1).
-* Added experimental support for GNS530 by PMS50 (v1.0.48).
-* Added experimental support for GTN750 (Free) by PMS50 (v2.1.14).
 * Added missing support for non-G950 Asobo PC-6 Porter.
+* Added support for G1000 NXi by Working Title (v0.10.1).
+* Added support for GNS530 by PMS50 (v1.0.48).
+* Added support for GTN750 by PMS50 (v2.1.15).
 * Updated Asobo planes for Sim Update 8.
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
