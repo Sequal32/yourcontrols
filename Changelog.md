@@ -13,13 +13,13 @@
 * Added PC-6 Turbo Porter by Milviz (v1.0.8).
 * Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
 * Added Airbus H125 by RotorSimPilot (v1.3.8).
-* Added Kodiak 100 by SimWorks Studios (v1.0.0).
+* Added Kodiak 100 by SimWorks Studios (v1.0.24).
 * Added TF-104G Starfighter by SimSkunkWorks (v3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.1.2).
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added support for G1000 NXi by Working Title (v0.10.1).
 * Added support for GNS530 by PMS50 (v1.0.48).
-* Added support for GTN750 by PMS50 (v2.1.15).
+* Added support for GTN750 by PMS50 (v2.1.19).
 * Updated Asobo planes for Sim Update 8.
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
@@ -27,7 +27,7 @@
 * Updated Mrtommymxr DA62X to v0.6.2.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
 * Updated RotorSimPilot R44 to v1.2.8.
-* Updated HPG H135 to v1.4.4.
+* Updated HypePerformanceGroup H135 to v1.4.4.
 
 #### Changes
 * Fixed all autopilot and radio button/knob desync by blanket-ignoring all associated H-events.
