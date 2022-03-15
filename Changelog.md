@@ -16,6 +16,7 @@
 * Added Kodiak 100 by SimWorks Studios (v1.0.24).
 * Added TF-104G Starfighter by SimSkunkWorks (v3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.1.2).
+* Added Van's RV-7 & 7A mod by Deejing (v1.0.7).
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added support for G1000 NXi by Working Title (v0.10.1).
 * Added support for GNS530 by PMS50 (v1.0.48).
