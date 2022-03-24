@@ -1,4 +1,4 @@
-# Version 2203.1.2
+# Version 2203.2.2
 
 include:
   - definitions/modules/Avionics/AS1000.yaml
@@ -16,14 +16,24 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Electrical
-    type: ToggleSwitch
+  - # Battery
+    type: var
     var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_MASTER_BATTERY
-    event_param: 1
   -
+    type: var
+    var_name: A:ELECTRICAL MASTER BATTERY:2
+    var_units: Bool
+    var_type: bool
+  -
+    type: event
+    event_name: MASTER_BATTERY_ON
+  -
+    type: event
+    event_name: MASTER_BATTERY_SET
+
+  - # Alternators
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
@@ -35,24 +45,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_MASTER_ALTERNATOR
-  -
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
-    set: 11 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: ToggleSwitch
-    var_name: A:EXTERNAL POWER ON:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
-  -
-    type: var
-    var_name: A:GENERAL ENG STARTER:1
-    var_units: Number
-    var_type: i32
-  -
-    type: event
-    event_name: SET_STARTER1_HELD
+
   - # Avionics 1
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:26
@@ -67,7 +60,43 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 27
-  - # ADF
+  - # Avionics Bus Tie
+    type: CustomCalculator
+    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
+    set: 9 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # Avionics STBY
+    type: CustomCalculator
+    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
+    set: 11 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # External Power Starter
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
+  - # External Power Bus
+    type: CustomCalculator
+    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 12 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
+    set: 11 12 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
+    set: 11 1 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
+
+  - # Starter
+    type: var
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Number
+    var_type: i32
+  -
+    type: event
+    event_name: SET_STARTER1_HELD
+
+  - # ADF Power
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:43
     var_units: Bool
@@ -81,30 +110,6 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 56
-  - # Avionics Bus Tie
-    type: CustomCalculator
-    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
-    set: 9 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # Avionics STBY
-    type: CustomCalculator
-    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
-    set: 11 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # Battery
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:10, Bool)
-    set: 10 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # External Power Bus
-    type: CustomCalculator
-    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
-    set: 1 12 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
-    set: 11 12 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
-    set: 11 1 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
 
   - # Failures
     type: var
