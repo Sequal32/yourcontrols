@@ -62,6 +62,7 @@
 * Fixed AP1 to AP2 toggle with a temporary workaround on FBW A32NX.
 * Fixed excessive data spam while in hover mode on HPG H135.
 * Fixed barometer desync with MFD knobs on HPG H135.
+* Fixed kohlsman index for Asobo C172 G1000 since Sim Update 8.
 
 #### Known Issues:
 * JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type (Aircraft Options) on tablet are not the same for all connected. Cycle options before starting.
