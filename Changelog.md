@@ -19,9 +19,10 @@
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
 * Added Van's RV-7 & 7A mod by Deejing (v1.0.7).
 * Added missing support for non-G950 Asobo PC-6 Porter.
-* Added support for G1000 NXi by Working Title (v0.11.0).
 * Added support for GNS530 by PMS50 (v1.0.48).
 * Added support for GTN750 by PMS50 (v2.1.20).
+* Added support for GTNXi 750 by TDS Sim Software.
+* Added support for G1000 NXi by Working Title (v0.11.0).
 * Updated Asobo planes for Sim Update 8.
 * Updated FlyByWire A32NX to March 23, 2022.
 * Updated Carenado M20R to v1.5.1.
