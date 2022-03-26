@@ -81,7 +81,7 @@ shared:
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT CABIN:3 # Reading light (doesn't rotate)
+    var_name: A:LIGHT CABIN:3 # Reading light (doesn't move cause O var)
     var_units: Bool
     var_type: i32
     event_name: CABIN_LIGHTS_SET
@@ -129,6 +129,7 @@ shared:
     var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
+    cancel_h_events: true
     event_param: 3
 
   - # Pilot door handle
@@ -280,21 +281,21 @@ shared:
   -
     type: var
     var_name: L:SWS_ESI500_Child_Menu_Visible
-  -
-    type: var
-    var_name: L:SWS_ESI500_Menu_Fade
-  -
-    type: var
-    var_name: L:SWS_ESI500_VOR_ILS_TO_Value
-  -
-    type: var
-    var_name: L:SWS_ESI500_VOR_ILS_FROM_Value
-  -
-    type: var
-    var_name: L:SWS_ESI500_GPS_TO_Value
-  -
-    type: var
-    var_name: L:SWS_ESI500_GPS_FROM_Value
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_Menu_Fade
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_VOR_ILS_TO_Value
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_VOR_ILS_FROM_Value
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_GPS_TO_Value
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_GPS_FROM_Value
 # -
 #   type: var
 #   var_name: L:SWS_ESI500_VOR_ILS_TO_Offset
