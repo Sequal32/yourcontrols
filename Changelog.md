@@ -24,7 +24,7 @@
 * Added experimental support for GTNXi 750 by TDS Sim Software.
 * Added experimental support for G1000 NXi by Working Title (v0.11.0).
 * Updated Asobo planes for Sim Update 8.
-* Updated FlyByWire A32NX to March 23, 2022.
+* Updated FlyByWire A32NX to March 25, 2022.
   - EFB not updated.
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
