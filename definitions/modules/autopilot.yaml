@@ -100,7 +100,7 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
     var_units: Knots
-    var_type: f64
+    var_type: i32
     event_name: AP_SPD_VAR_SET
     cancel_h_events: true
     event_param: 1
@@ -133,19 +133,6 @@ shared:
     event_name: AP_WING_LEVELER
     cancel_h_events: true
     use_calculator: true
-# - # Conflicts with VS/FLC
-#   type: ToggleSwitch
-#   var_name: A:AUTOPILOT PITCH HOLD
-#   var_units: Bool
-#   var_type: bool
-#   event_name: AP_PITCH_LEVELER
-#   use_calculator: true
-  -
-    type: var
-    var_name: A:AUTOPILOT PITCH HOLD REF
-    var_units: Degrees
-    var_type: f64
-    unreliable: true
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT BACKCOURSE HOLD
@@ -154,6 +141,12 @@ shared:
     event_name: AP_BC_HOLD
     cancel_h_events: true
     use_calculator: true
+  -
+    type: var
+    var_name: A:AUTOPILOT PITCH HOLD REF
+    var_units: Degrees
+    var_type: f64
+    unreliable: true
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
