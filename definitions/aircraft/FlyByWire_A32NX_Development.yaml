@@ -36,6 +36,7 @@ shared:
     var_units: Knots
     var_type: i32
     event_name: A32NX.FCU_SPD_SET
+    cancel_h_events: true
     use_calculator: true
     conditions:
       -
@@ -2925,6 +2926,7 @@ shared:
     var_units: Degrees
     var_type: f64
     event_name: A32NX.FCU_HDG_SET
+    cancel_h_events: true
     use_calculator: true
 # -
 #   type: var
@@ -3600,6 +3602,7 @@ shared:
     var_type: f64
     event_name: A32NX.FCU_VS_SET
     multiply_by: 10
+    cancel_h_events: true
     use_calculator: true
     conditions:
       -
@@ -3613,6 +3616,7 @@ shared:
     var_name: L:A32NX_AUTOPILOT_VS_SELECTED
     var_type: f64
     event_name: A32NX.FCU_VS_SET
+    cancel_h_events: true
     use_calculator: true
     conditions:
       -
@@ -5001,21 +5005,9 @@ ignore:
   - A320_Neo_FCU_APPR_PUSH
   - A320_Neo_FCU_LOC_PUSH
   - A320_Neo_FCU_EXPED_PUSH
-  - A320_Neo_FCU_SPEED_INC
-  - A320_Neo_FCU_SPEED_DEC
   - A320_Neo_FCU_SPEED_SET
-  - A320_Neo_FCU_HDG_INC_HEADING
-  - A320_Neo_FCU_HDG_DEC_HEADING
   - A320_Neo_FCU_HDG_SET
-  - A320_Neo_FCU_VS_INC_VS
-  - A320_Neo_FCU_VS_DEC_VS
   - A320_Neo_FCU_VS_SET
-  - A320_Neo_FCU_VS_INC_FPA
-  - A320_Neo_FCU_VS_DEC_FPA
-  - A320_Neo_FCU_HDG_INC_TRACK
-  - A320_Neo_FCU_HDG_DEC_TRACK
-  - A320_Neo_CDU_AP_INC_ALT
-  - A320_Neo_CDU_AP_DEC_ALT
-  - A320_Neo_CDU_VS
+
   - A320_Neo_MFD_BTN_TERRONND_1
   - A320_Neo_MFD_BTN_TERRONND_2
