@@ -96,6 +96,23 @@ shared:
     var_units: Bool
     var_type: bool
 
+  - # Landing Pulse lights
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:19
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 19
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:20
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 20
+    index_reversed: true
+
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
@@ -200,9 +217,6 @@ shared:
     var_name: L:CJ4_PFD_ScreenLuminosity
   -
     type: var
-    var_name: L:AS3000_Brightness
-  -
-    type: var
     var_name: L:CJ4_MFD_ScreenLuminosity
 # -
 #   type: var
@@ -251,12 +265,6 @@ shared:
     var_name: L:ParkingBrake_Position
   -
     type: var
-    var_name: L:Generic_Master_Caution_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
-  -
-    type: var
     var_name: L:XMLVAR_Essential_Bus_ON
 # -
 #   type: var
@@ -272,7 +280,7 @@ shared:
     var_name: L:LIGHTING_NAV_1
   -
     type: var
-    var_name: L:LIGHTING_LANDING_1
+    var_name: L:LIGHTING_POTENTIOMETER_19
   -
     type: var
     var_name: L:LIGHTING_TAXI_1
@@ -287,7 +295,7 @@ shared:
     var_name: L:LIGHTING_BEACON_1
   -
     type: var
-    var_name: L:LIGHTING_RECOGNITION_1
+    var_name: L:LIGHTING_POTENTIOMETER_20
   -
     type: var
     var_name: L:LIGHTING_PANEL_1
@@ -321,15 +329,15 @@ shared:
   -
     type: var
     var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:LANDING_GEAR_Gear
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -363,9 +371,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Baro_Selector_HPA_1
-  -
-    type: var
-    var_name: L:XMLVAR_Mins_Selector_Baro
+# -
+#   type: var
+#   var_name: L:Annunciations_Manager_Initialized
   -
     type: var
     var_name: L:XMLVAR_Pitot_1
@@ -375,6 +383,12 @@ shared:
   -
     type: var
     var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
@@ -426,9 +440,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:AIRLINER_TO_FLEX_TEMP
+  -
+    type: var
+    var_name: L:AIRLINER_TO_FLEX_TEMP
   -
     type: var
     var_name: L:AIRLINER_CRUISE_ALTITUDE
@@ -438,15 +452,15 @@ shared:
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
-# -
-#   type: var
-#   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
@@ -535,10 +549,5 @@ server:
     var_type: f64
 
 ignore:
-  - AP_KNOB
-  - AP_KNOB_Up
-  - AP_KNOB_Down
-  - AP_BARO_Up
-  - AP_BARO_Down
   - Generic_Upr_RANGE_INC
   - Generic_Upr_RANGE_DEC

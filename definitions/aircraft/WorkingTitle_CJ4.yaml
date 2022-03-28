@@ -1,4 +1,4 @@
-# Version 0.12.11 release (December 18, 2021)
+# Version 0.12.12 release
 
 include:
   - definitions/modules/electrical.yaml
@@ -49,6 +49,24 @@ shared:
     event_name: AUTOPILOT_DISENGAGE_SET
   -
     type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    cancel_h_events: true
+    use_calculator: true
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    cancel_h_events: true
+    use_calculator: true
+    event_param: 2
+  -
+    type: ToggleSwitch
     var_name: A:AUTOPILOT HEADING LOCK
     var_units: Bool
     var_type: bool
@@ -57,9 +75,8 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:1
     var_units: Degrees
-    var_type: f64
+    var_type: i32
     event_name: HEADING_BUG_SET
-    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT ALTITUDE LOCK
@@ -70,9 +87,8 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
     var_units: Feet
-    var_type: f64
+    var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
-    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT VERTICAL HOLD
@@ -83,9 +99,8 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR
     var_units: Feet per minute
-    var_type: f64
+    var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
-    event_param: 0
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT AIRSPEED HOLD
@@ -96,7 +111,7 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR
     var_units: Knots
-    var_type: f64
+    var_type: i32
     event_name: AP_SPD_VAR_SET
   -
     type: ToggleSwitch
@@ -112,45 +127,16 @@ shared:
     event_name: FLIGHT_LEVEL_CHANGE
   -
     type: ToggleSwitch
-    var_name: A:AUTOPILOT WING LEVELER
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
     var_units: Bool
     var_type: bool
-    event_name: AP_WING_LEVELER
-
-# - # Do not use - conflicts with Vertical Speed
-#   type: ToggleSwitch
-#   var_name: A:AUTOPILOT PITCH HOLD
-#   var_units: Bool
-#   var_type: bool
-#   event_name: AP_PITCH_LEVELER
+    event_name: AP_BC_HOLD
   -
     type: var
     var_name: A:AUTOPILOT PITCH HOLD REF
     var_units: Degrees
     var_type: f64
     unreliable: true
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT BACKCOURSE HOLD
-    var_units: Bool
-    var_type: bool
-    event_name: AP_BC_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_FLIGHT_DIRECTOR
-    event_param: 1
-    use_calculator: true
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_FLIGHT_DIRECTOR
-    event_param: 2
-    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM
@@ -453,10 +439,6 @@ shared:
     var_name: L:CJ4_PFD_ScreenLuminosity
   -
     type: var
-    var_name: L:AS3000_Brightness
-    cancel_h_events: true
-  -
-    type: var
     var_name: L:CJ4_MFD_ScreenLuminosity
   -
     type: var
@@ -539,12 +521,6 @@ shared:
   -
     type: var
     var_name: L:ParkingBrake_Position
-# - # overlaps
-#   type: var
-#   var_name: L:Generic_Master_Caution_Active
-# -
-#   type: var
-#   var_name: L:Generic_Master_Warning_Active
   -
     type: var
     var_name: L:XMLVAR_Essential_Bus_ON
@@ -608,6 +584,12 @@ shared:
   -
     type: var
     var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:LANDING_GEAR_Gear
@@ -629,12 +611,12 @@ shared:
   -
     type: var
     var_name: L:FADEC_ACTIVE
-# -
-#   type: var
-#   var_name: L:THROTTLE1_MODE
-# -
-#   type: var
-#   var_name: L:THROTTLE2_MODE
+  -
+    type: var
+    var_name: L:THROTTLE1_MODE
+  -
+    type: var
+    var_name: L:THROTTLE2_MODE
   -
     type: var
     var_name: L:WT_CJ4_INHIBIT_SEQUENCE
@@ -647,24 +629,24 @@ shared:
   -
     type: var
     var_name: L:RADIONAV_SOURCE
-# -
-#   type: var
-#   var_name: L:WT_CJ4_V1_ON
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VR_ON
-# -
-#   type: var
-#   var_name: L:WT_CJ4_V2_ON
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VT_ON
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VREF_ON
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VAP_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_V1_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_VR_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_V2_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_VT_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_VREF_ON
+  -
+    type: var
+    var_name: L:WT_CJ4_VAP_ON
   -
     type: var
     var_name: L:XMLVAR_Baro_Selector_HPA_1
@@ -677,12 +659,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VREF_FMCSET
-# -
-#   type: var
-#   var_name: L:WT_CJ4_VAP_FMCSET
+  -
+    type: var
+    var_name: L:WT_CJ4_VREF_FMCSET
+  -
+    type: var
+    var_name: L:WT_CJ4_VAP_FMCSET
   -
     type: var
     var_name: L:WT_CJ4_PFD1_AOA
@@ -692,9 +674,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_CJ4_SNOWFLAKE
-# -
-#   type: var
-#   var_name: L:WT_NAV_SENSITIVITY
+  -
+    type: var
+    var_name: L:WT_NAV_SENSITIVITY
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
@@ -713,9 +695,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
-# -
-#   type: var
-#   var_name: L:WT_NAV_HOLD_INDEX
+  -
+    type: var
+    var_name: L:WT_NAV_HOLD_INDEX
   -
     type: var
     var_name: L:WT.CJ4.BearingPointerMode_1
@@ -725,6 +707,9 @@ shared:
   -
     type: var
     var_name: L:WT_CJ4_WPT_ALERT
+# -
+#   type: var
+#   var_name: L:Annunciations_Manager_Initialized
   -
     type: var
     var_name: L:AS1000_Warnings_Master_Set
@@ -736,6 +721,12 @@ shared:
 #   var_name: L:CJ4 FUEL FLOW:2
   -
     type: var
+    var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
+  -
+    type: var
     var_name: L:AS1000_Warnings_WarningIndex
   -
     type: var
@@ -743,15 +734,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:AIRLINER_TO_FLEX_TEMP
+  -
+    type: var
+    var_name: L:AIRLINER_TO_FLEX_TEMP
 # -
 #   type: var
 #   var_name: L:WT.FlightPlan.Version
-# -
-#   type: var
-#   var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
+  -
+    type: var
+    var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
   -
     type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
@@ -779,9 +770,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_CJ4_XTK
-# -
-#   type: var
-#   var_name: L:WT_CJ4_BARO_SET
+  -
+    type: var
+    var_name: L:WT_CJ4_BARO_SET
   -
     type: var
     var_name: L:WT_CJ4_RADIO_SET
@@ -797,30 +788,18 @@ shared:
   -
     type: var
     var_name: L:WT_CJ4_ALT_HOLD
-# -
-#   type: var
-#   var_name: L:WT_CJ4_IN_DISCONTINUITY
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+  -
+    type: var
+    var_name: L:WT_CJ4_IN_DISCONTINUITY
   -
     type: var
     var_name: L:WT_CJ4_DISPLAY_MSG
 # -
 #   type: var
-#   var_name: L:WT_NAV_SENSITIVITY_SCALAR
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
   -
     type: var
-    var_name: L:CJ4_FMC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_FMC_State
-  -
-    type: var
-    var_name: L:CJ4_SAI_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_SAI_State
+    var_name: L:WT_NAV_SENSITIVITY_SCALAR
   -
     type: var
     var_name: L:HourMeter_ScreenLuminosity
@@ -848,12 +827,24 @@ shared:
   -
     type: var
     var_name: L:CJ4_MFD_State
+  -
+    type: var
+    var_name: L:CJ4_FMC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_FMC_State
+  -
+    type: var
+    var_name: L:CJ4_SAI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_SAI_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 master:
-  - # ASOBO_ENGINE_Lever_Throttle_Template
+  -
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
     var_units: Position 16k
@@ -941,6 +932,3 @@ server:
     var_name: A:PAYLOAD STATION WEIGHT:12
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - WT_CJ4_AP_FD_TOGGLE

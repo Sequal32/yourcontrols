@@ -33,6 +33,7 @@
 * Updated Mrtommymxr DA40NGX to v0.8.6.
 * Updated RotorSimPilot R44 to v1.2.8.
 * Updated HypePerformanceGroup H135 to v1.4.4.
+* Updated Working Title CJ4 to v0.12.12.
 
 #### Changes
 * Fixed master caution/warning acknowledge events for Sim Update 8.
@@ -63,6 +64,7 @@
 * Fixed excessive data spam while in hover mode on HPG H135.
 * Fixed barometer desync with MFD knobs on HPG H135.
 * Fixed kohlsman index for Asobo C172 G1000 since Sim Update 8.
+* Fixed landing/pulse lights on Asobo CJ4.
 
 #### Known Issues:
 * JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type (Aircraft Options) on tablet are not the same for all connected. Cycle options before starting.
