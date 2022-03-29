@@ -18,7 +18,8 @@
 * Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
 * Added PC-6 Turbo Porter by Milviz (v1.0.8).
 * Added TF-104G Starfighter by SimSkunkWorks (v3.0).
-* Added Van's RV-7 & 7A freeware mod by Deejing (v1.0.7).
+* Added Van's RV-14 & 14A by SimWorks Studios (v1.0.0).
+* Added Van's RV-7 & 7A mod by Deejing (v1.0.7).
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added experimental support for GNS530 by PMS50 (v1.0.48).
 * Added experimental support for GTN750 by PMS50 (v2.1.20).
