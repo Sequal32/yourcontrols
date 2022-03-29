@@ -22,7 +22,7 @@
 * Added Van's RV-7 & 7A mod by Deejing (v1.0.7).
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added experimental support for GNS530 by PMS50 (v1.0.48).
-* Added experimental support for GTN750 by PMS50 (v2.1.20).
+* Added experimental support for GTN750 by PMS50 (v2.1.21).
 * Added experimental support for GTNXi 750 by TDS Sim Software.
 * Added experimental support for G1000 NXi by Working Title (v0.11.0).
 * Updated Asobo planes for Sim Update 8.
