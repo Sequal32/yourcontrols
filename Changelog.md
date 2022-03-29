@@ -3,37 +3,38 @@
 ## Version 2.6.4
 
 #### Profiles
-* Added Electra-10A by Aeroplane Heaven (v1.2.1).
-* Added DHC6 Twin Otter by Aerosoft (v1.0.4.0).
-  - All switches and levers using B-events won't physically move for clients but the associated events still sync.
-* Added G115 Tutor T.1 by IRIS Simulations (v2.3.5).
-* Added J160/J170 Jabiru by IRIS Simulations (v1.5.6).
-* Added PA-28 Warrior II by JustFlight (v0.3.3).
-* Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
-* Added PC-6 Turbo Porter by Milviz (v1.0.8).
-* Added Kodiak 100 by SimWorks Studios (v1.0.24).
-* Added TF-104G Starfighter by SimSkunkWorks (v3.0).
-* Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
 * Added Airbus H125 by RotorSimPilot (v1.3.8).
 * Added Bell 47G by FlyInside (v1.71).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
-* Added Van's RV-7 & 7A mod by Deejing (v1.0.7).
+* Added DHC6 Twin Otter by Aerosoft (v1.0.4.0).
+  - All switches and levers using B-events won't physically move for clients but the associated events still sync.
+* Added Electra-10A by Aeroplane Heaven (v1.2.1).
+* Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
+* Added G115 Tutor T.1 by IRIS Simulations (v2.3.5).
+* Added J160/J170 Jabiru by IRIS Simulations (v1.5.6).
+* Added JRF-6B Goose by Big Radials (v1.0.1).
+* Added Kodiak 100 by SimWorks Studios (v1.0.24).
+* Added PA-28 Warrior II by JustFlight (v0.3.3).
+* Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
+* Added PC-6 Turbo Porter by Milviz (v1.0.8).
+* Added TF-104G Starfighter by SimSkunkWorks (v3.0).
+* Added Van's RV-7 & 7A freeware mod by Deejing (v1.0.7).
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added experimental support for GNS530 by PMS50 (v1.0.48).
 * Added experimental support for GTN750 by PMS50 (v2.1.20).
 * Added experimental support for GTNXi 750 by TDS Sim Software.
 * Added experimental support for G1000 NXi by Working Title (v0.11.0).
 * Updated Asobo planes for Sim Update 8.
-* Updated FlyByWire A32NX to March 25, 2022.
-  - EFB not updated.
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
+* Updated FlyByWire A32NX to March 25, 2022.
+  - EFB not updated.
+* Updated Headwind A330 to v0.94.
+* Updated HypePerformanceGroup H135 to v1.4.4.
 * Updated JustFlight Arrow III to v0.10.3.
 * Updated Mrtommymxr DA62X to v0.6.2.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
 * Updated RotorSimPilot R44 to v1.2.8.
-* Updated Headwind A330 to v0.94.
-* Updated HypePerformanceGroup H135 to v1.4.4.
 * Updated Working Title CJ4 to v0.12.12.
 
 #### Changes
