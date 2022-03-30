@@ -72,6 +72,7 @@
 
 #### Known Issues:
 * JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type (Aircraft Options) on tablet are not the same for all connected. Cycle options before starting.
+* FlyByWire current fuel state unsyncable. A/THR causes engines to be completely out of sync.
 
 
 ## Version 2.6.3
