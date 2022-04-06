@@ -6,8 +6,8 @@
 * Added Airbus H125 by RotorSimPilot (v1.3.8).
 * Added Bell 47G by FlyInside (v1.71).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
+* Added C414AW Chancellor by Flysimware (v1.3.2).
 * Added DHC6 Twin Otter by Aerosoft (v1.0.4.0).
-  - All switches and levers using B-events won't physically move for clients but the associated events still sync.
 * Added Electra-10A by Aeroplane Heaven (v1.2.1).
 * Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
 * Added G115 Tutor T.1 by IRIS Simulations (v2.3.5).
@@ -22,8 +22,8 @@
 * Added Van's RV-7 & 7A mod by Deejing (v1.0.7).
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added experimental support for GNS530 by PMS50 (v1.0.48).
-* Added experimental support for GTN750 by PMS50 (v2.1.21).
-* Added experimental support for GTNXi 750 by TDS Sim Software.
+* Added experimental support for GTN750 by PMS50 (v2.1.24).
+* Added experimental support for GTNXi 750 by TDS Sim Software (v1.0.1.2).
 * Added experimental support for G1000 NXi by Working Title (v0.11.0).
 * Updated Asobo planes for Sim Update 8.
 * Updated Carenado M20R to v1.5.1.
@@ -33,6 +33,7 @@
 * Updated Headwind A330 to v0.94.
 * Updated HypePerformanceGroup H135 to v1.4.4.
 * Updated JustFlight Arrow III to v0.10.3.
+* Updated Mrtommymxr C172 to v0.3.
 * Updated Mrtommymxr DA62X to v0.7.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
 * Updated RotorSimPilot R44 to v1.2.8.
@@ -42,8 +43,6 @@
 * Fixed master caution/warning acknowledge events for Sim Update 8.
 * Fixed avionics master switches on all aircraft experiencing issues.
 * Fixed all autopilot and radio button/knob desync by blanket-ignoring all associated H-events.
-  Includes:
-  - AS3X, AS225, AS430, AS530, AS1000, AS3000, GNS530, GTN650/750, KAP140.
   - AS3X, AS3000, GTN650/750 standby frequency page is ignored because it won't close.
 * Fixed inaccurate G1000 COM/NAV volume level percentage.
 * Fixed NAV/ADF volume knobs jumping back and forth.
@@ -71,8 +70,9 @@
 * Fixed AUTO BRK switches on Headwind A330-900.
 
 #### Known Issues:
+* B-events/vars: All switches and levers using "B:" will not physically move for clients but any associated "A:" or "L:" vars will still sync. This is because "B:" cannot be set through SimConnect. Asobo clearly has no intention of fixing/allowing this, either.
 * JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type (Aircraft Options) on tablet are not the same for all connected. Cycle options before starting.
-* FlyByWire current fuel state unsyncable. A/THR causes engines to be completely out of sync with partner aircraft.
+* FlyByWire: Current fuel state unsyncable. A/THR causes engines to be completely out of sync with partner aircraft.
 
 
 ## Version 2.6.3
