@@ -30,7 +30,7 @@
 * Updated Carenado Seneca V to v1.4.0.
 * Updated FlyByWire A32NX to March 25, 2022.
   - EFB not updated.
-* Updated Headwind A330 to v0.94.
+* Updated Headwind A330-900 to v0.101.
 * Updated HypePerformanceGroup H135 to v1.4.4.
 * Updated JustFlight Arrow III to v0.10.3.
 * Updated Mrtommymxr C172 to v0.3.
@@ -67,7 +67,6 @@
 * Fixed barometer desync with MFD knobs on HPG H135.
 * Fixed kohlsman index for Asobo C172 G1000 since SU8.
 * Fixed landing/pulse lights on Asobo CJ4.
-* Fixed AUTO BRK switches on Headwind A330-900.
 
 #### Known Issues:
 * B-events/vars: All switches and levers using "B:" will not physically move for clients but any associated "A:" or "L:" vars will still sync. This is because "B:" cannot be set through SimConnect. Asobo clearly has no intention of fixing/allowing this, either.
