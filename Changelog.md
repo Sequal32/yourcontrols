@@ -3,6 +3,7 @@
 ## Version 2.6.4
 
 #### Profiles
+* Added Airbus A32NX Stable by FlyByWire (v0.7.4).
 * Added Airbus H125 by RotorSimPilot (v1.3.8).
 * Added Bell 47G by FlyInside (v1.71).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
@@ -28,7 +29,7 @@
 * Updated Asobo planes for Sim Update 8.
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
-* Updated FlyByWire A32NX to March 25, 2022.
+* Updated FlyByWire A32NX to April 8, 2022.
   - EFB not updated.
 * Updated Headwind A330-900 to v0.101.
 * Updated HypePerformanceGroup H135 to v1.4.4.
