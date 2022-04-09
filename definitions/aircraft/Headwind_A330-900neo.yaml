@@ -768,9 +768,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_SWITCH_RADAR_PWS_Position
-  -
-    type: var
-    var_name: L:A32NX_COLD_AND_DARK_SPAWN
+# -
+#   type: var
+#   var_name: L:A32NX_COLD_AND_DARK_SPAWN
   -
     type: var
     var_name: L:A32NX_ELEC_COMMERCIAL_FAULT
@@ -1505,8 +1505,10 @@ shared:
 #   type: var
 #   var_name: L:A32NX_AUTOTHRUST_TLA:2
   -
-    type: var
+    type: ToggleSwitch
     var_name: L:A32NX_AUTOTHRUST_DISCONNECT
+    event_name: A32NX.FCU_ATHR_DISCONNECT_PUSH
+    use_calculator: true
   -
     type: var
     var_name: L:XMLVAR_PTU_ON
@@ -2172,8 +2174,10 @@ shared:
     type: var
     var_name: L:BTN_ARPT_2_FILTER_ACTIVE
   -
-    type: var
+    type: ToggleSwitch
     var_name: L:A32NX_TRK_FPA_MODE_ACTIVE
+    event_name: A32NX.FCU_TRK_FPA_TOGGLE_PUSH
+    use_calculator: true
   - # temporary AP1 to AP2 fix (H-event allowed)
     type: var
     var_name: L:A32NX_AUTOPILOT_2_ACTIVE
@@ -3442,9 +3446,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_HYD_RAT_RPM
-  -
-    type: var
-    var_name: L:A32NX_HYD_RAT_STOW_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_RAT_STOW_POSITION
   -
     type: var
     var_name: L:A32NX_HYD_PTU_ACTIVE_L2R
@@ -3998,6 +4002,16 @@ server:
     var_name: A:FUEL TANK RIGHT AUX LEVEL
     var_units: Percent
     var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_USED:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_USED:2
+    var_type: i32
     unreliable: true
   -
     type: var
