@@ -1,4 +1,4 @@
-# Version 1.0.0
+# Version 1.0.2
 
 include:
   - definitions/modules/autopilot.yaml
@@ -243,14 +243,14 @@ shared:
     up_event_name: PRESSURIZATION_PRESSURE_ALT_INC
     down_event_name: PRESSURIZATION_PRESSURE_ALT_DEC
     increment_by: 36
-  -
-    type: NumIncrement
-    var_name: A:PRESSURIZATION CABIN ALTITUDE RATE
-    var_units: Feet per minute
-    var_type: f64
-    up_event_name: PRESSURIZATION_CLIMB_RATE_INC
-    down_event_name: PRESSURIZATION_CLIMB_RATE_DEC
-    increment_by: 36
+# -
+#   type: NumIncrement
+#   var_name: A:PRESSURIZATION CABIN ALTITUDE RATE
+#   var_units: Feet per minute
+#   var_type: f64
+#   up_event_name: PRESSURIZATION_CLIMB_RATE_INC
+#   down_event_name: PRESSURIZATION_CLIMB_RATE_DEC
+#   increment_by: 36
 
   - # Radio Alt
     type: NumIncrement
@@ -1114,7 +1114,16 @@ shared:
 
   - # LVAR's
     type: var
+    var_name: L:XMLVAR_ENG_MODE_SEL
+  -
+    type: var
     var_name: L:XMLVAR_SeatBelts
+  -
+    type: var
+    var_name: L:XMLVAR_GrdCall
+  -
+    type: var
+    var_name: L:XMLVAR_NoSmoking
   -
     type: var
     var_name: L:B747_8_MFD_NAV_MODE
@@ -1124,6 +1133,69 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_RMP_R_On
+  -
+    type: var
+    var_name: L:PASSENGER_VIZ
+  -
+    type: var
+    var_name: L:PWR_OFF_BLUE_INVERTER
+  -
+    type: var
+    var_name: L:PWR_OFF_GREEN_INVERTER
+  -
+    type: var
+    var_name: L:ANTI_STALL_1
+  -
+    type: var
+    var_name: L:ANTI_STALL_2
+  -
+    type: var
+    var_name: L:AUTO_STAB_PITCH
+  -
+    type: var
+    var_name: L:AUTO_STAB_PITCH2
+  -
+    type: var
+    var_name: L:AUTO_STAB_ROLL
+  -
+    type: var
+    var_name: L:AUTO_STAB_ROLL2
+  -
+    type: var
+    var_name: L:AUTO_STAB_YAW
+  -
+    type: var
+    var_name: L:AUTO_STAB_YAW2
+  -
+    type: var
+    var_name: L:AUTO_FEEL_PITCH
+  -
+    type: var
+    var_name: L:AUTO_FEEL_PITCH2
+  -
+    type: var
+    var_name: L:AUTO_FEEL_ROLL
+  -
+    type: var
+    var_name: L:AUTO_FEEL_ROLL2
+  -
+    type: var
+    var_name: L:AUTO_FEEL_YAW
+  -
+    type: var
+    var_name: L:AUTO_FEEL_YAW2
+  -
+    type: var
+    var_name: L:ELEC_TRIM_FAIL
+  -
+    type: var
+    var_name: L:ELEC_TRIM_FAILB
+  -
+    type: var
+    var_name: L:ADS_1
+  -
+    type: var
+    var_name: L:ADS_2
   -
     type: var
     var_name: L:SPILL_POSITION1
@@ -1184,9 +1256,9 @@ shared:
   -
     type: var
     var_name: L:TCV4
-  -
-    type: var
-    var_name: L:TYRE PRESSURE
+# -
+#   type: var
+#   var_name: L:TYRE PRESSURE
   -
     type: var
     var_name: L:FUEL_TEMP_SELECTOR
@@ -1441,6 +1513,30 @@ shared:
     var_name: L:FUEL_AUTO_TRANSFER
   -
     type: var
+    var_name: L:Pump_Switch_Tank9
+  -
+    type: var
+    var_name: L:Pump_Switch_Tank9B
+  -
+    type: var
+    var_name: L:Pump_Switch_Tank10
+  -
+    type: var
+    var_name: L:Pump_Switch_Tank10B
+  -
+    type: var
+    var_name: L:ORIDE_11L
+  -
+    type: var
+    var_name: L:Inlet_Valve_11L
+  -
+    type: var
+    var_name: L:ORIDE_11R
+  -
+    type: var
+    var_name: L:Inlet_Valve_11R
+  -
+    type: var
     var_name: L:TANK_11_LOAD
   -
     type: var
@@ -1471,10 +1567,16 @@ shared:
     var_name: L:Inlet_Valve_7
   -
     type: var
-    var_name: L:ORIDE_11L
+    var_name: L:DE_AIR_SWITCH
   -
     type: var
-    var_name: L:Inlet_Valve_11L
+    var_name: L:DE_AIR_SWITCHB
+  -
+    type: var
+    var_name: L:TANK11_HYD
+  -
+    type: var
+    var_name: L:TANK11_HYD1
   -
     type: var
     var_name: L:FO_TRANSFER_GUARD
@@ -1490,12 +1592,6 @@ shared:
   -
     type: var
     var_name: L:LP_VALVE_COVER4
-  -
-    type: var
-    var_name: L:Inlet_Valve_11R
-  -
-    type: var
-    var_name: L:ORIDE_11R
   -
     type: var
     var_name: L:DCVOLTS
@@ -1616,9 +1712,6 @@ shared:
   -
     type: var
     var_name: L:ALT_AP_VALUE
-  -
-    type: var
-    var_name: L:Passenger_Viz
   -
     type: var
     var_name: L:Toilet_Door_Handle
@@ -1942,19 +2035,7 @@ shared:
     var_name: L:TRIMTANKS_COVER
   -
     type: var
-    var_name: L:ADS_1
-  -
-    type: var
-    var_name: L:ADS_2
-  -
-    type: var
     var_name: L:ADS_INHIBIT
-  -
-    type: var
-    var_name: L:XMLVAR_GrdCall
-  -
-    type: var
-    var_name: L:XMLVAR_NoSmoking
   -
     type: var
     var_name: L:CABIN_PHONE
@@ -1987,10 +2068,34 @@ shared:
     var_name: L:DE_AIR
   -
     type: var
-    var_name: L:AP_PANEL_HEADING_HOLD
+    var_name: L:MACH_PIT_HOLD_TARGET_AIRMACH
+  -
+    type: var
+    var_name: L:IAS_PIT_HOLD_TARGET_AIRSP
+  -
+    type: var
+    var_name: L:IAS_MODE_PITCH_HOLD
+  -
+    type: var
+    var_name: L:MACH_MODE_PITCH_HOLD
+  -
+    type: var
+    var_name: L:PITCH_DATUM_ACTIVE
+  -
+    type: var
+    var_name: L:IAS_DATUM_ACTIVE
+  -
+    type: var
+    var_name: L:MACH_DATUM_ACTIVE
   -
     type: var
     var_name: L:MAX CLIMB
+  -
+    type: var
+    var_name: L:MAX CRUISE
+  -
+    type: var
+    var_name: L:AP_PANEL_HEADING_HOLD
 # -
 #   type: var
 #   var_name: L:DELTA_SPEED
@@ -2008,10 +2113,16 @@ shared:
     var_name: L:AUTOLAND
   -
     type: var
-    var_name: L:MAX CRUISE
-# -
-#   type: var
-#   var_name: L:XMLVAR_AirSpeedIsInMach
+    var_name: L:DELTA_SPEED_PITCH
+  -
+    type: var
+    var_name: L:DELTA_MACH_PITCH
+  -
+    type: var
+    var_name: L:XMLVAR_AirSpeedIsInMach
+  -
+    type: var
+    var_name: L:MAX_CRUISE_TARGET_AIRMACH
   -
     type: var
     var_name: L:PILOT_PITCH_CTRL
@@ -2045,60 +2156,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Autopilot_2_Status
-  -
-    type: var
-    var_name: L:ANTI_STALL_1
-  -
-    type: var
-    var_name: L:ANTI_STALL_2
-  -
-    type: var
-    var_name: L:AUTO_STAB_PITCH
-  -
-    type: var
-    var_name: L:AUTO_STAB_ROLL
-  -
-    type: var
-    var_name: L:AUTO_STAB_YAW
-  -
-    type: var
-    var_name: L:AUTO_FEEL_PITCH
-  -
-    type: var
-    var_name: L:AUTO_FEEL_ROLL
-  -
-    type: var
-    var_name: L:AUTO_FEEL_YAW
-  -
-    type: var
-    var_name: L:AUTO_STAB_PITCH2
-  -
-    type: var
-    var_name: L:AUTO_STAB_ROLL2
-  -
-    type: var
-    var_name: L:AUTO_STAB_YAW2
-  -
-    type: var
-    var_name: L:AUTO_FEEL_PITCH2
-  -
-    type: var
-    var_name: L:AUTO_FEEL_ROLL2
-  -
-    type: var
-    var_name: L:AUTO_FEEL_YAW2
-  -
-    type: var
-    var_name: L:ELEC_TRIM_FAIL
-  -
-    type: var
-    var_name: L:ELEC_TRIM_FAILB
-  -
-    type: var
-    var_name: L:PWR_OFF_BLUE_INVERTER
-  -
-    type: var
-    var_name: L:PWR_OFF_GREEN_INVERTER
   -
     type: var
     var_name: L:ELEVON_GREEN_BLUE
@@ -2138,12 +2195,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_IE_Afterburner_1_Quit
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Value
   -
     type: var
     var_name: L:XMLVAR_IE_Afterburner_2_Quit
@@ -2269,6 +2320,12 @@ shared:
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
   -
     type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
   -
     type: var
@@ -2285,18 +2342,9 @@ shared:
   -
     type: var
     var_name: L:MODE_ALTITUDE
-  -
-    type: var
-    var_name: L:MODE_SPEED
 # -
 #   type: var
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:MFD_MapShowCursor
@@ -2336,6 +2384,9 @@ shared:
   -
     type: var
     var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:Fuel_Pump_Switch_A
   -
     type: var
     var_name: L:A320_Neo_CDU_ScreenLuminosity
