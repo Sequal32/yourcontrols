@@ -82,18 +82,6 @@ shared:
     event_name: TOGGLE_STRUCTURAL_DEICE
 
   - # Engines
-    type: ToggleSwitch
-    var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
-    var_units: Bool
-    var_type: bool
-    event_name: ENGINE_MASTER_1_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:RECIP ENG ENGINE MASTER SWITCH:2
-    var_units: Bool
-    var_type: bool
-    event_name: ENGINE_MASTER_2_TOGGLE
-  -
     type: NumSet
     var_name: A:TURB ENG IGNITION SWITCH EX1:1
     var_units: Enum
@@ -107,20 +95,6 @@ shared:
     event_name: TURBINE_IGNITION_SWITCH_SET2
 
   - # Electrical
-    type: CustomCalculator
-    get: 10 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
-    set: 6 10 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
-    set: 6 11 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: ToggleSwitch
-    var_name: A:EXTERNAL POWER ON:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
-  -
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
@@ -138,6 +112,12 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: APU_GENERATOR_SWITCH_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
 
   - # Fuel
     type: ToggleSwitch
@@ -569,35 +549,30 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: NAV_LIGHTS_SET
-    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT LOGO:0
     var_units: Bool
     var_type: f64
     event_name: LOGO_LIGHTS_SET
-    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT BEACON:0
     var_units: Bool
     var_type: f64
     event_name: BEACON_LIGHTS_SET
-    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT WING:0
     var_units: Bool
     var_type: f64
     event_name: WING_LIGHTS_SET
-    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT STROBE:0
     var_units: Bool
     var_type: f64
     event_name: STROBES_SET
-    event_param: 0
 
   - # Seatbelts
     type: ToggleSwitch
@@ -4098,3 +4073,5 @@ ignore:
 
   - A320_Neo_MFD_BTN_TERRONND_1
   - A320_Neo_MFD_BTN_TERRONND_2
+
+  - EB_EVENTS
