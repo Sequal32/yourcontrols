@@ -1,7 +1,6 @@
-# Version 1.0.2
+# Version 1.0.3
 
 include:
-  - definitions/modules/autopilot.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -13,6 +12,183 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Autopilot
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT DISENGAGED
+    var_units: Bool
+    var_type: i32
+    event_name: AUTOPILOT_DISENGAGE_SET
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_HDG_HOLD
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_ALT_HOLD
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    var_type: i32
+    event_name: AP_VS_SET
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD
+    var_units: Bool
+    var_type: i32
+    event_name: AP_AIRSPEED_SET
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MACH HOLD
+    var_units: Bool
+    var_type: i32
+    event_name: AP_MACH_SET
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: i32
+    event_name: AP_SPD_VAR_SET
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_ON
+    off_event_name: AP_MANAGED_SPEED_IN_MACH_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
+    var_units: Bool
+    var_type: bool
+    event_name: FLIGHT_LEVEL_CHANGE
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT WING LEVELER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_WING_LEVELER
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_BC_HOLD
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT PITCH HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PITCH_LEVELER
+  -
+    type: var
+    var_name: A:AUTOPILOT PITCH HOLD REF
+    var_units: Degrees
+    var_type: f64
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    use_calculator: true
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    use_calculator: true
+    event_param: 2
+  -
+    type: var
+    var_name: A:AUTOPILOT APPROACH HOLD
+    var_units: Bool
+    var_type: bool
+  -
+    type: event
+    event_name: AP_APR_HOLD
+  -
+    type: var
+    var_name: A:AUTOPILOT GLIDESLOPE HOLD
+    var_units: Bool
+    var_type: bool
+  -
+    type: event
+    event_name: AP_LOC_HOLD
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT THROTTLE ARM:1
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_ARM
+    use_calculator: true
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT THROTTLE ARM:2
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_ARM
+    use_calculator: true
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_TO_GA
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MAX BANK ID
+    var_units: Number
+    var_type: f64
+    event_name: AP_MAX_BANK_SET
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+
   - # AntiSkid
     type: ToggleSwitch
     var_name: A:ANTISKID BRAKES ACTIVE
@@ -2074,16 +2250,16 @@ shared:
     var_name: L:IAS_PIT_HOLD_TARGET_AIRSP
   -
     type: var
-    var_name: L:IAS_MODE_PITCH_HOLD
-  -
-    type: var
-    var_name: L:MACH_MODE_PITCH_HOLD
-  -
-    type: var
     var_name: L:PITCH_DATUM_ACTIVE
   -
     type: var
+    var_name: L:IAS_MODE_PITCH_HOLD
+  -
+    type: var
     var_name: L:IAS_DATUM_ACTIVE
+  -
+    type: var
+    var_name: L:MACH_MODE_PITCH_HOLD
   -
     type: var
     var_name: L:MACH_DATUM_ACTIVE
@@ -2096,33 +2272,24 @@ shared:
   -
     type: var
     var_name: L:AP_PANEL_HEADING_HOLD
+  -
+    type: var
+    var_name: L:IAS_ACQ
 # -
 #   type: var
 #   var_name: L:DELTA_SPEED
+  -
+    type: var
+    var_name: L:AUTOLAND
 # -
 #   type: var
 #   var_name: L:DELTA_ALTITUDE
   -
     type: var
-    var_name: L:IAS_ACQ
-  -
-    type: var
     var_name: L:ALT_ACQ
   -
     type: var
-    var_name: L:AUTOLAND
-  -
-    type: var
-    var_name: L:DELTA_SPEED_PITCH
-  -
-    type: var
-    var_name: L:DELTA_MACH_PITCH
-  -
-    type: var
     var_name: L:XMLVAR_AirSpeedIsInMach
-  -
-    type: var
-    var_name: L:MAX_CRUISE_TARGET_AIRMACH
   -
     type: var
     var_name: L:PILOT_PITCH_CTRL
@@ -2303,6 +2470,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_IE_Afterburner_4_LastThrottleInc
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -2318,12 +2491,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
@@ -2345,6 +2512,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:MFD_MapShowCursor
