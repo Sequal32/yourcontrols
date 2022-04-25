@@ -1,4 +1,4 @@
-# Version 1.4.2
+# Version 1.5.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -334,9 +334,9 @@ shared:
     event_name: PEDESTRAL_LIGHTS_SET
     event_param: 12
 
-  - # LVAR's
-    type: var
-    var_name: L:SHOW_HIDE_EFB
+# - # LVAR's (NXi)
+#   type: var
+#   var_name: L:SHOW_HIDE_EFB
   -
     type: var
     var_name: L:EFB_PUSH_PLUGS
@@ -681,9 +681,6 @@ shared:
   -
     type: var
     var_name: L:NAV_CAP_GPS
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_LateralValueActive
   -
     type: var
     var_name: L:MEMORY_GPS_APR
@@ -783,24 +780,6 @@ shared:
   -
     type: var
     var_name: L:GA_BTN
-# -
-#   type: var
-#   var_name: L: HDG_MODE
-# -
-#   type: var
-#   var_name: L: APR_MODE
-# -
-#   type: var
-#   var_name: L: NAV_MODE
-# -
-#   type: var
-#   var_name: L: VS_MODE
-# -
-#   type: var
-#   var_name: L: IAS_MODE
-# -
-#   type: var
-#   var_name: L: LVL_MODE
   -
     type: var
     var_name: L:GA_MODE_MEM
@@ -858,6 +837,89 @@ shared:
   -
     type: var
     var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:Prop1Rotation
+# -
+#   type: var
+#   var_name: L:Prop2Rotation
+  -
+    type: var
+    var_name: L:DEICE_PROP
+# -
+#   type: var
+#   var_name: L:STEERING
+# -
+#   type: var
+#   var_name: L:STEERING_UPPER
+  -
+    type: var
+    var_name: L:TIE_DOWN
+  -
+    type: var
+    var_name: L:ENGINE_OIL_LEFT
+  -
+    type: var
+    var_name: L:ENGINE_OIL_RIGHT
+  -
+    type: var
+    var_name: L:ENGINE_DOOR_LEFT
+  -
+    type: var
+    var_name: L:ENGINE_DOOR_RIGHT
+  -
+    type: var
+    var_name: L:HYD_RESERVOIR
+  -
+    type: var
+    var_name: L:FUEL_CAP_LEFT
+  -
+    type: var
+    var_name: L:FUEL_CAP_RIGHT
+  -
+    type: var
+    var_name: L:LANDING_LIGHT_MOTOR
+  -
+    type: var
+    var_name: L:AC_INLET
+  -
+    type: var
+    var_name: L:XMLVAR_HEAT_EXCHANGER_HANDLE_LEFT_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_HEAT_EXCHANGER_HANDLE_RIGHT_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:LOCKER_NOSE_1_LEVER
+  -
+    type: var
+    var_name: L:LOCKER_NOSE_1_BUTTON
+  -
+    type: var
+    var_name: L:LOCKER_NOSE_2_LEVER
+  -
+    type: var
+    var_name: L:LOCKER_NOSE_2_BUTTON
+  -
+    type: var
+    var_name: L:LOCKER_NOSE_3_LEVER
+  -
+    type: var
+    var_name: L:LOCKER_NOSE_3_BUTTON
+  -
+    type: var
+    var_name: L:LOCKER_WING_L_LEVER
+  -
+    type: var
+    var_name: L:LOCKER_WING_L
+  -
+    type: var
+    var_name: L:LOCKER_WING_R_LEVER
+  -
+    type: var
+    var_name: L:LOCKER_WING_R
   -
     type: var
     var_name: L:CABIN_CALL_KNOB
@@ -1025,9 +1087,6 @@ shared:
     var_name: L:STARTER1
 # -
 #   type: var
-#   var_name: L:Prop1Rotation
-# -
-#   type: var
 #   var_name: L:Prop1Crank
 # -
 #   type: var
@@ -1038,9 +1097,6 @@ shared:
   -
     type: var
     var_name: L:STARTER2
-# -
-#   type: var
-#   var_name: L:Prop2Rotation
 # -
 #   type: var
 #   var_name: L:Prop2Crank
@@ -1055,13 +1111,7 @@ shared:
 #   var_name: L:STEER_NODE
 # -
 #   type: var
-#   var_name: L:STEERING
-# -
-#   type: var
 #   var_name: L:STEERING_MEMORY
-# -
-#   type: var
-#   var_name: L:STEERING_UPPER
   -
     type: var
     var_name: L:RUDDER_LOCK
@@ -1070,43 +1120,16 @@ shared:
     var_name: L:ENG_DOORS
   -
     type: var
-    var_name: L:ENGINE_DOOR_LEFT
-  -
-    type: var
-    var_name: L:ENGINE_DOOR_RIGHT
-  -
-    type: var
     var_name: L:OIL_DOORS
-  -
-    type: var
-    var_name: L:ENGINE_OIL_LEFT
-  -
-    type: var
-    var_name: L:ENGINE_OIL_RIGHT
   -
     type: var
     var_name: L:HYD_RESVR
   -
     type: var
-    var_name: L:HYD_RESERVOIR
-  -
-    type: var
     var_name: L:FUEL_CAPS
   -
     type: var
-    var_name: L:FUEL_CAP_LEFT
-  -
-    type: var
-    var_name: L:FUEL_CAP_RIGHT
-  -
-    type: var
     var_name: L:L_WINGLOCKER
-  -
-    type: var
-    var_name: L:LOCKER_WING_L_LEVER
-  -
-    type: var
-    var_name: L:LOCKER_WING_L
   -
     type: var
     var_name: L:LOCKER_WING_L_DOOR
@@ -1115,40 +1138,16 @@ shared:
     var_name: L:R_WINGLOCKER
   -
     type: var
-    var_name: L:LOCKER_WING_R_LEVER
-  -
-    type: var
-    var_name: L:LOCKER_WING_R
-  -
-    type: var
     var_name: L:LOCKER_WING_R_DOOR
   -
     type: var
     var_name: L:NOSE_DOOR1
   -
     type: var
-    var_name: L:LOCKER_NOSE_1_BUTTON
-  -
-    type: var
-    var_name: L:LOCKER_NOSE_1_LEVER
-  -
-    type: var
     var_name: L:NOSE_DOOR2
   -
     type: var
-    var_name: L:LOCKER_NOSE_2_BUTTON
-  -
-    type: var
-    var_name: L:LOCKER_NOSE_2_LEVER
-  -
-    type: var
     var_name: L:NOSE_DOOR3
-  -
-    type: var
-    var_name: L:LOCKER_NOSE_3_BUTTON
-  -
-    type: var
-    var_name: L:LOCKER_NOSE_3_LEVER
   -
     type: var
     var_name: L:CABIN_UPPER
@@ -1173,6 +1172,27 @@ shared:
   -
     type: var
     var_name: L:CABIN_LOWER
+  -
+    type: var
+    var_name: L:GENERIC_ALERTER_TEN_THOUSANDTHS
+    unreliable: true
+  -
+    type: var
+    var_name: L:Alerter_GENERIC_ALERTER_TEN_THOUSANDTHS
+  -
+    type: var
+    var_name: L:Alerter_GENERIC_ALERTER_THOUSANDTHS
+  -
+    type: var
+    var_name: L:Alerter_GENERIC_ALERTER_HUNDREDTHS
+  -
+    type: var
+    var_name: L:GENERIC_ALERTER_THOUSANDTHS
+    unreliable: true
+  -
+    type: var
+    var_name: L:GENERIC_ALERTER_HUNDREDTHS
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:TDSGTNXI750U1_LKnobInc
@@ -1282,27 +1302,6 @@ shared:
   -
     type: var
     var_name: L:RNAV_ENTER_LIGHT
-  -
-    type: var
-    var_name: L:GENERIC_ALERTER_TEN_THOUSANDTHS
-    unreliable: true
-  -
-    type: var
-    var_name: L:Alerter_GENERIC_ALERTER_TEN_THOUSANDTHS
-  -
-    type: var
-    var_name: L:Alerter_GENERIC_ALERTER_THOUSANDTHS
-  -
-    type: var
-    var_name: L:Alerter_GENERIC_ALERTER_HUNDREDTHS
-  -
-    type: var
-    var_name: L:GENERIC_ALERTER_THOUSANDTHS
-    unreliable: true
-  -
-    type: var
-    var_name: L:GENERIC_ALERTER_HUNDREDTHS
-    unreliable: true
   -
     type: var
     var_name: L:DOOR_LIGHT1
@@ -1428,12 +1427,6 @@ shared:
     var_name: L:GYRO_DRIFT_SWITCH
   -
     type: var
-    var_name: L:STORED_FUEL_GALLONS
-  -
-    type: var
-    var_name: L:STORED_FUEL_POUNDS
-  -
-    type: var
     var_name: L:EMERG_GEAR_COVER
   -
     type: var
@@ -1492,14 +1485,6 @@ shared:
     var_name: L:STATIC_AIR_RIGHT
   -
     type: var
-    var_name: L:XMLVAR_HEAT_EXCHANGER_HANDLE_LEFT_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:XMLVAR_HEAT_EXCHANGER_HANDLE_RIGHT_Position
-    unreliable: true
-  -
-    type: var
     var_name: L:XMLVAR_CABIN_AIR_HEAT_Position
     unreliable: true
   -
@@ -1514,9 +1499,6 @@ shared:
     type: var
     var_name: L:XMLVAR_CABIN_AIR_FWD_Position
     unreliable: true
-  -
-    type: var
-    var_name: L:AC_INLET
   -
     type: var
     var_name: L:AIRCON_HI_LOW_SWITCH
@@ -1558,9 +1540,6 @@ shared:
     var_name: L:STALL_VENT_HEAT
   -
     type: var
-    var_name: L:DEICE_PROP
-  -
-    type: var
     var_name: L:CABIN_HEAT
   -
     type: var
@@ -1577,9 +1556,6 @@ shared:
   -
     type: var
     var_name: L:Plugs
-  -
-    type: var
-    var_name: L:Tie_Down
   -
     type: var
     var_name: L:Pitot_Tube
@@ -1607,9 +1583,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_PHASE_KNOB_Position
-  -
-    type: var
-    var_name: L:HYD_PRESS
   -
     type: var
     var_name: L:NAV1_GPS_BUTTON
@@ -1661,9 +1634,6 @@ shared:
   -
     type: var
     var_name: L:ADF_1
-  -
-    type: var
-    var_name: L:LANDING_LIGHT_MOTOR
   -
     type: var
     var_name: L:XMLVAR_Knob_Heading_Compass_Position
@@ -1733,6 +1703,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:SIMULATION_TIME
+# -
+#   type: var
+#   var_name: L:GTN750_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN750_INT_State
+# -
+#   type: var
+#   var_name: L:GTN750_INT_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN750_INT_2_State
   -
     type: var
     var_name: L:RNAVNAV_ScreenLuminosity
@@ -1751,6 +1733,15 @@ shared:
   -
     type: var
     var_name: L:CFS_Preflight_Mode
+  -
+    type: var
+    var_name: L:STORED_FUEL_GALLONS
+  -
+    type: var
+    var_name: L:STORED_FUEL_POUNDS
+  -
+    type: var
+    var_name: L:STORED_FUEL_TOTAL
   -
     type: var
     var_name: L:DMEC1077B_ScreenLuminosity
@@ -1811,7 +1802,16 @@ shared:
     var_name: L:GENERIC_XPNDR_SBY
   -
     type: var
+    var_name: L:GENERIC_AUTOPILOT_HDG
+  -
+    type: var
+    var_name: L:GENERIC_AUTOPILOT_FD
+  -
+    type: var
     var_name: L:GENERIC_AP_MASTER
+  -
+    type: var
+    var_name: L:GENERIC_XPNDR_ON
   -
     type: var
     var_name: L:GENERIC_AP_YAW_DAMPER
@@ -1823,28 +1823,22 @@ shared:
     var_name: L:GENERIC_AUTOPILOT_NAV
   -
     type: var
-    var_name: L:GENERIC_AUTOPILOT_HDG
-  -
-    type: var
-    var_name: L:GENERIC_AUTOPILOT_FD
-  -
-    type: var
-    var_name: L:GENERIC_AUTOPILOT_BC
-  -
-    type: var
-    var_name: L:GENERIC_XPNDR_ON
-  -
-    type: var
     var_name: L:GENERIC_XPNDR_OFF
   -
     type: var
     var_name: L:GENERIC_XPNDR_TEST
   -
     type: var
+    var_name: L:GENERIC_AUTOPILOT_BC
+  -
+    type: var
     var_name: L:GENERIC_XPNDR_ID
   -
     type: var
     var_name: L:AUTOPILOT_GS
+  -
+    type: var
+    var_name: L:XMLVAR_NAVOMATIC_AP_PITCH_Position
   -
     type: var
     var_name: L:XMLVAR_NAVOMATIC_TURN_KNOB_Position
@@ -1857,6 +1851,9 @@ shared:
   -
     type: var
     var_name: L:NAVOMATIC_TURN_BANK_Degrees
+  -
+    type: var
+    var_name: L:Alerter_CODE
   -
     type: var
     var_name: L:TRANSPONDER_GENERIC_XPNDR_THOUSANDTHS
@@ -1896,14 +1893,6 @@ shared:
   -
     type: var
     var_name: L:GENERIC_XPNDR_ONES
-    unreliable: true
-
-master:
-  - # OAT dial
-    type: var
-    var_name: A:AMBIENT TEMPERATURE
-    var_units: Celsius
-    var_type: f64
     unreliable: true
 
 server:

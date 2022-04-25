@@ -7,8 +7,8 @@
 * Added Airbus H125 by RotorSimPilot (v1.3.8).
 * Added Bell 47G by FlyInside (v1.71).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
-* Added C414AW Chancellor by Flysimware (v1.4.2).
-* Added Concorde by DC Designs (v1.0.2).
+* Added C414AW Chancellor by Flysimware (v1.5.0).
+* Added Concorde by DC Designs (v1.0.3).
 * Added DHC6 Twin Otter by Aerosoft (v1.0.4.0).
 * Added Electra-10A by Aeroplane Heaven (v1.2.1).
 * Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
