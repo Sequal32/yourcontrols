@@ -1,4 +1,4 @@
-# Version 0.5.0-dev (March 28, 2022)
+# Version 0.5.1
 
 include:
   - definitions/modules/electrical.yaml
@@ -6,7 +6,6 @@ include:
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
@@ -62,14 +61,14 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:1
     var_units: Degrees
-    var_type: f64
+    var_type: i32
     event_name: HEADING_BUG_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
     var_units: Feet
-    var_type: f64
+    var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
     cancel_h_events: true
     event_param: 3
@@ -77,7 +76,7 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
     var_units: Feet per minute
-    var_type: f64
+    var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
     event_param: 1
   -
@@ -211,12 +210,35 @@ shared:
     var_type: bool
     event_name: ANTI_ICE_TOGGLE_ENG4
 
-  - # Bleed
+  - # Pressurization
+    type: NumSet
+    var_name: A:BLEED AIR APU
+    var_units: Bool
+    var_type: i32
+    event_name: APU_BLEED_AIR_SOURCE_SET
+  -
+    type: NumSet
+    var_name: A:BLEED AIR ENGINE:1
+    var_units: Bool
+    var_type: i32
+    event_name: ENGINE_BLEED_AIR_SOURCE_SET
+    index_reversed: true
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:BLEED AIR ENGINE:2
+    var_units: Bool
+    var_type: i32
+    event_name: ENGINE_BLEED_AIR_SOURCE_SET
+    index_reversed: true
+    event_param: 2
+  -
     type: NumSet
     var_name: A:BLEED AIR ENGINE:3
     var_units: Bool
     var_type: i32
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
+    index_reversed: true
     event_param: 3
   -
     type: NumSet
@@ -224,7 +246,14 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
+    index_reversed: true
     event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:PRESSURIZATION DUMP SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
 
   - # Electrical
     type: CustomCalculator
@@ -270,6 +299,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: SET_EXTERNAL_POWER
+    index_reversed: true
     event_param: 2
 
   - # Engines
@@ -1011,7 +1041,7 @@ shared:
   -
     type: ToggleSwitch
     var_name: L:AP_HEADING_HOLD_ACTIVE
-    event_name: AP_HDG_HOLD_ON
+    event_name: AP_HDG_HOLD
     use_calculator: true
   -
     type: var
@@ -1373,9 +1403,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
-    type: var
-    var_name: L:SALTY_MINIMUMS_ALT
+# -
+#   type: var
+#   var_name: L:SALTY_MINIMUMS_ALT
   -
     type: var
     var_name: L:SALTY_ALT_ALERT
@@ -1460,6 +1490,12 @@ shared:
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
+  -
+    type: var
+    var_name: L:B747_8_FMC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_FMC_State
 # -
 #   type: var
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
@@ -1471,13 +1507,76 @@ shared:
 #   var_name: L:WT_CJ4_TOD_REMAINING
   -
     type: var
+    var_name: L:B747_8_Com_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_Com_1_State
+  -
+    type: var
+    var_name: L:B747_8_Com_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_Com_2_State
+  -
+    type: var
+    var_name: L:B747_8_Com_3_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_Com_3_State
+  -
+    type: var
+    var_name: L:B747_8_IAS_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_IAS_State
+  -
+    type: var
+    var_name: L:B747_8_HDG_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_HDG_State
+  -
+    type: var
+    var_name: L:B747_8_VSpeed_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_VSpeed_State
+  -
+    type: var
     var_name: L:XMLVAR_FPA_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:B747_8_ALT_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_ALT_State
+  -
+    type: var
+    var_name: L:B747_8_SAI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_SAI_State
 # -
 #   type: var
 #   var_name: L:SALTY_ISFD_INIT_TIMER
   -
     type: var
-    var_name: L:B747_8_SAI_State
+    var_name: L:B747_8_ATC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_ATC_State
+  -
+    type: var
+    var_name: L:B747_8_RUDDER_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_RUDDER_State
+  -
+    type: var
+    var_name: L:EFB_TEMPLATE_ScreenLuminosity
+  -
+    type: var
+    var_name: L:EFB_TEMPLATE_State
   -
     type: var
     var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
@@ -1526,75 +1625,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-  -
-    type: var
-    var_name: L:B747_8_ATC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_ATC_State
-  -
-    type: var
-    var_name: L:B747_8_RUDDER_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_RUDDER_State
-  -
-    type: var
-    var_name: L:EFB_TEMPLATE_ScreenLuminosity
-  -
-    type: var
-    var_name: L:EFB_TEMPLATE_State
-  -
-    type: var
-    var_name: L:B747_8_FMC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_FMC_State
-  -
-    type: var
-    var_name: L:B747_8_Com_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_Com_1_State
-  -
-    type: var
-    var_name: L:B747_8_Com_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_Com_2_State
-  -
-    type: var
-    var_name: L:B747_8_Com_3_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_Com_3_State
-  -
-    type: var
-    var_name: L:B747_8_IAS_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_IAS_State
-  -
-    type: var
-    var_name: L:B747_8_HDG_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_HDG_State
-  -
-    type: var
-    var_name: L:B747_8_VSpeed_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_VSpeed_State
-  -
-    type: var
-    var_name: L:B747_8_ALT_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_ALT_State
-  -
-    type: var
-    var_name: L:B747_8_SAI_ScreenLuminosity
 
 master:
   -
@@ -1720,8 +1750,6 @@ server:
 ignore:
   - B747_8_FMC_1_AP_APP_ARMED
   - B747_8_FMC_1_AP_LOC_ARMED
-  - B747_8_FMC_1_AP_LNAV
-  - B747_8_FMC_1_AP_VNAV
   - B747_8_MFD_BTN_TERR
   - B747_8_MFD_BTN_WXR
   - B747_8_PFD_BTN_TERR
