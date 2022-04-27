@@ -1,4 +1,4 @@
-# Version 1.0.0
+# Version 1.1.0
 
 include:
   - definitions/modules/Avionics/AS3X.yaml
@@ -6,7 +6,6 @@ include:
   - definitions/modules/Avionics/TDSNXi.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -26,20 +25,78 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 34
 
-  - # Avionics Battery (TDSNXi)
+  - # Avionics
+    type: NumSet
+    var_name: A:AVIONICS MASTER SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: AVIONICS_MASTER_1_SET
+  -
+    type: NumSet
+    var_name: A:AVIONICS MASTER SWITCH:2
+    var_units: Bool
+    var_type: i32
+    event_name: AVIONICS_MASTER_2_SET
+
+  - # Electrical
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:23
+    var_name: A:ELECTRICAL MASTER BATTERY:1
     var_units: Bool
     var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 23
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
   -
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:26
+    var_name: A:ELECTRICAL MASTER BATTERY:2
     var_units: Bool
     var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 26
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+  -
+    type: var
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Number
+    var_type: i32
+  -
+    type: event
+    event_name: SET_STARTER1_HELD
+
+  - # Magnetos
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_RIGHT
+  -
+    type: event
+    event_name: MAGNETO1_SET # backup for position
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:2
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO2_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:2
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO2_RIGHT
+  -
+    type: event
+    event_name: MAGNETO2_SET # backup for position
 
   - # Interior
     type: NumSet
@@ -140,6 +197,9 @@ shared:
     var_name: L:SWS_ESI500_Confirm_Selected
   -
     type: var
+    var_name: L:SWS_ESI500_Display_Startup_Logo
+  -
+    type: var
     var_name: L:SWS_ESI500_Menu_Level
   -
     type: var
@@ -231,9 +291,18 @@ shared:
   -
     type: var
     var_name: L:SWS_ESI500_AirspeedInMPH
-  -
-    type: var
-    var_name: L:SWS_ESI500_Altimeter_Pressure
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_GlidePathValueActive
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_GlidePathValueAngle
   -
     type: var
     var_name: L:ELECTRICAL_Switch_TwoBatteries
@@ -297,10 +366,46 @@ shared:
     var_name: L:Switch_ELT_ON
   -
     type: var
+    var_name: L:SWS_ESI500_Altimeter_Pressure
+  -
+    type: var
     var_name: L:GMA340_ANNUNCIATOR_TEST
 # -
 #   type: var
-#   var_name: L:GTN750_EMB_ScreenLuminosity
+#   var_name: L:TDSGTNXI750U1_Brightness
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_NavSrc
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
@@ -313,9 +418,9 @@ shared:
   -
     type: var
     var_name: L:ParkingBrake_Position
-# -
-#   type: var
-#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Magneto_Starter_IsHeld
 # -
 #   type: var
 #   var_name: L:SWS_GLIDE_RATIO
@@ -350,9 +455,6 @@ shared:
           var_type: bool
         equals:
           Bool: false
-  -
-    type: var
-    var_name: L:AXIS_AILERON_TRIM
 # -
 #   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_1_Angle
@@ -389,21 +491,75 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
+#   var_name: L:PMS50_GTN750_INSTALLED
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+#   var_name: L:PMS50_GTN650_INSTALLED
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_LateralValueActive
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_LateralValueMeters
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_LateralDeviationScaleNM
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_GlidePathValueMeters
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_ToFromFlag
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_NextWaypointDistanceNM
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_NextWaypointDesiredTrackVal
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_NextWaypointBearingVal
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_OBSModeActive
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_ActiveNavigationSource
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_Brightness
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U1_Brightness
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_Brightness
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_ElectricalCircuit
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_ElectricalCircuit
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U1_ElectricalCircuit
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_ElectricalCircuit
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_CustomApAltitude1
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_1_State
 # -
 #   type: var
 #   var_name: L:AS1000_Warnings_Master_Set
@@ -413,6 +569,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:MFD_MapShowCursor
@@ -442,55 +601,16 @@ shared:
 #   var_name: L:Glasscockpit_Wind_Mode
 # -
 #   type: var
-#   var_name: L:GTN750_EMB_HIDDEN
-# -
-#   type: var
-#   var_name: L:WT1000_AP_G1000_INSTALLED
-# -
-#   type: var
-#   var_name: L:GTN750_Waypoint_Map_MapShowCursor
-# -
-#   type: var
-#   var_name: L:GTN750_Waypoint_Map_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AUTO_ACTIVATE_APPROACH_DISABLED
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:PMS50_GTN750_MSG_VCALC_APPR
-# -
-#   type: var
-#   var_name: L:PMS50_GTN750_MSG_VCALC_ARR
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_1_State
-# -
-#   type: var
 #   var_name: L:AS3X_Touch_2_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS3X_Touch_2_State
-# -
-#   type: var
-#   var_name: L:GTN750_EMB_State
-# -
-#   type: var
-#   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
-# -
-#   type: var
-#   var_name: L:GTN750_HSI_GSI_NEEDLE
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
   -
     type: var
     var_name: L:HourMeter_ScreenLuminosity
@@ -499,28 +619,25 @@ shared:
     var_name: L:HourMeter_State
 # -
 #   type: var
-#   var_name: L:GTN750_FLIGHT_PLAN_CLEANED
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
 # -
 #   type: var
-#   var_name: L:GTN750_FLIGHT_PLAN_CLEAN_STARTED
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
 # -
 #   type: var
-#   var_name: L:Generic_Master_Warning_Active
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
-#   var_name: L:Generic_Master_Caution_Active
+#   var_name: L:Glasscockpits_FPLHaveOrigin
 # -
 #   type: var
-#   var_name: L:GTN750_HAVE_MESSAGE:1
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:GTN750_RELOAD
 
 server:
   -
