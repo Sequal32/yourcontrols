@@ -1,4 +1,4 @@
-# Version 0.12.12 release
+# Version 0.12.13
 
 include:
   - definitions/modules/electrical.yaml
@@ -203,14 +203,14 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Enum
+    var_units: Bool
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Enum
+    var_units: Bool
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
@@ -653,6 +653,9 @@ shared:
   -
     type: var
     var_name: L:WT_CJ4_MIN_SRC
+  -
+    type: var
+    var_name: L:CJ4_PFD_State
 # -
 #   type: var
 #   var_name: L:WT_CJ4_DONUT
@@ -707,6 +710,9 @@ shared:
   -
     type: var
     var_name: L:WT_CJ4_WPT_ALERT
+  -
+    type: var
+    var_name: L:CJ4_MFD_State
 # -
 #   type: var
 #   var_name: L:Annunciations_Manager_Initialized
@@ -745,13 +751,19 @@ shared:
     var_name: L:WT_CJ4_CONSTRAINT_ALTITUDE
   -
     type: var
+    var_name: L:RADIONAV ACTIVE:1
+  -
+    type: var
+    var_name: L:CJ4_FMC_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_FMC_State
+  -
+    type: var
     var_name: L:AIRLINER_FLIGHT_PHASE
   -
     type: var
     var_name: L:FMC_UPDATE_CURRENT_PAGE
-  -
-    type: var
-    var_name: L:RADIONAV ACTIVE:1
 # -
 #   type: var
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
@@ -767,6 +779,24 @@ shared:
   -
     type: var
     var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:CJ4_SAI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_SAI_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
 # -
 #   type: var
 #   var_name: L:WT_CJ4_XTK
@@ -790,33 +820,6 @@ shared:
     var_name: L:WT_CJ4_ALT_HOLD
   -
     type: var
-    var_name: L:WT_CJ4_IN_DISCONTINUITY
-  -
-    type: var
-    var_name: L:WT_CJ4_DISPLAY_MSG
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-  -
-    type: var
-    var_name: L:WT_NAV_SENSITIVITY_SCALAR
-  -
-    type: var
-    var_name: L:HourMeter_ScreenLuminosity
-  -
-    type: var
-    var_name: L:HourMeter_State
-  -
-    type: var
-    var_name: L:WasmInstrument_ScreenLuminosity
-  -
-    type: var
-    var_name: L:WasmInstrument_State
-  -
-    type: var
-    var_name: L:CJ4_PFD_State
-  -
-    type: var
     var_name: L:AIRLINER_V1_SPEED
   -
     type: var
@@ -824,21 +827,18 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_V2_SPEED
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
   -
     type: var
-    var_name: L:CJ4_MFD_State
+    var_name: L:WT_CJ4_DISPLAY_MSG
   -
     type: var
-    var_name: L:CJ4_FMC_ScreenLuminosity
+    var_name: L:WT_CJ4_IN_DISCONTINUITY
   -
     type: var
-    var_name: L:CJ4_FMC_State
-  -
-    type: var
-    var_name: L:CJ4_SAI_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_SAI_State
+    var_name: L:WT_NAV_SENSITIVITY_SCALAR
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
