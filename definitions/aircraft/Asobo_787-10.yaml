@@ -72,6 +72,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: SET_EXTERNAL_POWER
+    index_reversed: true
     event_param: 2
   -
     type: NumSet
@@ -79,6 +80,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: SET_EXTERNAL_POWER
+    index_reversed: true
     event_param: 3
 
   - # Failures
@@ -748,9 +750,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:B787_10_PFD_State
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
   -
     type: var
     var_name: L:PFD_MapShowCursor
@@ -802,6 +810,9 @@ shared:
   -
     type: var
     var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:B787_10_MFD_1_State
 # -
 #   type: var
 #   var_name: L:Annunciations_Manager_Initialized
@@ -846,6 +857,9 @@ shared:
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
   -
     type: var
+    var_name: L:B787_10_MFD_2_State
+  -
+    type: var
     var_name: L:BTN_WX_ACTIVE:2
   -
     type: var
@@ -853,18 +867,30 @@ shared:
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:AIRLINER_TO_FLEX_TEMP
+  -
+    type: var
+    var_name: L:AIRLINER_TO_FLEX_TEMP
   -
     type: var
     var_name: L:AIRLINER_CRUISE_ALTITUDE
-# -
-#   type: var
-#   var_name: L:FMC_UPDATE_CURRENT_PAGE
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
+  -
+    type: var
+    var_name: L:AP_SPEED_INTERVENTION_ACTIVE
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+  -
+    type: var
+    var_name: L:B787_10_FMC_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B787_10_FMC_1_State
+# -
+#   type: var
+#   var_name: L:FMC_UPDATE_CURRENT_PAGE
 # -
 #   type: var
 #   var_name: L:HUD_AIRSPEED_WHITE_START
@@ -895,27 +921,6 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_TAKEOFF_FLAP
-  -
-    type: var
-    var_name: L:AP_SPEED_INTERVENTION_ACTIVE
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-  -
-    type: var
-    var_name: L:B787_10_PFD_State
-  -
-    type: var
-    var_name: L:B787_10_MFD_1_State
-  -
-    type: var
-    var_name: L:B787_10_MFD_2_State
-  -
-    type: var
-    var_name: L:B787_10_FMC_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B787_10_FMC_1_State
   -
     type: var
     var_name: L:B787_10_FMC_2_ScreenLuminosity

@@ -3,9 +3,11 @@
 ## Version 2.6.4
 
 #### Profiles
-* Added Airbus A32NX Stable by FlyByWire (v0.7.4).
-* Added Airbus H125 by RotorSimPilot (v1.3.8).
+* Added A32NX Stable by FlyByWire (v0.7.4).
+* Added H125 by RotorSimPilot (v1.3.8).
 * Added Bell 47G by FlyInside (v1.71).
+* Added C140 by Aeroplane Heaven (v1.4.0a).
+* Added C170B by Carenado (v1.3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
 * Added C414AW Chancellor by Flysimware (v1.5.0).
 * Added Concorde by DC Designs (v1.0.3).
@@ -20,14 +22,14 @@
 * Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
 * Added PC-6 Turbo Porter by Milviz (v1.0.8).
 * Added TF-104G Starfighter by SimSkunkWorks (v3.0).
-* Added Van's RV-14 & 14A by SimWorks Studios (v1.0.0).
-* Added Van's RV-7 & 7A mod by Deejing (v1.0.7).
+* Added RV-14 & 14A by SimWorks Studios (v1.1.0).
+* Added RV-7 & 7A mod by Deejing (v1.0.7).
 * Added missing support for non-G950 Asobo PC-6 Porter.
-* Added experimental support for GNS530 by PMS50 (v1.0.48).
-* Added experimental support for GTN750 by PMS50 (v2.1.24).
-* Added experimental support for GTNXi 750 by TDS Sim Software (v1.0.1.2).
-* Added experimental support for G1000 NXi by Working Title (v0.11.0).
-* Updated Asobo planes for Sim Update 8.
+* Added basic support for GNS530 by PMS50 (v1.0.49).
+* Added basic support for GTN750 by PMS50 (v2.1.32).
+* Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.2).
+* Added basic support for G1000 NXi by Working Title (v0.12.0).
+* Updated ASOBO aircraft for Sim Update 9 (v1.25.7.0).
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
 * Updated FlyByWire A32NX to April 8, 2022.
@@ -39,10 +41,11 @@
 * Updated Mrtommymxr DA62X to v0.7.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
 * Updated RotorSimPilot R44 to v1.2.8.
-* Updated Working Title CJ4 to v0.12.12.
+* Updated SaltySimulations 747 to v0.5.1.
+* Updated Working Title CJ4 to v0.12.13.
 
 #### Changes
-* Fixed master caution/warning acknowledge events for Sim Update 8.
+* Fixed master caution and warning acknowledge events.
 * Fixed avionics master switches on all aircraft experiencing issues.
 * Fixed all autopilot and radio button/knob desync by blanket-ignoring all associated H-events.
   - AS3X, AS3000, GTN650/750 standby frequency page is ignored because it won't close.
@@ -50,6 +53,10 @@
 * Fixed NAV/ADF volume knobs jumping back and forth.
 * Fixed ADF frequency not always swapping.
 * Fixed parking brake event name spelling error.
+* Fixed attitude indicator bar calibration.
+* Fixed engine bleed air toggle event.
+* Fixed external power toggle event.
+* Fixed annunciator test light switch event.
 * Fixed multiple issues with Asobo Porter profile.
 * Fixed autopilot automatically leveling off when using V/S and FLC.
 * Fixed doors on PMDG DC6, Mugz TBM930, Carenado M20R, RSP R44.
@@ -58,8 +65,7 @@
 * Fixed missing external lights on Asobo Cap10.
 * Fixed aerobatic trim flap switch on Asobo Cap10.
 * Fixed flight director switches on Salty 747.
-* Fixed attitude indicator bar calibration.
-* Fixed annunciator test light switch event.
+* Fixed sync of LNAV/VNAV modes on Salty 747.
 * Fixed WX brightness knob on Asobo A320neo.
 * Fixed interior and exterior lights on Carenado M20R.
 * Fixed missing panel potentiometer on Asobo SW121.
@@ -68,12 +74,13 @@
 * Fixed excessive data spam while in hover mode on HPG H135.
 * Fixed barometer desync with MFD knobs on HPG H135.
 * Fixed kohlsman index for Asobo C172 G1000 since SU8.
-* Fixed landing/pulse lights on Asobo CJ4.
+* Fixed pulse light on Asobo CJ4 since SU9.
+* Fixed gear lever on A32NX Exp/Dev (#6893).
 
 #### Known Issues:
 * B-events/vars: All switches and levers using "B:" will not physically move for clients but any associated "A:" or "L:" vars will still sync. This is because "B:" cannot be set through SimConnect. Asobo clearly has no intention of fixing/allowing this, either.
 * JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type (Aircraft Options) on tablet are not the same for all connected. Cycle options before starting.
-* FlyByWire: Current fuel state unsyncable. A/THR causes engines to be completely out of sync with partner aircraft.
+* FlyByWire: Fuel state unsyncable. A/THR causes engines to be completely out of sync with partner aircraft.
 
 
 ## Version 2.6.3
