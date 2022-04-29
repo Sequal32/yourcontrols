@@ -27,7 +27,7 @@
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added basic support for GNS530 by PMS50 (v1.0.49).
 * Added basic support for GTN750 by PMS50 (v2.1.32).
-* Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.2).
+* Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.6).
 * Added basic support for G1000 NXi by Working Title (v0.12.0).
 * Updated ASOBO aircraft for Sim Update 9 (v1.25.7.0).
 * Updated Carenado M20R to v1.5.1.
