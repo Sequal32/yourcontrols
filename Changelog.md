@@ -14,7 +14,7 @@
 * Added DHC6 Twin Otter by Aerosoft (v1.0.4.0).
 * Added Electra-10A by Aeroplane Heaven (v1.2.1).
 * Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
-* Added G115 Tutor T.1 by IRIS Simulations (v2.3.5).
+* Added G115 Tutor T.1 by IRIS Simulations (v2.3.7).
 * Added J160/J170 Jabiru by IRIS Simulations (v1.5.6).
 * Added JRF-6B Goose by Big Radials (v1.0.1).
 * Added Kodiak 100 by SimWorks Studios (v1.0.24).
