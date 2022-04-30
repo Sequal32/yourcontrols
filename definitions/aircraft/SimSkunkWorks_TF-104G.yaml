@@ -1,4 +1,4 @@
-# Version 3.0
+# Version 3.1
 
 include:
   - definitions/modules/engines.yaml
@@ -11,26 +11,51 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Canopy (workaround)
+    type: ToggleSwitch
+    var_name: A:CANOPY OPEN
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+
   - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
     var_units: Bool
     var_type: bool
 
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+
   - # Interior
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_CABIN_LIGHTS
-    event_param: 1
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_PANEL_LIGHTS
-    event_param: 1
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_3_SET
+    index_reversed: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -44,6 +69,13 @@ shared:
     var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_9_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_10_SET
     index_reversed: true
 
   - # LVAR's
@@ -67,12 +99,27 @@ shared:
   -
     type: var
     var_name: L:CHUTE_STATUS
+# -
+#   type: var
+#   var_name: L:drag_chute_deploy_animation
+# -
+#   type: var
+#   var_name: L:drag_chute_drop_animation
+# -
+#   type: var
+#   var_name: L:kneeboard_open
   -
     type: var
-    var_name: L:drag_chute_deploy_animation
+    var_name: L:custom_event_id
   -
     type: var
-    var_name: L:drag_chute_drop_animation
+    var_name: L:opt_sight_cage
+  -
+    type: var
+    var_name: L:opt_sight_mils
+  -
+    type: var
+    var_name: L:opt_sight_mils_frame
   -
     type: var
     var_name: L:air_fresh_scoop_lever
@@ -82,9 +129,6 @@ shared:
   -
     type: var
     var_name: L:tendina
-  -
-    type: var
-    var_name: L:custom_event_id
   -
     type: var
     var_name: L:ptt_gear_unsafe_light
@@ -409,12 +453,33 @@ shared:
   -
     type: var
     var_name: L:console_lights
+# -
+#   type: var
+#   var_name: L:tablet_visible
+  -
+    type: var
+    var_name: L:C2_visibility_Local
+  -
+    type: var
+    var_name: L:C2_visibility
+  -
+    type: var
+    var_name: L:Q7_visibility_Local
+  -
+    type: var
+    var_name: L:Q7_visibility
   -
     type: var
     var_name: L:switch_airbrake
   -
     type: var
     var_name: L:lgear_light_vis_tag
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:com1_function_mode
@@ -454,6 +519,12 @@ shared:
   -
     type: var
     var_name: L:lights_flood_switch
+  -
+    type: var
+    var_name: L:opt_sight_switch
+  -
+    type: var
+    var_name: L:drum_mils_hundreds
   -
     type: var
     var_name: L:windmilling
@@ -511,6 +582,9 @@ shared:
   -
     type: var
     var_name: L:nasarr15_range_ndx
+  -
+    type: var
+    var_name: L:sight_dimmer_control
 # -
 #   type: var
 #   var_name: L:needle_eng_oil_psi
@@ -606,6 +680,9 @@ shared:
 #   var_name: L:oxy_blinker
   -
     type: var
+    var_name: L:drum_mils_tens
+  -
+    type: var
     var_name: L:sif_mode3_1st_digit
   -
     type: var
@@ -613,6 +690,9 @@ shared:
   -
     type: var
     var_name: L:manual_gear_handle
+  -
+    type: var
+    var_name: L:drum_mils_units
   -
     type: var
     var_name: L:fuel_ext_reading_toggle
@@ -798,6 +878,18 @@ shared:
     var_name: L:fuel_qty_cit_test
   -
     type: var
+    var_name: L:loc_drag_index
+  -
+    type: var
+    var_name: L:loc_total_di
+  -
+    type: var
+    var_name: L:cartridge_sound_pyl
+  -
+    type: var
+    var_name: L:cartridge_sound_tip
+  -
+    type: var
     var_name: L:normal_gear_disabled
 # -
 #   type: var
@@ -820,6 +912,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:apc_derivative
+  -
+    type: var
+    var_name: L:L_shaker
 # -
 #   type: var
 #   var_name: L:altimeter_warning
@@ -891,6 +986,12 @@ shared:
     var_name: L:com1_frequency_DEC
   -
     type: var
+    var_name: L:arrestor_rewind
+  -
+    type: var
+    var_name: L:arrestor_engaged
+  -
+    type: var
     var_name: L:chute_anim_swap
   -
     type: var
@@ -904,6 +1005,24 @@ shared:
   -
     type: var
     var_name: L:iff_squack_switch
+  -
+    type: var
+    var_name: L:reticle_mode
+  -
+    type: var
+    var_name: L:gse_readout
+  -
+    type: var
+    var_name: L:gse_set
+  -
+    type: var
+    var_name: L:gunsight_enabled
+  -
+    type: var
+    var_name: L:hud_enabled
+  -
+    type: var
+    var_name: L:gse_enabled
   -
     type: var
     var_name: L:WasmInstrument_ScreenLuminosity

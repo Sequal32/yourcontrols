@@ -4,38 +4,38 @@
 
 #### Profiles
 * Added A32NX Stable by FlyByWire (v0.7.4).
-* Added H125 by RotorSimPilot (v1.3.8).
 * Added Bell 47G by FlyInside (v1.71).
 * Added C140 by Aeroplane Heaven (v1.4.0a).
 * Added C170B by Carenado (v1.3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
 * Added C414AW Chancellor by Flysimware (v1.5.0).
-* Added Concorde by DC Designs (v1.0.3).
-* Added DHC6 Twin Otter by Aerosoft (v1.0.4.0).
+* Added Concorde by DC Designs (v1.0.4).
+* Added DHC6 Twin Otter by Aerosoft (v1.0.5.0).
 * Added Electra-10A by Aeroplane Heaven (v1.2.1).
 * Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
 * Added G115 Tutor T.1 by IRIS Simulations (v2.3.7).
+* Added H125 by RotorSimPilot (v1.3.9).
 * Added J160/J170 Jabiru by IRIS Simulations (v1.5.6).
-* Added JRF-6B Goose by Big Radials (v1.0.1).
+* Added JRF-6B Goose by Big Radials (v1.0.2a).
 * Added Kodiak 100 by SimWorks Studios (v1.0.24).
 * Added PA-28 Warrior II by JustFlight (v0.3.3).
 * Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
 * Added PC-6 Turbo Porter by Milviz (v1.0.8).
-* Added TF-104G Starfighter by SimSkunkWorks (v3.0).
 * Added RV-14 & 14A by SimWorks Studios (v1.1.0).
-* Added RV-7 & 7A mod by Deejing (v1.0.7).
+* Added RV-7 & 7A mod by Deejing (v1.0.8).
+* Added TF-104G Starfighter by SimSkunkWorks (v3.1).
 * Added missing support for non-G950 Asobo PC-6 Porter.
 * Added basic support for GNS530 by PMS50 (v1.0.49).
 * Added basic support for GTN750 by PMS50 (v2.1.32).
 * Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.6).
-* Added basic support for G1000 NXi by Working Title (v0.12.0).
+* Added basic support for G1000 NXi by Working Title (v0.12.1).
 * Updated ASOBO aircraft for Sim Update 9 (v1.25.7.0).
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
 * Updated FlyByWire A32NX to April 8, 2022.
   - EFB not updated.
-* Updated Headwind A330-900 to v0.101.
-* Updated HypePerformanceGroup H135 to v1.4.4.
+* Updated Headwind A330-900 to v0.106.
+* Updated HypePerformanceGroup H135 to v1.4.5.
 * Updated JustFlight Arrow III to v0.10.3.
 * Updated Mrtommymxr C172 to v0.3.
 * Updated Mrtommymxr DA62X to v0.7.

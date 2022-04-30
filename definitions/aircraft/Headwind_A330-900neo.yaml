@@ -1,4 +1,4 @@
-# Version 0.101
+# Version 0.106
 
 include:
   - definitions/modules/physics.yaml
@@ -2582,12 +2582,6 @@ shared:
   -
     type: var
     var_name: L:A32NX_EFB_TURNED_ON
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:A32NX_LOGGING_FLIGHT_CONTROLS_ENABLED
@@ -2964,6 +2958,12 @@ shared:
   -
     type: var
     var_name: L:A320_Neo_FCU_VS_SET_DATA
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:A32NX_FAILURE_ACTIVATE
@@ -3554,6 +3554,15 @@ shared:
     var_name: L:A32NX_INITIAL_FLIGHT_PHASE
   -
     type: var
+    var_name: L:PFD_TEMPLATE_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:PFD_TEMPLATE_1_State
+# -
+#   type: var
+#   var_name: L:A32NX_SPEEDS_S
+  -
+    type: var
     var_name: L:A320_Neo_MFD_1_ScreenLuminosity
   -
     type: var
@@ -3620,6 +3629,24 @@ shared:
     var_name: L:A320_Neo_EICAS_2_State
   -
     type: var
+    var_name: L:ISIS_TEMPLATE_ScreenLuminosity
+  -
+    type: var
+    var_name: L:ISIS_TEMPLATE_State
+  -
+    type: var
+    var_name: L:Clock_TEMPLATE_ScreenLuminosity
+  -
+    type: var
+    var_name: L:Clock_TEMPLATE_State
+  -
+    type: var
+    var_name: L:DCDU_TEMPLATE_ScreenLuminosity
+  -
+    type: var
+    var_name: L:DCDU_TEMPLATE_State
+  -
+    type: var
     var_name: L:AIRLINER_APPR_TRANS_ALT
 # -
 #   type: var
@@ -3670,9 +3697,6 @@ shared:
 #   var_name: L:A32NX_SPEEDS_F
 # -
 #   type: var
-#   var_name: L:A32NX_SPEEDS_S
-# -
-#   type: var
 #   var_name: L:A32NX_SPEEDS_LANDING_CONF3
 # -
 #   type: var
@@ -3683,12 +3707,18 @@ shared:
   -
     type: var
     var_name: L:A32NX_GPS_PRIMARY_LOST_MSG
-# -
-#   type: var
-#   var_name: L:A32NX_FLIGHT_PLAN_VERSION
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
+  -
+    type: var
+    var_name: L:A320_Neo_CDU_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_CDU_State
+# -
+#   type: var
+#   var_name: L:A32NX_FLIGHT_PLAN_VERSION
   -
     type: var
     var_name: L:GPSPrimaryAcknowledged
@@ -3716,6 +3746,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_ALT_DEVIATION
+  -
+    type: var
+    var_name: L:A32NX_TO_CONFIG_FLAPS
   -
     type: var
     var_name: L:FMC_UPDATE_CURRENT_PAGE
@@ -3751,78 +3784,6 @@ shared:
     var_name: L:A32NX_FCU_VS_MANAGED
   -
     type: var
-    var_name: L:A320_Neo_MFD_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_MFD_2_State
-  -
-    type: var
-    var_name: L:AUTOPILOT_CHRONO_STATE_R
-  -
-    type: var
-    var_name: L:A320_NEO_PREVIEW_DIRECT_TO
-  -
-    type: var
-    var_name: L:RADIONAV_SOURCE
-  -
-    type: var
-    var_name: L:A32NX_TO_CONFIG_FLAPS
-  -
-    type: var
-    var_name: L:A32NX_STALL_WARNING
-  -
-    type: var
-    var_name: L:AIRLINER_FMS_SHOW_TOP_DSCNT
-  -
-    type: var
-    var_name: L:AIRLINER_FMS_SHOW_TOP_CLIMB
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_14_21
-  -
-    type: var
-    var_name: L:A32NX_MFD_MASK_OPACITY
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_1_6
-  -
-    type: var
-    var_name: L:A32NX_COMPANY_MSG_COUNT
-  -
-    type: var
-    var_name: L:32NX_PACKS_1_IS_SUPPLYING
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_7_13
-  -
-    type: var
-    var_name: L:ISIS_TEMPLATE_ScreenLuminosity
-  -
-    type: var
-    var_name: L:ISIS_TEMPLATE_State
-  -
-    type: var
-    var_name: L:Clock_TEMPLATE_ScreenLuminosity
-  -
-    type: var
-    var_name: L:Clock_TEMPLATE_State
-  -
-    type: var
-    var_name: L:DCDU_TEMPLATE_ScreenLuminosity
-  -
-    type: var
-    var_name: L:DCDU_TEMPLATE_State
-  -
-    type: var
-    var_name: L:A320_Neo_CDU_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_CDU_State
-  -
-    type: var
     var_name: L:RMP_TEMPLATE_ScreenLuminosity
   -
     type: var
@@ -3853,6 +3814,15 @@ shared:
     var_name: L:PFD_TEMPLATE_2_State
   -
     type: var
+    var_name: L:A320_Neo_MFD_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_MFD_2_State
+  -
+    type: var
+    var_name: L:AUTOPILOT_CHRONO_STATE_R
+  -
+    type: var
     var_name: L:EFB_TEMPLATE_ScreenLuminosity
   -
     type: var
@@ -3865,19 +3835,46 @@ shared:
     var_name: L:WasmInstrument_State
   -
     type: var
-    var_name: L:PFD_TEMPLATE_1_ScreenLuminosity
+    var_name: L:A320_NEO_PREVIEW_DIRECT_TO
   -
     type: var
-    var_name: L:PFD_TEMPLATE_1_State
+    var_name: L:A32NX_MFD_MASK_OPACITY
+  -
+    type: var
+    var_name: L:RADIONAV_SOURCE
+  -
+    type: var
+    var_name: L:A32NX_PAX_TOTAL_ROWS_14_21
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+  -
+    type: var
+    var_name: L:A32NX_PAX_TOTAL_ROWS_1_6
+  -
+    type: var
+    var_name: L:A32NX_PAX_TOTAL_ROWS_7_13
+  -
+    type: var
+    var_name: L:AIRLINER_FMS_SHOW_TOP_DSCNT
+  -
+    type: var
+    var_name: L:AIRLINER_FMS_SHOW_TOP_CLIMB
+  -
+    type: var
+    var_name: L:A32NX_STALL_WARNING
+  -
+    type: var
+    var_name: L:32NX_PACKS_1_IS_SUPPLYING
+  -
+    type: var
+    var_name: L:A32NX_COMPANY_MSG_COUNT
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
-    type: var
-    var_name: L:A32NX_TO_CONFIG_FLAPS_ENTERED
 
 master:
   - # Controls

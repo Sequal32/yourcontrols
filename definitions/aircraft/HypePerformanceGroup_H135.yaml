@@ -1,4 +1,4 @@
-# Version 1.4.4
+# Version 1.4.5
 
 include:
   - definitions/modules/Avionics/GTN750.yaml
@@ -835,6 +835,12 @@ shared:
     var_name: L:DX3000_BaroMode
   -
     type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
     var_name: L:AS3000_PFD_2_ScreenLuminosity
   -
     type: var
@@ -931,10 +937,10 @@ shared:
     var_name: L:MFDR_HX_MAP_RANGE_DEC
   -
     type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
+    var_name: L:AS1000_AttitudeSpeedBackup_ScreenLuminosity
   -
     type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
+    var_name: L:AS1000_AttitudeSpeedBackup_State
   -
     type: var
     var_name: L:HX2_GTN_2_ScreenLuminosity
@@ -970,6 +976,12 @@ shared:
 #   var_name: L:GTN750_INT_State
   -
     type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+  -
+    type: var
     var_name: L:AS3000_MinimalsMode
   -
     type: var
@@ -1000,25 +1012,13 @@ shared:
 #   var_name: L:AIRLINER_FLIGHT_PHASE
 # -
 #   type: var
-#   var_name: L:AS3000_4_Timer_Value
-# -
-#   type: var
 #   var_name: L:ROTOR_STATUS_ENG1
 # -
 #   type: var
 #   var_name: L:ROTOR_STATUS_ENG2
-  -
-    type: var
-    var_name: L:WasmInstrument_ScreenLuminosity
-  -
-    type: var
-    var_name: L:WasmInstrument_State
-  -
-    type: var
-    var_name: L:AS1000_AttitudeSpeedBackup_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS1000_AttitudeSpeedBackup_State
+# -
+#   type: var
+#   var_name: L:AS3000_4_Timer_Value
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -1040,9 +1040,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:DBG_WV_PWR
-# -
-#   type: var
-#   var_name: L:HX1_DBG_Y
 
 master:
   - # Controls

@@ -1,4 +1,4 @@
-# Version 1.0.3
+# Version 1.0.4
 
 include:
   - definitions/modules/engines.yaml
@@ -9,7 +9,6 @@ include:
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
 
 shared:
   - # Autopilot
@@ -978,6 +977,33 @@ shared:
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 33
 
+  - # Trim (autotrim)
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: RUDDER_TRIM_SET_EX1
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: ELEVATOR_TRIM_SET
+    unreliable: true
+    conditions:
+      - var:
+          var_name: AUTOPILOT MASTER
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: false
+  -
+    type: NumSet
+    var_name: A:AILERON TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: AILERON_TRIM_SET_EX1
+
   - # Lights
     type: NumSet
     var_name: A:LIGHT LANDING:1
@@ -1372,30 +1398,30 @@ shared:
   -
     type: var
     var_name: L:ADS_2
-  -
-    type: var
-    var_name: L:SPILL_POSITION1
-  -
-    type: var
-    var_name: L:SPILL_POSITION2
-  -
-    type: var
-    var_name: L:SPILL_POSITION3
-  -
-    type: var
-    var_name: L:SPILL_POSITION4
-  -
-    type: var
-    var_name: L:RAMPS_POSITION1
-  -
-    type: var
-    var_name: L:RAMPS_POSITION2
-  -
-    type: var
-    var_name: L:RAMPS_POSITION3
-  -
-    type: var
-    var_name: L:RAMPS_POSITION4
+# -
+#   type: var
+#   var_name: L:SPILL_POSITION1
+# -
+#   type: var
+#   var_name: L:SPILL_POSITION2
+# -
+#   type: var
+#   var_name: L:SPILL_POSITION3
+# -
+#   type: var
+#   var_name: L:SPILL_POSITION4
+# -
+#   type: var
+#   var_name: L:RAMPS_POSITION1
+# -
+#   type: var
+#   var_name: L:RAMPS_POSITION2
+# -
+#   type: var
+#   var_name: L:RAMPS_POSITION3
+# -
+#   type: var
+#   var_name: L:RAMPS_POSITION4
   -
     type: var
     var_name: L:GPU Switch
@@ -1528,12 +1554,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden4
-  -
-    type: var
-    var_name: L:ENG1_2_Limiter
-  -
-    type: var
-    var_name: L:ENG3_4_Limiter
   -
     type: var
     var_name: L:ENG_FLIGHT_RATING_MODE_1
@@ -2136,6 +2156,9 @@ shared:
     var_name: L:TO_CG_SWITCH
   -
     type: var
+    var_name: L:ENG1_2_Limiter
+  -
+    type: var
     var_name: L:ENG3_4_FF_Limiter
   -
     type: var
@@ -2337,9 +2360,6 @@ shared:
     var_name: L:OVERHEAD_HYD_SELECTOR
   -
     type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
     var_name: L:PILOT_VISIBLE
   -
     type: var
@@ -2451,6 +2471,9 @@ shared:
     var_name: L:LIGHTING_TAXI_3
   -
     type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
     var_name: L:LIGHTING_LOGO_0
   -
     type: var
@@ -2458,66 +2481,33 @@ shared:
   -
     type: var
     var_name: L:LIGHTING_STROBE_0
-  -
-    type: var
-    var_name: L:XMLVAR_IE_Afterburner_1_LastThrottleInc
-  -
-    type: var
-    var_name: L:XMLVAR_IE_Afterburner_2_LastThrottleInc
-  -
-    type: var
-    var_name: L:XMLVAR_IE_Afterburner_3_LastThrottleInc
-  -
-    type: var
-    var_name: L:XMLVAR_IE_Afterburner_4_LastThrottleInc
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_1_LastThrottleInc
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_2_LastThrottleInc
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_3_LastThrottleInc
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_4_LastThrottleInc
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
   -
     type: var
-    var_name: L:AIRLINER_TO_FLEX_TEMP
+    var_name: L:A320_Neo_MFD_ScreenLuminosity
   -
     type: var
-    var_name: L:A320_NEO_CDU_START_PAGE
+    var_name: L:A320_Neo_MFD_State
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
   -
     type: var
-    var_name: L:AIRLINER_FLIGHT_PHASE
-  -
-    type: var
-    var_name: L:FMC_UPDATE_CURRENT_PAGE
-  -
-    type: var
-    var_name: L:RADIONAV ACTIVE:1
-  -
-    type: var
-    var_name: L:RADIONAV_SOURCE
-  -
-    type: var
-    var_name: L:MODE_HEADING
-  -
-    type: var
-    var_name: L:MODE_ALTITUDE
-# -
-#   type: var
-#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
+    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
   -
     type: var
     var_name: L:MFD_MapShowCursor
@@ -2553,10 +2543,25 @@ shared:
     var_name: L:AIRLINER_FMS_SHOW_TOP_CLIMB
   -
     type: var
-    var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+    var_name: L:DME1_ScreenLuminosity
   -
     type: var
-    var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+    var_name: L:DME1_State
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+  -
+    type: var
+    var_name: L:AIRLINER_TO_FLEX_TEMP
+  -
+    type: var
+    var_name: L:A320_NEO_CDU_START_PAGE
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:Fuel_Pump_Switch_A
@@ -2568,16 +2573,31 @@ shared:
     var_name: L:A320_Neo_CDU_State
   -
     type: var
+    var_name: L:AIRLINER_FLIGHT_PHASE
+  -
+    type: var
+    var_name: L:FMC_UPDATE_CURRENT_PAGE
+  -
+    type: var
+    var_name: L:RADIONAV ACTIVE:1
+  -
+    type: var
+    var_name: L:RADIONAV_SOURCE
+  -
+    type: var
+    var_name: L:MODE_HEADING
+  -
+    type: var
+    var_name: L:MODE_ALTITUDE
+# -
+#   type: var
+#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+  -
+    type: var
     var_name: L:A320_Neo_Clock_ScreenLuminosity
   -
     type: var
     var_name: L:A320_Neo_Clock_State
-  -
-    type: var
-    var_name: L:DME1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:DME1_State
   -
     type: var
     var_name: L:SCREEN_ScreenLuminosity
@@ -2640,12 +2660,6 @@ shared:
     var_name: L:TGW_State
   -
     type: var
-    var_name: L:A320_Neo_MFD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_MFD_State
-  -
-    type: var
     var_name: L:AIRLINER_V1_SPEED
   -
     type: var
@@ -2653,6 +2667,12 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_V2_SPEED
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED

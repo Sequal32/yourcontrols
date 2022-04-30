@@ -1,4 +1,4 @@
-# Version 1.0.1
+# Version 1.0.2a
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -211,6 +211,16 @@ shared:
     var_name: L:XML_leatherr
   -
     type: var
+    var_name: L:HDG_BUG
+    unreliable: true
+  -
+    type: var
+    var_name: L:TOGGLE_GYROPILOT
+  -
+    type: var
+    var_name: L:TOGGLE_HDG_HOLD
+  -
+    type: var
     var_name: L:XML_pitchref
   -
     type: var
@@ -391,9 +401,6 @@ shared:
     var_name: L:TAILWHEEL LOCK ON
 # -
 #   type: var
-#   var_name: L:Aera_Brightness_Manual
-# -
-#   type: var
 #   var_name: L:XMLVAR_Magneto_Starter_IsHeld
   -
     type: var
@@ -410,9 +417,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_Minutes_Delta
-  -
-    type: var
-    var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
   -
     type: var
     var_name: L:XMLVAR_ADF_Mode
@@ -440,12 +447,12 @@ shared:
   -
     type: var
     var_name: L:GNS_Brightness
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
 # -
 #   type: var
 #   var_name: L:XMLVAR_Starter_State_MinReleaseTime
@@ -499,6 +506,12 @@ shared:
     var_name: L:XMLVAR_Autopilot_Altitude_Increment
   -
     type: var
+    var_name: L:CJ4_PFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_MFD_ScreenLuminosity
+  -
+    type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
 # -
 #   type: var
@@ -548,6 +561,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:AS330_ScreenLuminosity
