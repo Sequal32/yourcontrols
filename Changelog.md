@@ -45,8 +45,7 @@
 * Updated Working Title CJ4 to v0.12.13.
 * Removed Frett G36 (deprecated).
 
-#### Fixes
-General:
+#### General Fixes
 * All autopilot and radio button/knob desync on aircraft utilizing legacy simvars.
   - AS3X, AS3000, GTN650/750 standby frequency page is ignored because it won't close.
 * Avionics master switches on all aircraft experiencing intermittent issues.
@@ -61,7 +60,7 @@ General:
 * Engine bleed air toggle event.
 * External power toggle event.
 
-Aircraft:
+#### Aircraft Fixes
 * Asobo A320neo: WX brightness knob.
 * Asobo C172: Kohlsman index for G1000 PFD.
 * Asobo C208: External power BUS and STBY alternator.
