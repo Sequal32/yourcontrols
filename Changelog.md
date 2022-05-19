@@ -3,7 +3,7 @@
 ## Version 2.6.4
 
 #### Profiles
-* Added A32NX Stable by FlyByWire (v0.7.4).
+* Added A32NX Stable by FlyByWire (v0.8.1).
 * Added Bell 47G by FlyInside (v1.71).
 * Added C140 by Aeroplane Heaven (v1.4.0a).
 * Added C170B by Carenado (v1.3.0).
@@ -20,7 +20,7 @@
 * Added Kodiak 100 by SimWorks Studios (v1.0.24).
 * Added PA-28 Warrior II by JustFlight (v0.3.3).
 * Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
-* Added PC-6 Turbo Porter by Milviz (v1.0.8).
+* Added PC-6 Turbo Porter by Milviz (v1.0.9).
 * Added RV-14 & 14A by SimWorks Studios (v1.1.0).
 * Added RV-7 & 7A mod by Deejing (v1.0.8).
 * Added TF-104G Starfighter by SimSkunkWorks (v3.1).
@@ -32,7 +32,7 @@
 * Updated ASOBO aircraft for Sim Update 9 (v1.25.7.0).
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
-* Updated FlyByWire A32NX to April 8, 2022.
+* Updated FlyByWire A32NX to May 18, 2022.
   - EFB not updated.
 * Updated Headwind A330-900 to v0.106.
 * Updated HypePerformanceGroup H135 to v1.4.5.
@@ -43,39 +43,50 @@
 * Updated RotorSimPilot R44 to v1.2.8.
 * Updated SaltySimulations 747 to v0.5.1.
 * Updated Working Title CJ4 to v0.12.13.
+* Removed Frett G36 (deprecated).
 
-#### Changes
-* Fixed master caution and warning acknowledge events.
-* Fixed avionics master switches on all aircraft experiencing issues.
-* Fixed all autopilot and radio button/knob desync by blanket-ignoring all associated H-events.
+#### Fixes
+General:
+* All autopilot and radio button/knob desync on aircraft utilizing legacy simvars.
   - AS3X, AS3000, GTN650/750 standby frequency page is ignored because it won't close.
-* Fixed inaccurate G1000 COM/NAV volume level percentage.
-* Fixed NAV/ADF volume knobs jumping back and forth.
-* Fixed ADF frequency not always swapping.
-* Fixed parking brake event name spelling error.
-* Fixed attitude indicator bar calibration.
-* Fixed engine bleed air toggle event.
-* Fixed external power toggle event.
-* Fixed annunciator test light switch event.
-* Fixed multiple issues with Asobo Porter profile.
-* Fixed autopilot automatically leveling off when using V/S and FLC.
-* Fixed doors on PMDG DC6, Mugz TBM930, Carenado M20R, RSP R44.
-* Fixed SVT terrain toggle on Asobo Longitude and TBM930.
-* Fixed vertical pitch reference on Working Title CJ4.
-* Fixed missing external lights on Asobo Cap10.
-* Fixed aerobatic trim flap switch on Asobo Cap10.
-* Fixed flight director switches on Salty 747.
-* Fixed sync of LNAV/VNAV modes on Salty 747.
-* Fixed WX brightness knob on Asobo A320neo.
-* Fixed interior and exterior lights on Carenado M20R.
-* Fixed missing panel potentiometer on Asobo SW121.
-* Fixed external power BUS and STBY alternator on Asobo C208.
-* Fixed AP1 to AP2 toggle with a temporary workaround on FBW A32NX.
-* Fixed excessive data spam while in hover mode on HPG H135.
-* Fixed barometer desync with MFD knobs on HPG H135.
-* Fixed kohlsman index for Asobo C172 G1000 since SU8.
-* Fixed pulse light on Asobo CJ4 since SU9.
-* Fixed gear lever on A32NX Exp/Dev (#6893).
+* Avionics master switches on all aircraft experiencing intermittent issues.
+* Master caution and warning acknowledge events since Sim Update 7.
+* Autopilot automatically leveling off when using V/S and FLC.
+* Inaccurate G1000 COM/NAV volume level percentage.
+* NAV/ADF volume knobs jumping back and forth.
+* ADF frequency not always swapping.
+* Parking brake event name spelling error.
+* Attitude indicator bar calibration.
+* Annunciator test light switch event.
+* Engine bleed air toggle event.
+* External power toggle event.
+
+Aircraft:
+* Asobo A320neo: WX brightness knob.
+* Asobo C172: Kohlsman index for G1000 PFD.
+* Asobo C208: External power BUS and STBY alternator.
+* Asobo Cap10: Missing external lights.
+* Asobo Cap10: Aerobatic trim flap switch.
+* Asobo CJ4: Pulse light switch.
+* Asobo Longitude: SVT terrain toggle desync.
+* Asobo Porter: Profile not executing.
+* Asobo Porter: Missing support for non-G950 variant.
+* Asobo Porter: Master battery and avionics switches.
+* Asobo Porter: Landing lights.
+* Asobo SW121: Missing panel potentiometer.
+* Asobo TBM930: SVT terrain toggle desync.
+* A32NX: Autobrake level setting (#7067).
+* A32NX: Gear lever for new hydraulic system (#6893).
+* A32NX: AP1 to AP2 toggle with a temporary workaround.
+* A32NX: Corrected 16K value for flap handle.
+* A32NX: LS toggle desync.
+* Carenado M20R: Interior and exterior lights.
+* HPG H135: Excessive data spam while in hover mode.
+* HPG H135: Barometer desync with MFD knobs.
+* Salty 747: Flight director switches.
+* Salty 747: Sync of LNAV/VNAV modes.
+* Working Title CJ4: Vertical pitch reference indicator.
+* Doors on PMDG DC6, Mugz TBM930, Carenado M20R, RSP R44.
 
 #### Known Issues:
 * B-events/vars: All switches and levers using "B:" will not physically move for clients but any associated "A:" or "L:" vars will still sync. This is because "B:" cannot be set through SimConnect. Asobo clearly has no intention of fixing/allowing this, either.
