@@ -1,6 +1,6 @@
 # YourControls Changelog
 
-## Version 2.6.4
+## Version 2.7.0
 
 #### Profiles
 * Added A32NX Stable by FlyByWire (v0.8.1).
@@ -8,7 +8,7 @@
 * Added C140 by Aeroplane Heaven (v1.4.0a).
 * Added C170B by Carenado (v1.3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
-* Added C414AW Chancellor by Flysimware (v1.5.0).
+* Added C414AW Chancellor by Flysimware (v1.9.0).
 * Added Concorde by DC Designs (v1.0.4).
 * Added DHC6 Twin Otter by Aerosoft (v1.0.5.0).
 * Added Electra-10A by Aeroplane Heaven (v1.2.1).
@@ -65,7 +65,8 @@
 * Asobo C208: External power BUS and STBY alternator.
 * Asobo Cap10: Missing external lights.
 * Asobo Cap10: Aerobatic trim flap switch.
-* Asobo CJ4: Pulse light switch.
+* Asobo CJ4: Pulse light pushbutton.
+* Asobo KingAir: 3rd interior cabin light.
 * Asobo Longitude: SVT terrain toggle desync.
 * Asobo Porter: Profile not executing.
 * Asobo Porter: Support for non-G950 variant.
@@ -79,15 +80,16 @@
 * A32NX: Corrected 16K value for flap handle.
 * A32NX: LS pushbutton desync.
 * Carenado M20R: Interior and exterior lights.
-* HPG H135: Excessive data spam while in hover mode.
 * HPG H135: Barometer desync with MFD knobs.
+* HPG H135: Excessive data spam while in hover mode.
+* HPG H135: Tablet autopilot button desync.
 * PMDG DC6: Oil cooler door switches.
 * PMDG DC6: Cooling turbine switch.
 * PMDG DC6: Emergency air brake lever.
 * PMDG DC6: Emergency hydraulic pump switch.
 * PMDG DC6: Inverter flip handle.
 * PMDG DC6: Reverse pitch lever.
-* PMDG DC6: Temperature control knob.
+* PMDG DC6: Temperature control knobs.
 * Salty 747: Flight director switches.
 * Salty 747: Sync of LNAV/VNAV modes.
 * Working Title CJ4: Vertical pitch reference indicator.
