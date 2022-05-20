@@ -1,4 +1,4 @@
-# Version 1.5.0
+# Version 1.9.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -334,7 +334,7 @@ shared:
     event_name: PEDESTRAL_LIGHTS_SET
     event_param: 12
 
-# - # LVAR's (NXi)
+# - # LVAR's (TDS)
 #   type: var
 #   var_name: L:SHOW_HIDE_EFB
   -
@@ -420,6 +420,18 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_LIGHTSWITCH_RADIO_1_Position
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_DME_C1077B_BUTTON_POWER
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_DAVTRON_SWITCH_STOP
+  -
+    type: var
+    var_name: L:XMLVAR_ADF1_POWER_Position
+  -
+    type: var
+    var_name: L:XMLVAR_COMM2_POWER_Position
   -
     type: var
     var_name: L:LVL_MODE
@@ -546,9 +558,6 @@ shared:
   -
     type: var
     var_name: L:VERT_DISP_IAS_VALUE
-# -
-#   type: var
-#   var_name: L:IAS_SPEED_REF
   -
     type: var
     var_name: L:VERT_DISP_IAS
@@ -563,13 +572,7 @@ shared:
     var_name: L:VERT_DISP_GS
   -
     type: var
-    var_name: L:VERT_DISP_GS_ARM
-  -
-    type: var
     var_name: L:VERT_DISP_GS_ARM_RIGHT
-  -
-    type: var
-    var_name: L:VERT_DISP_GP_ARM
   -
     type: var
     var_name: L:VERT_DISP_GP_ARM_RIGHT
@@ -582,6 +585,9 @@ shared:
   -
     type: var
     var_name: L:ALT_ARM_SWITCH
+  -
+    type: var
+    var_name: L:VERT_DISP_ALTS_ARM_VALUE
   -
     type: var
     var_name: L:VERT_DISP_ALTS_ARM
@@ -611,6 +617,12 @@ shared:
     var_name: L:MIN_PITCH
   -
     type: var
+    var_name: L:ALT_PLUS_300
+  -
+    type: var
+    var_name: L:ALT_MINUS_300
+  -
+    type: var
     var_name: L:AP_First_Load
   -
     type: var
@@ -624,6 +636,12 @@ shared:
   -
     type: var
     var_name: L:YAW_DAMPER_MEM
+  -
+    type: var
+    var_name: L:AP_DISCONNECT
+  -
+    type: var
+    var_name: L:AUTOPILOT_MASTER_DISCONNECT_YOKE
   -
     type: var
     var_name: L:AP_YD_OFF_MEM
@@ -642,6 +660,9 @@ shared:
   -
     type: var
     var_name: L:NAV_CAP_LOC
+  -
+    type: var
+    var_name: L:CDI_CAPTURED
   -
     type: var
     var_name: L:MEMORY_VOR_NAV
@@ -699,12 +720,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
-# -
-#   type: var
-#   var_name: L:IAS_VS_REF
-  -
-    type: var
-    var_name: L:VS_OFFSET
   -
     type: var
     var_name: L:LATERAL_MEMORY
@@ -729,6 +744,27 @@ shared:
   -
     type: var
     var_name: L:GARMIN_ALERTER_CODE
+  -
+    type: var
+    var_name: L:ALT_HLD_NEW_TARGET_TOTAL_ARMED
+  -
+    type: var
+    var_name: L:ALT300_UP_BLINK_ENABLE
+  -
+    type: var
+    var_name: L:ALT300_UP_BLINK_CNT
+  -
+    type: var
+    var_name: L:ALT_INC_300
+  -
+    type: var
+    var_name: L:ALT300_DN_BLINK_ENABLE
+  -
+    type: var
+    var_name: L:ALT300_DN_BLINK_CNT
+  -
+    type: var
+    var_name: L:ALT_DEC_300
   -
     type: var
     var_name: L:AP_BLINK_ENABLE
@@ -785,6 +821,9 @@ shared:
     var_name: L:GA_MODE_MEM
   -
     type: var
+    var_name: L:VERT_DISP_GS_ARM
+  -
+    type: var
     var_name: L:FD_BTN
   -
     type: var
@@ -819,6 +858,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AP_WHEEL_INC
+  -
+    type: var
+    var_name: L:ALT_HLD_NEW_TARGET_MEM
 # -
 #   type: var
 #   var_name: L:AP_WHEEL_DEC
@@ -940,9 +982,6 @@ shared:
     var_name: L:GENERIC_NAV2_RADIO_BUTTON4
   -
     type: var
-    var_name: L:GENERIC_Momentary_DME_C1077B_BUTTON_POWER
-  -
-    type: var
     var_name: L:GENERIC_DME_C1077B_BUTTON_DN
   -
     type: var
@@ -1055,9 +1094,6 @@ shared:
   -
     type: var
     var_name: L:VOLTAMMETER_KNOB
-  -
-    type: var
-    var_name: L:GENERIC_Momentary_DAVTRON_SWITCH_STOP
   -
     type: var
     var_name: L:GENERIC_Momentary_COM3_AUDIO_SWITCH
@@ -1174,6 +1210,9 @@ shared:
     var_name: L:CABIN_LOWER
   -
     type: var
+    var_name: L:ALERTER_TONE
+  -
+    type: var
     var_name: L:GENERIC_ALERTER_TEN_THOUSANDTHS
     unreliable: true
   -
@@ -1225,9 +1264,6 @@ shared:
 #   var_name: L:TDSGTNXI750U1_DTOKey
 # -
 #   type: var
-#   var_name: L:TDSGTNXI750U1_NavSrc
-# -
-#   type: var
 #   var_name: L:TDSGTNXI750U2_LKnobInc
 # -
 #   type: var
@@ -1256,15 +1292,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:TDSGTNXI750U2_DTOKey
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U2_NavSrc
   -
     type: var
     var_name: L:XMLVAR_NAV2_RADIO_POWER_Position
-  -
-    type: var
-    var_name: L:XMLVAR_COMM2_POWER_Position
 # -
 #   type: var
 #   var_name: L:EFB_BRIGHTNESS
@@ -1296,9 +1326,6 @@ shared:
   -
     type: var
     var_name: L:DAVTRON_BRIGHTNESS
-  -
-    type: var
-    var_name: L:XMLVAR_ADF1_POWER_Position
   -
     type: var
     var_name: L:RNAV_ENTER_LIGHT
@@ -1338,12 +1365,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:OXYGEN_CYL_NEEDLE
-  -
-    type: var
-    var_name: L:AP_DISCONNECT
-  -
-    type: var
-    var_name: L:AUTOPILOT_MASTER_DISCONNECT_YOKE
   -
     type: var
     var_name: L:PILOT_FD_SYNC_SWITCH
@@ -1427,6 +1448,12 @@ shared:
     var_name: L:GYRO_DRIFT_SWITCH
   -
     type: var
+    var_name: L:STORED_FUEL_GALLONS
+  -
+    type: var
+    var_name: L:STORED_FUEL_TOTAL
+  -
+    type: var
     var_name: L:EMERG_GEAR_COVER
   -
     type: var
@@ -1449,13 +1476,7 @@ shared:
     unreliable: true
 # -
 #   type: var
-#   var_name: L:TDSGTNXI_INSTALLED
-# -
-#   type: var
 #   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
-# -
-#   type: var
-#   var_name: L:PMS50_GTN750_INSTALLED
   -
     type: var
     var_name: L:XMLVAR_HSI_KNOB_HEADING_BUG_1
@@ -1600,10 +1621,7 @@ shared:
     var_name: L:XMLVAR_GARMIN_AP_PIT_MODE_Position
 # -
 #   type: var
-#   var_name: L:AS530_Default_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS530_SelectedSource
+#   var_name: L:IAS_SPEED_REF
   -
     type: var
     var_name: L:XMLVAR_COMM2_FREQ_WHOLE_Position
@@ -1696,27 +1714,6 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:GENERIC_DME_C1077B_NAV_MODE
-# -
-#   type: var
-#   var_name: L:DAVTRON_FLIGHT_TIME
-# -
-#   type: var
-#   var_name: L:SIMULATION_TIME
-# -
-#   type: var
-#   var_name: L:GTN750_INT_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN750_INT_State
-# -
-#   type: var
-#   var_name: L:GTN750_INT_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN750_INT_2_State
-  -
-    type: var
     var_name: L:RNAVNAV_ScreenLuminosity
   -
     type: var
@@ -1732,16 +1729,7 @@ shared:
     var_name: L:CFS1000A_State
   -
     type: var
-    var_name: L:CFS_Preflight_Mode
-  -
-    type: var
-    var_name: L:STORED_FUEL_GALLONS
-  -
-    type: var
-    var_name: L:STORED_FUEL_POUNDS
-  -
-    type: var
-    var_name: L:STORED_FUEL_TOTAL
+    var_name: L:GENERIC_DME_C1077B_NAV_MODE
   -
     type: var
     var_name: L:DMEC1077B_ScreenLuminosity
@@ -1775,12 +1763,18 @@ shared:
   -
     type: var
     var_name: L:M811B_State
+# -
+#   type: var
+#   var_name: L:DAVTRON_FLIGHT_TIME
   -
     type: var
     var_name: L:EFBTABLET_ScreenLuminosity
   -
     type: var
     var_name: L:EFBTABLET_State
+# -
+#   type: var
+#   var_name: L:SIMULATION_TIME
 # -
 #   type: var
 #   var_name: L:AS330_ScreenLuminosity
@@ -1838,9 +1832,6 @@ shared:
     var_name: L:AUTOPILOT_GS
   -
     type: var
-    var_name: L:XMLVAR_NAVOMATIC_AP_PITCH_Position
-  -
-    type: var
     var_name: L:XMLVAR_NAVOMATIC_TURN_KNOB_Position
   -
     type: var
@@ -1894,6 +1885,9 @@ shared:
     type: var
     var_name: L:GENERIC_XPNDR_ONES
     unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_NAVOMATIC_AP_PITCH_Position
 
 server:
   -
