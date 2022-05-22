@@ -34,7 +34,7 @@
 * Updated Carenado Seneca V to v1.4.0.
 * Updated FlyByWire A32NX to May 18, 2022.
   - EFB not updated.
-* Updated Headwind A330-900 to v0.106.
+* Updated Headwind A330-900 to v0.200.
 * Updated HypePerformanceGroup H135 to v1.4.5.
 * Updated JustFlight Arrow III to v0.10.3.
 * Updated Mrtommymxr C172 to v0.3.
