@@ -8,6 +8,7 @@
 * Added C140 by Aeroplane Heaven (v1.4.0a).
 * Added C170B by Carenado (v1.3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
+* Added C310R by Milviz (1.0.0).
 * Added C414AW Chancellor by Flysimware (v1.9.0).
 * Added Concorde by DC Designs (v1.0.4).
 * Added DHC6 Twin Otter by Aerosoft (v1.0.5.0).
@@ -98,6 +99,7 @@
 #### Known Issues:
 * B-events/vars: All switches and levers using "B:" will not physically move for clients but any associated "A:" or "L:" vars will still sync. This is because "B:" cannot be set through SimConnect. Asobo clearly has no intention of fixing/allowing this, either.
 * JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type (Aircraft Options) on tablet are not the same for all connected. Cycle options before starting.
+* Milviz C310R: Some actions on tablet only sync if everyone connected has tablet visible.
 * FlyByWire: Fuel state unsyncable. A/THR causes engines to be completely out of sync with partner aircraft.
 
 
