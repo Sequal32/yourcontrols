@@ -22,7 +22,7 @@
 * Added PA-28 Warrior II by JustFlight (v0.3.3).
 * Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
 * Added PC-6 Turbo Porter by Milviz (v1.0.9).
-* Added RV-14 & 14A by SimWorks Studios (v1.1.0).
+* Added RV-14 & 14A by SimWorks Studios (v1.2.0).
 * Added RV-7 & 7A mod by Deejing (v1.0.8).
 * Added TF-104G Starfighter by SimSkunkWorks (v3.2).
 * Added basic support for GNS530 by PMS50 (v1.0.49).
@@ -67,7 +67,7 @@
 * Asobo Cap10: Missing external lights.
 * Asobo Cap10: Aerobatic trim flap switch.
 * Asobo CJ4: Pulse light pushbutton.
-* Asobo KingAir: 3rd interior cabin light.
+* Asobo KingAir: Added 3rd interior cabin light.
 * Asobo Longitude: SVT terrain toggle desync.
 * Asobo Porter: Profile not executing.
 * Asobo Porter: Support for non-G950 variant.
@@ -95,12 +95,6 @@
 * Salty 747: Sync of LNAV/VNAV modes.
 * Working Title CJ4: Vertical pitch reference indicator.
 * Doors on PMDG DC6, Mugz TBM930, Carenado M20R, RSP R44.
-
-#### Known Issues:
-* B-events/vars: All switches and levers using "B:" will not physically move for clients but any associated "A:" or "L:" vars will still sync. This is because "B:" cannot be set through SimConnect. Asobo clearly has no intention of fixing/allowing this, either.
-* JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type (Aircraft Options) on tablet are not the same for all connected. Cycle options before starting.
-* Milviz C310R: Some actions on tablet only sync if everyone connected has tablet visible.
-* FlyByWire: Fuel state unsyncable. A/THR causes engines to be completely out of sync with partner aircraft.
 
 
 ## Version 2.6.3
