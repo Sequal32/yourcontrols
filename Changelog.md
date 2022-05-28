@@ -2,6 +2,8 @@
 
 ## Version 2.7.0
 
+To avoid potential cloud issues this update is shipping with the 2.6.3 executable and community package. Therefore, many existing issues still remain but many issues have been fixed within the latest aircraft definition files. I'd like to thank everyone on the Discord for testing and reporting issues with the candidate packages leading up to this release. -TH
+
 #### Profiles
 * Added A32NX Stable by FlyByWire (v0.8.1).
 * Added Bell 47G by FlyInside (v1.71).
@@ -28,7 +30,7 @@
 * Added basic support for GNS530 by PMS50 (v1.0.49).
 * Added basic support for GTN750 by PMS50 (v2.1.37).
 * Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.6).
-* Added basic support for G1000 NXi by Working Title (v0.12.1).
+* Added basic support for G1000 NXi by Working Title (v0.12.2).
 * Updated ASOBO aircraft for Sim Update 9 (v1.25.7.0).
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
@@ -95,6 +97,11 @@
 * Salty 747: Sync of LNAV/VNAV modes.
 * Working Title CJ4: Vertical pitch reference indicator.
 * Doors on PMDG DC6, Mugz TBM930, Carenado M20R, RSP R44.
+
+#### New issues
+* JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type on tablet are not the same for all connected. Each person should cycle type before powering.
+* Milviz C310R: Some actions on tablet only sync once everyone connected has tablet visible.
+* Touchscreen interaction on 3rd-party avionics packages currently does not sync.
 
 
 ## Version 2.6.3
