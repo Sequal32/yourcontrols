@@ -2272,11 +2272,12 @@ shared:
     type: var
     var_name: L:A32NX_AUTOPILOT_2_ACTIVE
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: L:A32NX_AUTOTHRUST_STATUS
+    var_units: Enum
+    var_type: f64
     event_name: A32NX.FCU_ATHR_PUSH
     use_calculator: true
-    on_condition_value: 2.0
   -
     type: ToggleSwitch
     var_name: L:A32NX_FCU_LOC_MODE_ACTIVE
