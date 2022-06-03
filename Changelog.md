@@ -2,7 +2,7 @@
 
 ## Version 2.7.0
 
-To avoid potential cloud issues this update is shipping with the 2.6.3 executable and community package. Therefore, many existing issues still remain but many issues have been fixed within the latest aircraft definition files. I'd like to thank everyone on the Discord for testing and reporting issues with the candidate packages leading up to this release. -TH
+To avoid potential cloud issues this update is shipping with the 2.6.3 executable and community package. Therefore, many existing issues still remain but many issues have been fixed within the latest aircraft definition files.
 
 #### Profiles
 * Added A32NX Stable by FlyByWire (v0.8.1).
