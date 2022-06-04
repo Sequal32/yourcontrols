@@ -1,4 +1,4 @@
-# Version 1.0.24
+# Version 1.2.0
 
 include:
   - definitions/modules/Avionics/AS1000.yaml
@@ -79,9 +79,9 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
-  -
+  - # Reading light (doesn't move cause O var)
     type: NumSet
-    var_name: A:LIGHT CABIN:3 # Reading light (doesn't move cause O var)
+    var_name: A:LIGHT CABIN:3
     var_units: Bool
     var_type: i32
     event_name: CABIN_LIGHTS_SET
@@ -207,7 +207,28 @@ shared:
     var_type: bool
     event_name: TOGGLE_WATER_RUDDER
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:HOBBS_FLIGHT_TIME_SECONDS
+# -
+#   type: var
+#   var_name: L:HOBBS_FLIGHT_TIME_HOURS
+# -
+#   type: var
+#   var_name: L:SWS_FAILURE_Turbine_1_Age
+# -
+#   type: var
+#   var_name: L:SWS_ENGINE_Starter_1_Uses
+# -
+#   type: var
+#   var_name: L:SWS_ENGINE_1_Ignition_On_Timer
+# -
+#   type: var
+#   var_name: L:SWS_ENGINE_1_Ignition_Overheat_Timer
+  -
+    type: var
+    var_name: L:KodiakAC_SwitchPage
+  -
     type: var
     var_name: L:SWS_ESI500_Instrument_Startup_Completed
   -
@@ -321,12 +342,6 @@ shared:
   -
     type: var
     var_name: L:SWS_ESI500_AirspeedInMPH
-  -
-    type: var
-    var_name: L:SWS_ESI500_Altimeter_Pressure
-  -
-    type: var
-    var_name: L:KodiakAC_SwitchPage
   -
     type: var
     var_name: L:KodiakAC_Fanspeed_Pilot
@@ -618,6 +633,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
+  -
+    type: var
+    var_name: L:SWS_ESI500_Altimeter_Pressure
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_1
@@ -944,6 +962,12 @@ shared:
     var_name: L:SWS_ENGINE_Switch_Starter_ThreeState_1
   -
     type: var
+    var_name: L:SWS_ENGINE_Starter_Failed_1
+  -
+    type: var
+    var_name: L:SWS_ENGINE_Switch_Ignition_Failed_1
+  -
+    type: var
     var_name: L:SWS_ENGINE_Switch_Ignition_1
   -
     type: var
@@ -995,9 +1019,6 @@ shared:
     var_name: L:ENG FUEL VALVE:1
   -
     type: var
-    var_name: L:HEATER_SPEED_CURRENTSETTING
-  -
-    type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_Pilot1
   -
     type: var
@@ -1008,6 +1029,9 @@ shared:
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_Copilot2
+  -
+    type: var
+    var_name: L:HEATER_SPEED_CURRENTSETTING
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PassengerL1
@@ -1035,6 +1059,16 @@ shared:
   -
     type: var
     var_name: L:TRIM_PITCH_INCREMENT
+  -
+    type: var
+    var_name: L:AXIS_ELEVATOR_TRIM
+    conditions:
+      - var:
+          var_name: AUTOPILOT MASTER
+          var_units: Bool
+          var_type: bool
+        equals:
+          Bool: false
 # -
 #   type: var
 #   var_name: L:SWS_GLIDE_RATIO
@@ -1049,16 +1083,22 @@ shared:
     var_name: L:TRIM_PITCH_TAKEOFF_MAX
 # -
 #   type: var
-#   var_name: L:PROP_BETA_1
+#   var_name: L:MAX_TORQUE_LIMIT
 # -
 #   type: var
-#   var_name: L:PROPELLER_1_DRAG_SET
+#   var_name: L:SWS_FAILURE_Engine_Overheat_Factor
 # -
 #   type: var
-#   var_name: L:PROPELLER_1_STILL_DRAG_MULTIPLIER
+#   var_name: L:SWS_FAILURE_Engine_OverSpeed_Factor
 # -
 #   type: var
-#   var_name: L:TOTAL_DRAG_PROPELLER_1
+#   var_name: L:SWS_FAILURE_Engine_OverTorque_Factor
+# -
+#   type: var
+#   var_name: L:ESP_TIMER_BANK_1
+# -
+#   type: var
+#   var_name: L:ESP_TIMER_PITCH_1
 # -
 #   type: var
 #   var_name: L:ITT_LERP_ENGINE1
@@ -1067,7 +1107,28 @@ shared:
 #   var_name: L:TURB_ENG_ITT_1
 # -
 #   type: var
+#   var_name: L:ITT_ENGINE_FUEL_INDUCED_1
+# -
+#   type: var
+#   var_name: L:ITT_PEAK_ENGINE_1
+# -
+#   type: var
+#   var_name: L:ITT_PEAK_N1_ENGINE_1
+# -
+#   type: var
 #   var_name: L:TURB_ENG_N1_1
+# -
+#   type: var
+#   var_name: L:COOLDOWN_STARTED_ENG1
+# -
+#   type: var
+#   var_name: L:ITT_TARGET_1
+# -
+#   type: var
+#   var_name: L:SWS_ENGINE_TURBINE_ITT_HOT
+# -
+#   type: var
+#   var_name: L:TURB_ENG_ITT_1_DISPLAY
   -
     type: var
     var_name: L:Cupholder_1
@@ -1092,6 +1153,9 @@ shared:
   -
     type: var
     var_name: L:Cupholder_8
+  -
+    type: var
+    var_name: L:SWS_SKYDIVE_Switch_Light_Jump
 # -
 #   type: var
 #   var_name: L:AS1000_MID_Display_Backup_Active
@@ -1107,18 +1171,21 @@ shared:
   -
     type: var
     var_name: L:SWS_MISC_Lever_Harness_2
-  -
-    type: var
-    var_name: L:SWS_SKYDIVE_Switch_Light_Jump
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:Glasscockpit_Wind_Mode
 # -
 #   type: var
 #   var_name: L:Annunciations_Manager_Initialized
+  -
+    type: var
+    var_name: L:SWS_FAILURE_Turbine_1_Failed
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN

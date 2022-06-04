@@ -20,7 +20,7 @@ To avoid potential cloud issues this update is shipping with the 2.6.3 executabl
 * Added H125 by RotorSimPilot (v1.3.9).
 * Added J160/J170 Jabiru by IRIS Simulations (v1.5.6).
 * Added JRF-6B Goose by Big Radials (v1.0.4).
-* Added Kodiak 100 by SimWorks Studios (v1.0.24).
+* Added Kodiak 100 by SimWorks Studios (v1.2.0).
 * Added PA-28 Warrior II by JustFlight (v0.3.3).
 * Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
 * Added PC-6 Turbo Porter by Milviz (v1.0.9).
