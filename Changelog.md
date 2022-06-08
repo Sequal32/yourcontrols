@@ -91,7 +91,7 @@ To avoid potential cloud issues this update is shipping with the 2.6.3 executabl
 * PMDG DC6: Emergency air brake lever.
 * PMDG DC6: Emergency hydraulic pump switch.
 * PMDG DC6: Inverter flip handle.
-* PMDG DC6: Reverse pitch lever.
+* PMDG DC6: Reverse pitch selector lever.
 * PMDG DC6: Temperature control knobs.
 * Salty 747: Flight director switches.
 * Salty 747: Sync of LNAV/VNAV modes.
