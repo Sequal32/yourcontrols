@@ -7,6 +7,7 @@ To avoid potential cloud issues this update is shipping with the 2.6.3 executabl
 #### Profiles
 * Added A32NX Stable by FlyByWire (v0.8.1).
 * Added Bell 47G by FlyInside (v1.71).
+* Added Boeing 247D by Wing42 (v1.0.1).
 * Added C140 by Aeroplane Heaven (v1.4.0a).
 * Added C170B by Carenado (v1.3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
