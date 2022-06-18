@@ -438,6 +438,49 @@ shared:
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 4
 
+  - # Jetway
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:10
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_JETWAY
+    use_calculator: true
+  - # Ramp Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:10
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_RAMPTRUCK
+    use_calculator: true
+  - # Catering Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:1
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_CATERING
+    use_calculator: true
+  - # Luggage Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:12
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_LUGGAGE
+    use_calculator: true
+  - # GPU
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:15
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_POWER_SUPPLY
+    use_calculator: true
+  - # Fuel Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:14
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_FUEL_KEY
+    use_calculator: true
+
   - # Lights
     type: NumSet
     var_name: A:LIGHT NAV:0

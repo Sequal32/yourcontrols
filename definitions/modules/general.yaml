@@ -1,24 +1,25 @@
 include:
   - definitions/modules/physics.yaml
+  - definitions/modules/service.yaml
   - definitions/modules/slew.yaml
 
 shared:
   - # Flaps
-    type: var
-    var_name: A:FLAPS HANDLE INDEX
-    var_units: Number
-    var_type: i32
-  -
     type: NumSet
     var_name: A:FLAPS HANDLE PERCENT
     var_units: Position 16k
     var_type: i32
     event_name: FLAPS_CONTINUOUS_SET
+  -
+    type: var
+    var_name: A:FLAPS HANDLE INDEX
+    var_units: Number
+    var_type: i32
 
   - # Gear
     type: NumSet
     var_name: A:GEAR HANDLE POSITION
-    var_units: Number
+    var_units: Bool
     var_type: i32
     event_name: GEAR_SET
 
@@ -54,7 +55,7 @@ shared:
     action: TransferControls
 
 master:
-  - # Controls (Sync surfaces and yoke will sync with them)
+  - # Surfaces (yoke inherited)
     type: NumSet
     var_name: A:ELEVATOR POSITION
     var_units: Position 16k

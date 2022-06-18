@@ -62,15 +62,21 @@ To avoid potential cloud issues this update is shipping with the 2.6.3 executabl
 * Annunciator test light switch event.
 * Engine bleed air toggle event.
 * External power toggle event.
+* Added pushback tug support.
 
 #### Aircraft Fixes
+* Asobo 747: ATC ground services.
+* Asobo 787: ATC ground services.
+* Asobo A320neo: ATC ground services.
 * Asobo A320neo: WX brightness knob.
 * Asobo C172: Kohlsman index for G1000 PFD.
 * Asobo C208: External power BUS and STBY alternator.
 * Asobo Cap10: Missing external lights.
 * Asobo Cap10: Aerobatic trim flap switch.
+* Asobo CJ4: ATC ground services.
 * Asobo CJ4: Pulse light pushbutton.
 * Asobo KingAir: Added 3rd interior cabin light.
+* Asobo Longitude: ATC ground services.
 * Asobo Longitude: SVT terrain toggle desync.
 * Asobo Porter: Profile not executing.
 * Asobo Porter: Support for non-G950 variant.
@@ -80,10 +86,12 @@ To avoid potential cloud issues this update is shipping with the 2.6.3 executabl
 * Asobo TBM930: SVT terrain toggle desync.
 * A32NX: Autobrake level setting (#7067).
 * A32NX: Gear lever for new hydraulic system (#6893).
+* A32NX: Ground services including exit and cargo doors (#7229).
 * A32NX: AP1 to AP2 toggle with a temporary workaround.
 * A32NX: Corrected 16K value for flap handle.
 * A32NX: LS pushbutton desync.
 * Carenado M20R: Interior and exterior lights.
+* Headwind A339: ATC ground services.
 * HPG H135: Barometer desync with MFD knobs.
 * HPG H135: Excessive data spam while in hover mode.
 * HPG H135: Tablet autopilot button desync.
@@ -94,6 +102,7 @@ To avoid potential cloud issues this update is shipping with the 2.6.3 executabl
 * PMDG DC6: Inverter flip handle.
 * PMDG DC6: Reverse pitch selector lever.
 * PMDG DC6: Temperature control knobs.
+* Salty 747: ATC ground services.
 * Salty 747: Flight director switches.
 * Salty 747: Sync of LNAV/VNAV modes.
 * Working Title CJ4: Vertical pitch reference indicator.
