@@ -10,7 +10,7 @@
 * Added C170B by Carenado (v1.3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
 * Added C310R by Milviz (1.0.0).
-* Added C414AW Chancellor by Flysimware (v1.9.0).
+* Added C414AW Chancellor by Flysimware (v2.4.1).
 * Added Concorde by DC Designs (v1.0.4).
 * Added DHC6 Twin Otter by Aerosoft (v1.0.5.0).
 * Added Electra-10A by Aeroplane Heaven (v1.2.1).
@@ -28,7 +28,7 @@
 * Added TF-104G Starfighter by SimSkunkWorks (v3.2).
 * Added basic support for GNS530 by PMS50 (v1.0.49).
 * Added basic support for GTN750 by PMS50 (v2.1.37).
-* Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.6).
+* Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.8).
 * Added basic support for G1000 NXi by Working Title (v0.12.2).
 * Updated ASOBO aircraft for Sim Update 9 (v1.25.7.0).
 * Updated Carenado M20R to v1.5.1.

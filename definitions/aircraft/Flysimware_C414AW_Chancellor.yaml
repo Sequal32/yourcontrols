@@ -1,4 +1,4 @@
-# Version 2.4.0
+# Version 2.4.1
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -1463,16 +1463,22 @@ shared:
     var_name: L:XMLVAR_VOLUME_BACK_KNOB_Position
   -
     type: var
+    var_name: L:Nav2RadioCurserstate
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
     var_name: L:XMLVAR_IsDeiceAirFrame
   -
     type: var
     var_name: L:XMLVAR_IsDeiceAirFrame2
   -
     type: var
-    var_name: L:Nav2RadioCurserstate
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
   -
     type: var
     var_name: L:RNAVNAV_ScreenLuminosity
@@ -1506,6 +1512,9 @@ shared:
   -
     type: var
     var_name: L:C1038A_State
+  -
+    type: var
+    var_name: L:GARMIN_ALERTER_CODE
   -
     type: var
     var_name: L:C1046A_ScreenLuminosity
@@ -1557,12 +1566,6 @@ shared:
   -
     type: var
     var_name: L:ESP_WARNING
-  -
-    type: var
-    var_name: L:WasmInstrument_ScreenLuminosity
-  -
-    type: var
-    var_name: L:WasmInstrument_State
 # -
 #   type: var
 #   var_name: L:AUTOPILOT_PREFLIGHT_CHECK
