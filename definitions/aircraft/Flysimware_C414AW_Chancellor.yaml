@@ -1,4 +1,4 @@
-# Version 1.9.0
+# Version 2.4.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -44,13 +44,13 @@ shared:
     event_name: ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE
     event_param: 6
 
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:9
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 9
+# - # Avionics (uses AVIONICS MASTER SWITCH now)
+#   type: ToggleSwitch
+#   var_name: A:CIRCUIT SWITCH ON:9
+#   var_units: Bool
+#   var_type: bool
+#   event_name: ELECTRICAL_CIRCUIT_TOGGLE
+#   event_param: 9
 
   - # Electrical Deice
     type: ToggleSwitch
@@ -333,10 +333,17 @@ shared:
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
     event_param: 12
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL:13
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 13
 
-# - # LVAR's (TDS)
-#   type: var
-#   var_name: L:SHOW_HIDE_EFB
+  - # LVAR's (TDS)
+    type: var
+    var_name: L:SHOW_HIDE_EFB
   -
     type: var
     var_name: L:EFB_PUSH_PLUGS
@@ -434,438 +441,6 @@ shared:
     var_name: L:XMLVAR_COMM2_POWER_Position
   -
     type: var
-    var_name: L:LVL_MODE
-  -
-    type: var
-    var_name: L:LAT_DISP_LVL
-  -
-    type: var
-    var_name: L:FD_MODE
-  -
-    type: var
-    var_name: L:ROL_MODE
-  -
-    type: var
-    var_name: L:LAT_DISP_ROL
-  -
-    type: var
-    var_name: L:HDG_MODE
-  -
-    type: var
-    var_name: L:LAT_DISP_HDG
-  -
-    type: var
-    var_name: L:NAV_MODE
-  -
-    type: var
-    var_name: L:APR_MODE
-  -
-    type: var
-    var_name: L:LAT_DISP_GPS
-  -
-    type: var
-    var_name: L:LAT_DISP_VOR
-  -
-    type: var
-    var_name: L:LAT_DISP_LOC
-  -
-    type: var
-    var_name: L:LAT_DISP_VAPP
-  -
-    type: var
-    var_name: L:GA_MODE
-  -
-    type: var
-    var_name: L:LAT_DISP_GA
-  -
-    type: var
-    var_name: L:BC_MODE
-  -
-    type: var
-    var_name: L:LAT_DISP_BC
-  -
-    type: var
-    var_name: L:LAT_DISP_GPS_ARM
-  -
-    type: var
-    var_name: L:LAT_DISP_LOC_ARM
-  -
-    type: var
-    var_name: L:LAT_DISP_VOR_ARM
-  -
-    type: var
-    var_name: L:LAT_DISP_VAPP_ARM
-  -
-    type: var
-    var_name: L:LAT_DISP_GA_ARM
-  -
-    type: var
-    var_name: L:LAT_DISP_BC_ARM
-  -
-    type: var
-    var_name: L:Vert_DISP_LVL
-  -
-    type: var
-    var_name: L:PIT_MODE
-  -
-    type: var
-    var_name: L:VERT_DISP_PIT
-  -
-    type: var
-    var_name: L:ALT_MODE
-  -
-    type: var
-    var_name: L:VERT_DISP_ALT_TARGET_VALUE
-# -
-#   type: var
-#   var_name: L:ALT_HLD_NEW_TARGET_TOTAL
-  -
-    type: var
-    var_name: L:VERT_DISP_ALT
-  -
-    type: var
-    var_name: L:ALTS_MODE
-  -
-    type: var
-    var_name: L:VERT_DISP_ALTS_VALUE
-  -
-    type: var
-    var_name: L:ALT_PRESELECT
-  -
-    type: var
-    var_name: L:VERT_DISP_ALTS
-  -
-    type: var
-    var_name: L:VERT_DISP_ALT_FT
-  -
-    type: var
-    var_name: L:VERT_DISP_ALTS_FT
-  -
-    type: var
-    var_name: L:IAS_MODE
-  -
-    type: var
-    var_name: L:VERT_DISP_KTS
-  -
-    type: var
-    var_name: L:VS_MODE
-  -
-    type: var
-    var_name: L:VERT_DISP_VS
-  -
-    type: var
-    var_name: L:VERT_DISP_VS_FPM
-  -
-    type: var
-    var_name: L:VERT_DISP_IAS_VALUE
-  -
-    type: var
-    var_name: L:VERT_DISP_IAS
-  -
-    type: var
-    var_name: L:VERT_DISP_GA
-  -
-    type: var
-    var_name: L:VERT_DISP_GP
-  -
-    type: var
-    var_name: L:VERT_DISP_GS
-  -
-    type: var
-    var_name: L:VERT_DISP_GS_ARM_RIGHT
-  -
-    type: var
-    var_name: L:VERT_DISP_GP_ARM_RIGHT
-  -
-    type: var
-    var_name: L:VERT_DISP_GA_ARM
-  -
-    type: var
-    var_name: L:VERT_DISP_ALT_ARM
-  -
-    type: var
-    var_name: L:ALT_ARM_SWITCH
-  -
-    type: var
-    var_name: L:VERT_DISP_ALTS_ARM_VALUE
-  -
-    type: var
-    var_name: L:VERT_DISP_ALTS_ARM
-  -
-    type: var
-    var_name: L:VERT_DISP_PIT_ARM
-# -
-#   type: var
-#   var_name: L:AP_PFT_COUNTER
-  -
-    type: var
-    var_name: L:AP_PFT_COUNTER_ENABLE
-  -
-    type: var
-    var_name: L:MAX_SPEED
-  -
-    type: var
-    var_name: L:MIN_SPEED
-  -
-    type: var
-    var_name: L:MAX_BANK
-  -
-    type: var
-    var_name: L:MAX_PITCH
-  -
-    type: var
-    var_name: L:MIN_PITCH
-  -
-    type: var
-    var_name: L:ALT_PLUS_300
-  -
-    type: var
-    var_name: L:ALT_MINUS_300
-  -
-    type: var
-    var_name: L:AP_First_Load
-  -
-    type: var
-    var_name: L:AP_PFT_COUNTER_POWER
-  -
-    type: var
-    var_name: L:AP_MODE
-  -
-    type: var
-    var_name: L:YD_MODE
-  -
-    type: var
-    var_name: L:YAW_DAMPER_MEM
-  -
-    type: var
-    var_name: L:AP_DISCONNECT
-  -
-    type: var
-    var_name: L:AUTOPILOT_MASTER_DISCONNECT_YOKE
-  -
-    type: var
-    var_name: L:AP_YD_OFF_MEM
-  -
-    type: var
-    var_name: L:PIT_MODE_MEM
-# -
-#   type: var
-#   var_name: L:AUTOPILOT_BANK_HOLD
-  -
-    type: var
-    var_name: L:NAV1_LOC_VOR_FREQ
-  -
-    type: var
-    var_name: L:NAV_CAP_BC
-  -
-    type: var
-    var_name: L:NAV_CAP_LOC
-  -
-    type: var
-    var_name: L:CDI_CAPTURED
-  -
-    type: var
-    var_name: L:MEMORY_VOR_NAV
-  -
-    type: var
-    var_name: L:NAV_CAP_VOR
-  -
-    type: var
-    var_name: L:MEMORY_LOC_NAV
-  -
-    type: var
-    var_name: L:MEMORY_VAPP_APR
-  -
-    type: var
-    var_name: L:APR_CAP_VAPP
-  -
-    type: var
-    var_name: L:MEMORY_LOC_APR
-  -
-    type: var
-    var_name: L:APR_CAP_LOC
-  -
-    type: var
-    var_name: L:MEMORY_VLOC_LOCGS_APR
-  -
-    type: var
-    var_name: L:APR_DISABLE_ALT
-  -
-    type: var
-    var_name: L:APR_CAP_GS
-  -
-    type: var
-    var_name: L:MEMORY_2NM
-  -
-    type: var
-    var_name: L:MEMORY_GPS_NAV
-  -
-    type: var
-    var_name: L:NAV_CAP_GPS
-  -
-    type: var
-    var_name: L:MEMORY_GPS_APR
-  -
-    type: var
-    var_name: L:APR_CAP_GPS
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_GlidePathValueAngle
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_GlidePathValueActive
-# -
-#   type: var
-#   var_name: L:GTN750_HSI_GSI_NEEDLE
-# -
-#   type: var
-#   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
-  -
-    type: var
-    var_name: L:LATERAL_MEMORY
-# -
-#   type: var
-#   var_name: L:VS_TARGET
-  -
-    type: var
-    var_name: L:GET_VS_MEM
-# -
-#   type: var
-#   var_name: L:ALT_HLD_NEW_TARGET
-# -
-#   type: var
-#   var_name: L:CAPTURED_INDICATED_ALT
-# -
-#   type: var
-#   var_name: L:HUNDREDTHS_REMAINDER
-# -
-#   type: var
-#   var_name: L:ALT_HLD_TARGET
-  -
-    type: var
-    var_name: L:GARMIN_ALERTER_CODE
-  -
-    type: var
-    var_name: L:ALT_HLD_NEW_TARGET_TOTAL_ARMED
-  -
-    type: var
-    var_name: L:ALT300_UP_BLINK_ENABLE
-  -
-    type: var
-    var_name: L:ALT300_UP_BLINK_CNT
-  -
-    type: var
-    var_name: L:ALT_INC_300
-  -
-    type: var
-    var_name: L:ALT300_DN_BLINK_ENABLE
-  -
-    type: var
-    var_name: L:ALT300_DN_BLINK_CNT
-  -
-    type: var
-    var_name: L:ALT_DEC_300
-  -
-    type: var
-    var_name: L:AP_BLINK_ENABLE
-  -
-    type: var
-    var_name: L:AP_MEM
-  -
-    type: var
-    var_name: L:AP_BLINK_CNT
-  -
-    type: var
-    var_name: L:YAW_BLINK_ENABLE
-  -
-    type: var
-    var_name: L:YAW_BLINK_CNT
-  -
-    type: var
-    var_name: L:SET_TARGET_ALT
-  -
-    type: var
-    var_name: L:INIT_ALTS_BLINK
-  -
-    type: var
-    var_name: L:ALTS_BLINK_ENABLE
-  -
-    type: var
-    var_name: L:ALTS_BLINK_CNT
-  -
-    type: var
-    var_name: L:ALTS_MEM
-  -
-    type: var
-    var_name: L:ALT_BLINK_ENABLE
-  -
-    type: var
-    var_name: L:ALT_BLINK_CNT
-  -
-    type: var
-    var_name: L:GET_ALT_MEM
-  -
-    type: var
-    var_name: L:VS_MODE_MEM
-  -
-    type: var
-    var_name: L:IAS_MODE_MEM
-  -
-    type: var
-    var_name: L:ADI_GA_BUTTON
-  -
-    type: var
-    var_name: L:GA_BTN
-  -
-    type: var
-    var_name: L:GA_MODE_MEM
-  -
-    type: var
-    var_name: L:VERT_DISP_GS_ARM
-  -
-    type: var
-    var_name: L:FD_BTN
-  -
-    type: var
-    var_name: L:VNAV_MODE
-  -
-    type: var
-    var_name: L:LVL_BTN
-  -
-    type: var
-    var_name: L:VNV_MODE
-  -
-    type: var
-    var_name: L:HDG_BTN
-  -
-    type: var
-    var_name: L:NAV_BTN
-  -
-    type: var
-    var_name: L:APR_BTN
-  -
-    type: var
-    var_name: L:BC_BTN
-  -
-    type: var
-    var_name: L:ALT_BTN
-  -
-    type: var
-    var_name: L:VS_BTN
-  -
-    type: var
-    var_name: L:IAS_BTN
-# -
-#   type: var
-#   var_name: L:AP_WHEEL_INC
-  -
-    type: var
-    var_name: L:ALT_HLD_NEW_TARGET_MEM
-# -
-#   type: var
-#   var_name: L:AP_WHEEL_DEC
-  -
-    type: var
     var_name: L:GENERIC_Momentary_LIGHT_SWITCH_LANDING_1
   -
     type: var
@@ -879,6 +454,96 @@ shared:
   -
     type: var
     var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:LUGGAGE_WING_1
+  -
+    type: var
+    var_name: L:LUGGAGE_WING_1_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_WING_2
+  -
+    type: var
+    var_name: L:LUGGAGE_WING_2_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_WING_TOTAL_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_WING_3
+  -
+    type: var
+    var_name: L:LUGGAGE_WING_3_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_1
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_1_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_2
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_2_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_3
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_3_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_4
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_4_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_5
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_5_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_6
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_6_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_7
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_7_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_8
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_8_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_9
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_9_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_10
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_10_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_11
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_11_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_TOTAL_WEIGHT
 # -
 #   type: var
 #   var_name: L:Prop1Rotation
@@ -1114,6 +779,33 @@ shared:
     var_name: L:GENERIC_Momentary_NAV2_AUDIO_SWITCH
   -
     type: var
+    var_name: L:AP_PFT_POWER
+  -
+    type: var
+    var_name: L:AP_PFT_COUNTER_ENABLE
+# -
+#   type: var
+#   var_name: L:AP_PFT_COUNTER
+  -
+    type: var
+    var_name: L:AP_MEM
+  -
+    type: var
+    var_name: L:YAW_DAMPER_MEM
+  -
+    type: var
+    var_name: L:AP_BLINK_ENABLE
+# -
+#   type: var
+#   var_name: L:AP_BLINK_CNT
+  -
+    type: var
+    var_name: L:YAW_BLINK_ENABLE
+# -
+#   type: var
+#   var_name: L:YAW_BLINK_CNT
+  -
+    type: var
     var_name: L:GEAR_HORN_ACTIVE
   -
     type: var
@@ -1211,27 +903,6 @@ shared:
   -
     type: var
     var_name: L:ALERTER_TONE
-  -
-    type: var
-    var_name: L:GENERIC_ALERTER_TEN_THOUSANDTHS
-    unreliable: true
-  -
-    type: var
-    var_name: L:Alerter_GENERIC_ALERTER_TEN_THOUSANDTHS
-  -
-    type: var
-    var_name: L:Alerter_GENERIC_ALERTER_THOUSANDTHS
-  -
-    type: var
-    var_name: L:Alerter_GENERIC_ALERTER_HUNDREDTHS
-  -
-    type: var
-    var_name: L:GENERIC_ALERTER_THOUSANDTHS
-    unreliable: true
-  -
-    type: var
-    var_name: L:GENERIC_ALERTER_HUNDREDTHS
-    unreliable: true
 # -
 #   type: var
 #   var_name: L:TDSGTNXI750U1_LKnobInc
@@ -1307,9 +978,9 @@ shared:
   -
     type: var
     var_name: L:EFB_CHARGER
-  -
-    type: var
-    var_name: L:EFB_DIGITAL_SOUND
+# -
+#   type: var
+#   var_name: L:EFB_DIGITAL_SOUND
   -
     type: var
     var_name: L:EFB_PUSH_POWER
@@ -1367,6 +1038,12 @@ shared:
 #   var_name: L:OXYGEN_CYL_NEEDLE
   -
     type: var
+    var_name: L:AUTOPILOT_MASTER_DISCONNECT_YOKE
+  -
+    type: var
+    var_name: L:AP_DISCONNECT
+  -
+    type: var
     var_name: L:PILOT_FD_SYNC_SWITCH
   -
     type: var
@@ -1382,7 +1059,13 @@ shared:
 #   var_name: L:XMLVAR_LeverThrottleHidden2
 # -
 #   type: var
+#   var_name: L:MIXTURE1_Pos
+# -
+#   type: var
 #   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:MIXTURE2_Pos
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverMixtureHidden2
@@ -1463,7 +1146,7 @@ shared:
     var_name: L:GROUND_RADAR_TEST_SWITCH
   -
     type: var
-    var_name: L:ADI_GA_BUTTON_MODE
+    var_name: L:ADI_GA_BUTTON
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
@@ -1480,6 +1163,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_HSI_KNOB_HEADING_BUG_1
+# -
+#   type: var
+#   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_LateralValueActive
 # -
 #   type: var
 #   var_name: L:TDSGTNXI_ToFromFlag
@@ -1546,10 +1235,58 @@ shared:
     var_name: L:Table_Right
   -
     type: var
-    var_name: L:SEATS_CABIN_7
+    var_name: L:PASS_1_7
   -
     type: var
-    var_name: L:PAYLOAD_STATION_WEIGHT_7
+    var_name: L:PASS_2_7
+  -
+    type: var
+    var_name: L:SEATS_CABIN_7_ANIM
+  -
+    type: var
+    var_name: L:PASS_1_3
+  -
+    type: var
+    var_name: L:PASS_2_3
+  -
+    type: var
+    var_name: L:PASS_1_4
+  -
+    type: var
+    var_name: L:PASS_2_4
+  -
+    type: var
+    var_name: L:PASS_1_5
+  -
+    type: var
+    var_name: L:PASS_2_5
+  -
+    type: var
+    var_name: L:PASS_1_6
+  -
+    type: var
+    var_name: L:PASS_2_6
+  -
+    type: var
+    var_name: L:PASS_1_8
+  -
+    type: var
+    var_name: L:PASS_2_8
+  -
+    type: var
+    var_name: L:PASS_3_8
+  -
+    type: var
+    var_name: L:PAYLOAD_STATION_TOTAL_WEIGHT_POUNDS
+  -
+    type: var
+    var_name: L:PAYLOAD_STATION_TOTAL_WEIGHT_KILOGRAMS
+  -
+    type: var
+    var_name: L:LUGGAGE_CARGO
+  -
+    type: var
+    var_name: L:LUGGAGE_CARGO_WEIGHT
 # -
 #   type: var
 #   var_name: L:STRUCTURAL_DEICE_MEMORY
@@ -1591,37 +1328,55 @@ shared:
     var_name: L:GENERIC_AUTOPILOT_NAV1_NAV2
   -
     type: var
+    var_name: L:PHASE_SWITCH
+  -
+    type: var
+    var_name: L:PHASE_SWITCH_ON
+  -
+    type: var
+    var_name: L:PHASE_KNOB_CONVERT
+# -
+#   type: var
+#   var_name: L:PHASE_VALUE
+  -
+    type: var
     var_name: L:MKR_BCN_TEST
   -
     type: var
     var_name: L:ALT_ALERT_LIGHT
   -
     type: var
-    var_name: L:PHASE_SWITCH
-  -
-    type: var
-    var_name: L:PHASE_KNOB_CONVERT
-  -
-    type: var
     var_name: L:XMLVAR_PHASE_KNOB_Position
+# -
+#   type: var
+#   var_name: L:PHASE_ANIM
   -
     type: var
     var_name: L:NAV1_GPS_BUTTON
   -
     type: var
     var_name: L:MARKER_BEACON_MUTE
-  -
-    type: var
-    var_name: L:MARKER_BEACON_TIMER
+# -
+#   type: var
+#   var_name: L:MARKER_BEACON_TIMER
   -
     type: var
     var_name: L:INTERCOM_AUDIO_SWITCH
   -
     type: var
+    var_name: L:XMLVAR_ALT_SEL_1000_Position
+  -
+    type: var
+    var_name: L:ALT_1000
+  -
+    type: var
+    var_name: L:XMLVAR_ALT_SEL_100_Position
+  -
+    type: var
+    var_name: L:ALT_100
+  -
+    type: var
     var_name: L:XMLVAR_GARMIN_AP_PIT_MODE_Position
-# -
-#   type: var
-#   var_name: L:IAS_SPEED_REF
   -
     type: var
     var_name: L:XMLVAR_COMM2_FREQ_WHOLE_Position
@@ -1708,6 +1463,12 @@ shared:
     var_name: L:XMLVAR_VOLUME_BACK_KNOB_Position
   -
     type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  -
+    type: var
     var_name: L:Nav2RadioCurserstate
 # -
 #   type: var
@@ -1738,7 +1499,7 @@ shared:
     var_name: L:DMEC1077B_State
   -
     type: var
-    var_name: L:MIN OUT
+    var_name: L:MIN_OUT
   -
     type: var
     var_name: L:C1038A_ScreenLuminosity
@@ -1781,6 +1542,30 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS330_State
+  -
+    type: var
+    var_name: L:AL300_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AL300_State
+  -
+    type: var
+    var_name: L:GFC605_ScreenLuminosity
+  -
+    type: var
+    var_name: L:GFC605_State
+  -
+    type: var
+    var_name: L:ESP_WARNING
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_PREFLIGHT_CHECK
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -1829,7 +1614,10 @@ shared:
     var_name: L:GENERIC_XPNDR_ID
   -
     type: var
-    var_name: L:AUTOPILOT_GS
+    var_name: L:PITCH_HOLD
+  -
+    type: var
+    var_name: L:ALT_ARM_SWITCH
   -
     type: var
     var_name: L:XMLVAR_NAVOMATIC_TURN_KNOB_Position
@@ -1844,7 +1632,28 @@ shared:
     var_name: L:NAVOMATIC_TURN_BANK_Degrees
   -
     type: var
+    var_name: L:GENERIC_ALERTER_TEN_THOUSANDTHS
+    unreliable: true
+  -
+    type: var
+    var_name: L:Alerter_GENERIC_ALERTER_TEN_THOUSANDTHS
+  -
+    type: var
+    var_name: L:Alerter_GENERIC_ALERTER_THOUSANDTHS
+  -
+    type: var
+    var_name: L:Alerter_GENERIC_ALERTER_HUNDREDTHS
+  -
+    type: var
     var_name: L:Alerter_CODE
+  -
+    type: var
+    var_name: L:GENERIC_ALERTER_THOUSANDTHS
+    unreliable: true
+  -
+    type: var
+    var_name: L:GENERIC_ALERTER_HUNDREDTHS
+    unreliable: true
   -
     type: var
     var_name: L:TRANSPONDER_GENERIC_XPNDR_THOUSANDTHS
@@ -1954,15 +1763,19 @@ server:
     var_type: f64
 
 ignore:
+  - WasmInstrument#Mainframe
   - GENERIC_DME_C1077B_BUTTON_UP
   - GENERIC_DME_C1077B_BUTTON_DN
   - KNOB_Knob_Heading_Compass_INC
   - KNOB_Knob_Heading_Compass_DEC
+  - KNOB_PRESSURIZATION_Knob_ClimbRate_INC
+  - KNOB_PRESSURIZATION_Knob_ClimbRate_DEC
   - KNOB_GROUND_RADAR_DH_HEIGHT_KNOB_INC
   - KNOB_GROUND_RADAR_DH_HEIGHT_KNOB_DEC
   - KNOB_GARMIN_AP_PIT_MODE_INC
   - KNOB_GARMIN_AP_PIT_MODE_DEC
 
+  - EFBTABLET#Mainframe
   - EFBTABLET#CHOCKS
   - EFBTABLET#PLUGS
   - EFBTABLET#TIE_DOWN
@@ -1980,12 +1793,98 @@ ignore:
   - EFBTABLET#OIL
   - EFBTABLET#HYD
   - EFBTABLET#ENG
+  - EFBTABLET#YOKELOCK
   - EFBTABLET#RUDDERLOCK
   - EFBTABLET#SHOWCOPILOT
   - EFBTABLET#READYTAKEOFF
   - EFBTABLET#READYSTART
   - EFBTABLET#COLDDARK
-  - EFBTABLET#BRIGHT_INCRESEHOTSPOT
+  - EFBTABLET#BRIGHT_INCREASEHOTSPOT
   - EFBTABLET#BRIGHT_DECREASEHOTSPOT
   - EFBTABLET#SOUND_OFFHOTSPOT
   - EFBTABLET#CLOCKHOTSPOT
+  - EFBTABLET#BATTERY_POWER_TWENTY
+
+  - EFBTABLET#PASS_1_3
+  - EFBTABLET#PASS_1_4
+  - EFBTABLET#PASS_1_5
+  - EFBTABLET#PASS_1_6
+  - EFBTABLET#PASS_1_7
+  - EFBTABLET#PASS_1_8
+  - EFBTABLET#PASS_2_3
+  - EFBTABLET#PASS_2_4
+  - EFBTABLET#PASS_2_5
+  - EFBTABLET#PASS_2_6
+  - EFBTABLET#PASS_2_7
+  - EFBTABLET#PASS_2_8
+  - EFBTABLET#PASS_3_8
+
+  - EFBTABLET#LUGGAGE_NOSE_1
+  - EFBTABLET#LUGGAGE_NOSE_2
+  - EFBTABLET#LUGGAGE_NOSE_3
+  - EFBTABLET#LUGGAGE_NOSE_4
+  - EFBTABLET#LUGGAGE_NOSE_5
+  - EFBTABLET#LUGGAGE_NOSE_6
+  - EFBTABLET#LUGGAGE_NOSE_7
+  - EFBTABLET#LUGGAGE_NOSE_8
+  - EFBTABLET#LUGGAGE_NOSE_9
+  - EFBTABLET#LUGGAGE_NOSE_10
+  - EFBTABLET#LUGGAGE_NOSE_11
+  - EFBTABLET#LUGGAGE_WING_1
+  - EFBTABLET#LUGGAGE_WING_2
+  - EFBTABLET#LUGGAGE_WING_3
+  - EFBTABLET#LUGGAGE_CARGO
+
+  - EFBTABLET#CAMERA1
+  - EFBTABLET#CAMERA2
+  - EFBTABLET#CAMERA3
+  - EFBTABLET#CAMERA4
+  - EFBTABLET#CAMERA5
+  - EFBTABLET#CAMERA6
+  - EFBTABLET#CAMERA7
+  - EFBTABLET#CAMERA8
+  - EFBTABLET#CAMERA9
+  - EFBTABLET#CAMERA10
+  - EFBTABLET#CAMERA11
+  - EFBTABLET#CAMERA12
+  - EFBTABLET#CAMERA13
+  - EFBTABLET#CAMERA14
+  - EFBTABLET#CAMERA15
+  - EFBTABLET#CAMERA16
+  - EFBTABLET#CAMERA17
+  - EFBTABLET#CAMERA18
+  - EFBTABLET#CAMERA19
+  - EFBTABLET#CAMERA20
+  - EFBTABLET#CAMERA21
+  - EFBTABLET#CAMERA22
+  - EFBTABLET#CAMERA23
+  - EFBTABLET#CAMERA24
+  - EFBTABLET#CAMERA25
+  - EFBTABLET#CAMERA26
+  - EFBTABLET#CAMERA27
+  - EFBTABLET#CAMERA28
+  - EFBTABLET#CAMERA29
+  - EFBTABLET#CAMERA30
+  - EFBTABLET#CAMERA31
+  - EFBTABLET#CAMERA32
+  - EFBTABLET#CAMERA33
+  - EFBTABLET#CAMERA34
+  - EFBTABLET#CAMERA35
+  - EFBTABLET#CAMERA36
+  - EFBTABLET#CAMERA37
+
+  - EFBTABLET#LeftWingProgressBar
+  - EFBTABLET#RightWingProgressBar
+  - EFBTABLET#LeftFuelSlider
+  - EFBTABLET#RightFuelSlider
+  - EFBTABLET#GallonLitersLeft
+  - EFBTABLET#GallonLiterRight
+  - EFBTABLET#GallonLiterTotal
+  - EFBTABLET#MaxDistanceBar
+  - EFBTABLET#MAXDISTANCEPROGRESSBAR
+  - EFBTABLET#Wp0TSLK4cOsOVa94MvHFB
+  - EFBTABLET#TyQIBS-Zn5Hu58J1BCTch
+  - EFBTABLET#lI52EzPTEsmK7wIGNDAAj
+  - EFBTABLET#SZUBDNQBLKEkwfsznV4To
+  - EFBTABLET#grqiXUAuoN1BitsHQDrWU
+  - EFBTABLET#7tQYQ6N5iF-uujrQ5RA1Z
