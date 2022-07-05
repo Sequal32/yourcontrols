@@ -89,6 +89,7 @@
 * A32NX: Corrected 16K value for flap handle.
 * A32NX: LS pushbutton desync.
 * Carenado M20R: Interior and exterior lights.
+* Carenado Seneca V: Added TDS GTN support.
 * Headwind A339: ATC ground services.
 * HPG H135: Barometer desync with MFD knobs.
 * HPG H135: Excessive data spam while in hover mode.
@@ -100,6 +101,8 @@
 * PMDG DC6: Inverter flip handle.
 * PMDG DC6: Reverse pitch selector lever.
 * PMDG DC6: Temperature control knobs.
+* RSP H125: Added TDS GTN support.
+* RSP R44: Added TDS GTN support.
 * Salty 747: ATC ground services.
 * Salty 747: Flight director switches.
 * Salty 747: Sync of LNAV/VNAV modes.
