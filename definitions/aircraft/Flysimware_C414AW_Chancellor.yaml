@@ -1,4 +1,4 @@
-# Version 2.4.1
+# Version 2.5.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -477,6 +477,27 @@ shared:
     var_name: L:LUGGAGE_WING_3_WEIGHT
   -
     type: var
+    var_name: L:LUGGAGE_NOSE_8
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_8_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_9
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_9_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_10
+  -
+    type: var
+    var_name: L:LUGGAGE_NOSE_10_WEIGHT
+  -
+    type: var
+    var_name: L:LUGGAGE_AVIONICS_TOTAL_WEIGHT
+  -
+    type: var
     var_name: L:LUGGAGE_NOSE_1
   -
     type: var
@@ -519,24 +540,6 @@ shared:
     var_name: L:LUGGAGE_NOSE_7_WEIGHT
   -
     type: var
-    var_name: L:LUGGAGE_NOSE_8
-  -
-    type: var
-    var_name: L:LUGGAGE_NOSE_8_WEIGHT
-  -
-    type: var
-    var_name: L:LUGGAGE_NOSE_9
-  -
-    type: var
-    var_name: L:LUGGAGE_NOSE_9_WEIGHT
-  -
-    type: var
-    var_name: L:LUGGAGE_NOSE_10
-  -
-    type: var
-    var_name: L:LUGGAGE_NOSE_10_WEIGHT
-  -
-    type: var
     var_name: L:LUGGAGE_NOSE_11
   -
     type: var
@@ -553,6 +556,9 @@ shared:
   -
     type: var
     var_name: L:DEICE_PROP
+# -
+#   type: var
+#   var_name: L:STRUCTURAL_DEICE_CYCLE
 # -
 #   type: var
 #   var_name: L:STEERING
@@ -969,9 +975,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:EFB_BRIGHTNESS
-  -
-    type: var
-    var_name: L:EFB_PUSH_SOUND
+# -
+#   type: var
+#   var_name: L:EFB_PUSH_SOUND
 # -
 #   type: var
 #   var_name: L:BATTERY_DEAD
@@ -1215,6 +1221,7 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_AIRCON_COOLER_KNOB_Position
+    unreliable: true
   -
     type: var
     var_name: L:ARMREST_LEFT
@@ -1289,10 +1296,10 @@ shared:
     var_name: L:LUGGAGE_CARGO_WEIGHT
 # -
 #   type: var
-#   var_name: L:STRUCTURAL_DEICE_MEMORY
+#   var_name: L:HAS_SUCTION
 # -
 #   type: var
-#   var_name: L:STRUCTURAL_DEICE_CYCLE
+#   var_name: L:STRUCTURAL_DEICE_MEMORY
   -
     type: var
     var_name: L:STALL_VENT_HEAT
@@ -1332,9 +1339,6 @@ shared:
   -
     type: var
     var_name: L:PHASE_SWITCH_ON
-  -
-    type: var
-    var_name: L:PHASE_KNOB_CONVERT
 # -
 #   type: var
 #   var_name: L:PHASE_VALUE
@@ -1347,6 +1351,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_PHASE_KNOB_Position
+  -
+    type: var
+    var_name: L:PHASE_KNOB_CONVERT
 # -
 #   type: var
 #   var_name: L:PHASE_ANIM
@@ -1469,12 +1476,6 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
-    type: var
     var_name: L:WasmInstrument_ScreenLuminosity
   -
     type: var
@@ -1512,9 +1513,6 @@ shared:
   -
     type: var
     var_name: L:C1038A_State
-  -
-    type: var
-    var_name: L:GARMIN_ALERTER_CODE
   -
     type: var
     var_name: L:C1046A_ScreenLuminosity
