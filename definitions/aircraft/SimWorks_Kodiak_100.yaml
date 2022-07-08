@@ -1,4 +1,4 @@
-# Version 1.2.0
+# Version 1.2.2
 
 include:
   - definitions/modules/Avionics/AS1000.yaml
@@ -1059,16 +1059,9 @@ shared:
   -
     type: var
     var_name: L:TRIM_PITCH_INCREMENT
-  -
-    type: var
-    var_name: L:AXIS_ELEVATOR_TRIM
-    conditions:
-      - var:
-          var_name: AUTOPILOT MASTER
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: false
+# -
+#   type: var
+#   var_name: L:AXIS_ELEVATOR_TRIM
 # -
 #   type: var
 #   var_name: L:SWS_GLIDE_RATIO
@@ -1093,6 +1086,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:SWS_FAILURE_Engine_OverTorque_Factor
+  -
+    type: var
+    var_name: L:HANDLING_ESP_MASTER
 # -
 #   type: var
 #   var_name: L:ESP_TIMER_BANK_1
@@ -1153,9 +1149,6 @@ shared:
   -
     type: var
     var_name: L:Cupholder_8
-  -
-    type: var
-    var_name: L:SWS_SKYDIVE_Switch_Light_Jump
 # -
 #   type: var
 #   var_name: L:AS1000_MID_Display_Backup_Active
@@ -1192,6 +1185,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+
+  - # Skydive
+    type: var
+    var_name: L:SWS_SKYDIVE_Switch_Light_Jump
 
 server:
   -

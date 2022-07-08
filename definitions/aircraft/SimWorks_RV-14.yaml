@@ -343,16 +343,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:TDSGTNXI_GlideRatio
-  -
-    type: var
-    var_name: L:AXIS_ELEVATOR_TRIM
-    conditions:
-      - var:
-          var_name: AUTOPILOT MASTER
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: false
+# -
+#   type: var
+#   var_name: L:AXIS_ELEVATOR_TRIM
 # -
 #   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_1_Angle
@@ -392,6 +385,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
@@ -457,6 +456,9 @@ shared:
 #   var_name: L:GTN750_EMB_State
 # -
 #   type: var
+#   var_name: L:WT1000_AP_G1000_INSTALLED
+# -
+#   type: var
 #   var_name: L:GTN750_Waypoint_Map_MapShowCursor
 # -
 #   type: var
@@ -476,9 +478,6 @@ shared:
   -
     type: var
     var_name: L:HourMeter_State
-# -
-#   type: var
-#   var_name: L:WT1000_AP_G1000_INSTALLED
 # -
 #   type: var
 #   var_name: L:GTN750_FLIGHT_PLAN_CLEANED
@@ -518,6 +517,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+  - # 14A
+    type: var
+    var_name: L:AP_NAV_SELECT_TMP
 
 server:
   -
