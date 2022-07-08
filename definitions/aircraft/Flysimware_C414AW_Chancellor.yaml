@@ -1,4 +1,4 @@
-# Version 2.5.0
+# Version 2.6.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -1092,10 +1092,12 @@ shared:
     var_name: L:XMLVAR_PRESSURIZATION_Knob_CabinAltitude_Position
   -
     type: var
-    var_name: L:PRESSURIZATION_CONTROL_LEFT
+    var_name: L:XMLVAR_PRESSURIZATION_CONTROL_LEFT_Position
+    unreliable: true
   -
     type: var
-    var_name: L:PRESSURIZATION_CONTROL_RIGHT
+    var_name: L:XMLVAR_PRESSURIZATION_CONTROL_RIGHT_Position
+    unreliable: true
   -
     type: var
     var_name: L:EMER_OXYGEN_PULL
@@ -1147,6 +1149,9 @@ shared:
   -
     type: var
     var_name: L:CROSSFEED_LEVER
+# -
+#   type: var
+#   var_name: L:Ground_Radar_Sound
   -
     type: var
     var_name: L:GROUND_RADAR_TEST_SWITCH
@@ -1199,6 +1204,78 @@ shared:
   -
     type: var
     var_name: L:STATIC_AIR_RIGHT
+# -
+#   type: var
+#   var_name: L:CLIMATE_CONTROL_LEFT_REDUCER
+# -
+#   type: var
+#   var_name: L:CLIMATE_CONTROL_RIGHT_REDUCER
+# -
+#   type: var
+#   var_name: L:CLIMATE_HEAT_EXCHANGER_REDUCER
+# -
+#   type: var
+#   var_name: L:CLIMATE_AIRCON_INCREASER
+# -
+#   type: var
+#   var_name: L:CLIMATE_HEATER_LOW_REDUCER
+# -
+#   type: var
+#   var_name: L:CLIMATE_HEATER_HIGH_REDUCER
+  -
+    type: var
+    var_name: L:CLIMATE_EXCHANGER_LEFT_KNOB
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIMATE_EXCHANGER_RIGHT_KNOB
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_LEFT_TEMP
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_LEFT_VALUE
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_RIGHT_TEMP
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_RIGHT_VALUE
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_VALUE
+  -
+    type: var
+    var_name: L:CABIN_HEAT
+# -
+#   type: var
+#   var_name: L:CLIMATE_HEATER_TOTAL
+  -
+    type: var
+    var_name: L:AIRCON_HI_LOW_SWITCH
+  -
+    type: var
+    var_name: L:XMLVAR_AIRCON_COOLER_KNOB_Position
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:CLIMATE_AIRCON_VALUE
+# -
+#   type: var
+#   var_name: L:CLIMATE_AIRCON_TOTAL
+# -
+#   type: var
+#   var_name: L:CLIMATE_AIRCON_SUBTOTAL
+# -
+#   type: var
+#   var_name: L:CLIMATE_TOTAL_VALUE_500
+# -
+#   type: var
+#   var_name: L:CLIMATE_TOTAL_VALUE
+# -
+#   type: var
+#   var_name: L:CLIMATE_TOTAL_TEMP
   -
     type: var
     var_name: L:XMLVAR_CABIN_AIR_HEAT_Position
@@ -1214,13 +1291,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_CABIN_AIR_FWD_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:AIRCON_HI_LOW_SWITCH
-  -
-    type: var
-    var_name: L:XMLVAR_AIRCON_COOLER_KNOB_Position
     unreliable: true
   -
     type: var
@@ -1303,9 +1373,6 @@ shared:
   -
     type: var
     var_name: L:STALL_VENT_HEAT
-  -
-    type: var
-    var_name: L:CABIN_HEAT
   -
     type: var
     var_name: L:CABIN_FAN_SOUND
@@ -1476,12 +1543,6 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:WasmInstrument_ScreenLuminosity
-  -
-    type: var
-    var_name: L:WasmInstrument_State
-  -
-    type: var
     var_name: L:RNAVNAV_ScreenLuminosity
   -
     type: var
@@ -1507,12 +1568,6 @@ shared:
   -
     type: var
     var_name: L:MIN_OUT
-  -
-    type: var
-    var_name: L:C1038A_ScreenLuminosity
-  -
-    type: var
-    var_name: L:C1038A_State
   -
     type: var
     var_name: L:C1046A_ScreenLuminosity
@@ -1564,6 +1619,18 @@ shared:
   -
     type: var
     var_name: L:ESP_WARNING
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+  -
+    type: var
+    var_name: L:C1038A_ScreenLuminosity
+  -
+    type: var
+    var_name: L:C1038A_State
 # -
 #   type: var
 #   var_name: L:AUTOPILOT_PREFLIGHT_CHECK
