@@ -14,7 +14,6 @@ var connection_list_button = document.getElementById("connection-page")
 var aircraft_list_button = document.getElementById("aircraft-page")
 
 var port_input_host = document.getElementById("port-input-host")
-var port_div = document.getElementById("port-div")
 
 var username = document.getElementById("username-input")
 var session_input = document.getElementById("session-input")
@@ -108,7 +107,7 @@ function FormButtonsDisabled(disabled) {
 function OnConnected() {
     connect_button.updatetext("danger", "Disconnect")
     server_button.updatetext("danger", "Stop Server")
-    
+
     FormButtonsDisabled(false)
     is_connected = true
 
@@ -198,10 +197,10 @@ function ValidateHostname(e) {
 function LoadSettings(newSettings) {
     joinPortInput.value = newSettings.port
     port_input_host.value = newSettings.port
-    
+
     joinIpInput.value = newSettings.ip
     streamer_mode.checked = newSettings.streamer_mode
-    
+
     username.value = newSettings.name
     timeout_input.value = newSettings.conn_timeout
     update_rate_input.value = newSettings.update_rate
@@ -287,7 +286,7 @@ function MessageReceived(data) {
         case "lostconnection":
             connectionList.remove(data["data"])
             break;
-        // Observing
+            // Observing
         case "observing":
             rectangle_status.style.backgroundColor = "grey"
             forceButton.hidden = true
@@ -296,18 +295,18 @@ function MessageReceived(data) {
             rectangle_status.style.backgroundColor = "red"
             forceButton.hidden = false
             break;
-        // Other client
+            // Other client
         case "set_observing":
             connectionList.setObserver(data["data"], true, !is_client)
             break;
         case "set_not_observing":
             connectionList.setObserver(data["data"], false)
             break;
-        // Other client
+            // Other client
         case "set_incontrol":
             connectionList.setInControl(data["data"])
             break;
-        // Add possible aircraft
+            // Add possible aircraft
         case "add_aircraft":
             aircraftList.addAircraft(data["data"])
             break;
@@ -328,8 +327,10 @@ function MessageReceived(data) {
 }
 
 // Init
-window.addEventListener("load", function() {
-    invoke({"type":"startup"})
+window.addEventListener("load", function () {
+    invoke({
+        "type": "startup"
+    })
 })
 
 function setTheme(isDarkTheme) {
@@ -353,67 +354,72 @@ function setTheme(isDarkTheme) {
 }
 
 function UpdateAircraft(filename) {
-    invoke({"type": "loadAircraft", "config_file_name": filename})
+    invoke({
+        "type": "loadAircraft",
+        "config_file_name": filename
+    })
 }
 
 // Buttons functions
 
-connect_button.updatetext = function(typeString, text) {
+connect_button.updatetext = function (typeString, text) {
     connect_button.className = connect_button.className.replace(/btn-\w+/gi, "btn-" + typeString)
     connect_button.innerHTML = text
 }
 
-server_button.updatetext = function(typeString, text) {
+server_button.updatetext = function (typeString, text) {
     server_button.className = server_button.className.replace(/btn-\w+/gi, "btn-" + typeString)
     server_button.innerHTML = text
 }
 
-alert.updatetext = function(typeString, text) {
+alert.updatetext = function (typeString, text) {
     alert.className = alert.className.replace(/alert-\w+/gi, "alert-" + typeString)
     // Only change text, do not get rid of rectangle
     alert.childNodes[0].nodeValue = text
 }
 
-cloudMethod.addEventListener("change", function() {
+cloudMethod.addEventListener("change", function () {
     port_div.hidden = true
 })
 
-directMethod.addEventListener("change", function() {
+directMethod.addEventListener("change", function () {
     port_div.hidden = false
 })
 
-relayMethod.addEventListener("change", function() {
+relayMethod.addEventListener("change", function () {
     port_div.hidden = true
 })
 
-joinConnectCloud.addEventListener("change", function() {
+joinConnectCloud.addEventListener("change", function () {
     sessionDiv.hidden = false
     joinPortDiv.hidden = true
     joinIpDiv.hidden = true
     sessionIpRadios.hidden = true
 })
 
-joinConnectDirect.addEventListener("change", function() {
+joinConnectDirect.addEventListener("change", function () {
     sessionDiv.hidden = true
     joinPortDiv.hidden = false
     joinIpDiv.hidden = false
     sessionIpRadios.hidden = false
 })
 
-joinPortInput.addEventListener("change", function() {
+joinPortInput.addEventListener("change", function () {
     port_input_host.value = joinPortInput.value
 })
 
-port_input_host.addEventListener("change", function() {
+port_input_host.addEventListener("change", function () {
     joinPortInput.value = port_input_host.value
 })
 
-forceButton.addEventListener("click", function() {
-    invoke({"type": "forceTakeControl"})
+forceButton.addEventListener("click", function () {
+    invoke({
+        "type": "forceTakeControl"
+    })
     forceButton.hidden = true
 })
 
-$("#settings-form").submit(function(e) {
+$("#settings-form").submit(function (e) {
     e.preventDefault()
 
     var newSettings = {}
@@ -428,24 +434,36 @@ $("#settings-form").submit(function(e) {
     newSettings.enable_log = enable_log.checked
 
     for (key in newSettings) {
-        if (newSettings[key] === null) {return}
+        if (newSettings[key] === null) {
+            return
+        }
         settings[key] = newSettings[key]
     }
 
     LoadSettings(settings)
-    invoke({"type": "updateConfig", "new_config": settings})
+    invoke({
+        "type": "updateConfig",
+        "new_config": settings
+    })
 })
 
-$("#main-form-host").submit(function(e) {
+$("#main-form-host").submit(function (e) {
     e.preventDefault()
 
-    if (is_connected) {invoke({type: "disconnect"}); return}
+    if (is_connected) {
+        invoke({
+            type: "disconnect"
+        });
+        return
+    }
 
     // Get radio button
     const method = cloudMethod.checked ? cloudMethod.value : relayMethod.checked ? relayMethod.value : directMethod.checked ? directMethod.value : "";
     const port_ok = method == "cloudServer" ? true : ValidateInt(port_input_host);
 
-    if (!port_ok || !ValidateName(username)) {return}
+    if (!port_ok || !ValidateName(username)) {
+        return
+    }
 
     FormButtonsDisabled(true)
 
@@ -461,19 +479,26 @@ $("#main-form-host").submit(function(e) {
 
 })
 
-$("#main-form-join").submit(function(e) {
+$("#main-form-join").submit(function (e) {
     e.preventDefault()
 
-    if (is_connected) {invoke({type: "disconnect"}); return}
+    if (is_connected) {
+        invoke({
+            type: "disconnect"
+        });
+        return
+    }
 
-    let validname = ValidateName(username)
+    var validname = ValidateName(username)
 
-    if (!validname) {return}
+    if (!validname) {
+        return
+    }
 
-    let method = joinConnectCloud.checked ? joinConnectCloud.value : joinConnectDirect.checked ? joinConnectDirect.value : "";
+    var method = joinConnectCloud.checked ? joinConnectCloud.value : joinConnectDirect.checked ? joinConnectDirect.value : "";
 
-    let data = {
-        type: "connect", 
+    var data = {
+        type: "connect",
         session_id: session_input.value.toUpperCase(),
         username: username.value,
         method: method,
@@ -492,17 +517,21 @@ $("#main-form-join").submit(function(e) {
             return
         }
 
-        if (!ValidateInt(joinPortInput)) {return}
-        
+        if (!ValidateInt(joinPortInput)) {
+            return
+        }
+
         data["port"] = parseInt(joinPortInput.value)
-    } 
+    }
 
     FormButtonsDisabled(true)
     invoke(data);
 })
 
 function update() {
-    invoke({type:"runUpdater"})
+    invoke({
+        type: "runUpdater"
+    })
     version_alert_button.classList.add("btn-primary")
     version_alert_button.classList.remove("btn-danger")
     version_alert_button.innerHTML = "Downloading....";
@@ -527,6 +556,7 @@ aircraftList.addAircraft = function (aircraftName) {
     aircraftList.appendChild(newButton)
 }
 
+
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 
@@ -536,6 +566,10 @@ $(function () {
     }).done(function (ip) {
         $("#ipv4-copy").click(function () {
             window.clipboardData.setData("Text", ip)
+            $("#ipv4-copy").text("Copied")
+            setTimeout(function () {
+                $("#ipv4-copy").text("Copy IPv4")
+            }, 1000)
         })
     }).fail(function () {
         $("#ipv4-copy").hide()
@@ -547,6 +581,10 @@ $(function () {
     }).done(function (ip) {
         $("#ipv6-copy").click(function () {
             window.clipboardData.setData("Text", ip)
+            $("#ipv6-copy").text("Copied")
+            setTimeout(function () {
+                $("#ipv6-copy").text("Copy IPv6")
+            }, 1000)
         })
     }).fail(function () {
         $("#ipv6-copy").hide()
