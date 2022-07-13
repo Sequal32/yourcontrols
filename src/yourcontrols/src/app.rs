@@ -64,7 +64,7 @@ pub enum AppMessage {
 fn get_message_str(type_string: &str, data: &str) -> String {
     format!(
         r#"MessageReceived({})"#,
-        serde_json::json!({"type": type_string, "data": data}).to_string()
+        serde_json::json!({"type": type_string, "data": data})
     )
 }
 
@@ -102,7 +102,7 @@ impl App {
                     </style>
                 </head>
                     <body class="themed">
-                    <img src="{logo}" class="logo-image"/>
+                    <img src="data:image/png;base64,{logo}" class="logo-image"/>
                     {body}
                 </body>
                 <script>
@@ -120,7 +120,7 @@ impl App {
                     jquery = include_str!("../web/jquery.min.js"),
                     bootstrapjs = include_str!("../web/bootstrap.bundle.min.js"),
                     bootstrapcss = include_str!("../web/bootstrap.min.css"),
-                    logo = format!("data:image/png;base64,{}", base64::encode(logo.as_slice()))
+                    logo = base64::encode(logo.as_slice())
                 )))
                 .invoke_handler(move |_, arg| {
                     tx.try_send(serde_json::from_str(arg).unwrap()).ok();

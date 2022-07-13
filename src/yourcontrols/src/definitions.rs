@@ -1141,8 +1141,7 @@ impl Definitions {
     }
 
     pub fn load_config_from_bytes(&mut self, bytes: Box<[u8]>) -> Result<(), Error> {
-        let yaml: IndexMap<String, Vec<Value>> =
-            rmp_serde::from_slice(&bytes).map_err(Error::NetDecodeError)?;
+        let yaml: IndexMap<String, Vec<Value>> = rmp_serde::from_slice(&bytes)?;
 
         self.parse_yaml(yaml)
     }

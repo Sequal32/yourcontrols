@@ -74,7 +74,7 @@ impl ToggleSwitch {
     }
 }
 
-impl<'a> Syncable<bool> for ToggleSwitch {
+impl Syncable<bool> for ToggleSwitch {
     fn set_current(&mut self, current: bool) {
         self.current = current;
     }
@@ -113,7 +113,7 @@ impl<'a> Syncable<bool> for ToggleSwitch {
     }
 }
 
-impl<'a> Syncable<f64> for ToggleSwitch {
+impl Syncable<f64> for ToggleSwitch {
     fn set_current(&mut self, current: f64) {
         self.current = float_eq(&current, &self.on_condition_value);
     }

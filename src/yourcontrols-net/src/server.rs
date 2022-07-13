@@ -4,7 +4,6 @@ use laminar::{Metrics, Socket};
 
 use log::info;
 use mem::drop;
-use retain_mut::RetainMut;
 use spin_sleep::sleep;
 use std::sync::{
     atomic::{AtomicBool, AtomicU16, Ordering::SeqCst},

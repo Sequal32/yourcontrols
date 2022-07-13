@@ -11,12 +11,6 @@ struct DefinitionEntry {
     data_name: String,
 }
 
-#[derive(Debug)]
-pub struct DataId {
-    data: VarReaderTypes,
-    datum_id: u32,
-}
-
 pub struct VarReader {
     datum_id_map: HashMap<String, u32>,
     data_map: Vec<DefinitionEntry>,

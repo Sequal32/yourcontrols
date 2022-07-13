@@ -735,8 +735,8 @@ fn main() {
                     let app_version = updater.get_version();
                     if let Ok(newest_version) = updater.get_latest_version() {
                         if *newest_version > app_version
-                            && (!newest_version.is_prerelease()
-                                || newest_version.is_prerelease() && config.check_for_betas)
+                            && (newest_version.pre.is_empty()
+                                || newest_version.pre.is_empty() && config.check_for_betas)
                         {
                             app_interface.version(&newest_version.to_string());
                         }

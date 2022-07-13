@@ -18,7 +18,7 @@ pub enum DownloadInstallerError {
     RequestFailed(attohttpc::Error),
     MissingFieldJSON,
     IOError(std::io::Error),
-    InvalidVersion(semver::SemVerError),
+    InvalidVersion(semver::Error),
     ZipError(zip::result::ZipError),
 }
 
