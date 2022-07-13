@@ -259,7 +259,9 @@ struct NumIncrementEntry<T> {
     var_name: String,
     var_units: Option<String>,
     up_event_name: String,
+    up_event_param: Option<T>,
     down_event_name: String,
+    down_event_param: Option<T>,
     increment_by: T,
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
@@ -821,6 +823,14 @@ impl Definitions {
             var.increment_by,
         );
         mapping.set_pass_difference(var.pass_difference);
+
+        if let Some(up_event_param) = var.up_event_param {
+            mapping.set_up_event_param(up_event_param);
+        }
+
+        if let Some(down_event_param) = var.down_event_param {
+            mapping.set_down_event_param(down_event_param);
+        }
 
         Ok((Box::new(mapping), var_string))
     }

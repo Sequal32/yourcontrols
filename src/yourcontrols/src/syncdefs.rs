@@ -281,7 +281,9 @@ where
 
 pub struct NumIncrement<T> {
     pub up_event_id: u32,
+    pub up_event_param: Option<T>,
     pub down_event_id: u32,
+    pub down_event_param: Option<T>,
     pub is_user_event: bool,
     pub increment_amount: T,
     pub current: T,
@@ -305,11 +307,21 @@ where
             is_user_event,
             current: Default::default(),
             pass_difference: false,
+            up_event_param: None,
+            down_event_param: None,
         }
     }
 
     pub fn set_pass_difference(&mut self, pass_difference: bool) {
         self.pass_difference = pass_difference
+    }
+
+    pub fn set_up_event_param(&mut self, param: T) {
+        self.up_event_param = Some(param);
+    }
+
+    pub fn set_down_event_param(&mut self, param: T) {
+        self.down_event_param = Some(param);
     }
 }
 
@@ -349,7 +361,7 @@ where
                 conn.transmit_client_event(
                     object_id,
                     self.down_event_id,
-                    0,
+                    self.down_event_param.and_then(|x| x.to_u32()).unwrap_or(0),
                     GROUP_ID,
                     simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
                 );
@@ -360,7 +372,7 @@ where
                 conn.transmit_client_event(
                     object_id,
                     self.up_event_id,
-                    0,
+                    self.up_event_param.and_then(|x| x.to_u32()).unwrap_or(0),
                     GROUP_ID,
                     simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
                 );
