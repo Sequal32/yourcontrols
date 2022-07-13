@@ -60,7 +60,6 @@ var networkLoss = document.getElementById("network-loss")
 var ping = document.getElementById("network-ping")
 
 var forceButton = document.getElementById("force-button")
-var externalIp = document.getElementById("external-ip")
 var start_observer = document.getElementById("start-observer")
 
 var is_connected = false
@@ -69,6 +68,7 @@ var on_client = true
 var has_control = false
 
 var cacheIpInput = ""
+var cacheSessionInput = ""
 
 var settings = {}
 
@@ -128,8 +128,8 @@ function OnConnected() {
     joinPortInput.disabled = true
 
     if (streamer_mode.checked) {
-        externalIp.hidden = true
         joinIpInput.value = joinIpInput.value.split(/\d/).join("X")
+        cacheSessionInput.value = session_input.value.replace('.', 'X')
     }
 
     SetStuffVisible(true)
@@ -158,7 +158,7 @@ function OnDisconnect(text) {
     connectionList.clear()
 
     joinIpInput.value = cacheIpInput
-    externalIp.hidden = false
+    session_input.value = cacheSessionInput
     forceButton.hidden = true
 
     ResetForm()
@@ -481,6 +481,7 @@ $("#main-form-join").submit(function(e) {
     }
 
     cacheIpInput = joinIpInput.value
+    cacheSessionInput = session_input.value
 
     if (joinConnectDirect.checked) {
         if (ValidateIp(joinIpInput)) {
@@ -528,23 +529,26 @@ aircraftList.addAircraft = function (aircraftName) {
 
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
+
+    $.ajax({
+        url: "https://api.ipify.org",
+        async: true
+    }).done(function (ip) {
+        $("#ipv4-copy").click(function () {
+            window.clipboardData.setData("Text", ip)
+        })
+    }).fail(function () {
+        $("#ipv4-copy").hide()
+    })
+
+    $.ajax({
+        url: "https://api6.ipify.org",
+        async: true
+    }).done(function (ip) {
+        $("#ipv6-copy").click(function () {
+            window.clipboardData.setData("Text", ip)
+        })
+    }).fail(function () {
+        $("#ipv6-copy").hide()
+    })
 })
-
-function httpGet()
-{
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", "https://api.ipify.org" );
-    xmlHttp.send();
-
-    function failed() {
-        externalIp.innerHTML = "Your IP: Failed to retrieve"
-    }
-
-    xmlHttp.onload = function() {
-        externalIp.innerHTML = "Your IP: " + xmlHttp.response
-    }
-    xmlHttp.onerror = failed
-    xmlHttp.ontimeout = failed
-}
-
-httpGet()
