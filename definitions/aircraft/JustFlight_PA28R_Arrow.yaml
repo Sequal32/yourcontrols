@@ -1,4 +1,4 @@
-# Version 0.10.3
+# Version 0.10.5
 
 include:
   - definitions/modules/Avionics/AS430.yaml
@@ -584,9 +584,11 @@ shared:
   -
     type: var
     var_name: L:JF_Visor_Position_1
+    unreliable: true
   -
     type: var
     var_name: L:JF_Visor_Position_2
+    unreliable: true
   -
     type: var
     var_name: L:HSI_enabled
@@ -614,6 +616,18 @@ shared:
   -
     type: var
     var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
   -
     type: var
     var_name: L:CoPilot_enabled
@@ -626,9 +640,9 @@ shared:
   -
     type: var
     var_name: L:LDG_GEAR_brt
-  -
-    type: var
-    var_name: L:EFB_Brt
+# -
+#   type: var
+#   var_name: L:EFB_Brt
   -
     type: var
     var_name: L:GPS100_fascia_scaler
@@ -669,9 +683,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:LEFT_MISC_press_test_MinReleaseTime
-  -
-    type: var
-    var_name: L:LEFT_MISC_press_test_LeftLeaveToRun
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_press_test_LeftLeaveToRun
   -
     type: var
     var_name: L:LEFT_MISC_lv_IsDown
@@ -684,9 +698,11 @@ shared:
   -
     type: var
     var_name: L:RIGHT_LOWER_cabin_heat_1
+    unreliable: true
   -
     type: var
     var_name: L:RIGHT_LOWER_cabin_heat_2
+    unreliable: true
   -
     type: var
     var_name: L:ALT_baro_scale_vis
@@ -801,7 +817,7 @@ shared:
   -
     type: ResetWhenEquals
     var_name: L:Cabin_door
-    equals: 
+    equals:
       - 11.0
       - 111.0
     target: L:DOOR_door
@@ -820,6 +836,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:PMS50_GTN650_INSTALLED
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
 # -
 #   type: var
 #   var_name: L:RIGHT_MISC_datcon_dig3
@@ -1103,15 +1122,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:TURN_COORD_indicator
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
   -
     type: var
     var_name: L:Towbar
-  -
-    type: var
-    var_name: L:EFB_sound_enabled
+# -
+#   type: var
+#   var_name: L:EFB_sound_enabled
 # -
 #   type: var
 #   var_name: L:GTN750_INT_HIDDEN
@@ -1129,7 +1145,28 @@ shared:
 #   var_name: L:LOWER_flap_handle_button
 # -
 #   type: var
+#   var_name: L:AS430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+# -
+#   type: var
+#   var_name: L:AS530_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:AS530_Default_MapShowCursor
@@ -1139,15 +1176,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
   -
     type: var
     var_name: L:Glasscockpits_FPLHaveOrigin
   -
     type: var
     var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:PMS50_AUTOPILOT_INSTALLED
@@ -1157,9 +1194,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:LEFT_LOWER_ignition
-  -
-    type: var
-    var_name: L:oilQty
+# -
+#   type: var
+#   var_name: L:oilQty
   -
     type: var
     var_name: L:StallWarn_avail
@@ -1178,9 +1215,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:gearPosOld
-# -
-#   type: var
-#   var_name: L:LEFT_MISC_fuel_sel_old
+  -
+    type: var
+    var_name: L:LEFT_MISC_fuel_sel_old
   -
     type: var
     var_name: L:sound_FuelSel_CW
@@ -1202,12 +1239,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Cabin_door_sound
-# -
-#   type: var
-#   var_name: L:DOOR_lower_latch_old
-# -
-#   type: var
-#   var_name: L:DOOR_upper_latch_old
+  -
+    type: var
+    var_name: L:DOOR_lower_latch_old
+  -
+    type: var
+    var_name: L:DOOR_upper_latch_old
   -
     type: var
     var_name: L:AC_fan
@@ -1220,18 +1257,6 @@ shared:
   -
     type: var
     var_name: L:WasmInstrument_State
-# -
-#   type: var
-#   var_name: L:AS430_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS430_State
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
 # -
 #   type: var
 #   var_name: L:GTN750_INT_ScreenLuminosity
