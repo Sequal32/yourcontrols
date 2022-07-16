@@ -20,17 +20,17 @@
 * Added J160/J170 Jabiru by IRIS Simulations (v1.5.6).
 * Added JRF-6B Goose by Big Radials (v1.0.4).
 * Added Kodiak 100 by SimWorks Studios (v1.2.2).
-* Added PA-28 Warrior II by JustFlight (v0.3.3).
-* Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.3).
+* Added PA-28 Warrior II by JustFlight (v0.3.5).
+* Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.5).
 * Added PC-6 Turbo Porter by Milviz (v1.0.9).
 * Added RV-14 & 14A by SimWorks Studios (v1.2.0).
 * Added RV-7 & 7A mod by Deejing (v1.0.8).
 * Added Stream by LightSim (v1.3).
 * Added TF-104G Starfighter by SimSkunkWorks (v3.2).
-* Added basic support for GNS530 by PMS50 (v1.0.49).
-* Added basic support for GTN750 by PMS50 (v2.1.37).
+* Added basic support for GNS530 by PMS50 (v1.0.50).
+* Added basic support for GTN750 by PMS50 (v2.1.41).
 * Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.8).
-* Added basic support for G1000 NXi by Working Title (v0.12.2).
+* Added basic support for G1000 NXi by Working Title (v1.0.1).
 * Updated ASOBO aircraft for Sim Update 9 (v1.25.7.0).
 * Updated Carenado M20R to v1.5.1.
 * Updated Carenado Seneca V to v1.4.0.
@@ -38,7 +38,7 @@
   - EFB not updated.
 * Updated Headwind A330-900 to v0.200.
 * Updated HypePerformanceGroup H135 to v1.4.5.
-* Updated JustFlight Arrow III to v0.10.3.
+* Updated JustFlight Arrow III to v0.10.5.
 * Updated Mrtommymxr C172 to v0.3.
 * Updated Mrtommymxr DA62X to v0.7.
 * Updated Mrtommymxr DA40NGX to v0.8.6.
@@ -48,6 +48,8 @@
 * Removed Frett G36 (deprecated).
 
 #### General Fixes
+* Performance degradation on solo flights longer than 2 hours.
+* H-event duplication after ending and making new server.
 * All autopilot and radio button/knob desync on aircraft utilizing legacy simvars.
   - AS3X, AS3000, GTN650/750 standby frequency page is ignored because it won't close.
 * Avionics master switches on all aircraft experiencing intermittent issues.
@@ -58,9 +60,10 @@
 * ADF frequency not always swapping.
 * Parking brake event name spelling error.
 * Attitude indicator bar calibration.
-* Annunciator test light switch event.
+* Annunciator test light switch.
 * Engine bleed air toggle event.
 * External power toggle event.
+* Propeller condition lever.
 * Added pushback tug support.
 
 #### Aircraft Fixes
@@ -111,9 +114,11 @@
 * Doors on PMDG DC6, Mugz TBM930, Carenado M20R, RSP R44.
 
 #### New issues
+* B-events/variables: This is a new system introduced by Asobo with Sim Update 5. All switches and levers using "B:" will not physically move for clients but any associated "A:" or "L:" vars will still sync. This is because "B:" is not settable through SimConnect.
+* Touchscreen interaction on 3rd-party avionics packages currently does not sync. This is a 3rd-party WASM limitation. Full support for such packages may or may not be possible.
 * JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type on tablet are not the same for all connected. Each person should cycle type before powering.
 * Milviz C310R: Some actions on tablet only sync once everyone connected has tablet visible.
-* Touchscreen interaction on 3rd-party avionics packages currently does not sync.
+* FlyByWire current fuel state unsyncable. A/THR causes engines to be completely out of sync.
 
 
 ## Version 2.6.3
