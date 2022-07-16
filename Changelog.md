@@ -26,7 +26,7 @@
 * Added RV-14 & 14A by SimWorks Studios (v1.2.0).
 * Added RV-7 & 7A mod by Deejing (v1.0.8).
 * Added Stream by LightSim (v1.3).
-* Added TF-104G Starfighter by SimSkunkWorks (v3.2).
+* Added TF-104G Starfighter by SimSkunkWorks (v3.1.2).
 * Added basic support for GNS530 by PMS50 (v1.0.50).
 * Added basic support for GTN750 by PMS50 (v2.1.41).
 * Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.8).
