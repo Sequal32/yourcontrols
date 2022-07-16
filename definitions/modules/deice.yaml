@@ -4,20 +4,31 @@ shared:
   - # ASOBO_DEICE_Switch_Pitot_Template
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Enum
+    var_units: Bool
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
   -
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: PITOT_HEAT_TOGGLE
+    event_param: 1
+  -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Enum
+    var_units: Bool
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
   -
-    type: event
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT SWITCH:2
+    var_units: Bool
+    var_type: bool
     event_name: PITOT_HEAT_TOGGLE
+    event_param: 2
 
   - # ASOBO_DEICE_Switch_Airframe_Template
     type: ToggleSwitch
