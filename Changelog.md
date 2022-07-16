@@ -114,7 +114,7 @@
 * Doors on PMDG DC6, Mugz TBM930, Carenado M20R, RSP R44.
 
 #### New issues
-* B-events/variables: This is a new system introduced by Asobo with Sim Update 5. All switches and levers using "B:" will not physically move for clients but any associated "A:" or "L:" vars will still sync. This is because "B:" is not settable through SimConnect.
+* B-events/variables: This is a new system introduced by Asobo with Sim Update 5. All switches and levers now using "B:" no longer visually move but any associated "A:" or "L:" secondary vars will still sync, causing proper effect. This is because "B:" is not settable through SimConnect. Asobo currently shows no intent on fixing this.
 * Touchscreen interaction on 3rd-party avionics packages currently does not sync. This is a 3rd-party WASM limitation. Full support for such packages may or may not be possible.
 * JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type on tablet are not the same for all connected. Each person should cycle type before powering.
 * Milviz C310R: Some actions on tablet only sync once everyone connected has tablet visible.
