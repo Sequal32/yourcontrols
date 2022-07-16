@@ -1,12 +1,17 @@
-# Version 0.12.2
+# Version 1.0.1
 
 shared:
   -
     type: var
+    var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+  -
+    type: var
     var_name: L:WT1000_Fuel_GalBurned
+    unreliable: true
   -
     type: var
     var_name: L:WT1000_Fuel_GalRemaining
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:WT_LNavData_DTK_True
@@ -81,6 +86,9 @@ shared:
 #   var_name: L:WTAP_LNav_Vector_Distance_Remaining
 # -
 #   type: var
+#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
+# -
+#   type: var
 #   var_name: L:WTAP_GP_Vertical_Deviation
   -
     type: var
@@ -130,9 +138,15 @@ shared:
   -
     type: var
     var_name: L:WTAP_VNav_Alt_Capture_Type
+  -
+    type: var
+    var_name: L:WT_MINIMUMS_MODE
 # -
 #   type: var
 #   var_name: L:WTAP_GP_FPA
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Required_VS
 # -
 #   type: var
 #   var_name: L:WT1000_AP_G1000_INSTALLED
