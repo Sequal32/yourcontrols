@@ -1,7 +1,6 @@
 # Version 0.12.13
 
 include:
-  - definitions/modules/electrical.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
@@ -12,6 +11,28 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:23
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 23
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:24
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 24
+
+  - # Battery
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+
   - # Comm Power
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:28
@@ -27,6 +48,19 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 30
 
+  - # Generators
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR2
+
   - # STBY FTL
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:49
@@ -34,6 +68,19 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 49
+
+  - # Starters
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER2
 
   - # Autopilot
     type: ToggleSwitch
