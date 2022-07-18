@@ -1,5 +1,7 @@
-class VCockpitInstrumentData {}
-class VCockpitPanelData {}
+class VCockpitInstrumentData {
+}
+class VCockpitPanelData {
+}
 var globalPanelData = null;
 var globalInstrumentListener = RegisterViewListener("JS_LISTENER_INSTRUMENTS");
 class VCockpitPanel extends HTMLElement {
@@ -34,7 +36,8 @@ class VCockpitPanel extends HTMLElement {
         }
         this.vignettage = document.querySelector("#vignettage");
     }
-    disconnectedCallback() {}
+    disconnectedCallback() {
+    }
     load(_data) {
         this.data = _data;
         this.curInstrumentIndex = -1;
@@ -60,7 +63,8 @@ class VCockpitPanel extends HTMLElement {
             if (_attributes[i].name == "quality") {
                 if (_attributes[i].value == "hidden" || _attributes[i].value == "disabled") {
                     diffAndSetStyle(this, StyleProperty.display, "none");
-                } else {
+                }
+                else {
                     diffAndSetStyle(this, StyleProperty.display, "block");
                 }
             }
@@ -106,7 +110,8 @@ class VCockpitPanel extends HTMLElement {
     createInstrument(_instrumentName, _instrumentClass) {
         try {
             var template = document.createElement(_instrumentName);
-        } catch (error) {
+        }
+        catch (error) {
             console.error("Error while creating instrument. Retrying...");
             setTimeout(this.createInstrument.bind(this, _instrumentName, _instrumentClass), 1000);
             return;
@@ -125,7 +130,6 @@ class VCockpitPanel extends HTMLElement {
             this.data.daInstruments[this.curInstrumentIndex].templateName = _instrumentName;
             this.data.daInstruments[this.curInstrumentIndex].templateClass = _instrumentClass;
             document.title += " - " + template.instrumentIdentifier;
-
             // YourControls
             handler = new YourControlsHandler(template.instrumentIdentifier, template.isInteractive)
         }
@@ -143,7 +147,8 @@ class VCockpitPanel extends HTMLElement {
                 var instrumentClass = this.data.daInstruments[index].templateClass;
                 console.log("Instrument " + url + " already imported. Creating right now.");
                 this.createInstrument(instrumentName, instrumentClass);
-            } else {
+            }
+            else {
                 Include.setAsyncLoading(false);
                 Include.addImport(url);
             }
@@ -201,7 +206,8 @@ class VCockpitPanel extends HTMLElement {
                         if (opacity > 1.0) {
                             opacity = 1.0;
                             animSpeed = -animSpeed;
-                        } else if (opacity < 0.25) {
+                        }
+                        else if (opacity < 0.25) {
                             opacity = 0.25;
                             animSpeed = -animSpeed;
                         }
@@ -222,7 +228,6 @@ class VCockpitPanel extends HTMLElement {
 }
 VCockpitPanel.instrumentRoot = "../Instruments/";
 window.customElements.define("vcockpit-panel", VCockpitPanel);
-
 function registerInstrument(_instrumentName, _instrumentClass) {
     var panel = window.document.getElementById("panel");
     if (panel) {
@@ -238,7 +243,8 @@ Coherent.on("ShowVCockpitPanel", function (_data) {
         if (panel.hasData()) {
             console.log("Reloading panel...");
             window.location.reload(true);
-        } else {
+        }
+        else {
             panel.load(_data);
         }
     }
@@ -257,7 +263,6 @@ Coherent.on("OnInteractionEvent", function (_target, _args) {
             if (!handler.processInteractionEvent(_args)) {
                 return
             }
-
             for (var i = 0; i < panel.children.length; i++) {
                 var instrument = panel.children[i];
                 if (instrument) {
@@ -376,17 +381,10 @@ if (EDITION_MODE()) {
         instrument.iGUId = 0;
         instrument.sUrl = "NavSystems/AS1000/MFD/AS1000_MFD.html";
         instrument.templateName = "";
-        instrument.vPosAndSize = {
-            x: 0,
-            y: 0,
-            z: 1024,
-            w: 768
-        };
+        instrument.vPosAndSize = { x: 0, y: 0, z: 1024, w: 768 };
         data.daInstruments.push(instrument);
         Coherent.trigger("ShowVCockpitPanel", data);
-        setTimeout(() => {
-            Coherent.trigger("OnAllInstrumentsLoaded");
-        }, 5000);
+        setTimeout(() => { Coherent.trigger("OnAllInstrumentsLoaded"); }, 5000);
     });
     let g_UpdateRunning = -1;
     g_debugMgr.AddDebugButton("STOP", () => {
@@ -477,7 +475,8 @@ if (EDITION_MODE()) {
         }
         let update = () => {
             for (let i = 0; i < batches.length; i++) {
-                SimVar.GetSimVarArrayValues(batches[i], function (_Values) {}, "data_" + i);
+                SimVar.GetSimVarArrayValues(batches[i], function (_Values) {
+                }, "data_" + i);
             }
             g_UpdateRunning = requestAnimationFrame(update);
         };
