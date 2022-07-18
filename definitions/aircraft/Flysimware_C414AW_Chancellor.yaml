@@ -1,4 +1,4 @@
-# Version 2.6.0
+# Version 2.7.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -451,6 +451,9 @@ shared:
   -
     type: var
     var_name: L:FUEL_Lever_Selector_2
+# -
+#   type: var
+#   var_name: L:Initial_Mixture_Position
   -
     type: var
     var_name: L:LOCAL_milliBar_to_inHg
@@ -635,13 +638,7 @@ shared:
     var_name: L:LOCKER_WING_R
   -
     type: var
-    var_name: L:CABIN_CALL_KNOB
-  -
-    type: var
     var_name: L:GENERIC_DME_C1077B_BUTTON_UP
-  -
-    type: var
-    var_name: L:GENERIC_Momentary_NAV1_AUDIO_SWITCH
   -
     type: var
     var_name: L:GENERIC_Momentary_DEICE_SURFACE
@@ -656,25 +653,13 @@ shared:
     var_name: L:GENERIC_DME_C1077B_BUTTON_DN
   -
     type: var
-    var_name: L:GENERIC_Momentary_MARKER_AUDIO_SWITCH
-  -
-    type: var
     var_name: L:GENERIC_NAV2_RADIO_CLR
   -
     type: var
     var_name: L:GENERIC_NAV2_RADIO_BUTTON_ZERO
   -
     type: var
-    var_name: L:GENERIC_Momentary_COM1_AUDIO_SWITCH
-  -
-    type: var
     var_name: L:RMI_ADF_KNOB
-  -
-    type: var
-    var_name: L:GENERIC_Momentary_DME2_AUDIO_SWITCH
-  -
-    type: var
-    var_name: L:GENERIC_Momentary_ADF1_AUDIO_SWITCH
   -
     type: var
     var_name: L:GENERIC_Momentary_PRIMER_SWITCH
@@ -699,9 +684,6 @@ shared:
   -
     type: var
     var_name: L:GENERIC_NAV2_RADIO_BUTTON1
-  -
-    type: var
-    var_name: L:GENERIC_Momentary_MUTE_AUDIO_SWITCH
   -
     type: var
     var_name: L:GENERIC_NAV2_RADIO_BUTTON8
@@ -731,16 +713,7 @@ shared:
     var_name: L:GENERIC_NAV2_RADIO_BUTTON2
   -
     type: var
-    var_name: L:GENERIC_Momentary_COM2_AUDIO_SWITCH
-  -
-    type: var
-    var_name: L:GENERIC_Momentary_ADF2_AUDIO_SWITCH
-  -
-    type: var
     var_name: L:GENERIC_CFS1000A_SET
-  -
-    type: var
-    var_name: L:GENERIC_Momentary_DME1_AUDIO_SWITCH
   -
     type: var
     var_name: L:GENERIC_ADF1_TEST
@@ -767,9 +740,6 @@ shared:
     var_name: L:VOLTAMMETER_KNOB
   -
     type: var
-    var_name: L:GENERIC_Momentary_COM3_AUDIO_SWITCH
-  -
-    type: var
     var_name: L:GENERIC_NAV2_RADIO_FRG
   -
     type: var
@@ -780,9 +750,6 @@ shared:
   -
     type: var
     var_name: L:GENERIC_NAV2_RADIO_PERIOD
-  -
-    type: var
-    var_name: L:GENERIC_Momentary_NAV2_AUDIO_SWITCH
   -
     type: var
     var_name: L:AP_PFT_POWER
@@ -810,6 +777,92 @@ shared:
 # -
 #   type: var
 #   var_name: L:YAW_BLINK_CNT
+  -
+    type: var
+    var_name: L:XMLVAR_PRESSURIZATION_CONTROL_LEFT_Position
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_CONTROL_LEFT_REDUCER
+  -
+    type: var
+    var_name: L:XMLVAR_PRESSURIZATION_CONTROL_RIGHT_Position
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_CONTROL_RIGHT_REDUCER
+  -
+    type: var
+    var_name: L:CLIMATE_EXCHANGER_LEFT_KNOB
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIMATE_EXCHANGER_RIGHT_KNOB
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_EGT1_INCREASER
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_EGT2_INCREASER
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_EGT_INCREASER
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_HEAT_REDUCER
+# -
+#   type: var
+#   var_name: L:CLIMATE_1000
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_TOTAL
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_HEAT_LEFT
+# -
+#   type: var
+#   var_name: L:CLIMATE_EXCHANGER_HEAT_RIGHT
+  -
+    type: var
+    var_name: L:XMLVAR_CABIN_AIR_HEAT_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIMATE_HEATER_LOW_KNOB
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIMATE_HEATER_HIGH_KNOB
+    unreliable: true
+  -
+    type: var
+    var_name: L:CABIN_HEAT
+# -
+#   type: var
+#   var_name: L:CLIMATE_HEATER_TOTAL
+  -
+    type: var
+    var_name: L:AIRCON_HI_LOW_SWITCH
+  -
+    type: var
+    var_name: L:XMLVAR_AIRCON_COOLER_KNOB_Position
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:CLIMATE_AIRCON_VALUE
+# -
+#   type: var
+#   var_name: L:CLIMATE_AIRCON_TOTAL
+# -
+#   type: var
+#   var_name: L:CLIMATE_AIRCON_SUBTOTAL
+# -
+#   type: var
+#   var_name: L:CLIMATE_TOTAL_VALUE
+# -
+#   type: var
+#   var_name: L:CLIMATE_TOTAL_TEMP
   -
     type: var
     var_name: L:GEAR_HORN_ACTIVE
@@ -909,6 +962,9 @@ shared:
   -
     type: var
     var_name: L:ALERTER_TONE
+  -
+    type: var
+    var_name: L:PILOT_FD_SYNC_SWITCH
 # -
 #   type: var
 #   var_name: L:TDSGTNXI750U1_LKnobInc
@@ -1050,9 +1106,6 @@ shared:
     var_name: L:AP_DISCONNECT
   -
     type: var
-    var_name: L:PILOT_FD_SYNC_SWITCH
-  -
-    type: var
     var_name: L:XMLVAR_COPILOT_Knob_Attitude_Bars_Position
   -
     type: var
@@ -1086,24 +1139,16 @@ shared:
     var_name: L:DOOR_PUSH_UPPER
   -
     type: var
+    var_name: L:CABIN_PRESSURIZATION_SWITCH
+  -
+    type: var
     var_name: L:PRESSURIZATION_DUMP_LEVER
   -
     type: var
     var_name: L:XMLVAR_PRESSURIZATION_Knob_CabinAltitude_Position
   -
     type: var
-    var_name: L:XMLVAR_PRESSURIZATION_CONTROL_LEFT_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:XMLVAR_PRESSURIZATION_CONTROL_RIGHT_Position
-    unreliable: true
-  -
-    type: var
     var_name: L:EMER_OXYGEN_PULL
-  -
-    type: var
-    var_name: L:CABIN_PRESSURIZATION_SWITCH
   -
     type: var
     var_name: L:LIGHTING_Knob_Light_Passenger3
@@ -1149,12 +1194,15 @@ shared:
   -
     type: var
     var_name: L:CROSSFEED_LEVER
-# -
-#   type: var
-#   var_name: L:Ground_Radar_Sound
+  -
+    type: var
+    var_name: L:Ground_Radar_Active
   -
     type: var
     var_name: L:GROUND_RADAR_TEST_SWITCH
+# -
+#   type: var
+#   var_name: L:Ground_Radar_Sound
   -
     type: var
     var_name: L:ADI_GA_BUTTON
@@ -1204,82 +1252,6 @@ shared:
   -
     type: var
     var_name: L:STATIC_AIR_RIGHT
-# -
-#   type: var
-#   var_name: L:CLIMATE_CONTROL_LEFT_REDUCER
-# -
-#   type: var
-#   var_name: L:CLIMATE_CONTROL_RIGHT_REDUCER
-# -
-#   type: var
-#   var_name: L:CLIMATE_HEAT_EXCHANGER_REDUCER
-# -
-#   type: var
-#   var_name: L:CLIMATE_AIRCON_INCREASER
-# -
-#   type: var
-#   var_name: L:CLIMATE_HEATER_LOW_REDUCER
-# -
-#   type: var
-#   var_name: L:CLIMATE_HEATER_HIGH_REDUCER
-  -
-    type: var
-    var_name: L:CLIMATE_EXCHANGER_LEFT_KNOB
-    unreliable: true
-  -
-    type: var
-    var_name: L:CLIMATE_EXCHANGER_RIGHT_KNOB
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:CLIMATE_EXCHANGER_LEFT_TEMP
-# -
-#   type: var
-#   var_name: L:CLIMATE_EXCHANGER_LEFT_VALUE
-# -
-#   type: var
-#   var_name: L:CLIMATE_EXCHANGER_RIGHT_TEMP
-# -
-#   type: var
-#   var_name: L:CLIMATE_EXCHANGER_RIGHT_VALUE
-# -
-#   type: var
-#   var_name: L:CLIMATE_EXCHANGER_VALUE
-  -
-    type: var
-    var_name: L:CABIN_HEAT
-# -
-#   type: var
-#   var_name: L:CLIMATE_HEATER_TOTAL
-  -
-    type: var
-    var_name: L:AIRCON_HI_LOW_SWITCH
-  -
-    type: var
-    var_name: L:XMLVAR_AIRCON_COOLER_KNOB_Position
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:CLIMATE_AIRCON_VALUE
-# -
-#   type: var
-#   var_name: L:CLIMATE_AIRCON_TOTAL
-# -
-#   type: var
-#   var_name: L:CLIMATE_AIRCON_SUBTOTAL
-# -
-#   type: var
-#   var_name: L:CLIMATE_TOTAL_VALUE_500
-# -
-#   type: var
-#   var_name: L:CLIMATE_TOTAL_VALUE
-# -
-#   type: var
-#   var_name: L:CLIMATE_TOTAL_TEMP
-  -
-    type: var
-    var_name: L:XMLVAR_CABIN_AIR_HEAT_Position
-    unreliable: true
   -
     type: var
     var_name: L:XMLVAR_CABIN_AIR_DEFROST_Position
@@ -1429,15 +1401,6 @@ shared:
     var_name: L:NAV1_GPS_BUTTON
   -
     type: var
-    var_name: L:MARKER_BEACON_MUTE
-# -
-#   type: var
-#   var_name: L:MARKER_BEACON_TIMER
-  -
-    type: var
-    var_name: L:INTERCOM_AUDIO_SWITCH
-  -
-    type: var
     var_name: L:XMLVAR_ALT_SEL_1000_Position
   -
     type: var
@@ -1531,16 +1494,16 @@ shared:
     var_name: L:XMLVAR_KNOB_ALTIMETER_2_Position
   -
     type: var
-    var_name: L:XMLVAR_VOLUME_FRONT_KNOB_Position
-  -
-    type: var
-    var_name: L:XMLVAR_VOLUME_BACK_KNOB_Position
-  -
-    type: var
     var_name: L:Nav2RadioCurserstate
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
   -
     type: var
     var_name: L:RNAVNAV_ScreenLuminosity
@@ -1568,6 +1531,12 @@ shared:
   -
     type: var
     var_name: L:MIN_OUT
+  -
+    type: var
+    var_name: L:C1038A_ScreenLuminosity
+  -
+    type: var
+    var_name: L:C1038A_State
   -
     type: var
     var_name: L:C1046A_ScreenLuminosity
@@ -1600,6 +1569,18 @@ shared:
 #   var_name: L:SIMULATION_TIME
 # -
 #   type: var
+#   var_name: L:ZEFBClimateTempTarget
+# -
+#   type: var
+#   var_name: L:ZEFBClimateNeedle
+# -
+#   type: var
+#   var_name: L:ZEFBClimateCnt_temp_up_mem
+# -
+#   type: var
+#   var_name: L:ZEFBClimateCnt_temp_dn_mem
+# -
+#   type: var
 #   var_name: L:AS330_ScreenLuminosity
 # -
 #   type: var
@@ -1625,12 +1606,9 @@ shared:
   -
     type: var
     var_name: L:WasmInstrument_State
-  -
-    type: var
-    var_name: L:C1038A_ScreenLuminosity
-  -
-    type: var
-    var_name: L:C1038A_State
+# -
+#   type: var
+#   var_name: L:ZEFBClimateInterval_up_ID
 # -
 #   type: var
 #   var_name: L:AUTOPILOT_PREFLIGHT_CHECK
@@ -1646,7 +1624,13 @@ shared:
     var_name: L:GENERIC_XPNDR_ALT
   -
     type: var
+    var_name: L:CABIN_CALL_KNOB
+  -
+    type: var
     var_name: L:GENERIC_XPNDR_SBY
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_NAV1_AUDIO_SWITCH
   -
     type: var
     var_name: L:GENERIC_AUTOPILOT_HDG
@@ -1655,7 +1639,19 @@ shared:
     var_name: L:GENERIC_AUTOPILOT_FD
   -
     type: var
+    var_name: L:GENERIC_Momentary_MARKER_AUDIO_SWITCH
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_COM1_AUDIO_SWITCH
+  -
+    type: var
     var_name: L:GENERIC_AP_MASTER
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_DME2_AUDIO_SWITCH
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_ADF1_AUDIO_SWITCH
   -
     type: var
     var_name: L:GENERIC_XPNDR_ON
@@ -1667,6 +1663,9 @@ shared:
     var_name: L:GENERIC_AUTOPILOT_ALT
   -
     type: var
+    var_name: L:GENERIC_Momentary_MUTE_AUDIO_SWITCH
+  -
+    type: var
     var_name: L:GENERIC_AUTOPILOT_NAV
   -
     type: var
@@ -1676,10 +1675,25 @@ shared:
     var_name: L:GENERIC_XPNDR_TEST
   -
     type: var
+    var_name: L:GENERIC_Momentary_COM2_AUDIO_SWITCH
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_ADF2_AUDIO_SWITCH
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_DME1_AUDIO_SWITCH
+  -
+    type: var
     var_name: L:GENERIC_AUTOPILOT_BC
   -
     type: var
     var_name: L:GENERIC_XPNDR_ID
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_COM3_AUDIO_SWITCH
+  -
+    type: var
+    var_name: L:GENERIC_Momentary_NAV2_AUDIO_SWITCH
   -
     type: var
     var_name: L:PITCH_HOLD
@@ -1739,15 +1753,6 @@ shared:
     var_name: L:TRANSPONDER_CODE
   -
     type: var
-    var_name: L:BLOOM_XPNDR_ID
-  -
-    type: var
-    var_name: L:BLOOM_XPNDR_TIME
-  -
-    type: var
-    var_name: L:STORE_XPNDR_TIME
-  -
-    type: var
     var_name: L:GENERIC_XPNDR_THOUSANDTHS
     unreliable: true
   -
@@ -1764,7 +1769,22 @@ shared:
     unreliable: true
   -
     type: var
+    var_name: L:MARKER_BEACON_MUTE
+# -
+#   type: var
+#   var_name: L:MARKER_BEACON_TIMER
+  -
+    type: var
+    var_name: L:INTERCOM_AUDIO_SWITCH
+  -
+    type: var
     var_name: L:XMLVAR_NAVOMATIC_AP_PITCH_Position
+  -
+    type: var
+    var_name: L:XMLVAR_VOLUME_FRONT_KNOB_Position
+  -
+    type: var
+    var_name: L:XMLVAR_VOLUME_BACK_KNOB_Position
 
 server:
   -

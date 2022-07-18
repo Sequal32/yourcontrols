@@ -10,9 +10,9 @@
 * Added C170B by Carenado (v1.3.0).
 * Added C208B EX Improvement mod by Magraina (v2203.2.2).
 * Added C310R by Milviz (1.0.0).
-* Added C414AW Chancellor by Flysimware (v2.6.0).
+* Added C414AW Chancellor by Flysimware (v2.7.0).
 * Added Concorde by DC Designs (v1.0.4).
-* Added DHC6 Twin Otter by Aerosoft (v1.0.5.0).
+* Added DHC6 Twin Otter by Aerosoft (v1.0.6.0).
 * Added Electra-10A by Aeroplane Heaven (v1.33.7).
 * Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
 * Added G115 Tutor T.1 by IRIS Simulations (v2.3.7).
