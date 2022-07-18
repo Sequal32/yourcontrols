@@ -1,4 +1,4 @@
-# Version 1.0.5.0
+# Version 1.0.6.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -374,6 +374,18 @@ shared:
     var_name: L:XMLVAR_AudioPanel_1
 # -
 #   type: var
+#   var_name: L:AS530_ManualBrightness_Value
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled
+# -
+#   type: var
 #   var_name: L:XMLVAR_LTS_Test
   -
     type: var
@@ -654,6 +666,81 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AP_KAP140_INSTALLED
+# -
+#   type: var
+#   var_name: L:AS530_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+  -
+    type: var
+    var_name: L:KT76C_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KT76C_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightCheckCompleted
+  -
+    type: var
+    var_name: L:KR87_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KR87_State
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:KAP140_BARO_Display
   -
     type: var
     var_name: L:DHC6_EGPWS_DONTSINK
@@ -713,76 +800,16 @@ shared:
     var_name: L:DHC6_ALT_ALERT_RESET
 # -
 #   type: var
-#   var_name: L:AS430_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS430_State
-  -
-    type: var
-    var_name: L:KT76C_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KT76C_State
-# -
-#   type: var
-#   var_name: L:KAP140_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KAP140_State
-# -
-#   type: var
-#   var_name: L:AutopilotPreflightCheckCompleted
-  -
-    type: var
-    var_name: L:KR87_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KR87_State
-  -
-    type: var
-    var_name: L:WasmInstrument_ScreenLuminosity
-  -
-    type: var
-    var_name: L:WasmInstrument_State
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:KAP140_BARO_Display
-# -
-#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 
 server:
   -
