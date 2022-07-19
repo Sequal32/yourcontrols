@@ -53,7 +53,6 @@
 * Performance degradation on solo flights longer than 2 hours.
 * H-event duplication after ending and making new server.
 * All autopilot and radio button/knob desync on aircraft utilizing legacy simvars.
-  - AS3X, AS3000, GTN650/750 standby frequency page is ignored because it won't close.
 * Avionics master switches on all aircraft experiencing intermittent issues.
 * Master caution and warning acknowledge events since Sim Update 7.
 * Autopilot automatically leveling off when using V/S and FLC.
