@@ -45,7 +45,9 @@
 * Updated RotorSimPilot R44 to v1.2.8.
 * Updated SaltySimulations 747 to v0.5.1.
 * Updated Working Title CJ4 to v0.12.13.
+* Removed Aerosoft CRJ (being re-evaluated).
 * Removed Frett G36 (deprecated).
+* Removed PMDG DC-6 (being re-created).
 
 #### General Fixes
 * Performance degradation on solo flights longer than 2 hours.
@@ -98,27 +100,19 @@
 * HPG H135: Barometer desync with MFD knobs.
 * HPG H135: Excessive data spam while in hover mode.
 * HPG H135: Tablet autopilot button desync.
-* PMDG DC6: Oil cooler door switches.
-* PMDG DC6: Cooling turbine switch.
-* PMDG DC6: Emergency air brake lever.
-* PMDG DC6: Emergency hydraulic pump switch.
-* PMDG DC6: Inverter flip handle.
-* PMDG DC6: Reverse pitch selector lever.
-* PMDG DC6: Temperature control knobs.
 * RSP H125: Added TDS GTN support.
 * RSP R44: Added TDS GTN support.
 * Salty 747: ATC ground services.
 * Salty 747: Flight director switches.
 * Salty 747: Sync of LNAV/VNAV modes.
 * Working Title CJ4: Vertical pitch reference indicator.
-* Doors on PMDG DC6, Mugz TBM930, Carenado M20R, RSP R44.
 
 #### New issues
 * B-events/variables: This is a new system introduced by Asobo with Sim Update 5. All switches and levers now using "B:" no longer visually move but any associated "A:" or "L:" secondary vars will still sync, causing proper effect. This is because "B:" is not settable through SimConnect. Asobo currently shows no intent on fixing this.
 * Touchscreen interaction on 3rd-party avionics packages currently does not sync. This is a 3rd-party WASM limitation. Full support for such packages may or may not be possible.
 * JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type on tablet are not the same for all connected. Each person should cycle type before powering.
 * Milviz C310R: Some actions on tablet only sync once everyone connected has tablet visible.
-* FlyByWire current fuel state unsyncable. A/THR causes engines to be completely out of sync.
+* FlyByWire current fuel state unsyncable.
 
 
 ## Version 2.6.3
