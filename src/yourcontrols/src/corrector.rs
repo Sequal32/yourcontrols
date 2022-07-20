@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use simconnect::SimConnector;
-use yourcontrols_types::{AVarMap, VarReaderTypes};
+use yourcontrols_types::{VarMap, VarReaderTypes};
 
 use crate::sync::transfer::AircraftVars;
 use crate::util::InDataTypes;
@@ -30,13 +30,13 @@ impl Corrector {
         }
     }
 
-    pub fn remove_components(&self, data: &mut AVarMap) {
+    pub fn remove_components(&self, data: &mut VarMap) {
         if let Some(VarReaderTypes::F64(velocity)) = data.get_mut("VELOCITY BODY Z") {
             *velocity -= self.current.wind_z
         }
     }
 
-    pub fn add_components(&self, data: &mut AVarMap) {
+    pub fn add_components(&self, data: &mut VarMap) {
         if let Some(VarReaderTypes::F64(velocity)) = data.get_mut("VELOCITY BODY Z") {
             *velocity += self.current.wind_z
         }
