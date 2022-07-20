@@ -43,9 +43,11 @@ class YourControlsHandler {
                 break;
             }
             case "requestTime": {
-                if (!this.canProcess()) {break}
+                if (!this.canProcess()) {
+                    break
+                }
                 const hour = SimVar.GetSimVarValue("E:ZULU TIME", "Hours")
-                const minute = Math.ceil((hour % 1) * 60 )
+                const minute = Math.ceil((hour % 1) * 60)
 
                 this.net.sendObjectAsJSON({
                     type: "time",
@@ -62,7 +64,7 @@ class YourControlsHandler {
     onConnected() {
         if (this.isTouch) {
             this.events.bindEvents()
-			this.events.startDocumentListener()
+            this.events.startDocumentListener()
         }
     }
 
@@ -90,7 +92,7 @@ class YourControlsHandler {
             args[0] = args[0].substring(3)
 
         } else {
-            if (this.canProcess()) {  // Only one gauge should send interaction button events  
+            if (this.canProcess()) { // Only one gauge should send interaction button events
                 this.net.sendInteractionEvent("H:YCH" + args[0])
             }
         }
