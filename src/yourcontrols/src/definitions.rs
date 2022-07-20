@@ -122,11 +122,19 @@ fn evalute_condition(
     avarstransfer: &AircraftVars,
     condition: &Condition,
     incoming_value: &VarReaderTypes,
+    other_incoming_values: Option<&HashMap<String, VarReaderTypes>>,
 ) -> bool {
     let var_data = match condition.var.as_ref() {
         Some(v) => v,
         None => return evalute_condition_values(condition, incoming_value),
     };
+
+    // Check other incoming values for presence of condition var
+    if let Some(other_incoming_values) = other_incoming_values {
+        if let Some(data) = other_incoming_values.get(&var_data.var_name) {
+            return evalute_condition_values(condition, data);
+        }
+    }
 
     if var_data.var_name.starts_with("L:") {
         lvarstransfer
@@ -144,19 +152,48 @@ fn evalute_condition(
 fn evaluate_conditions(
     lvarstransfer: &LVarSyncer,
     avarstransfer: &AircraftVars,
-    conditions: Option<&Vec<Condition>>,
+    condition: Option<&Condition>,
     incoming_value: &VarReaderTypes,
+    other_incoming_values: Option<&HashMap<String, VarReaderTypes>>,
 ) -> bool {
-    let conditions = match conditions {
+    let condition = match condition {
         Some(c) => c,
         None => return true,
     };
 
-    for condition in conditions {
-        let satisfied = evalute_condition(lvarstransfer, avarstransfer, condition, incoming_value);
-        if !satisfied {
-            return false;
-        }
+    let mut satisfied = evalute_condition(
+        lvarstransfer,
+        avarstransfer,
+        condition,
+        incoming_value,
+        other_incoming_values,
+    );
+
+    if let Some(other) = &condition.other {
+        match other.as_ref() {
+            ConditionExpression::And(c) => {
+                satisfied &= evalute_condition(
+                    lvarstransfer,
+                    avarstransfer,
+                    c,
+                    incoming_value,
+                    other_incoming_values,
+                )
+            }
+            ConditionExpression::Or(c) => {
+                satisfied |= evalute_condition(
+                    lvarstransfer,
+                    avarstransfer,
+                    c,
+                    incoming_value,
+                    other_incoming_values,
+                )
+            }
+        };
+    }
+
+    if !satisfied {
+        return false;
     }
 
     true
@@ -183,7 +220,7 @@ struct EventEntry {
     use_calculator: bool,
     #[serde(default)]
     cancel_h_events: bool,
-    conditions: Option<Vec<Condition>>,
+    condition: Option<Condition>,
 }
 
 #[derive(Deserialize)]
@@ -199,6 +236,15 @@ struct Condition {
     equals: Option<VarReaderTypes>,
     greater_than: Option<VarReaderTypes>,
     less_than: Option<VarReaderTypes>,
+    #[serde(flatten)]
+    other: Option<Box<ConditionExpression>>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "snake_case")]
+enum ConditionExpression {
+    And(Condition),
+    Or(Condition),
 }
 
 // Describes an aircraft variable to listen for changes
@@ -208,7 +254,7 @@ struct VarEntry {
     var_units: Option<String>,
     var_type: Option<InDataTypes>,
     update_every: Option<f64>,
-    conditions: Option<Vec<Condition>>,
+    condition: Option<Condition>,
     interpolate: Option<InterpolationType>,
     #[serde(default)]
     unreliable: bool,
@@ -228,7 +274,7 @@ struct ToggleSwitchGenericEntry {
     #[serde(default)]
     use_calculator: bool,
     on_condition_value: Option<f64>,
-    conditions: Option<Vec<Condition>>,
+    condition: Option<Condition>,
     #[serde(default)]
     cancel_h_events: bool,
 }
@@ -248,6 +294,7 @@ struct NumSetGenericEntry<T> {
     is_user_event: bool,
     #[serde(default)]
     index_reversed: bool,
+    condition: Option<Condition>,
     // The event to call after the number is set
     swap_event_name: Option<String>,
     #[serde(default)]
@@ -263,6 +310,7 @@ struct NumIncrementEntry<T> {
     down_event_name: String,
     down_event_param: Option<T>,
     increment_by: T,
+    condition: Option<Condition>,
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
     pass_difference: bool,
@@ -277,7 +325,7 @@ struct NumDigitSetEntry {
     var_units: Option<String>,
     up_event_names: Vec<String>,
     down_event_names: Vec<String>,
-    conditions: Option<Vec<Condition>>,
+    condition: Option<Condition>,
     #[serde(default)]
     cancel_h_events: bool,
 }
@@ -286,7 +334,7 @@ struct NumDigitSetEntry {
 struct CustomCalculatorEntry {
     get: String,
     set: String,
-    conditions: Option<Vec<Condition>>,
+    condition: Option<Condition>,
     #[serde(default)]
     cancel_h_events: bool,
 }
@@ -297,7 +345,7 @@ struct LocalVarProxyEntry {
     target: String,
     #[serde(default)]
     loopback: bool,
-    conditions: Option<Vec<Condition>>,
+    condition: Option<Condition>,
 }
 
 #[derive(Deserialize)]
@@ -308,7 +356,7 @@ struct MultiplyDifferenceLocalVarEntry {
     max_val: f64,
     #[serde(default)]
     loopback: bool,
-    conditions: Option<Vec<Condition>>,
+    condition: Option<Condition>,
 }
 
 #[derive(Deserialize)]
@@ -316,7 +364,7 @@ struct ResetWhenEqualsEntry {
     var_name: String,
     target: String,
     equals: Vec<f64>,
-    conditions: Option<Vec<Condition>>,
+    condition: Option<Condition>,
 }
 
 #[derive(Deserialize)]
@@ -324,7 +372,7 @@ struct ProgramActionEntry {
     var_name: String,
     var_units: Option<String>,
     var_type: InDataTypes,
-    conditions: Vec<Condition>,
+    condition: Option<Condition>,
     action: ProgramAction,
 }
 
@@ -386,7 +434,7 @@ impl Period {
 
 struct Mapping {
     action: ActionType,
-    condition: Option<Vec<Condition>>,
+    condition: Option<Condition>,
     cancel_h_events: bool,
 }
 
@@ -520,7 +568,7 @@ impl Definitions {
             var_name,
             Mapping {
                 action: ActionType::VarOnly,
-                condition: var.conditions,
+                condition: var.condition,
                 cancel_h_events: var.cancel_h_events,
             },
         )?;
@@ -540,7 +588,7 @@ impl Definitions {
                 action: ActionType::Event(EventMapping {
                     use_calculator: event.use_calculator,
                 }),
-                condition: event.conditions,
+                condition: event.condition,
                 cancel_h_events: event.cancel_h_events,
             },
         )?;
@@ -603,28 +651,28 @@ impl Definitions {
         }
     }
 
+    fn process_new_condition(&mut self, condition: &mut Condition) -> Result<(), Error> {
+        if let Some(var_data) = &mut condition.var {
+            // Add new var to watch for
+            let (var_string, _) = self.add_var_string(
+                "shared",
+                &var_data.var_name,
+                var_data.var_units.as_deref(),
+                var_data.var_type,
+            )?;
+
+            var_data.var_name = var_string.clone();
+        }
+
+        Ok(())
+    }
+
     fn add_mapping(&mut self, var_name: String, mapping: Mapping) -> Result<(), Error> {
         let mut mapping = mapping;
 
         // Conditions
-        if let Some(conditions) = mapping.condition.as_mut() {
-            for condition in conditions {
-                if let Some(var_data) = condition.var.as_mut() {
-                    // Add new var to watch for
-                    let (var_string, _) = self.add_var_string(
-                        "shared",
-                        &var_data.var_name,
-                        var_data.var_units.as_deref(),
-                        var_data.var_type,
-                    )?;
-                    var_data.var_name = var_string.clone();
-
-                    // Do not add var to do not sync if there's a mapping for it
-                    if self.mappings.get(&var_string).is_none() {
-                        self.do_not_sync.insert(var_string);
-                    }
-                }
-            }
+        if let Some(condition) = &mut mapping.condition {
+            self.process_new_condition(condition)?;
         }
 
         // If the var name was already added to do not sync... remove it
@@ -658,7 +706,7 @@ impl Definitions {
 
         // Set optional features
         if var.use_calculator {
-            action.set_calculator_event_name(Some(&var.event_name));
+            action.set_calculator_event_name(var.event_name);
         }
 
         if let Some(off_event) = var.off_event_name.as_ref() {
@@ -685,7 +733,7 @@ impl Definitions {
             var_string,
             Mapping {
                 action: mapping,
-                condition: var.conditions,
+                condition: var.condition,
                 cancel_h_events: var.cancel_h_events,
             },
         )?;
@@ -720,6 +768,7 @@ impl Definitions {
                 var_string.clone(),
                 Mapping {
                     action: ActionType::VarOnly,
+                    condition: var.condition,
                     ..Default::default()
                 },
             )?;
@@ -763,7 +812,7 @@ impl Definitions {
         let data_type_string: &str = check_and_return_field!("var_type", var, str);
         let data_type = get_data_type_from_string(data_type_string)?;
 
-        let condition = try_cast_yaml!(var["conditions"].clone());
+        let condition = try_cast_yaml!(var["condition"].clone());
         let cancel_h_events = var["cancel_h_events"].as_bool().unwrap_or(false);
 
         match data_type {
@@ -901,7 +950,7 @@ impl Definitions {
             var_string,
             Mapping {
                 action: ActionType::I32(Box::new(NumDigitSet::new(up_event_ids, down_event_ids))),
-                condition: var.conditions,
+                condition: var.condition,
                 cancel_h_events: var.cancel_h_events,
             },
         )?;
@@ -923,7 +972,7 @@ impl Definitions {
             var_name,
             Mapping {
                 action: ActionType::F64(Box::new(CustomCalculator::new(var.set))),
-                condition: var.conditions,
+                condition: var.condition,
                 cancel_h_events: var.cancel_h_events,
             },
         )?;
@@ -949,7 +998,7 @@ impl Definitions {
             var_string,
             Mapping {
                 action: ActionType::F64(Box::new(LocalVarProxy::new(var.target, loopback))),
-                condition: var.conditions,
+                condition: var.condition,
                 ..Default::default()
             },
         )
@@ -978,7 +1027,7 @@ impl Definitions {
                     var.max_val,
                     loopback,
                 ))),
-                condition: var.conditions,
+                condition: var.condition,
                 ..Default::default()
             },
         )
@@ -996,7 +1045,7 @@ impl Definitions {
             var_string,
             Mapping {
                 action: ActionType::F64(Box::new(ResetWhenEquals::new(var.target, var.equals))),
-                condition: var.conditions,
+                condition: var.condition,
                 ..Default::default()
             },
         )
@@ -1013,7 +1062,7 @@ impl Definitions {
             var_string,
             Mapping {
                 action: ActionType::ProgramAction(var.action),
-                condition: Some(var.conditions),
+                condition: var.condition,
                 ..Default::default()
             },
         )?;
@@ -1162,16 +1211,6 @@ impl Definitions {
 
         if let Some(mappings) = self.mappings.get_mut(&result.var_name) {
             for mapping in mappings {
-                if !evaluate_conditions(
-                    &self.lvarstransfer,
-                    &self.avarstransfer,
-                    mapping.condition.as_ref(),
-                    &VarReaderTypes::F64(result.value),
-                ) {
-                    should_write = false;
-                    continue;
-                }
-
                 if mapping.cancel_h_events {
                     self.event_cancel_timer = Instant::now();
                 }
@@ -1261,6 +1300,7 @@ impl Definitions {
                     &self.avarstransfer,
                     mapping.condition.as_ref(),
                     &VarReaderTypes::Bool(false),
+                    None,
                 ) {
                     should_write = false;
                     continue;
@@ -1303,24 +1343,13 @@ impl Definitions {
             // Remove some computed components
             // self.physics_corrector.remove_components(&mut data);
             // Update all syncactions with the changed values
-            for (var_name, value) in data {
+            for (var_name, value) in &data {
                 // Determine if this variable should be updated
-                let mut should_write = !check_did_write_recently(&mut self.last_written, &var_name)
-                    && !self.do_not_sync.contains(&var_name);
+                let mut should_write = !check_did_write_recently(&mut self.last_written, var_name)
+                    && !self.do_not_sync.contains(var_name);
                 // Set current var syncactions
-                if let Some(mappings) = self.mappings.get_mut(&var_name) {
+                if let Some(mappings) = self.mappings.get_mut(var_name) {
                     for mapping in mappings {
-                        if !evaluate_conditions(
-                            &self.lvarstransfer,
-                            &self.avarstransfer,
-                            mapping.condition.as_ref(),
-                            &value,
-                        ) {
-                            // Does not statisfy mapping condition... do not write.
-                            should_write = false;
-                            continue;
-                        }
-
                         if mapping.cancel_h_events {
                             self.event_cancel_timer = Instant::now();
                         }
@@ -1330,20 +1359,20 @@ impl Definitions {
                             action,
                             value,
                             mapping,
-                            { action.set_current(new_value) },
+                            { action.set_current(*new_value) },
                             {},
                             {}
                         );
                     }
                 }
 
-                if let Some(period) = self.periods.get_mut(&var_name) {
+                if let Some(period) = self.periods.get_mut(var_name) {
                     should_write = should_write && period.do_update();
                 }
 
                 if should_write {
                     // Queue data for reading
-                    self.current_sync.avars.insert(var_name.clone(), value);
+                    self.current_sync.avars.insert(var_name.clone(), *value);
                 }
             }
         }
@@ -1497,6 +1526,16 @@ impl Definitions {
             // Otherwise sync them using defined events
             if let Some(mappings) = self.mappings.get_mut(&var_name) {
                 for mapping in mappings {
+                    if !evaluate_conditions(
+                        &self.lvarstransfer,
+                        &self.avarstransfer,
+                        mapping.condition.as_ref(),
+                        &data,
+                        None,
+                    ) {
+                        continue;
+                    }
+
                     execute_mapping!(
                         new_value,
                         action,
@@ -1537,10 +1576,25 @@ impl Definitions {
 
     #[allow(unused_variables)]
     fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap) -> Result<(), Error> {
+        let hi = data
+            .iter()
+            .map(|(k, v)| (k.clone(), VarReaderTypes::F64(*v)))
+            .collect();
+
         for (var_name, value) in data {
             match self.mappings.get_mut(&var_name) {
                 Some(mappings) => {
                     for mapping in mappings {
+                        if !evaluate_conditions(
+                            &self.lvarstransfer,
+                            &self.avarstransfer,
+                            mapping.condition.as_ref(),
+                            &VarReaderTypes::F64(value),
+                            Some(&hi),
+                        ) {
+                            continue;
+                        }
+
                         execute_mapping!(
                             new_value,
                             action,
