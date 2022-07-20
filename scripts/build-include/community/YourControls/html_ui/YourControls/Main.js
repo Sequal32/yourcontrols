@@ -43,9 +43,11 @@ class YourControlsHandler {
                 break;
             }
             case "requestTime": {
-                if (!this.canProcess()) {break}
+                if (!this.canProcess()) {
+                    break
+                }
                 const hour = SimVar.GetSimVarValue("E:ZULU TIME", "Hours")
-                const minute = Math.ceil((hour % 1) * 60 )
+                const minute = Math.ceil((hour % 1) * 60)
 
                 this.net.sendObjectAsJSON({
                     type: "time",
