@@ -20,7 +20,7 @@ use crate::syncdefs::{
 use crate::util::{Category, InDataTypes};
 use crate::{corrector::Corrector, syncdefs::LocalVarProxy};
 
-use yourcontrols_types::{AVarMap, AllNeedSync, Error, Event, EventData, LVarMap, VarReaderTypes};
+use yourcontrols_types::{AllNeedSync, Error, Event, EventData, VarMap, VarReaderTypes};
 
 // Checks if a field in a Value exists, otherwise will return an error with the name of the field
 macro_rules! check_and_return_field {
@@ -1236,7 +1236,7 @@ impl Definitions {
 
         self.current_sync
             .lvars
-            .insert(result.var_name, result.value);
+            .insert(result.var_name, VarReaderTypes::F64(result.value));
     }
 
     // Processes client data and adds to the result queue if it changed
@@ -1505,12 +1505,12 @@ impl Definitions {
     }
 
     #[allow(unused_variables)]
-    fn write_aircraft_data(&mut self, conn: &SimConnector, data: AVarMap, time: f64) {
+    fn write_aircraft_data(&mut self, conn: &SimConnector, data: VarMap, time: f64) {
         if data.is_empty() {
             return;
         }
 
-        let mut to_sync = AVarMap::new();
+        let mut to_sync = VarMap::new();
         to_sync.reserve(data.len());
 
         let mut interpolation_data = Vec::new();
@@ -1575,22 +1575,17 @@ impl Definitions {
     }
 
     #[allow(unused_variables)]
-    fn write_local_data(&mut self, conn: &SimConnector, data: LVarMap) -> Result<(), Error> {
-        let hi = data
-            .iter()
-            .map(|(k, v)| (k.clone(), VarReaderTypes::F64(*v)))
-            .collect();
-
-        for (var_name, value) in data {
-            match self.mappings.get_mut(&var_name) {
+    fn write_local_data(&mut self, conn: &SimConnector, data: VarMap) -> Result<(), Error> {
+        for (var_name, value) in &data {
+            match self.mappings.get_mut(var_name) {
                 Some(mappings) => {
                     for mapping in mappings {
                         if !evaluate_conditions(
                             &self.lvarstransfer,
                             &self.avarstransfer,
                             mapping.condition.as_ref(),
-                            &VarReaderTypes::F64(value),
-                            Some(&hi),
+                            &value,
+                            Some(&data),
                         ) {
                             continue;
                         }
@@ -1598,9 +1593,9 @@ impl Definitions {
                         execute_mapping!(
                             new_value,
                             action,
-                            VarReaderTypes::F64(value),
+                            value,
                             mapping,
-                            { action.set_new(new_value, conn, &mut self.lvarstransfer) },
+                            { action.set_new(*new_value, conn, &mut self.lvarstransfer) },
                             {
                                 self.lvarstransfer
                                     .set(conn, &var_name, value.to_string().as_ref());
@@ -1608,10 +1603,10 @@ impl Definitions {
                             {}
                         );
 
-                        set_did_write_recently(&mut self.last_written, &var_name);
+                        set_did_write_recently(&mut self.last_written, var_name);
                     }
                 }
-                None => return Err(Error::MissingMapping(var_name)),
+                None => return Err(Error::MissingMapping(var_name.clone())),
             }
         }
 
@@ -1689,6 +1684,7 @@ impl Definitions {
                 .get_all_vars()
                 .into_iter()
                 .filter(|(x, _)| !self.do_not_sync.contains(x))
+                .map(|(k, v)| (k, VarReaderTypes::F64(v)))
                 .collect(),
             events: EventData::new(),
         }

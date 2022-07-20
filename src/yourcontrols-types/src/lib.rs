@@ -3,7 +3,7 @@ mod error;
 pub use error::Error;
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub enum Event {
@@ -46,17 +46,26 @@ impl VarReaderTypes {
     }
 }
 
-// Name of aircraft variable and the value of it
-pub type AVarMap = HashMap<String, VarReaderTypes>;
-// Name of local variable and the value of it
-pub type LVarMap = HashMap<String, f64>;
+impl Display for VarReaderTypes {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            VarReaderTypes::Bool(v) => f.write_str(&v.to_string()),
+            VarReaderTypes::I32(v) => f.write_str(&v.to_string()),
+            VarReaderTypes::I64(v) => f.write_str(&v.to_string()),
+            VarReaderTypes::F64(v) => f.write_str(&v.to_string()),
+        }
+    }
+}
+
+// Name of variable and the value of it
+pub type VarMap = HashMap<String, VarReaderTypes>;
 // Name of the event the DWORD data associated with it with how many times it got triggered (not a map as the event could've got triggered multiple times before the data could get send)
 pub type EventData = Vec<Event>;
 
 #[derive(Debug, Deserialize, Serialize, Clone, Default)]
 pub struct AllNeedSync {
-    pub avars: AVarMap,
-    pub lvars: LVarMap,
+    pub avars: VarMap,
+    pub lvars: VarMap,
     pub events: EventData,
 }
 
