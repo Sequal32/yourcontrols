@@ -57,17 +57,3 @@ shared:
     var_units: Degrees
     var_type: i32
     event_name: ADF_CARD_SET
-
-master:
-  -
-    type: var
-    var_name: A:PLANE HEADING DEGREES GYRO
-    var_units: Degrees
-    var_type: f64
-    unreliable: true # Do not use interpolate or will spin and flip at 360 north
-  -
-    type: var
-    var_name: A:DELTA HEADING RATE
-    var_units: Degrees
-    var_type: f64
-    unreliable: true
