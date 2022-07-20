@@ -54,11 +54,12 @@ impl ToggleSwitch {
         self.off_event_id = Some(off_event_id);
     }
 
-    pub fn set_calculator_event_name(&mut self, event_name: Option<&str>) {
-        match event_name {
-            Some(event_name) => self.event_name = Some(format!("K:{}", event_name)),
-            None => self.event_name = None,
-        }
+    pub fn set_calculator_event_name(&mut self, event_name: String) {
+        self.event_name = Some(if event_name.chars().nth(1).unwrap_or(' ') != ':' {
+            format!("K:{}", event_name)
+        } else {
+            event_name
+        })
     }
 
     pub fn set_param(&mut self, param: u32) {
@@ -181,12 +182,12 @@ where
     }
 
     pub fn set_calculator_event_name(&mut self, event_name: Option<&str>, with_param: bool) {
-        match event_name {
+        self.event_name = match event_name {
             Some(event_name) => match with_param {
-                true => self.event_name = Some(format!("K:2:{}", event_name)),
-                false => self.event_name = Some(format!("K:{}", event_name)),
+                true => Some(format!("K:2:{}", event_name)),
+                false => Some(format!("K:{}", event_name)),
             },
-            None => self.event_name = None,
+            None => None,
         }
     }
 
