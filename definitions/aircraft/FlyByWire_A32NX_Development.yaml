@@ -700,17 +700,17 @@ shared:
     action: TakeControls
     var_name: L:A32NX_PRIORITY_TAKEOVER:1
     var_type: f64
-    conditions:
-      - equals:
-          F64: 1.0
+    condition:
+      equals:
+        F64: 1.0
   -
     type: ProgramAction
     action: TakeControls
     var_name: L:A32NX_PRIORITY_TAKEOVER:2
     var_type: f64
-    conditions:
-      - equals:
-          F64: 1.0
+    condition:
+      equals:
+        F64: 1.0
 
 # - # LVAR's (same as Exp)
 #   type: var
@@ -2337,12 +2337,9 @@ shared:
     type: var
     var_name: L:A32NX_AUTOPILOT_2_ACTIVE
   -
-    type: NumSet
-    var_name: L:A32NX_AUTOTHRUST_STATUS
-    var_units: Enum
-    var_type: f64
-    event_name: A32NX.FCU_ATHR_PUSH
-    use_calculator: true
+    type: CustomCalculator
+    get: "1 0 (L:A32NX_AUTOTHRUST_STATUS, number) ? "
+    set: "(>K:A32NX.FCU_ATHR_PUSH)"
   -
     type: ToggleSwitch
     var_name: L:A32NX_FCU_LOC_MODE_ACTIVE
@@ -2415,8 +2412,8 @@ shared:
   -
     type: var
     var_name: L:A32NX_BTN_TOCONFIG
-    conditions:
-      - equals:
+    condition:
+      equals:
         F64: 1
   -
     type: var
@@ -2424,8 +2421,8 @@ shared:
   -
     type: var
     var_name: L:A32NX_BTN_CLR
-    conditions:
-      - equals:
+    condition:
+      equals:
         F64: 1
   -
     type: var
@@ -2433,14 +2430,14 @@ shared:
   -
     type: var
     var_name: L:A32NX_BTN_CLR2
-    conditions:
-      - equals:
+    condition:
+      equals:
         F64: 1
   -
     type: var
     var_name: L:A32NX_BTN_RCL
-    conditions:
-      - equals:
+    condition:
+      equals:
         F64: 1
   -
     type: var
@@ -2613,9 +2610,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_FWC_FLIGHT_PHASE
-  -
-    type: var
-    var_name: L:A32NX_AUTOTHRUST_MODE
+# -
+#   type: var
+#   var_name: L:A32NX_AUTOTHRUST_MODE
   -
     type: var
     var_name: L:A32NX_FADEC_POWERED_ENG1
@@ -2643,9 +2640,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_ENGINE_IDLE_N1
-  -
-    type: var
-    var_name: L:A32NX_AUTOTHRUST_THRUST_LIMIT_TYPE
+# -
+#   type: var
+#   var_name: L:A32NX_AUTOTHRUST_THRUST_LIMIT_TYPE
 # -
 #   type: var
 #   var_name: L:A32NX_AUTOTHRUST_THRUST_LIMIT
@@ -2673,9 +2670,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_ENGINE_EGT:1
-  -
-    type: var
-    var_name: L:A32NX_AUTOTHRUST_THRUST_LEVER_WARNING_TOGA
+# -
+#   type: var
+#   var_name: L:A32NX_AUTOTHRUST_THRUST_LEVER_WARNING_TOGA
 # -
 #   type: var
 #   var_name: L:A32NX_ENGINE_EGT:2
@@ -2775,9 +2772,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_ENGINE_IDLE_N1:2
-  -
-    type: var
-    var_name: L:A32NX_AUTOTHRUST_THRUST_LEVER_WARNING_FLEX
+# -
+#   type: var
+#   var_name: L:A32NX_AUTOTHRUST_THRUST_LEVER_WARNING_FLEX
   -
     type: var
     var_name: L:A32NX_REFUEL_STARTED_BY_USR
@@ -2944,12 +2941,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_FM_LS_COURSE
-  -
-    type: var
-    var_name: L:A32NX_FMA_LATERAL_MODE
-  -
-    type: var
-    var_name: L:A32NX_FMA_LATERAL_ARMED
+# -
+#   type: var
+#   var_name: L:A32NX_FMA_LATERAL_MODE
+# -
+#   type: var
+#   var_name: L:A32NX_FMA_LATERAL_ARMED
   -
     type: var
     var_name: L:A32NX_TCAS_STATE
@@ -3606,9 +3603,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_SPEEDS_ALPHA_MAX_CALC
-  -
-    type: var
-    var_name: L:A32NX_FMA_VERTICAL_MODE
+# -
+#   type: var
+#   var_name: L:A32NX_FMA_VERTICAL_MODE
   -
     type: NumSet
     var_name: L:A32NX_AUTOPILOT_VS_SELECTED
@@ -3616,13 +3613,12 @@ shared:
     event_name: A32NX.FCU_VS_SET
     cancel_h_events: true
     use_calculator: true
-    conditions:
-      -
-        var:
-          var_name: L:A32NX_TRK_FPA_MODE_ACTIVE
-          var_type: f64
-        equals:
-          F64: 0.0
+    condition:
+      var:
+        var_name: L:A32NX_TRK_FPA_MODE_ACTIVE
+        var_type: f64
+      equals:
+        F64: 0.0
   -
     type: NumSet
     var_name: L:A32NX_AUTOPILOT_FPA_SELECTED
@@ -3631,22 +3627,42 @@ shared:
     multiply_by: 10
     cancel_h_events: true
     use_calculator: true
-    conditions:
-      -
-        var:
-          var_name: L:A32NX_TRK_FPA_MODE_ACTIVE
-          var_type: f64
-        equals:
-          F64: 1.0
+    condition:
+      var:
+        var_name: L:A32NX_TRK_FPA_MODE_ACTIVE
+        var_type: f64
+      equals:
+        F64: 1.0
+  -
+    type: NumSet
+    var_name: L:A32NX_AUTOPILOT_SPEED_SELECTED
+    var_type: f64
+    event_name: A32NX.FCU_SPD_SET
+    multiply_by: 100
+    use_calculator: true
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: true
   -
     type: NumSet
     var_name: L:A32NX_AUTOPILOT_SPEED_SELECTED
     var_type: f64
     event_name: A32NX.FCU_SPD_SET
     use_calculator: true
-  -
-    type: var
-    var_name: L:A32NX_FMA_VERTICAL_ARMED
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+# -
+#   type: var
+#   var_name: L:A32NX_FMA_VERTICAL_ARMED
   -
     type: var
     var_name: L:A32NX_DEPARTURE_ELEVATION
@@ -3773,36 +3789,36 @@ shared:
   -
     type: var
     var_name: L:A320_Neo_FCU_State
-  -
-    type: var
-    var_name: L:A32NX_FCU_SPD_MANAGED_DOT
-  -
-    type: var
-    var_name: L:A32NX_FCU_SPD_MANAGED_DASHES
-  -
-    type: var
-    var_name: L:A320_FCU_SHOW_SELECTED_HEADING
-  -
-    type: var
-    var_name: L:A32NX_FCU_HDG_MANAGED_DASHES
-  -
-    type: var
-    var_name: L:A32NX_FCU_HDG_MANAGED_DOT
+# -
+#   type: var
+#   var_name: L:A32NX_FCU_SPD_MANAGED_DOT
+# -
+#   type: var
+#   var_name: L:A32NX_FCU_SPD_MANAGED_DASHES
+# -
+#   type: var
+#   var_name: L:A320_FCU_SHOW_SELECTED_HEADING
+# -
+#   type: var
+#   var_name: L:A32NX_FCU_HDG_MANAGED_DASHES
+# -
+#   type: var
+#   var_name: L:A32NX_FCU_HDG_MANAGED_DOT
   -
     type: var
     var_name: L:A32NX_FCU_HEADING_SYNC
   -
     type: var
     var_name: L:A32NX_FCU_MODE_REVERSION_TRK_FPA_ACTIVE
-  -
-    type: var
-    var_name: L:A32NX_FCU_ALT_MANAGED
-  -
-    type: var
-    var_name: L:A320_NE0_FCU_STATE
-  -
-    type: var
-    var_name: L:A32NX_FCU_VS_MANAGED
+# -
+#   type: var
+#   var_name: L:A32NX_FCU_ALT_MANAGED
+# -
+#   type: var
+#   var_name: L:A320_NE0_FCU_STATE
+# -
+#   type: var
+#   var_name: L:A32NX_FCU_VS_MANAGED
   -
     type: var
     var_name: L:RMP_TEMPLATE_ScreenLuminosity
@@ -4112,9 +4128,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_FCU_MODE_REVERSION_TARGET_FPM
-  -
-    type: var
-    var_name: L:A32NX_AUTOTHRUST_MODE_MESSAGE
+# -
+#   type: var
+#   var_name: L:A32NX_AUTOTHRUST_MODE_MESSAGE
 # -
 #   type: var
 #   var_name: L:A32NX_AUTOTHRUST_THRUST_LIMIT_REV
