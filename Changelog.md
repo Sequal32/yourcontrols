@@ -92,6 +92,7 @@
 * A32NX: Ground services including exit and cargo doors (#7229).
 * A32NX: AP1 to AP2 toggle with a temporary workaround.
 * A32NX: Corrected 16K value for flap handle.
+* A32NX: A/THR turning off and back on.
 * A32NX: LS pushbutton desync.
 * Carenado M20R: Interior and exterior lights.
 * Carenado Seneca V: Added TDS GTN support.
