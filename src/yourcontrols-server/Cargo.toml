@@ -1,0 +1,22 @@
+[package]
+name = "yourcontrols-server"
+version = "0.1.0"
+authors = ["Sequal32"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bimap = "0.6"
+crossbeam-channel = "0.5"                                     # held back because of laminar
+dotenv = "0.15"
+log = "0.4"
+laminar = { git = "https://github.com/Sequal32/laminar.git" }
+rand = "0.8"
+semver = "1.0"
+simplelog = "0.12"
+serde = { version = "1.0", features = ["derive"] }
+rmp-serde = "1.1"
+zstd = "0.7"
+yourcontrols-net = { path = "../yourcontrols-net" }
+yourcontrols-types = { path = "../yourcontrols-types" }

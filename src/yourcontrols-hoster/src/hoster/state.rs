@@ -115,6 +115,7 @@ impl ServerState {
             | Payloads::HostingReceived { .. }
             | Payloads::SetHost { .. }
             | Payloads::AttemptConnection { .. }
+            | Payloads::AttemptHosterConnection { .. }
             | Payloads::RequestHosting { .. }
             | Payloads::PeerEstablished { .. }
             | Payloads::ConnectionDenied { .. }
