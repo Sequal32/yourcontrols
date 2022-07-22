@@ -10,7 +10,6 @@ use std::sync::{
 use std::thread;
 use std::{mem, net::IpAddr, net::SocketAddr, sync::Mutex, time::Duration, time::Instant};
 
-use crate::messages::{Message, Payloads, SenderReceiver};
 use crate::util::{
     get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr,
 };
@@ -19,6 +18,10 @@ use crate::util::{
     TransferClient,
 };
 use crate::util::{HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES};
+use crate::{
+    messages::{Message, Payloads, SenderReceiver},
+    util::get_local_endpoints_with_port,
+};
 
 use yourcontrols_types::Error;
 
@@ -32,8 +35,8 @@ struct TransferStruct {
     // Reading/writing to UDP stream
     net: SenderReceiver,
     // Hole punching
-    connected: bool,
-    received_address: Option<SocketAddr>,
+    received_address: Vec<SocketAddr>,
+    connected_address: Option<SocketAddr>,
     retry_timer: Option<Instant>,
     session_id: String,
     retries: u8,
@@ -52,6 +55,7 @@ impl TransferStruct {
         match &payload {
             // Unused by client
             Payloads::InitHandshake { .. } |
+            Payloads::RendezvousHandshake  { .. } |
             Payloads::PeerEstablished { .. } |
             Payloads::RequestHosting {..} |
             Payloads::Ready |
@@ -64,6 +68,7 @@ impl TransferStruct {
             Payloads::Update { .. } |
             Payloads::ConnectionDenied { .. } |
             Payloads::SetHost |
+            Payloads::AttemptHosterConnection {..} |
             Payloads::Heartbeat => {}
             // Used
             Payloads::InvalidVersion { server_version } => {
@@ -74,14 +79,15 @@ impl TransferStruct {
             }
             Payloads::Handshake { session_id } => {
                 // Already established connection
-                if self.connected {return}
+                if self.connected() {return}
                 // Why doesn't the other peer have the same session ID? 
                 if *session_id != *self.session_id {
                     self.stop(format!("Handshake verification failed! Expected {}, got {}", self.session_id, session_id));
                     return;
                 }
                 // Established connection with host
-                self.connected = true;
+                self.connected_address = Some(addr);
+                self.received_address.drain(..);
 
                 // Send initial data
                 self.net.send_message(Payloads::InitHandshake {
@@ -96,8 +102,8 @@ impl TransferStruct {
             Payloads::HostingReceived { session_id } => {
                 self.session_id = session_id.clone();
             }
-            Payloads::AttemptConnection { peer } => {
-                self.received_address = Some(*peer)
+            Payloads::AttemptConnection { peers } => {
+                self.received_address = peers.clone();
             }
         }
 
@@ -108,7 +114,7 @@ impl TransferStruct {
 
     fn handle_app_message(&mut self) {
         while let Ok((payload, _)) = self.client_rx.try_recv() {
-            if let Some(address) = self.received_address {
+            if let Some(address) = self.connected_address {
                 self.net.send_message(payload, address).ok();
             }
         }
@@ -116,7 +122,7 @@ impl TransferStruct {
 
     // Returns whether to stop client (can't establish connection)
     fn handle_handshake(&mut self) {
-        if self.connected {
+        if self.connected() {
             return;
         }
 
@@ -127,13 +133,13 @@ impl TransferStruct {
             }
         }
 
-        if let Some(addr) = self.received_address {
+        for addr in &self.received_address {
             self.net
                 .send_message(
                     Payloads::Handshake {
                         session_id: self.session_id.clone(),
                     },
-                    addr,
+                    *addr,
                 )
                 .ok();
             // Reset second timer
@@ -158,11 +164,11 @@ impl TransferStruct {
 
     // Reliably compared to default heartbeat implementation
     fn handle_heartbeat(&mut self) {
-        if !self.connected {
+        if !self.connected() {
             return;
         }
 
-        if let Some(addr) = self.received_address {
+        if let Some(addr) = self.connected_address {
             if self.heartbeat_instant.elapsed().as_secs_f32() < HEARTBEAT_INTERVAL_MANUAL_SECS {
                 return;
             }
@@ -177,6 +183,10 @@ impl TransferStruct {
             .try_send(ReceiveMessage::Event(Event::ConnectionLost(reason)))
             .ok();
         self.should_stop.store(true, SeqCst);
+    }
+
+    fn connected(&self) -> bool {
+        self.connected_address.is_some()
     }
 }
 
@@ -224,10 +234,15 @@ impl Client {
         )
     }
 
-    pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), Error> {
+    pub fn start(
+        &mut self,
+        ip: IpAddr,
+        port: u16,
+        session_id: Option<String>, // Only used when connecting to the hoster as a secret password
+    ) -> Result<(), Error> {
         self.run(
             ip.is_ipv6(),
-            None,
+            session_id,
             None,
             Some(match_ip_address_to_socket_addr(ip, port)),
         )
@@ -258,6 +273,7 @@ impl Client {
         target_address: Option<SocketAddr>,
     ) -> Result<(), Error> {
         let socket = self.get_socket(is_ipv6)?;
+        let port = socket.local_addr().unwrap().port();
 
         self.is_host = session_id.is_none() && target_address.is_none();
 
@@ -270,8 +286,8 @@ impl Client {
             net: SenderReceiver::from_socket(socket),
             // Holepunching
             retries: 0,
-            connected: false,
-            received_address: target_address,
+            received_address: target_address.map(|x| vec![x]).unwrap_or_default(),
+            connected_address: None,
             retry_timer: None,
             session_id: session_id.clone().unwrap_or_default(),
             // State
@@ -284,14 +300,27 @@ impl Client {
         if let Some(rendezvous) = rendezvous {
             if let Some(session_id) = session_id {
                 // Send a handshake to rendezvous to resolve session id with an ip address
+
                 transfer
                     .net
-                    .send_message(Payloads::Handshake { session_id }, rendezvous)
+                    .send_message(
+                        Payloads::RendezvousHandshake {
+                            session_id,
+                            local_endpoint: get_local_endpoints_with_port(port),
+                        },
+                        rendezvous,
+                    )
                     .ok();
             } else {
                 transfer
                     .net
-                    .send_message(Payloads::RequestHosting { self_hosted: false }, rendezvous)
+                    .send_message(
+                        Payloads::RequestHosting {
+                            self_hosted: false,
+                            local_endpoint: get_local_endpoints_with_port(port),
+                        },
+                        rendezvous,
+                    )
                     .ok();
             }
         } else if let Some(addr) = target_address {
@@ -337,8 +366,8 @@ impl Client {
                         }
                         Message::Metrics(addr, metrics) => {
                             // Send message from game server, not rendezvous
-                            if let Some(received_address) = transfer.received_address {
-                                if received_address == addr {
+                            if let Some(connected_address) = transfer.connected_address {
+                                if connected_address == addr {
                                     transfer
                                         .server_tx
                                         .send(ReceiveMessage::Event(Event::Metrics(metrics)))
@@ -350,7 +379,7 @@ impl Client {
                 }
 
                 // Check rendezvous timer
-                if transfer.received_address.is_none()
+                if !transfer.connected()
                     && rendezvous.is_some()
                     && rendezvous_timer.elapsed().as_secs() >= 5
                 {

@@ -2,6 +2,7 @@ use crossbeam_channel::{Receiver, Sender};
 use dns_lookup::lookup_host;
 use dotenv_codegen::dotenv;
 use laminar::Metrics;
+use std::str::FromStr;
 use std::time::SystemTime;
 use std::{
     net::SocketAddr,
@@ -71,6 +72,12 @@ pub fn get_seconds() -> f64 {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
         .as_secs_f64()
+}
+
+pub fn get_local_endpoints_with_port(port: u16) -> Option<SocketAddr> {
+    local_ipaddress::get()
+        .and_then(|x| IpAddr::from_str(&x).ok())
+        .map(|x| SocketAddr::new(x, port))
 }
 
 #[derive(Debug)]
