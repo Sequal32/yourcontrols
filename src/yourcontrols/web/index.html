@@ -1,274 +1,332 @@
 <div class="row" onload="OnLoad">
-    <div class="col-12">
-        <div class="alert w-100 alert-danger blert-margin" id="alert" role="alert">
-            Not Connected
-            <div class="rectangle" id="rectangle-status"></div>
-        </div>
+  <div class="col-12">
+    <div class="alert w-100 alert-danger blert-margin" id="alert" role="alert">
+      Not Connected
+      <div class="rectangle" id="rectangle-status"></div>
     </div>
-    <div class="col-12">
-        <div class="row">
-            <div class="col-6">
-                <div class="card w-100 themed" id="top-left-card">
-                    <div class="card-body" id="network" hidden>
-                        <h5 class="card-title">Network Stats</h5>
-                        <div class="network-left">
-                            <p id="download-bandwidth">↓ 0.00 KB/s</p>
-                            <p id="download-rate">0 Packets/s</p>
-                            <p id="network-ping" hidden>0ms</p>
-                        </div>
-                        <div class="network-right">
-                            <p id="upload-bandwidth">↑ 0.00 KB/s</p>
-                            <p id="upload-rate">0 Packets/s</p>
-                            <p id="network-loss">0% Packet loss</p>
-                        </div>
-                    </div>
-                    <div class="card-body" id="not_server_running">
-                        <h5 class="card-title">Join</h5>
-                        <form class="needs-validation form-div" id="main-form-join" novalidate>
-                            <div class="form-group col-sm-auto bottom-margin" id="session-div">
-                                <label for="session-input">Session Code</label>
-                                <input type="text" class="form-control themed" id="session-input" aria-describedby="session-feedback" style="text-transform: uppercase" required>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
-                                <div class="invalid-feedback" id="session-feedback">
-                                    Please provide a valid session code.
-                                </div>
-                            </div>
-                            <div class="col-sm-auto bottom-margin" id="join-ip-div" hidden>
-                                <label for="join-ip-input">Server Hostname or IP</label>
-                                <input type="text" class="form-control themed  border-none" id="join-ip-input" aria-describedby="ip-feedback" required>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
-                                <div class="invalid-feedback">
-                                    Please provide a valid ip or hostname.
-                                </div>
-                            </div>
-                            <div class="col-sm-auto bottom-margin" id="join-port-div" hidden>
-                                <label for="join-port-input">Port</label>
-                                <input type="text" class="form-control themed " id="join-port-input" aria-describedby="port-feedback" required>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
-                                <div class="invalid-feedback" id="port-feedback">
-                                    Please provide a valid port number.
-                                </div>
-                            </div>
+  </div>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-6">
+        <div class="card w-100 themed" id="top-left-card">
+          <div class="card-body" id="network" hidden>
+            <h5 class="card-title">Network Stats</h5>
+            <div class="network-left">
+              <p id="download-bandwidth">↓ 0.00 KB/s</p>
+              <p id="download-rate">0 Packets/s</p>
+              <p id="network-ping" hidden>0ms</p>
+            </div>
+            <div class="network-right">
+              <p id="upload-bandwidth">↑ 0.00 KB/s</p>
+              <p id="upload-rate">0 Packets/s</p>
+              <p id="network-loss">0% Packet loss</p>
+            </div>
+          </div>
+          <div class="card-body" id="not_server_running">
+            <h5 class="card-title">Join</h5>
+            <form class="needs-validation form-div" id="main-form-join" novalidate>
+              <div class="form-group col-sm-auto bottom-margin" id="session-div">
+                <label for="session-input">Session Code</label>
+                <input type="text" class="form-control themed" id="session-input" aria-describedby="session-feedback"
+                  style="text-transform: uppercase" required />
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback" id="session-feedback">
+                  Please provide a valid session code.
+                </div>
+              </div>
+              <div class="col-sm-auto bottom-margin" id="join-ip-div" hidden>
+                <label for="join-ip-input">Server Hostname or IP</label>
+                <input type="text" class="form-control themed  border-none" id="join-ip-input"
+                  aria-describedby="ip-feedback" required />
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Please provide a valid ip or hostname.
+                </div>
+              </div>
+              <div class="col-sm-auto bottom-margin" id="join-port-div" hidden>
+                <label for="join-port-input">Port</label>
+                <input type="text" class="form-control themed " id="join-port-input" aria-describedby="port-feedback"
+                  required />
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback" id="port-feedback">
+                  Please provide a valid port number.
+                </div>
+              </div>
 
-                            <div id="session-ip-radios" class="form-row form-check" hidden>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="ipRadios" id="session-ip4" checked>
-                                    <label class="form-check-label" for="session-ip4">IPv4</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="ipRadios" id="session-ip6">
-                                    <label class="form-check-label" for="session-ip6">IPv6</label>
-                                </div>
-                            </div>
-                            <div id="radios" class="form-row form-check">
-                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Select this if the Host selected Cloud Server.">
-                                    <input class="form-check-input" type="radio" value="cloudServer" name="joinRadios" id="join-connect-cloud" checked>
-                                    <label class="form-check-label" for="join-connect-cloud">Cloud Server</label>
-                                </div>
-                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Select this if the Host selected Direct.">
-                                    <input class="form-check-input" type="radio" value="direct" name="joinRadios" id="join-connect-direct">
-                                    <label class="form-check-label" for="join-connect-direct">Direct</label>
-                                </div>
-                            </div>
-                            <div class="form-row justify-content-center small-margin">
-                                <button id="connect-button" type="submit" class="btn btn-success">Connect</button>
-                            </div>
-                        </form>
-                    </div>
+              <div id="session-ip-radios" class="form-row form-check" hidden>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="ipRadios" id="session-ip4" checked />
+                  <label class="form-check-label" for="session-ip4">IPv4</label>
                 </div>
-            </div>
-            <div class="col-6">
-                <div class="card w-100 themed" id="top-right-card">
-                    <div class="card-body" id="not_user_client">
-                        <h5 class="card-title m-1">Host</h5>
-                        <button type="button" id="ipv4-copy" class="btn btn-link btn-sm">Copy IPv4</button>
-                        <button type="button" id="ipv6-copy" class="btn btn-link btn-sm">Copy IPv6</button>
-                        <form class="needs-validation form-div" id="main-form-host" novalidate>
-                            <div class="form-group col-sm-auto bottom-margin" id="port-div" hidden>
-                                <label for="port-input">Port</label>
-                                <input type="text" class="form-control themed " id="port-input-host" aria-describedby="port-feedback" required>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
-                                <div class="invalid-feedback" id="port-feedback">
-                                    Please provide a valid port number.
-                                </div>
-                            </div>
-                            <div class="form-check">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="ipRadios" id="server-ip4" checked>
-                                    <label class="form-check-label" for="ip4">IPv4</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="ipRadios" id="server-ip6">
-                                    <label class="form-check-label" for="ip6">IPv6</label>
-                                </div>
-                            </div>
-                            <div class="form-check" id="connection-radios">
-                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Host by connecting directly to other clients via the Cloud. Depending on router this may not work.">
-                                    <input class="form-check-input" type="radio" name="connectionRadios" value="cloudServer" id="punchthrough-radio" checked>
-                                    <label class="form-check-label" for="punchthrough-radio">Cloud P2P</label>
-                                </div>
-                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Request a server to be hosted in the Cloud.">
-                                    <input class="form-check-input" type="radio" name="connectionRadios" value="relay" id="relay-radio">
-                                    <label class="form-check-label" for="relay-radio">Cloud Host</label>
-                                </div>
-                                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="Host a server without connecting to the Cloud. Requires port fowarding, will attempt to use UPnP to automatically port forward.">
-                                    <input class="form-check-input" type="radio" name="connectionRadios" value="direct" id="direct-radio">
-                                    <label class="form-check-label" for="direct-radio">Direct</label>
-                                </div>
-                                
-                            </div>
-                            <div class="form-group form-row justify-content-center small-margin align-bottom">
-                                <button type="submit" id="server-button" class="btn btn-primary">Start Server</button>
-                            </div>
-                        </form>
-                        <button id="force-button" class="btn btn-primary mx-auto mt-2" style="display: block" hidden>Take Control</button>
-                    </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="ipRadios" id="session-ip6" />
+                  <label class="form-check-label" for="session-ip6">IPv6</label>
                 </div>
-                <div class="card w-100 themed" hidden id="is_user_client">
-                    <div class="card-body">
-                        <h5 class="card-title">Host</h5>
-                        <div>
-                            You can only host when you're not connected to a server.
-                        </div>
-                    </div>
+              </div>
+              <div id="radios" class="form-row form-check">
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
+                  data-trigger="hover" title="Select this if the Host selected Cloud Server.">
+                  <input class="form-check-input" type="radio" value="cloudServer" name="joinRadios"
+                    id="join-connect-cloud" checked />
+                  <label class="form-check-label" for="join-connect-cloud">
+                    Cloud Server
+                  </label>
                 </div>
-            </div>
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
+                  data-trigger="hover" title="Select this if the Host selected Direct.">
+                  <input class="form-check-input" type="radio" value="direct" name="joinRadios"
+                    id="join-connect-direct" />
+                  <label class="form-check-label" for="join-connect-direct">
+                    Direct
+                  </label>
+                </div>
+              </div>
+              <div class="form-row justify-content-center small-margin">
+                <button id="connect-button" type="submit" class="btn btn-success">
+                  Connect
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-    </div>
-    <div class="col-12 spacer"></div>
-    <div class="col-12">
-        <div class="row">
-            <div class="col-6">
-                <div class="card themed ">
-                    <div class="card-body">
-                        <h5 class="card-title">Client List</h5>
-                        <ul class="list-group ", id="connection-list"></ul>
-                    </div>
+      </div>
+      <div class="col-6">
+        <div class="card w-100 themed" id="top-right-card">
+          <div class="card-body" id="not_user_client">
+            <h5 class="card-title m-1">Host</h5>
+            <small class="text-muted m-1" id="external-ipv4"></small>
+            <small class="text-muted m-1" id="external-ipv6"></small>
+
+            <form class="needs-validation form-div" id="main-form-host" novalidate>
+              <div class="form-group col-sm-auto bottom-margin" id="port-div" hidden>
+                <label for="port-input">Port</label>
+                <input type="text" class="form-control themed " id="port-input-host" aria-describedby="port-feedback"
+                  required />
+                <div class="valid-feedback">
+                  Looks good!
                 </div>
-            </div>
-            <div class="col-6">
-                <div class="card themed" id="is_client_server_running">
-                    <div class="card-body">
-                        <h5 class="card-title">Settings</h5>
-                        <form class="needs-validation form-div" id="settings-form" novalidate>
-                            <div class="form-group col-sm-auto small-margin align-bottom">
-                                <label for="aircraft-list">Active Aircraft</label>
-                                <select id="aircraft-list" class="form-control themed themed">
-                                    <option selected value="" id="default-aircraft-option"></option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-auto bottom-margin" id="name-div">
-                                <label for="name-input">Username</label>
-                                <input type="text" class="form-control themed " id="username-input" placeholder="Username" aria-describedby="ip-feedback" required>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
-                                <div class="invalid-feedback" id="ip-feedback">
-                                    Please provide a username.
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-auto bottom-margin" id="update-rate-div">
-                                <label for="update-rate-input">Update Rate</label>
-                                <input type="number" class="form-control themed " id="update-rate-input" aria-describedby="ip-feedback" required>
-                                <small id="update-rate-input-help" class="form-text text-muted">The update rate that aircraft data is sent in hz. Setting this higher may be unstable. Effective range: 10hz-60hz</small>
-                            </div>
-                            <div class="form-group col-sm-auto bottom-margin" id="timeout-div">
-                                <label for="timeout-input">Connection Timeout</label>
-                                <input type="number" class="form-control themed " id="timeout-input" aria-describedby="ip-feedback" required>
-                                <small id="timeout-input-help" class="form-text text-muted">How many seconds after not receiving a message before the connection is dropped. If you're experiencing random disconnects, try setting this value higher.</small>
-                            </div>
-                            <div class="form-group col-sm-auto bottom-margin">
-                                <div class="form-check" id="buffer-div">
-                                    <input class="form-check-input" type="checkbox" id="enable-log">
-                                    <label for="enable-log">Enable verbose logging</label>
-                                    <small id="enable-log-help" class="form-text text-muted">Logs sent & received packets.
-                                        Disable if the log file gets too large.</small>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-auto bottom-margin">
-                                <div class="form-check" id="buffer-div">
-                                    <input class="form-check-input" type="checkbox" id="theme-select">
-                                    <label for="theme-select">Dark Theme</label>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-auto bottom-margin">
-                                <div class="form-check" id="buffer-div">
-                                    <input class="form-check-input" type="checkbox" id="streamer-mode">
-                                    <label for="streamer-mode">Streamer Mode</label>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-auto bottom-margin">
-                                <div class="form-check" id="buffer-div">
-                                    <input class="form-check-input" type="checkbox" id="use-upnp">
-                                    <label for="use-upnp">Use UPnP</label>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-auto bottom-margin">
-                                <div class="form-check" id="buffer-div">
-                                    <input class="form-check-input" type="checkbox" id="start-observer">
-                                    <label for="start-observer">New connections start as observer</label>
-                                </div>
-                            </div>
-                            <div class="form-group form-row justify-content-center small-margin align-bottom">
-                                <button type="submit" id="settings-button" class="btn btn-success">Save Settings</button>
-                            </div>
-                        </form>
-                    </div>
+                <div class="invalid-feedback" id="port-feedback">
+                  Please provide a valid port number.
                 </div>
-                <div class="card themed" id="not_client_server_running" hidden>
-                    <div class="card-body">
-                        <h5 class="card-title">Settings</h5>
-                        <div>
-                            You can change the settings when you're not connected to a server or not running a server.
-                        </div>
-                    </div>
+              </div>
+              <div class="form-check">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="ipRadios" id="server-ip4" checked />
+                  <label class="form-check-label" for="ip4">IPv4</label>
                 </div>
-            </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="ipRadios" id="server-ip6" />
+                  <label class="form-check-label" for="ip6">IPv6</label>
+                </div>
+              </div>
+              <div class="form-check" id="connection-radios">
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
+                  data-trigger="hover"
+                  title="Host by connecting directly to other clients via the Cloud. Depending on router this may not work.">
+                  <input class="form-check-input" type="radio" name="connectionRadios" value="cloudServer"
+                    id="punchthrough-radio" checked />
+                  <label class="form-check-label" for="punchthrough-radio">
+                    Cloud P2P
+                  </label>
+                </div>
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
+                  data-trigger="hover" title="Request a server to be hosted in the Cloud.">
+                  <input class="form-check-input" type="radio" name="connectionRadios" value="relay" id="relay-radio" />
+                  <label class="form-check-label" for="relay-radio">
+                    Cloud Host
+                  </label>
+                </div>
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
+                  data-trigger="hover"
+                  title="Host a server without connecting to the Cloud. Requires port fowarding, will attempt to use UPnP to automatically port forward.">
+                  <input class="form-check-input" type="radio" name="connectionRadios" value="direct"
+                    id="direct-radio" />
+                  <label class="form-check-label" for="direct-radio">
+                    Direct
+                  </label>
+                </div>
+              </div>
+              <div class="form-group form-row justify-content-center small-margin align-bottom">
+                <button type="submit" id="server-button" class="btn btn-primary">
+                  Start Server
+                </button>
+              </div>
+            </form>
+            <button id="force-button" class="btn btn-primary mx-auto mt-2" style="display: block" hidden>
+              Take Control
+            </button>
+          </div>
         </div>
+        <div class="card w-100 themed" hidden id="is_user_client">
+          <div class="card-body">
+            <h5 class="card-title">Host</h5>
+            <div>
+              You can only host when you're not connected to a server.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="col-12 spacer"></div>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-6">
+        <div class="card themed ">
+          <div class="card-body">
+            <h5 class="card-title">Client List</h5>
+            <ul class="list-group " , id="connection-list"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card themed" id="is_client_server_running">
+          <div class="card-body">
+            <h5 class="card-title">Settings</h5>
+            <form class="needs-validation form-div" id="settings-form" novalidate>
+              <div class="form-group col-sm-auto small-margin align-bottom">
+                <label for="aircraft-list">Active Aircraft</label>
+                <select id="aircraft-list" class="form-control themed themed">
+                  <option selected value="" id="default-aircraft-option"></option>
+                </select>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin" id="name-div">
+                <label for="name-input">Username</label>
+                <input type="text" class="form-control themed " id="username-input" placeholder="Username"
+                  aria-describedby="ip-feedback" required />
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback" id="ip-feedback">
+                  Please provide a username.
+                </div>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin" id="update-rate-div">
+                <label for="update-rate-input">Update Rate</label>
+                <input type="number" class="form-control themed " id="update-rate-input" aria-describedby="ip-feedback"
+                  required />
+                <small id="update-rate-input-help" class="form-text text-muted">
+                  The update rate that aircraft data is sent in hz. Setting this
+                  higher may be unstable. Effective range: 10hz-60hz
+                </small>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin" id="timeout-div">
+                <label for="timeout-input">Connection Timeout</label>
+                <input type="number" class="form-control themed " id="timeout-input" aria-describedby="ip-feedback"
+                  required />
+                <small id="timeout-input-help" class="form-text text-muted">
+                  How many seconds after not receiving a message before the
+                  connection is dropped. If you're experiencing random
+                  disconnects, try setting this value higher.
+                </small>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin">
+                <div class="form-check" id="buffer-div">
+                  <input class="form-check-input" type="checkbox" id="enable-log" />
+                  <label for="enable-log">Enable verbose logging</label>
+                  <small id="enable-log-help" class="form-text text-muted">
+                    Logs sent & received packets. Disable if the log file gets
+                    too large.
+                  </small>
+                </div>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin">
+                <div class="form-check" id="buffer-div">
+                  <input class="form-check-input" type="checkbox" id="theme-select" />
+                  <label for="theme-select">Dark Theme</label>
+                </div>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin">
+                <div class="form-check" id="buffer-div">
+                  <input class="form-check-input" type="checkbox" id="streamer-mode" />
+                  <label for="streamer-mode">Streamer Mode</label>
+                </div>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin">
+                <div class="form-check" id="buffer-div">
+                  <input class="form-check-input" type="checkbox" id="use-upnp" />
+                  <label for="use-upnp">Use UPnP</label>
+                </div>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin">
+                <div class="form-check" id="buffer-div">
+                  <input class="form-check-input" type="checkbox" id="start-observer" />
+                  <label for="start-observer">
+                    New connections start as observer
+                  </label>
+                </div>
+              </div>
+              <div class="form-group form-row justify-content-center small-margin align-bottom">
+                <button type="submit" id="settings-button" class="btn btn-success">
+                  Save Settings
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="card themed" id="not_client_server_running" hidden>
+          <div class="card-body">
+            <h5 class="card-title">Settings</h5>
+            <div>
+              You can change the settings when you're not connected to a server
+              or not running a server.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="modal fade" id="restartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content themed">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Restart Now?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                The settings that you changed need the application to be restarted.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Restart Later</button>
-                <button type="button" class="btn btn-success" onclick="restart">Restart It Now</button>
-            </div>
-        </div>
+<div class="modal fade" id="restartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content themed">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Restart Now?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        The settings that you changed need the application to be restarted.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Restart Later
+        </button>
+        <button type="button" class="btn btn-success" onclick="restart">
+          Restart It Now
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
-<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content themed">
-            <div class="modal-header">
-                <h5 class="modal-title" id="version-alert-text"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Update It Later</button>
-                <button type="button" class="btn btn-success" id="version_alert_button">Update It Now</button>
-            </div>
-        </div>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content themed">
+      <div class="modal-header">
+        <h5 class="modal-title" id="version-alert-text"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Update It Later
+        </button>
+        <button type="button" class="btn btn-success" id="version_alert_button">
+          Update It Now
+        </button>
+      </div>
     </div>
+  </div>
 </div>
