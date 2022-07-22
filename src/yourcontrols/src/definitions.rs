@@ -310,7 +310,8 @@ struct NumIncrementEntry<T> {
     down_event_name: String,
     down_event_param: Option<T>,
     increment_by: T,
-    condition: Option<Condition>,
+    // A condition object is manually parsed in this implementation
+    // condition: Option<Condition>,
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
     pass_difference: bool,
@@ -661,7 +662,7 @@ impl Definitions {
                 var_data.var_type,
             )?;
 
-            var_data.var_name = var_string.clone();
+            var_data.var_name = var_string;
         }
 
         Ok(())
@@ -1584,7 +1585,7 @@ impl Definitions {
                             &self.lvarstransfer,
                             &self.avarstransfer,
                             mapping.condition.as_ref(),
-                            &value,
+                            value,
                             Some(&data),
                         ) {
                             continue;
@@ -1598,7 +1599,7 @@ impl Definitions {
                             { action.set_new(*new_value, conn, &mut self.lvarstransfer) },
                             {
                                 self.lvarstransfer
-                                    .set(conn, &var_name, value.to_string().as_ref());
+                                    .set(conn, var_name, value.to_string().as_ref());
                             },
                             {}
                         );
