@@ -47,6 +47,7 @@ fn process_payload(
     match &payload {
         // Unused
         Payloads::InvalidName { .. }
+        | Payloads::RendezvousHandshake { .. }
         | Payloads::InvalidVersion { .. }
         | Payloads::PlayerJoined { .. }
         | Payloads::HostingReceived { .. }

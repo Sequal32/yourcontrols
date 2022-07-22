@@ -22,6 +22,7 @@ pub enum Payloads {
     SetHost,
     RequestHosting {
         self_hosted: bool,
+        local_endpoint: Option<SocketAddr>,
     },
     ConnectionDenied {
         reason: String,
@@ -57,6 +58,10 @@ pub enum Payloads {
     // Ready to receive data
     Ready,
     // Hole punching payloads
+    RendezvousHandshake {
+        session_id: String,
+        local_endpoint: Option<SocketAddr>,
+    },
     Handshake {
         session_id: String,
     }, // With hoster
@@ -64,7 +69,7 @@ pub enum Payloads {
         session_id: String,
     },
     AttemptConnection {
-        peer: SocketAddr,
+        peers: Vec<SocketAddr>,
     },
     AttemptHosterConnection {
         peer: SocketAddr,
@@ -99,6 +104,7 @@ fn get_packet_for_message(
         Payloads::Heartbeat {..} |
         Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload_bytes),
         Payloads::PeerEstablished {..} |
+        Payloads::RendezvousHandshake  {..} |
         Payloads::Handshake {..} => Packet::unreliable(target, payload_bytes),
         Payloads::InitHandshake {..} |
         Payloads::PlayerJoined {..} |

@@ -21,66 +21,65 @@ fn process_message(
     servers: &mut Arc<Mutex<Servers>>,
 ) {
     match message {
-        Payloads::Handshake { session_id } if session_id.len() == 5 => {
-            let peer_addr = match sessions.get_socket_info_for_session(&session_id) {
-                Some(info) => info,
-                None => {
-                    // Invalid session
-                    net.send_message(
-                        Payloads::ConnectionDenied {
-                            reason: "Session not found.".to_string(),
-                        },
-                        addr,
-                    )
-                    .ok();
-                    return;
-                }
-            };
-
-            info!(
-                "{} wants to join {}",
-                counters.get_id_for_addr(&addr.ip()),
-                session_id
-            );
-            // Send data to client
-            net.send_message(Payloads::AttemptConnection { peer: *peer_addr }, addr)
-                .ok();
-
-            // Send data to hoster
-            net.send_message(Payloads::AttemptConnection { peer: addr }, *peer_addr)
-                .ok();
-
-            sessions.add_client_to_session(session_id, addr);
-        }
-        Payloads::Handshake { session_id } => {
-            // Hosted server
+        Payloads::RendezvousHandshake {
+            session_id,
+            local_endpoint,
+        } => {
             let state = &mut servers.lock().unwrap().meta_state;
 
-            let server_info = match state.active_servers.get(&session_id) {
-                Some(info) => info,
-                None => {
-                    // Invalid session
-                    net.send_message(
-                        Payloads::ConnectionDenied {
-                            reason: "Session not found.".to_string(),
-                        },
-                        addr,
-                    )
-                    .ok();
-                    return;
-                }
-            };
+            if let Some(server_connection_info) = sessions.get_session_connection_info(&session_id)
+            {
+                // SELF HOSTED SESSION
+                info!(
+                    "{} wants to join {}",
+                    counters.get_id_for_addr(&addr.ip()),
+                    session_id
+                );
+                // Send data to client
+                net.send_message(
+                    Payloads::AttemptConnection {
+                        peers: server_connection_info.hoster_endpoints.clone(),
+                    },
+                    addr,
+                )
+                .ok();
 
-            state.unknown_clients.insert(addr.ip(), session_id);
+                // Send data to hoster
+                net.send_message(
+                    Payloads::AttemptConnection {
+                        peers: vec![local_endpoint, Some(addr)]
+                            .into_iter()
+                            .flatten()
+                            .collect(),
+                    },
+                    server_connection_info.hoster_addr,
+                )
+                .ok();
 
-            net.send_message(
-                Payloads::AttemptHosterConnection {
-                    peer: server_info.address,
-                },
-                addr,
-            )
-            .ok();
+                sessions.add_client_to_session(session_id, addr);
+            } else if let Some(server_info) = state.active_servers.get(&session_id) {
+                // HOSTED SESSION
+                state.unknown_clients.insert(addr.ip(), session_id);
+
+                net.send_message(
+                    Payloads::AttemptHosterConnection {
+                        peer: server_info.address,
+                    },
+                    addr,
+                )
+                .ok();
+            } else {
+                // Invalid session
+                net.send_message(
+                    Payloads::ConnectionDenied {
+                        reason: "Session not found.".to_string(),
+                    },
+                    addr,
+                )
+                .ok();
+            }
         }
+
         Payloads::PeerEstablished { peer } => {
             info!(
                 "{} established connection with {}",
@@ -89,11 +88,20 @@ fn process_message(
             );
         }
 
-        Payloads::RequestHosting { self_hosted } => {
+        Payloads::RequestHosting {
+            self_hosted,
+            local_endpoint,
+        } => {
             let session_id;
 
             if self_hosted {
-                session_id = sessions.map_session_id_to_socket_info(addr);
+                session_id = sessions.map_session_id_to_socket_info(
+                    addr,
+                    vec![local_endpoint, Some(addr)]
+                        .into_iter()
+                        .flatten()
+                        .collect(),
+                );
                 info!(
                     "Self hosted session created with hoster {} as {}",
                     counters.get_id_for_addr(&addr.ip()),
@@ -130,8 +138,13 @@ fn process_message(
                     session_id
                 );
                 // Tell client to handshake with the hoster
-                net.send_message(Payloads::AttemptConnection { peer: hoster_addr }, addr)
-                    .ok();
+                net.send_message(
+                    Payloads::AttemptConnection {
+                        peers: vec![hoster_addr],
+                    },
+                    addr,
+                )
+                .ok();
             }
 
             net.send_message(Payloads::HostingReceived { session_id }, addr)
@@ -186,7 +199,7 @@ pub fn run_rendezvous(servers: Arc<Mutex<Servers>>, port: u16) {
                         info!("{} lost connection, was in session {:?}. Was connected for {} seconds.", counters.get_id_for_addr(&ip), sessions.remove_client_from_session(&addr), counters.get_last_request_seconds(&ip));
                     }
                 }
-                Err(Error::NetEncodeError(e)) => {
+                Err(Error::NetEncodeError(_)) => {
                     // warn!("{} sent invalid data! {:?}", addr, string_data);
                     // counters.increment_request_counter(addr.ip());
                     // TODO: blacklist client

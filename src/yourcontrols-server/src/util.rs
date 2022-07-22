@@ -9,7 +9,9 @@ use rand::prelude::SliceRandom;
 
 const LETTERS: &[u8; 26] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-pub fn get_random_id(length: u8) -> String {
+pub const SESSION_ID_LENGTH: usize = 8;
+
+pub fn get_random_id(length: usize) -> String {
     let mut rng = rand::thread_rng();
 
     let mut code = String::new();

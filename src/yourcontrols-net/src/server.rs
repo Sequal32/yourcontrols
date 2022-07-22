@@ -18,13 +18,16 @@ use std::{
     time::Instant,
 };
 
-use crate::messages::{Message, Payloads, SenderReceiver};
 use crate::util::{get_bind_address, get_rendezvous_server, get_socket_config};
 use crate::util::{
     ClientReceiver, ClientSender, Event, ReceiveMessage, ServerReceiver, ServerSender,
     TransferClient,
 };
 use crate::util::{HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES};
+use crate::{
+    messages::{Message, Payloads, SenderReceiver},
+    util::get_local_endpoints_with_port,
+};
 
 use yourcontrols_types::Error;
 
@@ -134,6 +137,7 @@ impl TransferStruct {
             | Payloads::ConnectionDenied { .. }
             | Payloads::Heartbeat
             | Payloads::SetHost
+            | Payloads::RendezvousHandshake { .. }
             | Payloads::PeerEstablished { .. } => return, // No client should be able to send this
             // No processing needed
             Payloads::Update { .. } => {}
@@ -263,9 +267,21 @@ impl TransferStruct {
                     .try_send(ReceiveMessage::Event(Event::ConnectionEstablished))
                     .ok();
             }
-            Payloads::AttemptConnection { peer } => {
-                info!("[NETWORK] Port {} attempting connection.", peer.port());
-                self.clients_to_holepunch.push(HolePunchSession::new(*peer));
+            Payloads::AttemptConnection { peers } => {
+                info!(
+                    "[NETWORK] Peers attempted connection {}",
+                    peers
+                        .iter()
+                        .map(|x| x.port().to_string())
+                        .collect::<Vec<String>>()
+                        .join(", ")
+                );
+                self.clients_to_holepunch.append(
+                    &mut peers
+                        .iter()
+                        .map(|peer| HolePunchSession::new(*peer))
+                        .collect(),
+                );
                 should_relay = false;
             }
         }
@@ -479,7 +495,10 @@ impl Server {
     }
 
     fn run(&mut self, socket: Socket, rendezvous: Option<SocketAddr>) -> Result<(), Error> {
-        info!("[NETWORK] Listening on {:?}", socket.local_addr());
+        let local_endpoint = socket.local_addr().unwrap();
+        let port = local_endpoint.port();
+
+        info!("[NETWORK] Listening on {:?}", local_endpoint);
 
         let mut transfer = TransferStruct {
             // Holepunching
@@ -506,7 +525,13 @@ impl Server {
             // Send handshake payload to rendezvous server to get session ID
             transfer
                 .net
-                .send_message(Payloads::RequestHosting { self_hosted: true }, addr)
+                .send_message(
+                    Payloads::RequestHosting {
+                        self_hosted: true,
+                        local_endpoint: get_local_endpoints_with_port(port),
+                    },
+                    addr,
+                )
                 .ok();
         } else {
             // If not hole punching, then tell the application that the server is immediately ready

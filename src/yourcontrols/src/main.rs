@@ -79,7 +79,7 @@ fn calculate_update_rate(update_rate: u16) -> f64 {
 fn start_client(
     timeout: u64,
     username: String,
-    session_id: String,
+    session_id: Option<String>,
     version: String,
     isipv6: bool,
     ip: Option<IpAddr>,
@@ -101,9 +101,9 @@ fn start_client(
                 None => ip.unwrap(),
             };
             // A port must've been passed with direct connect
-            client.start(actual_ip, port.unwrap(), Some(session_id))
+            client.start(actual_ip, port.unwrap(), session_id)
         }
-        ConnectionMethod::CloudServer => client.start_with_hole_punch(session_id, isipv6),
+        ConnectionMethod::CloudServer => client.start_with_hole_punch(session_id.unwrap(), isipv6),
         ConnectionMethod::Relay => panic!("Never should be reached!"),
     };
 
@@ -224,7 +224,9 @@ fn main() {
     let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions| {
         // Connect to simconnect
         *definitions = Definitions::new();
-        // let connected = conn.connect("YourControls");
+        #[cfg(not(feature = "skip_sim_connect"))]
+        let connected = conn.connect("YourControls");
+        #[cfg(feature = "skip_sim_connect")]
         let connected = true;
         if connected {
             // Display not connected to server message
@@ -275,6 +277,7 @@ fn main() {
                     ReceiveMessage::Payload(payload) => match payload {
                         // Unused
                         Payloads::Handshake { .. }
+                        | Payloads::RendezvousHandshake { .. }
                         | Payloads::HostingReceived { .. }
                         | Payloads::AttemptConnection { .. }
                         | Payloads::PeerEstablished { .. }
@@ -462,7 +465,7 @@ fn main() {
                             match start_client(
                                 config.conn_timeout,
                                 client.get_server_name().to_string(),
-                                client.get_session_id().unwrap(),
+                                client.get_session_id(),
                                 updater.get_version().to_string(),
                                 false,
                                 Some(peer.ip()),

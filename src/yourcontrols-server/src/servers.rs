@@ -4,7 +4,7 @@ use std::{
     time::Instant,
 };
 
-use crate::util::get_random_id;
+use crate::util::{get_random_id, SESSION_ID_LENGTH};
 
 pub struct Client {
     pub addr: SocketAddr,
@@ -26,15 +26,6 @@ impl ServerState {
             heartbeat_instant: Instant::now(),
             started_at: Instant::now(),
         }
-    }
-
-    pub fn get_from_addr(&mut self, addr: SocketAddr) -> Option<&mut Client> {
-        for (_, client) in self.clients.iter_mut() {
-            if client.addr == addr {
-                return Some(client);
-            }
-        }
-        None
     }
 }
 
@@ -88,7 +79,7 @@ impl Servers {
         address: SocketAddr,
         addr_who_requested: SocketAddr,
     ) -> String {
-        let id = get_random_id(6);
+        let id = get_random_id(SESSION_ID_LENGTH);
 
         self.meta_state
             .active_servers
@@ -106,9 +97,5 @@ impl Servers {
     pub fn remove_server(&mut self, session_id: &String) {
         self.meta_state.active_servers.remove(session_id);
         self.server_states.remove(session_id);
-    }
-
-    pub fn get_clients_connected_to_session(&self) -> usize {
-        self.meta_state.clients_connected.len()
     }
 }

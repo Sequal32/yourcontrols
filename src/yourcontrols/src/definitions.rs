@@ -1648,6 +1648,7 @@ impl Definitions {
         self.physics_corrector.on_connected(conn);
 
         // Might be running another instance
+        #[cfg(not(feature = "skip_sim_connect"))]
         self.jstransfer.start().map_err(|_| ())?;
 
         // Get aircraft data
