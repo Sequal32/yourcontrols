@@ -66,6 +66,9 @@ pub enum Payloads {
     AttemptConnection {
         peer: SocketAddr,
     },
+    AttemptHosterConnection {
+        peer: SocketAddr,
+    },
     PeerEstablished {
         peer: SocketAddr,
     },
@@ -86,6 +89,7 @@ fn get_packet_for_message(
     match message {
         // Unused
         Payloads::AttemptConnection {..} |
+        Payloads::AttemptHosterConnection {..} |
         Payloads::HostingReceived {..} |
         Payloads::SetHost {..} |
         Payloads::ConnectionDenied {..} |

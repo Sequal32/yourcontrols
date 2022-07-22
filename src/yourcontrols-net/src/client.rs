@@ -64,6 +64,7 @@ impl TransferStruct {
             Payloads::Update { .. } |
             Payloads::ConnectionDenied { .. } |
             Payloads::SetHost |
+            Payloads::AttemptHosterConnection {..} |
             Payloads::Heartbeat => {}
             // Used
             Payloads::InvalidVersion { server_version } => {
@@ -224,10 +225,15 @@ impl Client {
         )
     }
 
-    pub fn start(&mut self, ip: IpAddr, port: u16) -> Result<(), Error> {
+    pub fn start(
+        &mut self,
+        ip: IpAddr,
+        port: u16,
+        session_id: Option<String>, // Only used when connecting to the hoster as a secret password
+    ) -> Result<(), Error> {
         self.run(
             ip.is_ipv6(),
-            None,
+            session_id,
             None,
             Some(match_ip_address_to_socket_addr(ip, port)),
         )

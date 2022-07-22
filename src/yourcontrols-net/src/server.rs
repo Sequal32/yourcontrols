@@ -124,6 +124,7 @@ impl TransferStruct {
         match &payload {
             // Unused for server
             Payloads::InvalidName { .. }
+            | Payloads::AttemptHosterConnection { .. }
             | Payloads::InvalidVersion { .. }
             | Payloads::PlayerJoined { .. }
             | Payloads::PlayerLeft { .. }

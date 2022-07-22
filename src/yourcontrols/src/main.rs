@@ -101,7 +101,7 @@ fn start_client(
                 None => ip.unwrap(),
             };
             // A port must've been passed with direct connect
-            client.start(actual_ip, port.unwrap())
+            client.start(actual_ip, port.unwrap(), Some(session_id))
         }
         ConnectionMethod::CloudServer => client.start_with_hole_punch(session_id, isipv6),
         ConnectionMethod::Relay => panic!("Never should be reached!"),
@@ -224,8 +224,8 @@ fn main() {
     let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions| {
         // Connect to simconnect
         *definitions = Definitions::new();
-        let connected = conn.connect("YourControls");
-        // let connected = true;
+        // let connected = conn.connect("YourControls");
+        let connected = true;
         if connected {
             // Display not connected to server message
             info!("[SIM] Connected to SimConnect.");
@@ -457,6 +457,33 @@ fn main() {
                             }
                             // Start the connection timer to wait to send the ready payload
                             connection_time = Some(Instant::now());
+                        }
+                        Payloads::AttemptHosterConnection { peer } => {
+                            match start_client(
+                                config.conn_timeout,
+                                client.get_server_name().to_string(),
+                                client.get_session_id().unwrap(),
+                                updater.get_version().to_string(),
+                                false,
+                                Some(peer.ip()),
+                                None,
+                                Some(peer.port()),
+                                ConnectionMethod::Direct,
+                            ) {
+                                Ok(new_client) => {
+                                    info!(
+                                        "[NETWORK] New client started to connect to hosted server."
+                                    );
+                                    *client = Box::new(new_client);
+                                }
+                                Err(e) => {
+                                    app_interface.client_fail(e.to_string().as_str());
+                                    error!(
+                                        "[NETWORK] Could not start new hoster client! Reason: {}",
+                                        e
+                                    );
+                                }
+                            };
                         }
                     },
                     ReceiveMessage::Event(e) => match e {
