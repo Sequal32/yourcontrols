@@ -35,7 +35,7 @@ pub enum AppMessage {
     },
     Connect {
         username: String,
-        session_id: String,
+        session_id: Option<String>,
         isipv6: bool,
         ip: Option<IpAddr>,
         hostname: Option<String>,

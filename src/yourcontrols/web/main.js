@@ -521,6 +521,7 @@ $("#main-form-join").submit(function (e) {
             return
         }
 
+        data["session_id"] = null // Joining directly should never include a session_id
         data["port"] = parseInt(joinPortInput.value)
     }
 

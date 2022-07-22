@@ -110,11 +110,13 @@ impl ServerState {
         match &payload {
             // Unused
             Payloads::InvalidName { .. }
+            | Payloads::RendezvousHandshake { .. }
             | Payloads::InvalidVersion { .. }
             | Payloads::PlayerJoined { .. }
             | Payloads::HostingReceived { .. }
             | Payloads::SetHost { .. }
             | Payloads::AttemptConnection { .. }
+            | Payloads::AttemptHosterConnection { .. }
             | Payloads::RequestHosting { .. }
             | Payloads::PeerEstablished { .. }
             | Payloads::ConnectionDenied { .. }
