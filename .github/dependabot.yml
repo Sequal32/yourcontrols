@@ -1,0 +1,14 @@
+version: 2
+updates:
+- package-ecosystem: cargo
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: simplelog
+    versions:
+    - 0.10.0
+  - dependency-name: zstd
+    versions:
+    - 0.7.0+zstd.1.4.9
