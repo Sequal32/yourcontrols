@@ -168,7 +168,7 @@ pub fn run_rendezvous(servers: Arc<Mutex<Servers>>, port: u16) {
     let mut info_timer = Instant::now();
     let mut servers = servers;
 
-    info!("Server started!");
+    info!("Server started on port {}!", port);
 
     loop {
         net.poll();

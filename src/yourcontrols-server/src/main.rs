@@ -25,6 +25,14 @@ pub fn main() {
     let servers = Arc::new(Mutex::new(Servers::new()));
     let servers_clone = servers.clone();
 
-    thread::spawn(|| run_hoster(servers_clone, 5556));
-    run_rendezvous(servers, 5555);
+    thread::spawn(|| {
+        run_hoster(
+            servers_clone,
+            dotenv::var("HOSTER_PORT").unwrap().parse().unwrap(),
+        )
+    });
+    run_rendezvous(
+        servers,
+        dotenv::var("SERVER_PORT").unwrap().parse().unwrap(),
+    );
 }

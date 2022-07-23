@@ -219,6 +219,12 @@ pub fn run_hoster(servers: Arc<Mutex<Servers>>, port: u16) {
 
     let mut cleanup_timer = Instant::now();
 
+    info!(
+        "Hoster started on port {}! Connect address {}",
+        port,
+        dotenv::var("HOSTER_IP").unwrap()
+    );
+
     loop {
         net.poll();
 
@@ -232,9 +238,7 @@ pub fn run_hoster(servers: Arc<Mutex<Servers>>, port: u16) {
                         if let Some(previous_session_id) =
                             servers.meta_state.unknown_clients.get(&addr.ip()).cloned()
                         {
-                            info!("{} {}", session_id, previous_session_id);
                             if session_id == &previous_session_id {
-                                info!("NEW IP ADDR ASSIGNED");
                                 servers.meta_state.unknown_clients.remove(&addr.ip());
                                 servers
                                     .meta_state
