@@ -1,29 +1,39 @@
-# Version 1.3.0
+# Version 1.5.1
 
 include:
   - definitions/modules/Avionics/AS530.yaml
+  - definitions/modules/Avionics/GTN750.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-  - # Fuel
+  - # Lights
     type: NumSet
-    var_name: A:FUEL TANK SELECTOR:1
-    var_units: Enum
-    var_type: i32
-    event_name: FUEL_SELECTOR_SET
-    event_param: 1
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI:2
+    var_units: Bool
+    var_type: f64
+    event_name: TAXI_LIGHTS_SET
+    event_param: 2
 
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
@@ -32,10 +42,10 @@ shared:
     event_param: 1
   -
     type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:1
+    var_name: A:LIGHT POTENTIOMETER:1
     var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
     event_param: 1
     index_reversed: true
   -
@@ -47,12 +57,33 @@ shared:
     event_param: 2
   -
     type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:2
+    var_name: A:LIGHT POTENTIOMETER:2
     var_units: Percent
-    var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:4
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 4
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -70,28 +101,59 @@ shared:
     event_param: 5
     index_reversed: true
 
-  - # Exit
-    type: event
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:0
+    var_units: Number
+    var_type: f64
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 0
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:1
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:4
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:5
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 5
 
-  - # LVAR's
+  - # Failures
     type: var
-    var_name: L:NAV1_RADIO_WHOLE_INC
-  -
-    type: var
-    var_name: L:NAV1_RADIO_WHOLE_DEC
-  -
-    type: var
-    var_name: L:NAV1_RADIO_FRACT_INC
-  -
-    type: var
-    var_name: L:NAV1_RADIO_FRACT_DEC
-  -
-    type: var
-    var_name: L:NAV1StandbyFreq
-  -
-    type: var
-    var_name: L:NAV1StandbyFreqTemp
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+
+# - # LVAR's
+#   type: var
+#   var_name: L:NAV1_RADIO_WHOLE_INC
+# -
+#   type: var
+#   var_name: L:NAV1StandbyFreq
+# -
+#   type: var
+#   var_name: L:NAV1StandbyFreqTemp
+# -
+#   type: var
+#   var_name: L:NAV1_RADIO_WHOLE_DEC
+# -
+#   type: var
+#   var_name: L:NAV1_RADIO_FRACT_INC
+# -
+#   type: var
+#   var_name: L:NAV1_RADIO_FRACT_DEC
   -
     type: var
     var_name: L:GAUGE_DME62A1_INIT
@@ -106,28 +168,16 @@ shared:
     var_name: L:BTN_PRESS_CLOSE
   -
     type: var
-    var_name: L:M20R_SWITCH_XPDR
-  -
-    type: var
-    var_name: L:POINTER_TCODE
-  -
-    type: var
-    var_name: L:TCODE1
-  -
-    type: var
-    var_name: L:TCODE2
-  -
-    type: var
-    var_name: L:TCODE3
-  -
-    type: var
-    var_name: L:TCODE4
-  -
-    type: var
-    var_name: L:BUFFER_BTN_FMC
-  -
-    type: var
     var_name: L:SWITCH_COMM2_ONOFF
+# -
+#   type: var
+#   var_name: L:TimeClockDig
+# -
+#   type: var
+#   var_name: L:HoursTimeDig
+# -
+#   type: var
+#   var_name: L:MinutesTimeDig
   -
     type: var
     var_name: L:GAUGE_CLOCK_INIT2
@@ -140,12 +190,24 @@ shared:
   -
     type: var
     var_name: L:Clock Stopwatch
+# -
+#   type: var
+#   var_name: L:Stopwatch Last Abs Time
+# -
+#   type: var
+#   var_name: L:Stopwatch Seconds Elapsed
   -
     type: var
-    var_name: L:M20R_BTN_TEST_PUSH_VDC
+    var_name: L:M20R_BTN_TOGGLE_VDCAMPS
   -
     type: var
     var_name: L:GAUGE_UPDATE_INIT
+# -
+#   type: var
+#   var_name: L:VAR_HEAD_COPILOTO
+# -
+#   type: var
+#   var_name: L:VAR_HEAD_PILOTO
   -
     type: var
     var_name: L:SPOILERS_HANDLE_POSITION_DOWN
@@ -158,39 +220,63 @@ shared:
   -
     type: var
     var_name: L:BUFFER_P100_SpeedBrake2
-  -
-    type: var
-    var_name: L:VIBRATION_STARTED
+# -
+#   type: var
+#   var_name: L:VIBRATION_STARTED
   -
     type: var
     var_name: L:Ventana_1
+# -
+#   type: var
+#   var_name: L:ClickSoundCar12
+# -
+#   type: var
+#   var_name: L:CLICKSOUNDCAR12_TIMER
+# -
+#   type: var
+#   var_name: L:ClickSoundCar13
+# -
+#   type: var
+#   var_name: L:CLICKSOUNDCAR13_TIMER
   -
     type: var
     var_name: L:ASD_SWITCH_ELT
+# -
+#   type: var
+#   var_name: L:ClickSoundCar4
   -
     type: var
     var_name: L:SW_TRANS_POS
   -
     type: var
     var_name: L:SW_TRANS_LIGHT
-  -
-    type: var
-    var_name: L:M20R_SWITCH_HIGHT_BOOST
-  -
-    type: var
-    var_name: L:M20R_SWITCH_BOOST_PUMP
-  -
-    type: var
-    var_name: L:FUEL_TANK1_SELECTOR_INIT
-  -
-    type: var
-    var_name: L:KNOB_FUEL_SELECTOR
+# -
+#   type: var
+#   var_name: L:Time_Cont_car
+# -
+#   type: var
+#   var_name: L:VIS_STROBE_CAR_L_ON
+# -
+#   type: var
+#   var_name: L:VIS_STROBE_CAR_R_ON
+# -
+#   type: var
+#   var_name: L:VIS_STROBE_CAR_C_ON
+# -
+#   type: var
+#   var_name: L:VIS_BEACON_CAR
+# -
+#   type: var
+#   var_name: L:VIS_BEACON_CAR2
   -
     type: var
     var_name: L:GAUGE_CLOCK_M20R_INIT
   -
     type: var
     var_name: L:VAR_TEST_AUX
+  -
+    type: var
+    var_name: L:FUEL_TANK1_SELECTOR_INIT
   -
     type: var
     var_name: L:TOGGLE_FUEL_VALVE_ENG1
@@ -223,13 +309,34 @@ shared:
     var_name: L:ASD_SWITCH_C2_AUDIO_MKE1
   -
     type: var
+    var_name: L:TCODE1
+  -
+    type: var
+    var_name: L:TCODE2
+  -
+    type: var
+    var_name: L:TCODE3
+  -
+    type: var
+    var_name: L:TCODE4
+  -
+    type: var
     var_name: L:key_XPDR_Press
+  -
+    type: var
+    var_name: L:POINTER_TCODE
   -
     type: var
     var_name: L:STATEVIEW
   -
     type: var
+    var_name: L:M20R_SWITCH_XPDR
+  -
+    type: var
     var_name: L:AUTOPILOT MASTER
+# -
+#   type: var
+#   var_name: L:Time_Cont_car_ALT_ALERT
   -
     type: var
     var_name: L:ALT_VS_SEL_ON
@@ -260,6 +367,9 @@ shared:
   -
     type: var
     var_name: L:GAUGE_ALT_ALERT_LIGHT
+# -
+#   type: var
+#   var_name: L:VS_HOLD_ALT
   -
     type: var
     var_name: L:AP_VS_VAR_SET_ENGLISH
@@ -272,6 +382,9 @@ shared:
   -
     type: var
     var_name: L:GAUGE_ALT_ALERT_ONE
+# -
+#   type: var
+#   var_name: L:clicksoundcar5
   -
     type: var
     var_name: L:GAUGE_ALT_ALERT_INIT
@@ -292,10 +405,28 @@ shared:
     var_name: L:GAUGE_ALT_ALERT_MODE
   -
     type: var
+    var_name: L:KASVsAltWheelUP
+  -
+    type: var
     var_name: L:BUFFER_PC12_Altknob
   -
     type: var
+    var_name: L:KASVsAltWheelUP1000
+  -
+    type: var
+    var_name: L:KASVsAltWheelDN
+  -
+    type: var
+    var_name: L:KASVsAltWheelDN1000
+  -
+    type: var
+    var_name: L:KASVsAltWheelPUSHINNER
+  -
+    type: var
     var_name: L:KAS297_ALT_ARM_PUSH
+  -
+    type: var
+    var_name: L:BUFFER_BTN_FMC
   -
     type: var
     var_name: L:NAV
@@ -452,6 +583,234 @@ shared:
   -
     type: var
     var_name: L:COLD_AND_DARK_AUX_ST
+# -
+#   type: var
+#   var_name: L:TABLET_BTN_PILOT_VIS
+# -
+#   type: var
+#   var_name: L:TABLET_BTN_COPILOT_VIS
+# -
+#   type: var
+#   var_name: L:PILOT_VIS
+# -
+#   type: var
+#   var_name: L:COPILOT_VIS
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE_OLD
+# -
+#   type: var
+#   var_name: L:CARENADO_GNS_GTN_VIS
+# -
+#   type: var
+#   var_name: L:GTN750_INT_HIDDEN
+# -
+#   type: var
+#   var_name: L:AS530_HIDDEN
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_TIMER
+  -
+    type: var
+    var_name: L:VAR_SW_TABLET
+  -
+    type: var
+    var_name: L:TABLET_ANIM
+# -
+#   type: var
+#   var_name: L:GENERAL_ENG1_THROTTLE_LEVER_POSITION_LAST
+# -
+#   type: var
+#   var_name: L:BUFFER_LEVEL_THR_CLICK_FLAG1
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C1
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C2
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C3
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C4
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C5
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C6
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C7
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C8
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C9
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C10
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C11
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C12
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C13
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C14
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C15
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C16
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C17
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C18
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C19
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C20
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C21
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C22
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C23
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C24
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C25
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C26
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C27
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C28
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C29
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C30
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C31
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C32
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C33
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C34
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C35
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C36
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C37
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C38
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C39
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C40
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C41
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C42
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C43
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C44
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C45
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C46
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C47
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C48
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C49
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C50
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_C51
+  -
+    type: var
+    var_name: L:AUX_GPS_NAV1
+# -
+#   type: var
+#   var_name: L:AUX_BUFFER_LEVEL_THR_CLICK_FLAG1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AP_PITCH_REF_ANIM_TIMER2
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_ALTERNATOR1
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_ALTERNATOR1_AMP
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_BAT_LOAD1_AMP
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_MSTER_BATTERY
+  -
+    type: var
+    var_name: L:AUX_ELECTRICAL_CIRCUIT_GENERAL_PANEL_ON
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_BAT_VOLT
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_GENALT_BUS_VOLT1
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_MAIN_BUS_AMP
   -
     type: var
     var_name: L:TABLET_BTN_STATIC_ELEMENT
@@ -463,16 +822,13 @@ shared:
     var_name: L:TABLET_BTN_EXT_PWR
   -
     type: var
-    var_name: L:TABLET_BTN_PILOT_VIS
-  -
-    type: var
-    var_name: L:TABLET_BTN_COPILOT_VIS
-  -
-    type: var
     var_name: L:TABLET_BTN_COLD_AND_DARK
   -
     type: var
     var_name: L:TABLET_BTN_DONE
+# -
+#   type: var
+#   var_name: L:COLD_AND_DARK_TIMER
   -
     type: var
     var_name: L:M20R_SWITCH_VENT
@@ -494,9 +850,6 @@ shared:
   -
     type: var
     var_name: L:M20R_BTN_GR_SAFETY_BY_PASS
-  -
-    type: var
-    var_name: L:BTN_PRESS_ENGINE_AUTO_SHUTDOWN
   -
     type: var
     var_name: L:ASD_KNOB_DIMM_SWITCH_SENECA
@@ -527,369 +880,330 @@ shared:
   -
     type: var
     var_name: L:TABLET_BTN_BAGAGE_DOOR
-  -
-    type: var
-    var_name: L:GPS_SWAPCOM
-  -
-    type: var
-    var_name: L:GPS_SWAPNAV
-  -
-    type: var
-    var_name: L:GPS_RNG_UP
-  -
-    type: var
-    var_name: L:GPS_RNG_DOWN
-  -
-    type: var
-    var_name: L:GPS_CDI
-  -
-    type: var
-    var_name: L:GPS_OBS
-  -
-    type: var
-    var_name: L:GPS_MSG
-  -
-    type: var
-    var_name: L:GPS_FPL
-  -
-    type: var
-    var_name: L:GPS_VNAV
-  -
-    type: var
-    var_name: L:GPS_PROC
-  -
-    type: var
-    var_name: L:GPS_ENT
-  -
-    type: var
-    var_name: L:GPS_CLR
-  -
-    type: var
-    var_name: L:GPS_MENU
-  -
-    type: var
-    var_name: L:GPS_DIR
-  -
-    type: var
-    var_name: L:TimeoutON
-  -
-    type: var
-    var_name: L:SWAPNAVCOM
-  -
-    type: var
-    var_name: L:TimeoutSWAP
-  -
-    type: var
-    var_name: L:GPS_CRSR
-  -
-    type: var
-    var_name: L:GPS_WHOLE
-  -
-    type: var
-    var_name: L:KNOB_GPS_WHOLE_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:GPS_FRAC
-  -
-    type: var
-    var_name: L:KNOB_GPS_FRAC_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:GPS_GROUPS
-  -
-    type: var
-    var_name: L:KNOB_GPS_GROUPS_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:GPS_PAGE
-  -
-    type: var
-    var_name: L:KNOB_GPS_PAGE_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:ASD_KNOB_ADF_KR87_OUTER_SWAP
-  -
-    type: var
-    var_name: L:BUFFER_BTN_DIM
-  -
-    type: var
-    var_name: L:ASD_KNOB_ADF_KR87_OUTER
-  -
-    type: var
-    var_name: L:ASD_KNOB_ADF_KR87_INNER_SWAP
-  -
-    type: var
-    var_name: L:ASD_KNOB_ADF_KR87_INNER
-  -
-    type: var
-    var_name: L:SWITCH_ADF1_ONOFF
-  -
-    type: var
-    var_name: L:Radio_ON_OFF_BTN_ADF
-  -
-    type: var
-    var_name: L:Radio_ON_OFF_BTN_BFO
-  -
-    type: var
-    var_name: L:Radio_ON_OFF_BTN_FLT_ET
-  -
-    type: var
-    var_name: L:TimeClockStartSL
-  -
-    type: var
-    var_name: L:CHONOMETER_MODESL
-  -
-    type: var
-    var_name: L:VarCom2KHz
-  -
-    type: var
-    var_name: L:KNOB_COM2_KHZ_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:VarCom2MHz
-  -
-    type: var
-    var_name: L:KNOB_COM2_MHZ_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:VarNav2MHz
-  -
-    type: var
-    var_name: L:KNOB_NAV2_MHZ_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:VarCom1KHz
-  -
-    type: var
-    var_name: L:KNOB_NAV2_KHZ_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:ST_Ventana
-  -
-    type: var
-    var_name: L:NEEDLE_ASI_TAS
-  -
-    type: var
-    var_name: L:KNOB_TAS_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:KNOB_NAV2_OBS_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:KNOB_GYRO_HEADING_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:KNOB_ADF_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:KNOB_NAV1_OBS_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:AnimVar_kohlsman
-  -
-    type: var
-    var_name: L:KNOB_KOHLSMAN_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:ASD_SWITCH_DUMMY4_TAPA_EMB500
-  -
-    type: var
-    var_name: L:ASD_M20R_DUMMY_DIM_BRT_METAL
-  -
-    type: var
-    var_name: L:ASD_SWITCH_FLAP_DIR
-  -
-    type: var
-    var_name: L:LEVER_CABIN_VENT_M20R
-  -
-    type: var
-    var_name: L:LEVER_CABIN_HEAT_M20R
-  -
-    type: var
-    var_name: L:LEVER_DEFROST_AIR_M20R
-  -
-    type: var
-    var_name: L:LEVER_ALT_AIR_M20R
-  -
-    type: var
-    var_name: L:KNOB_RADIO_VAR
-  -
-    type: var
-    var_name: L:KNOB_RADIO_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:M20R_SWITCH_LGT_BOTPANEL
-  -
-    type: var
-    var_name: L:M20R_SWITCH_DUMMY_1_LIGHT
-  -
-    type: var
-    var_name: L:LEVER_FUEL_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:M20R_SWITCH_STANDBY_VACUUM
-  -
-    type: var
-    var_name: L:M20R_SWITCH_ELEV_TRIM
-  -
-    type: var
-    var_name: L:M20R_KNOB_RADIO_LIGHT
-  -
-    type: var
-    var_name: L:M20R_KNOB_INSTRUMENT_GLARESHIELD
-  -
-    type: var
-    var_name: L:M20R_SWITCH_COPILOT_HEADSET
-  -
-    type: var
-    var_name: L:KNOB_FUELFLOWDIG_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:M20R_BTN_GAL_USED_REM
-  -
-    type: var
-    var_name: L:M20R_BTN_FULL_ADD_FUEL
-  -
-    type: var
-    var_name: L:M20R_BTN_AP_SYNC
-  -
-    type: var
-    var_name: L:M20R_BTN_CWS
-  -
-    type: var
-    var_name: L:VARKNOB_KASVSALT_INNER
-  -
-    type: var
-    var_name: L:KNOB_KAS_VS_ALT_INNER_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:VARKNOB_KASVSALT
-  -
-    type: var
-    var_name: L:KNOB_KAS_VS_ALT_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:ARMON
-  -
-    type: var
-    var_name: L:TRIMAPDN
-  -
-    type: var
-    var_name: L:VSIAPDN
-  -
-    type: var
-    var_name: L:TRIMAPUP
-  -
-    type: var
-    var_name: L:VSIAPUP
-  -
-    type: var
-    var_name: L:VSMODE
-  -
-    type: var
-    var_name: L:Trans
-  -
-    type: var
-    var_name: L:M20R_POWER_LIGHTS
-  -
-    type: var
-    var_name: L:BTN_AUDIO_PA
-  -
-    type: var
-    var_name: L:BTN_AUDIO_CREW
-  -
-    type: var
-    var_name: L:BTN_AUDIO_SENS
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
   -
     type: var
     var_name: L:BTN_COM1_MIC
   -
     type: var
-    var_name: L:BTN_COM2_MIC
-  -
-    type: var
-    var_name: L:SWITCH_MUSIC_CREW
-  -
-    type: var
-    var_name: L:SWITCH_BAT1_BAT2
-  -
-    type: var
-    var_name: L:KNOB_VOL1
-  -
-    type: var
-    var_name: L:KNOB_VOL1_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:KNOB_VOL2
-  -
-    type: var
-    var_name: L:KNOB_VOL2_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:KNOB_VOL3
-  -
-    type: var
-    var_name: L:KNOB_VOL3_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:KNOB_DME1
-  -
-    type: var
-    var_name: L:KNOB_DME1_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:KNOB_DME2
-  -
-    type: var
-    var_name: L:KNOB_DME2_MOUSEDOWNPOS
-  -
-    type: var
-    var_name: L:COPILOT_VIS
-  -
-    type: var
-    var_name: L:PILOT_VIS
+    var_name: L:BTN_AUDIO_SENS
   -
     type: var
     var_name: L:COSASBOOL
   -
     type: var
     var_name: L:TABLET_BTN_PILOT_DOOR
+# -
+#   type: var
+#   var_name: L:YokePilot
+# -
+#   type: var
+#   var_name: L:YokeCopilot
   -
     type: var
-    var_name: L:XMLVAR_ADFFrequencyToggle
+    var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
-    var_name: L:TABLET_BTN_NEXT
+    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+  -
+    type: var
+    var_name: L:ASD_BTN_M20R_TEST_ANNUNCIATOR_TIMER
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_ELECTRICAL_Switch_Power12V_ON
+  -
+    type: var
+    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:DME_DUMMY_KNOB_SOUND
+  -
+    type: var
+    var_name: L:GAUGE_PUSH_MODE_VS
+# -
+#   type: var
+#   var_name: L:XMLVAR_AP_PITCH_REF_ANIM_TIMER
+# -
+#   type: var
+#   var_name: L:XMLVAR_AP_PITCH_REF_ANIM
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:AP_DUMMY_ROCKET_SWITCH_SOUND
+  -
+    type: var
+    var_name: L:M20R_btn_safety_by_pass
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:M20R_SWITCH_STANDBY_VACUUM
+  -
+    type: var
+    var_name: L:M20R_SWITCH_BOOST_PUMP
+  -
+    type: var
+    var_name: L:M20R_SWITCH_HIGHT_BOOST
+  -
+    type: var
+    var_name: L:XML_M20R_switch_brg_dimm
+  -
+    type: var
+    var_name: L:M20R_switch_select_hsi
+  -
+    type: var
+    var_name: L:VARKNOB_KASVSALT_INNER
+  -
+    type: var
+    var_name: L:VARKNOB_KASVSALT
+# -
+#   type: var
+#   var_name: L:NEEDLE_ASI_TAS
+  -
+    type: var
+    var_name: L:KNOB_VOL1
+  -
+    type: var
+    var_name: L:KNOB_VOL2
+  -
+    type: var
+    var_name: L:KNOB_VOL3
+  -
+    type: var
+    var_name: L:KNOB_VOL4
+  -
+    type: var
+    var_name: L:KNOB_DME2
+  -
+    type: var
+    var_name: L:KNOB_DME1
+  -
+    type: var
+    var_name: L:Tapas_switch_hight_boost
+  -
+    type: var
+    var_name: L:CUSTOM_SWITCH_Master_Inst_Light
+  -
+    type: var
+    var_name: L:lever_defrost_air_M20R
+  -
+    type: var
+    var_name: L:ASD_LEVER_C182T_DEFROST
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+  -
+    type: var
+    var_name: L:INSTRUMENT_ADF
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_5
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_3
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_4
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_2
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_2
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_RECOGNITION_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:DEICE_Propeller_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
   -
     type: var
     var_name: L:TABLET_BTN_BACK
+  -
+    type: var
+    var_name: L:TABLET_BTN_NEXT
 # -
 #   type: var
 #   var_name: L:AS530_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS530_State
-
-# - # Don't sync
-#   type: var
-#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+  -
+    type: var
+    var_name: L:KX155A_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KX155A_2_State
+  -
+    type: var
+    var_name: L:KR87_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KR87_State
+  -
+    type: var
+    var_name: L:KT76C_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KT76C_State
 # -
 #   type: var
-#   var_name: L:XMLVAR_CabinHeat_Position_1
+#   var_name: L:GTN750_INT_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:XMLVAR_CabinAir_Position_1
+#   var_name: L:GTN750_INT_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64

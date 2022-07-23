@@ -46,7 +46,10 @@ shared:
     var_type: i32
     event_name: AVIONICS_MASTER_SET
   -
-    type: event
+    type: ToggleSwitch
+    var_name: A:AVIONICS MASTER SWITCH
+    var_units: Bool
+    var_type: bool
     event_name: TOGGLE_AVIONICS_MASTER
 
   - # ASOBO_ELECTRICAL_Switch_Alternator_Template
@@ -57,7 +60,10 @@ shared:
     event_name: ALTERNATOR_SET
     event_param: 1
   -
-    type: event
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
     event_name: TOGGLE_ALTERNATOR1
   -
     type: NumSet
@@ -67,7 +73,10 @@ shared:
     event_name: ALTERNATOR_SET
     event_param: 2
   -
-    type: event
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: bool
     event_name: TOGGLE_ALTERNATOR2
 
   - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
@@ -76,39 +85,47 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: SET_EXTERNAL_POWER
+    index_reversed: true
     event_param: 1
   -
-    type: event
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
+    index_reversed: true
+    event_param: 1
 
   - # ASOBO_ELECTRICAL_Push_Starter_Template
-    type: var
+    type: NumSet
     var_name: A:GENERAL ENG STARTER:1
-    var_units: Number
+    var_units: Bool
     var_type: i32
+    event_name: STARTER1_SET
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER2_SET
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER2
   -
     type: event
     event_name: SET_STARTER1_HELD
   -
-    type: var
-    var_name: A:GENERAL ENG STARTER:2
-    var_units: Number
-    var_type: i32
-  -
     type: event
     event_name: SET_STARTER2_HELD
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_IsDown
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_State_MinReleaseTime
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_IsHeld
 
   - # ASOBO_ELECTRICAL_Switch_Magneto_Template
     type: NumSet
@@ -140,6 +157,43 @@ shared:
   -
     type: event
     event_name: MAGNETO2_SET # backup for position
+
+  - # LVAR's
+    type: var
+    var_name: L:XMLVAR_Starter_State
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State_IsDown
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_State_MinReleaseTime
+  -
+    type: var
+    var_name: L:XMLVAR_Starter
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_EndTimeDown
+  -
+    type: var
+    var_name: L:XMLVAR_Starter1
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_1_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Starter1_EndTimeDown
+  -
+    type: var
+    var_name: L:XMLVAR_Starter2
+  -
+    type: var
+    var_name: L:XMLVAR_Starter_2_IsHeld
+  -
+    type: var
+    var_name: L:XMLVAR_Starter2_EndTimeDown
   -
     type: var
     var_name: L:XMLVAR_Magneto_Starter_IsHeld

@@ -7,6 +7,15 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
+    index_reversed: true
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:BLEED AIR ENGINE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    index_reversed: true
     event_param: 1
   -
     type: NumSet
@@ -14,10 +23,16 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
+    index_reversed: true
     event_param: 2
   -
-    type: event
+    type: ToggleSwitch
+    var_name: A:BLEED AIR ENGINE:2
+    var_units: Bool
+    var_type: bool
     event_name: ENGINE_BLEED_AIR_SOURCE_TOGGLE
+    index_reversed: true
+    event_param: 2
 
   - # ASOBO_PRESSURIZATION_Switch_APU_Bleed_Template
     type: NumSet
@@ -26,7 +41,10 @@ shared:
     var_type: i32
     event_name: APU_BLEED_AIR_SOURCE_SET
   -
-    type: event
+    type: ToggleSwitch
+    var_name: A:BLEED AIR APU
+    var_units: Bool
+    var_type: bool
     event_name: APU_BLEED_AIR_SOURCE_TOGGLE
 
   - # ASOBO_PRESSURIZATION_Push_Dump_Template

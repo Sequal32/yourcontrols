@@ -8,6 +8,7 @@ include:
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
   - definitions/modules/radios.yaml
@@ -16,21 +17,18 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:20
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 20
-  -
+  - # Aerobatics Trim Flap
+    type: CustomCalculator
+    get: -1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:5, Bool)
+    set: 5 -1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # Horizon
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:34
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 34
-  -
+  - # Directional
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:35
     var_units: Bool
@@ -59,16 +57,16 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Lights
+  - # Interior
     type: NumSet
-    var_name: A:LIGHT PANEL
+    var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
@@ -76,7 +74,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 10
@@ -85,9 +83,6 @@ shared:
   - # LVAR's
     type: var
     var_name: L:LOCAL_milliBar_to_inHg
-  -
-    type: var
-    var_name: L:GNS_Brightness
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverMixtureHidden1
@@ -127,6 +122,12 @@ shared:
   -
     type: var
     var_name: L:ELECTRICAL_Starter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:LIGHTING_LANDING_1
@@ -145,9 +146,6 @@ shared:
   -
     type: var
     var_name: L:INSTRUMENT_Altimeter_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Gyro_Drift
   -
     type: var
     var_name: L:XMLVAR_IsDeiceAirFrame
@@ -157,12 +155,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:AS330_ScreenLuminosity
@@ -189,31 +181,37 @@ shared:
     var_name: L:PGM1212_State
 # -
 #   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK CENTER LEVEL
+    var_name: A:FUEL TANK CENTER LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK CENTER2 LEVEL
+    var_name: A:FUEL TANK CENTER2 LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64

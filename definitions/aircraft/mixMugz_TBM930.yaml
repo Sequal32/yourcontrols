@@ -1,12 +1,30 @@
-# Version 0.6.1
+# Version 0.6.3
 
 include:
   - definitions/aircraft/Asobo_TBM930.yaml
 
 shared:
-  - # Exit
-    type: event
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:0
+    var_units: Number
+    var_type: f64
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:1
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:2
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
 
   - # LVAR's (Mugz only)
     type: var

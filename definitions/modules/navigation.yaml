@@ -5,6 +5,7 @@ shared:
     var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
+    cancel_h_events: true
     event_param: 1
   -
     type: NumSet
@@ -12,6 +13,7 @@ shared:
     var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
+    cancel_h_events: true
     event_param: 2
   -
     type: NumSet
@@ -26,40 +28,32 @@ shared:
     var_type: bool
     event_name: ATTITUDE_CAGE_BUTTON
   -
-    type: NumSet
+    type: NumIncrement
     var_name: A:ATTITUDE BARS POSITION
     var_units: Percent
     var_type: f64
-    event_name: ATTITUDE_BARS_POSITION_SET
+    up_event_name: ATTITUDE_BARS_POSITION_UP
+    down_event_name: ATTITUDE_BARS_POSITION_DOWN
+    increment_by: 3.6
   -
     type: NumSet
     var_name: A:NAV OBS:1
     var_units: Degrees
     var_type: i32
     event_name: VOR1_SET
+    cancel_h_events: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:NAV OBS:2
     var_units: Degrees
     var_type: i32
     event_name: VOR2_SET
+    cancel_h_events: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:ADF CARD
     var_units: Degrees
     var_type: i32
     event_name: ADF_CARD_SET
-
-master:
-  -
-    type: var
-    var_name: A:PLANE HEADING DEGREES GYRO
-    var_units: Degrees
-    var_type: f64
-    unreliable: true # Do not use interpolate or will spin and flip at 360 north
-  -
-    type: var
-    var_name: A:DELTA HEADING RATE
-    var_units: Radians per second
-    var_type: f64
-    unreliable: true

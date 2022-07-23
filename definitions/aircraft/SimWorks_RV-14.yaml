@@ -1,0 +1,552 @@
+# Version 1.2.0
+
+include:
+  - definitions/modules/Avionics/AS3X.yaml
+  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/Avionics/TDSNXi.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # AP Power
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:34
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 34
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 7
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTRAL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
+
+  - # EFD Altimeter
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:3
+    var_units: Millibars scaler 16
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    cancel_h_events: true
+    event_param: 3
+
+  - # Canopy lock
+    type: ToggleSwitch
+    var_name: A:SMOKE ENABLE:7
+    var_units: Bool
+    var_type: f64
+    event_name: SMOKE_ON
+    off_event_name: SMOKE_OFF
+    event_param: 7
+  - # Canopy open
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:0
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  - # Canopy ejection
+    type: ToggleSwitch
+    var_name: A:SMOKE ENABLE:6
+    var_units: Bool
+    var_type: f64
+    event_name: SMOKE_ON
+    off_event_name: SMOKE_OFF
+    event_param: 6
+
+  - # LVAR's
+    type: var
+    var_name: L:SWS_ESI500_Instrument_Startup_Completed
+  -
+    type: var
+    var_name: L:SWS_ESI500_Main_Menu_Max_Position
+  -
+    type: var
+    var_name: L:SWS_ESI500_Menu_Horizontal_Scroll_Step
+  -
+    type: var
+    var_name: L:SWS_ESI500_Menu_Vertical_Scroll_Step
+  -
+    type: var
+    var_name: L:SWS_ESI500_Child_Menu_Max_Position
+  -
+    type: var
+    var_name: L:SWS_ESI500_Menu_Brightness_Offset
+  -
+    type: var
+    var_name: L:SWS_ESI500_Confirm_Selected
+  -
+    type: var
+    var_name: L:SWS_ESI500_Display_Startup_Logo
+  -
+    type: var
+    var_name: L:SWS_ESI500_Menu_Level
+  -
+    type: var
+    var_name: L:SWS_ESI500_Main_Menu_Horizontal_Shift
+  -
+    type: var
+    var_name: L:SWS_ESI500_Main_Menu_Selected_Position
+  -
+    type: var
+    var_name: L:SWS_ESI500_Menu_Option_Change
+  -
+    type: var
+    var_name: L:SWS_ESI500_Main_Menu_Direction
+  -
+    type: var
+    var_name: L:SWS_ESI500_Menu_Select
+  -
+    type: var
+    var_name: L:SWS_ESI500_Child_Menu_Selected_Position
+  -
+    type: var
+    var_name: L:SWS_ESI500_Child_Menu_Horizontal_Shift
+  -
+    type: var
+    var_name: L:SWS_ESI500_NAVMODE
+  -
+    type: var
+    var_name: L:SWS_ESI500_BaroPressSetting
+  -
+    type: var
+    var_name: L:SWS_ESI500_AltimeterMetric
+  -
+    type: var
+    var_name: L:SWS_ESI500_Main_Menu_Vertical_Shift
+  -
+    type: var
+    var_name: L:SWS_ESI500_Child_Menu_Direction
+  -
+    type: var
+    var_name: L:SWS_ESI500_VOR_Activated
+  -
+    type: var
+    var_name: L:SWS_ESI500_ILS_Activated
+  -
+    type: var
+    var_name: L:SWS_ESI500_GPS_Activated
+  -
+    type: var
+    var_name: L:SWS_ESI500_Course_Direct_To_Activated
+  -
+    type: var
+    var_name: L:SWS_ESI500_Course_Setting
+  -
+    type: var
+    var_name: L:SWS_ESI500_Main_Menu_Visible
+  -
+    type: var
+    var_name: L:SWS_ESI500_Child_Menu_Visible
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_Menu_Fade
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_VOR_ILS_TO_Value
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_VOR_ILS_FROM_Value
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_GPS_TO_Value
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_GPS_FROM_Value
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_VOR_ILS_TO_Offset
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_VOR_ILS_FROM_Offset
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_GPS_TO_Offset
+# -
+#   type: var
+#   var_name: L:SWS_ESI500_GPS_FROM_Offset
+  -
+    type: var
+    var_name: L:SWS_ESI500_ShadedRects
+  -
+    type: var
+    var_name: L:SWS_ESI500_AirspeedInMPH
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_GlidePathValueActive
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_GlidePathValueAngle
+  -
+    type: var
+    var_name: L:ELECTRICAL_Switch_TwoBatteries
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_L
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_R
+  -
+    type: var
+    var_name: L:ELECTRICAL_Switch_Avionics_Battery
+  -
+    type: var
+    var_name: L:ELECTRICAL_Switch_Avionics_Master
+  -
+    type: var
+    var_name: L:LIGHTING_Switch_Light_WigWag
+  -
+    type: var
+    var_name: L:SWS_HANDLING_Switch_Flaps_UpCenterDown
+  -
+    type: var
+    var_name: L:SWS_MISC_Sunshade_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_PEDESTRAL_1
+  -
+    type: var
+    var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:Switch_ELT_RESET
+  -
+    type: var
+    var_name: L:Switch_ELT_ON
+  -
+    type: var
+    var_name: L:SWS_ESI500_Altimeter_Pressure
+  -
+    type: var
+    var_name: L:GMA340_ANNUNCIATOR_TEST
+# -
+#   type: var
+#   var_name: L:GTN750_EMB_ScreenLuminosity
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:SWS_GLIDE_RATIO
+  -
+    type: var
+    var_name: L:SWS_ELECTRICAL_Switch_PMAG_Test
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_VGlide
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_GlideRatio
+# -
+#   type: var
+#   var_name: L:AXIS_ELEVATOR_TRIM
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_1_Angle
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_1_RPM_Target
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_1_RPM
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_2_Angle
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_2_RPM_Target
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_2_RPM
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:HANDLING_RudderTrim
+  -
+    type: var
+    var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_1_State
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_Wind_Mode
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_2_State
+# -
+#   type: var
+#   var_name: L:GTN750_EMB_HIDDEN
+# -
+#   type: var
+#   var_name: L:GTN750_EMB_State
+# -
+#   type: var
+#   var_name: L:WT1000_AP_G1000_INSTALLED
+# -
+#   type: var
+#   var_name: L:GTN750_Waypoint_Map_MapShowCursor
+# -
+#   type: var
+#   var_name: L:GTN750_Waypoint_Map_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AUTO_ACTIVATE_APPROACH_DISABLED
+# -
+#   type: var
+#   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
+# -
+#   type: var
+#   var_name: L:GTN750_HSI_GSI_NEEDLE
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
+# -
+#   type: var
+#   var_name: L:GTN750_FLIGHT_PLAN_CLEANED
+# -
+#   type: var
+#   var_name: L:GTN750_FLIGHT_PLAN_CLEAN_STARTED
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_MSG_VCALC_APPR
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_MSG_VCALC_ARR
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:GTN750_HAVE_MESSAGE:1
+# -
+#   type: var
+#   var_name: L:GTN750_RELOAD
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+  - # 14A
+    type: var
+    var_name: L:AP_NAV_SELECT_TMP
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64

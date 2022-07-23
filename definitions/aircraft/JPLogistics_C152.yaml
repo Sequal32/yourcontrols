@@ -3,6 +3,7 @@
 include:
   - definitions/aircraft/Asobo_C152.yaml
   - definitions/modules/Avionics/AS330.yaml
+  - definitions/modules/Avionics/KAP140.yaml
 
 shared:
   - # NAVCOM
@@ -94,16 +95,15 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 6
     index_reversed: true
-
-  - # Emissive lights
+  -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:9
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 9
@@ -196,12 +196,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
-  -
-    type: var
-    var_name: L:XMLVAR_CABIN_HEAT_1_POSITION
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Air_1_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_CABIN_HEAT_1_POSITION
+# -
+#   type: var
+#   var_name: L:XMLVAR_Cabin_Air_1_Position
   -
     type: var
     var_name: L:XMLVAR_AUDIO_SPKR_SEL
@@ -319,12 +319,12 @@ shared:
   -
     type: var
     var_name: L:KR87_State
-  -
-    type: var
-    var_name: L:KAP140_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
   -
     type: var
     var_name: L:AutopilotPreflightCheckCompleted
@@ -346,9 +346,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
-    type: var
-    var_name: L:KAP140_BARO_Display
+# -
+#   type: var
+#   var_name: L:KAP140_BARO_Display
 # -
 #   type: var
 #   var_name: L:AS330_ScreenLuminosity
@@ -357,23 +357,13 @@ shared:
 #   var_name: L:AS330_State
 
 server:
-  - # OAT dial
+  - # Payload (extra)
     type: var
-    var_name: A:AMBIENT TEMPERATURE
-    var_units: Celsius
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - KAP140_Push_HDG
-  - adf_frqTransfert

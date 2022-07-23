@@ -1,5 +1,6 @@
 include:
   - definitions/modules/Avionics/AS1000.yaml
+  - definitions/modules/Avionics/GTN750.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -14,14 +15,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:30
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 30
-
   - # Aux pumps
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:9
@@ -99,7 +92,7 @@ shared:
     type: event
     event_name: FUEL_SELECTOR_2_OFF
 
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -231,10 +224,16 @@ shared:
 #   var_name: L:AS1000_PFD_Brightness
 # -
 #   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
   -
     type: var
     var_name: L:XMLVAR_Autopilot_2_Status
@@ -244,6 +243,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:LIGHTING_STROBE_1
@@ -303,6 +308,9 @@ shared:
 #   var_name: L:PFD_InnerMap_MapShowCursor
 # -
 #   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_SelectedNavIndex
 # -
 #   type: var
@@ -319,24 +327,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+#   var_name: L:AS1000_MFD_State
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:MFD_MapShowCursor
@@ -354,6 +356,9 @@ shared:
 #   var_name: L:XMLVAR_SyntheticVision_Off
 # -
 #   type: var
+#   var_name: L:AS1000_PFD_State
+# -
+#   type: var
 #   var_name: L:Glasscockpit_Wind_Mode
 # -
 #   type: var
@@ -363,6 +368,9 @@ shared:
 #   var_name: L:AS1000_Warnings_WarningIndex
 # -
 #   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+# -
+#   type: var
 #   var_name: L:Glasscockpit_HSI_Arc
 # -
 #   type: var
@@ -370,6 +378,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:GPS_Current_Phase
@@ -384,19 +398,10 @@ shared:
 #   var_name: L:AS3000_MinimalsValue
 # -
 #   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+#   var_name: L:Glasscockpits_FPLHaveOrigin
 # -
 #   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_State
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_State
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
@@ -411,85 +416,87 @@ shared:
 #   var_name: L:AS1000_SpeedBackup_State
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK LEFT AUX LEVEL
+    var_name: A:FUEL TANK LEFT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:7
+    var_name: A:PAYLOAD STATION WEIGHT:7
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:8
+    var_name: A:PAYLOAD STATION WEIGHT:8
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:9
+    var_name: A:PAYLOAD STATION WEIGHT:9
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - AP_KNOB
-  - AP_KNOB_Up
-  - AP_KNOB_Down
-  - AP_BARO_Up
-  - AP_BARO_Down

@@ -6,12 +6,28 @@ shared:
     var_type: bool
     event_name: TOGGLE_ALTERNATE_STATIC
 
+  - # ASOBO_SAFETY_Light_Template
+    type: ToggleSwitch
+    var_name: A:ANNUNCIATOR SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: ANNUNCIATOR_SWITCH_ON
+    off_event_name: ANNUNCIATOR_SWITCH_OFF
+
   - # ASOBO_SAFETY_Switch_ELT_Template
     type: ToggleSwitch
     var_name: A:ELT ACTIVATED
     var_units: Bool
-    off_event_name: ELT_OFF
+    var_type: bool
     event_name: ELT_ON
+    off_event_name: ELT_OFF
+
+  - # ASOBO_SAFETY_Push_Warning_Template
+    type: event
+    event_name: MASTER_CAUTION_ACKNOWLEDGE
+  -
+    type: event
+    event_name: MASTER_WARNING_ACKNOWLEDGE
 
   - # LVAR's
     type: var

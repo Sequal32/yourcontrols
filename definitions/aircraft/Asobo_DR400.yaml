@@ -14,68 +14,60 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:21
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 21
-
   - # Failures
     type: var
     var_name: A:CIRCUIT NAVCOM1 ON
     var_units: Bool
     var_type: bool
 
-  - # Lights
-    type: ToggleSwitch
-    var_name: A:LIGHT PANEL
-    var_units: Bool
-    var_type: bool
-    event_name: PANEL_LIGHTS_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT GLARESHIELD:1
-    var_units: Bool
-    var_type: bool
-    event_name: GLARESHIELD_LIGHTS_TOGGLE
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT GLARESHIELD:2
-    var_units: Bool
-    var_type: bool
-    event_name: GLARESHIELD_LIGHTS_TOGGLE
-    event_param: 2
-  -
+  - # Interior
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:1
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 1
-    index_reversed: true
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
   -
     type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
   -
     type: NumSet
+    var_name: A:LIGHT GLARESHIELD:2
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:1
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 7
@@ -126,15 +118,18 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_DayNightSwitch
-  -
-    type: var
-    var_name: L:XMLVAR_DayNightSwitch_Timer
+# -
+#   type: var
+#   var_name: L:XMLVAR_DayNightSwitch_Timer
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:INSTRUMENT_Course_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Gyro_Drift
   -
     type: var
     var_name: L:INSTRUMENT_Altimeter_1
@@ -173,12 +168,6 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
-    type: var
     var_name: L:KX155A_ScreenLuminosity
   -
     type: var
@@ -197,24 +186,24 @@ shared:
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK CENTER LEVEL
+    var_name: A:FUEL TANK CENTER LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64

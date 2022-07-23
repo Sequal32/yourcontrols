@@ -1,7 +1,8 @@
-# Version 0.6
+# Version 0.7
 
 include:
   - definitions/modules/Avionics/AS1000.yaml
+  - definitions/modules/Avionics/GTN750.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
@@ -15,14 +16,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:30
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 30
-
   - # Aux pumps
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:9
@@ -107,7 +100,7 @@ shared:
     type: event
     event_name: FUEL_SELECTOR_2_OFF
 
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -198,6 +191,9 @@ shared:
   -
     type: var
     var_name: L:FADEC_ECUB_RUNNING_R
+  -
+    type: var
+    var_name: L:FADEC_FEATHER_L
 # -
 #   type: var
 #   var_name: L:ELEC_VOLTAGE_DROP
@@ -218,25 +214,19 @@ shared:
     var_name: L:FADEC_MASTER_L
 # -
 #   type: var
-#   var_name: L:FAIL_WATER_L
-# -
-#   type: var
 #   var_name: L:ENG_TARGET_RADIATOR_TEMPERATURE_1
 # -
 #   type: var
-#   var_name: L:FAIL_OIL_L
-# -
-#   type: var
 #   var_name: L:ENG_TARGET_OIL_TEMPERATURE_1
-# -
-#   type: var
-#   var_name: L:FAIL_GBOX_L
 # -
 #   type: var
 #   var_name: L:ENG_TARGET_GBOX_TEMPERATURE_1
 # -
 #   type: var
 #   var_name: L:ENG_TARGET_OIL_PRESSURE_1
+# -
+#   type: var
+#   var_name: L:START_OIL:1
 # -
 #   type: var
 #   var_name: L:FADEC_POWER_OUTPUT_L
@@ -254,9 +244,6 @@ shared:
 #   var_name: L:ENG_FUEL_FLOW_DIFF:1
 # -
 #   type: var
-#   var_name: L:FUEL_INVERTED
-# -
-#   type: var
 #   var_name: L:FUEL_TANK_LEFT_MAIN_QUANTITY
 # -
 #   type: var
@@ -266,25 +253,19 @@ shared:
     var_name: L:FADEC_MASTER_R
 # -
 #   type: var
-#   var_name: L:FAIL_WATER_R
-# -
-#   type: var
 #   var_name: L:ENG_TARGET_RADIATOR_TEMPERATURE_2
 # -
 #   type: var
-#   var_name: L:FAIL_OIL_R
-# -
-#   type: var
 #   var_name: L:ENG_TARGET_OIL_TEMPERATURE_2
-# -
-#   type: var
-#   var_name: L:FAIL_GBOX_R
 # -
 #   type: var
 #   var_name: L:ENG_TARGET_GBOX_TEMPERATURE_2
 # -
 #   type: var
 #   var_name: L:ENG_TARGET_OIL_PRESSURE_2
+# -
+#   type: var
+#   var_name: L:START_OIL:2
 # -
 #   type: var
 #   var_name: L:FADEC_POWER_OUTPUT_R
@@ -393,9 +374,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:ELEC_GENALT_BUS_AMPS_2
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_STATE
+  -
+    type: var
+    var_name: L:FUEL_TOT_RST
 # -
 #   type: var
 #   var_name: L:FUEL_GAL_USED
@@ -438,12 +419,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:DEICE_WINDSHIELD_TIMER
-  -
-    type: var
-    var_name: L:XMLVAR_CABINAIR_Position_1
-  -
-    type: var
-    var_name: L:XMLVAR_CABINHEAT_Position_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_CABINAIR_Position_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_CABINHEAT_Position_1
 # -
 #   type: var
 #   var_name: L:DEICE_DEFROST_POWER
@@ -458,7 +439,16 @@ shared:
     var_name: L:DEICE_PRESS_HI
   -
     type: var
-    var_name: L:FADEC_FEATHER_L
+    var_name: L:FADEC_ECU_FAIL_L_B
+  -
+    type: var
+    var_name: L:FADEC_ECU_FAIL_L_A
+  -
+    type: var
+    var_name: L:FADEC_ECUS_L_GOOD
+  -
+    type: var
+    var_name: L:FADEC_ECUB_RUNNING_L
 # -
 #   type: var
 #   var_name: L:PROP_PITCH1_TARGET
@@ -476,6 +466,9 @@ shared:
     var_name: L:FADEC_ECUTEST_FAIL_L_A
   -
     type: var
+    var_name: L:FADEC_ECU_L_POWER
+  -
+    type: var
     var_name: L:FADEC_ECUTEST_BUTTON_B
   -
     type: var
@@ -486,12 +479,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Throttle1_Pos
-# -
-#   type: var
-#   var_name: L:THROTTLE1_MODE
   -
     type: var
-    var_name: L:FADEC_ECUB_RUNNING_L
+    var_name: L:THROTTLE1_MODE
+  -
+    type: var
+    var_name: L:FADEC_ECUTEST_ERROR_CLEAR_TOGGLE:1
   -
     type: var
     var_name: L:FADEC_ECUTEST_TIMER_L
@@ -501,6 +494,15 @@ shared:
   -
     type: var
     var_name: L:FADEC_ECUTEST_L
+  -
+    type: var
+    var_name: L:FADEC_ECU_FAIL_R_B
+  -
+    type: var
+    var_name: L:FADEC_ECU_FAIL_R_A
+  -
+    type: var
+    var_name: L:FADEC_ECUS_R_GOOD
   -
     type: var
     var_name: L:FADEC_FEATHER_R
@@ -518,6 +520,9 @@ shared:
     var_name: L:FADEC_ECUTEST_FAIL_R_A
   -
     type: var
+    var_name: L:FADEC_ECU_R_POWER
+  -
+    type: var
     var_name: L:FADEC_ECUTEST_BUTTON_R
 # -
 #   type: var
@@ -527,6 +532,9 @@ shared:
 #   var_name: L:Throttle2_Pos
   -
     type: var
+    var_name: L:FADEC_ECUTEST_ERROR_CLEAR_TOGGLE:2
+  -
+    type: var
     var_name: L:FADEC_ECUTEST_TIMER_R
   -
     type: var
@@ -534,9 +542,57 @@ shared:
   -
     type: var
     var_name: L:FADEC_ECUTEST_R
+  -
+    type: var
+    var_name: L:FADEC_ECU_L_A_GOOD
+  -
+    type: var
+    var_name: L:FADEC_ECU_L_B_GOOD
+  -
+    type: var
+    var_name: L:FADEC_ENGINE_L_GOOD
+  -
+    type: var
+    var_name: L:FADEC_ECU_L_A_ERROR
+  -
+    type: var
+    var_name: L:FADEC_ECU_L_B_ERROR
+  -
+    type: var
+    var_name: L:DAY_IS_ODD
 # -
 #   type: var
 #   var_name: L:FADEC_POWER_LEVER_L
+  -
+    type: var
+    var_name: L:jeff_bezos
+  -
+    type: var
+    var_name: L:FADEC_IDLEP:1
+  -
+    type: var
+    var_name: L:FADEC_IDLEI:1
+  -
+    type: var
+    var_name: L:FADEC_IDLE_PAST:1
+  -
+    type: var
+    var_name: L:FADEC_IDLED:1
+  -
+    type: var
+    var_name: L:FADEC_ECU_R_A_GOOD
+  -
+    type: var
+    var_name: L:FADEC_ECU_R_B_GOOD
+  -
+    type: var
+    var_name: L:FADEC_ENGINE_R_GOOD
+  -
+    type: var
+    var_name: L:FADEC_ECU_R_A_ERROR
+  -
+    type: var
+    var_name: L:FADEC_ECU_R_B_ERROR
 # -
 #   type: var
 #   var_name: L:FADEC_POWER_LEVER_R
@@ -569,37 +625,64 @@ shared:
     var_name: L:KONAMI_STEP
   -
     type: var
+    var_name: L:KONAMI_TIMER
+  -
+    type: var
     var_name: L:LIGMA_BALLS
-# -
-#   type: var
-#   var_name: L:FAIL_STRESS_L
-# -
-#   type: var
-#   var_name: L:FAIL_POWER_STRESS_L
-# -
-#   type: var
-#   var_name: L:FAIL_STRESS_R
-# -
-#   type: var
-#   var_name: L:FAIL_POWER_STRESS_R
-# -
-#   type: var
-#   var_name: L:FIRE_TIMER_L
-# -
-#   type: var
-#   var_name: L:FAILED_L
-# -
-#   type: var
-#   var_name: L:FIRE_TIMER_R
-# -
-#   type: var
-#   var_name: L:FAILED_R
   -
     type: var
-    var_name: L:START_CRANK:1
+    var_name: L:ELE_LSTART
   -
     type: var
-    var_name: L:START_CRANK:2
+    var_name: L:ELE_LFADEC-MAIN
+  -
+    type: var
+    var_name: L:ELE_RSTART
+  -
+    type: var
+    var_name: L:ELE_RFADEC-MAIN
+  -
+    type: var
+    var_name: L:ELE_LALT
+  -
+    type: var
+    var_name: L:ELE_LFADEC-BATT
+  -
+    type: var
+    var_name: L:ELE_LPUMP-RFADEC
+  -
+    type: var
+    var_name: L:ELE_RALT
+  -
+    type: var
+    var_name: L:ELE_RFADEC-BATT
+  -
+    type: var
+    var_name: L:ELE_RPUMP-LFADEC
+  -
+    type: var
+    var_name: L:GEAR_EMERGENCY
+  -
+    type: var
+    var_name: L:PITOT_OVERHEAT
+  -
+    type: var
+    var_name: L:FIRE_TIMER_L
+  -
+    type: var
+    var_name: L:FAILED_L
+  -
+    type: var
+    var_name: L:FIRE_TIMER_R
+  -
+    type: var
+    var_name: L:FAILED_R
+# -
+#   type: var
+#   var_name: L:FUEL_INVERTED
+  -
+    type: var
+    var_name: L:FAIL_POWER_STRESS_L
 # -
 #   type: var
 #   var_name: L:FAIL_POWER_TEMP_L
@@ -609,6 +692,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:FAIL_DUTY_CYCLE_L
+  -
+    type: var
+    var_name: L:FAIL_POWER_STRESS_R
 # -
 #   type: var
 #   var_name: L:FAIL_POWER_TEMP_R
@@ -618,21 +704,45 @@ shared:
 # -
 #   type: var
 #   var_name: L:FAIL_DUTY_CYCLE_R
+# -
+#   type: var
+#   var_name: L:START_CRANK:1
+# -
+#   type: var
+#   var_name: L:START_CRANK:1_MAX
   -
     type: var
-    var_name: L:START_CRANK:1_MAX
+    var_name: L:FILTER_RESRTICTION
+# -
+#   type: var
+#   var_name: L:START_CRANK:2
+# -
+#   type: var
+#   var_name: L:START_CRANK:2_MAX
   -
     type: var
-    var_name: L:START_OIL:1
+    var_name: L:GEAR_FIRE_TEST_IsDown
+  -
+    type: var
+    var_name: L:SOUND_GEAR_FIRE
+  -
+    type: var
+    var_name: L:SOUND_CHECK_GEAR_TIMER
+  -
+    type: var
+    var_name: L:SOUND_CHECK_GEAR
+  -
+    type: var
+    var_name: L:SOUND_CHECK_GEAR_TIMER_TEST
+  -
+    type: var
+    var_name: L:SOUND_STALL_WARNING
+  -
+    type: var
+    var_name: L:ENGINE_ALTERNATE_AIR
   -
     type: var
     var_name: L:FILTER_ICE
-  -
-    type: var
-    var_name: L:START_CRANK:2_MAX
-  -
-    type: var
-    var_name: L:START_OIL:2
 # -
 #   type: var
 #   var_name: L:ESP_TIMER
@@ -678,6 +788,156 @@ shared:
   -
     type: var
     var_name: L:FLUTTER_INTENSITY
+  -
+    type: var
+    var_name: L:STALL_OVERHEATED
+  -
+    type: var
+    var_name: L:STALL_OVERHEAT
+  -
+    type: var
+    var_name: L:ELEC_MD302_TIMER
+# -
+#   type: var
+#   var_name: L:WC_RADIATOR_TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OC_OIL_TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:WC_RADIATOR_TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OC_OIL_TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:WC_DENSITY_CORRECTION
+# -
+#   type: var
+#   var_name: L:WC_POWER_OUTPUT:1
+# -
+#   type: var
+#   var_name: L:WC_ENGINE_FRICTION:1
+# -
+#   type: var
+#   var_name: L:WC_HEATING:1
+# -
+#   type: var
+#   var_name: L:WC_WATER_PUMP_SPEED:1
+# -
+#   type: var
+#   var_name: L:WC_THERMOSTAT:1
+# -
+#   type: var
+#   var_name: L:WC_INDUCED_AIRFLOW:1
+# -
+#   type: var
+#   var_name: L:WC_AIRFLOW:1
+# -
+#   type: var
+#   var_name: L:WC_TEMP_DIFF:1
+# -
+#   type: var
+#   var_name: L:WC_ACTIVE_COOLING:1
+# -
+#   type: var
+#   var_name: L:WC_PASSIVE_COOLING:1
+# -
+#   type: var
+#   var_name: L:WC_COOLING:1
+# -
+#   type: var
+#   var_name: L:WC_MAX_HEATING:1
+# -
+#   type: var
+#   var_name: L:WC_MAX_COOLING:1
+# -
+#   type: var
+#   var_name: L:WC_TEMP_INC:1
+# -
+#   type: var
+#   var_name: L:WC_POWER_OUTPUT:2
+# -
+#   type: var
+#   var_name: L:WC_ENGINE_FRICTION:2
+# -
+#   type: var
+#   var_name: L:WC_HEATING:2
+# -
+#   type: var
+#   var_name: L:WC_WATER_PUMP_SPEED:2
+# -
+#   type: var
+#   var_name: L:WC_THERMOSTAT:2
+# -
+#   type: var
+#   var_name: L:WC_INDUCED_AIRFLOW:2
+# -
+#   type: var
+#   var_name: L:WC_AIRFLOW:2
+# -
+#   type: var
+#   var_name: L:WC_TEMP_DIFF:2
+# -
+#   type: var
+#   var_name: L:WC_ACTIVE_COOLING:2
+# -
+#   type: var
+#   var_name: L:WC_PASSIVE_COOLING:2
+# -
+#   type: var
+#   var_name: L:WC_COOLING:2
+# -
+#   type: var
+#   var_name: L:WC_MAX_HEATING:2
+# -
+#   type: var
+#   var_name: L:WC_MAX_COOLING:2
+# -
+#   type: var
+#   var_name: L:WC_TEMP_INC:2
+# -
+#   type: var
+#   var_name: L:OC_ENGINE_FRICTION:1
+# -
+#   type: var
+#   var_name: L:OC_OIL_PUMP_SPEED:1
+# -
+#   type: var
+#   var_name: L:OC_BLOCK_TEMP_DIFF:1
+# -
+#   type: var
+#   var_name: L:OC_HEATING:1
+# -
+#   type: var
+#   var_name: L:OC_MAX_HEATING:1
+# -
+#   type: var
+#   var_name: L:OC_MAX_COOLING:1
+# -
+#   type: var
+#   var_name: L:OC_TEMP_INC:1
+# -
+#   type: var
+#   var_name: L:OC_ENGINE_FRICTION:2
+# -
+#   type: var
+#   var_name: L:OC_OIL_PUMP_SPEED:2
+# -
+#   type: var
+#   var_name: L:OC_BLOCK_TEMP_DIFF:2
+# -
+#   type: var
+#   var_name: L:OC_HEATING:2
+# -
+#   type: var
+#   var_name: L:OC_MAX_HEATING:2
+# -
+#   type: var
+#   var_name: L:OC_MAX_COOLING:2
+# -
+#   type: var
+#   var_name: L:OC_TEMP_INC:2
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
@@ -693,27 +953,30 @@ shared:
   -
     type: var
     var_name: L:FADEC_ECUTEST_BUTTON_L_IsDown
-  -
-    type: var
-    var_name: L:FADEC_ECUTEST_BUTTON_L_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:FADEC_ECUTEST_BUTTON_L_MinReleaseTime
   -
     type: var
     var_name: L:FADEC_ECUTEST_BUTTON_R_IsDown
-  -
-    type: var
-    var_name: L:FADEC_ECUTEST_BUTTON_R_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:FADEC_ECUTEST_BUTTON_R_MinReleaseTime
   -
     type: var
     var_name: L:FADEC_ECUTEST_BUTTON_B_IsDown
+# -
+#   type: var
+#   var_name: L:FADEC_ECUTEST_BUTTON_B_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:GEAR_FIRE_TEST_MinReleaseTime
   -
     type: var
-    var_name: L:FADEC_ECUTEST_BUTTON_B_MinReleaseTime
-  -
-    type: var
-    var_name: L:GEAR_FIRE_TEST_IsDown
-  -
-    type: var
-    var_name: L:GEAR_FIRE_TEST_MinReleaseTime
+    var_name: L:FUEL_TOT_RST_IsDown
+# -
+#   type: var
+#   var_name: L:FUEL_TOT_RST_MinReleaseTime
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
@@ -764,13 +1027,22 @@ shared:
 #   var_name: L:AS1000_PFD_Brightness
 # -
 #   type: var
-#   var_name: L:AS1000_MFD_ScreenLuminosity
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
   -
     type: var
     var_name: L:XMLVAR_Autopilot_2_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
@@ -783,6 +1055,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:DA62_ShowCoPilot
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:LIGHTING_STROBE_1
@@ -842,6 +1120,9 @@ shared:
 #   var_name: L:PFD_InnerMap_MapShowCursor
 # -
 #   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_SelectedNavIndex
 # -
 #   type: var
@@ -863,22 +1144,10 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
-    type: var
     var_name: L:FADEC_ECUTEST
-# -
-#   type: var
-#   var_name: L:THROTTLE2_MODE
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:THROTTLE2_MODE
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
@@ -908,6 +1177,9 @@ shared:
 #   var_name: L:AS1000_Warnings_WarningIndex
 # -
 #   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+# -
+#   type: var
 #   var_name: L:Glasscockpit_HSI_Arc
 # -
 #   type: var
@@ -915,6 +1187,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:GPS_Current_Phase
@@ -927,9 +1205,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS3000_MinimalsValue
-  -
-    type: var
-    var_name: L:WT1000_VNav_TOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:WT1000_VNav_TOD_Leg_Index
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
@@ -939,12 +1223,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_State
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_State
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
@@ -965,90 +1243,92 @@ shared:
     var_name: L:WasmInstrument_State
 # -
 #   type: var
+#   var_name: L:AS1000_MFD_State
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_State
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK LEFT AUX LEVEL
+    var_name: A:FUEL TANK LEFT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:7
+    var_name: A:PAYLOAD STATION WEIGHT:7
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:8
+    var_name: A:PAYLOAD STATION WEIGHT:8
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:9
+    var_name: A:PAYLOAD STATION WEIGHT:9
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:10
+    var_name: A:PAYLOAD STATION WEIGHT:10
     var_units: Pounds
     var_type: f64
 
 ignore:
-  - AP_KNOB
-  - AP_KNOB_Up
-  - AP_KNOB_Down
-  - AP_BARO_Up
-  - AP_BARO_Down
+  - EB_EVENTS

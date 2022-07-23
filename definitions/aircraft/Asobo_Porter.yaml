@@ -1,17 +1,64 @@
 include:
+  - definitions/modules/Avionics/AS330.yaml
+  - definitions/modules/Avionics/AS430.yaml
+  - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/AS1000.yaml
+  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/Avionics/KAP140.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:AVIONICS MASTER SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: AVIONICS_MASTER_1_ON
+    off_event_name: AVIONICS_MASTER_1_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AVIONICS MASTER SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: AVIONICS_MASTER_2_ON
+    off_event_name: AVIONICS_MASTER_2_OFF
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY
+    var_units: Bool
+    var_type: bool
+    event_name: MASTER_BATTERY_ON
+    off_event_name: MASTER_BATTERY_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_ALTERNATOR
+  -
+    type: NumSet
+    var_name: A:EXTERNAL POWER ON
+    var_units: Bool
+    var_type: i32
+    event_name: SET_EXTERNAL_POWER
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER1_SET
+
   - # Breakers
     type: ToggleSwitch
     var_name: A:CIRCUIT BREAKER PULLED:0
@@ -26,7 +73,7 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
     event_param: 3
-      -
+  -
     type: ToggleSwitch
     var_name: A:CIRCUIT BREAKER PULLED:4
     var_units: Bool
@@ -160,13 +207,6 @@ shared:
     type: event
     event_name: AP_ATT_HOLD_OFF
 
-  - # Battery (Doesn't move, B-event)
-    type: event
-    event_name: MASTER_BATTERY_ON
-  -
-    type: event
-    event_name: MASTER_BATTERY_OFF
-
   - # FD
     type: event
     event_name: SYNC_FLIGHT_DIRECTOR_PITCH
@@ -192,26 +232,38 @@ shared:
 
   - # Lights
     type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
     var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_2_SET
     index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_3_SET
+    index_reversed: true
 
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
-    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
     var_type: i32
     event_name: CABIN_LIGHTS_SET
-    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
@@ -243,13 +295,326 @@ shared:
     var_name: L:PC6_FUELSYSVALVE_OPEN
   -
     type: var
-    var_name: L:XMLVAR_LDG_LT_EXT
+    var_name: L:PC6_IC_HIGH
   -
     type: var
     var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
+    var_name: L:XMLVAR_LLDG_LT_EXT
+  -
+    type: var
+    var_name: L:XMLVAR_RLDG_LT_EXT
+  -
+    type: var
     var_name: L:HANDLING_X_Dir_Y_Dir_Position
+  -
+    type: var
+    var_name: L:XMLVAR_Defrost_Push
+  -
+    type: var
+    var_name: L:AttiBars_Pos
+  -
+    type: var
+    var_name: L:DigitalFuelMeter_FP5L_PAGE_LED
+  -
+    type: var
+    var_name: L:DigitalFuelMeter_FP5L_LOW_FUEL_LIGHT
+  -
+    type: var
+    var_name: L:DigitalFuelMeter_FP5L_HL_AUX_LIGHT
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+  -
+    type: var
+    var_name: L:XMLVAR_Joystick_Ail_Trim
+  -
+    type: var
+    var_name: L:XMLVAR_Joystick_Stab_Trim
+  -
+    type: var
+    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:Condition_Lever_CutOff_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+  -
+    type: var
+    var_name: L:PC6_IDLECTRL_LOCK
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_STALL_WARN_TEST_COUNT
+  -
+    type: var
+    var_name: L:XMLVAR_STALL_WARN_TEST
+  -
+    type: var
+    var_name: L:XMLVAR_PROP_LOW_PITCH_TEST_COUNT
+  -
+    type: var
+    var_name: L:XMLVAR_PROP_LOW_PITCH_TEST
+  -
+    type: var
+    var_name: L:XMLVAR_PLT_LIGHT_GEN_TEST_COUNT
+  -
+    type: var
+    var_name: L:XMLVAR_PLT_LIGHT_GEN_TEST
+  -
+    type: var
+    var_name: L:XMLVAR_UNKNOWN_INOP_TEST
+  -
+    type: var
+    var_name: L:XMLVAR_FCU_HEATER_TEST
+  -
+    type: var
+    var_name: L:FCU_HEATER_SWITCH
+  -
+    type: var
+    var_name: L:XMLVAR_BOOSTER_PUMP_TEST
+  -
+    type: var
+    var_name: L:PC6_AUX_FUEL_BOOST_PUMP
+  -
+    type: var
+    var_name: L:XMLVAR_FUEL_FILTER_CLOGGED_TEST
+  -
+    type: var
+    var_name: L:XMLVAR_STARTER_ON_TEST
+  -
+    type: var
+    var_name: L:PC6_SKI_PUMP_PRESS
+  -
+    type: var
+    var_name: L:PC6_SKI_RETRACT
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_2
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:XMLVAR_AudioPanel_1
+  -
+    type: var
+    var_name: L:XMLVAR_Interrupt_Cover
+  -
+    type: var
+    var_name: L:XMLVAR_Interrupt_Cover_CNT
+  -
+    type: var
+    var_name: L:XMLVAR_Interrupt_Switch
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:PC6_IDLECTRL_LEVER
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_2
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_11
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:PC6_CB_ADF2
+  -
+    type: var
+    var_name: L:PC6_CB_FLOW
+  -
+    type: var
+    var_name: L:PC6_CB_POWER_SOCKET
+  -
+    type: var
+    var_name: L:PC6_CB_PROP_LP
+  -
+    type: var
+    var_name: L:PC6_CB_BTRY_WARN
+  -
+    type: var
+    var_name: L:PC6_CB_FUEL_IND
+  -
+    type: var
+    var_name: L:PC6_CB_ENG_INST
+  -
+    type: var
+    var_name: L:PC6_CB_TRIM_CTRL
+  -
+    type: var
+    var_name: L:PC6_CB_CB_IND
+  -
+    type: var
+    var_name: L:XMLVAR_STALL_WARN_TEST_COMPLETE
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_40
+  -
+    type: var
+    var_name: L:XMLVAR_PROP_LOW_PITCH_TEST_COMPLETE
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_41
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_42
+  -
+    type: var
+    var_name: L:XMLVAR_PLT_LIGHT_GEN_TEST_COMPLETE
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_43
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_44
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_45
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_46
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_47
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+  -
+    type: var
+    var_name: L:KR87_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KR87_State
+  -
+    type: var
+    var_name: L:DigitalFuelMeter_FP5L_ScreenLuminosity
+  -
+    type: var
+    var_name: L:DigitalFuelMeter_FP5L_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+  - # Non-G950
+    type: var
+    var_name: L:XMLVAR_LDG_LT_EXT
   -
     type: var
     var_name: L:XMLVAR_ANIM_WARNING_1
@@ -282,73 +647,16 @@ shared:
     var_name: L:XMLVAR_ANIM_CAUTION_1
   -
     type: var
-    var_name: L:L:XMLVAR_REV_MODE_SEL
-  -
-    type: var
     var_name: L:XMLVAR_REV_MODE_SEL
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_STATE
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_TEST_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-  -
-    type: var
-    var_name: L:XMLVAR_Joystick_Ail_Trim
-  -
-    type: var
-    var_name: L:XMLVAR_Joystick_Stab_Trim
-  -
-    type: var
-    var_name: L:Condition_Lever_CutOff_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden1
-  -
-    type: var
-    var_name: L:PC6_IDLECTRL_LOCK
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden2
   -
     type: var
     var_name: L:XMLVAR_RudderTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_Brightness
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_Brightness
   -
     type: var
     var_name: L:XMLVAR_Autopilot_3_Status
@@ -364,9 +672,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_G950_GEN_BUS2_MOM_HI_COUNT
-  -
-    type: var
-    var_name: L:PC6_AUX_FUEL_BOOST_PUMP
   -
     type: var
     var_name: L:XMLVAR_Ignition_Cover
@@ -393,28 +698,10 @@ shared:
     var_name: L:XMLVAR_G950_NAV_STROBE_POS_MOM_LO_COUNT
   -
     type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_11
-  -
-    type: var
     var_name: L:XMLVAR_G950_AP_MASTER_MOM_HI_COUNT
   -
     type: var
     var_name: L:XMLVAR_G950_AP_MASTER_MOM_LO_COUNT
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
   -
     type: var
     var_name: L:DEICE_Propeller_1
@@ -457,57 +744,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_emerg_fuelctrl_02_switch
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_2
-  -
-    type: var
-    var_name: L:XMLVAR_Interrupt_Cover
-  -
-    type: var
-    var_name: L:XMLVAR_Interrupt_Cover_CNT
-  -
-    type: var
-    var_name: L:XMLVAR_Interrupt_Switch
-  -
-    type: var
-    var_name: L:PC6_IDLECTRL_LEVER
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_SelectedNavIndex
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_SelectedComIndex
-# -
-#   type: var
-#   var_name: L:PFD_CDI_Source
-# -
-#   type: var
-#   var_name: L:PFD_InnerMap_MapZoomRange
-# -
-#   type: var
-#   var_name: L:PFD_InnerMap_MapShowCursor
-# -
-#   type: var
-#   var_name: L:XMLVAR_VNAVButtonValue
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_SelectedNavIndex
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_SelectedComIndex
-# -
-#   type: var
-#   var_name: L:MFD_InnerMap_MapZoomRange
-# -
-#   type: var
-#   var_name: L:MFD_InnerMap_MapShowCursor
   -
     type: var
     var_name: L:PC6_CB_
@@ -544,168 +780,62 @@ shared:
   -
     type: var
     var_name: L:LANDING_GEAR_Gear
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:XMLVAR_SyntheticVision_On
-# -
-#   type: var
-#   var_name: L:XMLVAR_SyntheticVision_Off
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:Glasscockpit_Wind_Mode
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_Master_Set
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_WarningIndex
-# -
-#   type: var
-#   var_name: L:Glasscockpit_HSI_Arc
-# -
-#   type: var
-#   var_name: L:PFD_BRG1_Source
-# -
-#   type: var
-#   var_name: L:PFD_BRG2_Source
-# -
-#   type: var
-#   var_name: L:Generic_Master_Warning_Active
-# -
-#   type: var
-#   var_name: L:Generic_Master_Caution_Active
-# -
-#   type: var
-#   var_name: L:GPS_Current_Phase
-# -
-#   type: var
-#   var_name: L:Glasscockpit_DmeSource
-# -
-#   type: var
-#   var_name: L:AS3000_MinimalsMode
-# -
-#   type: var
-#   var_name: L:AS3000_MinimalsValue
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:MFD_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MFD_MapZoomRange
-# -
-#   type: var
-#   var_name: L:Glasscockpit_MFD_Started
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_State
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_State
-  -
-    type: var
-    var_name: L:KAP140_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KAP140_State
-  -
-    type: var
-    var_name: L:AutopilotPreflightCheckCompleted
-  -
-    type: var
-    var_name: L:KR87_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KR87_State
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:7
+    var_name: A:PAYLOAD STATION WEIGHT:7
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:8
+    var_name: A:PAYLOAD STATION WEIGHT:8
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:9
+    var_name: A:PAYLOAD STATION WEIGHT:9
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - KAP140_Push_AP
-  - KAP140_Knob_Outer_INC
-  - KAP140_Knob_Outer_DEC
-  - KAP140_Knob_Inner_INC
-  - KAP140_Knob_Inner_DEC

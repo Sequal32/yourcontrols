@@ -113,7 +113,7 @@ shared:
     event_name: FUELSYSTEM_VALVE_TOGGLE
     event_param: 8
 
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
@@ -181,13 +181,13 @@ shared:
     var_type: f64
     event_name: ELEVATOR_TRIM_SET
     unreliable: true
-    conditions:
-      - var:
-          var_name: AUTOPILOT MASTER
-          var_units: Bool
-          var_type: bool
-        equals:
-          Bool: false
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
   -
     type: NumSet
     var_name: A:AILERON TRIM PCT
@@ -195,22 +195,22 @@ shared:
     var_type: f64
     event_name: AILERON_TRIM_SET
 
-  - # Hook (doesn't work B-event)
-    type: ToggleSwitch
+  - # Hook
+    type: NumSet
     var_name: A:TAILHOOK HANDLE
     var_units: Bool
     var_type: i32
     event_name: SET_TAIL_HOOK_HANDLE
 
   - # Launch bar (INOP)
-    type: ToggleSwitch
-    var_name: A:LAUNCHBAR POSITION
+    type: NumSet
+    var_name: A:LAUNCHBAR SWITCH
     var_units: Bool
     var_type: i32
     event_name: SET_LAUNCH_BAR_SWITCH
 
-  - # Wing fold (doesn't work B-event)
-    type: ToggleSwitch
+  - # Wing fold
+    type: NumSet
     var_name: A:FOLDING WING HANDLE POSITION
     var_units: Bool
     var_type: i32
@@ -231,9 +231,6 @@ shared:
     var_name: L:XMLVAR_AS04F_EFD_1_Brightness
   -
     type: var
-    var_name: L:XMLVAR_AS04F_HUD_1_Brightness
-  -
-    type: var
     var_name: L:XMLVAR_AS04F_HUD_Black_Level
   -
     type: var
@@ -249,6 +246,24 @@ shared:
     var_name: L:XMLVAR_Lights_Mode
   -
     type: var
+    var_name: L:XMLVAR_AS04F_HSI_HDG_TK_Selector
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HSI_CRS_Selector
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_Fire_Test_Pos
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_Hook_Bypass
+  -
+    type: var
+    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_1_Brightness
+  -
+    type: var
     var_name: L:LOCAL_milliBar_to_inHg
 # -
 #   type: var
@@ -256,6 +271,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_AB_R_Current_Stage
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_Hook_Position_Factor
   -
     type: var
     var_name: L:XMLVAR_AS04F_DDI_1_Brightness
@@ -271,6 +289,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_AS04F_DDI_2_Brightness
+# -
+#   type: var
+#   var_name: L:HANDLING_AILERON_ELEVATOR_Trim_Position
   -
     type: var
     var_name: L:XMLVAR_Starter1
@@ -315,22 +336,34 @@ shared:
     var_name: L:XMLVAR_DeiceWindshield_1
   -
     type: var
-    var_name: L:Generic_Master_Caution_Active
+    var_name: L:XMLVAR_LTS_Test
   -
     type: var
-    var_name: L:XMLVAR_LTS_Test
+    var_name: L:XMLVAR_AS04F_Fire_Test_Enabled
   -
     type: var
     var_name: L:LANDING_GEAR_Gear
   -
     type: var
-    var_name: L:XMLVAR_Emergency_Brake
-  -
-    type: var
     var_name: L:XMLVAR_Parking_Brake
   -
     type: var
+    var_name: L:XMLVAR_Emergency_Brake
+  -
+    type: var
     var_name: L:HANDLING_Autobrakes_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_1_Quit
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_2_Quit
   -
     type: var
     var_name: L:XMLVAR_HUD_Push_VelocityVector_Cage
@@ -342,25 +375,19 @@ shared:
     var_name: L:ELECTRICAL_APU_Starter
   -
     type: var
-    var_name: L:LIGHTING_RECOGNITION_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
     var_name: L:LIGHTING_LANDING_1
   -
     type: var
-    var_name: L:XMLVAR_AS04F_HSI_1_HDG_TK
+    var_name: L:FA18_Fuel_Bingo
   -
     type: var
-    var_name: L:XMLVAR_AS04F_HSI_HDG_TK_Selector
+    var_name: L:FA18_EFD_Page
   -
     type: var
-    var_name: L:XMLVAR_AS04F_HSI_1_CRS
+    var_name: L:XMLVAR_AS04F_HSI_HDG_TK
   -
     type: var
-    var_name: L:XMLVAR_AS04F_HSI_CRS_Selector
+    var_name: L:XMLVAR_AS04F_HSI_CRS
   -
     type: var
     var_name: L:XMLVAR_AS04F_HUD_Symbology_Reject
@@ -399,6 +426,12 @@ shared:
     var_name: L:INSTRUMENT_Altimeter_1
 # -
 #   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_1_LastThrottleInc
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_2_LastThrottleInc
+# -
+#   type: var
 #   var_name: L:YourControlsPanelId
   -
     type: var
@@ -423,120 +456,6 @@ shared:
     var_name: L:FA18_HEADING_SELECT_MODE
   -
     type: var
-    var_name: L:FA18_DDI_HSI_DATA_WYPT_SEQUFC_Pressed
-  -
-    type: var
-    var_name: L:FA18_DDI_HSI_DATA_WYPT_UFC_Pressed
-  -
-    type: var
-    var_name: L:FA18_DDI_HSI_DATA_TCN_UFC_Pressed
-  -
-    type: var
-    var_name: L:FA18_DDI_HSI_DATA_AC_BARO_Pressed
-  -
-    type: var
-    var_name: L:FA18_DDI_HSI_DATA_AC_RADAR_Pressed
-  -
-    type: var
-    var_name: L:FA18_Fuel_Bingo
-  -
-    type: var
-    var_name: L:FA18_DDI_3_FORCE_RELOAD
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-  -
-    type: var
-    var_name: L:DDI_MapShowCursor
-  -
-    type: var
-    var_name: L:DDI_MapZoomRange
-  -
-    type: var
-    var_name: L:AS1000_Warnings_Master_Set
-  -
-    type: var
-    var_name: L:AS1000_Warnings_WarningIndex
-  -
-    type: var
-    var_name: L:FA18_DDI_LAT_LON_DISPLAY_MODE
-  -
-    type: var
-    var_name: L:FA18_DDI_HSI_NORTH_UP
-  -
-    type: var
-    var_name: L:FA18_DDI_STEERING_SOURCE
-  -
-    type: var
-    var_name: L:FA18_IS_STEERING_COUPLED
-  -
-    type: var
-    var_name: L:FA18_Warning_Landing_Gear
-# -
-#   type: var
-#   var_name: L:FA_18_TIME_SINCE_TAKE_OFF
-  -
-    type: var
-    var_name: L:FA18_DIVE_RECOVERY
-  -
-    type: var
-    var_name: L:FA18_BINGO_TRIGGERED
-  -
-    type: var
-    var_name: L:FA18_DDI_1_FORCE_RELOAD
-  -
-    type: var
-    var_name: L:FA18_DDI_START_PAGE_1
-  -
-    type: var
-    var_name: L:FA18_DDI_2_FORCE_RELOAD
-  -
-    type: var
-    var_name: L:FA18_WaypointManager_Initialized
-  -
-    type: var
-    var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-  -
-    type: var
-    var_name: L:VFR_MAP_SHOWN_FLIGHTPLAN_INDEX
-  -
-    type: var
-    var_name: L:FA18_DDI_CURRENT_SEQUENCE
-  -
-    type: var
-    var_name: L:FA18_DDI_CURRENT_WAYPOINT_INDEX
-  -
-    type: var
-    var_name: L:FA18_DDI_SET_WAYPOINT_LAT
-  -
-    type: var
-    var_name: L:FA18_DDI_SET_WAYPOINT_LONG
-  -
-    type: var
-    var_name: L:FA18_DDI_SET_WAYPOINT_ELEV
-  -
-    type: var
-    var_name: L:FA18_DDI_INSERT_WAYPOINT
-  -
-    type: var
-    var_name: L:FA18_DDI_DELETE_WAYPOINT
-  -
-    type: var
-    var_name: L:FA18_DDI_START_PAGE_2
-  -
-    type: var
-    var_name: L:FA18_DDI_4_FORCE_RELOAD
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-  -
-    type: var
     var_name: L:AS04F_ACC_UFCD_ScreenLuminosity
   -
     type: var
@@ -549,16 +468,73 @@ shared:
     var_name: L:AS04F_ACC_EFD_State
   -
     type: var
+    var_name: L:FA18_DDI_BLIM_MODE
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:DDI_MapShowCursor
+  -
+    type: var
+    var_name: L:DDI_MapZoomRange
+  -
+    type: var
     var_name: L:AS04F_DDI_3_ScreenLuminosity
   -
     type: var
     var_name: L:AS04F_DDI_3_State
   -
     type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:FA18_DDI_LAT_LON_DISPLAY_MODE
+  -
+    type: var
+    var_name: L:FA18_DDI_STEERING_SOURCE
+  -
+    type: var
+    var_name: L:FA18_DDI_HSI_NORTH_UP
+  -
+    type: var
+    var_name: L:FA18_ADF_ACTIVE
+  -
+    type: var
+    var_name: L:FA18_IS_STEERING_COUPLED
+  -
+    type: var
+    var_name: L:FA18_Warning_Landing_Gear
+# -
+#   type: var
+#   var_name: L:FA_18_TIME_SINCE_TAKE_OFF
+  -
+    type: var
+    var_name: L:FA18_BINGO_TRIGGERED
+  -
+    type: var
+    var_name: L:FA18_DDI_START_PAGE_1
+  -
+    type: var
     var_name: L:AS04F_DDI_1_ScreenLuminosity
   -
     type: var
     var_name: L:AS04F_DDI_1_State
+  -
+    type: var
+    var_name: L:FA18_DDI_CURRENT_SEQUENCE_INDEX
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:VFR_MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:FA18_DDI_START_PAGE_2
   -
     type: var
     var_name: L:AS04F_DDI_2_ScreenLuminosity
@@ -579,66 +555,63 @@ shared:
     var_name: L:AS04F_AltitudeRollers_State
   -
     type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:FA18_DDI_CURRENT_WAYPOINT_NUMBER
+  -
+    type: var
+    var_name: L:FA18_DDI_AUTO_SEQ_STEERING
+  -
+    type: var
     var_name: L:HUD_AP_SELECTED_SPEED
   -
     type: var
     var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
-    type: var
-    var_name: L:PFD_BRG1_Source
-  -
-    type: var
-    var_name: L:PFD_BRG2_Source
-  -
-    type: var
-    var_name: L:PFD_CDI_Source
-  -
-    type: var
-    var_name: L:GPS_Current_Phase
-  -
-    type: var
-    var_name: L:Glasscockpit_DmeSource
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK CENTER LEVEL
+    var_name: A:FUEL TANK CENTER LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK CENTER2 LEVEL
+    var_name: A:FUEL TANK CENTER2 LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK CENTER3 LEVEL
+    var_name: A:FUEL TANK CENTER3 LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK CENTER4 LEVEL # Doesn't sync?
+    var_name: A:FUEL TANK CENTER4 LEVEL # Doesn't sync?
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
 

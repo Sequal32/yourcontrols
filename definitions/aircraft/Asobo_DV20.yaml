@@ -60,9 +60,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_Magneto_Starter_IsHeld
-  -
-    type: var
-    var_name: L:GNS_Brightness
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
@@ -72,9 +75,6 @@ shared:
   -
     type: var
     var_name: L:INSTRUMENT_Altimeter_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Gyro_Drift
   -
     type: var
     var_name: L:INSTRUMENT_Course_1
@@ -90,18 +90,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:AS430_MapZoomRange
-  -
-    type: var
-    var_name: L:AS430_SelectedSource
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -143,24 +137,24 @@ shared:
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK CENTER LEVEL
+    var_name: A:FUEL TANK CENTER LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64

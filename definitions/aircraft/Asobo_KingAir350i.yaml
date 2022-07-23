@@ -1,7 +1,6 @@
 include:
   - definitions/modules/Avionics/AS3X.yaml
   - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -16,28 +15,65 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:26
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 26
-
-  - # Deice
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:2
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_SET
-    event_param: 2
-
   - # Prop Sync
     type: ToggleSwitch
     var_name: A:PROP SYNC ACTIVE
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_PROPELLER_SYNC
+
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:2
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+  -
+    type: ToggleSwitch
+    var_name: A:STRUCTURAL DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STRUCTURAL_DEICE
+  -
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:PROP DEICE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_PROPELLER_DEICE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:PROP DEICE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_PROPELLER_DEICE
+    event_param: 2
 
   - # Failures
     type: var
@@ -129,7 +165,8 @@ shared:
     var_type: f64
     event_name: LANDING_LIGHTS_SET
     event_param: 2
-  -
+
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -138,7 +175,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
@@ -146,7 +183,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
@@ -154,7 +191,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
@@ -162,7 +199,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 6
@@ -177,7 +214,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 7
@@ -192,11 +229,18 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:8
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 8
     index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
   -
     type: NumSet
     var_name: A:LIGHT GLARESHIELD:1
@@ -206,7 +250,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
@@ -214,7 +258,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:9
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 9
@@ -222,7 +266,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 10
@@ -230,7 +274,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:11
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
@@ -239,9 +283,6 @@ shared:
 # - # LVAR's
 #   type: var
 #   var_name: L:AS3X_Touch_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_Brightness
 # -
 #   type: var
 #   var_name: L:AS3X_Touch_2_ScreenLuminosity
@@ -272,24 +313,24 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverPropellerHidden2
-  -
-    type: var
-    var_name: L:XMLVAR_Starter1
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_1_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_Starter1_EndTimeDown
-  -
-    type: var
-    var_name: L:XMLVAR_Starter2
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_2_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_Starter2_EndTimeDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_1_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter1_EndTimeDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter2
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_2_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter2_EndTimeDown
   -
     type: var
     var_name: L:XMLVAR_TANK_QUANTITY_Test_IsHeld
@@ -326,12 +367,6 @@ shared:
   -
     type: var
     var_name: L:ParkingBrake_Position
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE
@@ -350,6 +385,12 @@ shared:
   -
     type: var
     var_name: L:ELECTRICAL_ExternalPower_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
@@ -412,6 +453,9 @@ shared:
     var_name: L:LIGHTING_CABIN_2
   -
     type: var
+    var_name: L:LIGHTING_CABIN_3
+  -
+    type: var
     var_name: L:LIGHTING_GLARESHIELD_1
   -
     type: var
@@ -422,15 +466,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:AS3X_Touch_Brightness_IsAuto
+#   var_name: L:AS3X_Touch_1_State
 # -
 #   type: var
 #   var_name: L:AS1000_Warnings_Master_Set
@@ -440,6 +484,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:MFD_MapShowCursor
@@ -466,10 +513,19 @@ shared:
 #   var_name: L:Glasscockpit_DmeSource
 # -
 #   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
 #   var_name: L:Glasscockpit_Wind_Mode
 # -
 #   type: var
-#   var_name: L:AS3X_Touch_Brightness_Auto
+#   var_name: L:AS3X_Touch_2_State
 # -
 #   type: var
 #   var_name: L:MFD_Main_MapShowCursor
@@ -482,21 +538,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_1_State
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_2_State
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeSpeedBackup_ScreenLuminosity
@@ -517,67 +558,75 @@ shared:
     var_name: L:DigitalOAT_State
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK LEFT AUX LEVEL
+    var_name: A:FUEL TANK LEFT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT AUX LEVEL
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - AP_BARO_Up
-  - AP_BARO_Down

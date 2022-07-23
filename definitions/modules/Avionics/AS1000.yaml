@@ -1,5 +1,6 @@
 include:
   - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/Avionics/WT1000_NXi.yaml
 
 shared:
   -
@@ -12,6 +13,13 @@ shared:
     type: var
     var_name: L:AS1000_MFD_Brightness
     cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:AS1000_MFD_Brightness_IsAuto
+  -
+    type: var
+    var_name: L:AS1000_MID_Display_Backup_Active
   -
     type: var
     var_name: L:AS1000_PFD_ScreenLuminosity
@@ -22,45 +30,7 @@ shared:
     type: var
     var_name: L:AS1000_PFD_Brightness
     cancel_h_events: true
-
-ignore:
-  - AP_UP # MID V/S
-  - AP_DN # MID V/S
-  - AP_KNOB_Up
-  - AP_KNOB_Down
-  - AS1000_PFD_VOL_1_INC
-  - AS1000_PFD_VOL_1_DEC
-  - AS1000_MFD_VOL_1_INC
-  - AS1000_MFD_VOL_1_DEC
-  - AS1000_PFD_VOL_2_INC
-  - AS1000_PFD_VOL_2_DEC
-  - AS1000_MFD_VOL_2_INC
-  - AS1000_MFD_VOL_2_DEC
-  - AS1000_PFD_COM_Small_INC
-  - AS1000_PFD_COM_Small_DEC
-  - AS1000_MFD_COM_Small_INC
-  - AS1000_MFD_COM_Small_DEC
-  - AS1000_PFD_COM_Large_DEC
-  - AS1000_MFD_COM_Large_DEC
-  - AS1000_PFD_COM_Switch
-  - AS1000_MFD_COM_Switch
-  - AS1000_PFD_NAV_Small_INC
-  - AS1000_PFD_NAV_Small_DEC
-  - AS1000_PFD_NAV_Large_INC
-  - AS1000_PFD_NAV_Large_DEC
-  - AS1000_MFD_NAV_Small_INC
-  - AS1000_MFD_NAV_Small_DEC
-  - AS1000_MFD_NAV_Large_INC
-  - AS1000_MFD_NAV_Large_DEC
-  - AS1000_PFD_NAV_Switch
-  - AS1000_MFD_NAV_Switch
-  - AS1000_PFD_BARO_INC
-  - AS1000_PFD_BARO_DEC
-  - AS1000_MFD_BARO_INC
-  - AS1000_MFD_BARO_DEC
-  - AS1000_PFD_CRS_INC
-  - AS1000_PFD_CRS_DEC
-  - AS1000_PFD_CRS_PUSH
-  - AS1000_MFD_CRS_INC
-  - AS1000_MFD_CRS_DEC
-  - AS1000_MFD_CRS_PUSH
+    unreliable: true
+  -
+    type: var
+    var_name: L:AS1000_PFD_Brightness_IsAuto

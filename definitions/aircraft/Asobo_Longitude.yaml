@@ -40,13 +40,14 @@ shared:
     type: ToggleSwitch
     var_name: A:APU SWITCH
     var_units: Bool
+    var_type: bool
     event_name: APU_STARTER
     off_event_name: APU_OFF_SWITCH
 
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Enum
+    var_units: Bool
     var_type: i32
     event_name: PITOT_HEAT_SET
   -
@@ -115,6 +116,39 @@ shared:
     var_units: Bool
     var_type: bool
 
+  - # GPU
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:2
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_POWER_SUPPLY
+    use_calculator: true
+    event_param: 2
+  - # GPU
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:3
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_POWER_SUPPLY
+    use_calculator: true
+    event_param: 3
+  - # Fuel Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:0
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_FUEL_KEY
+    use_calculator: true
+    event_param: 0
+  - # Fuel Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:1
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_FUEL_KEY
+    use_calculator: true
+    event_param: 1
+
   - # Lights
     type: NumSet
     var_name: A:LIGHT LANDING:2
@@ -123,7 +157,7 @@ shared:
     event_name: LANDING_LIGHTS_SET
     event_param: 2
 
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -234,13 +268,19 @@ shared:
 
 # - # LVAR's
 #   type: var
+#   var_name: L:AS3000_Brightness
+# -
+#   type: var
+#   var_name: L:AS3000_IsLocalVarDefined
+# -
+#   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
 # -
 #   type: var
 #   var_name: L:AS3000_MFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3000_Brightness
 # -
 #   type: var
 #   var_name: L:AS3000_PFD_ScreenLuminosity
@@ -265,9 +305,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
@@ -319,12 +356,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
-# -
-#   type: var
-#   var_name: L:Generic_Master_Caution_Active
-# -
-#   type: var
-#   var_name: L:Generic_Master_Warning_Active
 # -
 #   type: var
 #   var_name: L:XMLVAR_Cabin_Heat_1_Position
@@ -400,6 +431,12 @@ shared:
   -
     type: var
     var_name: L:ELECTRICAL_APU_Bleed
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:LANDING_GEAR_Gear
@@ -415,18 +452,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_EMER_LTS_STATE
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:AS3000_Brightness_Manual
 # -
 #   type: var
 #   var_name: L:XMLVAR_SyntheticVision_On
@@ -435,7 +463,13 @@ shared:
 #   var_name: L:XMLVAR_SyntheticVision_Off
 # -
 #   type: var
+#   var_name: L:AS3000_PFD_State
+# -
+#   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:PFD_InnerMap_MapShowCursor
@@ -451,6 +485,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:Annunciations_Manager_Initialized
 # -
 #   type: var
 #   var_name: L:Glasscockpit_HSI_Arc
@@ -474,6 +511,12 @@ shared:
     var_name: L:XMLVAR_Pitot_2
 # -
 #   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
 #   var_name: L:PFD_CDI_Source
 # -
 #   type: var
@@ -490,6 +533,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS3000_MinimalsValue
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_State
 # -
 #   type: var
 #   var_name: L:MFD_MapShowCursor
@@ -514,42 +560,24 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:AS3000_1_Timer_Value
-# -
-#   type: var
-#   var_name: L:AS3000_Brightness_Auto
-# -
-#   type: var
-#   var_name: L:AS3000_2_Timer_Value
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS3000_PFD_State
-# -
-#   type: var
-#   var_name: L:AS3000_MFD_State
   -
     type: var
     var_name: L:AS3000_TSC_Vertical_1_ScreenLuminosity
   -
     type: var
     var_name: L:AS3000_TSC_Vertical_1_State
+# -
+#   type: var
+#   var_name: L:AS3000_1_Timer_Value
   -
     type: var
     var_name: L:AS3000_TSC_Vertical_2_ScreenLuminosity
   -
     type: var
     var_name: L:AS3000_TSC_Vertical_2_State
+# -
+#   type: var
+#   var_name: L:AS3000_2_Timer_Value
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeSpeedBackup_ScreenLuminosity
@@ -564,156 +592,85 @@ shared:
     var_name: L:HourMeter_State
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:7
+    var_name: A:PAYLOAD STATION WEIGHT:7
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:8
+    var_name: A:PAYLOAD STATION WEIGHT:8
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:9
+    var_name: A:PAYLOAD STATION WEIGHT:9
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:10
+    var_name: A:PAYLOAD STATION WEIGHT:10
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:11
+    var_name: A:PAYLOAD STATION WEIGHT:11
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - AP_KNOB
-  - AP_KNOB_Up
-  - AP_KNOB_Down
-  - AS3000_TSC_Vertical_1_TopKnob_Large_INC
-  - AS3000_TSC_Vertical_1_TopKnob_Large_DEC
-  - AS3000_TSC_Vertical_1_TopKnob_Small_INC
-  - AS3000_TSC_Vertical_1_TopKnob_Small_DEC
-  - AS3000_TSC_Vertical_1_BottomKnob_Small_INC
-  - AS3000_TSC_Vertical_1_BottomKnob_Small_DEC
-  - AS3000_TSC_Vertical_2_TopKnob_Large_INC
-  - AS3000_TSC_Vertical_2_TopKnob_Large_DEC
-  - AS3000_TSC_Vertical_2_TopKnob_Small_INC
-  - AS3000_TSC_Vertical_2_TopKnob_Small_DEC
-  - AS3000_TSC_Vertical_2_BottomKnob_Small_INC
-  - AS3000_TSC_Vertical_2_BottomKnob_Small_DEC
-  - AS3000_PFD_BARO_INC
-  - AS3000_PFD_BARO_DEC
-# COM primary
-  - AS3000_TSC_Vertical_1#Com1Active
-  - AS3000_TSC_Vertical_1#Com1Stby
-  - AS3000_TSC_Vertical_1#Com2Active
-  - AS3000_TSC_Vertical_1#Com2Stby
-  - AS3000_TSC_Vertical_1#FK_Xfer
-  - AS3000_TSC_Vertical_2#Com1Active
-  - AS3000_TSC_Vertical_2#Com1Stby
-  - AS3000_TSC_Vertical_2#Com2Active
-  - AS3000_TSC_Vertical_2#Com2Stby
-  - AS3000_TSC_Vertical_2#FK_Xfer
-# COM1 swap
-  - AS3000_TSC_Vertical_1#-1054176649
-  - AS3000_TSC_Vertical_1#971012390
-  - AS3000_TSC_Vertical_1#769170469
-# COM2 swap
-  - AS3000_TSC_Vertical_1#-1054176648
-  - AS3000_TSC_Vertical_1#971012391
-  - AS3000_TSC_Vertical_1#769170470
-# COM XFER
-  - AS3000_TSC_Vertical_1#-651305233
-  - AS3000_TSC_Vertical_1#-2126745615
-  - AS3000_TSC_Vertical_1#769170472
-  - AS3000_TSC_Vertical_2#-651305233
-  - AS3000_TSC_Vertical_2#-2126745615
-  - AS3000_TSC_Vertical_2#769170472
-# COM receives/transmits
-  - AS3000_TSC_Vertical_1#Mic
-  - AS3000_TSC_Vertical_1#Mon
-  - AS3000_TSC_Vertical_1#-278181930
-  - AS3000_TSC_Vertical_1#-957356707
-  - AS3000_TSC_Vertical_1#-645636810
-  - AS3000_TSC_Vertical_1#-645636809
-  - AS3000_TSC_Vertical_1#355770355
-  - AS3000_TSC_Vertical_1#-381849815
-  - AS3000_TSC_Vertical_1#-381849816
-  - AS3000_TSC_Vertical_1#-278181958
-  - AS3000_TSC_Vertical_1#-1610666929
-  - AS3000_TSC_Vertical_1#-1610666930
-  - AS3000_TSC_Vertical_1#61
-  - AS3000_TSC_Vertical_1#60
-  - AS3000_TSC_Vertical_1#355770354
-  - AS3000_TSC_Vertical_1#-957356736
-  - AS3000_TSC_Vertical_2#Mic
-  - AS3000_TSC_Vertical_2#Mon
-  - AS3000_TSC_Vertical_2#-278181930
-  - AS3000_TSC_Vertical_2#-957356707
-  - AS3000_TSC_Vertical_2#-645636810
-  - AS3000_TSC_Vertical_2#-645636809
-  - AS3000_TSC_Vertical_2#355770355
-  - AS3000_TSC_Vertical_2#-381849815
-  - AS3000_TSC_Vertical_2#-381849816
-  - AS3000_TSC_Vertical_2#-278181958
-  - AS3000_TSC_Vertical_2#-1610666929
-  - AS3000_TSC_Vertical_2#-1610666930
-  - AS3000_TSC_Vertical_2#61
-  - AS3000_TSC_Vertical_2#60
-  - AS3000_TSC_Vertical_2#355770354
-  - AS3000_TSC_Vertical_2#-957356736
-# SVT
-  - AS3000_TSC_Vertical_1#388428289

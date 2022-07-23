@@ -8,7 +8,6 @@ include:
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
   - definitions/modules/radios.yaml
@@ -17,14 +16,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:38
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 38
-
   - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
@@ -45,6 +36,25 @@ shared:
     var_name: A:CIRCUIT ON:39
     var_units: Bool
     var_type: bool
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT NAV:0
+    var_units: Bool
+    var_type: f64
+    event_name: NAV_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:0
+    var_units: Bool
+    var_type: f64
+    event_name: STROBES_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:0
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
 
   - # LVAR's
     type: var
@@ -75,12 +85,6 @@ shared:
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
 # -
 #   type: var
-#   var_name: L:AS3X_Brightness
-  -
-    type: var
-    var_name: L:GNS_Brightness
-# -
-#   type: var
 #   var_name: L:XMLVAR_ELT_STATE
 # -
 #   type: var
@@ -94,18 +98,24 @@ shared:
   -
     type: var
     var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:ParkingBrake_Position
   -
     type: var
-    var_name: L:LIGHTING_LANDING_1
+    var_name: L:LIGHTING_LANDING_0
   -
     type: var
-    var_name: L:LIGHTING_STROBE_1
+    var_name: L:LIGHTING_STROBE_0
   -
     type: var
-    var_name: L:LIGHTING_NAV_1
+    var_name: L:LIGHTING_NAV_0
 # -
 #   type: var
 #   var_name: L:MFD_Main_MapZoomRange
@@ -118,18 +128,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
 #   var_name: L:AS_Vigilus_Page
+# -
+#   type: var
+#   var_name: L:AS3X_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_1_State
   -
     type: var
     var_name: L:AP_NAV_SELECT_TMP
@@ -153,10 +163,13 @@ shared:
 #   var_name: L:PFD_BRG2_Source
 # -
 #   type: var
-#   var_name: L:Glasscockpit_DmeSource
+#   var_name: L:PFD_CDI_Source
 # -
 #   type: var
 #   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
 # -
 #   type: var
 #   var_name: L:AS3000_MinimalsMode
@@ -165,37 +178,16 @@ shared:
 #   var_name: L:AS3000_MinimalsValue
 # -
 #   type: var
-#   var_name: L:MFD_Main_MapShowCursor
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:PFD_CDI_Source
-  -
-    type: var
-    var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS3X_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_1_State
-# -
-#   type: var
 #   var_name: L:AS3X_2_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS3X_2_State
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:MFD_Main_MapShowCursor
   -
     type: var
     var_name: L:LedTrim_ScreenLuminosity
@@ -222,10 +214,25 @@ shared:
 #   var_name: L:AS330_State
 # -
 #   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
 #   var_name: L:AS430_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS430_State
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -234,31 +241,31 @@ shared:
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK CENTER LEVEL
+    var_name: A:FUEL TANK CENTER LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64

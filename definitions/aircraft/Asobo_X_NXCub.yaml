@@ -15,7 +15,7 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -24,7 +24,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
@@ -38,7 +38,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
@@ -47,7 +47,7 @@ shared:
   - # Pulse light
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 7
@@ -119,10 +119,13 @@ shared:
     var_name: L:LIGHTING_POTENTIOMETER_7
 # -
 #   type: var
-#   var_name: L:AS3X_Touch_Brightness
-# -
-#   type: var
 #   var_name: L:AS3X_Touch_ScreenLuminosity
+  -
+    type: var
+    var_name: L:Generic_Gear_Advisory_Active
+  -
+    type: var
+    var_name: L:XMLVAR_DIM_Light_Switch
 # -
 #   type: var
 #   var_name: L:XMLVAR_AirSpeedIsInMach
@@ -132,6 +135,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:LIGHTING_STROBE_1
@@ -146,16 +155,10 @@ shared:
     var_name: L:LIGHTING_PANEL_1
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
+    var_name: L:LANDING_GEAR_Gear
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_Brightness_IsAuto
 # -
 #   type: var
 #   var_name: L:AS1000_Warnings_Master_Set
@@ -165,6 +168,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:MFD_MapShowCursor
@@ -194,13 +200,13 @@ shared:
 #   var_name: L:Glasscockpit_Wind_Mode
 # -
 #   type: var
-#   var_name: L:AS3X_Touch_Brightness_Auto
-# -
-#   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:Generic_Gear_Advisory_Pushed
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
@@ -222,6 +228,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeSpeedBackup_State
+  -
+    type: var
+    var_name: L:GearAdvisoryAlertManager_ScreenLuminosity
+  -
+    type: var
+    var_name: L:GearAdvisoryAlertManager_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -230,34 +242,30 @@ shared:
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - AP_BARO_Up
-  - AP_BARO_Down

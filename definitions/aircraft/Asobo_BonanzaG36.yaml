@@ -1,5 +1,6 @@
 include:
   - definitions/modules/Avionics/AS1000.yaml
+  - definitions/modules/Avionics/GTN750.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -15,14 +16,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:24
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 24
-
   - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
@@ -44,14 +37,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Cowl Flap
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP1_SET
-
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -60,7 +46,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
@@ -68,7 +54,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
@@ -97,7 +83,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
@@ -111,7 +97,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
@@ -119,7 +105,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:14
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
@@ -136,10 +122,16 @@ shared:
 #   var_name: L:AS1000_PFD_Brightness
 # -
 #   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
   -
     type: var
     var_name: L:XMLVAR_Autopilot_2_Status
@@ -190,6 +182,9 @@ shared:
 #   var_name: L:PFD_InnerMap_MapShowCursor
 # -
 #   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_SelectedNavIndex
 # -
 #   type: var
@@ -209,6 +204,12 @@ shared:
   -
     type: var
     var_name: L:DEICE_Propeller_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:HANDLING_AileronsTrim
@@ -266,12 +267,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:XMLVAR_SyntheticVision_On
@@ -280,7 +275,13 @@ shared:
 #   var_name: L:XMLVAR_SyntheticVision_Off
 # -
 #   type: var
+#   var_name: L:AS1000_PFD_State
+# -
+#   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:Glasscockpit_Wind_Mode
@@ -292,6 +293,9 @@ shared:
 #   var_name: L:AS1000_Warnings_WarningIndex
 # -
 #   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+# -
+#   type: var
 #   var_name: L:Glasscockpit_HSI_Arc
 # -
 #   type: var
@@ -299,6 +303,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:GPS_Current_Phase
@@ -319,6 +329,9 @@ shared:
 #   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
+#   var_name: L:AS1000_MFD_State
+# -
+#   type: var
 #   var_name: L:MFD_MapShowCursor
 # -
 #   type: var
@@ -326,6 +339,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpit_MFD_Started
+  -
+    type: var
+    var_name: L:DigitalOAT_ScreenLuminosity
+  -
+    type: var
+    var_name: L:DigitalOAT_State
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
@@ -337,68 +356,56 @@ shared:
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
-#   var_name: L:AS1000_PFD_State
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_State
-  -
-    type: var
-    var_name: L:DigitalOAT_ScreenLuminosity
-  -
-    type: var
-    var_name: L:DigitalOAT_State
-# -
-#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:7
+    var_name: A:PAYLOAD STATION WEIGHT:7
     var_units: Pounds
     var_type: f64

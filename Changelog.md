@@ -1,20 +1,148 @@
 # YourControls Changelog
 
+## Version 2.7.0
+
+#### Profiles
+* Added A32NX Stable by FlyByWire (v0.8.1).
+* Added Bell 47G by FlyInside (v1.71).
+* Added Boeing 247D by Wing42 (v1.0.1).
+* Added C140 by Aeroplane Heaven (v1.4.0a).
+* Added C170B by Carenado (v1.3.0).
+* Added C208B EX Improvement mod by Magraina (v2203.2.2).
+* Added C310R by Milviz (1.0.0).
+* Added C414AW Chancellor by Flysimware (v2.7.0).
+* Added Concorde by DC Designs (v1.0.4).
+* Added DHC6 Twin Otter by Aerosoft (v1.0.6.0).
+* Added Electra-10A by Aeroplane Heaven (v1.33.7).
+* Added FreedomFox & Fox2 (KitFox STi) by Parallel 42 (v1.0.0).
+* Added G115 Tutor T.1 by IRIS Simulations (v2.3.7).
+* Added H125 by RotorSimPilot (v1.3.9).
+* Added J160/J170 Jabiru by IRIS Simulations (v1.5.6).
+* Added JRF-6B Goose by Big Radials (v1.0.4).
+* Added Kodiak 100 by SimWorks Studios (v1.2.2).
+* Added PA-28 Warrior II by JustFlight (v0.3.5).
+* Added PA-28R Turbo Arrow III/IV by JustFlight (v0.5.5).
+* Added PC-6 Turbo Porter by Milviz (v1.0.9).
+* Added RV-14 & 14A by SimWorks Studios (v1.2.0).
+* Added RV-7 & 7A mod by Deejing (v1.0.8).
+* Added Stream by LightSim (v1.3).
+* Added TF-104G Starfighter by SimSkunkWorks (v3.1.2).
+* Added basic support for GNS530 by PMS50 (v1.0.50).
+* Added basic support for GTN750 by PMS50 (v2.1.41).
+* Added basic support for GTNXi 750 by TDS Sim Software (v1.0.1.8).
+* Added basic support for G1000 NXi by Working Title (v1.0.1).
+* Updated ASOBO aircraft for Sim Update 9 (v1.25.7.0).
+* Updated Carenado M20R to v1.5.1.
+* Updated Carenado Seneca V to v1.4.0.
+* Updated FlyByWire A32NX to May 18, 2022.
+  - EFB not updated.
+* Updated Headwind A330-900 to v0.200.
+* Updated HypePerformanceGroup H135 to v1.4.5.
+* Updated JustFlight Arrow III to v0.10.5.
+* Updated Mrtommymxr C172 to v0.3.
+* Updated Mrtommymxr DA62X to v0.7.
+* Updated Mrtommymxr DA40NGX to v0.8.6.
+* Updated RotorSimPilot R44 to v1.2.8.
+* Updated SaltySimulations 747 to v0.5.1.
+* Updated Working Title CJ4 to v0.12.13.
+* Removed Aerosoft CRJ (being re-evaluated).
+* Removed Frett G36 (deprecated).
+* Removed PMDG DC-6 (being re-created).
+
+#### General Fixes
+* Performance degradation on solo flights longer than 2 hours.
+* H-event duplication after ending and making new server.
+* All autopilot and radio button/knob desync on aircraft utilizing legacy simvars.
+* Avionics master switches on all aircraft experiencing intermittent issues.
+* Master caution and warning acknowledge events since Sim Update 7.
+* Autopilot automatically leveling off when using V/S and FLC.
+* Inaccurate G1000 COM/NAV volume level percentage.
+* NAV/ADF volume knobs jumping back and forth.
+* ADF frequency not always swapping.
+* Parking brake event name spelling error.
+* Attitude indicator bar calibration.
+* Annunciator test light switch.
+* Engine bleed air toggle event.
+* External power toggle event.
+* Propeller condition lever.
+* Added pushback tug support.
+
+#### Aircraft Fixes
+* Asobo 747: ATC ground services.
+* Asobo 787: ATC ground services.
+* Asobo A320neo: ATC ground services.
+* Asobo A320neo: WX brightness knob.
+* Asobo C172: Kohlsman index for G1000 PFD.
+* Asobo C208: External power BUS and STBY alternator.
+* Asobo Cap10: Missing external lights.
+* Asobo Cap10: Aerobatic trim flap switch.
+* Asobo CJ4: ATC ground services.
+* Asobo CJ4: Pulse light pushbutton.
+* Asobo KingAir: Added 3rd interior cabin light.
+* Asobo Longitude: ATC ground services.
+* Asobo Longitude: SVT terrain toggle desync.
+* Asobo Porter: Profile not executing.
+* Asobo Porter: Support for non-G950 variant.
+* Asobo Porter: Master battery and avionics switches.
+* Asobo Porter: Landing lights.
+* Asobo SW121: Missing panel potentiometer.
+* Asobo TBM930: SVT terrain toggle desync.
+* A32NX: AP1 to AP2 toggle with a temporary workaround.
+* A32NX: Autobrake level setting (#7067).
+* A32NX: A/THR turning off and back on.
+* A32NX: Corrected 16K value for flap handle.
+* A32NX: Gear lever for new hydraulic system (#6893).
+* A32NX: Ground services including exit and cargo doors (#7229).
+* A32NX: LS pushbutton desync.
+* A32NX: Mach airspeed knob.
+* Carenado M20R: Interior and exterior lights.
+* Carenado Seneca V: Added TDS GTN support.
+* Headwind A339: ATC ground services.
+* HPG H135: Barometer desync with MFD knobs.
+* HPG H135: Excessive data spam while in hover mode.
+* HPG H135: Tablet autopilot button desync.
+* RSP H125: Added TDS GTN support.
+* RSP R44: Added TDS GTN support.
+* Salty 747: ATC ground services.
+* Salty 747: Flight director switches.
+* Salty 747: Sync of LNAV/VNAV modes.
+* Working Title CJ4: Vertical pitch reference indicator.
+
+#### New issues
+* B-events/variables: This is a new system introduced by Asobo with Sim Update 5. All switches and levers now using "B:" no longer visually move but any associated "A:" or "L:" secondary vars will still sync, causing proper effect. This is because "B:" is not settable through SimConnect. Asobo currently shows no intent on fixing this.
+* Touchscreen interaction on 3rd-party avionics packages currently does not sync. This is a 3rd-party WASM limitation. Full support for such packages may or may not be possible.
+* JustFlight PA-28 Bundle: Avionics power trouble may occur during cold start if GPS type on tablet are not the same for all connected. Each person should cycle type before powering.
+* Milviz C310R: Some actions on tablet only sync once everyone connected has tablet visible.
+* FlyByWire current fuel state unsyncable.
+
+
+## Version 2.6.3
+
+#### Changes
+* Attempt to fix cloud connection issues by changing the domain name to an IP address.
+
+
 ## Version 2.6.2
 
-### Profiles
+#### Profiles
 * Added Headwind A330-900neo.
   - EFB not synced.
 * Added RotorSimPilot Robinson R44 Raven II.
   - All pilots need to have flight model loaded with AirlandFS tool if transferring controls.
 
-### Changes
+#### Changes
 * Fixed time sync on initial connect to host.
 * Fixed H135 throttle collective.
+* Attempted to fix random warping on control transfer.
+* Attempted to fix low FPS on long flights even without using YourControls.
+* More instantaneous control transfer.
+* New option to disable verbose logging sent/received packets to reduce log file size.
+* Fixed an issue where the hostname/IP would disappear upon a failed connection.
+
 
 ## Version 2.6.1
 
-### Profiles
+#### Profiles
 * Added PMDG DC-6A/B (beta).
   - Note there are a few control knobs and multi-position switches that will physically move but won't sync the corresponding event(s) to client aircraft. We are working on how to send events that require multiple values.
   - For best sync possible, start Cold and Dark.
@@ -50,7 +178,7 @@
 * Added S-1S changes to Asobo_Pitts.
 * Renamed XCub to X_NXCub.
 
-### Changes
+#### Changes
 * Added support for aircraft slewing.
 * Added support for TACAN channels.
 * Added sync of G-force.
@@ -67,9 +195,10 @@
 * Fixed throttle levers not syncing for modded aircraft using local vars as throttle position. (WT CJ4 and DA-62X)
 * Fixed blue propeller and red mixture levers.
 
+
 ## Version 2.6.0
 
-### Profiles
+#### Profiles
 * Updated FBW A32NX to 0.8.0-dev. Temporarily removed outdated stable till next update.
   - AP buttons/knobs resynced. Managed speed unsyncable without overshoot (no variable). Either use selected speed or person in control set managed speed knob and remain in control for flight.
   - Added brake temp sync.
@@ -81,7 +210,7 @@
 * Added Heavy-Division 787 (78XH) profile.
 * Added Mrtommymxr C172 profile.
 
-### Changes
+#### Changes
 * All 30 ASOBO aircraft definition profiles updated for Sim Update 5 + brief updates for Sim Update 6.
 * Added payload weight to all 30 ASOBO aircraft. Payload menu in sim is broken (SimConnect issue), however, weight values set by server host are still transferred to all clients even though clients won't "see" the change in value.
 * Added payload weight to A32NX, Salty 747, WorkingTitle CJ4, and JPL C152. (same thing above applies)
@@ -99,203 +228,9 @@
 * Changed throttle levers to vars. Constant interp sync is unnecessary.
 * Moved all Lvars for Garmin 330, 430, 530, Aera, and Vigilus to their own module definitions.
 
+
 ## Version 2.5.18
 
+#### Changes
 * Updated VCockpit.js for Sim Update V
 * Support latest switch changes to the A32NX Development version
-
-## Version 2.5.17
-
-* A32NX ADIRS, AP APPR, AP LOC, AP EXPED, AP 1/2, AP ATHR
-* use_calculator on a var: event will now set the parameter as well
-* a custom on_condition can be specified for toggleswitches that use local vars
-
-## Version 2.5.16
-
-* Synchronized A32NX Dev version parking brake, mcdu/dcdu screen brightnesses
-
-## Version 2.5.15
-
-* Fixed a crash that could occur when trying to write a REALLY BIG floating point number
-
-## Version 2.5.14
-
-* Fix A32NX Development seatbelt sign and annunciator lights switch
-* Fix Longitude spoiler arm not syncing
-
-## Version 2.5.13
-
-
-* Fix A32NX Development batteries, spoilers, FCU, flaps, flight controls on ECAM not updating
-* Fixed lights on the DV20
-
-
-## Version 2.5.12
-
-* Fixed issues with the FBW A32NX experimental throttles desynced, vertical speed mismatched, and rattling sounds
-* Synced emergency light on the WT CJ4
-* Synced doors on the MixMugz TBM930
-* Attempted to fix WT CJ4 FD/Range desync
-* Attempted to fix Airbus H135 starters desync
-
-## Version 2.5.11
-
-* Resynced A32NX spoilers
-* Fix CJ4 autopilot altitude/heading selector issues
-  
-## Version 2.5.10
-
-* Actually fixed A32NX flaps
-* Added new WT CJ4 master light
-
-## Version 2.5.9
-
-* Added support for the Airbus H135
-* Resynced flaps/spoilers in the A32NX Experimental
-
-## Version 2.5.7
-
-* Changed the window title to YourControls vX.X.X
-* Fixed an issue where the heading indicator in the C152/172 would spin in circles
-* Fixed an issue where the plane would jump around in altitude below 1000ft
-* Added Aerosoft CRJ (DISCLAIMER: knobs do not sync well at all, it may be impossible to get the altitude selectors/radios synced)
-* Added support for the Carenado M20R, JustFLight PA28, and mixMugz TBM930 (EFBs do not sync)
-* Rewritten YourControls gauge to support unlimited local variables
-* Support the following pulls/commits in the A32NX Dev/Experimental version:
-  * [flybywiresim/a32nx##3794](https://github.com/flybywiresim/a32nx/pull/3794)
-  * [flybywiresim/a32nx##3930](https://github.com/flybywiresim/a32nx/pull/3930)'
-  * [flybywiresim/a32nx/autopilot](https://github.com/flybywiresim/a32nx/commit/8d09903343552b255be5f68a1ed4fff38af37568)
-
-## Version 2.5.6
-
-* Synced A32NX APU bleed
-* Prepare A32NX for when [flybywiresim/a32nx##3782](https://github.com/flybywiresim/a32nx/pull/3782) is merged
-
-
-## Version 2.5.5
-
-* Support new dev version of A32NX (APU/Electrical button syncage)
-* Fixed an issue where the aircraft would be floating or through the ground on initial connection
-* C152 - attempted to fix heading gyro desync
-* WT CJ4 - fixed various desync
-
-## Version 2.5.4
-
-* Fixed an error message when NAV is activated on the CJ4
-* Fixed an issue where brakes would still be depressed for others after releasing them
-* Fixed multiple autopilot definitions conflicts on the WT CJ4
-* Fixed off by one logic for the course and altimeter on the G1000s
-* Fixed an issue where avionic presses would be triggered multiple times for clients
-
-* Added C208B seatbelt signs/other INOP switches as an optional feature
-
-## Version 2.5.3
-
-### New Features
-
-* Added an error message when the community package is not loaded in the simulator
-
-### Fixes
-
-* Fixed a script error in the frontend UI that would pop up when the external IP could not be fetched
-* Fixed an issue where the number of clients connected would not update
-* Fixed an issue where the UI would be delayed in loading the saved config
-
-* Fixed an issue where the game would crash when transferring controls
-* Fixed an issue where clients would get teleported to various locations when transferring controls
-* Attempted to fix an issue where controls, switches, and avionics would stop working (gauge crashed)
-* Attempted to fix an issue where some switches/key presses would get randomly dropped
-  
-* Fixed an issue where the selected altitude would reset when climbing and nearing the selected altitude
-* Fixed pitch hold/autopilot leveler not syncing as intended
-* Fixed the FLC, HDG, NAV, VNAV, VS on the WT CJ4 where it would not sync properly
-* Fixed nav radios not syncing properly
-
-### Misc
-
-* Completely refactored the JS side of things
-
-### Synced
-* A32NX Coffee
-* A32NX EFB Textboxes (ensure you have the same A32NX version)
-* Time (on initial connection)
-* Fuel
-* Speed when winds are mismatched
-* Altitude when scenery is mismatched
-
-## Version 2.5.1
-
-### Fixes
-
-* Fixed an issue where aircraft movement and throttle would not be synced (removed fuel syncage).
-* Small optimization of net code
-
-## Version 2.5.0
-
-### New Features
-
-* Network Stats! See how much network YourControls is using and if there is any packet loss detected.
-* Cloud Host Did port forwarding and Cloud Server not work with you? Well this new option gives you the opportunity to get connected without any other setup! Currently the server resides in the USA so latency is the biggest issue if you choose to use this connection method.
-Note: Currently, the number of connections to the server is capped at 100, and will be increased as we upgrade our server infrastructure. You should always use Cloud P2P and Direct first if you can.
-* A32NX clicking the priority button on the joystick will now forcibly take control.
-* The person connecting to the server no longer has to select a definition file! The server will send their copy over to the client hassle-free
-* New clients will no longer start as an observer
-* You can now set a keybinding to transfer controls to, and take controls from the 1st person on the connection list! Go into the controls menu, and bind a key combo to LAUNCH BAR SWITCH TOGGLE.
-* Streamer Mode - Hides your IP after connecting.
-* New connections as observer - New connections will not be able to manipulate switches.
-
-### Changes
-
-* Reworked interpolation - syncs position/rotation data more reliably
-* UPnP is now it's own setting. Check the `Log.txt` if you need to see if UPnP worked or not and why.
-* The default port has now been changed to 25071.
-
-## Bug Fixes
-* Clicking the CDI button on the G1000/G3000 will no longer throw it off sync
-* Fixed an issue where MCDU scratchpad inputs would be out of order. For example, typing KBOS would sync KOBS sometimes.
-* FD drift has been fixed (only if winds are the same for all people)
-* Fixed an issue where transferring controls would lead to an unrecoverable dive
-
-## Synced
-* Indicated Airspeed
-* FBW A32NX EFB, Printer, APU, New Radios
-* Engine N1/N2/ITT/torque
-* Engine oil temp/oil pressure
-* More precise radio syncing (you can now increment by 0.05MHz)
-* Fuel
-
-**Huge thanks to @rthom91 for testing and syncing all of these new aircraft!**
-
-## New Aircraft
-* Experimental FBW A32NX
-* Mrtommymxr DA40NGX
-* Mrtommymxr DA62X
-* SaltySimulations 747-8
-* TheFrett Bonanza G36
-* WorkingTitle CJ4
-* Asobo Extra 330LT
-* Asobo Boeing 747-8i
-* Asobo Boeing 787-10
-* Asobo Airbus A320 Neo
-* Asobo Mudry Cap 10
-* Asobo Cessna 152
-* Asobo Cessna 172 Steam
-* Asobo Cessna 208B
-* Asobo CJ4
-* Asobo CTLS
-* Asobo Diamond DA40NG
-* Asobo Diamond DA40TDI
-* Asobo Robin DR400
-* Asobo DV20
-* Asobo Bonanza G36
-* Asobo Baron G58
-* Asobo KingAir 350
-* Asobo Cessna Citation Longitude
-* Asobo Cirrus SR22
-* Asobo Pipistrel Virus SW1221
-* Asobo Zlin Savage Cub
-* Asobo Zlin Savage Shock
-* Asobo Aveko VL-3 Sprint
-
-## Known Issues
-* Having differing weather will cause differences in indicated altitude and airspeed

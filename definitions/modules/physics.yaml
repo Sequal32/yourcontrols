@@ -20,7 +20,7 @@ master:
   -
     type: var
     var_name: A:VERTICAL SPEED
-    var_units: Feet per minute
+    var_units: Feet per second
     var_type: f64
     interpolate: DefaultConstant
   -
@@ -35,6 +35,18 @@ master:
     var_units: Degrees
     var_type: f64
     interpolate: Wrap90
+  -
+    type: var
+    var_name: A:PLANE HEADING DEGREES GYRO
+    var_units: Degrees
+    var_type: f64
+    interpolate: Wrap360
+  -
+    type: var
+    var_name: A:PLANE HEADING DEGREES TRUE
+    var_units: Degrees
+    var_type: f64
+    interpolate: Wrap360
   -
     type: var
     var_name: A:PLANE HEADING DEGREES MAGNETIC

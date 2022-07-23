@@ -8,6 +8,7 @@ include:
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/passenger.yaml
   - definitions/modules/radios.yaml
@@ -16,21 +17,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:20
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 20
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:37
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 37
-
   - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
@@ -47,31 +33,19 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Lights
-    type: ToggleSwitch
-    var_name: A:LIGHT NAV:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_NAV_LIGHTS
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT LANDING
-    var_units: Bool
-    var_type: bool
-    event_name: LANDING_LIGHTS_TOGGLE
-  -
-    type: ToggleSwitch
+  - # Interior
+    type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
-    var_type: bool
-    event_name: PANEL_LIGHTS_TOGGLE
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
     event_param: 1
   -
-    type: ToggleSwitch
-    var_name: A:LIGHT CABIN
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
     var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_CABIN_LIGHTS
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
   -
     type: NumSet
     var_name: A:LIGHT PANEL:2
@@ -81,8 +55,16 @@ shared:
     event_param: 2
   -
     type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING:2
-    var_units: percent
+    var_units: Percent
     var_type: i32
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 2
@@ -129,7 +111,10 @@ shared:
 #   var_name: L:XMLVAR_ELT_TEST_TIME
 # -
 #   type: var
-#   var_name: L:AS3X_Brightness
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
@@ -180,6 +165,12 @@ shared:
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
+#   var_name: L:AS3X_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_1_State
+# -
+#   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
 # -
 #   type: var
@@ -213,6 +204,15 @@ shared:
 #   var_name: L:AS3000_MinimalsValue
 # -
 #   type: var
+#   var_name: L:AS3X_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_2_State
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
 #   var_name: L:MFD_Main_MapShowCursor
 # -
 #   type: var
@@ -220,30 +220,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveDestination
-  -
-    type: var
-    var_name: L:GNS_Brightness
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS3X_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_1_State
-# -
-#   type: var
-#   var_name: L:AS3X_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_2_State
 # -
 #   type: var
 #   var_name: L:AS430_ScreenLuminosity
@@ -264,31 +240,40 @@ shared:
     var_name: L:LedTrim_State
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64

@@ -10,7 +10,7 @@ To setup:
     Try all of these options in this order, until one works for you.
 
     Cloud P2P
-    Cloud P2P utilizes a rendezvous server in order to connect two computers behind a router. Dependending on your router, this may fail and you'll have to use other connection methods. *This is the preferred method*.
+    Cloud P2P utilizes a rendezvous server in order to connect two computers behind a router. Depending on your router, this may fail and you'll have to use other connection methods. *This is the preferred method*.
 
     1. Click `Start Server`
     2. In `Settings`, under the header `Active Aircraft`, select the .yaml file associated with the aircraft you're flying.
@@ -39,7 +39,6 @@ To setup:
 
 Notes:
 1. Both you and your copilot are recommended to turn off crash physics as there can be some desync issues that stresses your aircraft too much.
-   
 2. For the G1000/FMC/similar systems, only one person should be interacting with a given area at a time. For example, one person flies while the other fills out the flightplan (you should not be filing out the flightplan at the same time), or one person adjusts the transponder while another zooms out the map. This is to avoid desynchronization issues.
 
 If you enjoy the mod, considering showing your gratitude with a donation! 

@@ -15,6 +15,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Autofeather
+    type: ToggleSwitch
+    var_name: A:PANEL AUTO FEATHER SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AUTOFEATHER_ARM
+
   - # Bleed
     type: NumSet
     var_name: A:BLEED AIR SOURCE CONTROL
@@ -55,7 +62,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_10_SET
     index_reversed: true
 
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL
     var_units: Bool
@@ -159,15 +166,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
-  -
-    type: var
-    var_name: L:XMLVAR_Starter
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_Starter_EndTimeDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_EndTimeDown
   -
     type: var
     var_name: L:XMLVAR_Ignition
@@ -186,9 +193,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
-# -
-#   type: var
-#   var_name: L:AS3000_Brightness
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
@@ -207,12 +211,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_InertSep1_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
   -
     type: var
     var_name: L:LANDING_GEAR_Gear
@@ -251,22 +249,16 @@ shared:
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:AS3000_Brightness_Manual
-# -
-#   type: var
 #   var_name: L:XMLVAR_SyntheticVision_On
 # -
 #   type: var
 #   var_name: L:XMLVAR_SyntheticVision_Off
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:PFD_InnerMap_MapShowCursor
@@ -284,6 +276,9 @@ shared:
 #   var_name: L:AS1000_Warnings_WarningIndex
 # -
 #   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+# -
+#   type: var
 #   var_name: L:Glasscockpit_HSI_Arc
 # -
 #   type: var
@@ -297,6 +292,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpit_SVTTerrain
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:PFD_CDI_Source
@@ -317,7 +318,10 @@ shared:
 #   var_name: L:AS3000_MinimalsValue
 # -
 #   type: var
-#   var_name: L:AS3000_Brightness_Auto
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:AS3000_2_Timer_Value
@@ -341,13 +345,19 @@ shared:
 #   var_name: L:AS3000_MFD_MapRotationMode
 # -
 #   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
 # -
 #   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+#   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeBackup_State
 # -
 #   type: var
 #   var_name: L:AS1000_SpeedBackup_ScreenLuminosity
@@ -380,144 +390,61 @@ shared:
 #   var_name: L:AS3000_MFD_State
 # -
 #   type: var
-#   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS1000_AttitudeBackup_State
-# -
-#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:7
+    var_name: A:PAYLOAD STATION WEIGHT:7
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:8
+    var_name: A:PAYLOAD STATION WEIGHT:8
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - AP_BARO_Up
-  - AP_BARO_Down
-  - AP_KNOB_Up
-  - AP_KNOB_Down
-  - AS3000_TSC_Horizontal_1_TopKnob_Large_INC
-  - AS3000_TSC_Horizontal_1_TopKnob_Large_DEC
-  - AS3000_TSC_Horizontal_1_TopKnob_Small_INC
-  - AS3000_TSC_Horizontal_1_TopKnob_Small_DEC
-  - AS3000_TSC_Horizontal_1_TopKnob_Large_INC
-  - AS3000_TSC_Horizontal_1_TopKnob_Large_DEC
-  - AS3000_TSC_Horizontal_1_TopKnob_Small_INC
-  - AS3000_TSC_Horizontal_1_TopKnob_Small_DEC
-# COM primary
-  - AS3000_TSC_Horizontal_1#Com1Active
-  - AS3000_TSC_Horizontal_1#Com1Stby
-  - AS3000_TSC_Horizontal_1#Com2Active
-  - AS3000_TSC_Horizontal_1#Com2Stby
-  - AS3000_TSC_Horizontal_1#FK_Xfer
-  - AS3000_TSC_Horizontal_1#NKXferButton
-  - AS3000_TSC_Horizontal_2#Com1Active
-  - AS3000_TSC_Horizontal_2#Com1Stby
-  - AS3000_TSC_Horizontal_2#Com2Active
-  - AS3000_TSC_Horizontal_2#Com2Stby
-  - AS3000_TSC_Horizontal_2#FK_Xfer
-  - AS3000_TSC_Horizontal_2#NKXferButton
-# COM1 swap
-  - AS3000_TSC_Horizontal_1#971012391
-  - AS3000_TSC_Horizontal_1#769170470
-  - AS3000_TSC_Horizontal_1#-1054176646
-  - AS3000_TSC_Horizontal_2#971012391
-  - AS3000_TSC_Horizontal_2#769170470
-  - AS3000_TSC_Horizontal_2#-1054176646
-# COM2 swap
-  - AS3000_TSC_Horizontal_1#769170473
-  - AS3000_TSC_Horizontal_1#-1054176643
-  - AS3000_TSC_Horizontal_1#-1135460952
-  - AS3000_TSC_Horizontal_1#-2126745619
-  - AS3000_TSC_Horizontal_2#769170473
-  - AS3000_TSC_Horizontal_2#-1054176643
-  - AS3000_TSC_Horizontal_2#-1135460952
-  - AS3000_TSC_Horizontal_2#-2126745617
-# COM receives/transmits
-  - AS3000_TSC_Horizontal_1#Mic
-  - AS3000_TSC_Horizontal_1#Mon
-  - AS3000_TSC_Horizontal_1#1684040672
-  - AS3000_TSC_Horizontal_1#-957356656
-  - AS3000_TSC_Horizontal_1#1629924333
-  - AS3000_TSC_Horizontal_1#1629924334
-  - AS3000_TSC_Horizontal_1#-260516342
-  - AS3000_TSC_Horizontal_1#-260516341
-  - AS3000_TSC_Horizontal_1#1684040642
-  - AS3000_TSC_Horizontal_1#380867949
-  - AS3000_TSC_Horizontal_1#6085600
-  - AS3000_TSC_Horizontal_1#6085599
-  - AS3000_TSC_Horizontal_2#Mic
-  - AS3000_TSC_Horizontal_2#Mon
-  - AS3000_TSC_Horizontal_2#1684040672
-  - AS3000_TSC_Horizontal_2#-957356659
-  - AS3000_TSC_Horizontal_2#-260516342
-  - AS3000_TSC_Horizontal_2#-957356656
-  - AS3000_TSC_Horizontal_2#1629924334
-  - AS3000_TSC_Horizontal_2#-260516341
-  - AS3000_TSC_Horizontal_2#1684040642
-  - AS3000_TSC_Horizontal_2#189
-  - AS3000_TSC_Horizontal_2#6085600
-  - AS3000_TSC_Horizontal_2#6085599
-# SVT
-  - AS3000_PFD_1_SVTTerrain_Toggle
-  - AS3000_TSC_Horizontal_1#388428289
-  - AS3000_TSC_Horizontal_2#388428289
-# Working Title
-  - AS3000_TSC_Horizontal_1#-158606568
-  - AS3000_PFD_1_BRG2Switch
-  - AS3000_TSC_Horizontal_1#-158606569
-  - AS3000_PFD_1_BRG1Switch

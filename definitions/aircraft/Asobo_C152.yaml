@@ -14,13 +14,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Engine
-    type: NumSet
-    var_name: A:RECIP ENG PRIMER:1
-    var_units: percent
-    var_type: f64
-    event_name: TOGGLE_PRIMER1
-
   - # Failures
     type: var
     var_name: A:CIRCUIT GENERAL PANEL ON
@@ -47,7 +40,7 @@ shared:
     var_units: Bool
     var_type: bool
 
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
@@ -61,20 +54,19 @@ shared:
     event_name: GLARESHIELD_LIGHTS_SET
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 5
-    index_reversed: true
-
-  - # Emissive lights
-    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
     index_reversed: true
 
   - # LVAR's
@@ -119,15 +111,18 @@ shared:
   -
     type: var
     var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:INSTRUMENT_ADF
   -
     type: var
     var_name: L:INSTRUMENT_Altimeter_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Gyro_Drift
   -
     type: var
     var_name: L:INSTRUMENT_Course_1
@@ -160,18 +155,6 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:HourMeter_ScreenLuminosity
-  -
-    type: var
-    var_name: L:HourMeter_State
-  -
-    type: var
-    var_name: L:KX155A_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KX155A_1_State
-  -
-    type: var
     var_name: L:KX155A_2_ScreenLuminosity
   -
     type: var
@@ -182,6 +165,18 @@ shared:
   -
     type: var
     var_name: L:C300ADF_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
+  -
+    type: var
+    var_name: L:KX155A_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KX155A_1_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -189,26 +184,39 @@ shared:
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
+  - # Aero
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  -
+    type: var
+    var_name: L:PGM1212_ScreenLuminosity
+  -
+    type: var
+    var_name: L:PGM1212_State
+
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64

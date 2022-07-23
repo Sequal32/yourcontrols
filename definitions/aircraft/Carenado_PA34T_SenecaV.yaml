@@ -1,10 +1,12 @@
-# Version 1.3.0
+# Version 1.4.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/Avionics/TDSNXi.yaml
+  - definitions/modules/Avionics/GTN750.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -44,19 +46,6 @@ shared:
   - # Exit
     type: event
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
-
-  - # Cowl Flaps
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP1_SET
-  -
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:2
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP2_SET
 
   - # Magnetos
     type: NumSet
@@ -183,7 +172,7 @@ shared:
     var_type: f64
     event_name: TOGGLE_LOGO_LIGHTS
 
-  - # Lighting
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -193,7 +182,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
@@ -208,7 +197,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
@@ -223,7 +212,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
@@ -515,6 +504,12 @@ shared:
 #   var_name: L:AS530_HIDDEN
 # -
 #   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE_OLD
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE_OLD_2
+# -
+#   type: var
 #   var_name: L:TEST_VAR_PILOTO
 # -
 #   type: var
@@ -591,7 +586,7 @@ shared:
 # -
 #   type: var
 #   var_name: L:AUX_ELECTRICAL_GENALT_BUS_VOLT2
-# - # overlap
+# -
 #   type: var
 #   var_name: L:AUX_VERTICAL_HOLD_VAR
 # -
@@ -890,6 +885,12 @@ shared:
     var_name: L:XMLVAR_FUEL_CUTOFF2
   -
     type: var
+    var_name: L:VAR_SW_TABLET
+  -
+    type: var
+    var_name: L:TABLET_ANIM
+  -
+    type: var
     var_name: L:XMLVAR_LandingPulseState
 # -
 #   type: var
@@ -972,6 +973,18 @@ shared:
   -
     type: var
     var_name: L:BTN_PRESS_ENGINE_START
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_TIMER
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE_2
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_TIMER_2
   -
     type: var
     var_name: L:TABLET_PAG
@@ -981,9 +994,9 @@ shared:
   -
     type: var
     var_name: L:TABLET_BTN_BAGAGE_DOOR
-  -
-    type: var
-    var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
   -
     type: var
     var_name: L:LOCAL_milliBar_to_inHg
@@ -1211,9 +1224,6 @@ shared:
   -
     type: var
     var_name: L:LIGHTING_PANEL_3
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Gyro_Drift
   -
     type: var
     var_name: L:INSTRUMENT_Altimeter_1
@@ -1232,9 +1242,6 @@ shared:
   -
     type: var
     var_name: L:BUTTON_CLOCK_ON
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -1304,12 +1311,12 @@ shared:
   -
     type: var
     var_name: L:RDR2000_State
-  -
-    type: var
-    var_name: L:GTN750_INT_ScreenLuminosity
-  -
-    type: var
-    var_name: L:GTN750_INT_State
+# -
+#   type: var
+#   var_name: L:GTN750_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN750_INT_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -1318,58 +1325,55 @@ shared:
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:7
+    var_name: A:PAYLOAD STATION WEIGHT:7
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:8
+    var_name: A:PAYLOAD STATION WEIGHT:8
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - adf_frqTransfert

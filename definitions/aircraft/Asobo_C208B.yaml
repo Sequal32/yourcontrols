@@ -1,8 +1,8 @@
 include:
   - definitions/modules/Avionics/AS1000.yaml
+  - definitions/modules/Avionics/GTN750.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -14,20 +14,78 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+  -
+    type: var
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: bool
+  -
+    type: event
+    event_name: ALTERNATOR_ON
+  -
+    type: event
+    event_name: ALTERNATOR_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
+  -
+    type: CustomCalculator
+    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 12 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
+    set: 11 12 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
+    set: 11 1 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
+  -
+    type: var
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Number
+    var_type: i32
+  -
+    type: event
+    event_name: SET_STARTER1_HELD
+  - # Avionics 1
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:26
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 26
-  -
+  - # Avionics 2
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:27
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 27
+  - # Avionics Bus Tie
+    type: CustomCalculator
+    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
+    set: 9 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # Avionics STBY
+    type: CustomCalculator
+    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
+    set: 11 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
   - # Failures
     type: var
@@ -62,16 +120,17 @@ shared:
     var_type: f64
     event_name: LANDING_LIGHTS_SET
     event_param: 2
-  -
+
+  - # Interior
     type: NumSet
-    var_name: A:LIGHT PANEL
+    var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
@@ -79,13 +138,12 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
-    
-  - # ASOBO_LIGHTING_Knob_Pedestal_Template
+  -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL:1
     var_units: Bool
@@ -94,7 +152,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 6
@@ -109,7 +167,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:12
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 12
@@ -124,7 +182,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:13
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 13
@@ -146,7 +204,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:14
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
@@ -154,7 +212,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:15
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 15
@@ -162,7 +220,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:16
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 16
@@ -170,7 +228,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:18
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 18
@@ -178,7 +236,7 @@ shared:
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:30
-    var_units: percent
+    var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 30
@@ -240,6 +298,9 @@ shared:
 #   var_name: L:XMLVAR_AirSpeedIsInMach
   -
     type: var
+    var_name: L:XMLVAR_DeiceWindshield_1
+  -
+    type: var
     var_name: L:DEICE_Airframe_1
   -
     type: var
@@ -252,10 +313,16 @@ shared:
 #   var_name: L:AS1000_PFD_Brightness
 # -
 #   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
   -
     type: var
     var_name: L:HANDLING_RudderTrim
@@ -265,6 +332,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_InterSep
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
     var_name: L:LIGHTING_POTENTIOMETER_3
@@ -336,6 +409,9 @@ shared:
 #   var_name: L:PFD_InnerMap_MapShowCursor
 # -
 #   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+# -
+#   type: var
 #   var_name: L:AS1000_MFD_SelectedNavIndex
 # -
 #   type: var
@@ -346,9 +422,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:MFD_InnerMap_MapShowCursor
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -360,7 +433,13 @@ shared:
 #   var_name: L:XMLVAR_SyntheticVision_Off
 # -
 #   type: var
+#   var_name: L:AS1000_PFD_State
+# -
+#   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
 # -
 #   type: var
 #   var_name: L:Glasscockpit_Wind_Mode
@@ -372,6 +451,9 @@ shared:
 #   var_name: L:AS1000_Warnings_WarningIndex
 # -
 #   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+# -
+#   type: var
 #   var_name: L:Glasscockpit_HSI_Arc
 # -
 #   type: var
@@ -379,6 +461,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:GPS_Current_Phase
@@ -399,6 +487,9 @@ shared:
 #   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
+#   var_name: L:AS1000_MFD_State
+# -
+#   type: var
 #   var_name: L:MFD_MapShowCursor
 # -
 #   type: var
@@ -406,21 +497,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpit_MFD_Started
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_State
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_State
   -
     type: var
     var_name: L:KR87_ScreenLuminosity
@@ -435,99 +511,105 @@ shared:
     var_name: L:HourMeter_State
 # -
 #   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:7
+    var_name: A:PAYLOAD STATION WEIGHT:7
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:8
+    var_name: A:PAYLOAD STATION WEIGHT:8
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:9
+    var_name: A:PAYLOAD STATION WEIGHT:9
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:10
+    var_name: A:PAYLOAD STATION WEIGHT:10
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:11
+    var_name: A:PAYLOAD STATION WEIGHT:11
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:12
+    var_name: A:PAYLOAD STATION WEIGHT:12
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:13
+    var_name: A:PAYLOAD STATION WEIGHT:13
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:14
+    var_name: A:PAYLOAD STATION WEIGHT:14
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:15
+    var_name: A:PAYLOAD STATION WEIGHT:15
     var_units: Pounds
     var_type: f64
-
-ignore:
-  - adf_frqTransfert

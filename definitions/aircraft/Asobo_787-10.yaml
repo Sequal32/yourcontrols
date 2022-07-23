@@ -1,5 +1,5 @@
 include:
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/autopilot_airliner.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -26,10 +26,6 @@ shared:
     var_units: Number
     var_type: f64
     event_name: SET_AUTOBRAKE_CONTROL
-
-  - # Autopilot
-    type: event
-    event_name: AP_HDG_HOLD_ON
 
   - # Deice
     type: ToggleSwitch
@@ -76,6 +72,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: SET_EXTERNAL_POWER
+    index_reversed: true
     event_param: 2
   -
     type: NumSet
@@ -83,6 +80,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: SET_EXTERNAL_POWER
+    index_reversed: true
     event_param: 3
 
   - # Failures
@@ -223,6 +221,49 @@ shared:
     var_type: bool
     event_name: CABIN_SEATBELTS_ALERT_SWITCH_TOGGLE
 
+  - # Jetway
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_JETWAY
+    use_calculator: true
+  - # Ramp Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_RAMPTRUCK
+    use_calculator: true
+  - # Catering Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:7
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_CATERING
+    use_calculator: true
+  - # Luggage Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:8
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_LUGGAGE
+    use_calculator: true
+  - # GPU
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:12
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_POWER_SUPPLY
+    use_calculator: true
+  - # Fuel Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT OPEN:11
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_FUEL_KEY
+    use_calculator: true
+
   - # Lights
     type: NumSet
     var_name: A:LIGHT LANDING:2
@@ -252,15 +293,7 @@ shared:
     event_name: TAXI_LIGHTS_SET
     event_param: 3
 
-  - # Master Brightness
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:31
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 31
-    index_reversed: true
-  -
+  - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
@@ -396,8 +429,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 25
     index_reversed: true
-
-  - # MFD PFD
+  -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:26
     var_units: Percent
@@ -437,6 +469,14 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 30
     index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:31
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 31
+    index_reversed: true
 
   - # Wipers
     type: ToggleSwitch
@@ -474,85 +514,87 @@ shared:
     var_name: L:XMLVAR_SeatBelts
   -
     type: var
-    var_name: L:AP_ALT_HOLD_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_MFD_Side_0
-  -
-    type: var
-    var_name: L:XMLVAR_COM_3_Volume_VHF_R_2
-  -
-    type: var
-    var_name: L:AP_FLCH_ACTIVE
-  -
-    type: var
-    var_name: L:AP_VS_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_HUD_1_Down
-  -
-    type: var
-    var_name: L:XMLVAR_FPA_MODE_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
-# - # H-event
-#   type: var
-#   var_name: L:AP_LNAV_ARMED
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_3
-  -
-    type: var
-    var_name: L:AS01B_AUTO_THROTTLE_ARM_STATE
-  -
-    type: var
-    var_name: L:XMLVAR_COM_Transmit_Channel
-  -
-    type: var
-    var_name: L:XMLVAR_Transponder_Mode
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_2
-  -
-    type: var
-    var_name: L:XMLVAR_MFD_Side_1
-  -
-    type: var
-    var_name: L:AP_HEADING_HOLD_ACTIVE
-  -
-    type: var
     var_name: L:XMLVAR_Mins_Selector_Baro
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
-  -
-    type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_1
-  -
-    type: var
-    var_name: L:XMLVAR_COM_2_Volume_VHF_C_2
   -
     type: var
     var_name: L:XMLVAR_COM_3_Volume_VHF_R_1
   -
     type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+    var_name: L:XMLVAR_COM_Transmit_Channel
   -
     type: var
-    var_name: L:AP_SPD_ACTIVE
+    var_name: L:XMLVAR_HUD_1_Down
   -
     type: var
-    var_name: L:XMLVAR_COM_1_Volume_VHF_L_3
-# - # H-event
-#   type: var
-#   var_name: L:AP_VNAV_ARMED
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_2
+  -
+    type: var
+    var_name: L:XMLVAR_HUD_2_Down
+  -
+    type: var
+    var_name: L:XMLVAR_Baro_Selector_HPA_1
+  -
+    type: var
+    var_name: L:XMLVAR_MFD_Side_2
+  -
+    type: var
+    var_name: L:XMLVAR_Transponder_Mode
+  -
+    type: var
+    var_name: L:AP_VNAV_ARMED
+  -
+    type: var
+    var_name: L:XMLVAR_FPA_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_2
+  -
+    type: ToggleSwitch
+    var_name: L:AP_HEADING_HOLD_ACTIVE
+    event_name: AP_HDG_HOLD_ON
+    use_calculator: true
+  -
+    type: var
+    var_name: L:AP_LNAV_ARMED
+  -
+    type: var
+    var_name: L:AP_ALT_HOLD_ACTIVE
+  -
+    type: var
+    var_name: L:AP_FLCH_ACTIVE
   -
     type: var
     var_name: L:XMLVAR_COM_3_Volume_VHF_R_3
   -
     type: var
-    var_name: L:XMLVAR_HUD_2_Down
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_3
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_1
+  -
+    type: var
+    var_name: L:AS01B_AUTO_THROTTLE_ARM_STATE
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+  -
+    type: var
+    var_name: L:XMLVAR_COM_3_Volume_VHF_R_2
+  -
+    type: var
+    var_name: L:AP_VS_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
+  -
+    type: var
+    var_name: L:AP_SPD_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_MFD_Side_1
+  -
+    type: var
+    var_name: L:XMLVAR_COM_1_Volume_VHF_L_3
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -595,12 +637,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:XMLVAR_Starter1
-  -
-    type: var
-    var_name: L:XMLVAR_Starter2
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter2
   -
     type: var
     var_name: L:FuelBalanceSystemActive
@@ -616,18 +658,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_2_Status
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
   -
     type: var
     var_name: L:B787_10_PFD_ScreenLuminosity
@@ -637,6 +670,18 @@ shared:
   -
     type: var
     var_name: L:B787_10_MFD_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Value
   -
     type: var
     var_name: L:LIGHTING_LANDING_2
@@ -685,6 +730,12 @@ shared:
   -
     type: var
     var_name: L:ELECTRICAL_ExternalPower_3
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_ForcedToSTD
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_SavedPressure
 # -
 #   type: var
 #   var_name: L:XMLVAR_AirSpeedIsInMach
@@ -744,13 +795,13 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
+    var_name: L:B787_10_PFD_State
 # -
 #   type: var
 #   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
   -
     type: var
     var_name: L:PFD_MapShowCursor
@@ -775,9 +826,6 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_VREF_SPEED
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_ForcedToSTD
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
@@ -801,6 +849,18 @@ shared:
     var_name: L:VHF_ACTIVE_INDEX:1
   -
     type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:B787_10_MFD_1_State
+# -
+#   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+  -
+    type: var
     var_name: L:AS1000_Warnings_Master_Set
   -
     type: var
@@ -811,6 +871,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_EICAS_INDEX
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
   -
     type: var
     var_name: L:AS1000_Warnings_WarningIndex
@@ -829,30 +895,45 @@ shared:
   -
     type: var
     var_name: L:B787_MAP_MODE
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:B787_10_MFD_2_State
   -
     type: var
     var_name: L:BTN_WX_ACTIVE:2
   -
     type: var
     var_name: L:BTN_TERRONND_ACTIVE:2
-  -
-    type: var
-    var_name: L:XMLVAR_MFD_SIDE_2
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:AIRLINER_TO_FLEX_TEMP
+  -
+    type: var
+    var_name: L:AIRLINER_TO_FLEX_TEMP
   -
     type: var
     var_name: L:AIRLINER_CRUISE_ALTITUDE
-# -
-#   type: var
-#   var_name: L:FMC_UPDATE_CURRENT_PAGE
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
+  -
+    type: var
+    var_name: L:AP_SPEED_INTERVENTION_ACTIVE
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+  -
+    type: var
+    var_name: L:B787_10_FMC_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B787_10_FMC_1_State
+# -
+#   type: var
+#   var_name: L:FMC_UPDATE_CURRENT_PAGE
 # -
 #   type: var
 #   var_name: L:HUD_AIRSPEED_WHITE_START
@@ -882,31 +963,7 @@ shared:
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
   -
     type: var
-    var_name: L:AP_SPEED_INTERVENTION_ACTIVE
-  -
-    type: var
-    var_name: L:SHARED_MINIMUM_REFERENCE_VALUE
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-  -
-    type: var
-    var_name: L:B787_10_PFD_State
-  -
-    type: var
-    var_name: L:B787_10_MFD_1_State
-  -
-    type: var
-    var_name: L:B787_10_MFD_2_State
-  -
-    type: var
-    var_name: L:B787_10_FMC_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B787_10_FMC_1_State
+    var_name: L:AIRLINER_TAKEOFF_FLAP
   -
     type: var
     var_name: L:B787_10_FMC_2_ScreenLuminosity
@@ -969,65 +1026,61 @@ shared:
     var_name: L:B787_10_HUD_State
 
 server:
-  - # Payload
+  -
     type: var
-    var_name: FUEL TANK CENTER LEVEL
+    var_name: A:FUEL TANK CENTER LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: FUEL TANK RIGHT MAIN LEVEL
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:1
+    var_name: A:PAYLOAD STATION WEIGHT:1
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:2
+    var_name: A:PAYLOAD STATION WEIGHT:2
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:3
+    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:4
+    var_name: A:PAYLOAD STATION WEIGHT:4
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:5
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:6
+    var_name: A:PAYLOAD STATION WEIGHT:6
     var_units: Pounds
     var_type: f64
   -
     type: var
-    var_name: PAYLOAD STATION WEIGHT:7
+    var_name: A:PAYLOAD STATION WEIGHT:7
     var_units: Pounds
     var_type: f64
 
 ignore:
-  - AP_BARO_Up
-  - AP_BARO_Down
-  - AP_KNOB_Up
-  - AP_KNOB_Down
   - AS01B_MFD_1_TERR
   - AS01B_MFD_1_WXR
   - AS01B_MFD_2_EICAS
