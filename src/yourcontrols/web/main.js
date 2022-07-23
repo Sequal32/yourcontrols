@@ -623,11 +623,13 @@ $(function () {
         async: true,
     })
         .done(function (ip) {
-            if ($("#external-ipv6").text() == "Show IPv6") {
-                $("#external-ipv6").text("IPv6: " + ip);
-            } else {
-                $("#external-ipv6").text("Show IPv6");
-            }
+            $("#external-ipv6").click(function () {
+                if ($("#external-ipv6").text() == "Show IPv6") {
+                    $("#external-ipv6").text("IPv6: " + ip);
+                } else {
+                    $("#external-ipv6").text("Show IPv6");
+                }
+            })
             $("#external-ipv6").text("IPv6: " + ip);
         })
         .fail(function () {
