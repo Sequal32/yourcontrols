@@ -131,6 +131,8 @@ function OnConnected() {
     if (streamer_mode.checked) {
         joinIpInput.value = joinIpInput.value.split(/\d/).join("X");
         cacheSessionInput.value = session_input.value.replace(".", "X");
+        $("#external-ipv4").text("Show IPv4");
+        $("#external-ipv6").text("Show IPv6");
     }
 
     SetStuffVisible(true);
