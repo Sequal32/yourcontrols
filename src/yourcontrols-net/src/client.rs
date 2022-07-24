@@ -324,6 +324,7 @@ impl Client {
                     .ok();
             }
         } else if let Some(addr) = target_address {
+            info!("Sending request to port {} to join session", addr);
             // Send a handshake to the target address to start establishing a connection
             transfer
                 .net
@@ -357,16 +358,17 @@ impl Client {
                             transfer.handle_message(addr, payload);
                         }
                         Message::ConnectionClosed(addr) => {
-                            // Can't connect to rendezvous to obtain session key
-                            if rendezvous.is_none()
-                                || (rendezvous.is_some() && rendezvous.unwrap() != addr)
-                            {
-                                transfer.stop("No message received from server.".to_string())
+                            let was_connected_addr = transfer
+                                .connected_address
+                                .map(|x| x == addr)
+                                .unwrap_or(false);
+                            if was_connected_addr {
+                                transfer.stop("Connection timeout".to_string())
                             }
                         }
                         Message::Metrics(addr, metrics) => {
-                            // Send message from game server, not rendezvous
                             if let Some(connected_address) = transfer.connected_address {
+                                // Record message from game server only, not rendezvous
                                 if connected_address == addr {
                                     transfer
                                         .server_tx

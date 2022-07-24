@@ -92,12 +92,20 @@ impl TransferStruct {
                 }
             }
 
-            to_send.push((
-                Payloads::Handshake {
-                    session_id: session_id.clone(),
-                },
-                session.addr,
-            ));
+            for addr in &session.addrs {
+                to_send.push((
+                    Payloads::Handshake {
+                        session_id: session_id.clone(),
+                    },
+                    *addr,
+                ));
+                info!(
+                    "[NETWORK] Sent handshake packet to port {}. Retry #{}",
+                    addr.port(),
+                    session.retries
+                );
+            }
+
             // Reset second timer
             session.retries += 1;
             session.timer = Some(Instant::now());
@@ -106,12 +114,6 @@ impl TransferStruct {
             if session.retries == MAX_PUNCH_RETRIES {
                 return false;
             }
-
-            info!(
-                "[NETWORK] Sent handshake packet to port {}. Retry #{}",
-                session.addr.port(),
-                session.retries
-            );
 
             true
         });
@@ -236,6 +238,14 @@ impl TransferStruct {
                     addr.port(),
                     session_id
                 );
+                // Make sure we're not already established on another IP
+                if !self
+                    .clients_to_holepunch
+                    .iter()
+                    .any(|x| x.addrs.contains(&addr))
+                {
+                    return;
+                }
                 // Incoming UDP packet from peer
                 if *session_id == self.session_id {
                     self.net
@@ -252,7 +262,8 @@ impl TransferStruct {
                             .send_message(Payloads::PeerEstablished { peer: addr }, *rendezvous)
                             .ok();
 
-                        self.clients_to_holepunch.retain(|x| x.addr != addr);
+                        self.clients_to_holepunch
+                            .retain(|x| x.addrs.contains(&addr));
                     }
                 }
 
@@ -276,12 +287,8 @@ impl TransferStruct {
                         .collect::<Vec<String>>()
                         .join(", ")
                 );
-                self.clients_to_holepunch.append(
-                    &mut peers
-                        .iter()
-                        .map(|peer| HolePunchSession::new(*peer))
-                        .collect(),
-                );
+                self.clients_to_holepunch
+                    .push(HolePunchSession::new(peers.clone()));
                 should_relay = false;
             }
         }
@@ -375,15 +382,15 @@ impl TransferStruct {
 }
 
 struct HolePunchSession {
-    addr: SocketAddr,
+    addrs: Vec<SocketAddr>,
     timer: Option<Instant>,
     retries: u8,
 }
 
 impl HolePunchSession {
-    pub fn new(addr: SocketAddr) -> Self {
+    pub fn new(addrs: Vec<SocketAddr>) -> Self {
         Self {
-            addr,
+            addrs,
             timer: None,
             retries: 0,
         }
