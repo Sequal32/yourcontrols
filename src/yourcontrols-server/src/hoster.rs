@@ -60,7 +60,11 @@ fn process_payload(
         | Payloads::Heartbeat
         | Payloads::PlayerLeft { .. } => return,
         // Used
-        Payloads::AircraftDefinition { .. } | Payloads::Update { .. } => {}
+        Payloads::AircraftDefinition { bytes } => {
+            state.aircraft_definition = Some(bytes.clone());
+            return;
+        }
+        Payloads::Update { .. } => {}
         Payloads::InitHandshake { name, version } => {
             if let Ok(version) = Version::from_str(version) {
                 let server_version =
@@ -122,6 +126,17 @@ fn process_payload(
                 state,
                 net,
             );
+
+            // Send definitions to new client
+            if let Some(bytes) = state.aircraft_definition.as_ref() {
+                net.send_message(
+                    Payloads::AircraftDefinition {
+                        bytes: bytes.clone(),
+                    },
+                    addr,
+                )
+                .ok();
+            }
 
             info!("{} connected to hoster.", name);
 

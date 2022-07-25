@@ -13,6 +13,7 @@ pub struct Client {
 
 pub struct ServerState {
     pub clients: HashMap<String, Client>,
+    pub aircraft_definition: Option<Box<[u8]>>,
     pub in_control: String,
     pub heartbeat_instant: Instant,
     pub started_at: Instant,
@@ -23,6 +24,7 @@ impl ServerState {
         Self {
             clients: HashMap::new(),
             in_control: "SERVER".to_string(),
+            aircraft_definition: None,
             heartbeat_instant: Instant::now(),
             started_at: Instant::now(),
         }

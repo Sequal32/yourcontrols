@@ -436,6 +436,11 @@ fn main() {
                         }
                         Payloads::SetHost => {
                             app_interface.set_host();
+                            // Host was set which means successfully established connection to hoster, need to send definitions
+                            client.send_definitions(
+                                definitions.get_buffer_bytes().into_boxed_slice(),
+                                client.get_server_name().to_string(),
+                            );
                         }
                         Payloads::ConnectionDenied { reason } => {
                             client.stop(format!("Connection Denied: {}", reason));
