@@ -99,7 +99,6 @@ fn get_packet_for_message(
         Payloads::SetHost {..} |
         Payloads::ConnectionDenied {..} |
         // Used
-        Payloads::AircraftDefinition {..}  |
         Payloads::InvalidVersion {..} |
         Payloads::Heartbeat {..} |
         Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload_bytes),
@@ -112,6 +111,7 @@ fn get_packet_for_message(
         Payloads::SetObserver {..} |
         Payloads::Ready |
         Payloads::TransferControl {..} |
+        Payloads::AircraftDefinition {..}  |
         Payloads::RequestHosting {..} => Packet::reliable_ordered(target, payload_bytes, Some(1)),
         Payloads::Update {is_unreliable, ..} => if *is_unreliable {Packet::unreliable_sequenced(target, payload_bytes, Some(0))} else {Packet::reliable_ordered(target, payload_bytes, Some(0))}
     }
@@ -162,6 +162,7 @@ impl SenderReceiver {
     fn prepare_payload_bytes(&mut self, message: &Payloads) -> Result<Vec<u8>, Error> {
         // Struct to MessagePack
         let payload = rmp_serde::to_vec(&message)?;
+
         // Compress payload
         Ok(self.compressor.compress(&payload, 0)?)
     }
