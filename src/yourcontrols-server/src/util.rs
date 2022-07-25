@@ -114,13 +114,3 @@ impl Counters {
         self.ip_request_count.retain(|_, info| info.count > 0);
     }
 }
-
-pub fn get_socket_config(timeout: u64) -> Config {
-    laminar::Config {
-        heartbeat_interval: Some(Duration::from_secs(1)),
-        idle_connection_timeout: Duration::from_secs(timeout),
-        receive_buffer_max_size: 65536,
-        max_packets_in_flight: u16::MAX,
-        ..Default::default()
-    }
-}
