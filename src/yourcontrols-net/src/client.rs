@@ -300,7 +300,6 @@ impl Client {
         if let Some(rendezvous) = rendezvous {
             if let Some(session_id) = session_id {
                 // Send a handshake to rendezvous to resolve session id with an ip address
-
                 transfer
                     .net
                     .send_message(

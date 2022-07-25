@@ -239,7 +239,7 @@ impl TransferStruct {
                     session_id
                 );
                 // Make sure we're not already established on another IP
-                if !self
+                if self
                     .clients_to_holepunch
                     .iter()
                     .any(|x| x.addrs.contains(&addr))
@@ -265,6 +265,15 @@ impl TransferStruct {
                         self.clients_to_holepunch
                             .retain(|x| x.addrs.contains(&addr));
                     }
+                } else {
+                    self.net
+                        .send_message(
+                            Payloads::ConnectionDenied {
+                                reason: String::from("Invalid session id!"),
+                            },
+                            addr,
+                        )
+                        .ok();
                 }
 
                 should_relay = false;
