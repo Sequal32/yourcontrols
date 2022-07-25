@@ -282,7 +282,7 @@ impl App {
         )
     }
 
-    pub fn set_host(&self) {
-        self.invoke("host", None);
+    pub fn set_host(&self, session_id: String) {
+        self.invoke("host", Some(&session_id));
     }
 }

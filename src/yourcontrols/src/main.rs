@@ -435,7 +435,7 @@ fn main() {
                             }
                         }
                         Payloads::SetHost => {
-                            app_interface.set_host();
+                            app_interface.set_host(client.get_session_id().unwrap_or_default());
                             // Host was set which means successfully established connection to hoster, need to send definitions
                             client.send_definitions(
                                 definitions.get_buffer_bytes().into_boxed_slice(),
