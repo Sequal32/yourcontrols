@@ -277,7 +277,7 @@ function MessageReceived(data) {
             is_client = false;
             forceButton.hidden = false;
             $("#not_server_running").append(forceButton);
-            alert.updatetext("success", "You are now hosting! Session ID: " + data["data"]);
+            alert.updatetext("success", "You are now hosting!");
             break;
         case "error":
             alert.updatetext("danger", data["data"]);
