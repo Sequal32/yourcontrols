@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col-6">
         <div class="card w-100 themed" id="top-left-card">
-          <div class="card-body" id="network" hidden>
+          <div class="card-body" id="network-div" hidden>
             <h5 class="card-title">Network Stats</h5>
             <div class="network-left">
               <p id="download-bandwidth">↓ 0.00 KB/s</p>
@@ -22,7 +22,7 @@
               <p id="network-loss">0% Packet loss</p>
             </div>
           </div>
-          <div class="card-body" id="not_server_running">
+          <div class="card-body" id="join-div">
             <h5 class="card-title">Join</h5>
             <form class="needs-validation form-div" id="main-form-join" novalidate>
               <div class="form-group col-sm-auto bottom-margin" id="session-div">
@@ -98,7 +98,7 @@
       </div>
       <div class="col-6">
         <div class="card w-100 themed" id="top-right-card">
-          <div class="card-body" id="not_user_client">
+          <div class="card-body" id="host-div">
             <h5 class="card-title m-1">Host</h5>
             <small class="text-muted m-1" id="external-ipv4"></small>
             <small class="text-muted m-1" id="external-ipv6"></small>
@@ -187,7 +187,7 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="card themed" id="is_client_server_running">
+        <div class="card themed" id="settings-div">
           <div class="card-body">
             <h5 class="card-title">Settings</h5>
             <form class="needs-validation form-div" id="settings-form" novalidate>
@@ -271,12 +271,12 @@
             </form>
           </div>
         </div>
-        <div class="card themed" id="not_client_server_running" hidden>
+        <div class="card themed" id="settings-connected-message" hidden>
           <div class="card-body">
             <h5 class="card-title">Settings</h5>
             <div>
-              You can change the settings when you're not connected to a server
-              or not running a server.
+              You can not change the settings when you're connected to a server
+              or running a server.
             </div>
           </div>
         </div>

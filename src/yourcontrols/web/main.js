@@ -16,7 +16,7 @@ var aircraft_list_button = document.getElementById("aircraft-page");
 var port_input_host = document.getElementById("port-input-host");
 
 var username = document.getElementById("username-input");
-var session_input = document.getElementById("session-input");
+var sessionInput = document.getElementById("session-input");
 var name_input_join = document.getElementById("name-input-join");
 var theme_selector = document.getElementById("theme-select");
 var streamer_mode = document.getElementById("streamer-mode");
@@ -50,7 +50,6 @@ var joinIpInput = document.getElementById("join-ip-input");
 var joinPortInput = document.getElementById("join-port-input");
 
 // Network
-var networkDiv = document.getElementById("network");
 var downloadBandwidth = document.getElementById("download-bandwidth");
 var downloadRate = document.getElementById("download-rate");
 var uploadBandwidth = document.getElementById("upload-bandwidth");
@@ -83,17 +82,23 @@ function invoke(data) {
     window.external.invoke(JSON.stringify(data));
 }
 
-function SetStuffVisible(visible) {
-    if (is_client) {
-        document.getElementById("not_user_client").hidden = visible;
-        document.getElementById("top-right-card").appendChild(networkDiv);
+function SetStuffVisible(connected) {
+    if (connected) {
+        if (is_client) {
+            $("#host-div").attr("hidden", connected);
+            $("#network-div").appendTo("#top-right-card")
+        } else {
+            $("#join-div").attr("hidden", connected);
+            $("#network-div").appendTo("#top-left-card")
+        }
     } else {
-        document.getElementById("not_server_running").hidden = visible;
-        document.getElementById("top-left-card").appendChild(networkDiv);
+        $("#join-div").attr("hidden", false);
+        $("#host-div").attr("hidden", false);
     }
-    networkDiv.hidden = !visible;
-    document.getElementById("is_client_server_running").hidden = visible;
-    document.getElementById("not_client_server_running").hidden = !visible;
+
+    $("#settings-div").attr("hidden", connected);
+    $("#settings-connected-message").attr("hidden", !connected);
+    $("#network-div").attr("hidden", !connected);
 }
 
 function ResetForm() {
@@ -115,7 +120,7 @@ function OnConnected() {
     is_connected = true;
 
     port_input_host.disabled = true;
-    session_input.disabled = true;
+    sessionInput.disabled = true;
     session_ip4radio.disabled = true;
     server_ip4radio.disabled = true;
     session_ip6radio.disabled = true;
@@ -131,7 +136,7 @@ function OnConnected() {
 
     if (streamer_mode.checked) {
         joinIpInput.value = joinIpInput.value.split(/\d/).join("X");
-        cacheSessionInput.value = session_input.value.replace(".", "X");
+        cacheSessionInput.value = sessionInput.value.replace(".", "X");
         $("#external-ipv4").text("Show IPv4");
         $("#external-ipv6").text("Show IPv6");
         $("#session-id").text("Show Session Code")
@@ -145,11 +150,12 @@ function OnConnected() {
 function OnDisconnect(text) {
     alert.updatetext("danger", text);
     is_connected = false;
+    is_client = false;
     FormButtonsDisabled(false);
     port_input_host.disabled = false;
 
     session_ip4radio.disabled = false;
-    session_input.disabled = false;
+    sessionInput.disabled = false;
     server_ip4radio.disabled = false;
     session_ip6radio.disabled = false;
     server_ip6radio.disabled = false;
@@ -165,7 +171,7 @@ function OnDisconnect(text) {
     connectionList.clear();
 
     joinIpInput.value = cacheIpInput;
-    session_input.value = cacheSessionInput;
+    sessionInput.value = cacheSessionInput;
     forceButton.hidden = true;
 
     $("#session-id").hide()
@@ -274,8 +280,6 @@ function MessageReceived(data) {
             is_client = true;
             alert.updatetext("success", "Connected to server.");
             connect_button.updatetext("danger", "Disconnect");
-            document.getElementById("not_user_client").hidden = true;
-            document.getElementById("is_user_client").hidden = false;
             $("#not_server_running").append(forceButton);
             OnConnected();
             break;
@@ -566,22 +570,24 @@ $("#main-form-join").submit(function (e) {
             ? joinConnectDirect.value
             : "";
 
+    cacheIpInput = joinIpInput.value.trim();
+    cacheSessionInput = sessionInput.value.toUpperCase().trim();
+
     var data = {
         type: "connect",
-        session_id: session_input.value.toUpperCase().trim(),
-        username: username.value,
+        session_id: cacheSessionInput,
+        username: username.value.trim(),
         method: method,
         isipv6: session_ip6radio.checked,
     };
 
-    cacheIpInput = joinIpInput.value;
-    cacheSessionInput = session_input.value;
+
 
     if (joinConnectDirect.checked) {
         if (ValidateIp(joinIpInput)) {
-            data["ip"] = joinIpInput.value.trim();
-        } else if (ValidateHostname(joinIpInput)) {
-            data["hostname"] = joinIpInput.value;
+            data["ip"] = cacheIpInput;
+        } else if (ValidateHostname(sessionInput)) {
+            data["hostname"] = cacheIpInput;
         } else {
             return;
         }
