@@ -231,9 +231,9 @@ pub fn run_hoster(servers: Arc<Mutex<Servers>>, port: u16) {
     let mut cleanup_timer = Instant::now();
 
     info!(
-        "Hoster started on port {}! Connect address {}",
+        "Hoster started on port {}! Connect hostname {}",
         port,
-        dotenv::var("HOSTER_IP").unwrap()
+        dotenv::var("HOSTER_HOSTNAME").unwrap()
     );
 
     loop {

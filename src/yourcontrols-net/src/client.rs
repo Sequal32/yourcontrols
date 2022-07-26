@@ -305,7 +305,7 @@ impl Client {
                     .send_message(
                         Payloads::RendezvousHandshake {
                             session_id,
-                            local_endpoint: get_local_endpoints_with_port(port),
+                            local_endpoint: get_local_endpoints_with_port(is_ipv6, port),
                         },
                         rendezvous,
                     )
@@ -316,7 +316,7 @@ impl Client {
                     .send_message(
                         Payloads::RequestHosting {
                             self_hosted: false,
-                            local_endpoint: get_local_endpoints_with_port(port),
+                            local_endpoint: get_local_endpoints_with_port(is_ipv6, port),
                         },
                         rendezvous,
                     )

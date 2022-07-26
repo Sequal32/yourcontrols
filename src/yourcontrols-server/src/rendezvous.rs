@@ -1,13 +1,17 @@
 use crate::servers::Servers;
 use crate::sessions::Sessions;
 use crate::util::Counters;
+use dotenv::var;
 use laminar::Socket;
 use log::info;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use std::thread::sleep;
 use std::time::{Duration, Instant};
-use yourcontrols_net::{get_socket_config, get_socket_duplex, Message, Payloads, SenderReceiver};
+use yourcontrols_net::{
+    get_addr_from_hostname_and_port, get_socket_config, get_socket_duplex, Message, Payloads,
+    SenderReceiver,
+};
 use yourcontrols_types::Error;
 
 const MAX_REQUESTS_PER_HOUR: u32 = 300;
@@ -111,10 +115,7 @@ fn process_message(
                 let mut servers = servers.lock().unwrap();
                 // Limit
                 if servers.meta_state.clients_connected.len()
-                    >= dotenv::var("MAX_CLIENT_CONNECTIONS")
-                        .unwrap()
-                        .parse()
-                        .unwrap()
+                    >= var("MAX_CLIENT_CONNECTIONS").unwrap().parse().unwrap()
                 {
                     net.send_message(
                         Payloads::ConnectionDenied {
@@ -126,10 +127,13 @@ fn process_message(
                     return;
                 }
                 // Reserve
-                let hoster_addr: SocketAddr = dotenv::var("HOSTER_IP")
-                    .expect("should be set")
-                    .parse()
-                    .unwrap();
+                let hoster_addr = get_addr_from_hostname_and_port(
+                    addr.is_ipv6(),
+                    &var("HOSTER_HOSTNAME").unwrap(),
+                    var("HOSTER_PORT").unwrap().parse().unwrap(),
+                )
+                .unwrap();
+
                 session_id = servers.reserve_server(hoster_addr, addr);
 
                 info!(
@@ -211,10 +215,12 @@ pub fn run_rendezvous(servers: Arc<Mutex<Servers>>, port: u16) {
         if info_timer.elapsed().as_secs() >= 600 {
             let servers = servers.lock().unwrap();
             info!(
-                "Connections: {}, Sessions: {}, Hosted Sessions: {}, Clients In Hosted: {}",
+                "Connections: {}, Sessions: {}, Hosted Sessions: {}, Clients In Hosted: {}, Unknown: {}, Connected: {}",
                 sessions.get_user_count(),
                 sessions.get_session_count(),
                 servers.meta_state.active_servers.len(),
+                servers.meta_state.clients_connected.len(),
+                servers.meta_state.unknown_clients.len(),
                 servers.meta_state.clients_connected.len()
             );
 

@@ -2,9 +2,8 @@ use crossbeam_channel::{Receiver, Sender};
 use dns_lookup::lookup_host;
 use dotenv_codegen::dotenv;
 use laminar::Metrics;
-use socket2::{Domain, Type};
+use socket2::{Domain, Socket, Type};
 use std::net::UdpSocket;
-use std::str::FromStr;
 use std::time::SystemTime;
 use std::{
     net::SocketAddr,
@@ -70,7 +69,7 @@ pub fn get_socket_config(timeout: u64) -> laminar::Config {
 }
 
 pub fn get_socket_duplex(port: u16) -> UdpSocket {
-    let socket = socket2::Socket::new(Domain::IPV6, Type::DGRAM, None).unwrap();
+    let socket = Socket::new(Domain::IPV6, Type::DGRAM, None).unwrap();
     socket
         .bind(
             &format!("[::]:{}", port)
@@ -90,10 +89,29 @@ pub fn get_seconds() -> f64 {
         .as_secs_f64()
 }
 
-pub fn get_local_endpoints_with_port(port: u16) -> Option<SocketAddr> {
-    local_ipaddress::get()
-        .and_then(|x| IpAddr::from_str(&x).ok())
-        .map(|x| SocketAddr::new(x, port))
+pub fn get_local_endpoints_with_port(is_ipv6: bool, port: u16) -> Option<SocketAddr> {
+    get_local_ip_address(is_ipv6).map(|x| SocketAddr::new(x, port))
+}
+
+pub fn get_local_ip_address(is_ipv6: bool) -> Option<IpAddr> {
+    let socket = match UdpSocket::bind(if is_ipv6 { "[::]:0" } else { "0.0.0.0:0" }) {
+        Ok(s) => s,
+        Err(_) => return None,
+    };
+
+    match socket.connect(if is_ipv6 {
+        "[2001:4860:4860::8888]:80"
+    } else {
+        "8.8.8.8:80"
+    }) {
+        Ok(()) => (),
+        Err(_) => return None,
+    };
+
+    match socket.local_addr() {
+        Ok(addr) => Some(addr.ip()),
+        Err(_) => None,
+    }
 }
 
 #[derive(Debug)]

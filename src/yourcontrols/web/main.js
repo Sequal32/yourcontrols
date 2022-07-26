@@ -438,14 +438,12 @@ joinConnectCloud.addEventListener("change", function () {
     sessionDiv.hidden = false;
     joinPortDiv.hidden = true;
     joinIpDiv.hidden = true;
-    sessionIpRadios.hidden = true;
 });
 
 joinConnectDirect.addEventListener("change", function () {
     sessionDiv.hidden = true;
     joinPortDiv.hidden = false;
     joinIpDiv.hidden = false;
-    sessionIpRadios.hidden = false;
 });
 
 joinPortInput.addEventListener("change", function () {

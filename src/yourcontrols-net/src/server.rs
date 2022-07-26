@@ -18,7 +18,9 @@ use std::{
     time::Instant,
 };
 
-use crate::util::{get_bind_address, get_rendezvous_server, get_socket_config};
+use crate::util::{
+    get_bind_address, get_local_ip_address, get_rendezvous_server, get_socket_config,
+};
 use crate::util::{
     ClientReceiver, ClientSender, Event, ReceiveMessage, ServerReceiver, ServerSender,
     TransferClient,
@@ -450,12 +452,9 @@ impl Server {
     }
 
     fn port_forward(&self, port: u16) -> Result<(), Error> {
-        let local_addr = match local_ipaddress::get() {
-            Some(addr) => match addr.parse::<Ipv4Addr>() {
-                Ok(addr) => addr,
-                Err(_) => return Err(Error::LocalAddrNotIPv4(addr)),
-            },
-            None => return Err(Error::LocalAddrNotFound),
+        let local_addr: Ipv4Addr = match get_local_ip_address(false) {
+            Some(IpAddr::V4(ip)) => ip,
+            Some(IpAddr::V6(_)) | None => return Err(Error::LocalAddrNotFound),
         };
 
         info!("[NETWORK] Found local address: {}", local_addr);
@@ -544,7 +543,10 @@ impl Server {
                 .send_message(
                     Payloads::RequestHosting {
                         self_hosted: true,
-                        local_endpoint: get_local_endpoints_with_port(port),
+                        local_endpoint: get_local_endpoints_with_port(
+                            local_endpoint.is_ipv6(),
+                            port,
+                        ),
                     },
                     addr,
                 )
