@@ -71,9 +71,6 @@ pub fn get_socket_config(timeout: u64) -> laminar::Config {
 
 pub fn get_socket_duplex(port: u16) -> UdpSocket {
     let socket = socket2::Socket::new(Domain::IPV6, Type::DGRAM, None).unwrap();
-    // socket
-    //     .bind(&SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, port)).into())
-    //     .unwrap();
     socket
         .bind(
             &format!("[::]:{}", port)
