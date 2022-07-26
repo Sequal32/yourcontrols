@@ -68,6 +68,7 @@ var has_control = false;
 
 var cacheIpInput = "";
 var cacheSessionInput = "";
+var session_code = "";
 
 var settings = {};
 
@@ -133,6 +134,7 @@ function OnConnected() {
         cacheSessionInput.value = session_input.value.replace(".", "X");
         $("#external-ipv4").text("Show IPv4");
         $("#external-ipv6").text("Show IPv6");
+        $("#session-id").text("Show Session Code")
     }
 
     SetStuffVisible(true);
@@ -163,6 +165,8 @@ function OnDisconnect(text) {
     joinIpInput.value = cacheIpInput;
     session_input.value = cacheSessionInput;
     forceButton.hidden = true;
+
+    $("#session-id").attr("hidden", true)
 
     ResetForm();
     SetStuffVisible(false);
@@ -265,7 +269,7 @@ function MessageReceived(data) {
             break;
         case "server":
             is_client = false;
-            alert.updatetext("success", "Server started! " + data["data"]);
+            alert.updatetext("success", "Server started!");
             $("#not_user_client").append(forceButton);
             OnConnected();
             break;
@@ -342,6 +346,10 @@ function MessageReceived(data) {
             break;
         case "metrics":
             UpdateMetrics(JSON.parse(data["data"]));
+            break;
+        case "session":
+            session_code = data["data"]
+            $("#session-id").attr("hidden", false).text("Session Code: " + data["data"]);
             break;
     }
 }
@@ -638,4 +646,12 @@ $(function () {
         .fail(function () {
             $("#external-ipv6").hide();
         });
+
+    $("#session-id").click(function () {
+        if ($("#session-id").text() == "Show Session Code") {
+            $("#session-id").text("Session Code: " + session_code);
+        } else {
+            $("#session-id").text("Show Session Code");
+        }
+    })
 });

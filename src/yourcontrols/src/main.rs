@@ -353,11 +353,6 @@ fn main() {
                             clients.add_client(name.clone());
 
                             if client.is_host() {
-                                app_interface.server_started(
-                                    clients.get_number_clients() as u16,
-                                    client.get_session_id().as_deref(),
-                                );
-
                                 client.send_definitions(
                                     definitions.get_buffer_bytes().into_boxed_slice(),
                                     name.clone(),
@@ -408,12 +403,6 @@ fn main() {
                             }
 
                             app_interface.lost_connection(&name);
-                            if client.is_host() {
-                                app_interface.server_started(
-                                    clients.get_number_clients() as u16,
-                                    client.get_session_id().as_deref(),
-                                );
-                            }
                         }
                         Payloads::SetObserver {
                             from: _,
@@ -498,7 +487,10 @@ fn main() {
                         Event::ConnectionEstablished => {
                             if client.is_host() {
                                 // Display server started message
-                                app_interface.server_started(0, client.get_session_id().as_deref());
+                                app_interface.server_started();
+                                if let Some(session_code) = client.get_session_id().as_deref() {
+                                    app_interface.set_session_code(session_code);
+                                }
                                 // Unfreeze aircraft
                                 control.take_control(&conn, &definitions.lvarstransfer.transfer);
                                 app_interface.gain_control();

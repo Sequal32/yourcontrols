@@ -205,19 +205,12 @@ impl App {
         self.invoke("lostcontrol", None);
     }
 
-    pub fn server_started(&self, client_count: u16, session_id: Option<&str>) {
-        let session_id = session_id.unwrap_or("");
+    pub fn server_started(&self) {
+        self.invoke("server", None);
+    }
 
-        let connected_string = if session_id.is_empty() {
-            format!("{} clients connected.", client_count)
-        } else {
-            format!(
-                "{} clients connected. Session ID: {}",
-                client_count, session_id
-            )
-        };
-
-        self.invoke("server", Some(&connected_string));
+    pub fn set_session_code(&self, code: &str) {
+        self.invoke("session", Some(code));
     }
 
     pub fn new_connection(&self, name: &str) {
