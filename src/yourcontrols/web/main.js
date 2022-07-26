@@ -525,7 +525,7 @@ $("#main-form-host").submit(function (e) {
     invoke({
         type: "startServer",
         port: parseInt(port_input_host.value) || 0,
-        isipv6: server_ip6radio.checked,
+        is_ipv6: server_ip6radio.checked,
         use_upnp: use_upnp.checked,
         username: username.value,
         method: method,

@@ -593,7 +593,7 @@ fn main() {
                 AppMessage::StartServer {
                     username,
                     port,
-                    isipv6,
+                    is_ipv6,
                     method,
                     use_upnp,
                 } => {
@@ -621,10 +621,10 @@ fn main() {
 
                                 let result = match method {
                                     ConnectionMethod::Direct => {
-                                        server.start(isipv6, port, use_upnp)
+                                        server.start(is_ipv6, port, use_upnp)
                                     }
                                     ConnectionMethod::CloudServer => {
-                                        server.start_with_hole_punching(isipv6)
+                                        server.start_with_hole_punching(is_ipv6)
                                     }
                                     _ => panic!("Not implemented!"),
                                 };
