@@ -224,17 +224,17 @@ pub fn run_hoster(servers: Arc<Mutex<Servers>>, port: u16) {
     let socket = Socket::from_udp_socket(get_socket_duplex(port), get_socket_config(5))
         .expect("Failed to bind!");
 
+    info!(
+        "Hoster started on {}! Connect hostname {}",
+        socket.local_addr().unwrap(),
+        dotenv::var("SERVER_HOSTNAME").unwrap()
+    );
+
     let mut net = SenderReceiver::from_socket(socket);
 
     let mut metrics_data = HashMap::new();
 
     let mut cleanup_timer = Instant::now();
-
-    info!(
-        "Hoster started on port {}! Connect hostname {}",
-        port,
-        dotenv::var("HOSTER_HOSTNAME").unwrap()
-    );
 
     loop {
         net.poll();

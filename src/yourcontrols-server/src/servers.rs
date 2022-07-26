@@ -33,15 +33,15 @@ impl ServerState {
 
 pub struct ServerInfo {
     pub creation_time: Instant,
-    pub address: SocketAddr,
+    pub hostname: String,
     pub addr_who_requested: SocketAddr,
 }
 
 impl ServerInfo {
-    pub fn new(address: SocketAddr, addr_who_requested: SocketAddr) -> Self {
+    pub fn new(hostname: String, addr_who_requested: SocketAddr) -> Self {
         Self {
             creation_time: Instant::now(),
-            address,
+            hostname,
             addr_who_requested,
         }
     }
@@ -76,16 +76,12 @@ impl Servers {
         }
     }
 
-    pub fn reserve_server(
-        &mut self,
-        address: SocketAddr,
-        addr_who_requested: SocketAddr,
-    ) -> String {
+    pub fn reserve_server(&mut self, hostname: String, addr_who_requested: SocketAddr) -> String {
         let id = get_random_id(SESSION_ID_LENGTH);
 
         self.meta_state
             .active_servers
-            .insert(id.clone(), ServerInfo::new(address, addr_who_requested));
+            .insert(id.clone(), ServerInfo::new(hostname, addr_who_requested));
 
         self.meta_state
             .clients_connected

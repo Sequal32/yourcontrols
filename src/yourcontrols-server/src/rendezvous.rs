@@ -9,12 +9,21 @@ use std::sync::{Arc, Mutex};
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 use yourcontrols_net::{
-    get_addr_from_hostname_and_port, get_socket_config, get_socket_duplex, Message, Payloads,
-    SenderReceiver,
+    get_addr_from_hostname_and_port, get_socket_config, get_socket_duplex, is_ipv4_mapped_to_ipv6,
+    Message, Payloads, SenderReceiver,
 };
 use yourcontrols_types::Error;
 
 const MAX_REQUESTS_PER_HOUR: u32 = 300;
+
+fn resolve_hoster_address(incoming_addr: SocketAddr, hostname: &str) -> SocketAddr {
+    get_addr_from_hostname_and_port(
+        !is_ipv4_mapped_to_ipv6(incoming_addr),
+        hostname,
+        var("HOSTER_PORT").unwrap().parse().unwrap(),
+    )
+    .unwrap_or_else(|_| var("HOSTER_IP").unwrap().parse().unwrap())
+}
 
 fn process_message(
     addr: SocketAddr,
@@ -67,7 +76,7 @@ fn process_message(
 
                 net.send_message(
                     Payloads::AttemptHosterConnection {
-                        peer: server_info.address,
+                        peer: resolve_hoster_address(addr, &server_info.hostname),
                     },
                     addr,
                 )
@@ -127,14 +136,9 @@ fn process_message(
                     return;
                 }
                 // Reserve
-                let hoster_addr = get_addr_from_hostname_and_port(
-                    addr.is_ipv6(),
-                    &var("HOSTER_HOSTNAME").unwrap(),
-                    var("HOSTER_PORT").unwrap().parse().unwrap(),
-                )
-                .unwrap();
-
-                session_id = servers.reserve_server(hoster_addr, addr);
+                let server_hostname = var("SERVER_HOSTNAME").unwrap();
+                let hoster_addr = resolve_hoster_address(addr, &server_hostname);
+                session_id = servers.reserve_server(server_hostname, addr);
 
                 info!(
                     "Hosting session for hoster {} as {}",
@@ -162,14 +166,14 @@ fn process_message(
 pub fn run_rendezvous(servers: Arc<Mutex<Servers>>, port: u16) {
     let socket = Socket::from_udp_socket(get_socket_duplex(port), get_socket_config(3))
         .expect("Failed to bind!");
+    info!("Server started on {}!", socket.local_addr().unwrap());
+
     let mut net = SenderReceiver::from_socket(socket);
     let mut sessions = Sessions::new();
 
     let mut counters = Counters::new();
     let mut info_timer = Instant::now();
     let mut servers = servers;
-
-    info!("Server started on port {}!", port);
 
     loop {
         net.poll();

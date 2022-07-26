@@ -45,17 +45,26 @@ pub fn match_ip_address_to_socket_addr(ip: IpAddr, port: u16) -> SocketAddr {
     }
 }
 
-pub fn get_rendezvous_server(is_ipv6: bool) -> Result<SocketAddr, Error> {
-    for ip in lookup_host(RENDEZVOUS_SERVER_HOSTNAME)? {
+pub fn get_addr_from_hostname_and_port(
+    is_ipv6: bool,
+    hostname: &str,
+    port: u16,
+) -> Result<SocketAddr, Error> {
+    for ip in lookup_host(hostname)? {
         if (ip.is_ipv6() && !is_ipv6) || (ip.is_ipv4() && is_ipv6) {
             continue;
         }
-        return Ok(match_ip_address_to_socket_addr(
-            ip,
-            RENDEZVOUS_PORT.parse().unwrap(),
-        ));
+        return Ok(match_ip_address_to_socket_addr(ip, port));
     }
     Err(Error::MismatchingIpVersion)
+}
+
+pub fn get_rendezvous_server(is_ipv6: bool) -> Result<SocketAddr, Error> {
+    get_addr_from_hostname_and_port(
+        is_ipv6,
+        RENDEZVOUS_SERVER_HOSTNAME,
+        RENDEZVOUS_PORT.parse().unwrap(),
+    )
 }
 
 pub fn get_socket_config(timeout: u64) -> laminar::Config {
@@ -70,6 +79,7 @@ pub fn get_socket_config(timeout: u64) -> laminar::Config {
 
 pub fn get_socket_duplex(port: u16) -> UdpSocket {
     let socket = Socket::new(Domain::IPV6, Type::DGRAM, None).unwrap();
+    socket.set_only_v6(false).unwrap();
     socket
         .bind(
             &format!("[::]:{}", port)
@@ -78,7 +88,6 @@ pub fn get_socket_duplex(port: u16) -> UdpSocket {
                 .into(),
         )
         .unwrap();
-    socket.set_only_v6(false).ok();
     socket.into()
 }
 
@@ -114,6 +123,13 @@ pub fn get_local_ip_address(is_ipv6: bool) -> Option<IpAddr> {
     }
 }
 
+pub fn is_ipv4_mapped_to_ipv6(addr: SocketAddr) -> bool {
+    if let SocketAddr::V6(v6) = addr {
+        matches!(v6.ip().segments(), [0, 0, 0, 0, 0, 0xFFFF, ..])
+    } else {
+        false
+    }
+}
 #[derive(Debug)]
 pub enum Event {
     ConnectionEstablished,

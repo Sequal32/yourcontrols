@@ -129,6 +129,8 @@ function OnConnected() {
     joinIpInput.disabled = true;
     joinPortInput.disabled = true;
 
+
+
     if (streamer_mode.checked) {
         joinIpInput.value = joinIpInput.value.split(/\d/).join("X");
         cacheSessionInput.value = session_input.value.replace(".", "X");
@@ -175,6 +177,19 @@ function OnDisconnect(text) {
 
     ResetForm();
     SetStuffVisible(false);
+}
+
+function SetSessionCode(code) {
+    session_code = code
+    if (code == "") {
+        $("#external-ipv4").show();
+        $("#external-ipv6").show();
+        $("#session-id").hide()
+    } else {
+        $("#session-id").show().text("Session Code: " + code);
+        $("#external-ipv4").hide();
+        $("#external-ipv6").hide();
+    }
 }
 
 function ServerClientPageChange(isClient) {
@@ -353,10 +368,7 @@ function MessageReceived(data) {
             UpdateMetrics(JSON.parse(data["data"]));
             break;
         case "session":
-            session_code = data["data"]
-            $("#session-id").show().text("Session Code: " + data["data"]);
-            $("#external-ipv4").hide();
-            $("#external-ipv6").hide();
+            SetSessionCode(data["data"])
             break;
     }
 }
@@ -554,7 +566,7 @@ $("#main-form-join").submit(function (e) {
 
     var data = {
         type: "connect",
-        session_id: session_input.value.toUpperCase(),
+        session_id: session_input.value.toUpperCase().trim(),
         username: username.value,
         method: method,
         isipv6: session_ip6radio.checked,

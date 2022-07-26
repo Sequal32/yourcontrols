@@ -636,7 +636,7 @@ fn main() {
                                         info!("[NETWORK] Server started");
                                     }
                                     Err(e) => {
-                                        app_interface.server_fail(e.to_string().as_str());
+                                        app_interface.server_fail(&e.to_string());
                                         info!("[NETWORK] Could not start server! Reason: {}", e);
                                     }
                                 }
@@ -648,13 +648,14 @@ fn main() {
                                     config.conn_timeout,
                                 ));
 
-                                match client.start_with_relay() {
+                                match client.start_with_relay(is_ipv6) {
                                     Ok(_) => {
                                         transfer_client = Some(client);
                                         info!("[NETWORK] Hosting started");
                                     }
                                     Err(e) => {
                                         info!("[NETWORK] Hosting could not start! Reason: {}", e);
+                                        app_interface.server_fail(&e.to_string());
                                     }
                                 }
                             }

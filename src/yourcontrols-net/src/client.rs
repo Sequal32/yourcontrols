@@ -261,8 +261,8 @@ impl Client {
         )
     }
 
-    pub fn start_with_relay(&mut self) -> Result<(), Error> {
-        self.run(false, None, Some(get_rendezvous_server(false)?), None)
+    pub fn start_with_relay(&mut self, is_ipv6: bool) -> Result<(), Error> {
+        self.run(is_ipv6, None, Some(get_rendezvous_server(is_ipv6)?), None)
     }
 
     pub fn run(

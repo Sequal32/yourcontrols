@@ -43,7 +43,7 @@ impl Display for Error {
         match self {
             Error::IOError(e) => write!(f, "An IO error occured: {}", e),
             Error::MismatchingIpVersion => {
-                write!(f, "No hostname ips matched the requested IP version.")
+                write!(f, "No hostname IPs matched the requested IP version.")
             }
             Error::SocketError(e) => write!(f, "Could not initialize socket! Reason: {}", e),
 
