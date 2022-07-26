@@ -1,14 +1,14 @@
 use crate::servers::{Client, ServerState, Servers};
 use laminar::Socket;
-use log::{error, info};
+use log::info;
 use semver::Version;
 use std::collections::HashMap;
-use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
+use std::net::SocketAddr;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
 use std::thread::sleep;
 use std::time::{Duration, Instant};
-use yourcontrols_net::{get_socket_config, Message, Payloads, SenderReceiver};
+use yourcontrols_net::{get_socket_config, get_socket_duplex, Message, Payloads, SenderReceiver};
 use yourcontrols_types::Error;
 
 pub const SERVER_NAME: &str = "SERVER";
@@ -221,11 +221,8 @@ fn cleanup(servers: &mut Servers) {
 }
 
 pub fn run_hoster(servers: Arc<Mutex<Servers>>, port: u16) {
-    let socket = Socket::bind_with_config(
-        SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), port),
-        get_socket_config(5),
-    )
-    .expect("Failed to bind!");
+    let socket = Socket::from_udp_socket(get_socket_duplex(port), get_socket_config(5))
+        .expect("Failed to bind!");
 
     let mut net = SenderReceiver::from_socket(socket);
 

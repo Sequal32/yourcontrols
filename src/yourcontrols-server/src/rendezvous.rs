@@ -3,11 +3,11 @@ use crate::sessions::Sessions;
 use crate::util::Counters;
 use laminar::Socket;
 use log::info;
-use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
+use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use std::thread::sleep;
 use std::time::{Duration, Instant};
-use yourcontrols_net::{get_socket_config, Message, Payloads, SenderReceiver};
+use yourcontrols_net::{get_socket_config, get_socket_duplex, Message, Payloads, SenderReceiver};
 use yourcontrols_types::Error;
 
 const MAX_REQUESTS_PER_HOUR: u32 = 300;
@@ -156,11 +156,8 @@ fn process_message(
 }
 
 pub fn run_rendezvous(servers: Arc<Mutex<Servers>>, port: u16) {
-    let socket = Socket::bind_with_config(
-        SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), port),
-        get_socket_config(3),
-    )
-    .expect("Failed to bind!");
+    let socket = Socket::from_udp_socket(get_socket_duplex(port), get_socket_config(3))
+        .expect("Failed to bind!");
     let mut net = SenderReceiver::from_socket(socket);
     let mut sessions = Sessions::new();
 

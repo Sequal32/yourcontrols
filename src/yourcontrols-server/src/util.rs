@@ -1,9 +1,8 @@
 use std::collections::hash_map::Entry::{Occupied, Vacant};
 use std::collections::HashMap;
 use std::net::IpAddr;
-use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
+use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
-use laminar::Config;
 use log::info;
 use rand::prelude::SliceRandom;
 
