@@ -552,7 +552,7 @@ $("#main-form-join").submit(function (e) {
 
     if (joinConnectDirect.checked) {
         if (ValidateIp(joinIpInput)) {
-            data["ip"] = joinIpInput.value;
+            data["ip"] = joinIpInput.value.trim();
         } else if (ValidateHostname(joinIpInput)) {
             data["hostname"] = joinIpInput.value;
         } else {
