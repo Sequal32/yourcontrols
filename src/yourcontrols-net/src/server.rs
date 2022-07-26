@@ -19,13 +19,14 @@ use std::{
 };
 
 use crate::util::{
-    get_bind_address, get_local_ip_address, get_rendezvous_server, get_socket_config,
-};
-use crate::util::{
     ClientReceiver, ClientSender, Event, ReceiveMessage, ServerReceiver, ServerSender,
     TransferClient,
 };
 use crate::util::{HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES};
+use crate::{
+    get_socket_duplex,
+    util::{get_bind_address, get_local_ip_address, get_rendezvous_server, get_socket_config},
+};
 use crate::{
     messages::{Message, Payloads, SenderReceiver},
     util::get_local_endpoints_with_port,
@@ -487,10 +488,8 @@ impl Server {
     }
 
     pub fn start(&mut self, is_ipv6: bool, port: u16, upnp: bool) -> Result<(), Error> {
-        let socket = Socket::bind_with_config(
-            get_bind_address(is_ipv6, Some(port)),
-            get_socket_config(self.timeout),
-        )?;
+        let socket =
+            Socket::from_udp_socket(get_socket_duplex(port), get_socket_config(self.timeout))?;
         // Attempt to port forward
         if upnp && !is_ipv6 {
             self.last_port_forward_result = Some(self.port_forward(port));

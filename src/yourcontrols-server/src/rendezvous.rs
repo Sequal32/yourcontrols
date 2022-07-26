@@ -9,7 +9,7 @@ use std::sync::{Arc, Mutex};
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 use yourcontrols_net::{
-    get_addr_from_hostname_and_port, get_socket_config, get_socket_duplex, is_ipv4_mapped_to_ipv6,
+    get_addr_from_hostname_and_port, get_socket_config, get_socket_duplex, is_actually_ipv4,
     Message, Payloads, SenderReceiver,
 };
 use yourcontrols_types::Error;
@@ -18,7 +18,7 @@ const MAX_REQUESTS_PER_HOUR: u32 = 300;
 
 fn resolve_hoster_address(incoming_addr: SocketAddr, hostname: &str) -> SocketAddr {
     get_addr_from_hostname_and_port(
-        !is_ipv4_mapped_to_ipv6(incoming_addr),
+        !is_actually_ipv4(incoming_addr),
         hostname,
         var("HOSTER_PORT").unwrap().parse().unwrap(),
     )
@@ -48,6 +48,24 @@ fn process_message(
                     counters.get_id_for_addr(&addr.ip()),
                     session_id
                 );
+                // Sanity check ip version matches
+                let server_is_using_ipv4 =
+                    is_actually_ipv4(server_connection_info.hoster_endpoints[0]); // Relies on the 1st element to be external ip
+                let client_is_using_ipv4 = is_actually_ipv4(addr);
+
+                if server_is_using_ipv4 != client_is_using_ipv4 {
+                    net.send_message(
+                        Payloads::ConnectionDenied {
+                            reason: format!(
+                                "Server is using {}",
+                                if server_is_using_ipv4 { "IPv4" } else { "IPv6" }
+                            ),
+                        },
+                        addr,
+                    )
+                    .ok();
+                    return;
+                }
                 // Send data to client
                 net.send_message(
                     Payloads::AttemptConnection {
@@ -60,7 +78,7 @@ fn process_message(
                 // Send data to hoster
                 net.send_message(
                     Payloads::AttemptConnection {
-                        peers: vec![local_endpoint, Some(addr)]
+                        peers: vec![Some(addr), local_endpoint]
                             .into_iter()
                             .flatten()
                             .collect(),
@@ -110,7 +128,7 @@ fn process_message(
             if self_hosted {
                 session_id = sessions.map_session_id_to_socket_info(
                     addr,
-                    vec![local_endpoint, Some(addr)]
+                    vec![Some(addr), local_endpoint]
                         .into_iter()
                         .flatten()
                         .collect(),

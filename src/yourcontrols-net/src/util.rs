@@ -79,7 +79,7 @@ pub fn get_socket_config(timeout: u64) -> laminar::Config {
 
 pub fn get_socket_duplex(port: u16) -> UdpSocket {
     let socket = Socket::new(Domain::IPV6, Type::DGRAM, None).unwrap();
-    socket.set_only_v6(false).unwrap();
+    socket.set_only_v6(false).ok();
     socket
         .bind(
             &format!("[::]:{}", port)
@@ -123,11 +123,10 @@ pub fn get_local_ip_address(is_ipv6: bool) -> Option<IpAddr> {
     }
 }
 
-pub fn is_ipv4_mapped_to_ipv6(addr: SocketAddr) -> bool {
-    if let SocketAddr::V6(v6) = addr {
-        matches!(v6.ip().segments(), [0, 0, 0, 0, 0, 0xFFFF, ..])
-    } else {
-        false
+pub fn is_actually_ipv4(addr: SocketAddr) -> bool {
+    match addr {
+        SocketAddr::V4(_) => true,
+        SocketAddr::V6(v6) => matches!(v6.ip().segments(), [0, 0, 0, 0, 0, 0xFFFF, ..]),
     }
 }
 #[derive(Debug)]

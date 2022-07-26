@@ -129,8 +129,6 @@ function OnConnected() {
     joinIpInput.disabled = true;
     joinPortInput.disabled = true;
 
-
-
     if (streamer_mode.checked) {
         joinIpInput.value = joinIpInput.value.split(/\d/).join("X");
         cacheSessionInput.value = session_input.value.replace(".", "X");
@@ -472,6 +470,10 @@ forceButton.addEventListener("click", function () {
     });
     forceButton.hidden = true;
 });
+
+$("input[type=radio][name=connectionRadios]").change(function () {
+    $("#host-ip-radios").attr("hidden", $("#direct-radio").prop("checked"))
+})
 
 $("#settings-form").submit(function (e) {
     e.preventDefault();
