@@ -137,6 +137,8 @@ function OnConnected() {
         $("#session-id").text("Show Session Code")
     }
 
+
+
     SetStuffVisible(true);
 }
 
@@ -166,7 +168,10 @@ function OnDisconnect(text) {
     session_input.value = cacheSessionInput;
     forceButton.hidden = true;
 
-    $("#session-id").attr("hidden", true)
+    $("#session-id").hide()
+    $("#external-ipv4").show();
+    $("#external-ipv6").show();
+    session_code = ""
 
     ResetForm();
     SetStuffVisible(false);
@@ -349,7 +354,9 @@ function MessageReceived(data) {
             break;
         case "session":
             session_code = data["data"]
-            $("#session-id").attr("hidden", false).text("Session Code: " + data["data"]);
+            $("#session-id").show().text("Session Code: " + data["data"]);
+            $("#external-ipv4").hide();
+            $("#external-ipv6").hide();
             break;
     }
 }

@@ -323,7 +323,7 @@ impl Client {
                     .ok();
             }
         } else if let Some(addr) = target_address {
-            info!("Sending request to port {} to join session", addr);
+            info!("Sending request to port {} to join session", addr.port());
             // Send a handshake to the target address to start establishing a connection
             transfer
                 .net
