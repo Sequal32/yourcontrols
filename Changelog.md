@@ -12,7 +12,9 @@
 - Systems on LAN can now connect through Cloud P2P.
 - Added message for when cloud hoster connection is lost. First client in list becomes new hoster.
 - Added hide clickability for IP addresses and session code.
-- Added IPv6 support for Cloud P2P.
+- Added IPv6 support for Cloud P2P and Cloud Host.
+- Hosting via the `Direct` method will now listen on both IPv6 and IPv4 addreses
+- Current session ID moved to the `Server` tab.
 
 ### Profiles
 
