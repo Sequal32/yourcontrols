@@ -1,4 +1,5 @@
 use hoster::run_hoster;
+use log::info;
 use rendezvous::run_rendezvous;
 use servers::Servers;
 use simplelog::{LevelFilter, TermLogger, TerminalMode};
@@ -24,6 +25,11 @@ pub fn main() {
 
     let servers = Arc::new(Mutex::new(Servers::new()));
     let servers_clone = servers.clone();
+
+    info!(
+        "YourControls server v{} started!",
+        dotenv::var("CARGO_PKG_VERSION").unwrap()
+    );
 
     thread::spawn(|| {
         run_hoster(
