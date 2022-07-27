@@ -4,7 +4,7 @@ use crate::util::Counters;
 use dotenv::var;
 use laminar::Socket;
 use log::info;
-use std::net::SocketAddr;
+use std::net::{SocketAddr, SocketAddrV4};
 use std::sync::{Arc, Mutex};
 use std::thread::sleep;
 use std::time::{Duration, Instant};
@@ -23,6 +23,18 @@ fn resolve_hoster_address(incoming_addr: SocketAddr, hostname: &str) -> SocketAd
         var("HOSTER_PORT").unwrap().parse().unwrap(),
     )
     .unwrap_or_else(|_| var("HOSTER_IP").unwrap().parse().unwrap())
+}
+
+fn correct_ipv6_address(need_ipv4: bool, addr: SocketAddr) -> SocketAddr {
+    if need_ipv4 {
+        if let SocketAddr::V6(addrv6) = addr {
+            return SocketAddr::V4(SocketAddrV4::new(
+                addrv6.ip().to_ipv4().unwrap(),
+                addr.port(),
+            ));
+        }
+    }
+    addr
 }
 
 fn process_message(
@@ -78,10 +90,13 @@ fn process_message(
                 // Send data to hoster
                 net.send_message(
                     Payloads::AttemptConnection {
-                        peers: vec![Some(addr), local_endpoint]
-                            .into_iter()
-                            .flatten()
-                            .collect(),
+                        peers: vec![
+                            Some(correct_ipv6_address(client_is_using_ipv4, addr)),
+                            local_endpoint,
+                        ]
+                        .into_iter()
+                        .flatten()
+                        .collect(),
                     },
                     server_connection_info.hoster_addr,
                 )
@@ -128,10 +143,13 @@ fn process_message(
             if self_hosted {
                 session_id = sessions.map_session_id_to_socket_info(
                     addr,
-                    vec![Some(addr), local_endpoint]
-                        .into_iter()
-                        .flatten()
-                        .collect(),
+                    vec![
+                        Some(correct_ipv6_address(is_actually_ipv4(addr), addr)),
+                        local_endpoint,
+                    ]
+                    .into_iter()
+                    .flatten()
+                    .collect(),
                 );
                 info!(
                     "Self hosted session created with hoster {} as {}",
