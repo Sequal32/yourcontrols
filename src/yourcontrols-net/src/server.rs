@@ -241,14 +241,6 @@ impl TransferStruct {
                     addr.port(),
                     session_id
                 );
-                // Make sure we're not already established on another IP
-                if self
-                    .clients_to_holepunch
-                    .iter()
-                    .any(|x| x.addrs.contains(&addr))
-                {
-                    return;
-                }
                 // Incoming UDP packet from peer
                 if *session_id == self.session_id {
                     self.net
