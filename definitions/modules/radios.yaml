@@ -223,7 +223,6 @@ shared:
     var_type: f64
     event_name: RADIO_ADF_IDENT_SET
     cancel_h_events: true
-    event_param: 1
   -
     type: NumSet
     var_name: A:ADF SOUND:2
@@ -231,7 +230,6 @@ shared:
     var_type: f64
     event_name: RADIO_ADF2_IDENT_SET
     cancel_h_events: true
-    event_param: 2
   -
     type: NumIncrement
     var_name: A:ADF VOLUME:1
@@ -259,11 +257,25 @@ shared:
     event_name: RADIO_DME1_IDENT_SET
     cancel_h_events: true
   -
+    type: ToggleSwitch
+    var_name: A:DME SOUND:1
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_DME1_IDENT_TOGGLE
+    cancel_h_events: true
+  -
     type: NumSet
     var_name: A:DME SOUND:2
     var_units: Bool
     var_type: f64
     event_name: RADIO_DME2_IDENT_SET
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:DME SOUND:2
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_DME2_IDENT_TOGGLE
     cancel_h_events: true
 
   - # TACAN
