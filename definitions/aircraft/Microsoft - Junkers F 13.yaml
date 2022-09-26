@@ -1,0 +1,565 @@
+# Version 0.1.1
+
+include:
+  - definitions/modules/Avionics/Aera.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Breakers
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:2
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:5
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 5
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:6
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 6
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:7
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 7
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:8
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 8
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:9
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 9
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:10
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 10
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:11
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 11
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:12
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 12
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:14
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 14
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT AVIONICS ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:11
+    var_units: Bool
+    var_type: bool
+
+  - # Wheel lock
+    type: ToggleSwitch
+    var_name: A:TAILWHEEL LOCK ON
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TAILWHEEL_LOCK
+
+  - # LVAR's
+    type: var
+    var_name: L:Lever_Startup_Fuel_1
+  -
+    type: var
+    var_name: L:Lever_Startup_Fuel_2
+  -
+    type: var
+    var_name: L:Clipboard_Stairway_Toggle
+  -
+    type: var
+    var_name: L:Clipboard_Refuel_Request
+  -
+    type: var
+    var_name: L:Clipboard_Luggage_Cart_Toggle
+  -
+    type: var
+    var_name: L:Luggage_Counter
+  -
+    type: var
+    var_name: L:Clipboard_Door_Toggle
+  -
+    type: var
+    var_name: L:Clipboard_Toggle
+  -
+    type: var
+    var_name: L:Clipboard_Page_Toggle
+  -
+    type: var
+    var_name: L:KNOB_Magneto_1
+  -
+    type: var
+    var_name: L:Clipboard_Reoil
+  -
+    type: var
+    var_name: L:LEVER_Manual_Fuelpump
+  -
+    type: var
+    var_name: L:Engine_Starter_1
+  -
+    type: var
+    var_name: L:ENGINE_Lever_Ignition
+  -
+    type: var
+    var_name: L:Clipboard_Luggage_unload_Toggle
+  -
+    type: var
+    var_name: L:Clipboard_Luggage_load_Toggle
+  -
+    type: var
+    var_name: L:Toggle_Cockpit_Rear_Window
+    unreliable: true
+  -
+    type: var
+    var_name: L:Clipboard_Chocks_Toggle
+  -
+    type: var
+    var_name: L:Aircraft_Secured
+  -
+    type: var
+    var_name: L:Aircraft_Boarding
+  -
+    type: var
+    var_name: L:Clipboard_Engine_Start
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:Reoil_scale_anim
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+  -
+    type: var
+    var_name: L:Clipboard_Refuel_25
+  -
+    type: var
+    var_name: L:Clipboard_Refuel_50
+  -
+    type: var
+    var_name: L:Clipboard_Refuel_75
+  -
+    type: var
+    var_name: L:Clipboard_Refuel_100
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+
+  - # Replica
+    type: var
+    var_name: L:SWITCH_Battery_Master_Guard
+  -
+    type: var
+    var_name: L:SWITCH_Battery_Master
+  -
+    type: var
+    var_name: L:Knob_EFI_Power
+  -
+    type: var
+    var_name: L:Knob_MV50_Power
+  -
+    type: var
+    var_name: L:Knob_Xpdnr_Mode
+  -
+    type: var
+    var_name: L:SWITCH_Gyros
+  -
+    type: var
+    var_name: L:PUSH_Gyro_1
+  -
+    type: var
+    var_name: L:PUSH_Gyro_2
+  -
+    type: var
+    var_name: L:Circuit_Breaker_3
+  -
+    type: var
+    var_name: L:Circuit_Breaker_4
+  -
+    type: var
+    var_name: L:Circuit_Breaker_6
+  -
+    type: var
+    var_name: L:Circuit_Breaker_13
+  -
+    type: var
+    var_name: L:EFI_RKS_Fuel_Request
+  -
+    type: var
+    var_name: L:SWITCH_Magnetos_1
+  -
+    type: var
+    var_name: L:A510_Switch_Power
+  -
+    type: var
+    var_name: L:SWITCH_Start_Guard
+  -
+    type: var
+    var_name: L:PUSH_Com_Mde
+  -
+    type: var
+    var_name: L:SWITCH_Engine_Primer_1
+  -
+    type: var
+    var_name: L:EFI_LKS_2
+  -
+    type: var
+    var_name: L:EFI_RKS_Refuel
+  -
+    type: var
+    var_name: L:SWITCH_Fuelpump_2
+  -
+    type: var
+    var_name: L:PUSH_Com_Sql
+  -
+    type: var
+    var_name: L:PUSH_Xpndr_Vfr
+  -
+    type: var
+    var_name: L:EFI_RKS_5
+  -
+    type: var
+    var_name: L:EFI_RKS_2
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next
+  -
+    type: var
+    var_name: L:PUSH_Xpndr_Sel
+  -
+    type: var
+    var_name: L:EFI_LKS_4
+  -
+    type: var
+    var_name: L:EFI_RKS_1
+  -
+    type: var
+    var_name: L:EFI_LKS_3
+  -
+    type: var
+    var_name: L:SWITCH_Fuelpump_1
+  -
+    type: var
+    var_name: L:KNOB_Clock_Timer_Start_Stop
+  -
+    type: var
+    var_name: L:Tailwheel_Lock_R
+  -
+    type: var
+    var_name: L:SWITCH_Voltamps
+  -
+    type: var
+    var_name: L:SWITCH_Magnetos_2
+  -
+    type: var
+    var_name: L:Tailwheel_Lock_L
+  -
+    type: var
+    var_name: L:Knob_EFI_Mode
+  -
+    type: var
+    var_name: L:EFI_LKS_1
+  -
+    type: var
+    var_name: L:EFI_RKS_3
+  -
+    type: var
+    var_name: L:EFI_RKS_4
+  -
+    type: var
+    var_name: L:Fuelpump_LH_available
+  -
+    type: var
+    var_name: L:Fuelpump_RH_available
+  -
+    type: var
+    var_name: L:KNOB_Attitude_Cage_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:Clock_Counter_Seconds
+# -
+#   type: var
+#   var_name: L:Clock_Counter_Minutes
+# -
+#   type: var
+#   var_name: L:Clock_Counter_Hours
+  -
+    type: var
+    var_name: L:KNOB_Clock_Timer_Reset
+  -
+    type: var
+    var_name: L:KNOB_Attitude_Cage_2
+  -
+    type: var
+    var_name: L:SWITCH_Start
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_0
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_1
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_2
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_3
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_4
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_5
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_6
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_7
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_8
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_9
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_10
+  -
+    type: var
+    var_name: L:Knob_EFI_Back_Next_EMERGENCY_PAGE_11
+  -
+    type: var
+    var_name: L:PUSH_Com_Scn
+  -
+    type: var
+    var_name: L:PUSH_Com_Sto
+  -
+    type: var
+    var_name: L:Knob_Xpdnr_Mode_OFF
+  -
+    type: var
+    var_name: L:Knob_Xpdnr_Mode_STBY
+  -
+    type: var
+    var_name: L:Knob_Xpdnr_Mode_ON
+  -
+    type: var
+    var_name: L:Knob_Xpdnr_Mode_ALT
+  -
+    type: var
+    var_name: L:PUSH_Xpndr_Sel_CODE_0
+  -
+    type: var
+    var_name: L:PUSH_Xpndr_Sel_CODE_1
+  -
+    type: var
+    var_name: L:PUSH_Xpndr_Sel_CODE_2
+  -
+    type: var
+    var_name: L:PUSH_Xpndr_Sel_CODE_3
+  -
+    type: var
+    var_name: L:PUSH_Xpndr_Sto
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:PUSH_Clock_Seconds
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:IsChangeDataFieldsMenuOn
+# -
+#   type: var
+#   var_name: L:Aera_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:Aera_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Aera_IsPositionOverride
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:CJ4_SAI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:CJ4_SAI_State
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

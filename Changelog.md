@@ -1,5 +1,36 @@
 # YourControls Changelog
 
+## Version 2.7.1
+
+### Profiles
+
+- Complete profile re-organization.
+- Added Airbus A319 by LatinVFR (v1.2.4).
+- Added Airbus A321 by LatinVFR (v1.2.4).
+- Added Beechcraft Bonanza V35 by Microsoft (v1.5.2).
+- Added Beechcraft Model 17 Staggerwing by Microsoft (v1.8.0).
+- Added Beechcraft Model 18 by Microsoft (v1.6.2).
+- Added Cessna CT182T Skylane by Carenado (v1.5.0).
+- Added Cessna C337 Skymaster by Carenado (v1.1.2).
+- Added Discus2c by GotFriends (v2.0.4).
+- Added Edgley EA-7 Optica by GotFriends (v1.0.3).
+- Added Hondajet by FlightFX (v1.0.6).
+  - WT G3000 currently not supported, setting route won't sync.
+- Added Junkers F 13 by Microsoft (v0.1.1).
+- Added Junkers Ju 52 by Microsoft (v0.1.8).
+- Added Pilatus PC-12 by Carenado (v1.0.3).
+- Added Piper PA-28R Arrow III by Carenado (v1.5.0).
+- Added Piper PA-44 Seminole by Carenado (v1.8.0).
+- Added Schleicher AS33Me by MADolo Simulations (1.51).
+- Updated Flysimware C414AW Chancellor to v3.2.0.
+- Updated SimWorks Studios RV-14 to v1.3.2.
+
+### Aircraft Fixes
+
+- FlyByWire A32NX - Removed possible duplicate pushback command causing no more sync.
+- Carenado M20R - Desync with vertical speed gauge.
+- Carenado Seneca V - Landing pulse lights not turning off.
+
 ## Version 2.7.0
 
 ### Program Fixes
@@ -8,12 +39,12 @@
 - H-event duplication after ending and making new server with someone previously connected.
 - An issue preventing FlyByWire A32NX compatiblity with Cloud Host.
 - An issue with definitions not being received by clients through Cloud Host.
-- Attempted to fix an issue which prevented those behind CGN (carrier grade NATs) to connect via Cloud Host.
+- Attempted to fix an issue which prevented those behind CGN (Carrier-grade NAT) to connect through Cloud Host.
 - Systems on LAN can now connect through Cloud P2P.
 - Added message for when cloud hoster connection is lost. First client in list becomes new hoster.
 - Added hide clickability for IP addresses and session code.
 - Added IPv6 support for Cloud P2P and Cloud Host.
-- Hosting via the `Direct` method will now listen on both IPv6 and IPv4 addreses
+- Hosting via the `Direct` method will now listen on both IPv6 and IPv4 addresses.
 - Current session ID moved to the `Server` tab.
 
 ### Profiles

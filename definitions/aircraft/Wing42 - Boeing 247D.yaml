@@ -1,0 +1,3904 @@
+# Version 1.0.1
+
+include:
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Ignition
+    type: ToggleSwitch
+    var_name: A:MASTER IGNITION SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_IGNITION_SWITCH
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT RECOGNITION
+    var_units: Bool
+    var_type: f64
+    event_name: RECOGNITION_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT NAV
+    var_units: Bool
+    var_type: f64
+    event_name: NAV_LIGHTS_SET
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:2
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:3
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:4
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 4
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:5
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 5
+
+# - # LVAR's
+#   type: var
+#   var_name: L:LOADING STATE
+  -
+    type: var
+    var_name: L:TAP FUEL RIGHT
+  -
+    type: var
+    var_name: L:DOOR COCKPIT
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE LEFT LANDING LIGHT
+  -
+    type: var
+    var_name: L:FUSE GENERATOR
+  -
+    type: var
+    var_name: L:ASHTRAY:7
+  -
+    type: var
+    var_name: L:TAP OIL TEMP 2
+  -
+    type: var
+    var_name: L:FUSE NAV LIGHT
+  -
+    type: var
+    var_name: L:TAP OIL PRESS 2
+# -
+#   type: var
+#   var_name: L:ENG THROTTLE 2
+  -
+    type: var
+    var_name: L:VHF FREQUENCY INTEGERS
+  -
+    type: var
+    var_name: L:EMERGENCY HATCH
+    unreliable: true
+  -
+    type: var
+    var_name: L:ASHTRAY:9
+  -
+    type: var
+    var_name: L:RUDDER TRIM
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:PEEPHOLE 1
+  -
+    type: var
+    var_name: L:ENG MIXTURE 1
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUEL QUANTITY PLUNGER RIGHT
+    unreliable: true
+  -
+    type: var
+    var_name: L:EMERGENCY DOOR
+  -
+    type: var
+    var_name: L:RADIO RANGE BAND POSITION
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE EMPTY 4
+  -
+    type: var
+    var_name: L:FUSE EMPTY 3
+  -
+    type: var
+    var_name: L:FUSE COMPASS LIGHT
+  -
+    type: var
+    var_name: L:AUX FRICTION LOCK
+    unreliable: true
+  -
+    type: var
+    var_name: L:ELEVATOR TRIM
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT CABIN:10
+  -
+    type: var
+    var_name: L:ASHTRAY:10
+  -
+    type: var
+    var_name: L:ENG PROPELLER 1
+    unreliable: true
+  -
+    type: var
+    var_name: L:WOBBLE PUMP
+    unreliable: true
+  -
+    type: var
+    var_name: L:FLARE 2
+  -
+    type: var
+    var_name: L:FUSE CABIN SIGNS
+  -
+    type: var
+    var_name: L:LIGHT CABIN:3
+  -
+    type: var
+    var_name: L:LIGHT CABIN:4
+  -
+    type: var
+    var_name: L:WINDOW 1
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE RADIO EMPTY 2
+  -
+    type: var
+    var_name: L:VAR HANDLE1
+  -
+    type: var
+    var_name: L:LEVER PARKING BRAKE
+    unreliable: true
+  -
+    type: var
+    var_name: L:VENT 1
+    unreliable: true
+  -
+    type: var
+    var_name: L:FEATHERING COVER
+    unreliable: true
+  -
+    type: var
+    var_name: L:LEVER GEAR POSITION
+    unreliable: true
+  -
+    type: var
+    var_name: L:KNOB DG
+    unreliable: true
+  -
+    type: var
+    var_name: L:TAP MANIFOLD PRESSURE
+  -
+    type: var
+    var_name: L:FUSE FEATHERING PUMPS
+  -
+    type: var
+    var_name: L:RHEOSTAT ENG INSTRUMENT LIGHT
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPBOARD
+  -
+    type: var
+    var_name: L:THROTTLE FRICTION LOCK
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE READING LIGHTS
+  -
+    type: var
+    var_name: L:LIGHT PANEL:2
+  -
+    type: var
+    var_name: L:LEVER ENGINE SELECTOR
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:HIDE YOKE 2
+  -
+    type: var
+    var_name: L:LIGHT CABIN:12
+  -
+    type: var
+    var_name: L:WHEEL CHOCKS
+  -
+    type: var
+    var_name: L:LIGHT PANEL:5
+  -
+    type: var
+    var_name: L:LEVER OIL SHUTTER 1
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT CABIN:8
+  -
+    type: var
+    var_name: L:FUSEBOX RADIO
+    unreliable: true
+  -
+    type: var
+    var_name: L:TAP FUEL LEFT
+  -
+    type: var
+    var_name: L:AILERON TRIM
+    unreliable: true
+  -
+    type: var
+    var_name: L:VENT 4
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWITCH MAGNETO 2
+  -
+    type: var
+    var_name: L:SWITCH DOME CABIN
+  -
+    type: var
+    var_name: L:FUSE AVIONICS
+  -
+    type: var
+    var_name: L:VENT 3
+    unreliable: true
+  -
+    type: var
+    var_name: L:PROPELLER FRICTION LOCK
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT CABIN:6
+  -
+    type: var
+    var_name: L:DEICING SWITCH
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUEL QUANTITY PLUNGER LEFT
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE RADIO VHF
+  -
+    type: var
+    var_name: L:TAP FUEL PRESS 1
+  -
+    type: var
+    var_name: L:FLYWHEEL CLUTCH 1
+  -
+    type: var
+    var_name: L:LEVER CARBURETOR HEAT 2
+    unreliable: true
+  -
+    type: var
+    var_name: L:TAP RPM 2
+  -
+    type: var
+    var_name: L:ASHTRAY:5
+  -
+    type: var
+    var_name: L:TAP RADIO
+  -
+    type: var
+    var_name: L:JUMP SEAT
+  -
+    type: var
+    var_name: L:ASHTRAY:2
+  -
+    type: var
+    var_name: L:EMERGENCY HATCH HANDLE2
+  -
+    type: var
+    var_name: L:FUSE STEWARDESS LIGHTS
+  -
+    type: var
+    var_name: L:FUSE EMPTY 1
+  -
+    type: var
+    var_name: L:PITOT HEAT
+  -
+    type: var
+    var_name: L:PRIMER HANDLE
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT LANDING:1
+  -
+    type: var
+    var_name: L:LIGHT CABIN
+  -
+    type: var
+    var_name: L:LUX LEVER
+    unreliable: true
+  -
+    type: var
+    var_name: L:AVIONICS MASTER SWITCH
+  -
+    type: var
+    var_name: L:LIGHT CABIN:5
+  -
+    type: var
+    var_name: L:LUX SELECTOR
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT CABIN:2
+  -
+    type: var
+    var_name: L:CABIN HEAT LEVER
+    unreliable: true
+  -
+    type: var
+    var_name: L:TAP DG
+  -
+    type: var
+    var_name: L:SWITCH MAGNETO 1
+  -
+    type: var
+    var_name: L:ELECTRICAL MASTER BATTERY
+  -
+    type: var
+    var_name: L:FUSE GEAR MOTOR
+  -
+    type: var
+    var_name: L:DOOR LAVATORY
+    unreliable: true
+  -
+    type: var
+    var_name: L:VHF FREQUENCY DECIMALS
+    unreliable: true
+  -
+    type: var
+    var_name: L:PRIMER VALVE
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT PANEL:1
+  -
+    type: var
+    var_name: L:FUSE GEAR WARNING
+  -
+    type: var
+    var_name: L:FUEL QUANTITY PLUNGER LEFT TURN
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:HIDE YOKE 1
+  -
+    type: var
+    var_name: L:LIGHT CABIN:11
+  -
+    type: var
+    var_name: L:SWITCH RADIO RANGE POWER
+  -
+    type: var
+    var_name: L:MASTER IGNITION SWITCH
+  -
+    type: var
+    var_name: L:LEVER OIL SHUTTER 2
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE NAV INSTR LIGHT
+  -
+    type: var
+    var_name: L:LIGHT LANDING:2
+  -
+    type: var
+    var_name: L:FUEL QUANTITY PLUNGER RIGHT TURN
+    unreliable: true
+  -
+    type: var
+    var_name: L:LEVER TANK SELECTOR
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE RADIO RANGE
+  -
+    type: var
+    var_name: L:TAP AH
+  -
+    type: var
+    var_name: L:LIGHT NAV
+  -
+    type: var
+    var_name: L:FUSE EMPTY 2
+  -
+    type: var
+    var_name: L:RHEOSTAT COMPASS LIGHT
+    unreliable: true
+  -
+    type: var
+    var_name: L:ASHTRAY:6
+  -
+    type: var
+    var_name: L:RHEOSTAT NAV INSTRUMENT LIGHT
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT RECOGNITION
+  -
+    type: var
+    var_name: L:FUSE MAP LIGHT
+  -
+    type: var
+    var_name: L:ASHTRAY:1
+  -
+    type: var
+    var_name: L:FUEL QUANTITY SELECTOR
+    unreliable: true
+  -
+    type: var
+    var_name: L:EMERGENCY HATCH HANDLE1
+  -
+    type: var
+    var_name: L:FLYWHEEL CLUTCH 2
+  -
+    type: var
+    var_name: L:LEVER CARBURETOR HEAT 1
+    unreliable: true
+  -
+    type: var
+    var_name: L:TAP FUEL PRESS 2
+  -
+    type: var
+    var_name: L:ASHTRAY:8
+  -
+    type: var
+    var_name: L:SWITCH DOME COCKPIT
+  -
+    type: var
+    var_name: L:FUSE DOME LIGHT
+  -
+    type: var
+    var_name: L:TAP RPM 1
+  -
+    type: var
+    var_name: L:TAP COMPASS
+  -
+    type: var
+    var_name: L:PRIMER HANDLE TURN
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWITCH RADIO RANGE CW
+  -
+    type: var
+    var_name: L:FUSEBOX
+    unreliable: true
+  -
+    type: var
+    var_name: L:MIXTURE FRICTION LOCK
+    unreliable: true
+  -
+    type: var
+    var_name: L:ENGINE TEMPERATURE SELECTOR POSITION
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE DYNAMOTOR
+  -
+    type: var
+    var_name: L:ENG MIXTURE 2
+    unreliable: true
+  -
+    type: var
+    var_name: L:TAP AMMETER
+# -
+#   type: var
+#   var_name: L:PEEPHOLE 2
+  -
+    type: var
+    var_name: L:RADIO CRYSTAL ALL
+  -
+    type: var
+    var_name: L:FUSE COURTESY LIGHT
+  -
+    type: var
+    var_name: L:TAP OIL TEMP 1
+  -
+    type: var
+    var_name: L:TAP TB
+  -
+    type: var
+    var_name: L:TAP OIL PRESS 1
+  -
+    type: var
+    var_name: L:KNOB ALTIMETER
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE RIGHT LANDING LIGHT
+  -
+    type: var
+    var_name: L:RADIO RANGE VOLUME
+    unreliable: true
+  -
+    type: var
+    var_name: L:PRIMER SELECTOR
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:ENG THROTTLE 1
+  -
+    type: var
+    var_name: L:VHF VOLUME
+    unreliable: true
+  -
+    type: var
+    var_name: L:RADIO CRYSTAL SW
+  -
+    type: var
+    var_name: L:TAP ASI
+  -
+    type: var
+    var_name: L:TAP GEAR
+  -
+    type: var
+    var_name: L:KNOB CLOCK
+    unreliable: true
+  -
+    type: var
+    var_name: L:ASHTRAY:3
+  -
+    type: var
+    var_name: L:ASHTRAY:4
+  -
+    type: var
+    var_name: L:FUSE PITOT HEAT
+  -
+    type: var
+    var_name: L:TAP CLOCK
+  -
+    type: var
+    var_name: L:VENT 2
+    unreliable: true
+  -
+    type: var
+    var_name: L:FUSE RADIO EMPTY 1
+  -
+    type: var
+    var_name: L:VAR HANDLE2
+  -
+    type: var
+    var_name: L:TAP OAT
+  -
+    type: var
+    var_name: L:RADIO RANGE FREQUENCY HANDLE
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT CABIN:9
+  -
+    type: var
+    var_name: L:AUTO START
+  -
+    type: var
+    var_name: L:LIGHT CABIN:7
+  -
+    type: var
+    var_name: L:FUSEBOX LOCK
+  -
+    type: var
+    var_name: L:WINDOW 2
+    unreliable: true
+  -
+    type: var
+    var_name: L:FLARE 1
+  -
+    type: var
+    var_name: L:MANIFOLD PRESSURE SELECTOR POSITION
+    unreliable: true
+  -
+    type: var
+    var_name: L:TAP VSI
+  -
+    type: var
+    var_name: L:TAP ENGINE TEMPERATURE
+  -
+    type: var
+    var_name: L:FUSE ENG INSTR LIGHT
+  -
+    type: var
+    var_name: L:RADIO CRYSTAL LW
+  -
+    type: var
+    var_name: L:LIGHT PANEL:4
+  -
+    type: var
+    var_name: L:LIGHT CABIN:13
+  -
+    type: var
+    var_name: L:MANUAL GEAR SELECTOR
+  -
+    type: var
+    var_name: L:MANUAL GEAR LEVER
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT PANEL:3
+  -
+    type: var
+    var_name: L:ENG PROPELLER 2
+    unreliable: true
+  -
+    type: var
+    var_name: L:TAP ALTIMETER
+# -
+#   type: var
+#   var_name: L:ABSOLUTE TIME
+# -
+#   type: var
+#   var_name: L:LOCAL TIME
+# -
+#   type: var
+#   var_name: L:ZULU TIME
+# -
+#   type: var
+#   var_name: L:LOCAL DAY OF WEEK
+# -
+#   type: var
+#   var_name: L:LOCAL DAY OF MONTH
+# -
+#   type: var
+#   var_name: L:LOCAL MONTH OF YEAR
+# -
+#   type: var
+#   var_name: L:LOCAL DAY OF YEAR
+# -
+#   type: var
+#   var_name: L:LOCAL YEAR
+  -
+    type: var
+    var_name: L:STARTER CRANK USED:1
+  -
+    type: var
+    var_name: L:STARTER CRANK:1
+  -
+    type: var
+    var_name: L:STARTER CRANK USED:2
+  -
+    type: var
+    var_name: L:STARTER CRANK:2
+  -
+    type: var
+    var_name: L:PASSENGER DOOR
+  -
+    type: var
+    var_name: L:CARGO DOOR FRONT
+# -
+#   type: var
+#   var_name: L:ELEVATOR
+# -
+#   type: var
+#   var_name: L:VIBRATION POSITION:3
+# -
+#   type: var
+#   var_name: L:AILERON
+# -
+#   type: var
+#   var_name: L:VIBRATION POSITION:2
+# -
+#   type: var
+#   var_name: L:RUDDER
+  -
+    type: var
+    var_name: L:SWITCH MAGNETO 1 MOVING
+  -
+    type: var
+    var_name: L:SWITCH MAGNETO 2 MOVING
+  -
+    type: var
+    var_name: L:LEVER ENGINE SELECTOR MOVING
+  -
+    type: var
+    var_name: L:LEVER TANK SELECTOR MOVING
+  -
+    type: var
+    var_name: L:PRIMER SELECTOR MOVING
+  -
+    type: var
+    var_name: L:PRIMER HANDLE TURN MOVING
+  -
+    type: var
+    var_name: L:PRIMER HANDLE MOVING
+  -
+    type: var
+    var_name: L:PRIMER HANDLE DRAG
+    unreliable: true
+  -
+    type: var
+    var_name: L:PRIMER VALVE MOVING
+  -
+    type: var
+    var_name: L:WOBBLE PUMP MOVING
+  -
+    type: var
+    var_name: L:WOBBLE PUMP DRAG
+    unreliable: true
+  -
+    type: var
+    var_name: L:DEICING SWITCH MOVING
+  -
+    type: var
+    var_name: L:ELEVATOR TRIM MOVING
+  -
+    type: var
+    var_name: L:RUDDER TRIM MOVING
+  -
+    type: var
+    var_name: L:AILERON TRIM MOVING
+  -
+    type: var
+    var_name: L:THROTTLE FRICTION LOCK MOVING
+  -
+    type: var
+    var_name: L:MIXTURE FRICTION LOCK MOVING
+  -
+    type: var
+    var_name: L:PROPELLER FRICTION LOCK MOVING
+  -
+    type: var
+    var_name: L:AUX FRICTION LOCK MOVING
+  -
+    type: var
+    var_name: L:ENG THROTTLE 1 MOVING
+  -
+    type: var
+    var_name: L:ENG THROTTLE 2 MOVING
+  -
+    type: var
+    var_name: L:ENG MIXTURE 1 MOVING
+  -
+    type: var
+    var_name: L:ENG MIXTURE 2 MOVING
+  -
+    type: var
+    var_name: L:ENG PROPELLER 1 MOVING
+  -
+    type: var
+    var_name: L:ENG PROPELLER 2 MOVING
+  -
+    type: var
+    var_name: L:LEVER OIL SHUTTER 1 MOVING
+  -
+    type: var
+    var_name: L:LEVER OIL SHUTTER 2 MOVING
+  -
+    type: var
+    var_name: L:LEVER CARBURETOR HEAT 1 MOVING
+  -
+    type: var
+    var_name: L:LEVER CARBURETOR HEAT 2 MOVING
+  -
+    type: var
+    var_name: L:LEVER GEAR POSITION MOVING
+  -
+    type: var
+    var_name: L:MANUAL GEAR LEVER MOVING
+  -
+    type: var
+    var_name: L:MANUAL GEAR LEVER DRAG
+    unreliable: true
+  -
+    type: var
+    var_name: L:LEVER PARKING BRAKE MOVING
+  -
+    type: var
+    var_name: L:LUX SELECTOR MOVING
+  -
+    type: var
+    var_name: L:LUX LEVER MOVING
+  -
+    type: var
+    var_name: L:LUX DISCHARGE:1
+  -
+    type: var
+    var_name: L:LUX DISCHARGE:2
+  -
+    type: var
+    var_name: L:SWITCH CABIN SIGN
+# -
+#   type: var
+#   var_name: L:PROP FEATHERING:1
+# -
+#   type: var
+#   var_name: L:PROP FEATHERING:2
+# -
+#   type: var
+#   var_name: L:ELECTRICAL MAIN BUS VOLTAGE:1
+  -
+    type: var
+    var_name: L:CIRCUIT ON 35
+  -
+    type: var
+    var_name: L:LIGHT READING:2
+  -
+    type: var
+    var_name: L:LIGHT READING:3
+  -
+    type: var
+    var_name: L:LIGHT READING:4
+  -
+    type: var
+    var_name: L:LIGHT READING:5
+  -
+    type: var
+    var_name: L:LIGHT READING:6
+  -
+    type: var
+    var_name: L:LIGHT READING:7
+  -
+    type: var
+    var_name: L:LIGHT READING:8
+  -
+    type: var
+    var_name: L:LIGHT READING:9
+  -
+    type: var
+    var_name: L:LIGHT READING:10
+  -
+    type: var
+    var_name: L:LIGHT READING:11
+  -
+    type: var
+    var_name: L:LIGHT READING:12
+  -
+    type: var
+    var_name: L:LIGHT READING:13
+  -
+    type: var
+    var_name: L:CIRCUIT ON:4
+  -
+    type: var
+    var_name: L:CIRCUIT ON:5
+  -
+    type: var
+    var_name: L:CIRCUIT ON:6
+  -
+    type: var
+    var_name: L:CIRCUIT ON:7
+  -
+    type: var
+    var_name: L:CIRCUIT ON:9
+  -
+    type: var
+    var_name: L:CIRCUIT ON:8
+  -
+    type: var
+    var_name: L:CIRCUIT ON:11
+  -
+    type: var
+    var_name: L:CIRCUIT ON:10
+  -
+    type: var
+    var_name: L:CIRCUIT ON:2
+  -
+    type: var
+    var_name: L:CIRCUIT ON:3
+  -
+    type: var
+    var_name: L:CIRCUIT ON:35
+  -
+    type: var
+    var_name: L:CIRCUIT ON:18
+# -
+#   type: var
+#   var_name: L:ELECTRICAL MAIN BUS AMPS:2
+  -
+    type: var
+    var_name: L:CIRCUIT ON:17
+  -
+    type: var
+    var_name: L:CIRCUIT ON:14
+# -
+#   type: var
+#   var_name: L:ELECTRICAL MAIN BUS AMPS:6
+  -
+    type: var
+    var_name: L:RHEOSTAT NAV INSTRUMENT LIGHT MOVING
+  -
+    type: var
+    var_name: L:RHEOSTAT ENG INSTRUMENT LIGHT MOVING
+  -
+    type: var
+    var_name: L:RHEOSTAT COMPASS LIGHT MOVING
+  -
+    type: var
+    var_name: L:FEATHERING COVER MOVING
+  -
+    type: var
+    var_name: L:FUSEBOX MOVING
+  -
+    type: var
+    var_name: L:SPARE FUSES
+  -
+    type: var
+    var_name: L:CLIPBOARD UNLOCKED
+  -
+    type: var
+    var_name: L:FUSEBOX RADIO MOVING
+# -
+#   type: var
+#   var_name: L:NEEDLE RPM:1
+# -
+#   type: var
+#   var_name: L:NEEDLE RPM:2
+  -
+    type: var
+    var_name: L:MANIFOLD PRESSURE SELECTOR
+# -
+#   type: var
+#   var_name: L:NEEDLE MANIFOLD PRESSURE:1
+# -
+#   type: var
+#   var_name: L:NEEDLE MANIFOLD PRESSURE:2
+# -
+#   type: var
+#   var_name: L:NEEDLE ENGINE TEMPERATURE
+# -
+#   type: var
+#   var_name: L:NEEDLE OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:NEEDLE OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:NEEDLE OIL PRESSURE:1
+# -
+#   type: var
+#   var_name: L:NEEDLE OIL PRESSURE:2
+# -
+#   type: var
+#   var_name: L:NEEDLE FUEL PRESSURE:1
+# -
+#   type: var
+#   var_name: L:NEEDLE FUEL PRESSURE:2
+# -
+#   type: var
+#   var_name: L:NEEDLE COMPASS
+# -
+#   type: var
+#   var_name: L:NEEDLE COMPASS PITCH
+# -
+#   type: var
+#   var_name: L:NEEDLE COMPASS BANK
+# -
+#   type: var
+#   var_name: L:NEEDLE ASI
+# -
+#   type: var
+#   var_name: L:NEEDLE VSI
+# -
+#   type: var
+#   var_name: L:NEEDLE ALTIMETER
+  -
+    type: var
+    var_name: L:KNOB ALTIMETER MOVING
+# -
+#   type: var
+#   var_name: L:NEEDLE TB BANK
+# -
+#   type: var
+#   var_name: L:NEEDLE TB TURN
+# -
+#   type: var
+#   var_name: L:NEEDLE DG
+# -
+#   type: var
+#   var_name: L:NEEDLE AH PITCH
+# -
+#   type: var
+#   var_name: L:NEEDLE AH BANK
+# -
+#   type: var
+#   var_name: L:NEEDLE OAT
+# -
+#   type: var
+#   var_name: L:NEEDLE AMMETER
+# -
+#   type: var
+#   var_name: L:NEEDLE GEAR LEFT POSITION
+# -
+#   type: var
+#   var_name: L:NEEDLE FUEL GAUGE LEFT
+# -
+#   type: var
+#   var_name: L:NEEDLE FUEL GAUGE RIGHT
+# -
+#   type: var
+#   var_name: L:GLIDE RATIO
+# -
+#   type: var
+#   var_name: L:LUMINESCENT GROUP ENG INSTRUMENTS RIGHT
+  -
+    type: var
+    var_name: L:MANIFOLD PRESSURE SELECTOR POSITION MOVING
+# -
+#   type: var
+#   var_name: L:LUMINESCENT GROUP NAV INSTRUMENTS
+  -
+    type: var
+    var_name: L:ENGINE TEMPERATURE SELECTOR POSITION MOVING
+# -
+#   type: var
+#   var_name: L:LUMINESCENT GROUP ENG INSTRUMENTS LEFT
+# -
+#   type: var
+#   var_name: L:LUMINESCENT GROUP COMPASS
+  -
+    type: var
+    var_name: L:KNOB DG MOVING
+  -
+    type: var
+    var_name: L:KNOB DG DELTA
+    unreliable: true
+  -
+    type: var
+    var_name: L:KNOB CLOCK MOVING
+  -
+    type: var
+    var_name: L:FUEL QUANTITY PLUNGER LEFT TURN MOVING
+  -
+    type: var
+    var_name: L:FUEL QUANTITY PLUNGER LEFT MOVING
+  -
+    type: var
+    var_name: L:FUEL QUANTITY SELECTOR MOVING
+  -
+    type: var
+    var_name: L:FUEL QUANTITY PLUNGER RIGHT TURN MOVING
+  -
+    type: var
+    var_name: L:FUEL QUANTITY PLUNGER RIGHT MOVING
+  -
+    type: var
+    var_name: L:RADIO RANGE BAND
+  -
+    type: var
+    var_name: L:RADIO RANGE FREQUENCY
+    unreliable: true
+  -
+    type: var
+    var_name: L:RADIO RANGE POWER
+  -
+    type: var
+    var_name: L:RADIO RANGE VOLUME MOVING
+  -
+    type: var
+    var_name: L:RADIO RANGE BAND POSITION MOVING
+# -
+#   type: var
+#   var_name: L:LUMINESCENT GROUP RADIO
+  -
+    type: var
+    var_name: L:RADIO RANGE FREQUENCY HANDLE MOVING
+  -
+    type: var
+    var_name: L:VHF VOLUME MOVING
+  -
+    type: var
+    var_name: L:VHF FREQUENCY INTEGERS MOVING
+  -
+    type: var
+    var_name: L:VHF FREQUENCY DECIMALS MOVING
+# -
+#   type: var
+#   var_name: L:VIBRATION POSITION:1
+# -
+#   type: var
+#   var_name: L:VIBRATION POSITION:4
+# -
+#   type: var
+#   var_name: L:COMPASS SHAKE
+# -
+#   type: var
+#   var_name: L:VIBRATION POSITION:5
+  -
+    type: var
+    var_name: L:LEVER CARBURETOR HEATER 2 MOVING
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:1
+  -
+    type: var
+    var_name: L:LEVER CARBURETOR HEATER 1 MOVING
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:2
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:3
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:4
+  -
+    type: var
+    var_name: L:LEVER PROPELLER 1 MOVING
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:5
+  -
+    type: var
+    var_name: L:LEVER PROPELLER 2 MOVING
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:6
+  -
+    type: var
+    var_name: L:LEVER THROTTLE 1 MOVING
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:7
+  -
+    type: var
+    var_name: L:LEVER THROTTLE 2 MOVING
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:8
+  -
+    type: var
+    var_name: L:LEVER MIXTURE 1 MOVING
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:9
+  -
+    type: var
+    var_name: L:LEVER MIXTURE 2 MOVING
+# -
+#   type: var
+#   var_name: L:CONTROL WOBBLE:10
+  -
+    type: var
+    var_name: L:SOAP
+    unreliable: true
+  -
+    type: var
+    var_name: L:EMERGENCY HATCH MOVING
+  -
+    type: var
+    var_name: L:PEEPHOLE 1 MOVING
+  -
+    type: var
+    var_name: L:PEEPHOLE 2 MOVING
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:1
+  -
+    type: var
+    var_name: L:VISIBILITY CARGO 2
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:2
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:3
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:4
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:5
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:6
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:7
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:8
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:9
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:10
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:11
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:12
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:13
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:14
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:15
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:16
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:17
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:18
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:19
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE INT VISIBILITY:20
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:1
+  -
+    type: var
+    var_name: L:VISIBILITY CARGO 1
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:2
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:3
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:4
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:5
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:6
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:7
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:8
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:9
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:10
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:11
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:12
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:13
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:14
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:15
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:16
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:17
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:18
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:19
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:20
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:21
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:22
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:23
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:24
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:25
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:26
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:27
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:28
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:29
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:30
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:31
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:32
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:33
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:34
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:35
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:36
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:37
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:38
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:39
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:40
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:41
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:42
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:43
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:44
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:45
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:46
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:47
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:48
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:49
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:50
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:51
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:52
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:53
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:54
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:55
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:56
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:57
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:58
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:59
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:60
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:61
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:62
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:63
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:64
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:65
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:66
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:67
+  -
+    type: var
+    var_name: L:CARGO MAIL INT VISIBILITY:68
+  -
+    type: var
+    var_name: L:DOOR COCKPIT MOVING
+  -
+    type: var
+    var_name: L:DOOR LAVATORY MOVING
+  -
+    type: var
+    var_name: L:EMERGENCY DOOR HANDLE1
+  -
+    type: var
+    var_name: L:EMERGENCY DOOR HANDLE2
+  -
+    type: var
+    var_name: L:JUMP SEAT MOVING
+  -
+    type: var
+    var_name: L:VENT 1 MOVING
+  -
+    type: var
+    var_name: L:VENT 2 MOVING
+  -
+    type: var
+    var_name: L:VENT 3 MOVING
+  -
+    type: var
+    var_name: L:VENT 4 MOVING
+  -
+    type: var
+    var_name: L:CABIN HEAT LEVER MOVING
+  -
+    type: var
+    var_name: L:WINDOW 1 MOVING
+  -
+    type: var
+    var_name: L:WINDOW 2 MOVING
+  -
+    type: var
+    var_name: L:NOTE OIL SELECTED ENGINE
+  -
+    type: var
+    var_name: L:CLIPBOARD BOARDING BUTTON
+  -
+    type: var
+    var_name: L:FLYWHEEL AUTO WIND:2
+  -
+    type: var
+    var_name: L:FLYWHEEL AUTO WIND:1
+  -
+    type: var
+    var_name: L:FLYWHEEL AUTO MESH:2
+# -
+#   type: var
+#   var_name: L:FLYWHEEL RPM 1
+  -
+    type: var
+    var_name: L:FLYWHEEL AUTO MESH:1
+# -
+#   type: var
+#   var_name: L:FLYWHEEL RPM 2
+  -
+    type: var
+    var_name: L:CLIPBOARD ACTIVE PAGE
+  -
+    type: var
+    var_name: L:NOTE CREW:1
+  -
+    type: var
+    var_name: L:NOTE CREW:2
+  -
+    type: var
+    var_name: L:NOTE CREW:3
+  -
+    type: var
+    var_name: L:NOTE OIL GRADE
+  -
+    type: var
+    var_name: L:OIL NOTE GRADE SELECTED
+  -
+    type: var
+    var_name: L:BTN OIL NOTE OK
+  -
+    type: var
+    var_name: L:BTN OIL TOP UP:1
+  -
+    type: var
+    var_name: L:BTN OIL TOP UP:2
+  -
+    type: var
+    var_name: L:BTN OIL CHANGE:1
+  -
+    type: var
+    var_name: L:BTN OIL CHANGE:2
+  -
+    type: var
+    var_name: L:PAYLOAD WEIGHT UNITS
+  -
+    type: var
+    var_name: L:CLIPBOARD PILOT
+  -
+    type: var
+    var_name: L:CLIPBOARD COPILOT
+  -
+    type: var
+    var_name: L:CLIPBOARD STEWARDESS
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:1
+  -
+    type: var
+    var_name: L:CLIPBOARD SERVICE PAYLOAD LOCKED
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:2
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:3
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:4
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:5
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:6
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:7
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:8
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:9
+  -
+    type: var
+    var_name: L:CLIPBOARD PASSENGER:10
+  -
+    type: var
+    var_name: L:CLIPBOARD FUEL TANK LEFT MAIN
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPBOARD FUEL TANK RIGHT MAIN
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPBOARD FUEL TANK RIGHT AUX
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPBOARD OIL TANK LEFT
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPBOARD OIL TANK RIGHT
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPBOARD CARGO FRONT
+  -
+    type: var
+    var_name: L:CLIPBOARD CARGO REAR
+  -
+    type: var
+    var_name: L:PASSENGER STAIRS
+  -
+    type: var
+    var_name: L:BAGGAGE CART FRONT
+  -
+    type: var
+    var_name: L:NOSE LADDER
+  -
+    type: var
+    var_name: L:BAGGAGE CART REAR
+  -
+    type: var
+    var_name: L:CARGO DOOR REAR
+  -
+    type: var
+    var_name: L:LADDER ENGINE LEFT
+  -
+    type: var
+    var_name: L:LADDER ENGINE RIGHT
+  -
+    type: var
+    var_name: L:COWLING LEFT
+  -
+    type: var
+    var_name: L:COWLING RIGHT
+  -
+    type: var
+    var_name: L:OIL PAN LEFT
+  -
+    type: var
+    var_name: L:OIL PAN RIGHT
+  -
+    type: var
+    var_name: L:BATTERY COMPARTMENT
+  -
+    type: var
+    var_name: L:GEAR FAIRING
+  -
+    type: var
+    var_name: L:PROP_O_TRONIC ENGINE
+  -
+    type: var
+    var_name: L:PROP_O_TRONIC START
+  -
+    type: var
+    var_name: L:PROP_O_TRONIC ELECTRICAL
+  -
+    type: var
+    var_name: L:OIL TEMPERATURE UNITS CELSIUS
+  -
+    type: var
+    var_name: L:OIL GRADE LAST FILL:1
+  -
+    type: var
+    var_name: L:NOTE OIL MODE
+  -
+    type: var
+    var_name: L:OIL GRADE LAST FILL:2
+# - # why is this here
+#   type: var
+#   var_name: L:
+# -
+#   type: var
+#   var_name: L:ENG IDLE THROTTLE:1
+# -
+#   type: var
+#   var_name: L:ENG IDLE THROTTLE:2
+  -
+    type: var
+    var_name: L:ENGINE TEMPERATURE SELECTOR
+# -
+#   type: var
+#   var_name: L:PROP ROTATION ANGLE:1
+  -
+    type: var
+    var_name: L:MANUAL PROP:1
+    unreliable: true
+  -
+    type: var
+    var_name: L:PROP BEND:1
+# -
+#   type: var
+#   var_name: L:PROP ROTATION ANGLE:2
+  -
+    type: var
+    var_name: L:MANUAL PROP:2
+    unreliable: true
+  -
+    type: var
+    var_name: L:PROP BEND:2
+# -
+#   type: var
+#   var_name: L:STARTER CRANK POSITION:1
+# -
+#   type: var
+#   var_name: L:STARTER CRANK POSITION:2
+  -
+    type: var
+    var_name: L:FUEL FILLER LEFT MAIN
+  -
+    type: var
+    var_name: L:FUEL FILLER RIGHT MAIN
+  -
+    type: var
+    var_name: L:FUEL FILLER RIGHT AUX
+  -
+    type: var
+    var_name: L:OIL FILLER LEFT
+  -
+    type: var
+    var_name: L:OIL FILLER RIGHT
+# -
+#   type: var
+#   var_name: L:DEICING BOOTS
+# -
+#   type: var
+#   var_name: L:ANTENNA SHAKE
+# -
+#   type: var
+#   var_name: L:VIBRATION ENGINE 1
+# -
+#   type: var
+#   var_name: L:VIBRATION ENGINE 2
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:1
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:2
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:3
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:4
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:5
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:6
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:7
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:8
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:9
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:10
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:11
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:12
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:13
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:14
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:15
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:16
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:17
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:18
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:19
+  -
+    type: var
+    var_name: L:CARGO LUGGAGE EXT VISIBILITY:20
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:1
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:2
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:3
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:4
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:5
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:6
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:7
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:8
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:9
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:10
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:11
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:12
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:13
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:14
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:15
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:16
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:17
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:18
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:19
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:20
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:21
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:22
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:23
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:24
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:25
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:26
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:27
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:28
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:29
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:30
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:31
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:32
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:33
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:34
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:35
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:36
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:37
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:38
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:39
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:40
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:41
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:42
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:43
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:44
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:45
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:46
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:47
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:48
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:49
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:50
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:51
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:52
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:53
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:54
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:55
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:56
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:57
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:58
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:59
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:60
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:61
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:62
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:63
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:64
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:65
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:66
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:67
+  -
+    type: var
+    var_name: L:CARGO MAIL EXT VISIBILITY:68
+# -
+#   type: var
+#   var_name: L:FX PUFF1 1
+# -
+#   type: var
+#   var_name: L:FX PUFF1 2
+  -
+    type: var
+    var_name: L:ENG ON FIRE 1
+  -
+    type: var
+    var_name: L:ENG ON FIRE 2
+  -
+    type: var
+    var_name: L:FX EXTINGUISHER:1
+  -
+    type: var
+    var_name: L:FX EXTINGUISHER:2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:SYSTEM STATUS
+# -
+#   type: var
+#   var_name: L:SIMCONNECT STATUS
+# -
+#   type: var
+#   var_name: L:SIMCONNECT EXCEPTION
+# -
+#   type: var
+#   var_name: L:LAST ABSOLUTE TIME
+# -
+#   type: var
+#   var_name: L:LAST DELTA TIME
+# -
+#   type: var
+#   var_name: L:LOCAL TIME TYPE
+# -
+#   type: var
+#   var_name: L:LOCAL SUNRISE
+# -
+#   type: var
+#   var_name: L:LOCAL SUNSET
+# -
+#   type: var
+#   var_name: L:LOCAL NOON
+# -
+#   type: var
+#   var_name: L:LOCAL SUN
+# -
+#   type: var
+#   var_name: L:RELATIVE WIND SPEED
+# -
+#   type: var
+#   var_name: L:GRAVITY X
+# -
+#   type: var
+#   var_name: L:GRAVITY Y
+# -
+#   type: var
+#   var_name: L:ZONE OUTSIDE TEMPERATURE:0
+# -
+#   type: var
+#   var_name: L:ZONE ENGINE FRONT TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ZONE ENGINE BACK TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ZONE OIL SHUTTER TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ZONE ENGINE FRONT TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ZONE ENGINE BACK TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ZONE OIL SHUTTER TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ZONE COCKPIT TEMPERATURE:0
+# -
+#   type: var
+#   var_name: L:ZONE CABIN TEMPERATURE:0
+# -
+#   type: var
+#   var_name: L:TANK LEFT MAIN FLOW
+# -
+#   type: var
+#   var_name: L:TANK RIGHT MAIN FLOW
+# -
+#   type: var
+#   var_name: L:TANK RIGHT AUX FLOW
+# -
+#   type: var
+#   var_name: L:FUEL GAUGE LEFT MAIN PRESSURE
+# -
+#   type: var
+#   var_name: L:NEEDLE FUEL GAUGE LEFT RAW
+# -
+#   type: var
+#   var_name: L:FUEL GAUGE RIGHT MAIN PRESSURE
+# -
+#   type: var
+#   var_name: L:FUEL GAUGE RIGHT AUX PRESSURE
+# -
+#   type: var
+#   var_name: L:NEEDLE FUEL GAUGE RIGHT MAIN RAW
+# -
+#   type: var
+#   var_name: L:NEEDLE FUEL GAUGE RIGHT AUX RAW
+# -
+#   type: var
+#   var_name: L:OIL TANK QUANTITY:0
+# -
+#   type: var
+#   var_name: L:OIL CONSUMPTION:0
+# -
+#   type: var
+#   var_name: L:OIL TANK TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL TANK VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL TANK VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL TANK PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL TANK LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL TANK RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL PUMP EFFICIENCY:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP EFFICIENCY:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK VOLUME:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK VOLUME OUT:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK PRESSURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK LEAKAGE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK RESISTANCE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL GRADE:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL PARTICLES:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL OXIDATION:1
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL COLOR:1
+# -
+#   type: var
+#   var_name: L:TOTAL OIL:1
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER1 TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 1 HEAD TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 0 CHARGE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER2 TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 2 HEAD TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 1 CHARGE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER3 TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 3 HEAD TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 2 CHARGE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER4 TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 4 HEAD TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 3 CHARGE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER5 TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 5 HEAD TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 4 CHARGE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER6 TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 6 HEAD TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 5 CHARGE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER7 TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 7 HEAD TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 6 CHARGE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER8 TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 8 HEAD TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 7 CHARGE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER9 TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 9 HEAD TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:CYLINDER 8 CHARGE TEMPERATURE:1
+  -
+    type: var
+    var_name: L:BACKFIRE CHANCE:1
+  -
+    type: var
+    var_name: L:DETONATION CHANCE:1
+# -
+#   type: var
+#   var_name: L:ENGINE TEMPERATURE
+# -
+#   type: var
+#   var_name: L:SMOKE DENSITY:1
+# -
+#   type: var
+#   var_name: L:SMOKE BLUE:1
+# -
+#   type: var
+#   var_name: L:SMOKE BROWN:1
+# -
+#   type: var
+#   var_name: L:SMOKE BLACK:1
+# -
+#   type: var
+#   var_name: L:FX STARTUP:1
+# -
+#   type: var
+#   var_name: L:SND PUFF1 1
+# -
+#   type: var
+#   var_name: L:CRANKCASE TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:PROPELLER TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:OIL TANK QUANTITY:1
+# -
+#   type: var
+#   var_name: L:OIL CONSUMPTION:1
+# -
+#   type: var
+#   var_name: L:OIL TANK TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL TANK VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL TANK VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL TANK PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL TANK LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL TANK RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL TANK OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO PUMP OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL PUMP EFFICIENCY:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL FILTER OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL PRESSURE VALVE OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO ENGINE OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL CHECK VALVE OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL PART ENGINE OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL PART PROP OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL PART BLOCK OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL SCREEN OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL SUMP PUMP EFFICIENCY:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO COOLER OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE VALVE OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL COOLER OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK VOLUME:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK VOLUME OUT:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK PRESSURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK LEAKAGE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK RESISTANCE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL GRADE:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL PARTICLES:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL OXIDATION:2
+# -
+#   type: var
+#   var_name: L:OIL LINE TO TANK OIL COLOR:2
+# -
+#   type: var
+#   var_name: L:TOTAL OIL:2
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER1 TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 1 HEAD TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 0 CHARGE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER2 TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 2 HEAD TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 1 CHARGE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER3 TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 3 HEAD TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 2 CHARGE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER4 TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 4 HEAD TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 3 CHARGE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER5 TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 5 HEAD TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 4 CHARGE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER6 TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 6 HEAD TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 5 CHARGE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER7 TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 7 HEAD TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 6 CHARGE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER8 TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 8 HEAD TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 7 CHARGE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:ENGINE CYLINDER9 TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 9 HEAD TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:CYLINDER 8 CHARGE TEMPERATURE:2
+  -
+    type: var
+    var_name: L:BACKFIRE CHANCE:2
+  -
+    type: var
+    var_name: L:DETONATION CHANCE:2
+# -
+#   type: var
+#   var_name: L:SMOKE DENSITY:2
+# -
+#   type: var
+#   var_name: L:SMOKE BLUE:2
+# -
+#   type: var
+#   var_name: L:SMOKE BROWN:2
+# -
+#   type: var
+#   var_name: L:SMOKE BLACK:2
+# -
+#   type: var
+#   var_name: L:FX STARTUP:2
+# -
+#   type: var
+#   var_name: L:SND PUFF1 2
+# -
+#   type: var
+#   var_name: L:CRANKCASE TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:PROPELLER TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:BATTERY VOLTAGE
+# -
+#   type: var
+#   var_name: L:BATTERY CURRENT
+# -
+#   type: var
+#   var_name: L:GENERATOR1 VOLTAGE
+# -
+#   type: var
+#   var_name: L:GENERATOR1 CURRENT
+# -
+#   type: var
+#   var_name: L:ELECTRICAL MAIN BUS CURRENT:1
+  -
+    type: var
+    var_name: L:CIRCUIT ON:19
+  -
+    type: var
+    var_name: L:CIRCUIT ON:21
+  -
+    type: var
+    var_name: L:CIRCUIT ON:22
+  -
+    type: var
+    var_name: L:CIRCUIT ON:23
+  -
+    type: var
+    var_name: L:CIRCUIT ON:24
+  -
+    type: var
+    var_name: L:CIRCUIT ON:25
+  -
+    type: var
+    var_name: L:CIRCUIT ON:26
+  -
+    type: var
+    var_name: L:CIRCUIT ON:27
+  -
+    type: var
+    var_name: L:CIRCUIT ON:28
+  -
+    type: var
+    var_name: L:CIRCUIT ON:29
+  -
+    type: var
+    var_name: L:CIRCUIT ON:30
+  -
+    type: var
+    var_name: L:CIRCUIT ON:31
+  -
+    type: var
+    var_name: L:CIRCUIT ON:32
+  -
+    type: var
+    var_name: L:CIRCUIT ON:33
+  -
+    type: var
+    var_name: L:CIRCUIT ON:34
+  -
+    type: var
+    var_name: L:SOUND PLAY RELAY:1
+  -
+    type: var
+    var_name: L:SOUND PLAY RELAY:2
+  -
+    type: var
+    var_name: L:FUSE EMPTY 0
+  -
+    type: var
+    var_name: L:FUSE RADIO EMPTY 0
+# -
+#   type: var
+#   var_name: L:VAC AH RPM
+# -
+#   type: var
+#   var_name: L:VAC DG RPM
+# -
+#   type: var
+#   var_name: L:DG OFFSET
+# -
+#   type: var
+#   var_name: L:DG ERROR
+# -
+#   type: var
+#   var_name: L:VAC TB RPM
+# -
+#   type: var
+#   var_name: L:RATTLE INTENSITY
+# -
+#   type: var
+#   var_name: L:RATTLE INTENSITY NORMALIZED
+  -
+    type: var
+    var_name: L:FEATHERING PUMP ON 1
+  -
+    type: var
+    var_name: L:FEATHERING PUMP ON 2
+# -
+#   type: var
+#   var_name: L:FEATHERING PUMP RPM 1
+# -
+#   type: var
+#   var_name: L:FEATHERING PUMP RPM 2
+  -
+    type: var
+    var_name: L:DEICING TOGGLE
+  -
+    type: var
+    var_name: L:VHF FREQUENCY
+    unreliable: true
+  -
+    type: var
+    var_name: L:VHF FREQUENCY SIM
+    unreliable: true
+  -
+    type: var
+    var_name: L:LUX BOTTLE VOLUME
+  -
+    type: var
+    var_name: L:FX EXTINGUISHER 1
+  -
+    type: var
+    var_name: L:FX EXTINGUISHER 2
+  -
+    type: var
+    var_name: L:LUX DISCHARGE:3
+  -
+    type: var
+    var_name: L:FX EXTINGUISHER:3
+  -
+    type: var
+    var_name: L:FX EXTINGUISHER 3
+  -
+    type: var
+    var_name: L:ENG ON FIRE 3
+  -
+    type: var
+    var_name: L:LUX DISCHARGE:4
+  -
+    type: var
+    var_name: L:FX EXTINGUISHER:4
+  -
+    type: var
+    var_name: L:FX EXTINGUISHER 4
+  -
+    type: var
+    var_name: L:ENG ON FIRE 4
+  -
+    type: var
+    var_name: L:ESCAPE HATCH
+  -
+    type: var
+    var_name: L:ASHTRAY 1
+  -
+    type: var
+    var_name: L:ASHTRAY 2
+  -
+    type: var
+    var_name: L:ASHTRAY 3
+  -
+    type: var
+    var_name: L:ASHTRAY 4
+  -
+    type: var
+    var_name: L:ASHTRAY 5
+  -
+    type: var
+    var_name: L:ASHTRAY 6
+  -
+    type: var
+    var_name: L:ASHTRAY 7
+  -
+    type: var
+    var_name: L:ASHTRAY 8
+  -
+    type: var
+    var_name: L:ASHTRAY 9
+  -
+    type: var
+    var_name: L:ASHTRAY 10
+  -
+    type: var
+    var_name: L:PRIMER TURN
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHT READING:1
+  -
+    type: var
+    var_name: L:ASHTRAY:11
+  -
+    type: var
+    var_name: L:SYSTEM STATUS RADIO
+  -
+    type: var
+    var_name: L:RADIO RANGE A VOLUME
+  -
+    type: var
+    var_name: L:RADIO RANGE N VOLUME
+  -
+    type: var
+    var_name: L:RADIO RANGE ID VOLUME
+  -
+    type: var
+    var_name: L:RADIO RANGE NOISE VOLUME
+  -
+    type: var
+    var_name: L:RADIO RANGE MUSIC VOLUME
+# -
+#   type: var
+#   var_name: L:RADIO RANGE TIME
+# -
+#   type: var
+#   var_name: L:SOUND AN PLAYING BOOL
+# -
+#   type: var
+#   var_name: L:SOUND ID PLAYING BOOL
+# -
+#   type: var
+#   var_name: L:SOUND NOISE PLAYING BOOL
+# -
+#   type: var
+#   var_name: L:SOUND MUSIC PLAYING BOOL
+# -
+#   type: var
+#   var_name: L:SOUND ID BIP PLAYING BOOL
+# -
+#   type: var
+#   var_name: L:SOUND ID BEEP PLAYING BOOL
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+master:
+  -
+    type: var
+    var_name: L:ENG THROTTLE 1
+    unreliable: true
+  -
+    type: var
+    var_name: L:ENG THROTTLE 2
+    unreliable: true
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:13
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:14
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:15
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:16
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:17
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

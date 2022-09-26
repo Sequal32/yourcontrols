@@ -1,0 +1,780 @@
+# Version 2.0.4
+
+include:
+  - definitions/modules/Avionics/Aera.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Battery
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+
+  - # Canopy
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTRAL_LIGHTS_SET
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+
+  - # LVAR's
+    type: var
+    var_name: L:VARIO_MODE
+  -
+    type: var
+    var_name: L:VARIO_TONE_ACTIVE
+  -
+    type: var
+    var_name: L:YAWSTRING_1
+  -
+    type: var
+    var_name: L:BALLAST_ENABLE
+  -
+    type: var
+    var_name: L:WaterBallastRatio
+  -
+    type: var
+    var_name: L:UNITS_IMPERIAL
+  -
+    type: var
+    var_name: L:NAV_SWAP
+  -
+    type: var
+    var_name: L:NAV_BRIGHTNESS
+    unreliable: true
+  -
+    type: var
+    var_name: L:CANOPY_TOGGLE
+  -
+    type: var
+    var_name: L:OXYGEN_TOGGLE
+  -
+    type: var
+    var_name: L:NAV_TOGGLE
+  -
+    type: var
+    var_name: L:COVER_TOGGLE
+  -
+    type: var
+    var_name: L:NAV_SCREEN
+  -
+    type: var
+    var_name: L:NOTICE_VIS
+# -
+#   type: var
+#   var_name: L:PILOT_ACTIVE
+  -
+    type: var
+    var_name: L:CHECKLIST_ANIM
+  -
+    type: var
+    var_name: L:TEMP_IMPERIAL
+  -
+    type: var
+    var_name: L:WINDOW_LARGE
+  -
+    type: var
+    var_name: L:WINDOW_SMALL
+# -
+#   type: var
+#   var_name: L:WINDOW_SMALL_VOLUME
+# -
+#   type: var
+#   var_name: L:WINDOW_LARGE_VOLUME
+  -
+    type: var
+    var_name: L:OXYGEN_KNOB
+  -
+    type: var
+    var_name: L:OXYGEN_SOUND
+# -
+#   type: var
+#   var_name: L:YOKE_TOGGLE
+  -
+    type: var
+    var_name: L:YAW_TOGGLE
+  -
+    type: var
+    var_name: L:BEZEL_CAL
+  -
+    type: var
+    var_name: L:COMPASS_ACTIVE
+  -
+    type: var
+    var_name: L:FLARM_ACTIVE
+  -
+    type: var
+    var_name: L:GOPRO_ACTIVE
+# -
+#   type: var
+#   var_name: L:LVAR_SPOILERS_PERCENT
+# -
+#   type: var
+#   var_name: L:SPOILERS_OPEN_LVAR
+# -
+#   type: var
+#   var_name: L:SPOILERS_CLOSE_LVAR
+# -
+#   type: var
+#   var_name: L:SOUND_SPOILERS
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:SOUND_GEAR
+  -
+    type: var
+    var_name: L:IsFES
+# -
+#   type: var
+#   var_name: L:CANOPY_PERCENT_SOUND
+  -
+    type: var
+    var_name: L:CANOPY_OPEN
+  -
+    type: var
+    var_name: L:CANOPY_CLOSE
+# -
+#   type: var
+#   var_name: L:AC_OPEN_VOLUME
+  -
+    type: var
+    var_name: L:GUARD_OPEN_ALL
+  -
+    type: var
+    var_name: L:BEZEL_CAL_ANALOG
+  -
+    type: var
+    var_name: L:S80_UP_BUTTON
+  -
+    type: var
+    var_name: L:S80_ENTER_BUTTON
+  -
+    type: var
+    var_name: L:S80_DOWN_BUTTON
+  -
+    type: var
+    var_name: L:S80_SD_CARD
+  -
+    type: var
+    var_name: L:VENT_MOVE
+  -
+    type: var
+    var_name: L:OXYGEN_QTY
+  -
+    type: var
+    var_name: L:KA_SOUND_ON
+# -
+#   type: var
+#   var_name: L:SIM_ACTIVE
+  -
+    type: var
+    var_name: L:BALLAST_DUMP_LEFT
+  -
+    type: var
+    var_name: L:BALLAST_SPLASH_LEFT
+  -
+    type: var
+    var_name: L:BALLAST_DUMP_RIGHT
+  -
+    type: var
+    var_name: L:BALLAST_SPLASH_RIGHT
+# -
+#   type: var
+#   var_name: L:LAST PRESSURE ALTITUDE
+# -
+#   type: var
+#   var_name: L:LAST AIRSPEED TRUE
+# -
+#   type: var
+#   var_name: L:TOTAL ENERGY
+  -
+    type: var
+    var_name: L:VARIO_POWER_STATUS
+# -
+#   type: var
+#   var_name: L:VARIO_NEEDLE
+# -
+#   type: var
+#   var_name: L:VARIO_TONE
+# -
+#   type: var
+#   var_name: L:VARIO_TONE_LIFT
+# -
+#   type: var
+#   var_name: L:VARIO_TONE_SINK
+# -
+#   type: var
+#   var_name: L:LAST VELOCITY
+# -
+#   type: var
+#   var_name: L:AUTO_PILOT_BANK
+# -
+#   type: var
+#   var_name: L:AUTO_PILOT_COURSE
+# -
+#   type: var
+#   var_name: L:AUTO_PILOT_COURSE_DIFF
+# -
+#   type: var
+#   var_name: L:YAWSTRING_TIP_ANIM
+# -
+#   type: var
+#   var_name: L:YAWSTRING_X_DEG
+# -
+#   type: var
+#   var_name: L:YAWSTRING_X_ANIM
+# -
+#   type: var
+#   var_name: L:NETTO
+  -
+    type: var
+    var_name: L:FES_SWITCH
+  -
+    type: var
+    var_name: L:CANOPY_VOLUME
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  -
+    type: var
+    var_name: L:RADAR_PING
+  -
+    type: var
+    var_name: L:RADAR_SWAP_INTERVAL
+  -
+    type: var
+    var_name: L:RADAR_SWAP_WIDTH
+  -
+    type: var
+    var_name: L:RADAR_SWAP_HEIGHT
+  -
+    type: var
+    var_name: L:RADAR_SCAN_RADIUS
+  -
+    type: var
+    var_name: L:RADAR_SKIP_GROUND
+  -
+    type: var
+    var_name: L:RADAR_SKIP_AIR
+  -
+    type: var
+    var_name: L:RADAR_TARGET_LOCKED
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_BALLISTIC_TIME
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_BALLISTIC_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_BALLISTIC_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_VEL
+  -
+    type: var
+    var_name: L:CABLE_CONNECTED
+  -
+    type: var
+    var_name: L:SLACK_UP
+  -
+    type: var
+    var_name: L:ALL_OUT
+  -
+    type: var
+    var_name: L:ROPE_RELEASE
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+  -
+    type: var
+    var_name: L:FLARM_ALERT_VOLUME
+# -
+#   type: var
+#   var_name: L:THUMB_ANIM
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:tablet_script_ScreenLuminosity
+  -
+    type: var
+    var_name: L:tablet_script_State
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeBackup_State
+# -
+#   type: var
+#   var_name: L:Aera_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:Aera_State
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+  -
+    type: var
+    var_name: L:AS92_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS92_State
+  -
+    type: var
+    var_name: L:AS21_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS21_State
+  -
+    type: var
+    var_name: L:lxnav_v80_script_ScreenLuminosity
+  -
+    type: var
+    var_name: L:lxnav_v80_script_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+# - # FES
+#   type: var
+#   var_name: L:PropAngle
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:GUARD_OPEN_FES
+# -
+#   type: var
+#   var_name: L:FES_ALARM
+  -
+    type: var
+    var_name: L:FES_OK
+  -
+    type: var
+    var_name: L:FES_ERROR
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:fes_fcu_script_ScreenLuminosity
+  -
+    type: var
+    var_name: L:fes_fcu_script_State
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - Aera#units_value
+  - Transponder_VFR

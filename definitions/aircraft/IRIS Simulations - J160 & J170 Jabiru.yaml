@@ -1,0 +1,399 @@
+# Version 1.5.6
+
+include:
+  - definitions/modules/Avionics/Aera.yaml
+  - definitions/modules/Avionics/AS3X.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # LVAR's
+    type: var
+    var_name: L:COM1_PWR
+  -
+    type: var
+    var_name: L:COM1_MODE
+  -
+    type: var
+    var_name: L:COM1_FRACT
+  -
+    type: var
+    var_name: L:COM1_VOX
+  -
+    type: var
+    var_name: L:KNOB_COM1_PWR
+  -
+    type: var
+    var_name: L:SW_COM1_PRI
+  -
+    type: var
+    var_name: L:COM1_FREQ
+# -
+#   type: var
+#   var_name: L:TIMER1
+# -
+#   type: var
+#   var_name: L:SW_COM1_MODE
+# -
+#   type: var
+#   var_name: L:SW_COM1_FREQ
+# -
+#   type: var
+#   var_name: L:KNOB_COM1_FREQ
+  -
+    type: var
+    var_name: L:COM2_PWR
+  -
+    type: var
+    var_name: L:COM2_MODE
+  -
+    type: var
+    var_name: L:COM2_FRACT
+  -
+    type: var
+    var_name: L:COM2_VOX
+  -
+    type: var
+    var_name: L:KNOB_COM2_PWR
+  -
+    type: var
+    var_name: L:SW_COM2_PRI
+  -
+    type: var
+    var_name: L:COM2_FREQ
+# -
+#   type: var
+#   var_name: L:SW_COM2_MODE
+# -
+#   type: var
+#   var_name: L:SW_COM2_FREQ
+# -
+#   type: var
+#   var_name: L:KNOB_COM2_FREQ
+  -
+    type: var
+    var_name: L:TABLET_TOGGLE
+  -
+    type: var
+    var_name: L:VIS_OPTION_PILOT
+  -
+    type: var
+    var_name: L:VIS_OPTION_COPILOT
+  -
+    type: var
+    var_name: L:VIS_OPTION_SPATS_NOSE
+  -
+    type: var
+    var_name: L:VIS_OPTION_SPATS_MAIN
+  -
+    type: var
+    var_name: L:VIS_OPTION_PROP
+# -
+#   type: var
+#   var_name: L:SWITCH_CLICK_ON
+# -
+#   type: var
+#   var_name: L:SWITCH_CLICK_OFF
+# -
+#   type: var
+#   var_name: L:BTN_CLICK
+# -
+#   type: var
+#   var_name: L:ROTARY_CLICK
+  -
+    type: var
+    var_name: L:ONLOAD_INIT
+  -
+    type: var
+    var_name: L:VIS_PILOT
+  -
+    type: var
+    var_name: L:VIS_AERA
+  -
+    type: var
+    var_name: L:BTN_EFIS_PWR
+  -
+    type: var
+    var_name: L:T2000_PWR
+  -
+    type: var
+    var_name: L:T2000_MODE
+  -
+    type: var
+    var_name: L:KNOB_T2000_MODE
+  -
+    type: var
+    var_name: L:PARTS_INIT
+  -
+    type: var
+    var_name: L:VIS_SPATS_NOSE
+  -
+    type: var
+    var_name: L:VIS_SPATS_MAIN
+  -
+    type: var
+    var_name: L:VIS_PROP
+  -
+    type: var
+    var_name: L:LEVER_CHOKE
+  -
+    type: var
+    var_name: L:STALL_HORN
+  -
+    type: var
+    var_name: L:FLAPS_AUDIO
+  -
+    type: var
+    var_name: L:AUTO-START
+  -
+    type: var
+    var_name: L:SW_MAG1
+  -
+    type: var
+    var_name: L:SW_MAG2
+  -
+    type: var
+    var_name: L:SW_MASTER
+  -
+    type: var
+    var_name: L:SW_STROBE
+  -
+    type: var
+    var_name: L:AUTO-SHUTDOWN
+  -
+    type: var
+    var_name: L:VIS_COPILOT
+  -
+    type: var
+    var_name: L:ANIM_DOOR_L
+  -
+    type: var
+    var_name: L:ANIM_DOOR_R
+  -
+    type: var
+    var_name: L:ClickStart
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden3
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden4
+  -
+    type: var
+    var_name: L:AP_HDG_FLASH
+  -
+    type: var
+    var_name: L:AUTOPILOT_TRACK_HOLD
+  -
+    type: var
+    var_name: L:AP_ALT_FLASH
+  -
+    type: var
+    var_name: L:VIS_EFIS
+  -
+    type: var
+    var_name: L:LEVER_CABIN_HEAT
+  -
+    type: var
+    var_name: L:BTN_T2000_PWR
+  -
+    type: var
+    var_name: L:T2000_SELF_TEST
+# -
+#   type: var
+#   var_name: L:TIMER2
+  -
+    type: var
+    var_name: L:BTN_T2000_MODE
+  -
+    type: var
+    var_name: L:BTN_T2000_ENT
+  -
+    type: var
+    var_name: L:BTN_T2000_IDENT
+# -
+#   type: var
+#   var_name: L:T2000_IDENT-TIME
+  -
+    type: var
+    var_name: L:T2000_DIGIT
+  -
+    type: var
+    var_name: L:BTN_T2000_TOGGLE
+  -
+    type: var
+    var_name: L:BTN_T2000_VFR
+  -
+    type: var
+    var_name: L:XPDR_FREQ
+# -
+#   type: var
+#   var_name: L:KNOB_T2000_CODE
+# -
+#   type: var
+#   var_name: L:KNOB_ALT_BARO
+# -
+#   type: var
+#   var_name: L:ROTARY CLICK
+# -
+#   type: var
+#   var_name: L:BTN_AP_MASTER
+# -
+#   type: var
+#   var_name: L:BTN_AP_HDG
+# -
+#   type: var
+#   var_name: L:BTN_AP_NAV
+# -
+#   type: var
+#   var_name: L:BTN_AP_ALT
+  -
+    type: var
+    var_name: L:KNOB_AP_VALUE
+  -
+    type: var
+    var_name: L:BTN_AP_VALUE
+  -
+    type: var
+    var_name: L:AP_TIME_RESET
+  -
+    type: var
+    var_name: L:KNOB_AS3X_SML_L
+  -
+    type: var
+    var_name: L:KNOB_AS3X_LRG_L
+  -
+    type: var
+    var_name: L:KNOB_AS3X_SML_R
+  -
+    type: var
+    var_name: L:KNOB_AS3X_LRG_R
+# -
+#   type: var
+#   var_name: L:KNOB_AP_VALUE-RESET
+# -
+#   type: var
+#   var_name: L:KNOB_AP_VALUE-RESET-TIME
+# -
+#   type: var
+#   var_name: L:KNOB_AP_VALUE-RESET-TIME_DISP
+# -
+#   type: var
+#   var_name: L:KNOB_AP_VALUE-RESET-TIME-DISP
+  -
+    type: var
+    var_name: L:VIS_OPTION_EFIS
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:SW_FUEL_PUMP
+  -
+    type: var
+    var_name: L:SW_STROBES
+  -
+    type: var
+    var_name: L:SW_AVIONICS
+  -
+    type: var
+    var_name: L:SW_LANDING
+  -
+    type: var
+    var_name: L:BARO_MODE
+  -
+    type: var
+    var_name: L:AUTOPILOT TRACK LOCK
+# -
+#   type: var
+#   var_name: L:IsChangeDataFieldsMenuOn
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Aera_IsPositionOverride
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeSpeedBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeSpeedBackup_State
+# -
+#   type: var
+#   var_name: L:Aera_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:Aera_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
