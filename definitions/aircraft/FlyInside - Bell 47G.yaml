@@ -1,0 +1,527 @@
+# Version 1.80
+
+include:
+  - definitions/modules/engines_heli.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # LVAR's
+    type: var
+    var_name: L:Sims.XPlane
+# -
+#   type: var
+#   var_name: L:Copilot.Display
+# -
+#   type: var
+#   var_name: L:SimState.View.EventBased
+# -
+#   type: var
+#   var_name: L:SimLicense.Connected
+# -
+#   type: var
+#   var_name: L:SimLicense.Activated
+# -
+#   type: var
+#   var_name: L:Aircraft.Rotor.RPM.Percent
+  -
+    type: var
+    var_name: L:Aircraft.Warnings.Volt
+# -
+#   type: var
+#   var_name: L:Aircraft.Transponder.Flash
+# -
+#   type: var
+#   var_name: L:Aircraft.Properties.Name
+# -
+#   type: var
+#   var_name: L:Aircraft.LiveryIndex
+# -
+#   type: var
+#   var_name: L:Aircraft.Electric.Battery.On
+  -
+    type: ToggleSwitch
+    var_name: L:Aircraft.Lights.Cabin.On
+    event_name: TOGGLE_CABIN_LIGHTS
+    use_calculator: true
+  -
+    type: var
+    var_name: L:Doors.Hidden
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:Aircraft.Input.Collective.Position
+  -
+    type: var
+    var_name: L:Aircraft.Lights.Landing.On
+# -
+#   type: var
+#   var_name: L:BladeGroups.SwashCP
+  -
+    type: var
+    var_name: L:Aircraft.Dummy.CollectiveFrictionKnob
+# -
+#   type: var
+#   var_name: L:Aircraft.Dummy.CollectiveFrictionKnob.Touching
+# -
+#   type: var
+#   var_name: L:Random_number
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd1
+# -
+#   type: var
+#   var_name: L:Sounds.CustomSnd1.MS
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd2
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd2.MS
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd3
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd3.MS
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd4
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd4.MS
+  -
+    type: var
+    var_name: L:Lights.EnableGrimes
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd7
+# -
+#   type: var
+#   var_name: L:Sounds.CustomSnd7.MS
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd8
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd8.MS
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd9
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd9.MS
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd10
+  -
+    type: var
+    var_name: L:Sounds.CustomSnd10.MS
+  -
+    type: var
+    var_name: L:Aircraft.Instruments.Altimeter.Kohlsman.HG
+  -
+    type: var
+    var_name: L:Aircraft.Radios.Com.1.On
+  -
+    type: var
+    var_name: L:Aircraft.Radios.Transponder.State
+# -
+#   type: var
+#   var_name: L:Aircraft.Radios.Com.1.Frequency.Standby
+# -
+#   type: var
+#   var_name: L:SimState.GlobalTime
+# -
+#   type: var
+#   var_name: L:TestVarRadio_Swap.Time
+# -
+#   type: var
+#   var_name: L:TestVarRadio_Swap.Latch
+# -
+#   type: var
+#   var_name: L:Sounds.CustomSnd5
+  -
+    type: var
+    var_name: L:Aircraft.Systems.Fuel.Primer.Switch
+  -
+    type: var
+    var_name: L:Aircraft.Gauges.DisplayOilTemp
+  -
+    type: var
+    var_name: L:Aircraft.Systems.Instruments.Enabled
+  -
+    type: var
+    var_name: L:Aircraft.Engine.1.Alternator.Enabled
+  -
+    type: var
+    var_name: L:Aircraft.Transponder.IdentTime
+  -
+    type: var
+    var_name: L:Aircraft.Engine.1.Input.MagnetosPosition
+# -
+#   type: var
+#   var_name: L:Aircraft.Engine.1.Input.MagnetosPosition.Touching
+# -
+#   type: var
+#   var_name: L:HeliManager.Hidden
+  -
+    type: var
+    var_name: L:Doors.Open.1
+  -
+    type: var
+    var_name: L:Aircraft.Systems.Starter.Switch
+  -
+    type: var
+    var_name: L:Aircraft.Systems.PistonGoverner.On
+# -
+#   type: var
+#   var_name: L:LastMouseY
+# -
+#   type: var
+#   var_name: L:Aircraft.Engine.1.Input.PropellerPosition
+# -
+#   type: var
+#   var_name: L:LastMouseX
+  -
+    type: var
+    var_name: L:Aircraft.Engine.1.Input.MixturePosition
+  -
+    type: var
+    var_name: L:Aircraft.Engine.1.Input.CarbHeatPosition
+  -
+    type: var
+    var_name: L:Doors.Open.2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:Aircraft.Input.Roll
+# -
+#   type: var
+#   var_name: L:Aircraft.Rotor.Rotation.Continuous
+# -
+#   type: var
+#   var_name: L:Aircraft.Gauges.AirTemp
+# -
+#   type: var
+#   var_name: L:TestVarRadio_Swap
+# -
+#   type: var
+#   var_name: L:BladeGroups.SwashRoll
+# -
+#   type: var
+#   var_name: L:Aircraft.Radios.Transpoder.1.Code
+# -
+#   type: var
+#   var_name: L:Aircraft.Input.Pitch
+# -
+#   type: var
+#   var_name: L:Aircraft.Instruments.TurnCoordinator.Position
+# -
+#   type: var
+#   var_name: L:BladeGroups.Swash2.Rotated
+# -
+#   type: var
+#   var_name: L:Aircraft.Position.Altitude.Indicated
+# -
+#   type: var
+#   var_name: L:Aircraft.Fuel.Total.QuantityOut
+# -
+#   type: var
+#   var_name: L:Aircraft.Controls.Rudder.Position
+# -
+#   type: var
+#   var_name: L:BladeGroups.Swash1.Rotated
+# -
+#   type: var
+#   var_name: L:Aircraft.Gauges.CarbHeat
+  -
+    type: var
+    var_name: L:Aircraft.Lights.Strobe.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Gauges.OilPressure
+# -
+#   type: var
+#   var_name: L:Aircraft.Position.Airspeed.Indicated
+# -
+#   type: var
+#   var_name: L:BladeGroups.SwashPitch
+# -
+#   type: var
+#   var_name: L:Aircraft.Position.VerticalSpeed.value
+# -
+#   type: var
+#   var_name: L:Aircraft.Engine.1.Turbine.N2.Smooth
+# -
+#   type: var
+#   var_name: L:Dummy.Zero
+# -
+#   type: var
+#   var_name: L:Aircraft.Position.Heading.Magnetic.Value
+  -
+    type: var
+    var_name: L:Aircraft.Lights.Nav.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Rotor.RPM.Value
+# -
+#   type: var
+#   var_name: L:Aircraft.AnimFrames
+# -
+#   type: var
+#   var_name: L:Aircraft.Vibrations.X
+# -
+#   type: var
+#   var_name: L:Aircraft.Gauges.OilTemp
+# -
+#   type: var
+#   var_name: L:Aircraft.EngineDamage
+# -
+#   type: var
+#   var_name: L:Aircraft.Gauges.TransTemp
+# -
+#   type: var
+#   var_name: L:BladeGroups.Swash1.CrossRotated
+# -
+#   type: var
+#   var_name: L:Aircraft.Vibrations.Y
+# -
+#   type: var
+#   var_name: L:Aircraft.IndicatedTorque
+  -
+    type: var
+    var_name: L:Aircraft.Engine.1.Combustion.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Vibrations.Z
+# -
+#   type: var
+#   var_name: L:Aircraft.Gauges.CylTemp
+  -
+    type: var
+    var_name: L:Aircraft.Lights.Beacon.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Beacon.Angle
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+  -
+    type: var
+    var_name: L:Aircraft.Systems.Hydraulics.Sync
+  -
+    type: var
+    var_name: L:Aircraft.Systems.Starter.Enabled
+# -
+#   type: var
+#   var_name: L:Constants.One
+# -
+#   type: var
+#   var_name: L:Constants.Zero
+# -
+#   type: var
+#   var_name: L:Aircraft.Radios.COM.1.Frequency.Active
+# -
+#   type: var
+#   var_name: L:Aircraft.DiskLiftLossMultiplier
+  -
+    type: var
+    var_name: L:Aircraft.EngineFailure
+  -
+    type: var
+    var_name: L:DidVarStartup
+  -
+    type: var
+    var_name: L:Aircraft.Clock.Reset
+# -
+#   type: var
+#   var_name: L:Aircraft.Vibrations.Misc.Rate
+# -
+#   type: var
+#   var_name: L:Aircraft.Vibrations.Misc.Amplitude
+# -
+#   type: var
+#   var_name: L:Aircraft.IsFloatsVersion
+# -
+#   type: var
+#   var_name: L:PerFrameCode.Time
+# -
+#   type: var
+#   var_name: L:Systems.BadBatteryCount
+# -
+#   type: var
+#   var_name: L:Systems.BadAltCount
+# -
+#   type: var
+#   var_name: L:Systems.BadInstCount
+# -
+#   type: var
+#   var_name: L:Aircraft.ParticleStrengthMultiplier
+# -
+#   type: var
+#   var_name: L:GrassEffect
+# -
+#   type: var
+#   var_name: L:Aircraft.WaterEffectMultiplier
+# -
+#   type: var
+#   var_name: L:Aircraft.CollectiveBonus
+# -
+#   type: var
+#   var_name: L:Aircraft.RollMultiplier
+# -
+#   type: var
+#   var_name: L:TotalTime
+# -
+#   type: var
+#   var_name: L:Aircraft.Physics.PowerUsedTorque
+# -
+#   type: var
+#   var_name: L:Aircraft.CollectiveAcceleration
+# -
+#   type: var
+#   var_name: L:SwirlUpdate1.Time
+# -
+#   type: var
+#   var_name: L:SwirlUpdate2.Time
+# -
+#   type: var
+#   var_name: L:ParticleStrength.Time
+# -
+#   type: var
+#   var_name: L:NewSwirlStrength
+# -
+#   type: var
+#   var_name: L:SwirlStrength
+# -
+#   type: var
+#   var_name: L:SwirlStrength1
+# -
+#   type: var
+#   var_name: L:SwirlStrength2
+# -
+#   type: var
+#   var_name: L:NewParticleStrength
+# -
+#   type: var
+#   var_name: L:ParticleStrengthBase
+# -
+#   type: var
+#   var_name: L:ParticleStrength
+# -
+#   type: var
+#   var_name: L:Aircraft.Engine.1.Torque
+# -
+#   type: var
+#   var_name: L:Aircraft.Engine.1.Turbine.N2
+# -
+#   type: var
+#   var_name: L:Aircraft.Position.Heading.Value
+# -
+#   type: var
+#   var_name: L:Aircraft.Fuel.Total.Quantity
+  -
+    type: var
+    var_name: L:Aircraft.Lights.Taxi.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Engine.1.Torque.Smooth
+# -
+#   type: var
+#   var_name: L:Aircraft.Time.Clock
+# -
+#   type: var
+#   var_name: L:SwashAngle
+# -
+#   type: var
+#   var_name: L:SwashAngleCross
+# -
+#   type: var
+#   var_name: L:Sounds.CustomSnd11.MS
+# -
+#   type: var
+#   var_name: L:Aircraft.BladeSlap
+# -
+#   type: var
+#   var_name: L:Aircraft.Input.Throttle
+# -
+#   type: var
+#   var_name: L:Aircraft.ExtraDrag.Z
+# -
+#   type: var
+#   var_name: L:Aircraft.Weight.Extra
+# -
+#   type: var
+#   var_name: L:Aircraft.Properties.Weight.Total
+# -
+#   type: var
+#   var_name: L:Aircraft.Properties.Weight.Empty
+# -
+#   type: var
+#   var_name: L:Aircraft.FuelTank.Center.Percent
+# -
+#   type: var
+#   var_name: L:Aircraft.FuelTank.Center.Amount
+# -
+#   type: var
+#   var_name: L:Aircraft.Mass.1.Weight
+# -
+#   type: var
+#   var_name: L:Aircraft.GroundEffectValue
+# -
+#   type: var
+#   var_name: L:Aircraft.ETLValue
+# -
+#   type: var
+#   var_name: L:SimEngine.FPS
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

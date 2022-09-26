@@ -1,0 +1,866 @@
+# Version 0.1.8
+
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER2
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER3
+
+  - # Engines
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG3
+  -
+    type: NumSet
+    var_name: A:RECIP ENG PRIMER:3
+    var_units: Percent
+    var_type: i32
+    event_name: TOGGLE_PRIMER3
+  -
+    type: NumSet
+    var_name: A:RECIP ENG COWL FLAP POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: COWLFLAP3_SET
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE3_SET
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: PROP_PITCH3_SET
+    interpolate: Default
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG2
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG3
+  -
+    type: ToggleSwitch
+    var_name: A:MANUAL FUEL PUMP HANDLE
+    var_units: Bool
+    var_type: bool
+    event_name: MANUAL_FUEL_PRESSURE_PUMP
+  -
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:1
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_SET
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUEL_PUMP
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP ON:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUEL_PUMP
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP ON:3
+    var_units: Bool
+    var_type: bool
+    event_name: FUEL_PUMP
+    event_param: 3
+
+  - # Hydraulics
+    type: ToggleSwitch
+    var_name: A:HYDRAULIC SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: HYDRAULIC_SWITCH_TOGGLE
+    event_param: 2
+
+  - # Copilot Altimeter
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:3
+    var_units: Millibars scaler 16
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 3
+
+  - # Magnetos
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:1
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO1_RIGHT
+  -
+    type: event
+    event_name: MAGNETO1_SET
+  -
+    type: event
+    event_name: MAGNETO1_START
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:2
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO2_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:2
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO2_RIGHT
+  -
+    type: event
+    event_name: MAGNETO2_SET
+  -
+    type: event
+    event_name: MAGNETO2_START
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:3
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO3_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:3
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO3_RIGHT
+  -
+    type: event
+    event_name: MAGNETO3_SET
+  -
+    type: event
+    event_name: MAGNETO3_START
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_ON
+    off_event_name: PANEL_LIGHTS_OFF
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:8
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_8_SET
+
+  - # Radio Master
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:23
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 23
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+    set: 4 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 7 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+    set: 4 7 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # LVAR's
+    type: var
+    var_name: L:SWITCH_Netzausschalter
+  -
+    type: var
+    var_name: L:SWITCH_Netzausschalter_Guard
+  -
+    type: var
+    var_name: L:SWITCH_Starter_Master
+# -
+#   type: var
+#   var_name: L:SWITCH_Magneto_1_off
+# -
+#   type: var
+#   var_name: L:SWITCH_Magneto_2_off
+# -
+#   type: var
+#   var_name: L:SWITCH_Magneto_3_off
+  -
+    type: var
+    var_name: L:SWITCH_Vorwaermung
+  -
+    type: var
+    var_name: L:Switch_Vernebler
+  -
+    type: var
+    var_name: L:LEVER_Fuel_supply_engine_1
+  -
+    type: var
+    var_name: L:LEVER_Fuel_supply_engine_2
+  -
+    type: var
+    var_name: L:LEVER_Fuel_supply_engine_3
+  -
+    type: var
+    var_name: L:SW_Netzausschalter_Cover
+  -
+    type: var
+    var_name: L:Window_OVH_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:Window_Left_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:Window_Right_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:TOGGLE_Passenger_Stairway
+  -
+    type: var
+    var_name: L:Door_Left
+  -
+    type: var
+    var_name: L:TOGGLE_Passenger_door
+  -
+    type: var
+    var_name: L:Door_Right
+  -
+    type: var
+    var_name: L:TOGGLE_Emergency_door
+  -
+    type: var
+    var_name: L:Banner_Left
+  -
+    type: var
+    var_name: L:Banner_Right
+# -
+#   type: var
+#   var_name: L:SWITCH_Magneto_2
+  -
+    type: var
+    var_name: L:SWITCH_Ignition_Engine_1
+  -
+    type: var
+    var_name: L:STARTER_Clutch_Engine_2
+  -
+    type: var
+    var_name: L:SWITCH_Autopilot_Notaus
+  -
+    type: var
+    var_name: L:XMLVAR_AP_NEEDS_UPDATE
+  -
+    type: var
+    var_name: L:KNOB_Vspeed_2
+  -
+    type: var
+    var_name: L:SWITCH_Ignition_Engine_3
+  -
+    type: var
+    var_name: L:STARTER_Clutch_Engine_3
+  -
+    type: var
+    var_name: L:Wobble_Pump
+  -
+    type: var
+    var_name: L:Rudder_Ratio_R
+  -
+    type: var
+    var_name: L:XMLVAR_AUTOPILOT_ACTIVE
+# -
+#   type: var
+#   var_name: L:SWITCH_Magneto_3
+  -
+    type: var
+    var_name: L:SWITCH_Ignition_Engine_2
+  -
+    type: var
+    var_name: L:Switch_Druckminderventil
+# -
+#   type: var
+#   var_name: L:SWITCH_Magneto_1
+  -
+    type: var
+    var_name: L:Switch_Normalgas
+  -
+    type: var
+    var_name: L:Rudder_Ratio_L
+  -
+    type: var
+    var_name: L:Switch_Einspritzsperrhahn
+  -
+    type: var
+    var_name: L:STARTER_Clutch_Engine_1
+  -
+    type: var
+    var_name: L:SWITCH_Fuel_Pump
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:XMLVAR_AP_HEADING_HOLD
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden3
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden3
+  -
+    type: var
+    var_name: L:STARTER_Clutch_Engine_1_Anim
+  -
+    type: var
+    var_name: L:STARTER_Clutch_Engine_1_Anim_IsDown
+# -
+#   type: var
+#   var_name: L:STARTER_Clutch_Engine_1_Anim_MinReleaseTime
+  -
+    type: var
+    var_name: L:STARTER_Clutch_Engine_2_Anim
+  -
+    type: var
+    var_name: L:STARTER_Clutch_Engine_2_Anim_IsDown
+# -
+#   type: var
+#   var_name: L:STARTER_Clutch_Engine_2_Anim_MinReleaseTime
+  -
+    type: var
+    var_name: L:STARTER_Clutch_Engine_3_Anim
+  -
+    type: var
+    var_name: L:STARTER_Clutch_Engine_3_Anim_IsDown
+# -
+#   type: var
+#   var_name: L:STARTER_Clutch_Engine_3_Anim_MinReleaseTime
+  -
+    type: var
+    var_name: L:LIGHTING_Knob_Instruments_1
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:XMLVAR_AP_DISENGAGED
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_5
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:XMLVAR_Switch_Normalgas
+  -
+    type: var
+    var_name: L:XMLVAR_STARTER_Clutch_Engine_1_Cover_Opened
+  -
+    type: var
+    var_name: L:XMLVAR_STARTER_Clutch_Engine_2_Cover_Opened
+  -
+    type: var
+    var_name: L:XMLVAR_STARTER_Clutch_Engine_3_Cover_Opened
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_3
+  -
+    type: var
+    var_name: L:LIGHTING_WING_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+
+  - # Retrofit
+    type: var
+    var_name: L:SWITCH_Compartment_Blower
+  -
+    type: var
+    var_name: L:SWITCH_GenBat1
+  -
+    type: var
+    var_name: L:SWITCH_GenBat2
+  -
+    type: var
+    var_name: L:SWITCH_LC1
+  -
+    type: var
+    var_name: L:SWITCH_LC2
+  -
+    type: var
+    var_name: L:SWITCH_RCC1
+  -
+    type: var
+    var_name: L:SWITCH_RCC2
+  -
+    type: var
+    var_name: L:SWITCH_BusTie
+  -
+    type: var
+    var_name: L:SWITCH_ServBus
+  -
+    type: var
+    var_name: L:SWITCH_No_smoking
+  -
+    type: var
+    var_name: L:SWITCH_Fasten_belts
+  -
+    type: var
+    var_name: L:SWITCH_Emergency_exit
+  -
+    type: var
+    var_name: L:SWITCH_Safety_Engine_Master_1
+  -
+    type: var
+    var_name: L:SWITCH_Safety_Engine_Master_2
+  -
+    type: var
+    var_name: L:SWITCH_Safety_Engine_Master_3
+  -
+    type: var
+    var_name: L:SWITCH_Engine_Master_1
+  -
+    type: var
+    var_name: L:SWITCH_Engine_Master_2
+  -
+    type: var
+    var_name: L:SWITCH_Engine_Master_3
+  -
+    type: var
+    var_name: L:SW_Engine_Master_1_Cover
+  -
+    type: var
+    var_name: L:SW_Engine_Master_2_Cover
+  -
+    type: var
+    var_name: L:SW_Engine_Master_3_Cover
+  -
+    type: var
+    var_name: L:XMLVAR_COMM_1_Power
+  -
+    type: var
+    var_name: L:XMLVAR_COMM_2_Power
+  -
+    type: var
+    var_name: L:XMLVAR_Radio_Master
+  -
+    type: var
+    var_name: L:SWITCH_Firetest
+  -
+    type: var
+    var_name: L:SWITCH_ADF_1_Ident
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_1_Power
+  -
+    type: var
+    var_name: L:SWITCH_Gyro_CW_1
+  -
+    type: var
+    var_name: L:NAV_ADF_2_RMI_1
+  -
+    type: var
+    var_name: L:SWITCH_Saftety_Start
+  -
+    type: var
+    var_name: L:NAV_ADF_1_RMI_1
+  -
+    type: var
+    var_name: L:SWITCH_Alt_Report
+  -
+    type: var
+    var_name: L:DME_1_STATE
+  -
+    type: var
+    var_name: L:SWITCH_Gyro_SF_1
+  -
+    type: var
+    var_name: L:SWITCH_FireExtinguisher_2
+  -
+    type: var
+    var_name: L:SWITCH_Batbus_Test
+  -
+    type: var
+    var_name: L:DME_2_STATE
+  -
+    type: var
+    var_name: L:SWITCH_Hydr_Pump
+  -
+    type: var
+    var_name: L:XMLVAR_COMM_2_Source
+  -
+    type: var
+    var_name: L:SWITCH_Gyro_SF_2
+  -
+    type: var
+    var_name: L:SWITCH_FireExtinguisher_1
+  -
+    type: var
+    var_name: L:SWITCH_ExdcTie
+  -
+    type: var
+    var_name: L:SWITCH_Extpwr
+  -
+    type: var
+    var_name: L:SWITCH_Gyro_CW_2
+  -
+    type: var
+    var_name: L:NAV_ADF_2_RMI_2
+  -
+    type: var
+    var_name: L:KNOB_Elec_Mode_Selector
+  -
+    type: var
+    var_name: L:XMLVAR_COMM_1_Source
+  -
+    type: var
+    var_name: L:SWITCH_FireExtinguisher_3
+  -
+    type: var
+    var_name: L:SWITCH_Dome_Light
+  -
+    type: var
+    var_name: L:NAV_ADF_1_RMI_2
+  -
+    type: var
+    var_name: L:SWITCH_Emergency_IC
+  -
+    type: var
+    var_name: L:SWITCH_Master_Battery
+  -
+    type: var
+    var_name: L:PULL_SBAttitude_Cage
+  -
+    type: var
+    var_name: L:PUSH_Annunciator_Test
+  -
+    type: var
+    var_name: L:SWITCH_Starter_1
+  -
+    type: var
+    var_name: L:SWITCH_Starter_2
+  -
+    type: var
+    var_name: L:SWITCH_Starter_3
+  -
+    type: var
+    var_name: L:KNOB_Attitude_Cage_1
+  -
+    type: var
+    var_name: L:PUSH_Outlet_Temperature
+  -
+    type: var
+    var_name: L:KNOB_Attitude_Cage_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden3
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_1_TEST
+  -
+    type: var
+    var_name: L:KNOB_Elec_Mode_Selector_BAT_BUS_1
+  -
+    type: var
+    var_name: L:KNOB_Elec_Mode_Selector_BAT_BUS_2
+  -
+    type: var
+    var_name: L:KNOB_Elec_Mode_Selector_Generator_1
+  -
+    type: var
+    var_name: L:KNOB_Elec_Mode_Selector_Generator_2
+  -
+    type: var
+    var_name: L:KNOB_Elec_Mode_Selector_DC_BUS_1
+  -
+    type: var
+    var_name: L:KNOB_Elec_Mode_Selector_DC_BUS_2
+  -
+    type: var
+    var_name: L:KNOB_Elec_Mode_Selector_EXTERNAL_POWER
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_2
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:SWITCH_Attentioncall
+  -
+    type: var
+    var_name: L:PUSH_Magneto_Primer_1
+  -
+    type: var
+    var_name: L:PUSH_Magneto_Primer_2
+  -
+    type: var
+    var_name: L:PUSH_Magneto_Primer_3
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:DEICE_Pitot_2
+  -
+    type: var
+    var_name: L:SWITCH_Radio_OBS
+  -
+    type: var
+    var_name: L:SWITCH_Radio_IC
+
+master:
+  - # ASOBO_ENGINE_Lever_Throttle_Template
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE3_SET
+    interpolate: Default
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:13
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:14
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:15
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:16
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:17
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

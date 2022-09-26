@@ -31,6 +31,14 @@ shared:
     event_param: 1
   -
     type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:2
+    var_units: Degrees
+    var_type: i32
+    event_name: HEADING_BUG_SET
+    cancel_h_events: true
+    event_param: 2
+  -
+    type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:3
     var_units: Degrees
     var_type: i32
@@ -70,9 +78,6 @@ shared:
     cancel_h_events: true
     use_calculator: true
   -
-    type: var
-    var_name: L:XMLVAR_VNAVButtonValue
-  -
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
     var_units: Feet per minute
@@ -104,12 +109,6 @@ shared:
     event_name: AP_SPD_VAR_SET
     cancel_h_events: true
     event_param: 1
-  -
-    type: var
-    var_name: L:XMLVAR_SpeedIsManuallySet
-  -
-    type: var
-    var_name: L:XMLVAR_AirSpeedIsInMach
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT MANAGED SPEED IN MACH
@@ -258,3 +257,13 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: ELEVATOR_TRIM_DISABLED_SET
+
+  - # LVAR's
+    type: var
+    var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:XMLVAR_SpeedIsManuallySet
+  -
+    type: var
+    var_name: L:XMLVAR_AirSpeedIsInMach

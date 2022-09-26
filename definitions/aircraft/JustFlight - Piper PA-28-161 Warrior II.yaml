@@ -1,0 +1,1334 @@
+# Version 0.3.5
+
+include:
+  - definitions/modules/Avionics/AS430.yaml
+  - definitions/modules/Avionics/AS530.yaml
+  - definitions/modules/Avionics/TDSNXi.yaml
+  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:0
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 10
+    index_reversed: true
+
+  - # Autopilot
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: i32
+    event_name: HEADING_BUG_SET
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_ALTITUDE_HOLD
+
+  - # LVAR's
+    type: var
+    var_name: L:AircraftState
+# -
+#   type: var
+#   var_name: L:TrimTab
+  -
+    type: var
+    var_name: L:Hide_Pilot
+  -
+    type: var
+    var_name: L:Wheel_covers
+  -
+    type: var
+    var_name: L:Ext_towbar
+  -
+    type: var
+    var_name: L:ALTIMETER_flag
+  -
+    type: var
+    var_name: L:LEFT_MISC_press_test
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_lv
+  -
+    type: var
+    var_name: L:LEFT_MISC_window_latch
+  -
+    type: var
+    var_name: L:LEFT_LOWER_elec_trim
+  -
+    type: var
+    var_name: L:AUTOPILOT_onoff
+  -
+    type: var
+    var_name: L:AUTOPILOT_hdg
+  -
+    type: var
+    var_name: L:LDG_GEAR_lever_LC
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_bat
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_alt
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_fuelpump
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_ldg_light
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_bcn_light
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_anticol_light
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_pitotheat
+  -
+    type: var
+    var_name: L:KT76_ident_button
+  -
+    type: var
+    var_name: L:UPPER_cabin_air
+  -
+    type: var
+    var_name: L:YOKE_rst
+  -
+    type: var
+    var_name: L:YOKE_mode
+  -
+    type: var
+    var_name: L:YOKE_stsp
+  -
+    type: var
+    var_name: L:STBY_ALTIMETER_flag
+  -
+    type: var
+    var_name: L:RIGHT_MISC_icomm
+  -
+    type: var
+    var_name: L:RIGHT_MISC_dme_nav
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_autopilot
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_altntr
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_engine
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_fuel_pump
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_ldg_gear_cont
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_ldg_gear_lts
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_stall
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_ac_blower
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_beacon
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_pitot
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_turn_bank
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_pitch_trim
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_start
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_icomm
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_inst_pnl
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_lts_ovhd
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_nav_lts
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_anticoll_lts
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_ldg_lts
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_com1
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_com2
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_adf
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_audio_pnl
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_nav1
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_nav2
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_dme
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_xpdr
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_radio_lts
+  -
+    type: var
+    var_name: L:DOOR_lower_latch
+  -
+    type: var
+    var_name: L:DOOR_upper_latch
+  -
+    type: var
+    var_name: L:GPS100_MSG
+  -
+    type: var
+    var_name: L:GPS100_GOTO
+  -
+    type: var
+    var_name: L:GPS100_AUTOSTO
+  -
+    type: var
+    var_name: L:GPS100_SET
+  -
+    type: var
+    var_name: L:GPS100_RTE
+  -
+    type: var
+    var_name: L:GPS100_WPT
+  -
+    type: var
+    var_name: L:GPS100_NAV
+  -
+    type: var
+    var_name: L:GPS100_ABC
+  -
+    type: var
+    var_name: L:GPS100_DEF
+  -
+    type: var
+    var_name: L:GPS100_GHI
+  -
+    type: var
+    var_name: L:GPS100_JKL
+  -
+    type: var
+    var_name: L:GPS100_MNO
+  -
+    type: var
+    var_name: L:GPS100_PQR
+  -
+    type: var
+    var_name: L:GPS100_STU
+  -
+    type: var
+    var_name: L:GPS100_VWX
+  -
+    type: var
+    var_name: L:GPS100_YZ
+  -
+    type: var
+    var_name: L:GPS100_CLR
+  -
+    type: var
+    var_name: L:GPS100_ZERO
+  -
+    type: var
+    var_name: L:GPS100_ENT
+  -
+    type: var
+    var_name: L:EFB_On_Switch
+  -
+    type: var
+    var_name: L:EFB_On
+  -
+    type: var
+    var_name: L:AUTOPILOT_nav
+  -
+    type: var
+    var_name: L:AUTOPILOT_apr
+  -
+    type: var
+    var_name: L:AUTOPILOT_rev
+  -
+    type: var
+    var_name: L:AUTOPILOT_test
+  -
+    type: var
+    var_name: L:CIRCUIT_BREAKERS_phones
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:CustomReg_enabled
+  -
+    type: var
+    var_name: L:Ext_tiedowns
+  -
+    type: var
+    var_name: L:Ext_chocks
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_lv_light
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_oil
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_alt
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_vac
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_starter_light
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_warn_gear
+# -
+#   type: var
+#   var_name: L:LDG_GEAR_auto_ext
+# -
+#   type: var
+#   var_name: L:LDG_GEAR_nose_gear
+# -
+#   type: var
+#   var_name: L:LDG_GEAR_left_gear
+# -
+#   type: var
+#   var_name: L:LDG_GEAR_right_gear
+  -
+    type: var
+    var_name: L:Panel_light_scaler
+  -
+    type: var
+    var_name: L:Radio_light_scaler
+  -
+    type: var
+    var_name: L:KN62_light_scaler
+  -
+    type: var
+    var_name: L:GPS100_light_scaler
+  -
+    type: var
+    var_name: L:Yoke_light_scaler
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_window_LC
+# -
+#   type: var
+#   var_name: L:DOOR_door
+# -
+#   type: var
+#   var_name: L:LeftYoke_hide
+# -
+#   type: var
+#   var_name: L:RightYoke_hide
+  -
+    type: var
+    var_name: L:THROTTLE_QUADRANT_mixture_lock
+  -
+    type: var
+    var_name: L:THROTTLE_QUADRANT_friction
+  -
+    type: var
+    var_name: L:AUTOPILOT_alt
+  -
+    type: var
+    var_name: L:AUTOPILOT_navgps
+  -
+    type: var
+    var_name: L:GNS530_VIZ
+  -
+    type: var
+    var_name: L:GNS430_VIZ
+  -
+    type: var
+    var_name: L:KMA20_VIZ
+  -
+    type: var
+    var_name: L:KX170_VIZ
+  -
+    type: var
+    var_name: L:KX175_VIZ
+  -
+    type: var
+    var_name: L:KT76_VIZ
+  -
+    type: var
+    var_name: L:GTN650_VIZ
+  -
+    type: var
+    var_name: L:GTN750_VIZ
+  -
+    type: var
+    var_name: L:GPS100_VIZ
+  -
+    type: var
+    var_name: L:KX170_COMM1_offon
+  -
+    type: var
+    var_name: L:KX170_NAV1_offon
+# -
+#   type: var
+#   var_name: L:KX170_COMM1_outer_knob
+# -
+#   type: var
+#   var_name: L:KX170_COMM1_inner_knob
+# -
+#   type: var
+#   var_name: L:KX170_NAV1_outer_knob
+# -
+#   type: var
+#   var_name: L:KX170_NAV1_inner_knob
+  -
+    type: var
+    var_name: L:KX170_COMM1_vol_knob
+  -
+    type: var
+    var_name: L:KX170_NAV1_vol_knob
+  -
+    type: var
+    var_name: L:KX175_COMM2_vol_knob
+  -
+    type: var
+    var_name: L:KX175_NAV2_vol_knob
+  -
+    type: var
+    var_name: L:KX175_COMM2_offon
+  -
+    type: var
+    var_name: L:KX175_NAV2_offon
+# -
+#   type: var
+#   var_name: L:KX175_COMM2_outer_knob
+# -
+#   type: var
+#   var_name: L:KX175_COMM2_inner_knob
+# -
+#   type: var
+#   var_name: L:KX175_NAV2_outer_knob
+# -
+#   type: var
+#   var_name: L:KX175_NAV2_inner_knob
+  -
+    type: var
+    var_name: L:KMA20_knob
+  -
+    type: var
+    var_name: L:KMA20_auto
+  -
+    type: var
+    var_name: L:KMA20_com1
+  -
+    type: var
+    var_name: L:KMA20_com2
+  -
+    type: var
+    var_name: L:KMA20_nav1
+  -
+    type: var
+    var_name: L:KMA20_nav2
+  -
+    type: var
+    var_name: L:KMA20_adf
+  -
+    type: var
+    var_name: L:KMA20_dme
+  -
+    type: var
+    var_name: L:KMA20_mkr
+  -
+    type: var
+    var_name: L:KMA20_mkr_hilo
+  -
+    type: var
+    var_name: L:KT76_mode_knob
+# -
+#   type: var
+#   var_name: L:KT76_dig1_knob
+# -
+#   type: var
+#   var_name: L:KT76_dig2_knob
+# -
+#   type: var
+#   var_name: L:KT76_dig3_knob
+# -
+#   type: var
+#   var_name: L:KT76_dig4_knob
+  -
+    type: var
+    var_name: L:KR85_mode_knob
+# -
+#   type: var
+#   var_name: L:KR85_left_knob
+# -
+#   type: var
+#   var_name: L:KR85_right_outer_knob
+# -
+#   type: var
+#   var_name: L:KR85_right_inner_knob
+  -
+    type: var
+    var_name: L:KR85_vol_knob
+  -
+    type: var
+    var_name: L:KN62_mode_knob
+  -
+    type: var
+    var_name: L:KN62_power
+  -
+    type: var
+    var_name: L:ASI_tas_knob
+  -
+    type: var
+    var_name: L:ATTITUDE_INDICATOR_knob
+# -
+#   type: var
+#   var_name: L:ADF_knob
+# -
+#   type: var
+#   var_name: L:ALTIMETER_baro_knob
+# -
+#   type: var
+#   var_name: L:STBY_ALTIMETER_baro_knob
+# -
+#   type: var
+#   var_name: L:VOR1_knob
+# -
+#   type: var
+#   var_name: L:VOR2_knob
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_nav_light
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_panel_light
+  -
+    type: var
+    var_name: L:LEFT_MISC_fuel_sel
+  -
+    type: var
+    var_name: L:LOWER_emergency_gear
+  -
+    type: var
+    var_name: L:AUTOPILOT_mode
+  -
+    type: var
+    var_name: L:AUTOPILOT_roll
+  -
+    type: var
+    var_name: L:GPS100_OFFON
+  -
+    type: var
+    var_name: L:GPS100_ARROWS
+  -
+    type: var
+    var_name: L:LEFT_MISC_elt
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverFlapsHidden
+  -
+    type: var
+    var_name: L:RIGHT_LOWER_fan
+# -
+#   type: var
+#   var_name: L:RIGHT_LOWER_egt_knob
+  -
+    type: var
+    var_name: L:JF_Visor_Position_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:JF_Visor_Position_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:HSI_enabled
+# -
+#   type: var
+#   var_name: L:KT76_ident_light
+# -
+#   type: var
+#   var_name: L:KMA20_mkr_airway
+# -
+#   type: var
+#   var_name: L:KMA20_mkr_outer
+# -
+#   type: var
+#   var_name: L:KMA20_mkr_middle
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_0
+  -
+    type: var
+    var_name: L:HANDLING_RudderTrim
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+  -
+    type: var
+    var_name: L:CoPilot_enabled
+# -
+#   type: var
+#   var_name: L:LEFT_LOWER_starter_light
+# -
+#   type: var
+#   var_name: L:EFB_Brt
+  -
+    type: var
+    var_name: L:GPS100_fascia_scaler
+  -
+    type: var
+    var_name: L:AP_light_scaler
+  -
+    type: ResetWhenEquals
+    var_name: L:LEFT_MISC_window
+    equals: 
+      - 0.0
+      - 100.0
+    target: L:LEFT_MISC_window_LC
+  -
+    type: var
+    var_name: L:KN62_outer_knob
+  -
+    type: var
+    var_name: L:KN62_inner_knob_Push
+  -
+    type: var
+    var_name: L:KN62_inner_knob
+# -
+#   type: var
+#   var_name: L:HSI_heading_knob
+# -
+#   type: var
+#   var_name: L:HSI_CRS_knob
+# -
+#   type: var
+#   var_name: L:Dir_ind_bug_knob
+# -
+#   type: var
+#   var_name: L:DIRECTION_INDICATOR_card_knob
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_nav_light_bounce
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:LEFT_LOWER_prime
+  -
+    type: var
+    var_name: L:LEFT_ICOMM_sq
+  -
+    type: var
+    var_name: L:LEFT_ICOMM_vol
+  -
+    type: var
+    var_name: L:LEFT_ICOMM_icomm
+  -
+    type: var
+    var_name: L:RIGHT_LOWER_avionics_pwr
+  -
+    type: var
+    var_name: L:RIGHT_LOWER_emer_bus_guard
+  -
+    type: var
+    var_name: L:RIGHT_LOWER_emer_bus_switch
+  -
+    type: var
+    var_name: L:AUTOPILOT_nav_switch
+  -
+    type: var
+    var_name: L:AvionicsPower
+# -
+#   type: var
+#   var_name: L:LDG_GEAR_lever
+  -
+    type: var
+    var_name: L:LEFT_MISC_navgps
+  -
+    type: var
+    var_name: L:LEFT_MISC_press_test_IsDown
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_press_test_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_press_test_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:LEFT_MISC_lv_IsDown
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_lv_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_lv_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:RIGHT_LOWER_cabin_heat_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:RIGHT_LOWER_cabin_heat_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:ALT_baro_scale_vis
+  -
+    type: var
+    var_name: L:ALT_baro_scale_InHG_vis
+# -
+#   type: var
+#   var_name: L:GTN750_Vol
+# -
+#   type: var
+#   var_name: L:GTN650_Vol
+  -
+    type: var
+    var_name: L:GNS430_BLANKING_VIZ
+  -
+    type: var
+    var_name: L:RADIO_ANIM_GPS100
+  -
+    type: var
+    var_name: L:GPS100_BLANKING_VIZ
+# -
+#   type: var
+#   var_name: L:TDS_GTN750_VIZ
+# -
+#   type: var
+#   var_name: L:TDS_GTN650_VIZ
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_NavSrc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_NavSrc
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:YOKE_roll
+  -
+    type: ResetWhenEquals
+    var_name: L:Cabin_door
+    equals:
+      - 11.0
+      - 111.0
+    target: L:DOOR_door
+# -
+#   type: var
+#   var_name: L:exhaust
+  -
+    type: var
+    var_name: L:Baggage_door
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:PMS50_GTN650_INSTALLED
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig3
+  -
+    type: var
+    var_name: L:KR85_dig2_counter
+# -
+#   type: var
+#   var_name: L:EGT_needle
+# -
+#   type: var
+#   var_name: L:ALTIMETER_100
+# -
+#   type: var
+#   var_name: L:UPPER_oat
+# -
+#   type: var
+#   var_name: L:HSI_cdi
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_ACTIVE
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_GlidePathValueActive
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_GlidePathValueAngle
+# -
+#   type: var
+#   var_name: L:VOR1_gsi
+  -
+    type: var
+    var_name: L:KR85_dig1_counter
+# -
+#   type: var
+#   var_name: L:KX175_COMM2_counter2
+  -
+    type: var
+    var_name: L:RADIO_ANIM_GNS530
+# -
+#   type: var
+#   var_name: L:KX170_COMM1_counter3
+# -
+#   type: var
+#   var_name: L:RPM_dig_5
+  -
+    type: var
+    var_name: L:RADIO_ANIM_KN62
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_ToFromFlag
+# -
+#   type: var
+#   var_name: L:HSI_to_flag
+# -
+#   type: var
+#   var_name: L:RPM_dig_1
+# -
+#   type: var
+#   var_name: L:KX170_NAV1_counter1
+  -
+    type: var
+    var_name: L:KR85_dig3_counter
+# -
+#   type: var
+#   var_name: L:RIGHT_LOWER_alt_amp
+# -
+#   type: var
+#   var_name: L:HSI_from_flag
+# -
+#   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig4
+# -
+#   type: var
+#   var_name: L:RPM_dig_2
+# -
+#   type: var
+#   var_name: L:HSI_crs
+# -
+#   type: var
+#   var_name: L:VOR2_cdi_flag
+# -
+#   type: var
+#   var_name: L:VOR1_to_flag
+# -
+#   type: var
+#   var_name: L:KX170_COMM1_counter2
+# -
+#   type: var
+#   var_name: L:KX175_NAV2_counter2
+# -
+#   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig5
+# -
+#   type: var
+#   var_name: L:LEFT_LOWER_fuel_press
+# -
+#   type: var
+#   var_name: L:VOR2_from_flag
+# -
+#   type: var
+#   var_name: L:ATTITUDE_INDICATOR_pitch
+# -
+#   type: var
+#   var_name: L:DIRECTION_INDICATOR_card
+# -
+#   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig6
+# -
+#   type: var
+#   var_name: L:KX170_COMM1_counter1
+# -
+#   type: var
+#   var_name: L:KX175_COMM2_counter3
+# -
+#   type: var
+#   var_name: L:VOR1_from_flag
+# -
+#   type: var
+#   var_name: L:VSI_needle
+# -
+#   type: var
+#   var_name: L:UPPER_compass
+# -
+#   type: var
+#   var_name: L:HSI_hdg_flag
+# -
+#   type: var
+#   var_name: L:VOR2_to_flag
+# -
+#   type: var
+#   var_name: L:ALTIMETER_1000
+# -
+#   type: var
+#   var_name: L:LEFT_LOWER_fuel_right
+# -
+#   type: var
+#   var_name: L:LOWER_trim_wheel
+# -
+#   type: var
+#   var_name: L:ALTIMETER_10000
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_LateralValueActive
+# -
+#   type: var
+#   var_name: L:HSI_nav_flag
+  -
+    type: var
+    var_name: L:RADIO_ANIM_KX175
+# -
+#   type: var
+#   var_name: L:TURN_COORD_flag
+# -
+#   type: var
+#   var_name: L:HSI_card
+# -
+#   type: var
+#   var_name: L:KX170_NAV1_counter2
+  -
+    type: var
+    var_name: L:RADIO_ANIM_KR85
+  -
+    type: var
+    var_name: L:RADIO_ANIM_GTN750
+# -
+#   type: var
+#   var_name: L:ADF_card
+# -
+#   type: var
+#   var_name: L:GYRO_SUCTION_needle
+# -
+#   type: var
+#   var_name: L:KT76_dig4_counter
+# -
+#   type: var
+#   var_name: L:VOR1_gsi_flag
+# -
+#   type: var
+#   var_name: L:LEFT_LOWER_oil_temp
+# -
+#   type: var
+#   var_name: L:ASI_needle
+# -
+#   type: var
+#   var_name: L:ATTITUDE_INDICATOR_turn
+# -
+#   type: var
+#   var_name: L:HSI_hdg_bug
+  -
+    type: var
+    var_name: L:RADIO_ANIM_GNS430
+# -
+#   type: var
+#   var_name: L:VOR1_cdi
+# -
+#   type: var
+#   var_name: L:RPM_dig_3
+# -
+#   type: var
+#   var_name: L:VOR2_cdi
+# -
+#   type: var
+#   var_name: L:LEFT_LOWER_fuel_left
+# -
+#   type: var
+#   var_name: L:RPM_needle
+# -
+#   type: var
+#   var_name: L:KT76_dig3_counter
+# -
+#   type: var
+#   var_name: L:LEFT_LOWER_oil_press
+  -
+    type: var
+    var_name: L:DIRECTION_INDICATOR_bug
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:ATTITUDE_INDICATOR_bank
+# -
+#   type: var
+#   var_name: L:RPM_dig_4
+# -
+#   type: var
+#   var_name: L:KT76_dig1_counter
+# -
+#   type: var
+#   var_name: L:KT76_dig2_counter
+# -
+#   type: var
+#   var_name: L:ALTIMETER_baro_scale
+# -
+#   type: var
+#   var_name: L:KX175_NAV2_counter1
+# -
+#   type: var
+#   var_name: L:KX175_COMM2_counter1
+# -
+#   type: var
+#   var_name: L:ADF_needle
+# -
+#   type: var
+#   var_name: L:VOR1_cdi_flag
+  -
+    type: var
+    var_name: L:HSI_gsi
+# -
+#   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig2
+# -
+#   type: var
+#   var_name: L:TURN_COORD_indicator
+  -
+    type: var
+    var_name: L:Towbar
+# -
+#   type: var
+#   var_name: L:EFB_sound_enabled
+# -
+#   type: var
+#   var_name: L:GTN750_INT_HIDDEN
+# -
+#   type: var
+#   var_name: L:GTN650_INT_2_HIDDEN
+# -
+#   type: var
+#   var_name: L:AS430_HIDDEN
+# -
+#   type: var
+#   var_name: L:AS530_HIDDEN
+# -
+#   type: var
+#   var_name: L:LOWER_flap_handle_button
+# -
+#   type: var
+#   var_name: L:AS430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+# -
+#   type: var
+#   var_name: L:AS530_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:PMS50_AUTOPILOT_INSTALLED
+  -
+    type: var
+    var_name: L:EGT_red_needle
+  -
+    type: var
+    var_name: L:LOWER_flap_handle
+# -
+#   type: var
+#   var_name: L:LEFT_LOWER_ignition
+# -
+#   type: var
+#   var_name: L:oilQty
+  -
+    type: var
+    var_name: L:StallWarn_avail
+# -
+#   type: var
+#   var_name: L:LEFT_LOWER_ignition_old
+  -
+    type: var
+    var_name: L:LEFT_MISC_fuel_sel_old
+  -
+    type: var
+    var_name: L:sound_FuelSel_CW
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_nav_light_on
+  -
+    type: var
+    var_name: L:sound_Switch_Large_Dn
+  -
+    type: var
+    var_name: L:CENTRE_LOWER_panel_light_on
+  -
+    type: var
+    var_name: L:LOWER_park_brake
+  -
+    type: var
+    var_name: L:LOWER_rudder_trim
+# -
+#   type: var
+#   var_name: L:Cabin_door_sound
+  -
+    type: var
+    var_name: L:DOOR_lower_latch_old
+  -
+    type: var
+    var_name: L:DOOR_upper_latch_old
+  -
+    type: var
+    var_name: L:Pilot_straps
+  -
+    type: var
+    var_name: L:No_pilot_straps
+  -
+    type: var
+    var_name: L:AC_fan
+# -
+#   type: var
+#   var_name: L:RIGHT_MISC_datcon_dig1
+  -
+    type: var
+    var_name: L:sound_Switch_Small_Up
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:GTN750_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN750_INT_State
+# -
+#   type: var
+#   var_name: L:GTN650_INT_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN650_INT_2_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+master:
+  -
+    type: var
+    var_name: L:DIRECTION_INDICATOR_card
+    unreliable: true
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

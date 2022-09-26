@@ -1,0 +1,328 @@
+# Version 1.3.9
+
+include:
+  - definitions/modules/Avionics/TDSNXi.yaml
+  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/autopilot_heli.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:0
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:1
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+
+  - # LVAR's
+    type: var
+    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
+  -
+    type: var
+    var_name: L:Calibration mouse position
+  -
+    type: var
+    var_name: L:Attitude calibration
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:SPOT_VIS
+  -
+    type: var
+    var_name: L:CAMERA_VIS
+  -
+    type: var
+    var_name: L:DOORS_VIS
+  -
+    type: var
+    var_name: L:LOAD
+  -
+    type: var
+    var_name: L:FIRE_TEST
+  -
+    type: var
+    var_name: L:SOUND_CLICK
+  -
+    type: var
+    var_name: L:WLT_TEST
+  -
+    type: var
+    var_name: L:FUEL_PUMP
+  -
+    type: var
+    var_name: L:PITOT_SWITCH
+  -
+    type: var
+    var_name: L:VEMD_TOP_TOGGLE
+  -
+    type: var
+    var_name: L:VEMD_BOTTOM_TOGGLE
+  -
+    type: var
+    var_name: L:DOOR_PR_ROTATE
+  -
+    type: var
+    var_name: L:DOOR_COR_ROTATE
+  -
+    type: var
+    var_name: L:ENG_POSITION
+  -
+    type: var
+    var_name: L:GENE_POSITION
+  -
+    type: var
+    var_name: L:HORN_POSITION
+  -
+    type: var
+    var_name: L:HYD_POSITION
+  -
+    type: var
+    var_name: L:ROTOR_BRAKE_POSITION
+  -
+    type: var
+    var_name: L:FLIGHT_POSITION
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:DOOR_PF_WINDOW_ROTATE
+# -
+#   type: var
+#   var_name: L:H125_NR_RPM
+# -
+#   type: var
+#   var_name: L:PMS50_GTN650_INSTALLED
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:totGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:totGaugeDiv_State
+  -
+    type: var
+    var_name: L:endGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:endGaugeDiv_State
+# -
+#   type: var
+#   var_name: L:GTN650_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN650_INT_State
+  -
+    type: var
+    var_name: L:KX155A_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KX155A_1_State
+  -
+    type: var
+    var_name: L:KT76C_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KT76C_1_State
+  -
+    type: var
+    var_name: L:oatGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:oatGaugeDiv_State
+  -
+    type: var
+    var_name: L:fuelqtyGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:fuelqtyGaugeDiv_State
+  -
+    type: var
+    var_name: L:engoilpressGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:engoilpressGaugeDiv_State
+  -
+    type: var
+    var_name: L:engoiltempGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:engoiltempGaugeDiv_State
+  -
+    type: var
+    var_name: L:fuelflowGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:fuelflowGaugeDiv_State
+  -
+    type: var
+    var_name: L:rpm1GaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:rpm1GaugeDiv_State
+  -
+    type: var
+    var_name: L:voltGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:voltGaugeDiv_State
+  -
+    type: var
+    var_name: L:ampGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:ampGaugeDiv_State
+  -
+    type: var
+    var_name: L:n1GaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:n1GaugeDiv_State
+  -
+    type: var
+    var_name: L:trqGaugeDiv_ScreenLuminosity
+  -
+    type: var
+    var_name: L:trqGaugeDiv_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+      -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+      -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:13
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:14
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:15
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:16
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

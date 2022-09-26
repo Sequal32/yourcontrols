@@ -1,0 +1,910 @@
+# Version 1.0.6.0
+
+include:
+  - definitions/modules/Avionics/AS330.yaml
+  - definitions/modules/Avionics/AS430.yaml
+  - definitions/modules/Avionics/AS530.yaml
+  - definitions/modules/Avionics/KAP140.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/passenger.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  -
+    type: NumIncrement
+    var_name: A:DECISION HEIGHT
+    var_units: Feet
+    var_type: f64
+    up_event_name: INCREASE_DECISION_HEIGHT
+    down_event_name: DECREASE_DECISION_HEIGHT
+    increment_by: 10
+  -
+    type: ToggleSwitch
+    var_name: A:PANEL AUTO FEATHER SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AUTOFEATHER_ARM
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+
+  - # LVAR's
+    type: var
+    var_name: L:DHC6_COLD_DARK
+  -
+    type: var
+    var_name: L:DHC6_RELEASE_PARK_BRK_BY_TOE_BRAKES
+  -
+    type: var
+    var_name: L:DHC6_GUSTLOCK_VISIBLE
+  -
+    type: var
+    var_name: L:DHC6_FUEL_SELECTOR_1
+  -
+    type: var
+    var_name: L:DHC6_FUEL_SELECTOR_2
+  -
+    type: var
+    var_name: L:DHC6_FUEL_VALVE_1
+  -
+    type: var
+    var_name: L:DHC6_FUEL_VALVE_2
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:DHC6_CKPT_DOOR_L
+  -
+    type: var
+    var_name: L:DHC6_CKPT_DOOR_R
+  -
+    type: var
+    var_name: L:DHC6_CARGO_DOOR
+  -
+    type: var
+    var_name: L:DHC6_PAX_DOOR
+  -
+    type: var
+    var_name: L:DHC6_PAX_DOOR_SN
+  -
+    type: var
+    var_name: L:DHC6_SVC_DOOR
+  -
+    type: var
+    var_name: L:DHC6_CARGO_DOOR_FWD
+  -
+    type: var
+    var_name: L:DHC6_CARGO_DOOR_AFT
+# -
+#   type: var
+#   var_name: L:DHC6_WIPER_POS
+  -
+    type: var
+    var_name: L:DHC6_ANNUN_TEST
+  -
+    type: var
+    var_name: L:DHC6_FUEL_WING_TANK_L
+  -
+    type: var
+    var_name: L:DHC6_FUEL_WING_TANK_R
+  -
+    type: var
+    var_name: L:DHC6_FUEL_CUTOFF_L
+  -
+    type: var
+    var_name: L:DHC6_FUEL_CUTOFF_R
+  -
+    type: var
+    var_name: L:DHC6_FUEL_CONFIG
+  -
+    type: var
+    var_name: L:COND_LEVER_1
+  -
+    type: var
+    var_name: L:COND_LEVER_2
+  -
+    type: var
+    var_name: L:DHC6_POTI_MAX_BRT
+  -
+    type: var
+    var_name: L:DHC6_POTI_MAX_BRT_LOW
+  -
+    type: var
+    var_name: L:DHC6_POTI_MAX_BRT_ANN_BRT
+  -
+    type: var
+    var_name: L:DHC6_POTI_MAX_BRT_ANN_DIM
+  -
+    type: var
+    var_name: L:DHC6_BACKLIGHT_INIT
+  -
+    type: var
+    var_name: L:DHC6_BRT_PILOT
+  -
+    type: var
+    var_name: L:DHC6_BRT_COPILOT
+  -
+    type: var
+    var_name: L:DHC6_BRT_CONSOLE
+# -
+#   type: var
+#   var_name: L:DHC6_WIPER_DIR
+# -
+#   type: var
+#   var_name: L:DHC6_BATT_TEMP
+# -
+#   type: var
+#   var_name: L:DHC6_LAST_FLAPS_POS
+  -
+    type: var
+    var_name: L:DHC6_AP_STATUS
+  -
+    type: var
+    var_name: L:DHC6_ACCU_SOUND
+  -
+    type: var
+    var_name: L:DHC6_AP_OFF_SOUND
+  -
+    type: var
+    var_name: L:DHC6_CABIN_VENT_FAN_OFF
+  -
+    type: var
+    var_name: L:DHC6_AP_DISC_SOUND
+  -
+    type: var
+    var_name: L:DHC6_BATT_TEMP_TEST
+  -
+    type: var
+    var_name: L:DHC6_POWER_STATUS
+  -
+    type: var
+    var_name: L:DHC6_DC_MASTER
+  -
+    type: var
+    var_name: L:DHC6_DC_SOURCE
+  -
+    type: var
+    var_name: L:DHC6_ELEC_IND_SELECT
+  -
+    type: var
+    var_name: L:DHC6_ANNUN_TEST_SWITCH
+  -
+    type: var
+    var_name: L:DHC6_UTIL_LTS
+  -
+    type: var
+    var_name: L:DHC6_UTIL_LT_CPT_RED
+  -
+    type: var
+    var_name: L:DHC6_UTIL_LT_FO_RED
+  -
+    type: var
+    var_name: L:DHC6_POTI_MAX_BRT_OLD
+  -
+    type: var
+    var_name: L:DHC6_POTI_MAX_BRT_LOW_OLD
+  -
+    type: var
+    var_name: L:DHC6_WIPER_SPEED
+  -
+    type: var
+    var_name: L:DHC6_WIPER_STEP
+  -
+    type: var
+    var_name: L:DHC6_WIPER_MODE
+  -
+    type: var
+    var_name: L:DHC6_WIPER_PARK
+  -
+    type: var
+    var_name: L:DHC6_WIPER_SOUND_SLOW
+  -
+    type: var
+    var_name: L:DHC6_WIPER_SOUND_FAST
+  -
+    type: var
+    var_name: L:DHC6_GO_AROUND
+# -
+#   type: var
+#   var_name: L:DHC6_LAST_TRIM
+# -
+#   type: var
+#   var_name: L:DHC6_TRIM_CHANGE
+# -
+#   type: var
+#   var_name: L:DHC6_TRIM_DOWN
+# -
+#   type: var
+#   var_name: L:DHC6_TRIM_UP
+  -
+    type: var
+    var_name: L:DHC6_CABIN_VENT_FAN
+  -
+    type: var
+    var_name: L:DHC6_CABIN_FAN
+# -
+#   type: var
+#   var_name: L:DHC6_BRAKE_ACCU_USAGE
+# -
+#   type: var
+#   var_name: L:DHC6_HYDR_PRESS_USAGE
+  -
+    type: var
+    var_name: L:DHC6_FIRE_TEST_TRIGGER
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_FIRE_BELL_MUTE_sw
+  -
+    type: var
+    var_name: L:FIRE_BELL_SOUND
+  -
+    type: var
+    var_name: L:DHC6_STALL_TRIGGER
+  -
+    type: var
+    var_name: L:DHC6_CARGO_DOOR_L
+  -
+    type: var
+    var_name: L:DHC6_CARGO_DOOR_R
+  -
+    type: var
+    var_name: L:DHC6_ANNUN_DOORS
+  -
+    type: var
+    var_name: L:DHC6_STATUS_DOORS
+  -
+    type: var
+    var_name: L:DHC6_GUSTLOCK_REMOVED
+  -
+    type: var
+    var_name: L:DHC6_GUSTLOCK_INSTALLED
+# -
+#   type: var
+#   var_name: L:DHC6_YOKE_HIDDEN
+  -
+    type: var
+    var_name: L:ADF_CARD1
+# -
+#   type: var
+#   var_name: L:DHC6_ALT_CPT_10K
+# -
+#   type: var
+#   var_name: L:DHC6_ALT_CPT_1K
+  -
+    type: var
+    var_name: L:DHC6_CHRONO_L_SET_TRIGGER
+  -
+    type: var
+    var_name: L:DHC6_CHRONO_L_MODE_TRIGGER
+  -
+    type: var
+    var_name: L:DHC6_CHRONO_L_STSP_TRIGGER
+  -
+    type: var
+    var_name: L:ADF_CARD2
+  -
+    type: var
+    var_name: L:DHC6_CHRONO_R_SET_TRIGGER
+  -
+    type: var
+    var_name: L:DHC6_CHRONO_R_MODE_TRIGGER
+  -
+    type: var
+    var_name: L:DHC6_CHRONO_R_STSP_TRIGGER
+  -
+    type: var
+    var_name: L:DHC6_FQTY_IND_TEST
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:DHC6_PWR_LVR_TEST
+  -
+    type: var
+    var_name: L:FUEL_WING_PUMP_L_FAIL_TEST
+  -
+    type: var
+    var_name: L:FUEL_WING_PUMP_R_FAIL_TEST
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_MINIMUMS_APPR
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_MINIMUMS_ANN
+  -
+    type: var
+    var_name: L:DHC6_ALT_ALERT_LIGHT
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_INHIBIT
+  -
+    type: var
+    var_name: L:DHC6_HYD_CB_TEST
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:DHC6_FDR_TEST
+  -
+    type: var
+    var_name: L:DHC6_FDR_STATUS
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden2
+  -
+    type: var
+    var_name: L:DHC6_STAB_DEICE_L_TEST
+  -
+    type: var
+    var_name: L:DHC6_STAB_DEICE_R_TEST
+  -
+    type: var
+    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+  -
+    type: var
+    var_name: L:DHC6_NO_SMOKING
+  -
+    type: var
+    var_name: L:DHC6_SEAT_BELTS
+  -
+    type: var
+    var_name: L:DHC6_JUMPER_SIGN
+  -
+    type: var
+    var_name: L:ASDHC6_PITOT_HEAT_SET
+  -
+    type: var
+    var_name: L:ASDHC6_PITOT_HEAT_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_STROBES_SET
+  -
+    type: var
+    var_name: L:ASDHC6_STROBES_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_WINDOW_HEAT_SET
+  -
+    type: var
+    var_name: L:ASDHC6_WINDOW_HEAT_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_GENERATOR_LEFT_SET
+  -
+    type: var
+    var_name: L:ASDHC6_GENERATOR_RIGHT_SET
+  -
+    type: var
+    var_name: L:ASDHC6_GENERATORS_SET
+  -
+    type: var
+    var_name: L:ASDHC6_GENERATORS_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_DC_MASTER_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_ENGINE_START
+  -
+    type: var
+    var_name: L:ASDHC6_DC_SOURCE_SET
+  -
+    type: var
+    var_name: L:ASDHC6_COND_LVR1_SET
+  -
+    type: var
+    var_name: L:ASDHC6_COND_LVR2_SET
+  -
+    type: var
+    var_name: L:ASDHC6_FUELBOOST_FWD_SET
+  -
+    type: var
+    var_name: L:ASDHC6_FUELBOOST_FWD
+  -
+    type: var
+    var_name: L:ASDHC6_FUELBOOST_FWD_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_FUELBOOST_AFT_SET
+  -
+    type: var
+    var_name: L:ASDHC6_FUELBOOST_AFT
+  -
+    type: var
+    var_name: L:ASDHC6_FUELBOOST_AFT_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_SEATBELTS_SET
+  -
+    type: var
+    var_name: L:ASDHC6_SEATBELTS_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_NO_SM_SET
+  -
+    type: var
+    var_name: L:ASDHC6_NO_SM_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_PROP_DEICE_SET
+  -
+    type: var
+    var_name: L:ASDHC6_PROP_DEICE_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_ENG_INTAKE_DEICE_SET
+  -
+    type: var
+    var_name: L:ASDHC6_ENG_INTAKE_DEICE_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_DEICE_BOOTS_SET
+  -
+    type: var
+    var_name: L:ASDHC6_DEICE_BOOTS_TOGGLE
+  -
+    type: var
+    var_name: L:ASDHC6_LANDING_GEAR_SET
+  -
+    type: var
+    var_name: L:ASDHC6_LANDING_GEAR_TOGGLE
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_0
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_2
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_2
+  -
+    type: var
+    var_name: L:DHC6_BOOST_PUMP_SOUND_1
+  -
+    type: var
+    var_name: L:DHC6_BOOST_PUMP_SOUND_2
+  -
+    type: var
+    var_name: L:DHC6_BOOST_PUMP_SOUND_3
+  -
+    type: var
+    var_name: L:DHC6_BOOST_PUMP_SOUND_4
+  -
+    type: var
+    var_name: L:HANDLING_RudderTrim
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_FIRE_BELL_MUTE_guard
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_FIRE_BELL_MUTE_guard_CNT
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_AUTOFEATHER_TEST_guard
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_AUTOFEATHER_TEST_guard_CNT
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_AUTOFEATHER_TEST_sw
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_PROP_GOV_TEST_guard
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_PROP_GOV_TEST_guard_CNT
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_PROP_GOV_TEST_sw
+  -
+    type: var
+    var_name: L:DHC6_BETA_RANGE_TEST
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:DHC6_STARTER
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_IGNITION_MODE_GUARD
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_IGNITION_MODE_GUARD_CNT
+  -
+    type: var
+    var_name: L:XMLVAR_DHC6_IGNITION_MODE_switch
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:LIGHTING_WING_1
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:DHC6_COCKPIT_LT
+  -
+    type: var
+    var_name: L:DHC6_GENERAL_BRT
+  -
+    type: var
+    var_name: L:DHC6_READING_LTS
+  -
+    type: var
+    var_name: L:DHC6_BUS_TIE
+  -
+    type: var
+    var_name: L:DHC6_DEICE_BOOTS
+  -
+    type: var
+    var_name: L:DHC6_DEICE_BOOTS_SPEED
+  -
+    type: var
+    var_name: L:DHC6_DEICE_BOOTS_WING
+  -
+    type: var
+    var_name: L:DHC6_DEICE_BOOTS_STAB
+  -
+    type: var
+    var_name: L:DHC6_BLEED_AIR_L
+  -
+    type: var
+    var_name: L:DHC6_BLEED_AIR_R
+  -
+    type: var
+    var_name: L:DHC6_COMPT_FANS
+  -
+    type: var
+    var_name: L:DHC6_WINDOW_HEAT
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:DHC6_CARGO_DOOR_CLOSING
+  -
+    type: var
+    var_name: L:DHC6_CARGO_DOOR_OPENING
+  -
+    type: var
+    var_name: L:DHC6_PAX_DOOR_CLOSING
+  -
+    type: var
+    var_name: L:DHC6_PAX_DOOR_OPENING
+  -
+    type: var
+    var_name: L:DHC6_SKYDIVER_DOOR
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:DHC6_AMPH_GEAR_LT_DIM
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AP_KAP140_INSTALLED
+# -
+#   type: var
+#   var_name: L:AS530_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+  -
+    type: var
+    var_name: L:KT76C_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KT76C_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightCheckCompleted
+  -
+    type: var
+    var_name: L:KR87_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KR87_State
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:KAP140_BARO_Display
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_DONTSINK
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_SINKRATE
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_PULLUP
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_TERRAIN
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_TOOLOWTERRAIN
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_TOOLOWFLAPS
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_GS_LOWVOL
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_GS
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_MINIMUMS
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_BANKANGLE
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_10
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_20
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_30
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_40
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_50
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_100
+  -
+    type: var
+    var_name: L:DHC6_EGPWS_500
+  -
+    type: var
+    var_name: L:DHC6_ALT_ALERT
+  -
+    type: var
+    var_name: L:DHC6_ALT_ALERT_RESET
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER2 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT TIP LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT TIP LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

@@ -1,0 +1,458 @@
+include:
+  - definitions/modules/Avionics/AS3000.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/pressurization.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Autofeather
+    type: ToggleSwitch
+    var_name: A:PANEL AUTO FEATHER SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AUTOFEATHER_ARM
+
+  - # Bleed
+    type: NumSet
+    var_name: A:BLEED AIR SOURCE CONTROL
+    var_units: Enum
+    var_type: i32
+    event_name: BLEED_AIR_SOURCE_CONTROL_SET
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT AVIONICS ON
+    var_units: Bool
+    var_type: bool
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_2_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_3_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_10_SET
+    index_reversed: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_4_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_5_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_6_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_7_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:8
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_8_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:9
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_9_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTRAL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_12_SET
+    index_reversed: true
+
+  - # LVAR's
+    type: var
+    var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:XMLVAR_AileronTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_LandingGearLightBlink
+# -
+#   type: var
+#   var_name: L:XMLVAR_LandingGearLightTesting
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_EndTimeDown
+  -
+    type: var
+    var_name: L:XMLVAR_Ignition
+  -
+    type: var
+    var_name: L:XMLVAR_BoostFuelPump
+  -
+    type: var
+    var_name: L:XMLVAR_FuelSelectorAuto
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+  -
+    type: var
+    var_name: L:XMLVAR_PushXFR
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Deployment
+  -
+    type: var
+    var_name: L:XMLVAR_InertSep1_Active
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:LIGHTING_LOGO_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:LIGHTING_WING_1
+  -
+    type: var
+    var_name: L:XMLVAR_Battery_GPU_ON
+  -
+    type: var
+    var_name: L:DEICE_Airframe_1
+  -
+    type: var
+    var_name: L:DEICE_Propeller_1
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:DEICE_Pitot_2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_On
+# -
+#   type: var
+#   var_name: L:XMLVAR_SyntheticVision_Off
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Glasscockpit_Wind_Mode
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:Glasscockpit_AOA_Mode
+# -
+#   type: var
+#   var_name: L:Glasscockpit_SVTTerrain
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:AS3000_1_Timer_Value
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsMode
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsValue
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AS3000_2_Timer_Value
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_IsPositionOverride
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_Current_Map
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_Current_WeatherMap
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_MapRotationMode
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeBackup_State
+# -
+#   type: var
+#   var_name: L:AS1000_SpeedBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_SpeedBackup_State
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_1_State
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_2_State
+  -
+    type: var
+    var_name: L:AS3000_PFD_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_PFD_1_State
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

@@ -1,0 +1,189 @@
+# Version 1.2.8 beta
+
+include:
+  - definitions/modules/Avionics/TDSNXi.yaml
+  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT NAVCOM1 ON
+    var_units: Bool
+    var_type: bool
+
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:0
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:1
+    var_units: Number
+    var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+
+  - # LVAR's
+    type: var
+    var_name: L:Calibration mouse position
+  -
+    type: var
+    var_name: L:Attitude calibration
+  -
+    type: var
+    var_name: L:CYCLIC_TOGGLE
+  -
+    type: var
+    var_name: L:DOORS_VIS
+  -
+    type: var
+    var_name: L:FLOATS_VIS
+  -
+    type: var
+    var_name: L:CANOPY_VIS
+  -
+    type: var
+    var_name: L:DOOR_PF_WINDOW_ROTATE
+  -
+    type: var
+    var_name: L:DOOR_PR_ROTATE
+  -
+    type: var
+    var_name: L:DOOR_COR_ROTATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+  -
+    type: var
+    var_name: L:SPOT_VIS
+  -
+    type: var
+    var_name: L:ROTOR_BRAKE_POSITION
+  -
+    type: var
+    var_name: L:CLUTCH_POSITION
+  -
+    type: var
+    var_name: L:GOV_POSITION
+# -
+#   type: var
+#   var_name: L:PILOT_VIS
+  -
+    type: var
+    var_name: L:GPS_VIS
+  -
+    type: var
+    var_name: L:YAW_STRING_VIS
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:FINAL_WIND_MAGNITUDE
+# -
+#   type: var
+#   var_name: L:FINAL_WIND_DIRECTION
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:KX155A_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KX155A_1_State
+  -
+    type: var
+    var_name: L:KT76C_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KT76C_1_State
+# -
+#   type: var
+#   var_name: L:GTN750_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN750_INT_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - TransponderVFR

@@ -1,0 +1,371 @@
+# Version 1.0.0-beta9
+
+include:
+  - definitions/aircraft/Asobo_C152.yaml
+  - definitions/modules/Avionics/AS330.yaml
+  - definitions/modules/Avionics/KAP140.yaml
+
+shared:
+  - # NAVCOM
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:18
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 18
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:20
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 20
+
+  - # Breakers
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
+    set: 3 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+    set: 4 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
+    set: 5 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
+    set: 6 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:7, Bool)
+    set: 7 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:8, Bool)
+    set: 8 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
+    set: 9 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:10, Bool)
+    set: 10 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
+    set: 11 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:12, Bool)
+    set: 12 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:13, Bool)
+    set: 13 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:14, Bool)
+    set: 14 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:15, Bool)
+    set: 15 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:16, Bool)
+    set: 16 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:17, Bool)
+    set: 17 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:18, Bool)
+    set: 18 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Lighting
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:9
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 9
+    index_reversed: true
+
+  - # LVAR's
+    type: var
+    var_name: L:XMLVAR_JPL_VISOR_PILOT
+  -
+    type: var
+    var_name: L:XMLVAR_JPL_VISOR_COPILOT
+  -
+    type: var
+    var_name: L:JPL_WINDOW_PILOT
+  -
+    type: var
+    var_name: L:JPL_DOOR_PILOT
+  -
+    type: var
+    var_name: L:JPL_WINDOW_COPILOT
+  -
+    type: var
+    var_name: L:JPL_DOOR_COPILOT
+  -
+    type: var
+    var_name: L:JPL152_APVIZ
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:XMLVAR_FUEL_FLOW_TARGET
+  -
+    type: var
+    var_name: L:XMLVAR_PUMPED_FUEL
+  -
+    type: var
+    var_name: L:JPL152_CHT_HELPER
+# -
+#   type: var
+#   var_name: L:XMLVAR_Engine_Condition
+# -
+#   type: var
+#   var_name: L:XMLVAR_Fuel_Evaporating
+  -
+    type: var
+    var_name: L:JPL152_ADFVOL
+  -
+    type: var
+    var_name: L:JPL152_COM1VOL
+  -
+    type: var
+    var_name: L:JPL152_COM2VOL
+  -
+    type: var
+    var_name: L:JPL_CANOPY_OPEN
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_Hours_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_Minutes_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_CABIN_HEAT_1_POSITION
+# -
+#   type: var
+#   var_name: L:XMLVAR_Cabin_Air_1_Position
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_SPKR_SEL
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_EXT_SEL
+  -
+    type: var
+    var_name: L:DME_POWER
+  -
+    type: var
+    var_name: L:JPL_MARKER_TEST
+  -
+    type: var
+    var_name: L:C152_PilotsState
+  -
+    type: var
+    var_name: L:C152_CoPilotsState
+  -
+    type: var
+    var_name: L:C152_MailSmallState
+  -
+    type: var
+    var_name: L:C152_MailLargerState
+  -
+    type: var
+    var_name: L:C152_PumpState
+  -
+    type: var
+    var_name: L:C152_GennieState
+  -
+    type: var
+    var_name: L:C152_MailSmallRState
+  -
+    type: var
+    var_name: L:C152_MailLargerRState
+  -
+    type: var
+    var_name: L:C152_MultiParcelState
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_ADF
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Gyro_Drift
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_5
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_6
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Mode
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:KX155A_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_1_State
+# -
+#   type: var
+#   var_name: L:KX155A_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_2_State
+  -
+    type: var
+    var_name: L:KR87_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KR87_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
+  -
+    type: var
+    var_name: L:AutopilotPreflightCheckCompleted
+  -
+    type: var
+    var_name: L:JPLDME_ScreenLuminosity
+  -
+    type: var
+    var_name: L:JPLDME_State
+  -
+    type: var
+    var_name: L:EFB_ScreenLuminosity
+  -
+    type: var
+    var_name: L:EFB_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+# -
+#   type: var
+#   var_name: L:KAP140_BARO_Display
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+
+server:
+  - # Payload (extra)
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
