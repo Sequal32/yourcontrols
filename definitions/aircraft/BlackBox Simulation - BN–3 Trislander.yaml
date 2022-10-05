@@ -1,0 +1,702 @@
+# Version 1.1.6
+
+include:
+  - definitions/modules/Avionics/AS530.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/Avionics/KAP140.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Avionics
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
+    set: 5 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
+    set: 6 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # EFIS
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:3
+    var_units: Millibars scaler 16
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    cancel_h_events: true
+    event_param: 3
+
+  - # Engines
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG3
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG3
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER3
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:3
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO3_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:3
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO3_RIGHT
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE3_SET
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: PROP_PITCH3_SET
+    interpolate: Default
+
+  - # Failures
+    type: var
+    var_name: A:CIRCUIT GENERAL PANEL ON
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:48
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:CIRCUIT ON:63
+    var_units: Bool
+    var_type: bool
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:5
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 5
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:8
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 8
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:9
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 9
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:10
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 10
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:3
+    var_units: Enum
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:4
+    var_units: Enum
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:5
+    var_units: Enum
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 5
+    index_reversed: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:1
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 2
+
+# - # LVAR's
+#   type: var
+#   var_name: L:Vis1_Switch
+# -
+#   type: var
+#   var_name: L:Vis2_Switch
+  -
+    type: var
+    var_name: L:EFIS_Vis_Switch
+  -
+    type: var
+    var_name: L:Main_Door_Window
+  -
+    type: var
+    var_name: L:Door_L1
+  -
+    type: var
+    var_name: L:Door_L2
+  -
+    type: var
+    var_name: L:Door_R1
+  -
+    type: var
+    var_name: L:Door_R2
+  -
+    type: var
+    var_name: L:Door_R3
+  -
+    type: var
+    var_name: L:Door_Cargo
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_3
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_1
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_2
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_4
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_6
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_5
+  -
+    type: var
+    var_name: L:SOMETHING_OPEN
+  -
+    type: var
+    var_name: L:SOMETHINGL_OPEN
+  -
+    type: var
+    var_name: L:SOMETHINGR_OPEN
+  -
+    type: var
+    var_name: L:StartersState
+  -
+    type: var
+    var_name: L:BBS_XFERPUMP_DRYTIME_L
+  -
+    type: var
+    var_name: L:BBS_XFERPUMP_DRYTIME_R
+  -
+    type: var
+    var_name: L:TipTank_Test
+  -
+    type: var
+    var_name: L:Elec_SELECTOR
+  -
+    type: var
+    var_name: L:STRUCTURAL_DEICE_SWITCH
+  -
+    type: var
+    var_name: L:WINDSHIELD_DEICE_SWITCH
+# -
+#   type: var
+#   var_name: L:DeIce_Amps
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+  -
+    type: var
+    var_name: L:SW_REAR_ENGINE_POWER_FAIL
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_Mode
+  -
+    type: var
+    var_name: L:BBS_KN62DME_MODE
+  -
+    type: var
+    var_name: L:Switch_BBS_KN62DME_MODE
+  -
+    type: var
+    var_name: L:BBS_KN62DME_PWR
+  -
+    type: var
+    var_name: L:BB_XML_EVENT
+  -
+    type: var
+    var_name: L:AUDIO_HF1_INOP
+  -
+    type: var
+    var_name: L:AUDIO_HF2_INOP
+  -
+    type: var
+    var_name: L:AUDIO_SPARE_INOP
+  -
+    type: var
+    var_name: L:CarbTemp_SELECTOR
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1_LASTSTATE
+  -
+    type: var
+    var_name: L:BBS_Port_Tank_Test
+  -
+    type: var
+    var_name: L:BBS_Stbd_Tank_Test
+  -
+    type: var
+    var_name: L:BBS_Stall_Test
+  -
+    type: var
+    var_name: L:BBS_Gen1_Test
+  -
+    type: var
+    var_name: L:BBS_Gen2_Test
+  -
+    type: var
+    var_name: L:BBS_Gyro_Fail_Test
+  -
+    type: var
+    var_name: L:BBS_Rear_Eng_Fail_Test
+  -
+    type: var
+    var_name: L:BBS_Cabin_Heat_Test
+  -
+    type: var
+    var_name: L:BBS_Door_L1_Test
+  -
+    type: var
+    var_name: L:BBS_Door_L2_Test
+  -
+    type: var
+    var_name: L:BBS_Door_R1_Test
+  -
+    type: var
+    var_name: L:BBS_Door_R2_Test
+  -
+    type: var
+    var_name: L:BBS_Door_R3_Test
+  -
+    type: var
+    var_name: L:BBS_O_Marker_Test
+  -
+    type: var
+    var_name: L:BBS_M_Marker_Test
+  -
+    type: var
+    var_name: L:BBS_I_Marker_Test
+  -
+    type: var
+    var_name: L:BBS_BusBar_Isol_Test
+  -
+    type: var
+    var_name: L:BBS_FLAPS_SWITCH
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden3
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden3
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden3
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:BBS_Visor_Left
+    unreliable: true
+  -
+    type: var
+    var_name: L:BBS_Visor_Right
+    unreliable: true
+  -
+    type: var
+    var_name: L:LIGHTS_STROBE_INOP
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_1
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_2
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_3
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:HANDLING_RudderTrim
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_2
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  -
+    type: var
+    var_name: L:BB_XML_LASTEVENT
+  -
+    type: var
+    var_name: L:BB_MILIBARS
+  -
+    type: var
+    var_name: L:BBS_Switch_Pulse
+# -
+#   type: var
+#   var_name: L:BBS_PULSE_1
+# -
+#   type: var
+#   var_name: L:BBS_PULSE_2
+  -
+    type: var
+    var_name: L:BBS_NAV3_HZ
+  -
+    type: var
+    var_name: L:BB_XML_EVENT_ID
+  -
+    type: var
+    var_name: L:BB_XML_EVENT_DATA
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+  -
+    type: var
+    var_name: L:KX155A_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KX155A_2_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightCheckCompleted
+  -
+    type: var
+    var_name: L:WasmInstrument_ScreenLuminosity
+  -
+    type: var
+    var_name: L:WasmInstrument_State
+  -
+    type: var
+    var_name: L:BBS_ASPEN_CdiSource
+  -
+    type: var
+    var_name: L:AIRSPEED_HOLD_VAR
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BBS_ASPEN_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:BBS_ASPEN_1_State
+  -
+    type: var
+    var_name: L:BBS_ASPEN_RightFunction
+  -
+    type: var
+    var_name: L:BBS_ASPEN_isInteractingRight
+  -
+    type: var
+    var_name: L:BBS_ASPEN_LeftFunction
+  -
+    type: var
+    var_name: L:BBS_ASPEN_isInteractingLeft
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+  -
+    type: var
+    var_name: L:BBS_ASPEN_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:BBS_ASPEN_2_State
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:PFD_DME_Displayed
+  -
+    type: var
+    var_name: L:ClipBoard_ScreenLuminosity
+  -
+    type: var
+    var_name: L:ClipBoard_State
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+# -
+#   type: var
+#   var_name: L:KAP140_BARO_Display
+
+master:
+  - # ASOBO_ENGINE_Lever_Throttle_Template
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE3_SET
+    interpolate: Default
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - BBS_ASPEN_Push_B2
