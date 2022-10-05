@@ -1,0 +1,604 @@
+# Version 1.4.2
+
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:EXIT OPEN:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 5
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+
+  - # LVAR's
+    type: var
+    var_name: L:TABLET_INIT
+# -
+#   type: var
+#   var_name: L:TABLET
+  -
+    type: var
+    var_name: L:COLD_AND_DARK_AUX_ST
+# -
+#   type: var
+#   var_name: L:TABLET_BTN_PILOT_VIS
+# -
+#   type: var
+#   var_name: L:TABLET_BTN_COPILOT_VIS
+# -
+#   type: var
+#   var_name: L:PILOT_VIS
+# -
+#   type: var
+#   var_name: L:COPILOT_VIS
+# -
+#   type: var
+#   var_name: L:VAR_HEAD_COPILOTO
+  -
+    type: var
+    var_name: L:SW_DME_ON
+  -
+    type: var
+    var_name: L:GPS_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_EXT_CARENADO
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_TIMER
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE_OLD
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+  -
+    type: var
+    var_name: L:XMLVAR_Microphone_selector
+# -
+#   type: var
+#   var_name: L:TEST_VAR_PILOTO
+# -
+#   type: var
+#   var_name: L:VAR_HEAD_PILOTO
+# -
+#   type: var
+#   var_name: L:AUX_BETA_MIN_REV
+# -
+#   type: var
+#   var_name: L:AUX_BETA_MIN
+# -
+#   type: var
+#   var_name: L:AUX_BETA_MAX
+# -
+#   type: var
+#   var_name: L:AUX_BETA_INCIDENCE
+# -
+#   type: var
+#   var_name: L:AUX_ALPHA_INCIDENCE
+# -
+#   type: var
+#   var_name: L:AUX_BETA
+# -
+#   type: var
+#   var_name: L:AUX_BETA_ANIM
+# -
+#   type: var
+#   var_name: L:AUX_RPM
+# -
+#   type: var
+#   var_name: L:AUX_VS
+# -
+#   type: var
+#   var_name: L:AUX_ELEVATOR_TRIM_INDICATOR
+# -
+#   type: var
+#   var_name: L:AUX_ELEVATOR_TRIM_PCT
+# -
+#   type: var
+#   var_name: L:ENGINE1_ENG_RPM_RPM
+# -
+#   type: var
+#   var_name: L:ENGINE1_FUELPRESS_PSI
+# -
+#   type: var
+#   var_name: L:ENGINE1_FUELFLOW_GPH
+# -
+#   type: var
+#   var_name: L:ENGINE1_FUELFLOW_PPH
+# -
+#   type: var
+#   var_name: L:ENGINE1_OILTEMP_CELCIUS
+# -
+#   type: var
+#   var_name: L:ENGINE1_OILTEMP_FAHRENHEIT
+# -
+#   type: var
+#   var_name: L:ENGINE1_OILPRESS_PSI
+# -
+#   type: var
+#   var_name: L:ENGINE1_FUELPUMP_BOOL
+# -
+#   type: var
+#   var_name: L:ENGINE1_MANIFOLD_PRESSURE_INHG
+# -
+#   type: var
+#   var_name: L:ENGINE1_AUX_EGT_RANKINE
+# -
+#   type: var
+#   var_name: L:ENGINE1_AUX_EGT_FAHRENHEIT
+# -
+#   type: var
+#   var_name: L:ENGINE1_CHT_CELCIUS
+# -
+#   type: var
+#   var_name: L:ENGINE1_CHT_FAHRENHEIT
+# -
+#   type: var
+#   var_name: L:ENGINE1_CARBURATOR_CELCIUS
+# -
+#   type: var
+#   var_name: L:ENGINE1_CARBURATOR_FAHRENHEIT
+# -
+#   type: var
+#   var_name: L:AUX_FUEL_L_QTY_GALLONS
+# -
+#   type: var
+#   var_name: L:AUX_FUEL_R_QTY_GALLONS
+# -
+#   type: var
+#   var_name: L:AUX_TRANSPONDER STATE
+# -
+#   type: var
+#   var_name: L:AUX_TURN_COORDINATOR_FLAG_ON
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_ALTERNATOR1
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_ALTERNATOR1_AMP
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_BAT_LOAD1_AMP
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_MSTER_BATTERY
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_CIRCUIT_GENERAL_PANEL_ON
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_BAT_VOLT
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_GENALT_BUS_VOLT1
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_MAIN_BUS_AMP
+# -
+#   type: var
+#   var_name: L:AUX_VERTICAL_HOLD_VAR
+# -
+#   type: var
+#   var_name: L:AUX_AUTOPILOT_ALTITUDE_ARM
+# -
+#   type: var
+#   var_name: L:AUX_VERTICAL_SPEED
+# -
+#   type: var
+#   var_name: L:AUX_AUTOPILOT_MASTER
+# -
+#   type: var
+#   var_name: L:AUX_GW_FLAPS_HANDLE_INDEX
+# -
+#   type: var
+#   var_name: L:AUX_OAT
+# -
+#   type: var
+#   var_name: L:AUX_ENGINE_P1
+# -
+#   type: var
+#   var_name: L:AUX_ENGINE_RECIP_P1
+# -
+#   type: var
+#   var_name: L:AUX_ENGINE_1_COMBUSTION
+# -
+#   type: var
+#   var_name: L:AUX_FLAPS_TRAILING_EDGE_FLAPS_LEFT_PERCENT
+# -
+#   type: var
+#   var_name: L:AUX_GW_GEAR_HANDLE_INDEX
+# -
+#   type: var
+#   var_name: L:AUX_GW_MANIFOLD_PRESSURE
+# -
+#   type: var
+#   var_name: L:AUX_GW_RADIO_HEIGHT
+  -
+    type: var
+    var_name: L:ASD_BTN_GEAR_WARN_MUTE
+  -
+    type: var
+    var_name: L:AUX_GW_MUTE
+  -
+    type: var
+    var_name: L:BUFFER_P100_GearWarn
+# -
+#   type: var
+#   var_name: L:AUX_GW_BUFFER
+# -
+#   type: var
+#   var_name: L:AUX_ENG_PROPELLER_LEVER_POSITION
+# -
+#   type: var
+#   var_name: L:AUX_EGT_R
+# -
+#   type: var
+#   var_name: L:AUX_EGT_F
+# -
+#   type: var
+#   var_name: L:AUX_EGT_F2
+# -
+#   type: var
+#   var_name: L:AUX_ENG_GAS_TEMPERATURE_PCT
+# -
+#   type: var
+#   var_name: L:AUX_CARBURETOR_TEMPERATURE_C
+# -
+#   type: var
+#   var_name: L:AUX_CARBURETOR_TEMPERATURE_F
+# -
+#   type: var
+#   var_name: L:AUX_FUEL_TANK_SELECTOR_1
+# -
+#   type: var
+#   var_name: L:AUX_FUEL_TANK_SELECTOR_ANIM_1
+# -
+#   type: var
+#   var_name: L:AUX_FUEL_L_QTY
+# -
+#   type: var
+#   var_name: L:AUX_FUEL_R_QTY
+# -
+#   type: var
+#   var_name: L:AUX_STANDY_VACUUM_ON
+# -
+#   type: var
+#   var_name: L:AUX_ATTITUDE_BANK_DEG_DEG
+# -
+#   type: var
+#   var_name: L:AUX_ATTITUDE_BANK_DEG_RAD
+# -
+#   type: var
+#   var_name: L:AUX_ATTITUDE_PITCH_DEG_DEG
+# -
+#   type: var
+#   var_name: L:AUX_ATTITUDE_PITCH_DEG_RAD
+# -
+#   type: var
+#   var_name: L:XMLVAR_TRANSPONDER_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_TRANSPONDER_AVAILABLE
+# -
+#   type: var
+#   var_name: L:AUX_AIRSPEED_INDICATED
+# -
+#   type: var
+#   var_name: L:AUX_LIGHT_PANEL
+# -
+#   type: var
+#   var_name: L:AUX_LIGHT_PANEL_ON
+# -
+#   type: var
+#   var_name: L:AUX_LIGHT_PANEL_C8
+# -
+#   type: var
+#   var_name: L:AUX_LIGHT_PANEL_C40
+# -
+#   type: var
+#   var_name: L:AUX_ENG_CYLINDER_HEAD_TEMPERATURE_R
+# -
+#   type: var
+#   var_name: L:AUX_ENG_CYLINDER_HEAD_TEMPERATURE_F
+# -
+#   type: var
+#   var_name: L:AUX_RECIP_ENG_CYLINDER_HEAD_TEMPERATURE_C
+# -
+#   type: var
+#   var_name: L:AUX_AVIONICS_MASTER_SWITCH
+# -
+#   type: var
+#   var_name: L:AUX_CIRCUIT_AVIONICS_ON
+# -
+#   type: var
+#   var_name: L:AUX_GEAR_TIRE_CENTER
+# -
+#   type: var
+#   var_name: L:AUX_GEAR_TIRE_LEFT
+# -
+#   type: var
+#   var_name: L:AUX_GEAR_TIRE_RIGHT
+  -
+    type: var
+    var_name: L:CUSTOM_XMLVAR_LANDING_LIGHT_ON
+# -
+#   type: var
+#   var_name: L:XMLVAR_AP_MASTER
+  -
+    type: var
+    var_name: L:XMLVAR_DOORMAIN0
+# -
+#   type: var
+#   var_name: L:CARVAR_FLAG_DOOR0
+# -
+#   type: var
+#   var_name: L:AUX_ANIM_NEEDLE_ELECTRICAL_BATTERY_LOAD_PCT
+  -
+    type: var
+    var_name: L:XMLVAR_OIL_FILTER_CAUTION
+# -
+#   type: var
+#   var_name: L:AUX_ANIM_COVER_PITOT
+# -
+#   type: var
+#   var_name: L:ANIM_Needle_Volt
+  -
+    type: var
+    var_name: L:XMLVAR_CUSTOM_TRANSPONDER_TEST
+# -
+#   type: var
+#   var_name: L:XMLVAR_TRANSPONDER
+# -
+#   type: var
+#   var_name: L:Time_Cont_car
+# -
+#   type: var
+#   var_name: L:XMLVAR_GAL_TIMER
+# -
+#   type: var
+#   var_name: L:XMLVAR_FF_REM
+  -
+    type: var
+    var_name: L:BUTTON_FF_MODE_GAL
+# -
+#   type: var
+#   var_name: L:XMLVAR_FF_GAL_USED
+  -
+    type: var
+    var_name: L:GAUGE_FUELFLOW_INIT
+# -
+#   type: var
+#   var_name: L:FuelTotalRem
+# -
+#   type: var
+#   var_name: L:FuelTotalRemFLAG
+# -
+#   type: var
+#   var_name: L:AUX_AUTOPILOT_GPS_FLIGHTPLAN
+# -
+#   type: var
+#   var_name: L:AUX_AUTOPILOT_FlightPlanWaypointRemainingTotalDistance
+  -
+    type: var
+    var_name: L:ASD_BTN_FUELFLOW_TEST
+  -
+    type: var
+    var_name: L:BUTTON_FF_MODE
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE_2
+  -
+    type: var
+    var_name: L:SWITCH_DUMMY_AIR_TEMP
+  -
+    type: var
+    var_name: L:SWITCH_DUMMY_WINDOWS
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:ELECTRICAL_Starter_1
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:HANDLING_RudderTrim
+  -
+    type: var
+    var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+  -
+    type: var
+    var_name: L:KX155A_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KX155A_1_State
+  -
+    type: var
+    var_name: L:KX155A_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KX155A_2_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
