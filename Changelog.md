@@ -1,5 +1,11 @@
 # YourControls Changelog
 
+## Version 2.7.2.1
+
+### Profiles
+
+- Corrected aircraft-dependent profiles for latest name changes. (e.g. Heavy Division 787)
+
 ## Version 2.7.2
 
 ### Profiles
@@ -7,10 +13,10 @@
 - Added BN-2 Islander by BlackBox Simulation (v2.1.2).
 - Added BN-3 Trislander by BlackBox Simulation (v1.1.6).
 - Added Cessna C195 Businessliner by Microsoft (v1.4.2).
-- Added Cessna C510 Mustang by Cockspur (v1.0.0).
+- Added Cessna C510 Mustang by Cockspur (v1.0.3).
 - Updated FlyByWire A32NX (Dev/Exp) to October 2nd, 2022.
 
-### Fixes
+### Aircraft Fixes
 
 - FlyByWire A32NX - Improved sync of ground services on tablet.
 
