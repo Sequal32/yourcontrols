@@ -5,14 +5,13 @@ shared:
     var_units: Percent scaler 16k
     var_type: f64
     event_name: RUDDER_TRIM_SET_EX1
-    unreliable: true
+    interpolate: Default
   -
     type: NumSet
     var_name: A:ELEVATOR TRIM PCT
     var_units: Percent scaler 16k
     var_type: f64
     event_name: ELEVATOR_TRIM_SET
-    unreliable: true
     condition:
       var:
         var_name: A:AUTOPILOT MASTER
@@ -20,10 +19,11 @@ shared:
         var_type: bool
       equals:
         Bool: false
+    interpolate: Default
   -
     type: NumSet
     var_name: A:AILERON TRIM PCT
     var_units: Percent scaler 16k
     var_type: f64
     event_name: AILERON_TRIM_SET_EX1
-    unreliable: true
+    interpolate: Default

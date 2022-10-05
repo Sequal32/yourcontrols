@@ -1,15 +1,29 @@
 # YourControls Changelog
 
+## Version 2.7.2
+
+### Profiles
+
+- Added BN-2 Islander by BlackBox Simulation (v2.1.2).
+- Added BN-3 Trislander by BlackBox Simulation (v1.1.6).
+- Added Cessna C195 Businessliner by Microsoft (v1.4.2).
+- Added Cessna C510 Mustang by Cockspur (v1.0.0).
+- Updated FlyByWire A32NX (Dev/Exp) to October 2nd, 2022.
+
+### Fixes
+
+- FlyByWire A32NX - Improved sync of ground services on tablet.
+
 ## Version 2.7.1
 
 ### Profiles
 
 - Complete profile re-organization.
-- Added Airbus A319 by LatinVFR (v1.2.4).
-- Added Airbus A321 by LatinVFR (v1.2.4).
+- Added Airbus A319neo by LatinVFR (v1.0.4).
+- Added Airbus A321neo by LatinVFR (v1.2.5).
 - Added Beechcraft Bonanza V35 by Microsoft (v1.5.2).
 - Added Beechcraft Model 17 Staggerwing by Microsoft (v1.8.0).
-- Added Beechcraft Model 18 by Microsoft (v1.6.2).
+- Added Beechcraft Model 18 by Microsoft (v1.9.0).
 - Added Cessna CT182T Skylane by Carenado (v1.5.0).
 - Added Cessna C337 Skymaster by Carenado (v1.1.2).
 - Added Discus2c by GotFriends (v2.0.4).

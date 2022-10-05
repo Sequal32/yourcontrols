@@ -1,0 +1,555 @@
+# Version 1.0.0
+
+include:
+  - definitions/modules/Avionics/AS1000.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/pressurization.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # AntiSkid
+    type: ToggleSwitch
+    var_name: A:ANTISKID BRAKES ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: ANTISKID_BRAKES_TOGGLE
+
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:24
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 24
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:35
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 35
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:49
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 49
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR2
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER2
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:30
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 30
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:4
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 4
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:50
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 50
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:5
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 5
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:51
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 51
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:6
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 6
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:52
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 52
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:7
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 7
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:53
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 53
+    index_reversed: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:C510_Door_Pilot
+  -
+    type: var
+    var_name: L:C510_CARGO_Pilot
+  -
+    type: var
+    var_name: L:vis_ide_pitottubecovers
+  -
+    type: var
+    var_name: L:vis_ide_carpet
+  -
+    type: var
+    var_name: L:vis_ide_chocks
+  -
+    type: var
+    var_name: L:vis_ide_engine_covers
+  -
+    type: var
+    var_name: L:vis_ide_iDevice_Off
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverFlapsHidden
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:XMLVAR_C510_VISOR_Pilot
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_C510_VISOR_Pilot2
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_C510_VISOR_Pass1
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_C510_VISOR_Pass2
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_C510_VISOR_Pass3
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_C510_VISOR_Pass4
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_C510_VISOR_Pass5
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_C510_VISOR_Pass6
+    unreliable: true
+  -
+    type: var
+    var_name: L:C510_Table_Left
+  -
+    type: var
+    var_name: L:C510_Table_Right
+  -
+    type: var
+    var_name: L:C510_SimpleAnimation
+  -
+    type: var
+    var_name: L:C510_AirCond_ID
+  -
+    type: var
+    var_name: L:C510_Press_ID
+  -
+    type: var
+    var_name: L:C510_Oxygen_Supply_ID
+  -
+    type: var
+    var_name: L:C510_Pilot_Mic_ID
+  -
+    type: var
+    var_name: L:C510_CoPilot_Mic_ID
+  -
+    type: var
+    var_name: L:C510_Horn_Silence_ID
+  -
+    type: var
+    var_name: L:C510_Checklist_ID
+  -
+    type: var
+    var_name: L:C510_Checklist_Next_ID
+  -
+    type: var
+    var_name: L:C510_Safety_Switch_ID
+  -
+    type: var
+    var_name: L:C510_Toilet_ID
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:switch_fuel_right
+  -
+    type: var
+    var_name: L:switch_fuel_left
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+  -
+    type: var
+    var_name: L:XMLVAR_DeiceWindshield_1
+  -
+    type: var
+    var_name: L:DEICE_Airframe_1
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
+  -
+    type: var
+    var_name: L:vis_ide_pitottubecovers_on
+  -
+    type: var
+    var_name: L:vis_ide_carpet_on
+  -
+    type: var
+    var_name: L:vis_ide_chocks_on
+  -
+    type: var
+    var_name: L:vis_ide_engine_covers_on
+  -
+    type: var
+    var_name: L:vis_ide_copilot
+  -
+    type: var
+    var_name: L:vis_ide_copilot_on
+  -
+    type: var
+    var_name: L:vis_ide_Cargo_on
+  -
+    type: var
+    var_name: L:vis_ide_Pass_1
+  -
+    type: var
+    var_name: L:vis_ide_Pass_1_on
+  -
+    type: var
+    var_name: L:vis_ide_Pass_2
+  -
+    type: var
+    var_name: L:vis_ide_Pass_2_on
+  -
+    type: var
+    var_name: L:vis_ide_Pass_3
+  -
+    type: var
+    var_name: L:vis_ide_Pass_3_on
+  -
+    type: var
+    var_name: L:vis_ide_Pass_4
+  -
+    type: var
+    var_name: L:vis_ide_Pass_4_on
+  -
+    type: var
+    var_name: L:Privacy_Curtain
+  -
+    type: var
+    var_name: L:HANDLING_Autobrakes_Position
+  -
+    type: var
+    var_name: L:HANDLING_RudderTrim
+  -
+    type: var
+    var_name: L:HANDLING_AileronsTrim
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:XMLVAR_Essential_Bus_ON
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_30
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_3
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_4
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_5
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_6
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_7
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_WING_1
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_PushXFR
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
