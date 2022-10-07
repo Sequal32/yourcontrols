@@ -6,6 +6,10 @@
 
 - Corrected aircraft-dependent profiles for latest name changes. (e.g. Heavy Division 787)
 
+### Aircraft Fixes
+
+- Asobo Longitude: Added more payload to support Dakfly mod.
+
 ## Version 2.7.2
 
 ### Profiles
