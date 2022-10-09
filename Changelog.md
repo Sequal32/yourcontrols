@@ -10,6 +10,10 @@
 ### Aircraft Fixes
 
 - Asobo Longitude: Added more payload to support Dakfly mod.
+- FlyByWire A32NX: Reverted some changes that broke AP knobs in last update.
+
+### Issues
+![image](https://cdn.discordapp.com/attachments/765289974232252466/1028444695069737030/fbwkeepoff.png)
 
 ## Version 2.7.2
 
@@ -23,7 +27,7 @@
 
 ### Aircraft Fixes
 
-- FlyByWire A32NX - Improved sync of ground services on tablet.
+- FlyByWire A32NX: Improved sync of ground services on tablet.
 
 ## Version 2.7.1
 
@@ -52,9 +56,9 @@
 
 ### Aircraft Fixes
 
-- FlyByWire A32NX - Removed possible duplicate pushback command causing no more sync.
-- Carenado M20R - Desync with vertical speed gauge.
-- Carenado Seneca V - Landing pulse lights not turning off.
+- FlyByWire A32NX: Removed possible duplicate pushback command causing no more sync.
+- Carenado M20R: Desync with vertical speed gauge.
+- Carenado Seneca V: Landing pulse lights not turning off.
 
 ## Version 2.7.0
 

@@ -1130,11 +1130,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Autopilot_Altitude_Increment
-  -
-    type: var
-    var_name: L:A32NX_EFB_BRIGHTNESS
-    cancel_h_events: true
-    unreliable: true
+# -
+#   type: var
+#   var_name: L:A32NX_EFB_BRIGHTNESS
 # -
 #   type: var
 #   var_name: L:A32NX_ELEC_AC_ESS_SHED_BUS_IS_POWERED
@@ -1351,9 +1349,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_MCDU_CLR_Pressed
-  -
-    type: var
-    var_name: L:A32NX_MCDU_CLR_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_CLR_MinReleaseTime
   -
     type: var
     var_name: L:A32NX_MCDU_PUSH_ANIM_1_CLR
@@ -2364,9 +2362,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_ECAM_ALL_Push_IsDown
-  -
-    type: var
-    var_name: L:A32NX_ECAM_ALL_Push_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:A32NX_ECAM_ALL_Push_MinReleaseTime
   -
     type: var
     var_name: L:A32NX_BTN_TOCONFIG
@@ -2797,12 +2795,12 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_V2_SPEED
-  -
-    type: var
-    var_name: L:A32NX_FWD_DOOR_CARGO_LOCKED
-  -
-    type: var
-    var_name: L:A32NX_AFT_DOOR_CARGO_LOCKED
+# -
+#   type: var
+#   var_name: L:A32NX_FWD_DOOR_CARGO_LOCKED
+# -
+#   type: var
+#   var_name: L:A32NX_AFT_DOOR_CARGO_LOCKED
   -
     type: var
     var_name: L:A32NX_FWC_INHIBOVRD
@@ -2948,46 +2946,36 @@ shared:
   -
     type: var
     var_name: L:A32NX_EFIS_R_ND_FM_MESSAGE_FLAGS
-  -
-    type: var
-    var_name: L:A32NX_SOUND_PTU_AUDIBLE_COCKPIT
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_SOUND_EXTERIOR_MASTER
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_SOUND_INTERIOR_ENGINE
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_SOUND_INTERIOR_WIND
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_EFB_USING_AUTOBRIGHTNESS
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_REALISTIC_TILLER_ENABLED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_SOUND_PASSENGER_AMBIENCE_ENABLED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_SOUND_ANNOUNCEMENTS_ENABLED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_SOUND_BOARDING_MUSIC_ENABLED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_RADIO_RECEIVER_USAGE_ENABLED
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_PTU_AUDIBLE_COCKPIT
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_EXTERIOR_MASTER
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_INTERIOR_ENGINE
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_INTERIOR_WIND
+# -
+#   type: var
+#   var_name: L:A32NX_EFB_USING_AUTOBRIGHTNESS
+# -
+#   type: var
+#   var_name: L:A32NX_REALISTIC_TILLER_ENABLED
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_PASSENGER_AMBIENCE_ENABLED
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_ANNOUNCEMENTS_ENABLED
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_BOARDING_MUSIC_ENABLED
+# -
+#   type: var
+#   var_name: L:A32NX_RADIO_RECEIVER_USAGE_ENABLED
 # -
 #   type: var
 #   var_name: L:A32NX_FUEL_USED:1
@@ -4276,15 +4264,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_THROTTLE_MAPPING_TOGA_HIGH:2
-# -
-#   type: var
-#   var_name: L:A320_Neo_FCU_SPEED_SET_DATA
-# -
-#   type: var
-#   var_name: L:A320_Neo_FCU_HDG_SET_DATA
-# -
-#   type: var
-#   var_name: L:A320_Neo_FCU_VS_SET_DATA
+  -
+    type: var
+    var_name: L:A320_Neo_FCU_SPEED_SET_DATA
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A320_Neo_FCU_HDG_SET_DATA
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A320_Neo_FCU_VS_SET_DATA
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:A32NX_PUMP_STATE:1
@@ -5317,6 +5308,8 @@ ignore:
   - EFB_TEMPLATE#365536744
   - EFB_TEMPLATE#365536774
   - EFB_TEMPLATE#365536804
+  - EFB_TEMPLATE#732791099
+  - EFB_TEMPLATE#742416731
   - EFB_TEMPLATE#743151364
   - EFB_TEMPLATE#838198750
   - EFB_TEMPLATE#104927402
@@ -5328,12 +5321,15 @@ ignore:
   - EFB_TEMPLATE#1667072419
   - EFB_TEMPLATE#1667072420
   - EFB_TEMPLATE#1667072421
+  - EFB_TEMPLATE#1667072422
   - EFB_TEMPLATE#1667072423
   - EFB_TEMPLATE#1667072424
   - EFB_TEMPLATE#1667072425
   - EFB_TEMPLATE#1667072426
+  - EFB_TEMPLATE#1720764106
   - EFB_TEMPLATE#1883839580
   - EFB_TEMPLATE#-189935051
+  - EFB_TEMPLATE#-189935052
   - EFB_TEMPLATE#-189935063
   - EFB_TEMPLATE#-189935064
   - EFB_TEMPLATE#-189935065
@@ -5341,13 +5337,18 @@ ignore:
   - EFB_TEMPLATE#-189935077
   - EFB_TEMPLATE#-189935078
   - EFB_TEMPLATE#-368779817
+  - EFB_TEMPLATE#-474394798
   - EFB_TEMPLATE#-474394799
   - EFB_TEMPLATE#-474394800
   - EFB_TEMPLATE#-492643718
   - EFB_TEMPLATE#-592614240
+  - EFB_TEMPLATE#-710920000
   - EFB_TEMPLATE#-1300090956
+  - EFB_TEMPLATE#-1450666589
+  - EFB_TEMPLATE#-1450666592
   - EFB_TEMPLATE#-1450666595
   - EFB_TEMPLATE#-1450666596
   - EFB_TEMPLATE#-1710185517
+  - EFB_TEMPLATE#-1711622317
   - EFB_TEMPLATE#-2006940366
   - EFB_TEMPLATE#-2006940367
