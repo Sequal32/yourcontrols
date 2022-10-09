@@ -4,6 +4,7 @@
 
 ### Profiles
 
+- Added Tecnam P92 Echo by Erasam (v1.5).
 - Added Savoia-Marchetti S.55 & S.55X by Microsoft (v1.5.3).
 - Corrected aircraft-dependent profiles for latest name changes. (e.g. Heavy Division 787)
 
