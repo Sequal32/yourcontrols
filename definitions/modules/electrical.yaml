@@ -1,6 +1,14 @@
 # This file only supports aircraft with a max of two engines. You can specify more in the individual profile.
 
 shared:
+  - # ASOBO_ELECTRICAL_Switch_APU_Starter_Template
+    type: ToggleSwitch
+    var_name: A:APU SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: APU_STARTER
+    off_event_name: APU_OFF_SWITCH
+
   - # ASOBO_ELECTRICAL_Switch_APU_Generator_Template
     type: NumSet
     var_name: A:APU GENERATOR SWITCH:1
