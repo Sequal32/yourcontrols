@@ -1,5 +1,21 @@
 # YourControls Changelog
 
+## Version 2.7.3
+
+### Profiles
+
+- Added Savoia-Marchetti S.55 & S.55X by Microsoft (v1.5.3).
+- Added Tecnam P92 Echo by Erasam (v1.5).
+- Corrected aircraft-dependent profiles for latest name changes. (e.g. Heavy Division 787)
+
+### Aircraft Fixes
+
+- Asobo Longitude: Added more payload to support Dakfly mod.
+- FlyByWire A32NX: Reverted some changes that broke AP knobs in last update.
+
+### Issues
+![image](https://cdn.discordapp.com/attachments/765289974232252466/1028444695069737030/fbwkeepoff.png)
+
 ## Version 2.7.2
 
 ### Profiles
@@ -7,12 +23,12 @@
 - Added BN-2 Islander by BlackBox Simulation (v2.1.2).
 - Added BN-3 Trislander by BlackBox Simulation (v1.1.6).
 - Added Cessna C195 Businessliner by Microsoft (v1.4.2).
-- Added Cessna C510 Mustang by Cockspur (v1.0.0).
+- Added Cessna C510 Mustang by Cockspur (v1.0.3).
 - Updated FlyByWire A32NX (Dev/Exp) to October 2nd, 2022.
 
-### Fixes
+### Aircraft Fixes
 
-- FlyByWire A32NX - Improved sync of ground services on tablet.
+- FlyByWire A32NX: Improved sync of ground services on tablet.
 
 ## Version 2.7.1
 
@@ -41,9 +57,9 @@
 
 ### Aircraft Fixes
 
-- FlyByWire A32NX - Removed possible duplicate pushback command causing no more sync.
-- Carenado M20R - Desync with vertical speed gauge.
-- Carenado Seneca V - Landing pulse lights not turning off.
+- FlyByWire A32NX: Removed possible duplicate pushback command causing no more sync.
+- Carenado M20R: Desync with vertical speed gauge.
+- Carenado Seneca V: Landing pulse lights not turning off.
 
 ## Version 2.7.0
 
