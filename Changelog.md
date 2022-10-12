@@ -35,7 +35,7 @@
 ### Profiles
 
 - Complete profile re-organization.
-- Added Airbus A319neo by LatinVFR (v1.0.4).
+- Added Airbus A319ceo by LatinVFR (v1.0.4).
 - Added Airbus A321neo by LatinVFR (v1.2.5).
 - Added Beechcraft Bonanza V35 by Microsoft (v1.5.2).
 - Added Beechcraft Model 17 Staggerwing by Microsoft (v1.8.0).
