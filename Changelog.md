@@ -1,5 +1,11 @@
 # YourControls Changelog
 
+## Version 2.7.4
+
+### Profiles
+
+- Added PAC P-750 XSTOL by ORBX (v1.0.1).
+
 ## Version 2.7.3
 
 ### Profiles
