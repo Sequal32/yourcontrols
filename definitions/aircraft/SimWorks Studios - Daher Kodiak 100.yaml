@@ -1,4 +1,4 @@
-# Version 1.2.2
+# Version 1.3.6
 
 include:
   - definitions/modules/Avionics/AS1000.yaml
@@ -207,7 +207,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_WATER_RUDDER
 
-# - # LVAR's
+# - # LVAR's (Skydive trimmed)
 #   type: var
 #   var_name: L:HOBBS_FLIGHT_TIME_SECONDS
 # -
@@ -942,6 +942,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT1000_VNav_Approach_Mode
+  -
+    type: var
+    var_name: L:SWS_ENGINE_Lever_EmergencyPower_1
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:AS1000_PFD_Brightness_IsAuto
@@ -1076,9 +1080,6 @@ shared:
     var_name: L:TRIM_PITCH_TAKEOFF_MAX
 # -
 #   type: var
-#   var_name: L:MAX_TORQUE_LIMIT
-# -
-#   type: var
 #   var_name: L:SWS_FAILURE_Engine_Overheat_Factor
 # -
 #   type: var
@@ -1086,6 +1087,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:SWS_FAILURE_Engine_OverTorque_Factor
+# -
+#   type: var
+#   var_name: L:SWS_FAILURE_Engine_OverRev_Factor
   -
     type: var
     var_name: L:HANDLING_ESP_MASTER
@@ -1124,6 +1128,9 @@ shared:
 #   var_name: L:SWS_ENGINE_TURBINE_ITT_HOT
 # -
 #   type: var
+#   var_name: L:TURB_ENG_SHP_1
+# -
+#   type: var
 #   var_name: L:TURB_ENG_ITT_1_DISPLAY
   -
     type: var
@@ -1149,6 +1156,9 @@ shared:
   -
     type: var
     var_name: L:Cupholder_8
+  -
+    type: var
+    var_name: L:SWS_SKYDIVE_Switch_Light_Jump
 # -
 #   type: var
 #   var_name: L:AS1000_MID_Display_Backup_Active
@@ -1166,29 +1176,13 @@ shared:
     var_name: L:SWS_MISC_Lever_Harness_2
 # -
 #   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+# -
+#   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:Glasscockpit_Wind_Mode
-# -
-#   type: var
-#   var_name: L:Annunciations_Manager_Initialized
   -
     type: var
     var_name: L:SWS_FAILURE_Turbine_1_Failed
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-
-  - # Skydive
-    type: var
-    var_name: L:SWS_SKYDIVE_Switch_Light_Jump
 
 server:
   -
