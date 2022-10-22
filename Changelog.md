@@ -5,6 +5,7 @@
 ### Profiles
 
 - Added PAC P-750 XSTOL by ORBX (v1.0.1).
+- Updated Salty Simulations B747 to developer build. (Oct 15, 2022)
 - Updated SimWorks Studios Kodiak 100 II & III to v1.3.6.
 
 ## Version 2.7.3
