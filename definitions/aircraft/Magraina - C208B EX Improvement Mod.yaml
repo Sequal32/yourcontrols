@@ -74,6 +74,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 1
   - # External Power Bus
     type: CustomCalculator
     get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
@@ -126,6 +127,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -148,6 +150,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
