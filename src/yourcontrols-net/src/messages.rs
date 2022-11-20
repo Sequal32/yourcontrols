@@ -123,6 +123,13 @@ fn get_packet_for_message(
     }
 }
 
+fn get_compression_level_for_message(msg: &Payloads) -> i32 {
+    match msg {
+        Payloads::AircraftDefinition { .. } => 22,
+        _ => 0,
+    }
+}
+
 pub struct SenderReceiver {
     socket: Socket,
     sender: Sender<Packet>,
@@ -174,7 +181,9 @@ impl SenderReceiver {
         let payload_bytes = rmp_serde::to_vec(&message)?;
 
         // Compress
-        let compressed = self.compressor.compress(&payload_bytes, 0)?;
+        let compressed = self
+            .compressor
+            .compress(&payload_bytes, get_compression_level_for_message(message))?;
 
         // Wrap
         let wrapper = PayloadWrapper {
