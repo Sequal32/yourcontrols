@@ -73,6 +73,7 @@ pub fn get_socket_config(timeout: u64) -> laminar::Config {
         idle_connection_timeout: Duration::from_secs(timeout),
         receive_buffer_max_size: 65536,
         max_packets_in_flight: u16::MAX,
+        max_fragments: u8::MAX, // for sending aircraft definitions
         ..Default::default()
     }
 }
