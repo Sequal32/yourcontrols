@@ -1,0 +1,106 @@
+# Version 1.1.2
+
+include:
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+
+  - # LVAR's
+    type: var
+    var_name: L:cowling
+  -
+    type: var
+    var_name: L:JN4_ENG_MAGNETO_L
+  -
+    type: var
+    var_name: L:JN4_ENG_MAGNETO_R
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+  -
+    type: var
+    var_name: L:JN4_ENG_MAGNETO_L_CB
+  -
+    type: var
+    var_name: L:JN4_ENG_MAGNETO_R_CB
+  -
+    type: var
+    var_name: L:JN4_ENG_MAGNETO_Lever
+  -
+    type: var
+    var_name: L:Altimeter_Face
+# -
+#   type: var
+#   var_name: L:Altimeter_Face_ANIM
+  -
+    type: var
+    var_name: L:Altimeter_Clamp
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+  -
+    type: var
+    var_name: L:TrayTable
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:THROW_PROP1
+  -
+    type: var
+    var_name: L:throwprop
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
