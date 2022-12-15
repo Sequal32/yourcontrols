@@ -1,4 +1,4 @@
-# Version 3.2.0
+# Version 3.2.3
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -1139,12 +1139,15 @@ shared:
   -
     type: var
     var_name: L:COPILOT_WINDOW_LOCK
-  -
-    type: var
-    var_name: L:XMLVAR_HSI_KNOB_HEADING_BUG_1
+# -
+#   type: var
+#   var_name: L:GTN750_HSI_GSI_NEEDLE
 # -
 #   type: var
 #   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
+  -
+    type: var
+    var_name: L:XMLVAR_HSI_KNOB_HEADING_BUG_1
 # -
 #   type: var
 #   var_name: L:TDSGTNXI_LateralValueActive
@@ -1306,9 +1309,6 @@ shared:
     var_name: L:MKR_BCN_TEST
   -
     type: var
-    var_name: L:ALT_ALERT_LIGHT
-  -
-    type: var
     var_name: L:XMLVAR_PHASE_KNOB_Position
   -
     type: var
@@ -1423,12 +1423,6 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
-    type: var
     var_name: L:RNAVNAV_ScreenLuminosity
   -
     type: var
@@ -1513,9 +1507,6 @@ shared:
     var_name: L:ESP_WARNING
   -
     type: var
-    var_name: L:GFC605_MinSpeed
-  -
-    type: var
     var_name: L:WasmInstrument_ScreenLuminosity
   -
     type: var
@@ -1529,8 +1520,20 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:READY_TAKEOFF
+  -
+    type: var
+    var_name: L:READY_START
+  -
+    type: var
+    var_name: L:COLD_DARK
 
   - # 530
+    type: var
+    var_name: L:BENDIX_RADAR_RANGE
+  -
     type: var
     var_name: L:GENERIC_XPNDR_ALT
   -
@@ -1539,6 +1542,9 @@ shared:
   -
     type: var
     var_name: L:GENERIC_XPNDR_SBY
+  -
+    type: var
+    var_name: L:BENDIX_RADAR_MODE
   -
     type: var
     var_name: L:GENERIC_Momentary_NAV1_AUDIO_SWITCH
@@ -1611,6 +1617,9 @@ shared:
   -
     type: var
     var_name: L:ALT_ARM_SWITCH
+  -
+    type: var
+    var_name: L:NAV1_LOC_VOR_FREQ
   -
     type: var
     var_name: L:XMLVAR_NAVOMATIC_TURN_KNOB_Position
@@ -1702,6 +1711,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_VOLUME_BACK_KNOB_Position
+  -
+    type: var
+    var_name: L:WxRadarRange
+  -
+    type: var
+    var_name: L:WxRadarMode
 
 server:
   -
