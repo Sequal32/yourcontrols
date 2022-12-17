@@ -1,4 +1,4 @@
-# Version 3.1.2
+# Version 3.3.1
 
 include:
   - definitions/modules/engines.yaml
@@ -94,21 +94,12 @@ shared:
   -
     type: var
     var_name: L:analog_CLOCK_START
-  -
-    type: var
-    var_name: L:CHUTE_STATUS
-# -
-#   type: var
-#   var_name: L:drag_chute_deploy_animation
-# -
-#   type: var
-#   var_name: L:drag_chute_drop_animation
 # -
 #   type: var
 #   var_name: L:kneeboard_open
-  -
-    type: var
-    var_name: L:custom_event_id
+# -
+#   type: var
+#   var_name: L:custom_event_id
   -
     type: var
     var_name: L:opt_sight_cage
@@ -304,6 +295,15 @@ shared:
   -
     type: var
     var_name: L:starter0
+  -
+    type: var
+    var_name: L:CHUTE_STATUS
+# -
+#   type: var
+#   var_name: L:drag_chute_deploy_animation
+# -
+#   type: var
+#   var_name: L:drag_chute_drop_animation
 # -
 #   type: var
 #   var_name: L:pilot_vis_tag_front
@@ -480,6 +480,51 @@ shared:
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
+    var_name: L:hydraulic_door
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_4
+  -
+    type: var
+    var_name: L:rat_out
+  -
+    type: var
+    var_name: L:windmilling
+  -
+    type: var
+    var_name: L:wing_flag_mouvers
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_3
+# -
+#   type: var
+#   var_name: L:apc_vanes
+  -
+    type: var
+    var_name: L:CHUTE_BAY
+# -
+#   type: var
+#   var_name: L:NOZZLE_POS
+# -
+#   type: var
+#   var_name: L:aeroelastic_tips
+  -
+    type: var
+    var_name: L:breakers_door
+  -
+    type: var
+    var_name: L:tailhook_pos
+# -
+#   type: var
+#   var_name: L:rat_spinning
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_1
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_2
+  -
+    type: var
     var_name: L:com1_function_mode
   -
     type: var
@@ -507,9 +552,6 @@ shared:
     var_name: L:nasarr15_clplane_tens
   -
     type: var
-    var_name: L:rat_out
-  -
-    type: var
     var_name: L:com1_MHz
 # -
 #   type: var
@@ -523,9 +565,6 @@ shared:
   -
     type: var
     var_name: L:drum_mils_hundreds
-  -
-    type: var
-    var_name: L:windmilling
 # -
 #   type: var
 #   var_name: L:needle_fuel_flow
@@ -565,9 +604,6 @@ shared:
   -
     type: var
     var_name: L:yaw_damper_cover
-# -
-#   type: var
-#   var_name: L:nozzle_pos
   -
     type: var
     var_name: L:canopy_handle
@@ -799,42 +835,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:needle_kcas
-  -
-    type: var
-    var_name: L:hydraulic_door
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_4
-  -
-    type: var
-    var_name: L:wing_flag_mouvers
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_3
-# -
-#   type: var
-#   var_name: L:apc_vanes
-  -
-    type: var
-    var_name: L:CHUTE_BAY
-  -
-    type: var
-    var_name: L:aeroelastic_tips
-  -
-    type: var
-    var_name: L:breakers_door
-  -
-    type: var
-    var_name: L:tailhook_pos
-  -
-    type: var
-    var_name: L:rat_spinning
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_1
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -1043,6 +1043,12 @@ shared:
 server:
   -
     type: var
+    var_name: A:FUEL TANK CENTER2 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
     var_name: A:FUEL TANK LEFT AUX LEVEL
     var_units: Percent
     var_type: f64
@@ -1050,6 +1056,18 @@ server:
   -
     type: var
     var_name: A:FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT TIP LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT TIP LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
