@@ -70,6 +70,20 @@ shared:
     event_name: RADIO_VOR2_IDENT_SET
     cancel_h_events: true
   -
+    type: NumSet
+    var_name: A:NAV SOUND:3
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_VOR3_IDENT_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV SOUND:4
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_VOR4_IDENT_SET
+    cancel_h_events: true
+  -
     type: NumIncrement
     var_name: A:NAV VOLUME:1
     var_units: Percent
@@ -85,6 +99,24 @@ shared:
     var_type: i32
     up_event_name: NAV2_VOLUME_INC
     down_event_name: NAV2_VOLUME_DEC
+    cancel_h_events: true
+    increment_by: 2
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:3
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV3_VOLUME_INC
+    down_event_name: NAV3_VOLUME_DEC
+    cancel_h_events: true
+    increment_by: 2
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:4
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV4_VOLUME_INC
+    down_event_name: NAV4_VOLUME_DEC
     cancel_h_events: true
     increment_by: 2
 
