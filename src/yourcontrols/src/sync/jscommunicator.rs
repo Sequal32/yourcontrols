@@ -20,7 +20,7 @@ pub enum JSPayloads {
         name: String,
     },
     Input {
-        id: String,
+        event_id: String,
         value: String,
     },
     Time {
