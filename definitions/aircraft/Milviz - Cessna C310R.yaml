@@ -761,9 +761,9 @@ shared:
   -
     type: var
     var_name: L:C310_RSTR_GO
-# -
-#   type: var
-#   var_name: L:C310_TAB_HIDE_COPILOT
+  -
+    type: var
+    var_name: L:C310_TAB_HIDE_COPILOT
 # -
 #   type: var
 #   var_name: L:C310_Toggle_YokeHidden1
@@ -2071,3 +2071,17 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+  - MV_EFB#input_right_main # H
+  - MV_EFB#input_left_main # H
+  - MV_EFB#input_external_tank_right # H
+  - MV_EFB#input_external_tank_left # H
+  - MV_EFB#input_fuselage_clean # H
+  - MV_EFB#input_rate_of_change # H
+  - input_right_main#MV_EFB # JS
+  - input_left_main#MV_EFB # JS
+  - input_external_tank_right#MV_EFB # JS
+  - input_external_tank_left#MV_EFB # JS
+  - input_fuselage_clean#MV_EFB # JS
+  - input_rate_of_change#MV_EFB # JS

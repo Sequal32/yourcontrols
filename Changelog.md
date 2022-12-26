@@ -34,11 +34,14 @@
 
 - All aircraft: Removed unsettable circuit failure variables.
 - All Carenado: Re-enabled tablet button sync of pilot models.
-- Aerosoft DHC-6: Fixed cabin general, reading, emergency,
-  caution, entrance, FO ceiling, and skydiver day/night lights.
+- Aerosoft DHC-6: Fixed cabin general, reading, emergency, and FO ceiling lights.
+- Aerosoft DHC-6: Fixed cockpit caution, entrance, and skydiver day/night lights.
 - Big Radials JRF-6B: Fixed manual fuel pump lever.
 - FBW A32NX: Attempted to fix glitching SPD selection.
 - FBW A32NX: Fixed desync of ISIS SPD/ALT bugs.
+- FSW C414: Fixed tablet fuel tank spam.
+- Milviz C310: Fixed tablet dirt level spam.
+- Milviz C310: Fixed tablet fuel tank spam.
 - Milviz PC-6: Fixed trapdoor open/close.
 - Parallel 42 Kitfox: Fixed pilot & copilot doors.
 - SSW TF-104G: Fixed missing fuel sync for center & tip tanks.
