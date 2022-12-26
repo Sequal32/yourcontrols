@@ -26,7 +26,7 @@
 - Updated Microsoft Junkers Ju 52 to v0.1.9.
 - Updated Milviz C310R to v1.1.9.
 - Updated Milviz PC-6 to v1.1.2.
-- Updated Salty Simulations 747-8i to December 4, 2022 (dev build).
+- Updated Salty Simulations 747-8i (Dev) to December 4, 2022.
 - Updated SimSkunkWorks TF-104G Starfighter to v3.3.1.
 - Updated SimWorks Studios Kodiak 100 II & III to v1.4.0.
 
@@ -37,14 +37,14 @@
 - Aerosoft DHC-6: Fixed cabin general, reading, emergency, and FO ceiling lights.
 - Aerosoft DHC-6: Fixed cockpit caution, entrance, and skydiver day/night lights.
 - Big Radials JRF-6B: Fixed manual fuel pump lever.
-- FBW A32NX: Attempted to fix glitching SPD selection.
-- FBW A32NX: Fixed desync of ISIS SPD/ALT bugs.
-- FSW C414: Fixed tablet fuel tank spam.
+- FlyByWire A32NX: Attempted to fix glitching SPD selection.
+- FlyByWire A32NX: Fixed desync of ISIS SPD/ALT bugs.
+- Flysimware C414: Fixed tablet fuel tank spam.
 - Milviz C310: Fixed tablet dirt level spam.
 - Milviz C310: Fixed tablet fuel tank spam.
 - Milviz PC-6: Fixed trapdoor open/close.
 - Parallel 42 Kitfox: Fixed pilot & copilot doors.
-- SSW TF-104G: Fixed missing fuel sync for center & tip tanks.
+- SimSkunkWorks TF-104G: Fixed missing fuel sync for center & tip tanks.
 - Fixed typo with COM RECEIVE ALL.
 - Added support for NAV3 and NAV4.
 - Added support for rotorcraft.
