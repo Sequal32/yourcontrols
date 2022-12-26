@@ -1251,18 +1251,28 @@ impl Definitions {
         if let Some(message) = self.jstransfer.poll() {
             match message.payload {
                 JSPayloads::Interaction { name } => {
-                    if self.do_not_sync.get(&name[5..]).is_some()
+                    if self.do_not_sync.contains(&name[5..])
                         || self.event_cancel_timer.elapsed().as_millis() < 300
                     {
                         return;
                     };
                     self.current_sync.events.push(Event::JSEvent { name });
                 }
-                JSPayloads::Input { id, value } => self.current_sync.events.push(Event::JSInput {
+                JSPayloads::Input { event_id: id, value } => {
+                    let mut input_full_name = String::new();
+                    input_full_name.push_str(&id);
+                    input_full_name.push('#');
+                    input_full_name.push_str(&message.instrument_name);
+
+                    if self.do_not_sync.contains(&input_full_name) {
+                        return;
+                    }
+
+                    self.current_sync.events.push(Event::JSInput {
                     id,
                     value,
                     instrument: message.instrument_name,
-                }),
+                })},
                 JSPayloads::Time {
                     hour,
                     minute,
@@ -1430,7 +1440,7 @@ impl Definitions {
                     instrument,
                 } => self
                     .jstransfer
-                    .write_payload(JSPayloads::Input { id, value }, Some(&instrument)),
+                    .write_payload(JSPayloads::Input { event_id: id, value }, Some(&instrument)),
                 Event::Time {
                     hour,
                     minute,

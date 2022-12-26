@@ -27,8 +27,7 @@ pub fn main() {
     let servers_clone = servers.clone();
 
     info!(
-        "YourControls server v{} started!",
-        dotenv::var("CARGO_PKG_VERSION").unwrap()
+        "YourControls server started!",
     );
 
     thread::spawn(|| {
