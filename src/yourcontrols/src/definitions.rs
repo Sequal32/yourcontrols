@@ -1258,7 +1258,7 @@ impl Definitions {
                     };
                     self.current_sync.events.push(Event::JSEvent { name });
                 }
-                JSPayloads::Input { event_id: id, value } => {
+                JSPayloads::Input { id, value } => {
                     let mut input_full_name = String::new();
                     input_full_name.push_str(&id);
                     input_full_name.push('#');
@@ -1440,7 +1440,7 @@ impl Definitions {
                     instrument,
                 } => self
                     .jstransfer
-                    .write_payload(JSPayloads::Input { event_id: id, value }, Some(&instrument)),
+                    .write_payload(JSPayloads::Input { id, value }, Some(&instrument)),
                 Event::Time {
                     hour,
                     minute,
