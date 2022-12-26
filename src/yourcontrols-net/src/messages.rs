@@ -80,6 +80,12 @@ pub enum Payloads {
     Heartbeat,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct PayloadWrapper {
+    pub data: Vec<u8>,
+    pub size: usize, // used for decompression buffer size
+}
+
 pub enum Message {
     Payload(SocketAddr, Payloads),
     ConnectionClosed(SocketAddr),
@@ -117,6 +123,13 @@ fn get_packet_for_message(
     }
 }
 
+fn get_compression_level_for_message(msg: &Payloads) -> i32 {
+    match msg {
+        Payloads::AircraftDefinition { .. } => 22,
+        _ => 0,
+    }
+}
+
 pub struct SenderReceiver {
     socket: Socket,
     sender: Sender<Packet>,
@@ -148,8 +161,12 @@ impl SenderReceiver {
             _ => return Err(Error::NotProcessed),
         };
 
+        // Decode wrapper struct
+        let wrapper: PayloadWrapper = rmp_serde::from_slice(packet.payload())?;
+
         // Decompress
-        let payload_bytes = self.decompressor.decompress(packet.payload(), 131072)?;
+        let payload_bytes = self.decompressor.decompress(&wrapper.data, wrapper.size)?;
+
         // Decode to struct
         let payload = rmp_serde::from_slice(&payload_bytes)?;
         Ok(Message::Payload(packet.addr(), payload))
@@ -161,10 +178,21 @@ impl SenderReceiver {
 
     fn prepare_payload_bytes(&mut self, message: &Payloads) -> Result<Vec<u8>, Error> {
         // Struct to MessagePack
-        let payload = rmp_serde::to_vec(&message)?;
+        let payload_bytes = rmp_serde::to_vec(&message)?;
 
-        // Compress payload
-        Ok(self.compressor.compress(&payload, 0)?)
+        // Compress
+        let compressed = self
+            .compressor
+            .compress(&payload_bytes, get_compression_level_for_message(message))?;
+
+        // Wrap
+        let wrapper = PayloadWrapper {
+            data: compressed,
+            size: payload_bytes.len(),
+        };
+
+        // Serialize
+        Ok(rmp_serde::to_vec(&wrapper)?)
     }
 
     pub fn send_message(&mut self, message: Payloads, target: SocketAddr) -> Result<(), Error> {
