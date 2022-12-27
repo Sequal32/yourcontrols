@@ -1,0 +1,47 @@
+name: Build
+on: [workflow_dispatch]
+jobs:
+  release:
+    environment: Production
+    runs-on: windows-latest
+    steps:
+      - name: Cache LLVM and Clang
+        id: cache-llvm
+        uses: actions/cache@v2
+        with:
+          path: |
+            C:/Program Files/LLVM
+            ./llvm
+          key: llvm-11
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "11.0"
+          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
+      - name: "Install Python"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - name: "Install Rust"
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: "Cache cargo crates"
+        uses: Swatinem/rust-cache@v2
+      - name: "Checkout repo"
+        uses: actions/checkout@v3
+      - name: "Build executable"
+        uses: actions-rs/cargo@v1
+        env:
+          SERVER_HOSTNAME: ${{ secrets.SERVER_HOSTNAME }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        with:
+          command: build
+          args: --release --all-features
+      - name: Zip files
+        run: python scripts/build.py
+      - name: Upload
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: YourControls
+          path: "scripts/out/YourControls.zip"

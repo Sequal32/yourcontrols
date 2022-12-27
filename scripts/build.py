@@ -17,6 +17,8 @@ def insert_all_into_zip(zip_obj: ZipFile, directory: str, relative_dir: str = ""
                 ),
             )
 
+if not os.path.exists("scripts/out"):
+    os.mkdir("scripts/out")
 
 zipObj = ZipFile("scripts/out/YourControls.zip", "w", ZIP_DEFLATED)
 
