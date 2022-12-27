@@ -9,6 +9,17 @@ use crate::util::{get_random_id, SESSION_ID_LENGTH};
 pub struct Client {
     pub addr: SocketAddr,
     pub is_observer: bool,
+    pub is_host: bool,
+}
+
+impl Client {
+    pub fn new(addr: SocketAddr) -> Self {
+        Self {
+            addr,
+            is_observer: false,
+            is_host: false,
+        }
+    }
 }
 
 pub struct ServerState {

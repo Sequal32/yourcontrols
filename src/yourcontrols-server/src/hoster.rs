@@ -92,7 +92,7 @@ fn process_payload(
                     Payloads::PlayerJoined {
                         name: name.clone(),
                         in_control: state.in_control == *name,
-                        is_server: false,
+                        is_server: info.is_host,
                         is_observer: info.is_observer,
                     },
                     addr,
@@ -101,13 +101,7 @@ fn process_payload(
             }
 
             // Add client
-            state.clients.insert(
-                name.clone(),
-                Client {
-                    addr,
-                    is_observer: false,
-                },
-            );
+            state.clients.insert(name.clone(), Client::new(addr));
 
             // If the client is the first one to connect, give them control and have them "host"
             if state.in_control == SERVER_NAME {
@@ -174,6 +168,7 @@ fn process_payload(
 fn set_host(name: String, state: &mut ServerState, net: &mut SenderReceiver) {
     let client = state.clients.get_mut(&name).expect("always there");
     client.is_observer = false;
+    client.is_host = true;
 
     net.send_message(Payloads::SetHost, client.addr).ok();
     send_to_all(
