@@ -1,4 +1,4 @@
-# Version 1.0.3
+# Version 1.0.7
 
 include:
   - definitions/modules/Avionics/AS1000.yaml
@@ -16,13 +16,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # AntiSkid
-    type: ToggleSwitch
-    var_name: A:ANTISKID BRAKES ACTIVE
-    var_units: Bool
-    var_type: bool
-    event_name: ANTISKID_BRAKES_TOGGLE
-
   - # Avionics
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:24
@@ -51,6 +44,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
@@ -82,6 +76,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3

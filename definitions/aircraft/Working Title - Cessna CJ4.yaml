@@ -1,4 +1,4 @@
-# Version 0.12.13
+# Version 0.12.14
 
 include:
   - definitions/modules/fuel.yaml
@@ -32,6 +32,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
 
   - # Comm Power
     type: ToggleSwitch
@@ -287,71 +288,34 @@ shared:
     var_type: i32
     event_name: TURBINE_IGNITION_SWITCH_SET2
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:39
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:40
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:41
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:42
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:47
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:48
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:49
-    var_units: Bool
-    var_type: bool
-
   - # Lights
     type: NumSet
     var_name: A:LIGHT NAV:1
     var_units: Bool
     var_type: f64
     event_name: NAV_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT STROBE:1
     var_units: Bool
     var_type: f64
     event_name: STROBES_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT LOGO:1
     var_units: Bool
     var_type: f64
     event_name: LOGO_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT BEACON:1
     var_units: Bool
     var_type: f64
     event_name: BEACON_LIGHTS_SET
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:LIGHT RECOGNITION
@@ -377,6 +341,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3

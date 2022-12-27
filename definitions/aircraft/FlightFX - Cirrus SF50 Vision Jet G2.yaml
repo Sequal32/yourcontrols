@@ -1,0 +1,710 @@
+# Version 1.2.0
+
+include:
+  - definitions/modules/Avionics/AS3000.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:STRUCTURAL DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STRUCTURAL_DEICE
+  -
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:20
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 20
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:21
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 21
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:22
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 22
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:4
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 4
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:23
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 23
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:5
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 5
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:24
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 24
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:6
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 6
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:25
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 25
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:7
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 7
+
+  - # LVAR's
+    type: var
+    var_name: L:SF50_vams_static_gpu
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_vams_config_type
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_knob_stop_run
+  -
+    type: var
+    var_name: L:SF50_fuel_selector_left
+  -
+    type: var
+    var_name: L:SF50_fuel_selector_right
+  -
+    type: var
+    var_name: L:SF50_fuel_selector_auto
+  -
+    type: var
+    var_name: L:SF50_Switch_Courtesy_Mode
+  -
+    type: var
+    var_name: L:SF50_TempFan
+  -
+    type: var
+    var_name: L:SF50_ecs
+  -
+    type: var
+    var_name: L:SF50_vams_static_headphones
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_vams_static_storage_cover
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_vams_static_chocks
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_vams_static_covers
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_front_door
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_luggage_door
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_vams_luggage_type
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_ipad
+  -
+    type: var
+    var_name: L:SF50_push_phone
+# -
+#   type: var
+#   var_name: L:SF50_gen_1_load_amp
+# -
+#   type: var
+#   var_name: L:SF50_gen_2_load_amp
+# -
+#   type: var
+#   var_name: L:SF50_battery_1_charge_amp
+# -
+#   type: var
+#   var_name: L:SF50_battery_2_charge_amp
+  -
+    type: var
+    var_name: L:SF50_warn_takeoff_trim
+  -
+    type: var
+    var_name: L:SF50_warn_flaps_takeoff
+  -
+    type: var
+    var_name: L:SF50_warn_ldg_gear_up
+  -
+    type: var
+    var_name: L:SF50_warn_ldg_gear_sel_up
+  -
+    type: var
+    var_name: L:SF50_vams_static_headphones_on
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_vams_anr
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_vams_anr_on
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_vams_status_type
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_oxygen_switch
+  -
+    type: var
+    var_name: L:SF50_air_flow_switch
+  -
+    type: var
+    var_name: L:SF50_deice_high
+# -
+#   type: var
+#   var_name: L:SF50_deice_airboots_timer 
+# -
+#   type: var
+#   var_name: L:SF50_deice_airboots_stab
+# -
+#   type: var
+#   var_name: L:SF50_deice_airboots_lowerWing
+# -
+#   type: var
+#   var_name: L:SF50_deice_airboots_upperWing
+# -
+#   type: var
+#   var_name: L:SF50_deice_airboots_timer
+  -
+    type: var
+    var_name: L:SF50_cockpit_tv
+# -
+#   type: var
+#   var_name: L:SF50_MCT_SNAP_HELPER
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_TOGA
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Flex_MCT
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Climb
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Idle
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Rev
+# -
+#   type: var
+#   var_name: L:XML_Airbus_Throttle1_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+  -
+    type: var
+    var_name: L:SF50_vnav_enable
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:SF50_battery_timer
+# -
+#   type: var
+#   var_name: L:SF50_battery_5sec_timer
+  -
+    type: var
+    var_name: L:SF50_InitFuel_Fob_Sync
+# -
+#   type: var
+#   var_name: L:SF50_Fuel_Used
+# -
+#   type: var
+#   var_name: L:SF50_Fuel_Rem
+# -
+#   type: var
+#   var_name: L:SF50_Fuel_Autonomy
+# -
+#   type: var
+#   var_name: L:SF50_Fuel_Left_Tank
+# -
+#   type: var
+#   var_name: L:SF50_Fuel_Right_Tank
+# -
+#   type: var
+#   var_name: L:SF50_Fuel_Tank_Total
+  -
+    type: var
+    var_name: L:SF50_Fuel_Tank_Imbalance_Warn
+  -
+    type: var
+    var_name: L:SF50_Fuel_Tank_Imbalance_Caution
+  -
+    type: var
+    var_name: L:SF50_push_at_fms_man
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:SF50_Thrust_Timer
+  -
+    type: var
+    var_name: L:SF50_Thrust_Warning
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:SF50_deice_max
+# -
+#   type: var
+#   var_name: L:SF50_Courtesy_Mode_Timer
+# -
+#   type: var
+#   var_name: L:SF50_throttle_percentage
+# -
+#   type: var
+#   var_name: L:SF50_mct_max_level
+# -
+#   type: var
+#   var_name: L:SF50_toga_max_level
+  -
+    type: var
+    var_name: L:SF50_defog
+  -
+    type: var
+    var_name: L:SF50_aft
+  -
+    type: var
+    var_name: L:SF50_TempBKP
+  -
+    type: var
+    var_name: L:SF50_TempControl
+  -
+    type: var
+    var_name: L:SF50_TempFan_Power
+  -
+    type: var
+    var_name: L:SF50_TempFan_RPM
+  -
+    type: var
+    var_name: L:SF50_vnav_enable_on
+# -
+#   type: var
+#   var_name: L:SF50_vnav_alt
+# -
+#   type: var
+#   var_name: L:SF50_vnav_fpm
+  -
+    type: var
+    var_name: L:SF50_front_door_active
+# -
+#   type: var
+#   var_name: L:SF50_front_door_timer
+  -
+    type: var
+    var_name: L:SF50_front_door_close
+  -
+    type: var
+    var_name: L:SF50_gear_alternate_ext
+  -
+    type: var
+    var_name: L:SF50_gear_alternate_ext_handle
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Active
+# -
+#   type: var
+#   var_name: L:SF50_Preflight_Check_Timer
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Fire
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Stall
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Fire_Done
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Stall_Done
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Done
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_7
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_5
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_6
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Airframe_1
+  -
+    type: var
+    var_name: L:SF50_vams_static_gpu_on
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_vams_static_storage_cover_on
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_hide_luggage_part
+  -
+    type: var
+    var_name: L:SF50_luggage_door_on
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_AS3000_DisplayLightingBool
+  -
+    type: var
+    var_name: L:XMLVAR_AS3000_DisplayLighting
+# -
+#   type: var
+#   var_name: L:PFD_DME_Displayed
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+  -
+    type: var
+    var_name: L:AS3000_PFD_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_PFD_1_State
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsMode
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+# -
+#   type: var
+#   var_name: L:AS3000_MinimalsValue
+# -
+#   type: var
+#   var_name: L:SF50_Airport_Dest_Elevation
+# -
+#   type: var
+#   var_name: L:SF50_Airport_Dest_Elevation_Ft
+# -
+#   type: var
+#   var_name: L:SF50_FlightPlan_Has_Dest
+  -
+    type: var
+    var_name: L:SF50_cas_cautions_state
+  -
+    type: var
+    var_name: L:SF50_cas_warnings_state
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3000_MFD_State
+  -
+    type: var
+    var_name: L:SF50_Curr_Selected_Checklist
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_1_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_1_State
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_2_State
+  -
+    type: var
+    var_name: L:SF50_Init_Status_DB
+  -
+    type: var
+    var_name: L:SF50_Init_Status_WeightBalance
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_3_ScreenLuminosity
+  -
+    type: var
+    var_name: L:AS3000_TSC_Horizontal_3_State
+  -
+    type: var
+    var_name: L:HourMeter_ScreenLuminosity
+  -
+    type: var
+    var_name: L:HourMeter_State
+  -
+    type: var
+    var_name: L:vasm_ScreenLuminosity
+  -
+    type: var
+    var_name: L:vasm_State
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - AS3000_TSC_Horizontal_2#LightingConfigSlider

@@ -12,7 +12,7 @@ shared:
     var_type: bool
     event_name: ENGINE_MASTER_2_TOGGLE
 
-  - # ASOBO_ENGINE_Push_Ignition_Template (Also works for non-EX1)
+  - # ASOBO_ENGINE_Push_Ignition_Template
     type: NumSet
     var_name: A:TURB ENG IGNITION SWITCH EX1:1
     var_units: Enum
@@ -38,6 +38,14 @@ shared:
     var_type: i32
     event_name: TOGGLE_PRIMER2
 
+  - # ASOBO_ENGINE_Switch_Plasma_Template
+    type: NumSet
+    var_name: A:PLASMA ON:1
+    var_units: Bool
+    var_type: i32
+    event_name: PLASMA_SET
+    event_param: 1
+
   - # ASOBO_ENGINE_Lever_Mixture_Template
     type: NumSet
     var_name: A:GENERAL ENG MIXTURE LEVER POSITION:1
@@ -54,7 +62,7 @@ shared:
     interpolate: Default
 
 master:
-  - # Collective twist
+  - # ASOBO_ENGINE_Lever_Propeller_Template (Collective twist)
     type: NumSet
     var_name: A:GENERAL ENG PROPELLER LEVER POSITION:1
     var_units: Position 16k
@@ -68,7 +76,8 @@ master:
     var_type: f64
     event_name: PROP_PITCH2_SET
     interpolate: Default
-  - # Collective
+
+  - # ASOBO_ENGINE_Lever_Throttle_Template (Collective)
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
     var_units: Position 16k

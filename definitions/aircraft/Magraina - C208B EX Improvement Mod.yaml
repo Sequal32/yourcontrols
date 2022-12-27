@@ -74,6 +74,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 1
   - # External Power Bus
     type: CustomCalculator
     get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
@@ -112,32 +113,6 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 56
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:28
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:30
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:43
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:44
-    var_units: Bool
-    var_type: bool
-
   - # Lights
     type: NumSet
     var_name: A:LIGHT LANDING:2
@@ -152,6 +127,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -174,6 +150,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6

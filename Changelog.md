@@ -1,5 +1,54 @@
 # YourControls Changelog
 
+## Version 2.7.4
+
+### Profiles
+
+- Added Bell 407 by Microsoft & Nemeth Designs (v0.2.1).
+- Added Cirrus SF50 Vision Jet G2 by FlightFX (v1.2.0).
+- Added Curtiss JN4 Jenny by Microsoft & iniBuilds (v1.1.2).
+- Added Douglas DC-3 by Microsoft & Aeroplane Heaven (v1.0.4).
+- Added DHC-2 Beaver by Microsoft & Blackbird Sims (v1.0.2).
+- Added Grumman G-21A Goose by Microsoft & iniBuilds (v1.1.2).
+- Added Hughes H4 Hercules by Microsoft & Bluemesh (v1.1.3).
+- Added PAC P-750 XSTOL by ORBX (v1.0.1).
+- Updated Aeroplane Heaven C140 to v1.5.0.
+- Updated Aerosoft DHC-6 Twin Otter to v1.1.1.
+- Updated Carenado PC-12 to v1.1.0.
+- Updated DC Designs Concorde to v1.0.6.
+- Updated FlyByWire A32NX (Stable) to v0.9.1.
+- Updated FlyByWire A32NX (Dev/Exp) to December 24, 2022.
+- Updated Flysimware C414AW Chancellor to v3.2.3.
+- Updated Headwind A339X to v0.3.1.
+- Updated LatinVFR A319ceo to v1.0.7.
+- Updated LatinVFR A321neo to v1.2.10.
+- Updated Microsoft Bonanza V35 to v1.6.0.
+- Updated Microsoft Junkers Ju 52 to v0.1.9.
+- Updated Milviz C310R to v1.1.9.
+- Updated Milviz PC-6 to v1.1.2.
+- Updated Salty Simulations 747-8i (Dev) to December 4, 2022.
+- Updated SimSkunkWorks TF-104G Starfighter to v3.3.1.
+- Updated SimWorks Studios Kodiak 100 II & III to v1.4.0.
+
+### Changes
+
+- All aircraft: Removed unsettable circuit failure variables.
+- All Carenado: Re-enabled tablet button sync of pilot models.
+- Aerosoft DHC-6: Fixed cabin general, reading, emergency, and FO ceiling lights.
+- Aerosoft DHC-6: Fixed cockpit caution, entrance, and skydiver day/night lights.
+- Big Radials JRF-6B: Fixed manual fuel pump lever.
+- FlyByWire A32NX: Attempted to fix glitching SPD selection.
+- FlyByWire A32NX: Fixed desync of ISIS SPD/ALT bugs.
+- Flysimware C414: Fixed tablet fuel tank spam.
+- Milviz C310: Fixed tablet dirt level spam.
+- Milviz C310: Fixed tablet fuel tank spam.
+- Milviz PC-6: Fixed trapdoor open/close.
+- Parallel 42 Kitfox: Fixed pilot & copilot doors.
+- SimSkunkWorks TF-104G: Fixed missing fuel sync for center & tip tanks.
+- Fixed typo with COM RECEIVE ALL.
+- Added support for NAV3 and NAV4.
+- Added support for rotorcraft.
+
 ## Version 2.7.3
 
 ### Profiles
@@ -35,7 +84,7 @@
 ### Profiles
 
 - Complete profile re-organization.
-- Added Airbus A319neo by LatinVFR (v1.0.4).
+- Added Airbus A319ceo by LatinVFR (v1.0.4).
 - Added Airbus A321neo by LatinVFR (v1.2.5).
 - Added Beechcraft Bonanza V35 by Microsoft (v1.5.2).
 - Added Beechcraft Model 17 Staggerwing by Microsoft (v1.8.0).

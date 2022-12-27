@@ -1260,18 +1260,18 @@ impl Definitions {
                 }
                 JSPayloads::Input { id, value } => {
                     let mut input_full_name = String::new();
-                    input_full_name.push_str(&id);
-                    input_full_name.push('#');
                     input_full_name.push_str(&message.instrument_name);
+                    input_full_name.push('#');
+                    input_full_name.push_str(&id);
 
                     if self.do_not_sync.contains(&input_full_name) {
                         return;
                     }
 
                     self.current_sync.events.push(Event::JSInput {
-                    id,
-                    value,
                     instrument: message.instrument_name,
+                    value,
+                    id,
                 })},
                 JSPayloads::Time {
                     hour,

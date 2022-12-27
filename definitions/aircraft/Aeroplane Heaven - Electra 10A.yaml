@@ -16,19 +16,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Ignition
-    type: ToggleSwitch
-    var_name: A:MASTER IGNITION SWITCH
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_MASTER_IGNITION_SWITCH
-
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -51,6 +45,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: CABIN_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
@@ -65,6 +60,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5

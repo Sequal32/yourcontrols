@@ -28,30 +28,35 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: NAV_LIGHTS_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT BEACON:1
     var_units: Bool
     var_type: f64
     event_name: BEACON_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT STROBE:0
     var_units: Bool
     var_type: f64
     event_name: STROBES_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT LANDING:1
     var_units: Bool
     var_type: f64
     event_name: LANDING_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT TAXI:1
     var_units: Bool
     var_type: f64
     event_name: TAXI_LIGHTS_SET
+    event_param: 1
 
   - # Interior
     type: NumSet
@@ -59,6 +64,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING:1
@@ -73,6 +79,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL POWER SETTING:1
@@ -127,12 +134,6 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 2
     index_reversed: true
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
 
   - # LVAR's
     type: var

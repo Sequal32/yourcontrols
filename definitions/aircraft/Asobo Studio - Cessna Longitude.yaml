@@ -21,6 +21,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PITOT_HEAT_SET
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:STRUCTURAL DEICE SWITCH
@@ -66,47 +67,6 @@ shared:
     type: CustomCalculator
     get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
     set: 6 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:39
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:40
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:41
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:48
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:49
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:50
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:51
-    var_units: Bool
-    var_type: bool
 
   - # GPU
     type: ToggleSwitch
@@ -155,6 +115,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING:1
@@ -677,7 +638,7 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
-  -
+  - # Dakfly mod
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:12
     var_units: Pounds

@@ -1,4 +1,4 @@
-# Version 1.5
+# Version 1.7.3
 
 include:
   - definitions/modules/Avionics/Aera.yaml
@@ -26,23 +26,13 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 35
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT NAVCOM1 ON
-    var_units: Bool
-    var_type: bool
-
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
 
   - # LVAR's
     type: var
@@ -53,6 +43,9 @@ shared:
   -
     type: var
     var_name: L:AS510_HIDDEN
+  -
+    type: var
+    var_name: L:Light_Cockpit_Dim
   -
     type: var
     var_name: L:Throttle_Friction_Lever
@@ -215,6 +208,12 @@ shared:
   -
     type: var
     var_name: L:HourMeter_State
+  -
+    type: var
+    var_name: L:LedTrim_ScreenLuminosity
+  -
+    type: var
+    var_name: L:LedTrim_State
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN

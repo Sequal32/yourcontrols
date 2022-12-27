@@ -15,6 +15,20 @@ shared:
     cancel_h_events: true
   -
     type: NumSet
+    var_name: A:NAV ACTIVE FREQUENCY:3
+    var_units: Hz
+    var_type: i32
+    event_name: NAV3_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV ACTIVE FREQUENCY:4
+    var_units: Hz
+    var_type: i32
+    event_name: NAV4_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
     var_name: A:NAV STANDBY FREQUENCY:1
     var_units: Hz
     var_type: i32
@@ -29,6 +43,20 @@ shared:
     cancel_h_events: true
   -
     type: NumSet
+    var_name: A:NAV STANDBY FREQUENCY:3
+    var_units: Hz
+    var_type: i32
+    event_name: NAV3_STBY_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV STANDBY FREQUENCY:4
+    var_units: Hz
+    var_type: i32
+    event_name: NAV4_STBY_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
     var_name: A:NAV SOUND:1
     var_units: Bool
     var_type: f64
@@ -40,6 +68,20 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: RADIO_VOR2_IDENT_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV SOUND:3
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_VOR3_IDENT_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV SOUND:4
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_VOR4_IDENT_SET
     cancel_h_events: true
   -
     type: NumIncrement
@@ -57,6 +99,24 @@ shared:
     var_type: i32
     up_event_name: NAV2_VOLUME_INC
     down_event_name: NAV2_VOLUME_DEC
+    cancel_h_events: true
+    increment_by: 2
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:3
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV3_VOLUME_INC
+    down_event_name: NAV3_VOLUME_DEC
+    cancel_h_events: true
+    increment_by: 2
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:4
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV4_VOLUME_INC
+    down_event_name: NAV4_VOLUME_DEC
     cancel_h_events: true
     increment_by: 2
 
@@ -161,7 +221,7 @@ shared:
     event_name: COM_3_SPACING_MODE_SWITCH
   -
     type: NumSet
-    var_name: A:COM RECIEVE ALL
+    var_name: A:COM RECEIVE ALL
     var_units: Bool
     var_type: f64
     event_name: COM_RECEIVE_ALL_SET

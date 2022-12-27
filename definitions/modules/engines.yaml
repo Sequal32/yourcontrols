@@ -14,7 +14,7 @@ shared:
     var_type: bool
     event_name: ENGINE_MASTER_2_TOGGLE
 
-  - # ASOBO_ENGINE_Push_Ignition_Template (Also works for non-EX1)
+  - # ASOBO_ENGINE_Push_Ignition_Template
     type: NumSet
     var_name: A:TURB ENG IGNITION SWITCH EX1:1
     var_units: Enum
@@ -39,6 +39,14 @@ shared:
     var_units: Percent
     var_type: i32
     event_name: TOGGLE_PRIMER2
+
+  - # ASOBO_ENGINE_Switch_Plasma_Template
+    type: NumSet
+    var_name: A:PLASMA ON:1
+    var_units: Bool
+    var_type: i32
+    event_name: PLASMA_SET
+    event_param: 1
 
   - # ASOBO_ENGINE_Lever_CoolingFlaps_Radiator_Template
     type: NumSet

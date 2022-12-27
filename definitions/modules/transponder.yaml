@@ -1,16 +1,19 @@
 shared:
-  -
+  - # ASOBO_Transponder_Knob_Setting_Template
     type: var
     var_name: A:TRANSPONDER STATE:1
     var_units: Enum
     var_type: i32
-  -
+
+  - # ASOBO_Transponder_Push_IDT_Template
     type: ToggleSwitch
     var_name: A:TRANSPONDER IDENT:1
     var_units: Bool
     var_type: bool
     event_name: XPNDR_IDENT_ON
-  -
+    off_event_name: XPNDR_IDENT_OFF
+
+  - # ASOBO_Transponder_Knob_Value_Template
     type: NumDigitSet
     var_name: A:TRANSPONDER CODE:1
     var_units: Number

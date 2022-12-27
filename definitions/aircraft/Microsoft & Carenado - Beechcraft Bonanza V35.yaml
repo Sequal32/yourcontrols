@@ -1,4 +1,4 @@
-# Version 1.5.2
+# Version 1.6.0
 
 include:
   - definitions/modules/Avionics/AS530.yaml
@@ -38,27 +38,6 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 4
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT NAVCOM1 ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:36
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:40
-    var_units: Bool
-    var_type: bool
 
   - # Interior
     type: NumSet
@@ -248,12 +227,6 @@ shared:
     var_name: L:KAS297_ENG_VS_PUSH
   -
     type: var
-    var_name: L:PUSH_BTN_PC12_KAS297_ARM
-  -
-    type: var
-    var_name: L:PUSH_BTN_PC12_KAS297_ENG
-  -
-    type: var
     var_name: L:gps_modeCDI
   -
     type: var
@@ -273,6 +246,9 @@ shared:
   -
     type: var
     var_name: L:CUSTOM_AP_ATT_HOLD_ON
+  -
+    type: var
+    var_name: L:CUSTOM_AP_ALT_HOLD_ON
   -
     type: var
     var_name: L:Gauge_TEST_KFC150
@@ -389,6 +365,9 @@ shared:
 #   var_name: L:VAR_STARTER_SMOKE_STATE_OLD
   -
     type: var
+    var_name: L:XMLVAR_Microphone_selector
+  -
+    type: var
     var_name: L:XMLVAR_DOORMAIN0
 # -
 #   type: var
@@ -423,6 +402,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:BUFFER_LEVEL_THR_CLICK_FLAG1
+# -
+#   type: var
+#   var_name: L:AUX_AUTOPILOT_ATTITUDE_INDICATOR_BANK_DEGREES
+# -
+#   type: var
+#   var_name: L:AUX_AUTOPILOT_ATTITUDE_INDICATOR_PITCH_DEGREES
+# -
+#   type: var
+#   var_name: L:AUX_AUTOPILOT_YAW_DAMPER_BOOL
 # -
 #   type: var
 #   var_name: L:AUX_AMBIENT_TEMPERATURE_OAT_CELSIUS
@@ -972,24 +960,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
-    type: var
-    var_name: L:KX155A_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KX155A_2_State
-  -
-    type: var
-    var_name: L:KR87_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KR87_State
 # -
 #   type: var
 #   var_name: L:AS530_ScreenLuminosity
@@ -1005,18 +975,30 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS1000_MID_Display_Backup_Active
+  -
+    type: var
+    var_name: L:KX155A_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KX155A_2_State
+  -
+    type: var
+    var_name: L:KR87_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KR87_State
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin

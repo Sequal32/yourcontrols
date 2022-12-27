@@ -5,6 +5,7 @@ include:
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
@@ -15,89 +16,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Aux pumps
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:9
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 9
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:10
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 10
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:31
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:32
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:44
-    var_units: Bool
-    var_type: bool
-
-  - # Fuel
-    type: NumSet
-    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:1
-    var_units: Enum
-    var_type: i32
-    event_name: ELECT_FUEL_PUMP1_SET
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:2
-    var_units: Enum
-    var_type: i32
-    event_name: ELECT_FUEL_PUMP2_SET
-  -
-    type: var
-    var_name: A:FUEL TANK SELECTOR:1
-    var_units: Enum
-    var_type: i32
-  -
-    type: event
-    event_name: FUEL_SELECTOR_LEFT_MAIN
-  -
-    type: event
-    event_name: FUEL_SELECTOR_RIGHT_MAIN
-  -
-    type: event
-    event_name: FUEL_SELECTOR_OFF
-  -
-    type: var
-    var_name: A:FUEL TANK SELECTOR:2
-    var_units: Enum
-    var_type: i32
-  -
-    type: event
-    event_name: FUEL_SELECTOR_2_LEFT_MAIN
-  -
-    type: event
-    event_name: FUEL_SELECTOR_2_RIGHT_MAIN
-  -
-    type: event
-    event_name: FUEL_SELECTOR_2_OFF
-
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -112,6 +37,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5

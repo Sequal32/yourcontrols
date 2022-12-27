@@ -20,6 +20,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
@@ -43,6 +44,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 1
   -
     type: CustomCalculator
     get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
@@ -88,32 +90,6 @@ shared:
     get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
     set: 11 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:28
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:30
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:43
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:44
-    var_units: Bool
-    var_type: bool
-
   - # Lights
     type: NumSet
     var_name: A:LIGHT LANDING:2
@@ -128,6 +104,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -150,6 +127,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6

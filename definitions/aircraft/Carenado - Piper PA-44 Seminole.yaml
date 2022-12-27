@@ -40,45 +40,27 @@ shared:
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 4
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT NAVCOM1 ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:26
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:39
-    var_units: Bool
-    var_type: bool
-
   - # Lights
     type: NumSet
     var_name: A:LIGHT LANDING:1
     var_units: Bool
     var_type: f64
     event_name: LANDING_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT NAV:1
     var_units: Bool
     var_type: f64
     event_name: NAV_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT RECOGNITION:1
     var_units: Bool
     var_type: f64
     event_name: RECOGNITION_LIGHTS_SET
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:LIGHT BEACON
@@ -424,12 +406,12 @@ shared:
   -
     type: var
     var_name: L:COLD_AND_DARK_AUX_ST
-# -
-#   type: var
-#   var_name: L:TABLET_BTN_PILOT_VIS
-# -
-#   type: var
-#   var_name: L:TABLET_BTN_COPILOT_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_PILOT_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_COPILOT_VIS
 # -
 #   type: var
 #   var_name: L:PILOT_VIS

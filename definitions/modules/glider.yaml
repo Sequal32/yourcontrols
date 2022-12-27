@@ -1,0 +1,26 @@
+shared:
+  - # ASOBO_HANDLING_Push_Tow_Release
+    type: NumSet
+    var_name: A:TOW RELEASE HANDLE
+    var_units: Percent
+    var_type: f64
+    event_name: TOW_PLANE_RELEASE
+    use_calculator: true
+    unreliable: true
+
+  - # ASOBO_HANDLING_Switch_Water_Ballast_Template
+    type: ToggleSwitch
+    var_name: A:WATER BALLAST VALVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_WATER_BALLAST_VALVE
+    use_calculator: true
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:WATER BALLAST VALVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_WATER_BALLAST_VALVE
+    use_calculator: true
+    event_param: 2

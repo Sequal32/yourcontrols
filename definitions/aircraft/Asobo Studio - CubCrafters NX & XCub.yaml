@@ -21,6 +21,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -35,6 +36,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -52,19 +54,6 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 7
     index_reversed: true
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-
-  - # Water Rudder
-    type: ToggleSwitch
-    var_name: A:WATER RUDDER HANDLE POSITION
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_WATER_RUDDER
 
   - # LVAR's
     type: var

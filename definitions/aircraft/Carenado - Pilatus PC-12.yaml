@@ -1,4 +1,4 @@
-# Version 1.0.3
+# Version 1.1.0
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -139,57 +139,6 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 6
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:18
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:19
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:26
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:29
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:31
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:33
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:39
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:53
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:54
-    var_units: Bool
-    var_type: bool
 
   - # Pilot Altimeter
     type: NumSet
@@ -384,12 +333,12 @@ shared:
   -
     type: var
     var_name: L:COLD_AND_DARK_AUX_ST
-# -
-#   type: var
-#   var_name: L:TABLET_BTN_PILOT_VIS
-# -
-#   type: var
-#   var_name: L:TABLET_BTN_COPILOT_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_PILOT_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_COPILOT_VIS
 # -
 #   type: var
 #   var_name: L:PILOT_VIS
@@ -426,6 +375,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:GTN750XI_INT_HIDDEN
+  -
+    type: var
+    var_name: L:XMLVAR_BTN_UPPER_PANEL_FUEL_PUMP1
+  -
+    type: var
+    var_name: L:XMLVAR_BTN_UPPER_PANEL_FUEL_PUMP2
 # -
 #   type: var
 #   var_name: L:AUX_EXIT OPEN_0
@@ -465,6 +420,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AUX_LIGHT_POTENTIOMETER_9
+# -
+#   type: var
+#   var_name: L:AUX_ENGINE1_FUEL_VALVE_STATE
 # -
 #   type: var
 #   var_name: L:AUX_ENGINE1_IGNITION_STATE
@@ -597,9 +555,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:ENG_FUEL_FLOW_GPH_1
-  -
-    type: var
-    var_name: L:ENG_TURBINE_CONDITION_LEVER
+# -
+#   type: var
+#   var_name: L:ENG_TURBINE_CONDITION_LEVER
   -
     type: var
     var_name: L:GPS_ACTIVE_FLIGHT_PLAN_2
@@ -917,16 +875,19 @@ shared:
 #   var_name: L:TABLET_ANIM
   -
     type: var
+    var_name: L:TABLET_BTN_EXT_PWR
+  -
+    type: var
+    var_name: L:TABLET_BTN_EXT_PWR_TEST
+  -
+    type: var
     var_name: L:TABLET_BTN_STATIC_ELEMENT
   -
     type: var
     var_name: L:TABLET_BTN_TOW_CAR
-  -
-    type: var
-    var_name: L:TABLET_BTN_EXT_PWR
-  -
-    type: var
-    var_name: L:TABLET_BTN_DONE_WAIT
+# -
+#   type: var
+#   var_name: L:TABLET_BTN_DONE_WAIT
   -
     type: var
     var_name: L:TABLET_BTN_DONE
@@ -945,6 +906,15 @@ shared:
   -
     type: var
     var_name: L:ASD_SWITCH_LAND_LIGHT_PC404
+# -
+#   type: var
+#   var_name: L:ENG_TURBINE_CONTION_LEVER
+  -
+    type: var
+    var_name: L:XMLVAR_CUSTOM_FUEL_SWITCH_CUTOFF_1
+# -
+#   type: var
+#   var_name: L:Condition_Lever_CutOff_1
   -
     type: var
     var_name: L:XMLVAR_StrobeBeaconState
@@ -966,57 +936,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:TDSGTNXI_INSTALLED
-  -
-    type: var
-    var_name: L:Init
-  -
-    type: var
-    var_name: L:ASD_KNOB_EFIS_DIM
-  -
-    type: var
-    var_name: L:WARNING_LOW_HEIGHT_TEST
-  -
-    type: var
-    var_name: L:AP_NAV_SELECT_MODE
-  -
-    type: var
-    var_name: L:ALT_ARM_SEL_ON
-  -
-    type: var
-    var_name: L:Display Scale
-  -
-    type: var
-    var_name: L:MapItem Shown
-  -
-    type: var
-    var_name: L:MapItem Vors
-  -
-    type: var
-    var_name: L:MapItem Ndbs
-  -
-    type: var
-    var_name: L:LayerAirspaces
-  -
-    type: var
-    var_name: L:LayerFlightPlan
-  -
-    type: var
-    var_name: L:Display Mode
-  -
-    type: var
-    var_name: L:MFD Mode
-  -
-    type: var
-    var_name: L:BRG1 Button
-  -
-    type: var
-    var_name: L:BRG2 Button
-  -
-    type: var
-    var_name: L:EHSI_SHOW_GS
-# -
-#   type: var
-#   var_name: L:ASD_SWITCH_EFIS_POWER_TIMER_DIFF
 # -
 #   type: var
 #   var_name: L:AUX_PUSHER_ALPHA_INCIDENCE_DEG
@@ -1065,6 +984,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:CarCrsWheelINC
+  -
+    type: var
+    var_name: L:AP_NAV_SELECT_MODE
 # -
 #   type: var
 #   var_name: L:CarCrsWheelDEC
@@ -1080,12 +1002,6 @@ shared:
   -
     type: var
     var_name: L:ALTITUDE_SET_TEST
-  -
-    type: var
-    var_name: L:XMLVAR_BTN_UPPER_PANEL_FUEL_PUMP1
-  -
-    type: var
-    var_name: L:XMLVAR_BTN_UPPER_PANEL_FUEL_PUMP2
 # -
 #   type: var
 #   var_name: L:CUS_ANIM_INERTIAL_SEPARATOR
@@ -1119,6 +1035,9 @@ shared:
   -
     type: var
     var_name: L:GAUGE_UPDATE_INITA
+  -
+    type: var
+    var_name: L:ASD_KNOB_EFIS_DIM
   -
     type: var
     var_name: L:Clock Chronograph Mode
@@ -1281,6 +1200,9 @@ shared:
   -
     type: var
     var_name: L:PUSH_AM_ANUM_PC12_CAUTION
+# -
+#   type: var
+#   var_name: L:AUX_LIGHT_POTENTIOMETER_21
   -
     type: var
     var_name: L:ASD_BTN_PC12_ENGINE_TEST
@@ -1336,6 +1258,9 @@ shared:
 #   var_name: L:AUX_TURBE1_CAUTION6
 # -
 #   type: var
+#   var_name: L:AUX_TURBE1_CAUTION7
+# -
+#   type: var
 #   var_name: L:AUX_TURBE1_WARNING1
 # -
 #   type: var
@@ -1385,6 +1310,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AUX_TURBE1TRQRAW_FTLBS
+# -
+#   type: var
+#   var_name: L:AUX_TURBE1_WARNING7
   -
     type: var
     var_name: L:AUX_TURBE1_WARNING_ON
@@ -1630,7 +1558,31 @@ shared:
     var_name: L:XMLVAR_LEVER_MANUAL_OXYGENE
   -
     type: var
+    var_name: L:WARNING_LOW_HEIGHT_TEST
+  -
+    type: var
+    var_name: L:EHSI_EADI_BRT_ALPHA
+  -
+    type: var
+    var_name: L:EHSI_MAP_ZOOM
+  -
+    type: var
+    var_name: L:MFD Mode
+  -
+    type: var
     var_name: L:AP_NAV_OLD
+  -
+    type: var
+    var_name: L:BRG1 Button
+  -
+    type: var
+    var_name: L:BRG2 Button
+  -
+    type: var
+    var_name: L:MFD Declutter Mode
+  -
+    type: var
+    var_name: L:ASD_BTN_PC12_EFIS_TEST
   -
     type: var
     var_name: L:BUTTON_CLOCK_CTL
@@ -1676,9 +1628,6 @@ shared:
   -
     type: var
     var_name: L:ENG FUEL VALVE:1
-  -
-    type: var
-    var_name: L:Condition_Lever_CutOff_1
   -
     type: var
     var_name: L:Backup VOR Pointer1
@@ -1891,9 +1840,6 @@ shared:
     var_name: L:DEICE_Pitot_1
   -
     type: var
-    var_name: L:ELECTRICAL_ExternalPower_1
-  -
-    type: var
     var_name: L:XMLVAR_Should_Toggle_Connection
 # -
 #   type: var
@@ -1984,7 +1930,10 @@ shared:
     var_name: L:EX500_MFD_BRT_ALPHA
   -
     type: var
-    var_name: L:TEST_GS3
+    var_name: L:EHSI_CDI_VIS
+# -
+#   type: var
+#   var_name: L:ASD_SWITCH_EFIS_POWER_TIMER
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
@@ -2170,22 +2119,46 @@ shared:
     var_name: L:RADIONAV_SOURCE
   -
     type: var
-    var_name: L:CJ4_PFD_ScreenLuminosity
+    var_name: L:EADI_ScreenLuminosity
   -
     type: var
-    var_name: L:CJ4_PFD_State
+    var_name: L:EADI_State
+  -
+    type: var
+    var_name: L:EHSI_ScreenLuminosity
+  -
+    type: var
+    var_name: L:EHSI_State
 # -
 #   type: var
-#   var_name: L:ASD_SWITCH_EFIS_POWER_TIMER
+#   var_name: L:Annunciations_Manager_Initialized
 # -
 #   type: var
-#   var_name: L:EX500_MFD_SPLASH_SCREEN_TIMER_CONT
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:PFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:PFD_MapZoomRange
+  -
+    type: var
+    var_name: L:CJ4_MAP_SYMBOLS
 # -
 #   type: var
 #   var_name: L:XMLVAR_AirSpeedIsInMach
 # -
 #   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
+#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+# -
+#   type: var
+#   var_name: L:EX500_MFD_SPLASH_SCREEN_TIMER_CONT
 # -
 #   type: var
 #   var_name: L:AIRLINER_FLIGHT_PHASE
@@ -2200,10 +2173,16 @@ shared:
 #   var_name: L:AIRLINER_V2_SPEED
 # -
 #   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
 #   var_name: L:AIRLINER_VREF_SPEED
 # -
 #   type: var
 #   var_name: L:AIRLINER_VX_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
   -
     type: var
     var_name: L:XMLVAR_Baro_Selector_HPA_1
@@ -2215,7 +2194,16 @@ shared:
 #   var_name: L:XMLVAR_VNAVButtonValue
 # -
 #   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+#   var_name: L:ASD_SWITCH_EFIS_POWER_TIMER_DIFF
+  -
+    type: var
+    var_name: L:EHSI_SHOW_ILS
+  -
+    type: var
+    var_name: L:EHSI_TYPE_GS
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_LateralValueActive
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN

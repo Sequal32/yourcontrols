@@ -1,9 +1,10 @@
-# Version 1.0.6.0
+# Version 1.1.1
 
 include:
   - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/Avionics/KAP140.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
@@ -13,7 +14,6 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
@@ -42,7 +42,64 @@ shared:
     event_name: LANDING_LIGHTS_SET
     event_param: 2
 
-  - # LVAR's
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:21
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 21
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:25
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 25
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:26
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 26
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:27
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 27
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:28
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 28
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:29
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 29
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:33
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 33
+    index_reversed: true
+
+  - # LVAR's (Skydive)
     type: var
     var_name: L:DHC6_COLD_DARK
   -
@@ -63,9 +120,6 @@ shared:
   -
     type: var
     var_name: L:DHC6_FUEL_VALVE_2
-  -
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
     var_name: L:DHC6_CKPT_DOOR_L
@@ -93,6 +147,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:DHC6_WIPER_POS
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
     var_name: L:DHC6_ANNUN_TEST
@@ -150,21 +207,21 @@ shared:
 # -
 #   type: var
 #   var_name: L:DHC6_LAST_FLAPS_POS
-  -
-    type: var
-    var_name: L:DHC6_AP_STATUS
-  -
-    type: var
-    var_name: L:DHC6_ACCU_SOUND
-  -
-    type: var
-    var_name: L:DHC6_AP_OFF_SOUND
+# -
+#   type: var
+#   var_name: L:DHC6_AP_STATUS
+# -
+#   type: var
+#   var_name: L:DHC6_ACCU_SOUND
+# -
+#   type: var
+#   var_name: L:DHC6_AP_OFF_SOUND
   -
     type: var
     var_name: L:DHC6_CABIN_VENT_FAN_OFF
-  -
-    type: var
-    var_name: L:DHC6_AP_DISC_SOUND
+# -
+#   type: var
+#   var_name: L:DHC6_AP_DISC_SOUND
   -
     type: var
     var_name: L:DHC6_BATT_TEMP_TEST
@@ -210,12 +267,12 @@ shared:
   -
     type: var
     var_name: L:DHC6_WIPER_PARK
-  -
-    type: var
-    var_name: L:DHC6_WIPER_SOUND_SLOW
-  -
-    type: var
-    var_name: L:DHC6_WIPER_SOUND_FAST
+# -
+#   type: var
+#   var_name: L:DHC6_WIPER_SOUND_SLOW
+# -
+#   type: var
+#   var_name: L:DHC6_WIPER_SOUND_FAST
   -
     type: var
     var_name: L:DHC6_GO_AROUND
@@ -252,18 +309,18 @@ shared:
   -
     type: var
     var_name: L:FIRE_BELL_SOUND
-  -
-    type: var
-    var_name: L:DHC6_STALL_TRIGGER
+# -
+#   type: var
+#   var_name: L:DHC6_STALL_TRIGGER
   -
     type: var
     var_name: L:DHC6_CARGO_DOOR_L
   -
     type: var
     var_name: L:DHC6_CARGO_DOOR_R
-  -
-    type: var
-    var_name: L:DHC6_ANNUN_DOORS
+# -
+#   type: var
+#   var_name: L:DHC6_ANNUN_DOORS
   -
     type: var
     var_name: L:DHC6_STATUS_DOORS
@@ -321,15 +378,15 @@ shared:
   -
     type: var
     var_name: L:FUEL_WING_PUMP_R_FAIL_TEST
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_MINIMUMS_APPR
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_MINIMUMS_ANN
-  -
-    type: var
-    var_name: L:DHC6_ALT_ALERT_LIGHT
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_MINIMUMS_APPR
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_MINIMUMS_ANN
+# -
+#   type: var
+#   var_name: L:DHC6_ALT_ALERT_LIGHT
   -
     type: var
     var_name: L:DHC6_EGPWS_INHIBIT
@@ -501,18 +558,18 @@ shared:
   -
     type: var
     var_name: L:ASDHC6_LANDING_GEAR_TOGGLE
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_0
-  -
-    type: var
-    var_name: L:INSTRUMENT_Course_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Course_2
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_0
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
   -
     type: var
     var_name: L:DHC6_BOOST_PUMP_SOUND_1
@@ -657,12 +714,6 @@ shared:
   -
     type: var
     var_name: L:DHC6_SKYDIVER_DOOR
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
-  -
-    type: var
-    var_name: L:DHC6_AMPH_GEAR_LT_DIM
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -671,7 +722,61 @@ shared:
 #   var_name: L:AP_KAP140_INSTALLED
 # -
 #   type: var
-#   var_name: L:AS530_CDI_Source_1
+#   var_name: L:DHC6_EGPWS_DONTSINK
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_SINKRATE
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_PULLUP
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_TERRAIN
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_TOOLOWTERRAIN
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_TOOLOWFLAPS
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_GS_LOWVOL
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_GS
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_MINIMUMS
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_BANKANGLE
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_10
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_20
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_30
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_40
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_50
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_100
+# -
+#   type: var
+#   var_name: L:DHC6_EGPWS_500
+  -
+    type: var
+    var_name: L:DHC6_ALT_ALERT
+  -
+    type: var
+    var_name: L:DHC6_ALT_ALERT_RESET
 # -
 #   type: var
 #   var_name: L:AS530_ScreenLuminosity
@@ -687,9 +792,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:AS430_CDI_Source_1
 # -
 #   type: var
 #   var_name: L:AS430_ScreenLuminosity
@@ -732,84 +834,21 @@ shared:
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:KAP140_BARO_Display
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_DONTSINK
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_SINKRATE
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_PULLUP
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_TERRAIN
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_TOOLOWTERRAIN
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_TOOLOWFLAPS
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_GS_LOWVOL
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_GS
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_MINIMUMS
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_BANKANGLE
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_10
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_20
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_30
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_40
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_50
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_100
-  -
-    type: var
-    var_name: L:DHC6_EGPWS_500
-  -
-    type: var
-    var_name: L:DHC6_ALT_ALERT
-  -
-    type: var
-    var_name: L:DHC6_ALT_ALERT_RESET
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 
 server:
   -

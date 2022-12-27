@@ -75,27 +75,6 @@ shared:
     event_name: TOGGLE_PROPELLER_DEICE
     event_param: 2
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:27
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:28
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:29
-    var_units: Bool
-    var_type: bool
-
   - # Fuel Transfer (dead switches SU5)
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:49
@@ -172,6 +151,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -247,6 +227,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2

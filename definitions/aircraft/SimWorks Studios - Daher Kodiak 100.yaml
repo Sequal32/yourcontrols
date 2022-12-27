@@ -1,4 +1,4 @@
-# Version 1.2.2
+# Version 1.4.0 (Wheels & Amphibian)
 
 include:
   - definitions/modules/Avionics/AS1000.yaml
@@ -22,30 +22,35 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: BEACON_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT STROBE:1
     var_units: Bool
     var_type: f64
     event_name: STROBES_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT NAV:1
     var_units: Bool
     var_type: f64
     event_name: NAV_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT TAXI:1
     var_units: Bool
     var_type: f64
     event_name: TAXI_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT WING:1
     var_units: Bool
     var_type: f64
     event_name: WING_LIGHTS_SET
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:LIGHT RECOGNITION
@@ -71,6 +76,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -100,6 +106,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -114,6 +121,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:21
@@ -200,14 +208,7 @@ shared:
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 5
 
-  - # Water Rudder
-    type: ToggleSwitch
-    var_name: A:WATER RUDDER HANDLE POSITION
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_WATER_RUDDER
-
-# - # LVAR's
+# - # LVAR's (Skydive trimmed)
 #   type: var
 #   var_name: L:HOBBS_FLIGHT_TIME_SECONDS
 # -
@@ -942,6 +943,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT1000_VNav_Approach_Mode
+  -
+    type: var
+    var_name: L:SWS_ENGINE_Lever_EmergencyPower_1
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:AS1000_PFD_Brightness_IsAuto
@@ -1017,6 +1022,9 @@ shared:
   -
     type: var
     var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:PROP_RPM_1_FLOOR
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_Pilot1
@@ -1076,9 +1084,6 @@ shared:
     var_name: L:TRIM_PITCH_TAKEOFF_MAX
 # -
 #   type: var
-#   var_name: L:MAX_TORQUE_LIMIT
-# -
-#   type: var
 #   var_name: L:SWS_FAILURE_Engine_Overheat_Factor
 # -
 #   type: var
@@ -1086,6 +1091,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:SWS_FAILURE_Engine_OverTorque_Factor
+# -
+#   type: var
+#   var_name: L:SWS_FAILURE_Engine_OverRev_Factor
   -
     type: var
     var_name: L:HANDLING_ESP_MASTER
@@ -1124,6 +1132,9 @@ shared:
 #   var_name: L:SWS_ENGINE_TURBINE_ITT_HOT
 # -
 #   type: var
+#   var_name: L:TURB_ENG_SHP_1
+# -
+#   type: var
 #   var_name: L:TURB_ENG_ITT_1_DISPLAY
   -
     type: var
@@ -1149,6 +1160,15 @@ shared:
   -
     type: var
     var_name: L:Cupholder_8
+  -
+    type: var
+    var_name: L:SWS_SKYDIVE_Switch_Light_Jump
+  -
+    type: var
+    var_name: L:SWS_MISC_SunVisor_Rotate_1
+  -
+    type: var
+    var_name: L:SWS_MISC_SunVisor_Rotate_2
 # -
 #   type: var
 #   var_name: L:AS1000_MID_Display_Backup_Active
@@ -1160,35 +1180,65 @@ shared:
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
+    var_name: L:PITCH_LATCH_1_ACTIVE
+  -
+    type: var
     var_name: L:SWS_MISC_Lever_Harness_1
   -
     type: var
     var_name: L:SWS_MISC_Lever_Harness_2
 # -
 #   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+# -
+#   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:Glasscockpit_Wind_Mode
-# -
-#   type: var
-#   var_name: L:Annunciations_Manager_Initialized
   -
     type: var
     var_name: L:SWS_FAILURE_Turbine_1_Failed
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 
-  - # Skydive
+  - # Floatiak
     type: var
-    var_name: L:SWS_SKYDIVE_Switch_Light_Jump
+    var_name: L:GEAR_CANCEL_FLAG
+  -
+    type: var
+    var_name: L:GEAR_WARNING_STATE
+  -
+    type: var
+    var_name: L:GEAR_WARNING_SOUND_FLAG
+  -
+    type: var
+    var_name: L:GEAR_TRIGGER_ARMED
+  -
+    type: var
+    var_name: L:SWS_FLOATPLANE_Switch_TestGear_IsDown
+  -
+    type: var
+    var_name: L:GEAR_WARNING_SOUND_STATE
+  -
+    type: var
+    var_name: L:sound_aural_gc700_gear_is_up
+  -
+    type: var
+    var_name: L:sound_aural_gc700_gear_unsafe
+  -
+    type: var
+    var_name: L:sound_aural_gc700_gear_is_down
+  -
+    type: var
+    var_name: L:SWS_FLOATPLANE_Switch_TestGear
+# -
+#   type: var
+#   var_name: L:SWS_FLOATPLANE_Switch_TestGear_MinReleaseTime
+  -
+    type: var
+    var_name: L:SWS_FLOATPLANE_Switch_CancelGearWarningUp
+  -
+    type: var
+    var_name: L:SWS_FLOATPLANE_Switch_CancelGearWarningDown
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Gear
 
 server:
   -

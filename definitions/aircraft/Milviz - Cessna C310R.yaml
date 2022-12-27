@@ -1,4 +1,4 @@
-# Version 1.0.0
+# Version 1.1.9
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -55,17 +55,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: BREAKER_AUTOPILOT_TOGGLE
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:37
-    var_units: Bool
-    var_type: bool
 
   - # Lights
     type: ToggleSwitch
@@ -307,6 +296,9 @@ shared:
   -
     type: var
     var_name: L:C310_REng_Door_OPEN
+# -
+#   type: var
+#   var_name: L:C310_Door_0_OpenPercent
   -
     type: var
     var_name: L:C310_TAB_530
@@ -453,25 +445,28 @@ shared:
     var_name: L:C310_SW_EDMR_R
   -
     type: var
+    var_name: L:C310_CB_CLOCK
+  -
+    type: var
     var_name: L:C310_TAB_G5
   -
     type: var
     var_name: L:C310_FLAG_HDG
   -
     type: var
-    var_name: L:C310_SW_NAV_SELECTOR
-  -
-    type: var
-    var_name: L:C310_FLAG_NAV
-  -
-    type: var
-    var_name: L:C310_FLAG_NAV_GS
+    var_name: L:C310_SW_NAV_SOURCE
 # -
 #   type: var
 #   var_name: L:TDSGTNXI_INSTALLED
 # -
 #   type: var
 #   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
+  -
+    type: var
+    var_name: L:C310_FLAG_NAV
+  -
+    type: var
+    var_name: L:C310_FLAG_NAV_GS
 # -
 #   type: var
 #   var_name: L:C310_GSI_NAV_NEEDLE
@@ -481,6 +476,24 @@ shared:
 # -
 #   type: var
 #   var_name: L:TDSGTNXI_GlidePathValueAngle
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_RUNNING
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_HIDDEN
+# -
+#   type: var
+#   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
+# -
+#   type: var
+#   var_name: L:GTN750_HSI_GSI_NEEDLE
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_ToFromFlag
+  -
+    type: var
+    var_name: L:C310_SW_NAV_SELECTOR
   -
     type: var
     var_name: L:C310_ELEC_AMP_knob
@@ -724,9 +737,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:C310_AirflowPercent
-# -
-#   type: var
-#   var_name: L:C310_Door_0_OpenPercent
   -
     type: var
     var_name: L:C310_Handle_Position
@@ -751,9 +761,9 @@ shared:
   -
     type: var
     var_name: L:C310_RSTR_GO
-# -
-#   type: var
-#   var_name: L:C310_TAB_HIDE_COPILOT
+  -
+    type: var
+    var_name: L:C310_TAB_HIDE_COPILOT
 # -
 #   type: var
 #   var_name: L:C310_Toggle_YokeHidden1
@@ -801,46 +811,16 @@ shared:
     var_name: L:C310_Tablet_Screen_On
   -
     type: var
-    var_name: L:C310_GSI_NAV_GSI
+    var_name: L:C310_SHARD_WINDSH_SW
   -
     type: var
-    var_name: L:C310_GSI_TDS_ACTIVE
-# -
-#   type: var
-#   var_name: L:C310_GSI_TDS_GSI_ANGLE
-# -
-#   type: var
-#   var_name: L:C310_GSI_TDS_GSI_NEEDLE
+    var_name: L:C310_SHARD_PROP_DEICE_SW
   -
     type: var
-    var_name: L:C310_ICE_WINDSH_SW
+    var_name: L:C310_SHARD_DEICE_SWITCH
   -
     type: var
-    var_name: L:C310_ICE_PROP_DEICE_SW
-  -
-    type: var
-    var_name: L:C310_ICE_DEICE_SW
-  -
-    type: var
-    var_name: L:C310_ICE_STRUCT_ICE_PCT
-  -
-    type: var
-    var_name: L:C310_ICE_PITOT_ICE_PCT
-  -
-    type: var
-    var_name: L:C310_FLAPS_HANDLE_PCT
-  -
-    type: var
-    var_name: L:NAV1_OBS
-# -
-#   type: var
-#   var_name: L:C310_ENG_COMBUST_1
-# -
-#   type: var
-#   var_name: L:C310_ENG_COMBUST_2
-# -
-#   type: var
-#   var_name: L:C310_GROUND_SPEED
+    var_name: L:C310_SHARD_STRUCT_ICE_PCT
 # -
 #   type: var
 #   var_name: L:C310_FUEL_MAIN_1
@@ -886,24 +866,78 @@ shared:
   -
     type: var
     var_name: L:C310_PAYLOAD_11
-  -
-    type: var
-    var_name: L:C310_ALT_1_BREAKER
-  -
-    type: var
-    var_name: L:C310_ALT_2_BREAKER
-  -
-    type: var
-    var_name: L:C310_ALT_1_BREAKER_CON
-  -
-    type: var
-    var_name: L:C310_ALT_2_BREAKER_CON
 # -
 #   type: var
 #   var_name: L:C310_AIRSPEED_TRUE
   -
     type: var
     var_name: L:C310_FD_SPOILERS_SET
+  -
+    type: var
+    var_name: L:C310_NAV_OBS_1
+  -
+    type: var
+    var_name: L:C310_NAV_OBS_2
+  -
+    type: var
+    var_name: L:C310_CB_SYNC_FLAG
+  -
+    type: var
+    var_name: L:C310_CB_CABIN_LIGHTS
+  -
+    type: var
+    var_name: L:C310_CB_FLT_INST_LIGHTS
+  -
+    type: var
+    var_name: L:C310_CB_ENG_SW_LIGHTS
+  -
+    type: var
+    var_name: L:C310_CB_PITOT_HEAT
+  -
+    type: var
+    var_name: L:C310_CB_FLAP_MOTOR
+  -
+    type: var
+    var_name: L:C310_CB_START
+  -
+    type: var
+    var_name: L:C310_CB_TURNBANK
+  -
+    type: var
+    var_name: L:C310_CB_GEAR_MOTOR
+  -
+    type: var
+    var_name: L:C310_CB_GEAR_WARN
+  -
+    type: var
+    var_name: L:C310_CB_COM1
+  -
+    type: var
+    var_name: L:C310_CB_COM2
+  -
+    type: var
+    var_name: L:C310_CB_GPS
+  -
+    type: var
+    var_name: L:C310_CB_NAV1
+  -
+    type: var
+    var_name: L:C310_CB_NAV2
+  -
+    type: var
+    var_name: L:C310_CB_ADF
+  -
+    type: var
+    var_name: L:C310_CB_XPDR_1
+  -
+    type: var
+    var_name: L:C310_CB_GYRO
+  -
+    type: var
+    var_name: L:C310_CB_COMP
+  -
+    type: var
+    var_name: L:C310_CB_ALTERNATOR_R
   -
     type: var
     var_name: L:C310_SW_COVER_EMG_ALT_FLD
@@ -972,9 +1006,6 @@ shared:
     var_name: L:C310_CB_CIGAR
   -
     type: var
-    var_name: L:C310_CB_CLOCK
-  -
-    type: var
     var_name: L:C310_CB_TIMER
   -
     type: var
@@ -1009,6 +1040,18 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
 # -
 #   type: var
 #   var_name: L:TDSGTNXI750U1_LKnobInc
@@ -1131,6 +1174,9 @@ shared:
     var_name: L:C310_EDMR_STEP
   -
     type: var
+    var_name: L:INSTRUMENT_Course_2
+  -
+    type: var
     var_name: L:INSTRUMENT_Altimeter_1
   -
     type: var
@@ -1141,9 +1187,6 @@ shared:
   -
     type: var
     var_name: L:C310_CB_ALTERNATOR_L
-  -
-    type: var
-    var_name: L:C310_CB_ALTERNATOR_R
 # -
 #   type: var
 #   var_name: L:AS530_Default_MapZoomRange
@@ -1156,15 +1199,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS430_SelectedSource
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:PMS50_GTN650_INSTALLED
+# -
+#   type: var
+#   var_name: L:AP_KAP140_INSTALLED
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -1191,10 +1231,16 @@ shared:
 #   var_name: L:AutopilotPreflightCheckCompleted
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
+#   var_name: L:GTN750_INT_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+#   var_name: L:GTN750_INT_State
+# -
+#   type: var
+#   var_name: L:GTN650_INT_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN650_INT_2_State
 # -
 #   type: var
 #   var_name: L:AS530_ScreenLuminosity
@@ -1558,18 +1604,6 @@ shared:
   -
     type: var
     var_name: L:KX155A_2_State
-# -
-#   type: var
-#   var_name: L:GTN750_INT_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN750_INT_State
-# -
-#   type: var
-#   var_name: L:GTN650_INT_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN650_INT_2_State
   -
     type: var
     var_name: L:AS5_1_ScreenLuminosity
@@ -1620,7 +1654,10 @@ shared:
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
-#   var_name: L:KAP140_BARO_Display
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:C310_WASM_VER
@@ -1677,58 +1714,10 @@ shared:
     var_name: L:C310_CB_LKR_FUEL_R
   -
     type: var
-    var_name: L:C310_CB_CABIN_LIGHTS
-  -
-    type: var
-    var_name: L:C310_CB_FLT_INST_LIGHTS
-  -
-    type: var
-    var_name: L:C310_CB_ENG_SW_LIGHTS
-  -
-    type: var
-    var_name: L:C310_CB_PITOT_HEAT
-  -
-    type: var
     var_name: L:C310_CB_STALL_WARN
   -
     type: var
-    var_name: L:C310_CB_FLAP_MOTOR
-  -
-    type: var
-    var_name: L:C310_CB_START
-  -
-    type: var
     var_name: L:C310_CB_PROP_SYNC
-  -
-    type: var
-    var_name: L:C310_CB_TURNBANK
-  -
-    type: var
-    var_name: L:C310_CB_GEAR_MOTOR
-  -
-    type: var
-    var_name: L:C310_CB_GEAR_WARN
-  -
-    type: var
-    var_name: L:C310_CB_COM1
-  -
-    type: var
-    var_name: L:C310_CB_COM2
-  -
-    type: var
-    var_name: L:C310_CB_GPS
-  -
-    type: var
-    var_name: L:C310_CB_NAV1
-  -
-    type: var
-    var_name: L:C310_CB_NAV2
-  -
-    type: var
-    var_name: L:C310_CB_ADF
-  -
-    type: var
-    var_name: L:C310_CB_XPDR_1
   -
     type: var
     var_name: L:C310_CB_XPDR_2
@@ -1738,12 +1727,6 @@ shared:
   -
     type: var
     var_name: L:C310_CB_INTERIOR_COMM
-  -
-    type: var
-    var_name: L:C310_CB_GYRO
-  -
-    type: var
-    var_name: L:C310_CB_COMP
   -
     type: var
     var_name: L:C310_CB_WX1000
@@ -1788,9 +1771,6 @@ shared:
     var_name: L:C310_TABLET_SHOW
   -
     type: var
-    var_name: L:C310_REDS_CHOCKS
-  -
-    type: var
     var_name: L:C310_Passenger_Steps
   -
     type: var
@@ -1815,31 +1795,10 @@ shared:
     var_name: L:C310_PRIME_RIGHT
   -
     type: var
-    var_name: L:C310_AV_SWITCH
+    var_name: L:C310_FAIL_ALT1
   -
     type: var
-    var_name: L:C310_AV_CIRCUIT
-  -
-    type: var
-    var_name: L:C310_AV_POWER
-  -
-    type: var
-    var_name: L:C310_AV_ADF
-  -
-    type: var
-    var_name: L:C310_AV_COM1
-  -
-    type: var
-    var_name: L:C310_AV_COM2
-  -
-    type: var
-    var_name: L:C310_AV_XPNDR
-  -
-    type: var
-    var_name: L:C310_AV_GPS1
-  -
-    type: var
-    var_name: L:C310_AV_GPS2
+    var_name: L:C310_FAIL_ALT2
   -
     type: var
     var_name: L:C310_SHARD_PITOT_ICE_PCT
@@ -1855,6 +1814,33 @@ shared:
   -
     type: var
     var_name: L:C310_YAW_LIMITER
+  -
+    type: var
+    var_name: L:C310_TEMP_SWITCH
+  -
+    type: var
+    var_name: L:C310_TEMP_CABIN_AIR
+  -
+    type: var
+    var_name: L:C310_TEMP_FWD_CABIN_AIR
+  -
+    type: var
+    var_name: L:C310_TEMP_HEATER
+  -
+    type: var
+    var_name: L:C310_TEMP_FAN
+# -
+#   type: var
+#   var_name: L:C310_TEMP_CABIN
+# -
+#   type: var
+#   var_name: L:C310_TEMP_TARGET
+# -
+#   type: var
+#   var_name: L:C310_TEMP_ROC
+# -
+#   type: var
+#   var_name: L:C310_TEMP_OVERHEAT
   -
     type: var
     var_name: L:C310_LEFT_FUEL_PUMP
@@ -1972,6 +1958,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:C310_EDMR_CHT_REAL
+  -
+    type: var
+    var_name: L:C310_REDS_CHOCKS
 # -
 #   type: var
 #   var_name: L:C310_TRB_EARPAIN
@@ -1983,19 +1972,13 @@ shared:
 #   var_name: L:C310_TRB_G
 # -
 #   type: var
-#   var_name: L:C310_TEMP_CABIN
-# -
-#   type: var
-#   var_name: L:C310_TEMP_TARGET
-# -
-#   type: var
-#   var_name: L:C310_TEMP_ROC
-# -
-#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+# -
+#   type: var
+#   var_name: L:KAP140_BARO_Display
 
 server:
   -
@@ -2088,3 +2071,11 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+  - MV_EFB#input_right_main
+  - MV_EFB#input_left_main
+  - MV_EFB#input_external_tank_right
+  - MV_EFB#input_external_tank_left
+  - MV_EFB#input_fuselage_clean
+  - MV_EFB#input_rate_of_change

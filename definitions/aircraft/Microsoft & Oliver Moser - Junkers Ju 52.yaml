@@ -1,6 +1,8 @@
-# Version 0.1.8
+# Version 0.1.9
 
 include:
+  - definitions/modules/Avionics/Aera.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
@@ -212,6 +214,22 @@ shared:
     event_param: 2
 
   - # Interior
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_LIGHTS_ON
+    off_event_name: CABIN_LIGHTS_OFF
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_ON
+    off_event_name: PANEL_LIGHTS_OFF
+    event_param: 1
+  -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
     var_units: Percent
@@ -227,20 +245,6 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:LIGHT PANEL:1
-    var_units: Bool
-    var_type: bool
-    event_name: PANEL_LIGHTS_ON
-    off_event_name: PANEL_LIGHTS_OFF
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:8
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_8_SET
 
   - # Radio Master
     type: ToggleSwitch
@@ -296,6 +300,15 @@ shared:
     var_name: L:SW_Netzausschalter_Cover
   -
     type: var
+    var_name: L:Switch_Druckminderventil
+  -
+    type: var
+    var_name: L:WHEEL_compressed_air_left
+  -
+    type: var
+    var_name: L:WHEEL_compressed_air_right
+  -
+    type: var
     var_name: L:Window_OVH_Position
     unreliable: true
   -
@@ -308,25 +321,16 @@ shared:
     unreliable: true
   -
     type: var
-    var_name: L:TOGGLE_Passenger_Stairway
+    var_name: L:Toggle_Chocks
   -
     type: var
-    var_name: L:Door_Left
+    var_name: L:Toggle_Stairs
   -
     type: var
-    var_name: L:TOGGLE_Passenger_door
+    var_name: L:TOGGLE_Left_door
   -
     type: var
-    var_name: L:Door_Right
-  -
-    type: var
-    var_name: L:TOGGLE_Emergency_door
-  -
-    type: var
-    var_name: L:Banner_Left
-  -
-    type: var
-    var_name: L:Banner_Right
+    var_name: L:TOGGLE_Right_door
 # -
 #   type: var
 #   var_name: L:SWITCH_Magneto_2
@@ -366,9 +370,6 @@ shared:
   -
     type: var
     var_name: L:SWITCH_Ignition_Engine_2
-  -
-    type: var
-    var_name: L:Switch_Druckminderventil
 # -
 #   type: var
 #   var_name: L:SWITCH_Magneto_1
@@ -461,9 +462,6 @@ shared:
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
-    var_name: L:XMLVAR_Switch_Normalgas
-  -
-    type: var
     var_name: L:XMLVAR_STARTER_Clutch_Engine_1_Cover_Opened
   -
     type: var
@@ -488,10 +486,7 @@ shared:
     var_name: L:LIGHTING_NAV_1
   -
     type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
+    var_name: L:LIGHTING_CABIN_1
 
   - # Retrofit
     type: var
@@ -564,7 +559,10 @@ shared:
     var_name: L:XMLVAR_COMM_2_Power
   -
     type: var
-    var_name: L:XMLVAR_Radio_Master
+    var_name: L:Banner_Left
+  -
+    type: var
+    var_name: L:Banner_Right
   -
     type: var
     var_name: L:SWITCH_Firetest
@@ -594,6 +592,13 @@ shared:
     var_name: L:DME_1_STATE
   -
     type: var
+    var_name: L:Switch_Rotate_Tablet_horizontal
+    unreliable: true
+  -
+    type: var
+    var_name: L:Push_Tablet_Power
+  -
+    type: var
     var_name: L:SWITCH_Gyro_SF_1
   -
     type: var
@@ -603,7 +608,13 @@ shared:
     var_name: L:SWITCH_Batbus_Test
   -
     type: var
+    var_name: L:Switch_Tablet_Hider
+  -
+    type: var
     var_name: L:DME_2_STATE
+  -
+    type: var
+    var_name: L:SWITCH_Radio_Master
   -
     type: var
     var_name: L:SWITCH_Hydr_Pump
@@ -637,15 +648,18 @@ shared:
   -
     type: var
     var_name: L:SWITCH_FireExtinguisher_3
-  -
-    type: var
-    var_name: L:SWITCH_Dome_Light
+# -
+#   type: var
+#   var_name: L:SWITCH_Dome_Light
   -
     type: var
     var_name: L:NAV_ADF_1_RMI_2
   -
     type: var
     var_name: L:SWITCH_Emergency_IC
+# -
+#   type: var
+#   var_name: L:Tablet_Start_Counter
   -
     type: var
     var_name: L:SWITCH_Master_Battery

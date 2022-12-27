@@ -14,18 +14,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT NAVCOM1 ON
-    var_units: Bool
-    var_type: bool
-
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3

@@ -17,22 +17,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:35
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:37
-    var_units: Bool
-    var_type: bool
-
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
@@ -46,6 +30,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: CABIN_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT PANEL:2

@@ -18,13 +18,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Ignition
-    type: ToggleSwitch
-    var_name: A:MASTER IGNITION SWITCH
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_MASTER_IGNITION_SWITCH
-
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:2
@@ -100,12 +93,6 @@ shared:
     event_name: CABIN_LIGHTS_SET
     event_param: 4
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT ON:31
-    var_units: Bool
-    var_type: bool
-
   - # Fuel
     type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:1
@@ -127,27 +114,6 @@ shared:
     var_type: bool
     event_name: FUELSYSTEM_VALVE_TOGGLE
     event_param: 3
-  -
-    type: NumSet
-    var_name: A:MANUAL FUEL PUMP HANDLE:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: MANUAL_FUEL_PRESSURE_PUMP
-    unreliable: true
-
-  - # Water Rudder
-    type: ToggleSwitch
-    var_name: A:WATER RUDDER HANDLE POSITION
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_WATER_RUDDER
-
-  - # Wheel lock
-    type: ToggleSwitch
-    var_name: A:TAILWHEEL LOCK ON
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_TAILWHEEL_LOCK
 
   - # LVAR's
     type: var

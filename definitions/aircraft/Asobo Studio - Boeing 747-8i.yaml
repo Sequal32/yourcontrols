@@ -173,37 +173,6 @@ shared:
     var_type: i32
     event_name: TURBINE_IGNITION_SWITCH_SET4
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:1
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:2
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:3
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:110
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:114
-    var_units: Bool
-    var_type: bool
-
   - # Fuel
     type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:1
@@ -479,6 +448,7 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: NAV_LIGHTS_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT BEACON:1
@@ -499,18 +469,21 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: STROBES_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT LOGO:0
     var_units: Bool
     var_type: f64
     event_name: LOGO_LIGHTS_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT WING:0
     var_units: Bool
     var_type: f64
     event_name: WING_LIGHTS_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT LANDING:1
@@ -687,12 +660,14 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL POWER SETTING:1
     var_units: Percent
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
     index_reversed: true
   -
     type: NumSet
@@ -1021,7 +996,7 @@ shared:
     var_name: L:B747_8_MFD_ScreenLuminosity
   -
     type: var
-    var_name: L:LIGHTING_BEACON_1
+    var_name: L:LIGHTING_BEACON_1_Power_Setting
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
@@ -1081,160 +1056,97 @@ shared:
     var_name: L:LANDING_GEAR_Gear
   -
     type: var
-    var_name: L:LIGHTING_GLARESHIELD_1
+    var_name: L:LIGHTING_GLARESHIELD_1_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_PANEL_2
+    var_name: L:LIGHTING_PANEL_2_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_GLARESHIELD_2
+    var_name: L:LIGHTING_GLARESHIELD_2_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_PANEL_4
+    var_name: L:LIGHTING_PANEL_4_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_CABIN_1
+    var_name: L:LIGHTING_CABIN_1_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_GLARESHIELD_3
+    var_name: L:LIGHTING_GLARESHIELD_3_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_PANEL_5
+    var_name: L:LIGHTING_PANEL_5_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_CABIN_2
+    var_name: L:LIGHTING_CABIN_2_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_CABIN_3
+    var_name: L:LIGHTING_CABIN_3_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_PEDESTRAL_1
+    var_name: L:LIGHTING_PEDESTRAL_1_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_PANEL_3
+    var_name: L:LIGHTING_PANEL_3_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_PANEL_1
+    var_name: L:LIGHTING_PANEL_1_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_POTENTIOMETER_26
+    var_name: L:LIGHTING_POTENTIOMETER_26_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_POTENTIOMETER_25
+    var_name: L:LIGHTING_POTENTIOMETER_25_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_POTENTIOMETER_28
+    var_name: L:LIGHTING_POTENTIOMETER_28_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_POTENTIOMETER_29
+    var_name: L:LIGHTING_POTENTIOMETER_29_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_POTENTIOMETER_30
+    var_name: L:LIGHTING_POTENTIOMETER_30_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_POTENTIOMETER_50
+    var_name: L:LIGHTING_POTENTIOMETER_50_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_POTENTIOMETER_27
+    var_name: L:LIGHTING_POTENTIOMETER_27_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_LANDING_1
+    var_name: L:LIGHTING_LANDING_1_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_LANDING_2
+    var_name: L:LIGHTING_LANDING_2_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_LANDING_3
+    var_name: L:LIGHTING_LANDING_3_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_LANDING_4
+    var_name: L:LIGHTING_LANDING_4_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_TAXI_1
+    var_name: L:LIGHTING_TAXI_1_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_TAXI_2
+    var_name: L:LIGHTING_TAXI_2_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_TAXI_3
+    var_name: L:LIGHTING_TAXI_3_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_LOGO_0
+    var_name: L:LIGHTING_LOGO_0_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_NAV_0
+    var_name: L:LIGHTING_NAV_0_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_STROBE_0
+    var_name: L:LIGHTING_STROBE_0_Power_Setting
   -
     type: var
-    var_name: L:LIGHTING_WING_0
+    var_name: L:LIGHTING_WING_0_Power_Setting
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:B747_8_MFD_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-  -
-    type: var
-    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-  -
-    type: var
-    var_name: L:MFD_MapShowCursor
-  -
-    type: var
-    var_name: L:MFD_MapZoomRange
-  -
-    type: var
-    var_name: L:XMLVAR_TRK_MODE_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
-  -
-    type: var
-    var_name: L:B747_MAP_MODE
-  -
-    type: var
-    var_name: L:FMC_UPDATE_CURRENT_PAGE
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
-  -
-    type: var
-    var_name: L:B747_8_EICAS_1_State
-# -
-#   type: var
-#   var_name: L:Annunciations_Manager_Initialized
-  -
-    type: var
-    var_name: L:AS1000_Warnings_Master_Set
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
-  -
-    type: var
-    var_name: L:AS1000_Warnings_WarningIndex
-  -
-    type: var
-    var_name: L:AIRLINER_FLIGHT_PHASE
-  -
-    type: var
-    var_name: L:AIRLINER_THRUST_TAKEOFF_MODE
-  -
-    type: var
-    var_name: L:B747_8_EICAS_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:B747_8_EICAS_2_State
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
@@ -1244,6 +1156,15 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_CRUISE_ALTITUDE
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
@@ -1256,6 +1177,12 @@ shared:
   -
     type: var
     var_name: L:B747_8_FMC_State
+  -
+    type: var
+    var_name: L:AIRLINER_FLIGHT_PHASE
+  -
+    type: var
+    var_name: L:FMC_UPDATE_CURRENT_PAGE
 # -
 #   type: var
 #   var_name: L:HUD_AIRSPEED_WHITE_START
@@ -1286,6 +1213,57 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_TAKEOFF_FLAP
+  -
+    type: var
+    var_name: L:B747_8_MFD_State
+  -
+    type: var
+    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+  -
+    type: var
+    var_name: L:MFD_MapShowCursor
+  -
+    type: var
+    var_name: L:MFD_MapZoomRange
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:B747_MAP_MODE
+  -
+    type: var
+    var_name: L:B747_8_EICAS_1_State
+# -
+#   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Generic_Master_Caution_Active
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:AIRLINER_THRUST_TAKEOFF_MODE
+  -
+    type: var
+    var_name: L:B747_8_EICAS_2_ScreenLuminosity
+  -
+    type: var
+    var_name: L:B747_8_EICAS_2_State
+  -
+    type: var
+    var_name: L:AIRLINER_VREF_SPEED
   -
     type: var
     var_name: L:B747_8_Com_1_ScreenLuminosity
@@ -1364,9 +1342,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_VREF_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE

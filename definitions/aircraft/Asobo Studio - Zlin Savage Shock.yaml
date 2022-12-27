@@ -11,30 +11,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:35
-    var_units: Bool
-    var_type: bool
-
   - # Strobe
     type: NumSet
     var_name: A:LIGHT STROBE:1
     var_units: Bool
     var_type: f64
     event_name: STROBES_SET
-
-  - # Water Rudder
-    type: ToggleSwitch
-    var_name: A:WATER RUDDER HANDLE POSITION
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_WATER_RUDDER
+    event_param: 1
 
   - # LVAR's
     type: var

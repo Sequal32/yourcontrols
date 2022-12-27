@@ -1,4 +1,4 @@
-# Version 1.0.3
+# Version 1.0.5
 
 include:
   - definitions/modules/Avionics/AS330.yaml
@@ -21,28 +21,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT ON:12
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:20
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:24
-    var_units: Bool
-    var_type: bool
-
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
 
   - # LVAR's (trimmed)
     type: var

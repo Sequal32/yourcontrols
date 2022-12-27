@@ -1,4 +1,4 @@
-# Version 1.0.4
+# Version 1.0.6
 
 include:
   - definitions/modules/engines.yaml
@@ -189,13 +189,6 @@ shared:
     var_type: bool
     event_name: TOGGLE_GPS_DRIVES_NAV1
 
-  - # AntiSkid
-    type: ToggleSwitch
-    var_name: A:ANTISKID BRAKES ACTIVE
-    var_units: Bool
-    var_type: bool
-    event_name: ANTISKID_BRAKES_TOGGLE
-
   - # Bleed
     type: NumSet
     var_name: A:BLEED AIR ENGINE:3
@@ -289,6 +282,7 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
@@ -535,27 +529,6 @@ shared:
     var_type: bool
     event_name: REQUEST_FUEL_KEY
     use_calculator: true
-
-  - # Failures
-    type: var
-    var_name: A:LIGHT PANEL ON:1
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:2
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:3
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:5
-    var_units: Bool
-    var_type: bool
 
   - # Fuel Valves
     type: ToggleSwitch
@@ -1090,18 +1063,21 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: LOGO_LIGHTS_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT NAV:0
     var_units: Bool
     var_type: f64
     event_name: NAV_LIGHTS_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT STROBE:0
     var_units: Bool
     var_type: f64
     event_name: STROBES_SET
+    event_param: 0
 
   - # Interior
     type: NumSet
@@ -1345,15 +1321,6 @@ shared:
     var_name: L:XMLVAR_NoSmoking
   -
     type: var
-    var_name: L:B747_8_MFD_NAV_MODE
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_L_On
-  -
-    type: var
-    var_name: L:XMLVAR_RMP_R_On
-  -
-    type: var
     var_name: L:PASSENGER_VIZ
   -
     type: var
@@ -1439,6 +1406,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:RAMPS_POSITION4
+# -
+#   type: var
+#   var_name: L:XMLVAR_AB_L_Current_Stage
+# -
+#   type: var
+#   var_name: L:XMLVAR_AB_L2_Current_Stage
+# -
+#   type: var
+#   var_name: L:XMLVAR_AB_R_Current_Stage
+# -
+#   type: var
+#   var_name: L:XMLVAR_AB_R2_Current_Stage
   -
     type: var
     var_name: L:GPU Switch
@@ -1537,16 +1516,16 @@ shared:
     var_name: L:KNOB_ATC_ALT2
   -
     type: var
-    var_name: L:TURB_ENG_AB1
+    var_name: L:ENG_CTRL1
   -
     type: var
-    var_name: L:TURB_ENG_AB2
+    var_name: L:ENG_CTRL2
   -
     type: var
-    var_name: L:TURB_ENG_AB3
+    var_name: L:ENG_CTRL3
   -
     type: var
-    var_name: L:TURB_ENG_AB4
+    var_name: L:ENG_CTRL4
 # -
 #   type: var
 #   var_name: L:XMLVAR_LastAB1ThrottleSet
@@ -1792,6 +1771,9 @@ shared:
     var_name: L:TANK11_HYD1
   -
     type: var
+    var_name: L:FUELSYSTEM PUMP SWITCH
+  -
+    type: var
     var_name: L:FO_TRANSFER_GUARD
   -
     type: var
@@ -1913,9 +1895,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
-  -
-    type: var
-    var_name: L:NAV_HSI
   -
     type: var
     var_name: L:HDG_AP_VALUE
@@ -2332,6 +2311,9 @@ shared:
     var_name: L:XMLVAR_AirSpeedIsInMach
   -
     type: var
+    var_name: L:AUTOPILOT ALTITUDE LOCK VAR
+  -
+    type: var
     var_name: L:PILOT_PITCH_CTRL
   -
     type: var
@@ -2347,7 +2329,13 @@ shared:
     var_name: L:AP_BANK_HOLD_REF
   -
     type: var
+    var_name: L:GPS_DRIVES_NAV
+  -
+    type: var
     var_name: L:Dev_HSI
+  -
+    type: var
+    var_name: L:NAV_HSI
   -
     type: var
     var_name: L:COMP_HSI
@@ -2381,9 +2369,6 @@ shared:
   -
     type: var
     var_name: L:COPILOT_VISIBLE
-  -
-    type: var
-    var_name: L:ENGINEER_VISIBLE
   -
     type: var
     var_name: L:PILOT_TCAS_NEEDLE_PARENT:1
@@ -2515,112 +2500,22 @@ shared:
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:A320_Neo_MFD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_MFD_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-  -
-    type: var
-    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-  -
-    type: var
-    var_name: L:MFD_MapShowCursor
-  -
-    type: var
-    var_name: L:MFD_MapZoomRange
-  -
-    type: var
-    var_name: L:A320_Neo_MFD_NAV_MODE
-  -
-    type: var
-    var_name: L:BTN_LS_FILTER_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_TRK_MODE_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
-  -
-    type: var
-    var_name: L:BTN_TERRONND_ACTIVE
-  -
-    type: var
-    var_name: L:A320_NEO_PREVIEW_DIRECT_TO
-  -
-    type: var
-    var_name: L:AIRLINER_FMS_SHOW_TOP_DSCNT
-  -
-    type: var
-    var_name: L:AIRLINER_FMS_SHOW_TOP_CLIMB
-  -
-    type: var
     var_name: L:DME1_ScreenLuminosity
   -
     type: var
     var_name: L:DME1_State
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-  -
-    type: var
-    var_name: L:AIRLINER_TO_FLEX_TEMP
-  -
-    type: var
-    var_name: L:A320_NEO_CDU_START_PAGE
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
-  -
-    type: var
-    var_name: L:Fuel_Pump_Switch_A
-  -
-    type: var
-    var_name: L:A320_Neo_CDU_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_CDU_State
-  -
-    type: var
-    var_name: L:AIRLINER_FLIGHT_PHASE
-  -
-    type: var
-    var_name: L:FMC_UPDATE_CURRENT_PAGE
-  -
-    type: var
-    var_name: L:RADIONAV ACTIVE:1
-  -
-    type: var
-    var_name: L:RADIONAV_SOURCE
-  -
-    type: var
-    var_name: L:MODE_HEADING
-  -
-    type: var
-    var_name: L:MODE_ALTITUDE
-# -
-#   type: var
-#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
-  -
-    type: var
-    var_name: L:A320_Neo_Clock_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_Clock_State
   -
     type: var
     var_name: L:SCREEN_ScreenLuminosity
   -
     type: var
     var_name: L:SCREEN_State
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:A320_Neo_ATC_ScreenLuminosity
@@ -2675,6 +2570,96 @@ shared:
   -
     type: var
     var_name: L:TGW_State
+  -
+    type: var
+    var_name: L:A320_Neo_MFD_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_MFD_State
+  -
+    type: var
+    var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+  -
+    type: var
+    var_name: L:MFD_MapShowCursor
+  -
+    type: var
+    var_name: L:MFD_MapZoomRange
+  -
+    type: var
+    var_name: L:A320_Neo_MFD_NAV_MODE
+  -
+    type: var
+    var_name: L:BTN_LS_FILTER_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_MODE_ACTIVE
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
+  -
+    type: var
+    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
+  -
+    type: var
+    var_name: L:BTN_TERRONND_ACTIVE
+  -
+    type: var
+    var_name: L:A320_NEO_PREVIEW_DIRECT_TO
+  -
+    type: var
+    var_name: L:AIRLINER_FMS_SHOW_TOP_DSCNT
+  -
+    type: var
+    var_name: L:AIRLINER_FMS_SHOW_TOP_CLIMB
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+  -
+    type: var
+    var_name: L:AIRLINER_TO_FLEX_TEMP
+  -
+    type: var
+    var_name: L:AIRLINER_CRUISE_ALTITUDE
+  -
+    type: var
+    var_name: L:A320_NEO_CDU_START_PAGE
+  -
+    type: var
+    var_name: L:Fuel_Pump_Switch_A
+  -
+    type: var
+    var_name: L:A320_Neo_CDU_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_CDU_State
+  -
+    type: var
+    var_name: L:AIRLINER_FLIGHT_PHASE
+  -
+    type: var
+    var_name: L:FMC_UPDATE_CURRENT_PAGE
+  -
+    type: var
+    var_name: L:MODE_HEADING
+  -
+    type: var
+    var_name: L:MODE_ALTITUDE
+# -
+#   type: var
+#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+  -
+    type: var
+    var_name: L:A320_Neo_Clock_ScreenLuminosity
+  -
+    type: var
+    var_name: L:A320_Neo_Clock_State
+  -
+    type: var
+    var_name: L:RADIONAV_SOURCE
   -
     type: var
     var_name: L:AIRLINER_V1_SPEED

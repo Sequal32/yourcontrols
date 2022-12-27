@@ -211,12 +211,6 @@ shared:
     type: event
     event_name: SYNC_FLIGHT_DIRECTOR_PITCH
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-
   - # Fuel
     type: NumSet
     var_name: A:GENERAL ENG FUEL PUMP ON:1
@@ -258,12 +252,14 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
     var_type: i32
     event_name: CABIN_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
@@ -279,13 +275,6 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
     index_reversed: true
-
-  - # Water Rudder
-    type: ToggleSwitch
-    var_name: A:WATER RUDDER HANDLE POSITION
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_WATER_RUDDER
 
   - # LVAR's
     type: var

@@ -1,4 +1,4 @@
-# Version 0.1.1
+# Version 0.1.2
 
 include:
   - definitions/modules/Avionics/Aera.yaml
@@ -93,24 +93,6 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 14
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT AVIONICS ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:11
-    var_units: Bool
-    var_type: bool
-
-  - # Wheel lock
-    type: ToggleSwitch
-    var_name: A:TAILWHEEL LOCK ON
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_TAILWHEEL_LOCK
 
   - # LVAR's
     type: var

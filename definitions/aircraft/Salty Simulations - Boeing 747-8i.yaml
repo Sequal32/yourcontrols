@@ -1,4 +1,4 @@
-# Version 0.5.1
+# Version DEV (December 4, 2022)
 
 include:
   - definitions/modules/electrical.yaml
@@ -112,6 +112,13 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: AP_NAV1_HOLD
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT YAW DAMPER
+    var_units: Bool
+    var_type: bool
+    event_name: YAW_DAMPER_ON
+    off_event_name: YAW_DAMPER_OFF
   -
     type: NumSet
     var_name: A:AUTOPILOT MAX BANK ID
@@ -318,37 +325,6 @@ shared:
     var_units: Enum
     var_type: i32
     event_name: TURBINE_IGNITION_SWITCH_SET4
-
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:1
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:2
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:LIGHT PANEL ON:3
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:110
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:114
-    var_units: Bool
-    var_type: bool
 
   - # Fuel
     type: ToggleSwitch
@@ -625,6 +601,7 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: NAV_LIGHTS_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT BEACON:1
@@ -645,18 +622,21 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: STROBES_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT LOGO:0
     var_units: Bool
     var_type: f64
     event_name: LOGO_LIGHTS_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT WING:0
     var_units: Bool
     var_type: f64
     event_name: WING_LIGHTS_SET
+    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT LANDING:1
@@ -833,12 +813,14 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL POWER SETTING:1
     var_units: Percent
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
     index_reversed: true
   -
     type: NumSet
@@ -1010,15 +992,17 @@ shared:
   -
     type: var
     var_name: L:747_FUEL_TO_REMAIN
-  -
-    type: var
-    var_name: L:SALTY_ISFD_INIT_DONE
+# -
+#   type: var
+#   var_name: L:SALTY_ISFD_INIT_DONE
   -
     type: var
     var_name: L:SALTY_VIS_PILOT_0
+    cancel_h_events: true
   -
     type: var
     var_name: L:SALTY_VIS_PILOT_1
+    cancel_h_events: true
   -
     type: var
     var_name: L:SALTY_UNIT_IS_METRIC
@@ -1043,6 +1027,12 @@ shared:
   -
     type: var
     var_name: L:SALTY_LANDING_FLAP_VALUE
+  -
+    type: var
+    var_name: L:74S_YAW_DAMPER_UPPER
+  -
+    type: var
+    var_name: L:74S_YAW_DAMPER_LOWER
   -
     type: var
     var_name: L:BTN_WX_ACTIVE
@@ -1306,42 +1296,42 @@ shared:
   -
     type: var
     var_name: L:LANDING_GEAR_Gear
-  -
-    type: var
-    var_name: L:LIGHTING_GLARESHIELD_1
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_2
-  -
-    type: var
-    var_name: L:LIGHTING_GLARESHIELD_2
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_4
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:LIGHTING_GLARESHIELD_3
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_5
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_3
-  -
-    type: var
-    var_name: L:LIGHTING_PEDESTRAL_1
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_3
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_5
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_PEDESTRAL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
   -
     type: var
     var_name: L:LIGHTING_POTENTIOMETER_26
@@ -1399,27 +1389,24 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:74S_ADC_MANEUVERING_SPEED
+# -
+#   type: var
+#   var_name: L:74S_ADC_MACH_NUMBER
+# -
+#   type: var
+#   var_name: L:74S_ADC_MAXIMUM_SPEED
+# -
+#   type: var
+#   var_name: L:74S_ADC_MINIMUM_SPEED
   -
     type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
-  -
-    type: var
-    var_name: L:B747_8_PFD_State
-  -
-    type: var
-    var_name: L:SALTY_FD_TAKEOFF_PHASE
+    var_name: L:SALTY_SELECTED_APPROACH_FLAP
   -
     type: var
     var_name: L:SALTY_FPV_ON
-  -
-    type: var
-    var_name: L:WT_CJ4_VS_ON
-  -
-    type: var
-    var_name: L:AIRLINER_FLIGHT_PHASE
   -
     type: var
     var_name: L:AIRLINER_V1_SPEED
@@ -1431,28 +1418,61 @@ shared:
     var_name: L:AIRLINER_V2_SPEED
 # -
 #   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
+#   var_name: L:SALTY_VREF25
+# -
+#   type: var
+#   var_name: L:SALTY_VREF30
   -
     type: var
     var_name: L:AIRLINER_VREF_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:SALTY_MINIMUMS_ALT
   -
     type: var
-    var_name: L:SALTY_ALT_ALERT
+    var_name: L:AIRLINER_FLIGHT_PHASE
   -
     type: var
-    var_name: L:RADIONAV_SOURCE
+    var_name: L:74S_ALT_ALERT
+  -
+    type: var
+    var_name: L:74S_FMC_ORIGIN_ELEVATION
+  -
+    type: var
+    var_name: L:74S_FMC_DEST_ELEVATION
 # -
 #   type: var
-#   var_name: L:WT_CJ4_XTK
+#   var_name: L:74S_FMC_PASSED_HALFWAY
+# -
+#   type: var
+#   var_name: L:74S_MINS_BARO
+# -
+#   type: var
+#   var_name: L:74S_MINS_RADIO
   -
     type: var
-    var_name: L:AIRLINER_CRUISE_ALTITUDE
+    var_name: L:74S_EFIS_METRES_ON
+  -
+    type: var
+    var_name: L:74S_BARO_PRESEL_VISIBLE
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_APPROACH_COURSE
+# -
+#   type: var
+#   var_name: L:74S_AFDS_STATUS
+  -
+    type: var
+    var_name: L:74S_AUTOTHROTTLE_MODE_ACTIVE
+# -
+#   type: var
+#   var_name: L:74S_ROLL_MODE_ACTIVE
+# -
+#   type: var
+#   var_name: L:74S_ROLL_MODE_ARMED
+# -
+#   type: var
+#   var_name: L:74S_PITCH_MODE_ACTIVE
+# -
+#   type: var
+#   var_name: L:74S_PITCH_MODE_ARMED
   -
     type: var
     var_name: L:B747_8_MFD_State
@@ -1482,7 +1502,16 @@ shared:
 #   var_name: L:WT_CJ4_DTK
   -
     type: var
+    var_name: L:Glasscockpits_FPLHaveOrigin
+  -
+    type: var
+    var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
     var_name: L:B747_8_EICAS_1_State
+# -
+#   type: var
+#   var_name: L:74S_FMC_MIN_MANUEVER_SPEED
   -
     type: var
     var_name: L:AS1000_Warnings_Master_Set
@@ -1503,6 +1532,13 @@ shared:
     var_name: L:AIRLINER_THRUST_CLIMB_MODE
   -
     type: var
+    var_name: L:747_FUELING_STARTED_BY_USR
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:747_FUEL_DESIRED
+  -
+    type: var
     var_name: L:B747_8_EICAS_2_ScreenLuminosity
   -
     type: var
@@ -1519,9 +1555,9 @@ shared:
   -
     type: var
     var_name: L:AIRLINER_ACC_ALT
-# -
-#   type: var
-#   var_name: L:SALTY_VREF30
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:7_DESIRED
   -
     type: var
     var_name: L:RADIONAV ACTIVE:1
@@ -1534,6 +1570,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+  -
+    type: var
+    var_name: L:747_BOARDING_STARTED_BY_USR
+    cancel_h_events: true
   -
     type: var
     var_name: L:74S_ALREADY_PAUSED
@@ -1638,28 +1678,67 @@ shared:
 #   var_name: L:WT_CJ4_SNOWFLAKE
   -
     type: var
+    var_name: L:AIRLINER_CRUISE_ALTITUDE
+  -
+    type: var
     var_name: L:AIRLINER_THRUST_TAKEOFF_MODE
+# -
+#   type: var
+#   var_name: L:WT_CJ4_WPT_ALERT
+# -
+#   type: var
+#   var_name: L:WT_NAV_SENSITIVITY
+# -
+#   type: var
+#   var_name: L:WT_NAV_SENSITIVITY_SCALAR
   -
     type: var
-    var_name: L:WT_CJ4_WPT_ALERT
-  -
-    type: var
-    var_name: L:WT_NAV_SENSITIVITY
-  -
-    type: var
-    var_name: L:WT_NAV_SENSITIVITY_SCALAR
+    var_name: L:PAYLOAD STATION WEIGHT:6_DESIRED
 # -
 #   type: var
 #   var_name: L:FMC_FLIGHT_PLAN_IS_TEMPORARY
   -
     type: var
     var_name: L:BTN_CTR_ACTIVE
-# -
-#   type: var
-#   var_name: L:SALTY_VREF25
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:5_DESIRED
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:4_DESIRED
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:3_DESIRED
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:2_DESIRED
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:8_DESIRED
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:8
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:9_DESIRED
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:9
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:10_DESIRED
+  -
+    type: var
+    var_name: L:PAYLOAD STATION WEIGHT:10
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 master:
   -

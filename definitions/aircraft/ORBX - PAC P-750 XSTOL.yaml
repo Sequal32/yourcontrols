@@ -1,0 +1,888 @@
+# Version 1.0.1
+
+include:
+  - definitions/modules/Avionics/AS330.yaml
+  - definitions/modules/Avionics/AS430.yaml
+  - definitions/modules/Avionics/AS530.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/Avionics/TDSNXi.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Bus Tie
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:8, Bool)
+    set: 8 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:37
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 37
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
+
+  - # LVAR's (Passenger)
+    type: var
+    var_name: L:Orbx_P750_CUSTOM_Avionics_Type
+  -
+    type: var
+    var_name: L:Orbx_P750_CUSTOM_Units
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_IsColdDark
+  -
+    type: var
+    var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:Orbx_P750_DOOR_Cockpit_Left
+  -
+    type: var
+    var_name: L:Orbx_P750_DOOR_Cockpit_Right
+  -
+    type: var
+    var_name: L:Orbx_P750_DOOR_Cabin
+  -
+    type: var
+    var_name: L:Orbx_P750_DOOR_Agriculture_Hatch
+  -
+    type: var
+    var_name: L:Orbx_P750_DOOR_Any_Open
+  -
+    type: var
+    var_name: L:Orbx_P750_DOOR_Cockpit_Any_Open
+  -
+    type: var
+    var_name: L:Orbx_P750_LIGHTING_Map_Switch
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_1_Switch
+  -
+    type: var
+    var_name: L:Orbx_GMA345_Volume_Music_PILOT
+  -
+    type: var
+    var_name: L:Orbx_GMA345_Volume_ICS_COPILOT
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Bus_Tie_Cover
+  -
+    type: var
+    var_name: L:Orbx_GMA345_Volume_Music_COPILOT
+  -
+    type: var
+    var_name: L:Orbx_P750_ANNUNC_DAYNIGHT
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_1_CB
+  -
+    type: var
+    var_name: L:Orbx_P750_SAFETY_Voice_Alarm
+  -
+    type: var
+    var_name: L:Orbx_P750_FUEL_SWITCH
+  -
+    type: var
+    var_name: L:Orbx_P750_LIGHTING_Map_Brightness
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_2_Switch
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_2_CB
+  -
+    type: var
+    var_name: L:Orbx_P750_FUEL_DISPLAY_FRONT_TYPE
+  -
+    type: var
+    var_name: L:Orbx_P750_FUEL_DISPLAY_REAR_TYPE
+  -
+    type: var
+    var_name: L:Orbx_55X_AUTOPILOT_MASTER
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_RPM_Np_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_RPM_Ng_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_ITT_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Torque_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Oil_Pressure_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Oil_Temperature_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Tank_Front_Left_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Tank_Front_Right_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Tank_Back_Left_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Tank_Back_Right_Lights
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Light_IceZone
+  -
+    type: var
+    var_name: L:Orbx_P750_MISC_Clock_Page
+# -
+#   type: var
+#   var_name: L:Orbx_P750_MISC_Clock_Up_LED
+# -
+#   type: var
+#   var_name: L:Orbx_P750_MISC_Clock_Down_LED
+  -
+    type: var
+    var_name: L:Orbx_P750_FUEL_FP5L_Page
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Light_HighVolts
+# -
+#   type: var
+#   var_name: L:Orbx_P750_VAR_Light_Discharge
+  -
+    type: var
+    var_name: L:Orbx_P750_ANNUNC_TEST
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_Ann_Panel_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_FUEL_Filter_Bypassed
+  -
+    type: var
+    var_name: L:Orbx_P750_FLAPS_Motor_Isolated
+# -
+#   type: var
+#   var_name: L:Orbx_55X_Autopilot_Engaged
+# -
+#   type: var
+#   var_name: L:Orbx_SA200_Alert
+  -
+    type: var
+    var_name: L:Orbx_GMA345_Switched_On
+# -
+#   type: var
+#   var_name: L:Orbx_GMA345_Powered
+# -
+#   type: var
+#   var_name: L:Orbx_GMA345_Self_Test_Active
+# -
+#   type: var
+#   var_name: L:Orbx_GMA345_Startup_Time
+  -
+    type: var
+    var_name: L:Orbx_GMA345_Music_1_Enabled
+  -
+    type: var
+    var_name: L:Orbx_GMA345_Aux_1_Enabled
+  -
+    type: var
+    var_name: L:Orbx_GMA345_Aux_2_Enabled
+  -
+    type: var
+    var_name: L:Orbx_GMA345_Music_Channel
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+  -
+    type: var
+    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U2_DTOKey
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Deployment
+  -
+    type: var
+    var_name: L:XMLVAR_InertSep1_Active
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Bus_Tie
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter1_EndTimeDown
+  -
+    type: var
+    var_name: L:Orbx_P750_INIT_Engine_Flight_Idle
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_OSPEED_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_IPS_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_PITOT_STATIC_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_START_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_CABIN_HTR_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_FUEL_PUMP_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_STBD_TB_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_PORT_AH_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_AUTOPILOT_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_USB_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_MISC_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_ITT_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_AUDIO_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_FLAP_POWER_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_FLAP_CONTROLS_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_TQ_IND_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_P3_HEAT_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_TRIMS_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_PORT_TC_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_STBD_AH_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_DIG_INST_1_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_EHSI_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_AHRS_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_AV_FAN_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_DIG_INST_2_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_Bus_1_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_Bus_2_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_NAV_1_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_GPS_COM_1_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_GPS_COM_2_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_NAV_2_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_BREAKER_TXPDR_Pulled
+  -
+    type: var
+    var_name: L:Orbx_P750_Tablet_On
+# -
+#   type: var
+#   var_name: L:Orbx_P750_Tablet_Percentage
+  -
+    type: var
+    var_name: L:Orbx_P750_Tablet_IsCharging
+  -
+    type: var
+    var_name: L:Orbx_P750_Tablet_IsVisible
+# -
+#   type: var
+#   var_name: L:GTN750_INT_HIDDEN
+# -
+#   type: var
+#   var_name: L:GTN750_INT_2_HIDDEN
+  -
+    type: var
+    var_name: L:Vent_Cockpit_Left_LR_PositionX
+    unreliable: true
+  -
+    type: var
+    var_name: L:Vent_Cockpit_Left_LR_PositionY
+    unreliable: true
+  -
+    type: var
+    var_name: L:Vent_Cockpit_Right_LR_PositionX
+    unreliable: true
+  -
+    type: var
+    var_name: L:Vent_Cockpit_Right_LR_PositionY
+    unreliable: true
+  -
+    type: var
+    var_name: L:Orbx_P750_INTERACTIVE_Skydive_Light
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+  -
+    type: var
+    var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:XMLVAR_AileronTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:Orbx_P750_FLAPS_Left_Position
+# -
+#   type: var
+#   var_name: L:Orbx_P750_FLAPS_Right_Position
+  -
+    type: var
+    var_name: L:Orbx_P750_FLAPS_Left_Failed
+  -
+    type: var
+    var_name: L:Orbx_P750_FLAPS_Right_Failed
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_1_State
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_2_State
+  -
+    type: var
+    var_name: L:Orbx_P750_FUEL_Filter_Blocked
+  -
+    type: var
+    var_name: L:Orbx_P750_FAILURE_Elevator_Trim_Runaway
+  -
+    type: var
+    var_name: L:Orbx_P750_FAILURE_Elevator_Trim_Runaway_Active
+  -
+    type: var
+    var_name: L:Orbx_P750_FAILURE_Elevator_Trim_Runaway_Direction
+  -
+    type: var
+    var_name: L:Orbx_P750_HANDLING_Elevator_Trim_Interupt
+  -
+    type: var
+    var_name: L:Orbx_P750_Variant
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_1
+  -
+    type: var
+    var_name: L:Orbx_P750_EHSI_FREE
+  -
+    type: var
+    var_name: L:INSTRUMENT_ADF
+  -
+    type: var
+    var_name: L:INSTRUMENT_Course_2
+  -
+    type: var
+    var_name: L:INSTRUMENT_Altimeter_2
+  -
+    type: var
+    var_name: L:Orbx_P750_OIL_DISPLAY_TYPE
+  -
+    type: var
+    var_name: L:Orbx_P750_VOLTS_AMPS_DISPLAY_TYPE
+  -
+    type: var
+    var_name: L:Orbx_SA200_Mute
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:Orbx_P750_MISC_Windscreen_Demist
+  -
+    type: var
+    var_name: L:Orbx_P750_ENGINE_Oil_Cooler_Heater
+  -
+    type: var
+    var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:Orbx_P750_MISC_Cabin_Heater_Temperature
+  -
+    type: var
+    var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:Condition_Lever_CutOff_1
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_2
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_3
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_4
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_5
+  -
+    type: var
+    var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:Autopilot_55X_ScreenLuminosity
+  -
+    type: var
+    var_name: L:Autopilot_55X_State
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+  -
+    type: var
+    var_name: L:Orbx_PAC750_EngineMonitor_ScreenLuminosity
+  -
+    type: var
+    var_name: L:Orbx_PAC750_EngineMonitor_State
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+  -
+    type: var
+    var_name: L:HSI_MapShowCursor
+  -
+    type: var
+    var_name: L:HSI_MapZoomRange
+  -
+    type: var
+    var_name: L:SN3500_ScreenLuminosity
+  -
+    type: var
+    var_name: L:SN3500_State
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+  -
+    type: var
+    var_name: L:KR87_ScreenLuminosity
+  -
+    type: var
+    var_name: L:KR87_State
+# -
+#   type: var
+#   var_name: L:GTN750_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN750_INT_State
+# -
+#   type: var
+#   var_name: L:GTN750_INT_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN750_INT_2_State
+  -
+    type: var
+    var_name: L:Orbx_PAC750_Tablet_ScreenLuminosity
+  -
+    type: var
+    var_name: L:Orbx_PAC750_Tablet_State
+  -
+    type: var
+    var_name: L:Orbx_SA200_ScreenLuminosity
+  -
+    type: var
+    var_name: L:Orbx_SA200_State
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:Orbx_P750_FUEL_FP5L_LowFuel
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:Orbx_P750_DOOR_Skydive
+
+server:
+  -
+    type: var
+    var_name: A:FUELSYSTEM TANK LEVEL:1
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUELSYSTEM TANK LEVEL:2
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUELSYSTEM TANK LEVEL:3
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUELSYSTEM TANK LEVEL:4
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUELSYSTEM TANK LEVEL:5
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:13
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:14
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

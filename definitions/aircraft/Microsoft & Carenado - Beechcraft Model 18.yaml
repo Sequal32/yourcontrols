@@ -46,27 +46,6 @@ shared:
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 5
 
-  - # Failures
-    type: var
-    var_name: A:CIRCUIT GENERAL PANEL ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT NAVCOM2 ON
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:29
-    var_units: Bool
-    var_type: bool
-  -
-    type: var
-    var_name: A:CIRCUIT ON:31
-    var_units: Bool
-    var_type: bool
-
   - # Lights
     type: ToggleSwitch
     var_name: A:LIGHT NAV
@@ -93,6 +72,7 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: BEACON_LIGHTS_SET
+    event_param: 1
 
   - # Interior
     type: NumSet
@@ -262,13 +242,6 @@ shared:
     event_param: 64
     index_reversed: true
 
-  - # Wheel lock
-    type: ToggleSwitch
-    var_name: A:TAILWHEEL LOCK ON
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_TAILWHEEL_LOCK
-
   - # LVAR's
     type: var
     var_name: L:TABLET_INIT
@@ -284,12 +257,12 @@ shared:
   -
     type: var
     var_name: L:COLD_AND_DARK_AUX_ST
-# -
-#   type: var
-#   var_name: L:TABLET_BTN_PILOT_VIS
-# -
-#   type: var
-#   var_name: L:TABLET_BTN_COPILOT_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_PILOT_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_COPILOT_VIS
 # -
 #   type: var
 #   var_name: L:PILOT_VIS
