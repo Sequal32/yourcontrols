@@ -4,11 +4,9 @@ use rmp_serde::{self};
 use serde::{Deserialize, Serialize};
 use std::{net::SocketAddr, time::Instant};
 use yourcontrols_types::AllNeedSync;
-use zstd::block::{Compressor, Decompressor};
+use zstd::bulk::{Compressor, Decompressor};
 
 use yourcontrols_types::Error;
-
-const COMPRESS_DICTIONARY: &[u8] = include_bytes!("compress_dict.bin");
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum Payloads {
@@ -134,8 +132,8 @@ pub struct SenderReceiver {
     socket: Socket,
     sender: Sender<Packet>,
     receiver: Receiver<SocketEvent>,
-    compressor: Compressor,
-    decompressor: Decompressor,
+    compressor: Compressor<'static>,
+    decompressor: Decompressor<'static>,
 }
 
 impl SenderReceiver {
@@ -147,8 +145,8 @@ impl SenderReceiver {
             socket,
             sender,
             receiver,
-            compressor: Compressor::with_dict(COMPRESS_DICTIONARY.to_vec()),
-            decompressor: Decompressor::with_dict(COMPRESS_DICTIONARY.to_vec()),
+            compressor: Compressor::new(0).unwrap(),
+            decompressor: Decompressor::new().unwrap(),
         }
     }
 
@@ -181,9 +179,10 @@ impl SenderReceiver {
         let payload_bytes = rmp_serde::to_vec(&message)?;
 
         // Compress
-        let compressed = self
-            .compressor
-            .compress(&payload_bytes, get_compression_level_for_message(message))?;
+        self.compressor
+            .set_compression_level(get_compression_level_for_message(message));
+
+        let compressed = self.compressor.compress(&payload_bytes)?;
 
         // Wrap
         let wrapper = PayloadWrapper {
