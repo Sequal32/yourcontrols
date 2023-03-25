@@ -94,14 +94,6 @@ shared:
     get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
     set: 6 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
-  - # Decision
-    type: NumIncrement
-    var_name: A:DECISION HEIGHT
-    var_units: Feet
-    var_type: f64
-    up_event_name: INCREASE_DECISION_HEIGHT
-    down_event_name: DECREASE_DECISION_HEIGHT
-    increment_by: 10
   - # Cabin
     type: NumIncrement
     var_name: A:PRESSURIZATION CABIN ALTITUDE GOAL
@@ -546,9 +538,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AUX_ENGINE_RECIP_P1
-  -
-    type: var
-    var_name: L:AUX_PROP_SYNC_ACTIVE
+# -
+#   type: var
+#   var_name: L:AUX_PROP_SYNC_ACTIVE
 # -
 #   type: var
 #   var_name: L:RECIP_ENG_TURBINE_INLET_TEMPERATURE_1
