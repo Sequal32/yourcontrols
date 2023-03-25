@@ -32,3 +32,42 @@ shared:
     var_type: f64
     event_name: AXIS_ROTOR_BRAKE_SET
     interpolate: Default
+
+  - # ASOBO_HANDLING_Longitudinal_Lateral_Trim_Template
+    type: NumSet
+    var_name: A:ROTOR LATERAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LATERAL_TRIM_SET
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:ROTOR LONGITUDINAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LONGITUDINAL_TRIM_SET
+    interpolate: Default
+
+master:
+  - # ASOBO_HANDLING_Yoke_Template
+    type: NumSet
+    var_name: A:YOKE X POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_CYCLIC_LATERAL_SET
+    interpolate: InvertConstant
+  -
+    type: NumSet
+    var_name: A:YOKE Y POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_CYCLIC_LONGITUDINAL_SET
+    interpolate: InvertConstant
+
+  - # ASOBO_ROTORCRAFT_Tail_Rotor_Pedal_Template (AXIS_TAIL_ROTOR_SET currently doesn't work)
+    type: NumSet
+    var_name: A:TAIL ROTOR PEDAL POSITION
+    var_units: Position 32k
+    var_type: f64
+    event_name: AXIS_RUDDER_SET
+    interpolate: InvertConstant
