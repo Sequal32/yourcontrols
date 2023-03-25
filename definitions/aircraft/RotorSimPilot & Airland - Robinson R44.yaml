@@ -1,15 +1,15 @@
-# Version 1.2.8 beta
+# Version 1.4
 
 include:
   - definitions/modules/Avionics/TDSNXi.yaml
   - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/engines.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
+  - definitions/modules/rotorcraft.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
@@ -37,7 +37,7 @@ shared:
     var_name: L:Attitude calibration
   -
     type: var
-    var_name: L:CYCLIC_TOGGLE
+    var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
     var_name: L:DOORS_VIS
@@ -46,7 +46,7 @@ shared:
     var_name: L:FLOATS_VIS
   -
     type: var
-    var_name: L:CANOPY_VIS
+    var_name: L:CanopyVis
   -
     type: var
     var_name: L:DOOR_PF_WINDOW_ROTATE
@@ -56,18 +56,9 @@ shared:
   -
     type: var
     var_name: L:DOOR_COR_ROTATE
-# -
-#   type: var
-#   var_name: L:XMLVAR_Starter_State
-# -
-#   type: var
-#   var_name: L:XMLVAR_Starter_State_IsDown
-# -
-#   type: var
-#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:1
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverMixtureHidden1
@@ -76,16 +67,22 @@ shared:
     var_name: L:SPOT_VIS
   -
     type: var
-    var_name: L:ROTOR_BRAKE_POSITION
+    var_name: L:Pax1
   -
     type: var
-    var_name: L:CLUTCH_POSITION
+    var_name: L:Pax2
   -
     type: var
-    var_name: L:GOV_POSITION
-# -
-#   type: var
-#   var_name: L:PILOT_VIS
+    var_name: L:COPILOT_STORAGE_VIS
+  -
+    type: var
+    var_name: L:PILOT_STORAGE_VIS
+  -
+    type: var
+    var_name: L:PASS1_STORAGE_VIS
+  -
+    type: var
+    var_name: L:PASS2_STORAGE_VIS
   -
     type: var
     var_name: L:GPS_VIS
@@ -94,16 +91,31 @@ shared:
     var_name: L:YAW_STRING_VIS
   -
     type: var
-    var_name: L:ELECTRICAL_Starter_1
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
+    var_name: L:CYCLIC_TOGGLE
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_0
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
 # -
 #   type: var
 #   var_name: L:FINAL_WIND_MAGNITUDE
@@ -113,21 +125,27 @@ shared:
 # -
 #   type: var
 #   var_name: L:PMS50_GTN750_INSTALLED
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:KX155A_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KX155A_1_State
-  -
-    type: var
-    var_name: L:KT76C_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KT76C_1_State
+# -
+#   type: var
+#   var_name: L:KX155A_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_1_State
+# -
+#   type: var
+#   var_name: L:KT76C_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KT76C_1_State
 # -
 #   type: var
 #   var_name: L:GTN750_INT_ScreenLuminosity
@@ -140,6 +158,21 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+master:
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: HELICOPTER_THROTTLE_SET
+    interpolate: Default
+  -
+    type: var
+    var_name: A:COLLECTIVE POSITION
+    var_units: Percent
+    var_type: f64
+    interpolate: Default
 
 server:
   -
@@ -175,6 +208,12 @@ server:
   -
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
     var_units: Pounds
     var_type: f64
     unreliable: true
