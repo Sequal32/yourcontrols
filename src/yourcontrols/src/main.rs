@@ -1,4 +1,4 @@
-// #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(unaligned_references)]
 
 mod app;
@@ -355,8 +355,6 @@ fn main() {
                                 "[NETWORK] {} connected. In control: {}, observing: {}, server: {}",
                                 name, in_control, is_observer, is_server
                             );
-
-                            let mut is_observer = is_observer;
 
                             // This should be before the if statement as server_started counts the number of clients connected
                             clients.add_client(name.clone());

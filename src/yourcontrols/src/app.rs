@@ -1,5 +1,6 @@
 use crate::simconfig;
 
+use base64::Engine;
 use crossbeam_channel::{unbounded, Receiver, TryRecvError};
 use laminar::Metrics;
 use serde::{Deserialize, Serialize};
@@ -120,7 +121,7 @@ impl App {
                     jquery = include_str!("../web/jquery.min.js"),
                     bootstrapjs = include_str!("../web/bootstrap.bundle.min.js"),
                     bootstrapcss = include_str!("../web/bootstrap.min.css"),
-                    logo = base64::encode(logo.as_slice())
+                    logo = base64::engine::general_purpose::STANDARD_NO_PAD.encode(logo.as_slice())
                 )))
                 .invoke_handler(move |_, arg| {
                     tx.try_send(serde_json::from_str(arg).unwrap()).ok();
