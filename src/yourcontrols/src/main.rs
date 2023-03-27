@@ -296,7 +296,7 @@ fn main() {
                             time,
                         } => {
                             // Not non high updating packets for debugging
-                            if !is_unreliable && is_dev_build {
+                            if !is_unreliable {
                                 info!(
                                     "[PACKET] {:?} {} {:?} {:?} {:?}",
                                     data,
