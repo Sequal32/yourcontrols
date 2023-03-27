@@ -165,6 +165,8 @@ pub struct NumSet<T> {
     multiply_by: Option<T>,
     add_by: Option<T>,
     index_reversed: bool,
+    is_user_event: bool,
+
     current: T,
 }
 
@@ -187,6 +189,10 @@ where
             },
             None => None,
         }
+    }
+
+    pub fn set_is_user_event(&mut self, is_user_event: bool) {
+        self.is_user_event = is_user_event
     }
 
     pub fn set_swap_event(&mut self, event_id: u32) {
@@ -227,6 +233,8 @@ where
             return;
         }
 
+        let object_id = if self.is_user_event { 0 } else { 1 };
+
         let value = match self.multiply_by.as_ref() {
             Some(multiply_by) => new * *multiply_by,
             None => new,
@@ -252,7 +260,7 @@ where
             lvar_transfer.set_unchecked(conn, event_name, None, &value_string);
         } else {
             conn.transmit_client_event(
-                1,
+                object_id,
                 self.event_id,
                 value.to_i32().unwrap() as u32,
                 GROUP_ID,
@@ -262,7 +270,7 @@ where
 
         if let Some(swap_event_id) = self.swap_event_id {
             conn.transmit_client_event(
-                1,
+                object_id,
                 swap_event_id,
                 0,
                 GROUP_ID,
@@ -279,6 +287,7 @@ pub struct NumIncrement<T> {
     pub down_event_id: Option<u32>,
     pub down_event_name: Option<String>,
     pub down_event_param: Option<T>,
+    pub is_user_event: bool,
     pub increment_amount: T,
     pub current: T,
     pub pass_difference: bool,
@@ -288,13 +297,14 @@ impl<T> NumIncrement<T>
 where
     T: Default + ToString,
 {
-    pub fn new(increment_amount: T) -> Self {
+    pub fn new(is_user_event: bool, increment_amount: T) -> Self {
         Self {
             up_event_id: None,
             down_event_id: None,
             up_event_name: None,
             down_event_name: None,
             increment_amount,
+            is_user_event,
             current: Default::default(),
             pass_difference: false,
             up_event_param: None,
@@ -341,6 +351,7 @@ where
 
     fn set_new(&mut self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
         let mut working = self.current;
+        let object_id = if self.is_user_event { 0 } else { 1 };
 
         if self.pass_difference {
             if new > self.current {
@@ -348,7 +359,7 @@ where
 
                 if let Some(event_id) = self.up_event_id {
                     conn.transmit_client_event(
-                        1,
+                        object_id,
                         event_id,
                         difference,
                         GROUP_ID,
@@ -362,7 +373,7 @@ where
 
                 if let Some(event_id) = self.down_event_id {
                     conn.transmit_client_event(
-                        1,
+                        object_id,
                         event_id,
                         difference,
                         GROUP_ID,
@@ -378,7 +389,7 @@ where
 
                 if let Some(event_id) = self.down_event_id {
                     conn.transmit_client_event(
-                        1,
+                        object_id,
                         event_id,
                         self.down_event_param.and_then(|x| x.to_u32()).unwrap_or(0),
                         GROUP_ID,
@@ -403,7 +414,7 @@ where
 
                 if let Some(event_id) = self.up_event_id {
                     conn.transmit_client_event(
-                        1,
+                        object_id,
                         event_id,
                         self.up_event_param.and_then(|x| x.to_u32()).unwrap_or(0),
                         GROUP_ID,

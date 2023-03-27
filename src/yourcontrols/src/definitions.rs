@@ -291,6 +291,8 @@ struct NumSetGenericEntry<T> {
     #[serde(default)]
     use_calculator: bool,
     #[serde(default)]
+    is_user_event: bool,
+    #[serde(default)]
     index_reversed: bool,
     condition: Option<Condition>,
     // The event to call after the number is set
@@ -313,6 +315,9 @@ struct NumIncrementEntry<T> {
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
     pass_difference: bool,
+    #[serde(default)]
+    // Whether to transmit the client event as a user/aircraft event
+    is_user_event: bool,
     // Whether to use execute_calculator_code to transmit the event
     #[serde(default)]
     use_calculator: bool,
@@ -799,6 +804,8 @@ impl Definitions {
                 action.set_swap_event(swap_event_id);
             }
 
+            action.set_is_user_event(var.is_user_event);
+
             return Ok((Some(action), var_string));
         }
 
@@ -859,7 +866,7 @@ impl Definitions {
         let (var_string, _) =
             self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
 
-        let mut mapping = NumIncrement::new(var.increment_by);
+        let mut mapping = NumIncrement::new(var.is_user_event, var.increment_by);
         mapping.set_pass_difference(var.pass_difference);
 
         if let Some(up_event_param) = var.up_event_param {
