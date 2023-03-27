@@ -313,7 +313,6 @@ struct NumIncrementEntry<T> {
     #[serde(default)]
     // If the difference of the values can be passed as a param in order to only make one event call
     pass_difference: bool,
-    #[serde(default)]
     // Whether to use execute_calculator_code to transmit the event
     #[serde(default)]
     use_calculator: bool,

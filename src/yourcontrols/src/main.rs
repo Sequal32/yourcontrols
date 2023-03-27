@@ -1,4 +1,4 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+// #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(unaligned_references)]
 
 mod app;
@@ -135,7 +135,9 @@ fn write_update_data(
 }
 
 fn main() {
-    if !cfg!(debug_assertions) {
+    let is_dev_build = cfg!(debug_assertions);
+
+    if !is_dev_build {
         // Set CWD to application directory
         let exe_path = env::current_exe();
         env::set_current_dir(exe_path.unwrap().parent().unwrap()).ok();
@@ -294,8 +296,15 @@ fn main() {
                             time,
                         } => {
                             // Not non high updating packets for debugging
-                            if !is_unreliable && config.enable_log {
-                                info!("[PACKET] {:?}", data)
+                            if !is_unreliable && is_dev_build {
+                                info!(
+                                    "[PACKET] {:?} {} {:?} {:?} {:?}",
+                                    data,
+                                    from,
+                                    clients.is_observer(&from),
+                                    clients.client_is_server(&from),
+                                    clients.client_has_control(&from)
+                                );
                             }
 
                             if !clients.is_observer(&from) && ready_to_process_data {
@@ -357,11 +366,6 @@ fn main() {
                                     definitions.get_buffer_bytes().into_boxed_slice(),
                                     name.clone(),
                                 );
-
-                                if config.start_observer {
-                                    client.set_observer(name.clone(), true);
-                                    is_observer = true;
-                                }
                             }
 
                             app_interface.new_connection(&name);
@@ -569,7 +573,7 @@ fn main() {
                             is_init: false,
                         };
 
-                        write_update_data(&mut definitions, client, &permission, config.enable_log);
+                        write_update_data(&mut definitions, client, &permission, is_dev_build);
 
                         update_rate_instant = Instant::now();
                     }
@@ -663,7 +667,6 @@ fn main() {
 
                         config.port = port;
                         config.name = username;
-                        config.use_upnp = use_upnp;
                         write_configuration(&config);
                     }
                 }
