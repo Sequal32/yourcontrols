@@ -1,13 +1,12 @@
+# Version 0.1.102 / 1.0.0 Enhanced
+
 include:
-  - definitions/modules/Avionics/AS3000.yaml
   - definitions/modules/autopilot.yaml
-  - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -15,6 +14,30 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # APU
+    type: ToggleSwitch
+    var_name: A:APU SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: APU_STARTER
+    off_event_name: APU_OFF_SWITCH
+
+  - # L BATT
+    type: CustomCalculator
+    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
+    set: 3 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # R BATT
+    type: CustomCalculator
+    get: 6 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+    set: 4 6 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # STBY PWR
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 3
+
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
@@ -48,25 +71,29 @@ shared:
     event_name: ANTI_ICE_TOGGLE_ENG2
 
   - # Electrical
-    type: CustomCalculator
-    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
-    set: 1 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
+    type: NumSet
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: i32
+    event_name: SET_EXTERNAL_POWER
+    event_param: 1
+    index_reversed: true
+  - # MAIN 1
     type: CustomCalculator
     get: 7 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
     set: 1 7 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 6 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
-    set: 2 6 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
+  - # MAIN 2
     type: CustomCalculator
     get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
     set: 2 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
+  - # ELEC 1
     type: CustomCalculator
-    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
-    set: 6 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # ELEC 2
+    type: CustomCalculator
+    get: 6 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
+    set: 2 6 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
   - # GPU
     type: ToggleSwitch
@@ -101,6 +128,19 @@ shared:
     use_calculator: true
     event_param: 1
 
+  - # Engines
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER1_SET
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER2_SET
+
   - # Lights
     type: NumSet
     var_name: A:LIGHT LANDING:2
@@ -108,6 +148,26 @@ shared:
     var_type: f64
     event_name: LANDING_LIGHTS_SET
     event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:3
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 3
+
+  - # Passenger
+    type: ToggleSwitch
+    var_name: A:CABIN SEATBELTS ALERT SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_SEATBELTS_ALERT_SWITCH_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:CABIN NO SMOKING ALERT SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_NO_SMOKING_ALERT_SWITCH_TOGGLE
 
   - # Interior
     type: NumSet
@@ -219,30 +279,102 @@ shared:
     event_param: 20
     index_reversed: true
 
-# - # LVAR's
-#   type: var
-#   var_name: L:AS3000_Brightness
-# -
-#   type: var
-#   var_name: L:AS3000_IsLocalVarDefined
+  - # LVAR's
+    type: var
+    var_name: L:WT_LNG_PTCU_MODE
+  -
+    type: var
+    var_name: L:WT_LNG_GROUND_SPOILERS
+  -
+    type: var
+    var_name: L:WT_LNG_SPOILERS_GAIN
+  -
+    type: var
+    var_name: L:WT_LNG_POWER_RESERVE_AUTO_OFF
+  -
+    type: var
+    var_name: L:WT_LNG_FUEL_RECIRC
+  -
+    type: var
+    var_name: L:WT_Longitude_Engine_Run:2
+  -
+    type: var
+    var_name: L:WT_LNG_FUEL_PUMP_2_ON
+  -
+    type: var
+    var_name: L:WT_LNG_GRAVITY_XFLOW_OPEN
+  -
+    type: var
+    var_name: L:WT_LNG_POWER_RESERVE_MANUAL
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+  -
+    type: var
+    var_name: L:WT_Longitude_Engine_Run:1
+  -
+    type: var
+    var_name: L:WT_Longitude_Autothrottle_Status
 # -
 #   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
   -
     type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+    var_name: L:XMLVAR_BatterySTBY_SwitchState
 # -
 #   type: var
-#   var_name: L:AS3000_MFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3000_PFD_ScreenLuminosity
+#   var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:WT_LNG_FUEL_PUMP_1_ON
+  -
+    type: var
+    var_name: L:WTG3000_Auto_Backlight
+  -
+    type: var
+    var_name: L:WT_LNG_L_MAIN_MISSION_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_L_INT1_MISSION_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_L_INT2_MISSION_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_L_MISSION_EMER_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_L_EMER_BATT_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_L_MISSION_GEN_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_R_MAIN_MISSION_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_R_INT1_MISSION_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_R_INT2_MISSION_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_R_MISSION_EMER_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_BUS_TIE_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_R_EMER_BATT_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_R_MISSION_GEN_CONN
+  -
+    type: var
+    var_name: L:WT_LNG_L_EMER_GEN_CONN
   -
     type: var
     var_name: L:XMLVAR_STBYBattery_Test
-  -
-    type: var
-    var_name: L:XMLVAR_BatterySTBY_SwitchState
   -
     type: var
     var_name: L:XMLVAR_STBYBattery_IsHeld
@@ -251,28 +383,70 @@ shared:
     var_name: L:XMLVAR_APU_StarterKnob_Pos
   -
     type: var
+    var_name: L:WT_LNG_ENGINE_HALO_LIGHT_1
+  -
+    type: var
+    var_name: L:WT_LNG_ENGINE_HALO_LIGHT_2
+  -
+    type: var
+    var_name: L:WT_LNG_APU_FIRE_LIGHT
+  -
+    type: var
+    var_name: L:WT_LNG_L_BLEED_AIR
+  -
+    type: var
+    var_name: L:WT_LNG_R_BLEED_AIR
+  -
+    type: var
+    var_name: L:WT_LNG_APU_BLEED_AIR
+  -
+    type: var
+    var_name: L:WT_LNG_BLEED_ISOLATE
+  -
+    type: var
+    var_name: L:WT_LNG_L_PRESS_SRC
+  -
+    type: var
+    var_name: L:WT_LNG_R_PRESS_SRC
+  -
+    type: var
+    var_name: L:WT_LNG_FLOW_MODE
+  -
+    type: var
+    var_name: L:WT_LNG_PRESS_MODE
+  -
+    type: var
+    var_name: L:WT_LNG_CABIN_ALT_SWITCH
+  -
+    type: var
+    var_name: L:WT_LNG_ECS_SELECTION
+  -
+    type: var
     var_name: L:XMLVAR_Autopilot_1_Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_AirSpeedIsInMach
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
 # -
 #   type: var
-#   var_name: L:XMLVAR_VNAVButtonValue
+#   var_name: L:WT_Virtual_Throttle_Lever_Pos_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePosition_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
 # -
 #   type: var
+#   var_name: L:WT_Virtual_Throttle_Lever_Pos_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePosition_2
+# -
+#   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden2
-  -
-    type: var
-    var_name: L:ENG FUEL VALVE:1
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -285,6 +459,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:WT_LNG_SPOILERS_INPUT
   -
     type: var
     var_name: L:XMLVAR_ElevatorTrim_Switch_1_Secondary
@@ -303,87 +480,108 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:WT_LNG_PITOT_HEAT
+  -
+    type: var
+    var_name: L:WT_LNG_LEFT_ENGINE_AI
+  -
+    type: var
+    var_name: L:WT_LNG_RIGHT_ENGINE_AI
+  -
+    type: var
+    var_name: L:WT_LNG_WING_AI_MODE
+  -
+    type: var
+    var_name: L:WT_LNG_STAB_AI
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:WT_LNG_RUDDER_STANDBY_OFF
 # -
 #   type: var
-#   var_name: L:XMLVAR_Cabin_Heat_1_Position
+#   var_name: L:WTG3000_PFD_Altimeter_Baro_TT:1
+  -
+    type: var
+    var_name: L:WTG3000_Control_Panel_MapShowCursor:1
 # -
 #   type: var
-#   var_name: L:XMLVAR_Cabin_Heat_2_Position
-# -
-#   type: var
-#   var_name: L:Control_Panel_InnerMap_MapZoomRange
-# -
-#   type: var
-#   var_name: L:Control_Panel_InnerMap_MapShowCursor
+#   var_name: L:WTG3000_PFD_Altimeter_Baro_TT:2
+  -
+    type: var
+    var_name: L:WTG3000_Control_Panel_MapShowCursor:2
   -
     type: var
     var_name: L:ELECTRICAL_ExternalPower_1
   -
     type: var
     var_name: L:ELECTRICAL_APU_Generator_1
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_15
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_18
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_16
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_19
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_17
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_20
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_2
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_WING_1
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_1
-  -
-    type: var
-    var_name: L:LIGHTING_LOGO_1
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_3
-  -
-    type: var
-    var_name: L:ELECTRICAL_APU_Bleed
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_15
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_18
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_16
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_19
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_17
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_20
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_RECOGNITION_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_LOGO_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:WTGarmin_Nav_ActiveNavSource:1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
@@ -392,121 +590,283 @@ shared:
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
-    var_name: L:LANDING_GEAR_Gear
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
-  -
-    type: var
-    var_name: L:DEICE_Airframe_1
+    var_name: L:WT_LNG_FUEL_TRANSFER_DIRECTION
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
 # -
 #   type: var
 #   var_name: L:XMLVAR_EMER_LTS_STATE
+  -
+    type: var
+    var_name: L:WT_LNG_HYDRAULICS_PUMP_1
+  -
+    type: var
+    var_name: L:WT_LNG_HYDRAULICS_PUMP_2
+  -
+    type: var
+    var_name: L:WT_LNG_Cabin_TEMP_MANUAL
+  -
+    type: var
+    var_name: L:WT_LNG_Cabin_MANUAL_PCT
+  -
+    type: var
+    var_name: L:WT_LNG_Cockpit_TEMP_MANUAL
+  -
+    type: var
+    var_name: L:WT_LNG_Cockpit_MANUAL_PCT
+  -
+    type: var
+    var_name: L:WT_LNG_PREFLIGHT_TESTS_SKIP
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:XMLVAR_SyntheticVision_On
+#   var_name: L:XMLVAR_IsDeiceAirFrame
 # -
 #   type: var
-#   var_name: L:XMLVAR_SyntheticVision_Off
-# -
-#   type: var
-#   var_name: L:AS3000_PFD_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:PFD_InnerMap_MapShowCursor
-# -
-#   type: var
-#   var_name: L:PFD_InnerMap_MapZoomRange
-# -
-#   type: var
-#   var_name: L:Glasscockpit_Wind_Mode
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_Master_Set
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_WarningIndex
-# -
-#   type: var
-#   var_name: L:Annunciations_Manager_Initialized
-# -
-#   type: var
-#   var_name: L:Glasscockpit_HSI_Arc
-# -
-#   type: var
-#   var_name: L:PFD_BRG1_Source
-# -
-#   type: var
-#   var_name: L:PFD_BRG2_Source
-# -
-#   type: var
-#   var_name: L:Glasscockpit_AOA_Mode
-# -
-#   type: var
-#   var_name: L:Glasscockpit_SVTTerrain
+#   var_name: L:XMLVAR_IsDeiceAirFrame2
   -
     type: var
-    var_name: L:XMLVAR_Pitot_1
+    var_name: L:Generic_Master_Caution_Active
   -
     type: var
-    var_name: L:XMLVAR_Pitot_2
+    var_name: L:Generic_Master_Warning_Active
 # -
 #   type: var
-#   var_name: L:Generic_Master_Warning_Active
+#   var_name: L:WT_LNavData_DTK_True
 # -
 #   type: var
-#   var_name: L:Generic_Master_Caution_Active
+#   var_name: L:WT_LNavData_DTK_Mag
 # -
 #   type: var
-#   var_name: L:PFD_CDI_Source
+#   var_name: L:WT_LNavData_XTK
 # -
 #   type: var
-#   var_name: L:GPS_Current_Phase
+#   var_name: L:WTGarmin_LNavData_Next_DTK_True
 # -
 #   type: var
-#   var_name: L:Glasscockpit_DmeSource
+#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
 # -
 #   type: var
-#   var_name: L:AS3000_null_Timer_Value
+#   var_name: L:WT_LNavData_CDI_Scale
 # -
 #   type: var
-#   var_name: L:AS3000_MinimalsMode
+#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
 # -
 #   type: var
-#   var_name: L:AS3000_MinimalsValue
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
 # -
 #   type: var
-#   var_name: L:AS3000_MFD_State
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
 # -
 #   type: var
-#   var_name: L:MFD_MapShowCursor
+#   var_name: L:WT_LNavData_Waypoint_Distance
 # -
 #   type: var
-#   var_name: L:MFD_MapZoomRange
+#   var_name: L:WT_LNavData_Destination_Distance
 # -
 #   type: var
-#   var_name: L:AS3000_MFD_IsPositionOverride
+#   var_name: L:WTGarmin_LNavData_Egress_Distance
 # -
 #   type: var
-#   var_name: L:AS3000_MFD_Current_Map
+#   var_name: L:WTAP_LNav_DTK
 # -
 #   type: var
-#   var_name: L:AS3000_MFD_Current_WeatherMap
+#   var_name: L:WTAP_LNav_XTK
 # -
 #   type: var
-#   var_name: L:AS3000_MFD_MapRotationMode
+#   var_name: L:WTAP_LNav_Is_Tracking
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Transition_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Vector_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Course_To_Steer
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Suspended
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_BOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Distance_In_Leg
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_TOD
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_BOD
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOC_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_BOC_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOC_Distance_In_Leg
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_TOC
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_BOC
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_State
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Available
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Next_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Target_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_FPA
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_VNAV_Required_VS
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Alt_Capture_Type
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Service_Level
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_GP_FPA
+# -
+#   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_1_State
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_2_State
+# -
+#   type: var
+#   var_name: L:WTG3000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_MFD_State
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
+#   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_1_State
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_2_State
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_3_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_3_State
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_4_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_4_State
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeSpeedBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeSpeedBackup_State
+# -
+#   type: var
+#   var_name: L:HourMeter_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:HourMeter_State
+  -
+    type: var
+    var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Approach_Mode
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_ForcedToSTD
+  -
+    type: var
+    var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value:2
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
@@ -515,43 +875,172 @@ shared:
 #   var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
-    var_name: L:AS3000_TSC_Vertical_1_ScreenLuminosity
+    var_name: L:XMLVAR_Baro2_ForcedToSTD
   -
     type: var
-    var_name: L:AS3000_TSC_Vertical_1_State
+    var_name: L:XMLVAR_Baro2_SavedPressure
 # -
 #   type: var
-#   var_name: L:AS3000_1_Timer_Value
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS3000_TSC_Vertical_2_State
+#   var_name: L:FADEC_OIL_TEMP_LOW_AMBER_1
 # -
 #   type: var
-#   var_name: L:AS3000_2_Timer_Value
+#   var_name: L:FADEC_OIL_TEMP_HIGH_AMBER_1
 # -
 #   type: var
-#   var_name: L:AS1000_AttitudeSpeedBackup_ScreenLuminosity
+#   var_name: L:FADEC_OIL_TEMP_LOW_AMBER_2
 # -
 #   type: var
-#   var_name: L:AS1000_AttitudeSpeedBackup_State
-  -
-    type: var
-    var_name: L:HourMeter_ScreenLuminosity
-  -
-    type: var
-    var_name: L:HourMeter_State
+#   var_name: L:FADEC_OIL_TEMP_HIGH_AMBER_2
 # -
 #   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+#   var_name: L:WT_LNG_ECS_ACTIVE
 # -
 #   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+#   var_name: L:WTFltTimer_Mode:1
 # -
 #   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+#   var_name: L:WTFltTimer_Running:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Time:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Value:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Initial_Value:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Mode:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Running:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Time:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Value:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Initial_Value:2
+# -
+#   type: var
+#   var_name: L:WT3000_Fuel_Remaining
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Fob_Weight
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Aircraft_Weight
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Landing_Fuel
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Landing_Weight
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Holding_Fuel
+# -
+#   type: var
+#   var_name: L:FADEC_CLB_N1_1
+# -
+#   type: var
+#   var_name: L:FADEC_CLB_N1_2
+# -
+#   type: var
+#   var_name: L:FADEC_MAX_N1_1
+# -
+#   type: var
+#   var_name: L:FADEC_MAX_N1_2
+# -
+#   type: var
+#   var_name: L:FADEC_TGT_N1_1
+# -
+#   type: var
+#   var_name: L:FADEC_TGT_N1_2
+# -
+#   type: var
+#   var_name: L:FADEC_CRU_N1_1
+# -
+#   type: var
+#   var_name: L:FADEC_CRU_N1_2
+# -
+#   type: var
+#   var_name: L:FADEC_N1_RED_1
+# -
+#   type: var
+#   var_name: L:FADEC_N1_RED_2
+# -
+#   type: var
+#   var_name: L:FADEC_N2_RED_1
+# -
+#   type: var
+#   var_name: L:FADEC_N2_RED_2
+# -
+#   type: var
+#   var_name: L:FADEC_N2_AMBER_1
+# -
+#   type: var
+#   var_name: L:FADEC_N2_AMBER_2
+# -
+#   type: var
+#   var_name: L:FADEC_ITT_RED_1
+# -
+#   type: var
+#   var_name: L:FADEC_ITT_RED_2
+# -
+#   type: var
+#   var_name: L:FADEC_OIL_TEMP_LOW_RED_1
+# -
+#   type: var
+#   var_name: L:FADEC_OIL_TEMP_LOW_RED_2
+# -
+#   type: var
+#   var_name: L:WT1000_AP_G1000_INSTALLED
+# -
+#   type: var
+#   var_name: L:WT3000_Fuel_Burned
+# -
+#   type: var
+#   var_name: L:WT_LNG_LEFT_BRAKE_INPUT
+# -
+#   type: var
+#   var_name: L:WT_LNG_RIGHT_BRAKE_INPUT
+# -
+#   type: var
+#   var_name: L:WT_LNG_PARKING_BRAKE
+# -
+#   type: var
+#   var_name: L:WT_LNG_AILERONS_INPUT
+# -
+#   type: var
+#   var_name: L:WT_LNG_RUDDER_INPUT
+# -
+#   type: var
+#   var_name: L:WTG3000_MFD_1_Avionics_Status
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_2_Avionics_Status
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_1_Avionics_Status
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_1_Avionics_Status
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_2_Avionics_Status
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_3_Avionics_Status
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_4_Avionics_Status
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -638,21 +1127,9 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
-  - # Dakfly mod
+  -
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:12
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:13
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:14
     var_units: Pounds
     var_type: f64
     unreliable: true
