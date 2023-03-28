@@ -318,6 +318,9 @@ struct NumIncrementEntry<T> {
     #[serde(default)]
     // Whether to transmit the client event as a user/aircraft event
     is_user_event: bool,
+    // Whether to use execute_calculator_code to transmit the event
+    #[serde(default)]
+    use_calculator: bool,
 }
 
 #[derive(Deserialize)]
@@ -860,18 +863,10 @@ impl Definitions {
     where
         T: Default,
     {
-        let up_event_id = self.events.get_or_map_event_id(&var.up_event_name, false);
-        let down_event_id = self.events.get_or_map_event_id(&var.down_event_name, false);
-
         let (var_string, _) =
             self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
 
-        let mut mapping = NumIncrement::new(
-            up_event_id,
-            down_event_id,
-            var.is_user_event,
-            var.increment_by,
-        );
+        let mut mapping = NumIncrement::new(var.is_user_event, var.increment_by);
         mapping.set_pass_difference(var.pass_difference);
 
         if let Some(up_event_param) = var.up_event_param {
@@ -880,6 +875,17 @@ impl Definitions {
 
         if let Some(down_event_param) = var.down_event_param {
             mapping.set_down_event_param(down_event_param);
+        }
+
+        if var.use_calculator {
+            mapping.set_up_event_name(var.up_event_name);
+            mapping.set_down_event_name(var.down_event_name);
+        } else {
+            let up_event_id = self.events.get_or_map_event_id(&var.up_event_name, false);
+            let down_event_id = self.events.get_or_map_event_id(&var.down_event_name, false);
+
+            mapping.set_up_event_id(up_event_id);
+            mapping.set_down_event_id(down_event_id);
         }
 
         Ok((Box::new(mapping), var_string))
@@ -1269,10 +1275,11 @@ impl Definitions {
                     }
 
                     self.current_sync.events.push(Event::JSInput {
-                    instrument: message.instrument_name,
-                    value,
-                    id,
-                })},
+                        instrument: message.instrument_name,
+                        value,
+                        id,
+                    })
+                }
                 JSPayloads::Time {
                     hour,
                     minute,

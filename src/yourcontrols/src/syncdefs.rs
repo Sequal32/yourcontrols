@@ -281,9 +281,11 @@ where
 }
 
 pub struct NumIncrement<T> {
-    pub up_event_id: u32,
+    pub up_event_id: Option<u32>,
+    pub up_event_name: Option<String>,
     pub up_event_param: Option<T>,
-    pub down_event_id: u32,
+    pub down_event_id: Option<u32>,
+    pub down_event_name: Option<String>,
     pub down_event_param: Option<T>,
     pub is_user_event: bool,
     pub increment_amount: T,
@@ -295,15 +297,12 @@ impl<T> NumIncrement<T>
 where
     T: Default + ToString,
 {
-    pub fn new(
-        up_event_id: u32,
-        down_event_id: u32,
-        is_user_event: bool,
-        increment_amount: T,
-    ) -> Self {
+    pub fn new(is_user_event: bool, increment_amount: T) -> Self {
         Self {
-            up_event_id,
-            down_event_id,
+            up_event_id: None,
+            down_event_id: None,
+            up_event_name: None,
+            down_event_name: None,
             increment_amount,
             is_user_event,
             current: Default::default(),
@@ -324,6 +323,22 @@ where
     pub fn set_down_event_param(&mut self, param: T) {
         self.down_event_param = Some(param);
     }
+
+    pub fn set_down_event_name(&mut self, name: String) {
+        self.down_event_name = Some(format!("K:{}", name));
+    }
+
+    pub fn set_up_event_name(&mut self, name: String) {
+        self.up_event_name = Some(format!("K:{}", name));
+    }
+
+    pub fn set_down_event_id(&mut self, id: u32) {
+        self.down_event_id = Some(id);
+    }
+
+    pub fn set_up_event_id(&mut self, id: u32) {
+        self.up_event_id = Some(id);
+    }
 }
 
 impl<T> Syncable<T> for NumIncrement<T>
@@ -334,49 +349,89 @@ where
         self.current = current
     }
 
-    fn set_new(&mut self, new: T, conn: &simconnect::SimConnector, _: &mut LVarSyncer) {
+    fn set_new(&mut self, new: T, conn: &simconnect::SimConnector, lvar_transfer: &mut LVarSyncer) {
         let mut working = self.current;
         let object_id = if self.is_user_event { 0 } else { 1 };
 
         if self.pass_difference {
             if new > self.current {
-                conn.transmit_client_event(
-                    object_id,
-                    self.up_event_id,
-                    (new - self.current).to_i32().unwrap() as u32,
-                    GROUP_ID,
-                    simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
-                );
+                let difference = (new - self.current).to_i32().unwrap() as u32;
+
+                if let Some(event_id) = self.up_event_id {
+                    conn.transmit_client_event(
+                        object_id,
+                        event_id,
+                        difference,
+                        GROUP_ID,
+                        simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
+                    );
+                } else if let Some(event_name) = &self.up_event_name {
+                    lvar_transfer.set_unchecked(conn, event_name, None, &difference.to_string())
+                }
             } else if new < self.current {
-                conn.transmit_client_event(
-                    object_id,
-                    self.down_event_id,
-                    (self.current - new).to_i32().unwrap() as u32,
-                    GROUP_ID,
-                    simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
-                );
+                let difference = (self.current - new).to_i32().unwrap() as u32;
+
+                if let Some(event_id) = self.down_event_id {
+                    conn.transmit_client_event(
+                        object_id,
+                        event_id,
+                        difference,
+                        GROUP_ID,
+                        simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
+                    );
+                } else if let Some(event_name) = &self.up_event_name {
+                    lvar_transfer.set_unchecked(conn, event_name, None, &difference.to_string())
+                }
             }
         } else {
             while working > new {
                 working -= self.increment_amount;
-                conn.transmit_client_event(
-                    object_id,
-                    self.down_event_id,
-                    self.down_event_param.and_then(|x| x.to_u32()).unwrap_or(0),
-                    GROUP_ID,
-                    simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
-                );
+
+                if let Some(event_id) = self.down_event_id {
+                    conn.transmit_client_event(
+                        object_id,
+                        event_id,
+                        self.down_event_param.and_then(|x| x.to_u32()).unwrap_or(0),
+                        GROUP_ID,
+                        simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
+                    );
+                } else if let Some(event_name) = &self.down_event_name {
+                    lvar_transfer.set_unchecked(
+                        conn,
+                        event_name,
+                        None,
+                        &self
+                            .down_event_param
+                            .and_then(|x| x.to_u32())
+                            .unwrap_or(0)
+                            .to_string(),
+                    )
+                }
             }
 
             while working < new {
                 working += self.increment_amount;
-                conn.transmit_client_event(
-                    object_id,
-                    self.up_event_id,
-                    self.up_event_param.and_then(|x| x.to_u32()).unwrap_or(0),
-                    GROUP_ID,
-                    simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
-                );
+
+                if let Some(event_id) = self.up_event_id {
+                    conn.transmit_client_event(
+                        object_id,
+                        event_id,
+                        self.up_event_param.and_then(|x| x.to_u32()).unwrap_or(0),
+                        GROUP_ID,
+                        simconnect::SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY,
+                    );
+                } else if let Some(event_name) = &self.up_event_name {
+                    lvar_transfer.set_unchecked(
+                        conn,
+                        event_name,
+                        None,
+                        &self
+                            .up_event_param
+                            .and_then(|x| x.to_u32())
+                            .unwrap_or(0)
+                            .to_string(),
+                    )
+                }
             }
         }
     }

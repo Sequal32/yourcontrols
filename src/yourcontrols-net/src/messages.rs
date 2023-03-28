@@ -180,7 +180,7 @@ impl SenderReceiver {
 
         // Compress
         self.compressor
-            .set_compression_level(get_compression_level_for_message(message));
+            .set_compression_level(get_compression_level_for_message(message))?;
 
         let compressed = self.compressor.compress(&payload_bytes)?;
 
