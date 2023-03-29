@@ -571,7 +571,7 @@ fn main() {
                             is_init: false,
                         };
 
-                        write_update_data(&mut definitions, client, &permission, is_dev_build);
+                        write_update_data(&mut definitions, client, &permission, true);
 
                         update_rate_instant = Instant::now();
                     }
