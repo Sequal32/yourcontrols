@@ -5,8 +5,8 @@
 ### Profiles
 
 - Added: Airbus A318ceo by LatinVFR (v1.0.2).
-- Added: Airbus H125 by Cowan Simualation (v1.0.0).
-- Added: Bell 206B3 by Cowan Simualation (v1.0.2).
+- Added: Airbus H125 by Cowan Simulation (v1.0.0).
+- Added: Bell 206B3 by Cowan Simulation (v1.0.2).
 - Added: Cessna 172SP Classic by WBSim (v1.0.6).
 - Added: Embraer E175 by FlightSim Studio (v0.9.6-experimental).
   - Do not use standby freq/swap. Enter directly into active.
