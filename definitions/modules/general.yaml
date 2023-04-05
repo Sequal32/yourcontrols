@@ -47,7 +47,7 @@ shared:
     type: var
     var_name: A:FLAPS HANDLE INDEX
     var_units: Number
-    var_type: i32
+    var_type: f64
 
   - # ASOBO_HANDLING_Lever_Spoilers_Template
     type: NumSet
@@ -69,6 +69,13 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: ANTISKID_BRAKES_TOGGLE
+
+  - # ASOBO_HANDLING_Autobrakes_Template
+    type: NumSet
+    var_name: A:AUTO BRAKE SWITCH CB
+    var_units: Number
+    var_type: f64
+    event_name: SET_AUTOBRAKE_CONTROL
 
   - # ASOBO_HANDLING_Update_Unlock_Tailwheel
     type: ToggleSwitch

@@ -1,4 +1,4 @@
-# Version 1.0.4 / 0.1.0 Enhanced
+# Version 1.0.11 / 0.1.0 Enhanced
 
 include:
   - definitions/modules/Avionics/AS430.yaml
@@ -19,14 +19,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  -
-    type: NumIncrement
-    var_name: A:DECISION HEIGHT
-    var_units: Feet
-    var_type: f64
-    up_event_name: INCREASE_DECISION_HEIGHT
-    down_event_name: DECREASE_DECISION_HEIGHT
-    increment_by: 10
   -
     type: NumSet
     var_name: A:LIGHT LANDING:2
@@ -177,18 +169,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverPropellerHidden2
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
 # -
 #   type: var
-#   var_name: L:SWITCH_left_yoke_hider
+#   var_name: L:XMLVAR_YokeHidden1
 # -
 #   type: var
-#   var_name: L:SWITCH_right_yoke_hider
+#   var_name: L:XMLVAR_YokeHidden2
   -
     type: var
     var_name: L:Switch_SPERRYshow
@@ -323,6 +315,9 @@ shared:
     var_name: L:SWITCH_starter
 # -
 #   type: var
+#   var_name: L:radioheightcheck
+# -
+#   type: var
 #   var_name: L:throttlewarn
   -
     type: var
@@ -436,15 +431,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:INSTRUMENT_Altimeter_2
-  -
-    type: var
-    var_name: L:INSTRUMENT_ADF
-  -
-    type: var
-    var_name: L:INSTRUMENT_Course_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_ADF
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
 # -
 #   type: var
 #   var_name: L:AS430_MapZoomRange
@@ -457,21 +452,21 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_SelectedSource
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:HANDLING_RudderTrim
-  -
-    type: var
-    var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_AileronsTrim
   -
     type: var
     var_name: L:ELECTRICAL_ExternalPower_1
@@ -487,18 +482,18 @@ shared:
   -
     type: var
     var_name: L:DEICE_Switch_Engine
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
 # -
 #   type: var
 #   var_name: L:LIGHTING_CABIN_4
@@ -549,25 +544,28 @@ shared:
     var_name: L:qcoldcount
 # -
 #   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
 #   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:KX155A_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KX155A_1_State
-  -
-    type: var
-    var_name: L:KX155A_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KX155A_2_State
-  -
-    type: var
-    var_name: L:C300ADF_ScreenLuminosity
-  -
-    type: var
-    var_name: L:C300ADF_State
+# -
+#   type: var
+#   var_name: L:KX155A_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_2_State
+# -
+#   type: var
+#   var_name: L:C300ADF_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:C300ADF_State
+# -
+#   type: var
+#   var_name: L:KX155A_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_1_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED

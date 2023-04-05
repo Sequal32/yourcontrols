@@ -1,3 +1,5 @@
+# Version 0.1.93
+
 include:
   - definitions/modules/autopilot.yaml
   - definitions/modules/engines.yaml
@@ -70,6 +72,19 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 49
+
+  - # Passenger
+    type: ToggleSwitch
+    var_name: A:CABIN SEATBELTS ALERT SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_SEATBELTS_ALERT_SWITCH_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:CABIN NO SMOKING ALERT SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_NO_SMOKING_ALERT_SWITCH_TOGGLE
 
   - # Starters
     type: ToggleSwitch
@@ -251,16 +266,46 @@ shared:
     var_name: L:XMLVAR_Exclusive_Light_Last_Changed
   -
     type: var
+    var_name: L:WT_CJ4_PRESS_SOURCE
+  -
+    type: var
+    var_name: L:PASSENGER_KNOB_AIR_1
+  -
+    type: var
+    var_name: L:PASSENGER_KNOB_HEAT_1
+  -
+    type: var
+    var_name: L:PASSENGER_KNOB_AIR_3
+  -
+    type: var
+    var_name: L:WT_TOGA_ACTIVE
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:WT_CJ4_CLIMATE_CONTROL
+  -
+    type: var
+    var_name: L:PASSENGER_KNOB_AIR_2
+  -
+    type: var
+    var_name: L:PASSENGER_KNOB_HEAT_2
+  -
+    type: var
+    var_name: L:CJ4_EMER_LIGHT_ARMED
+  -
+    type: var
     var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
-  -
-    type: var
-    var_name: L:CJ4_PFD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:CJ4_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:CJ4_MFD_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -281,7 +326,13 @@ shared:
     var_name: L:DEICE_Airframe_2
 # -
 #   type: var
+#   var_name: L:XMLVAR_ThrottlePosition_1
+# -
+#   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePosition_2
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden2
@@ -303,9 +354,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_PEDESTRAL_SwitchStateTimer
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:WT21_AOA_PCT
   -
     type: var
     var_name: L:XMLVAR_Essential_Bus_ON
@@ -315,225 +369,318 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Baro1_SavedPressure
+  -
+    type: var
+    var_name: L:XMLVAR_Baro2_ForcedToSTD
 # -
 #   type: var
 #   var_name: L:XMLVAR_AirSpeedIsInMach
-# -
-#   type: var
-#   var_name: L:XMLVAR_VNAVButtonValue
   -
     type: var
     var_name: L:XMLVAR_PushXFR
-  -
-    type: var
-    var_name: L:RADIONAV_SOURCE
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_1
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_1
-  -
-    type: var
-    var_name: L:LIGHTING_LOGO_1
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_2
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_15
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_16
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_17
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_18
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LOGO_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_RECOGNITION_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_15
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_16
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_17
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_18
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
   -
     type: var
     var_name: L:DEICE_Pitot_1
   -
     type: var
     var_name: L:DEICE_Pitot_2
-  -
-    type: var
-    var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:WT_Virtual_Throttle_Lever_Pos_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:WT_Virtual_Throttle_Lever_Pos_2
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
   -
     type: var
-    var_name: L:CJ4_PFD_State
+    var_name: L:XMLVAR_IsDeiceAirFrame
   -
     type: var
-    var_name: L:AIRLINER_FLIGHT_PHASE
+    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:WT21_BETA_VERSION
   -
     type: var
-    var_name: L:AIRLINER_V1_SPEED
+    var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Alt_Capture_Type
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Next_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNAV_Required_VS
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Distance_In_Leg
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_TOD
   -
     type: var
-    var_name: L:AIRLINER_VR_SPEED
+    var_name: L:FMC_EXEC_ACTIVE
   -
     type: var
-    var_name: L:AIRLINER_V2_SPEED
+    var_name: L:WT_CMU_DATALINK_RCVD
+# -
+#   type: var
+#   var_name: L:WTWT21_LNavData_Tracked_Leg_End_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_BOD
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_FPA
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Destination_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_BOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WT21_STALL_WARNING
+# -
+#   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+  -
+    type: var
+    var_name: L:WT_CJ4_DISPLAY_MSG
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_DTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_XTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Tracking
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Transition_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Vector_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Course_To_Steer
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Suspended
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_State
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Available
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Target_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_GP_FPA
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_XTK
+# -
+#   type: var
+#   var_name: L:WT_LNavData_CDI_Scale
+# -
+#   type: var
+#   var_name: L:WTWT21_LNavData_CDI_Scale_Label
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Distance
+# -
+#   type: var
+#   var_name: L:WTWT21_LNavData_Nominal_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTWT21_LNavData_Destination_Distance_Direct
+# -
+#   type: var
+#   var_name: L:WTWT21_LNavData_Faf_Distance
+# -
+#   type: var
+#   var_name: L:WT21_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WT21_PFD_State
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Approach_Mode
+# -
+#   type: var
+#   var_name: L:WT21_MFD_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WT21_MFD_1_State
+# -
+#   type: var
+#   var_name: L:FADEC_TGT_N1_1
+# -
+#   type: var
+#   var_name: L:FADEC_TGT_N1_2
+# -
+#   type: var
+#   var_name: L:WT21_MFD_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WT21_MFD_2_State
+# -
+#   type: var
+#   var_name: L:WT21_FMC_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WT21_FMC_1_State
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
+#   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
+#   var_name: L:WT21_FMC_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WT21_FMC_2_State
+# -
+#   type: var
+#   var_name: L:CJ4_SAI_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:CJ4_SAI_State
+# -
+#   type: var
+#   var_name: L:HourMeter_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:HourMeter_State
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_VREF_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_VX_SPEED
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
-# -
-#   type: var
-#   var_name: L:Annunciations_Manager_Initialized
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_1
-  -
-    type: var
-    var_name: L:XMLVAR_Pitot_2
-  -
-    type: var
-    var_name: L:AS1000_Warnings_Master_Set
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-  -
-    type: var
-    var_name: L:PFD_MapShowCursor
-  -
-    type: var
-    var_name: L:PFD_MapZoomRange
-  -
-    type: var
-    var_name: L:CJ4_MAP_SYMBOLS
-  -
-    type: var
-    var_name: L:CJ4_MAP_ZOOM
-  -
-    type: var
-    var_name: L:XMLVAR_TRK_MODE_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
-  -
-    type: var
-    var_name: L:XMLVAR_NAV_AID_SWITCH_L2_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
-  -
-    type: var
-    var_name: L:CJ4_MFD_State
-  -
-    type: var
-    var_name: L:AS1000_Warnings_WarningIndex
-  -
-    type: var
-    var_name: L:MFD_MapShowCursor
-  -
-    type: var
-    var_name: L:MFD_MapZoomRange
-  -
-    type: var
-    var_name: L:Glasscockpit_MFD_Started
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-  -
-    type: var
-    var_name: L:AIRLINER_TO_FLEX_TEMP
-  -
-    type: var
-    var_name: L:AIRLINER_CRUISE_ALTITUDE
-  -
-    type: var
-    var_name: L:RADIONAV ACTIVE:1
-  -
-    type: var
-    var_name: L:CJ4_FMC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_FMC_State
-  -
-    type: var
-    var_name: L:FMC_UPDATE_CURRENT_PAGE
-  -
-    type: var
-    var_name: L:CJ4_SAI_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_SAI_State
-  -
-    type: var
-    var_name: L:HourMeter_ScreenLuminosity
-  -
-    type: var
-    var_name: L:HourMeter_State
-# -
-#   type: var
-#   var_name: L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
@@ -602,6 +749,12 @@ server:
   -
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:10
     var_units: Pounds
     var_type: f64
     unreliable: true
