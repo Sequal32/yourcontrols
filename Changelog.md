@@ -1,5 +1,23 @@
 # YourControls Changelog
 
+## Version 2.7.6
+
+### Changes
+
+- Added: Boeing 737NG Series by PMDG Simulations (v3.0.65).
+- Added: Support for stored radio frequencies.
+
+#### 737 Issues
+
+- Recommend setting unmodified COLDDARK state before sharing.
+- Fuel state unsyncable. Simvars being overridden.
+- Vertical speed window does not go negative value.
+- Altimeter sync is disabled. Sim event is being overridden?
+- APU/ENG bus switches may need to be switched twice for effect.
+- COM3 does nothing interally. Not using native simvars. Won't sync.
+- ADF standby frequency not using native simvar, active does and will sync.
+- FLT ALT/LAND ALT knobs currently disabled to prevent desync.
+
 ## Version 2.7.5
 
 ### Profiles
