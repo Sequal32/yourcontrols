@@ -61,7 +61,7 @@ impl ClientManager {
 
         if let Some(next_control) = self.next_control.as_ref() {
             if next_control == name {
-                self.next_control = self.clients.keys().into_iter().next().cloned();
+                self.next_control = self.clients.keys().next().cloned();
             }
         }
     }
@@ -99,9 +99,5 @@ impl ClientManager {
     pub fn reset(&mut self) {
         self.clients.clear();
         self.current_control = None;
-    }
-
-    pub fn get_number_clients(&self) -> usize {
-        self.clients.len()
     }
 }

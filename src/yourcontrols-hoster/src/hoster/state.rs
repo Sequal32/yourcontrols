@@ -30,12 +30,10 @@ impl ServerState {
     }
 
     pub fn get_from_addr(&mut self, addr: SocketAddr) -> Option<&mut ClientConnection> {
-        for (_, client) in self.clients.iter_mut() {
-            if client.addr == addr {
-                return Some(client);
-            }
-        }
-        None
+        self.clients
+            .iter_mut()
+            .map(|(_, client)| client)
+            .find(|client| client.addr == addr)
     }
 
     pub fn add_client(&mut self, name: String, addr: SocketAddr, is_observer: bool) {

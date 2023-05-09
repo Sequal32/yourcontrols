@@ -61,9 +61,9 @@ pub enum InterpolationType {
 
 fn format_get(var_name: &str, var_units: Option<&str>) -> String {
     if let Some(unit) = var_units {
-        return format!(r#"({}, {})"#, var_name, unit.trim());
+        format!(r#"({}, {})"#, var_name, unit.trim())
     } else {
-        return format!(r#"({})"#, var_name.trim());
+        format!(r#"({})"#, var_name.trim())
     }
 }
 

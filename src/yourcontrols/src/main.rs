@@ -1,5 +1,4 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-#![allow(unaligned_references)]
 
 mod app;
 mod clientmanager;
@@ -46,7 +45,7 @@ const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
 fn get_aircraft_configs() -> io::Result<Vec<String>> {
     let mut filenames = Vec::new();
 
-    for file in read_dir(&AIRCRAFT_DEFINITIONS_PATH)? {
+    for file in read_dir(AIRCRAFT_DEFINITIONS_PATH)? {
         let file = file?;
         filenames.push(
             file.path()
