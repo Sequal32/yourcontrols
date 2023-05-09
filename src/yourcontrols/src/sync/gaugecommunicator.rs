@@ -104,14 +104,16 @@ impl GaugeCommunicator {
             writer.write_string(format!(r#"{} (>{})"#, val.trim(), var_name.trim()));
         }
 
-        conn.set_client_data(
-            SEND,
-            SEND,
-            0,
-            0,
-            128,
-            writer.get_data_location() as *mut std::ffi::c_void,
-        );
+        unsafe {
+            conn.set_client_data(
+                SEND,
+                SEND,
+                0,
+                0,
+                128,
+                writer.get_data_location() as *mut std::ffi::c_void,
+            );
+        }
     }
 
     pub fn send_raw(&self, conn: &SimConnector, string: &str) {
@@ -119,14 +121,17 @@ impl GaugeCommunicator {
         writer.write_i32(0);
         writer.pad(4);
         writer.write_str(string);
-        conn.set_client_data(
-            SEND,
-            SEND,
-            0,
-            0,
-            128,
-            writer.get_data_location() as *mut std::ffi::c_void,
-        );
+
+        unsafe {
+            conn.set_client_data(
+                SEND,
+                SEND,
+                0,
+                0,
+                128,
+                writer.get_data_location() as *mut std::ffi::c_void,
+            );
+        }
     }
 
     pub fn add_definition(&mut self, var_name: String, var_units: Option<&str>) {
@@ -151,14 +156,16 @@ impl GaugeCommunicator {
                 }
             }
 
-            conn.set_client_data(
-                SEND_MULTIPLE,
-                SEND_MULTIPLE,
-                0,
-                0,
-                8064,
-                writer.get_data_location() as *mut std::ffi::c_void,
-            );
+            unsafe {
+                conn.set_client_data(
+                    SEND_MULTIPLE,
+                    SEND_MULTIPLE,
+                    0,
+                    0,
+                    8064,
+                    writer.get_data_location() as *mut std::ffi::c_void,
+                );
+            }
         }
     }
 
@@ -210,27 +217,32 @@ impl GaugeCommunicator {
             }
         }
 
-        conn.set_client_data(
-            SEND_INTERPOLATE,
-            SEND_INTERPOLATE,
-            simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED,
-            0,
-            count * 12 + 12,
-            writer.get_data_location() as *mut std::ffi::c_void,
-        );
+        unsafe {
+            conn.set_client_data(
+                SEND_INTERPOLATE,
+                SEND_INTERPOLATE,
+                simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED,
+                0,
+                count * 12 + 12,
+                writer.get_data_location() as *mut std::ffi::c_void,
+            );
+        }
     }
 
     fn do_operation(&self, operation: i32, conn: &SimConnector) {
         let mut writer = MemWriter::new(128, 4).unwrap();
         writer.write_i32(operation);
-        conn.set_client_data(
-            SEND,
-            SEND,
-            0,
-            0,
-            128,
-            writer.get_data_location() as *mut std::ffi::c_void,
-        );
+
+        unsafe {
+            conn.set_client_data(
+                SEND,
+                SEND,
+                0,
+                0,
+                128,
+                writer.get_data_location() as *mut std::ffi::c_void,
+            );
+        }
     }
 
     fn clear_definitions(&mut self, conn: &SimConnector) {
@@ -246,7 +258,7 @@ impl GaugeCommunicator {
         data: &simconnect::SIMCONNECT_RECV_CLIENT_DATA,
     ) -> Vec<GetResult> {
         let datums: &'static [ReturnDatum] = unsafe {
-            let pointer = &data._base.dwData as *const u32;
+            let pointer = std::ptr::addr_of!(data._base.dwData);
             let array_pointer = pointer.add(2) as *const ReturnDatum;
             let length = pointer.read();
 
@@ -288,14 +300,16 @@ impl GaugeCommunicator {
             writer.pad(64 - datum.exec_string.len() as isize);
         }
 
-        conn.set_client_data(
-            MAP_INTERPOLATE,
-            MAP_INTERPOLATE,
-            simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED,
-            0,
-            (self.interpolate_datums.len() * 72) as u32,
-            writer.get_data_location() as *mut std::ffi::c_void,
-        );
+        unsafe {
+            conn.set_client_data(
+                MAP_INTERPOLATE,
+                MAP_INTERPOLATE,
+                simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED,
+                0,
+                (self.interpolate_datums.len() * 72) as u32,
+                writer.get_data_location() as *mut std::ffi::c_void,
+            );
+        }
     }
 
     pub fn on_connected(&mut self, conn: &SimConnector) {

@@ -253,7 +253,9 @@ fn main() {
                     }
                     // Exception occured
                     DispatchResult::Exception(data) => {
-                        warn!("[SIM] SimConnect exception occurred: {}", data.dwException);
+                        warn!("[SIM] SimConnect exception occurred: {}", unsafe {
+                            std::ptr::addr_of!(data.dwException).read_unaligned()
+                        });
 
                         if data.dwException == 31 {
                             // Client data area was not initialized by the gauge

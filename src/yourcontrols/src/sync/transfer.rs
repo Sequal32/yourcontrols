@@ -204,10 +204,10 @@ impl AircraftVars {
         &mut self,
         data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA,
     ) -> Result<SimValue, io::Error> {
-        let vars = match self
-            .reader
-            .read_from_bytes(data.dwDefineCount, &data.dwData as *const u32)
-        {
+        let vars = match self.reader.read_from_bytes(
+            data.dwDefineCount,
+            std::ptr::addr_of!(data.dwData) as *const u32,
+        ) {
             Ok(v) => v,
             Err(e) => return Err(e),
         };
@@ -225,14 +225,17 @@ impl AircraftVars {
 
     pub fn set_vars(&self, conn: &SimConnector, data: &SimValue) {
         let mut bytes = self.reader.write_to_data(data);
-        conn.set_data_on_sim_object(
-            self.define_id,
-            0,
-            simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED,
-            data.len() as u32,
-            bytes.len() as u32,
-            bytes.as_mut_ptr() as *mut std::ffi::c_void,
-        );
+
+        unsafe {
+            conn.set_data_on_sim_object(
+                self.define_id,
+                0,
+                simconnect::SIMCONNECT_CLIENT_DATA_SET_FLAG_TAGGED,
+                data.len() as u32,
+                bytes.len() as u32,
+                bytes.as_mut_ptr() as *mut std::ffi::c_void,
+            );
+        }
     }
 
     pub fn get_var(&self, var_name: &str) -> Option<&VarReaderTypes> {
