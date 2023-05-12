@@ -1479,25 +1479,19 @@ impl Definitions {
         self.process_events(conn)
     }
 
-    fn filter_all_sync(&self, data: &mut AllNeedSync, sync_permission: &SyncPermission) {
-        data.filter(|name| self.can_sync(name, sync_permission));
-    }
-
     fn split_unreliable(&self, data: &mut AllNeedSync) -> AllNeedSync {
         data.filter_keep(|name| {
             self.interpolate_vars.contains(name) || self.unreliable_vars.contains(name)
         })
     }
 
-    pub fn get_need_sync(
-        &mut self,
+    fn filter_all_sync(
+        &self,
+        mut data: AllNeedSync,
         sync_permission: &SyncPermission,
     ) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
-        let mut data = AllNeedSync::new();
-        // Swap queued vars into local var
-        swap(&mut data, &mut self.current_sync);
         // Filter out based on what the client's current permissions are
-        self.filter_all_sync(&mut data, sync_permission);
+        data.filter(|name| self.can_sync(name, sync_permission));
         // Split into interpolated vs non interpolated values - used for reliable/unreliable transmissions
         let regular = self.split_unreliable(&mut data);
         // Convert into options
@@ -1509,6 +1503,25 @@ impl Definitions {
         };
 
         (unreliable, regular)
+    }
+
+    pub fn get_var_sync(
+        &mut self,
+        sync_permission: &SyncPermission,
+    ) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
+        let mut data = AllNeedSync::new();
+        data.avars = data.avars.drain().collect();
+        data.lvars = data.lvars.drain().collect();
+        self.filter_all_sync(data, sync_permission)
+    }
+
+    pub fn get_event_sync(
+        &mut self,
+        sync_permission: &SyncPermission,
+    ) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
+        let mut data = AllNeedSync::new();
+        data.events = data.events.drain(..).collect();
+        self.filter_all_sync(data, sync_permission)
     }
 
     fn can_sync(&self, var_name: &str, sync_permission: &SyncPermission) -> bool {
@@ -1642,12 +1655,11 @@ impl Definitions {
     pub fn on_receive_data(
         &mut self,
         conn: &SimConnector,
-        data: AllNeedSync,
+        mut data: AllNeedSync,
         time: f64,
         sync_permission: &SyncPermission,
     ) -> Result<(), Error> {
-        let mut data = data;
-        self.filter_all_sync(&mut data, sync_permission);
+        data.filter(|name| self.can_sync(name, sync_permission));
 
         // In this specific order
         // Aircraft var data should overwrite any event data

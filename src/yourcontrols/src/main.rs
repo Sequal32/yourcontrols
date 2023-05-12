@@ -31,6 +31,7 @@ use std::{
 };
 use update::Updater;
 use yourcontrols_net::{Client, Event, Payloads, ReceiveMessage, Server, TransferClient};
+use yourcontrols_types::AllNeedSync;
 
 use crate::util::get_hostname_ip;
 
@@ -114,12 +115,11 @@ fn start_client(
 }
 
 fn write_update_data(
-    definitions: &mut Definitions,
+    data: (Option<AllNeedSync>, Option<AllNeedSync>),
     client: &mut Box<dyn TransferClient>,
-    permission: &SyncPermission,
     log_sent: bool,
 ) {
-    let (unreliable, reliable) = definitions.get_need_sync(permission);
+    let (unreliable, reliable) = data;
 
     if let Some(data) = unreliable {
         client.update(data, true);
@@ -564,33 +564,35 @@ fn main() {
                 }
             }
 
-            // Handle initial connection delay, allows lvars to be processed
-            if let Some(time) = connection_time {
-                if time.elapsed().as_secs() >= 3 {
-                    // Update
-                    let can_update = update_rate_instant.elapsed().as_secs_f64() > update_rate;
+            // Handle initial 3 second connection delay, allows lvars to be processed
+            if let Some(true) = connection_time.map(|t| t.elapsed().as_secs() >= 3) {
+                // Update
+                let can_update_vars = update_rate_instant.elapsed().as_secs_f64() > update_rate;
 
-                    // Do not let server send initial data - wait for data to get cleared on the previous loop
-                    if !observing && can_update && ready_to_process_data {
-                        let permission = SyncPermission {
-                            is_server: client.is_host(),
-                            is_master: control.has_control(),
-                            is_init: false,
-                        };
+                // Do not let server send initial data - wait for data to get cleared on the previous loop
+                if !observing && ready_to_process_data {
+                    let permission = SyncPermission {
+                        is_server: client.is_host(),
+                        is_master: control.has_control(),
+                        is_init: false,
+                    };
 
-                        write_update_data(&mut definitions, client, &permission, true);
-
-                        update_rate_instant = Instant::now();
+                    if can_update_vars {
+                        write_update_data(definitions.get_var_sync(&permission), client, true);
+                    } else {
+                        write_update_data(definitions.get_event_sync(&permission), client, true);
                     }
 
-                    // Tell server we're ready to receive data after 3 seconds
-                    if !ready_to_process_data {
-                        ready_to_process_data = true;
-                        definitions.reset_sync();
+                    update_rate_instant = Instant::now();
+                }
 
-                        if !client.is_host() {
-                            client.send_ready();
-                        }
+                // Tell server we're ready to receive data after 3 seconds
+                if !ready_to_process_data {
+                    ready_to_process_data = true;
+                    definitions.reset_sync();
+
+                    if !client.is_host() {
+                        client.send_ready();
                     }
                 }
             }
