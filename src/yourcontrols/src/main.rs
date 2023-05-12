@@ -2,6 +2,7 @@
 #![allow(non_snake_case)]
 
 mod app;
+mod audio;
 mod clientmanager;
 mod corrector;
 mod definitions;
@@ -13,6 +14,7 @@ mod util;
 mod varreader;
 
 use app::{App, AppMessage, ConnectionMethod};
+use audio::AudioManager;
 use clientmanager::ClientManager;
 use definitions::{Definitions, ProgramAction, SyncPermission};
 use log::{error, info, warn};
@@ -167,6 +169,12 @@ fn main() {
     let mut conn = simconnect::SimConnector::new();
     let mut control = Control::new();
     let mut clients = ClientManager::new();
+
+    let mut audio = AudioManager::new();
+    if let Err(e) = audio.setup_stream() {
+        error!("[AUDIO] Could not initialize audio! Reason: {}", e);
+    }
+    audio.mute(config.sound_muted);
 
     let mut updater = Updater::new();
     let mut installer_spawned = false;
@@ -520,6 +528,10 @@ fn main() {
                             observing = false;
                             should_set_none_client = true;
 
+                            if let Err(e) = audio.play_disconnected() {
+                                warn!("[AUDIO] Error playing audio: {}", e);
+                            }
+
                             app_interface.client_fail(&reason);
                         }
                         Event::UnablePunchthrough => app_interface.client_fail(
@@ -798,9 +810,9 @@ fn main() {
                         }
                     };
                 }
-                AppMessage::UpdateConfig { new_config } => {
-                    config = new_config;
+                AppMessage::UpdateConfig { new_config: config } => {
                     update_rate = calculate_update_rate(config.update_rate);
+                    audio.mute(config.sound_muted);
                     write_configuration(&config);
                 }
                 AppMessage::ForceTakeControl => {

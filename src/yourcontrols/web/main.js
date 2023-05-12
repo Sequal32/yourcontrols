@@ -21,6 +21,7 @@ var name_input_join = document.getElementById("name-input-join");
 var theme_selector = document.getElementById("theme-select");
 var streamer_mode = document.getElementById("streamer-mode");
 var instructor_mode = document.getElementById("instructor-mode");
+var sound_muted = document.getElementById("sound-muted");
 
 var update_rate_input = document.getElementById("update-rate-input");
 var timeout_input = document.getElementById("timeout-input");
@@ -490,6 +491,7 @@ $("#settings-form").submit(function (e) {
     newSettings.ui_dark_theme = theme_selector.checked;
     newSettings.streamer_mode = streamer_mode.checked;
     newSettings.instructor_mode = instructor_mode.checked;
+    newSettings.sound_muted = sound_muted.checked;
 
     for (key in newSettings) {
         if (newSettings[key] === null) {

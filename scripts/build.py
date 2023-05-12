@@ -26,6 +26,7 @@ insert_all_into_zip(zipObj, "definitions/aircraft", "definitions/aircraft")
 insert_all_into_zip(zipObj, "definitions/modules", "definitions/modules")
 insert_all_into_zip(zipObj, "scripts/build-include", "")
 zipObj.write("assets/logo.png", "assets/logo.png")
+zipObj.write("assets/disconnected.mp3", "assets/disconnected.mp3")
 zipObj.write("target/release/YourControls.exe", "YourControls.exe")
 zipObj.write("SimConnect.dll", "SimConnect.dll")
 
