@@ -1,4 +1,4 @@
-# Version 1.1.2
+# Version 1.1.5
 
 include:
   - definitions/modules/autopilot.yaml
@@ -45,7 +45,7 @@ shared:
     event_name: CABIN_LIGHTS_SET
     event_param: 2
 
-  - # LVAR's (trimmed)
+  - # LVAR's
     type: var
     var_name: L:Exterior_Door_Handle
   -
@@ -84,9 +84,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden2
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:VOLT_TOGGLE
@@ -95,19 +95,22 @@ shared:
 #   var_name: L:HANDLING_ElevatorTrim
   -
     type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
+    var_name: L:efb_show_hide
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
@@ -123,21 +126,57 @@ shared:
   -
     type: var
     var_name: L:ENG_Start_Right
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
   -
     type: var
     var_name: L:TailWheelLever
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
   -
     type: var
     var_name: L:Cockpit_Door_Handle
   -
     type: var
     var_name: L:INSTRUMENT_Knob_Volts
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+  -
+    type: var
+    var_name: L:switch_headphones2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:HourMeter_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:HourMeter_State
+# -
+#   type: var
+#   var_name: L:g21-ini-efb_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:g21-ini-efb_State
+# -
+#   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   -

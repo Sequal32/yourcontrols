@@ -1,3 +1,5 @@
+# Version 0.1.29
+
 include:
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
@@ -9,6 +11,7 @@ include:
   - definitions/modules/navigation.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
@@ -190,6 +193,9 @@ shared:
     var_name: L:FA18_DDI_HSI_BING_MAP_SHOWN
   -
     type: var
+    var_name: L:AS04F_HELMET_MOUNTED_DISPLAY_BRIGHTNESS
+  -
+    type: var
     var_name: L:XMLVAR_Lights_Mode
   -
     type: var
@@ -203,15 +209,15 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_AS04F_Hook_Bypass
-  -
-    type: var
-    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
   -
     type: var
     var_name: L:XMLVAR_AS04F_HUD_1_Brightness
-  -
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
 # -
 #   type: var
 #   var_name: L:XMLVAR_AB_L_Current_Stage
@@ -223,25 +229,25 @@ shared:
     var_name: L:XMLVAR_AS04F_Hook_Position_Factor
   -
     type: var
-    var_name: L:XMLVAR_AS04F_DDI_1_Brightness
-  -
-    type: var
     var_name: L:EFD_Knob_Bingo_Pulled
-  -
-    type: var
-    var_name: L:XMLVAR_Update_Bleed
-  -
-    type: var
-    var_name: L:XMLVAR_AS04F_DDI_3_Brightness
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter1
   -
     type: var
     var_name: L:XMLVAR_AS04F_DDI_2_Brightness
+  -
+    type: var
+    var_name: L:XMLVAR_Update_Bleed
 # -
 #   type: var
 #   var_name: L:HANDLING_AILERON_ELEVATOR_Trim_Position
   -
     type: var
-    var_name: L:XMLVAR_Starter1
+    var_name: L:XMLVAR_AS04F_DDI_3_Brightness
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_DDI_1_Brightness
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -260,9 +266,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_EXT_Lights_Mode
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
   -
     type: var
     var_name: L:XMLVAR_EXT_LTS_IDENT
@@ -281,15 +287,15 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_DeiceWindshield_1
-  -
-    type: var
-    var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
   -
     type: var
     var_name: L:XMLVAR_AS04F_Fire_Test_Enabled
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
   -
     type: var
     var_name: L:XMLVAR_Parking_Brake
@@ -314,15 +320,15 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_HUD_Push_VelocityVector_Cage
-  -
-    type: var
-    var_name: L:HANDLING_RudderTrim
-  -
-    type: var
-    var_name: L:ELECTRICAL_APU_Starter
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_APU_Starter
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
   -
     type: var
     var_name: L:FA18_Fuel_Bingo
@@ -350,27 +356,27 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_AS04F_HUD_ATT_Selector
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_2
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_3
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_6
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_6
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Afterburner_1_LastThrottleInc
@@ -380,6 +386,72 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HMD_Symbology_Reject
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HMD_BrightnessMode
+  -
+    type: var
+    var_name: L:FA18_DDI_BLIM_MODE
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:DDI_MapShowCursor
+  -
+    type: var
+    var_name: L:DDI_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_4_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_4_State
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:FA18_DDI_LAT_LON_DISPLAY_MODE
+  -
+    type: var
+    var_name: L:Glasscockpit_TACAN_Mode
+  -
+    type: var
+    var_name: L:FA18_DDI_STEERING_SOURCE
+  -
+    type: var
+    var_name: L:FA18_IS_STEERING_COUPLED
+  -
+    type: var
+    var_name: L:FA18_Alert_Triggered
+  -
+    type: var
+    var_name: L:FA18_Warning_Landing_Gear
+# -
+#   type: var
+#   var_name: L:FA_18_TIME_SINCE_TAKE_OFF
+  -
+    type: var
+    var_name: L:FA18_BINGO_TRIGGERED
+# -
+#   type: var
+#   var_name: L:AS04F_AltitudeRollers_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_AltitudeRollers_State
+# -
+#   type: var
+#   var_name: L:AS04F_HMD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_HMD_State
   -
     type: var
     var_name: L:FA18_Alert_RAlt
@@ -394,55 +466,25 @@ shared:
     var_name: L:FA18_Alert_Active
   -
     type: var
-    var_name: L:FA18_Alert_Triggered
-  -
-    type: var
-    var_name: L:Glasscockpit_TACAN_Mode
-  -
-    type: var
     var_name: L:FA18_HEADING_SELECT_MODE
-  -
-    type: var
-    var_name: L:AS04F_ACC_UFCD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS04F_ACC_UFCD_State
-  -
-    type: var
-    var_name: L:AS04F_ACC_EFD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS04F_ACC_EFD_State
-  -
-    type: var
-    var_name: L:FA18_DDI_BLIM_MODE
 # -
 #   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-  -
-    type: var
-    var_name: L:DDI_MapShowCursor
-  -
-    type: var
-    var_name: L:DDI_MapZoomRange
-  -
-    type: var
-    var_name: L:AS04F_DDI_3_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS04F_DDI_3_State
-  -
-    type: var
-    var_name: L:AS1000_Warnings_Master_Set
-  -
-    type: var
-    var_name: L:AS1000_Warnings_WarningIndex
-  -
-    type: var
-    var_name: L:FA18_DDI_LAT_LON_DISPLAY_MODE
-  -
-    type: var
-    var_name: L:FA18_DDI_STEERING_SOURCE
+#   var_name: L:AS04F_ACC_UFCD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_ACC_UFCD_State
+# -
+#   type: var
+#   var_name: L:AS04F_ACC_EFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_ACC_EFD_State
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_3_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_3_State
   -
     type: var
     var_name: L:FA18_DDI_HSI_NORTH_UP
@@ -451,25 +493,13 @@ shared:
     var_name: L:FA18_ADF_ACTIVE
   -
     type: var
-    var_name: L:FA18_IS_STEERING_COUPLED
-  -
-    type: var
-    var_name: L:FA18_Warning_Landing_Gear
+    var_name: L:FA18_DDI_START_PAGE_1
 # -
 #   type: var
-#   var_name: L:FA_18_TIME_SINCE_TAKE_OFF
-  -
-    type: var
-    var_name: L:FA18_BINGO_TRIGGERED
-  -
-    type: var
-    var_name: L:FA18_DDI_START_PAGE_1
-  -
-    type: var
-    var_name: L:AS04F_DDI_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS04F_DDI_1_State
+#   var_name: L:AS04F_DDI_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_1_State
   -
     type: var
     var_name: L:FA18_DDI_CURRENT_SEQUENCE_INDEX
@@ -482,30 +512,18 @@ shared:
   -
     type: var
     var_name: L:FA18_DDI_START_PAGE_2
-  -
-    type: var
-    var_name: L:AS04F_DDI_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS04F_DDI_2_State
-  -
-    type: var
-    var_name: L:AS04F_DDI_4_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS04F_DDI_4_State
-  -
-    type: var
-    var_name: L:AS04F_AltitudeRollers_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS04F_AltitudeRollers_State
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_2_State
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:FA18_DDI_CURRENT_WAYPOINT_NUMBER

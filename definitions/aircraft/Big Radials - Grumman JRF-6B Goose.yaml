@@ -1,7 +1,6 @@
-# Version 1.0.4
+# Version 1.0.8
 
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/autopilot.yaml
@@ -114,40 +113,70 @@ shared:
     var_type: bool
     event_name: FUELSYSTEM_VALVE_TOGGLE
     event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:5
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 5
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:1
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 1
+    index_reversed: true
 
-  - # LVAR's
+  - # LVAR's (Ski, trimmed)
     type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+    var_name: L:FUEL_Knob_Selector
+  -
+    type: var
+    var_name: L:FUEL_Knob_XFeed
 # -
 #   type: var
-#   var_name: L:PROPSTART_1_RPM
+#   var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:PROPSTART_1_RPM
+    interpolate: Default
 # -
 #   type: var
 #   var_name: L:PROPSTART_1_ANGLE
-# -
-#   type: var
-#   var_name: L:PROPSTART_2_RPM
+  -
+    type: var
+    var_name: L:PROPSTART_2_RPM
+    interpolate: Default
 # -
 #   type: var
 #   var_name: L:PROPSTART_2_ANGLE
   -
     type: var
-    var_name: L:XML_mainexit
+    var_name: L:BR_mainexit
   -
     type: var
-    var_name: L:XML_fronthatch
+    var_name: L:BR_fronthatch
   -
     type: var
-    var_name: L:XML_emergencyexit
+    var_name: L:BR_emergencyexit
   -
     type: var
-    var_name: L:XML_wheelhub
+    var_name: L:BR_wheelhub
   -
     type: var
-    var_name: L:XML_anchor
+    var_name: L:BR_anchor
   -
     type: var
-    var_name: L:XML_stool
+    var_name: L:BR_stool
   -
     type: var
     var_name: L:CriticalEngine_2
@@ -160,34 +189,40 @@ shared:
   -
     type: var
     var_name: L:RoughEngine_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
   -
     type: var
-    var_name: L:XML_exitladder
+    var_name: L:BR_exitladder
 # -
 #   type: var
-#   var_name: L:XML_hidelyoke
+#   var_name: L:BR_hidelyoke
   -
     type: var
-    var_name: L:XML_leatherl
+    var_name: L:BR_leatherl
 # -
 #   type: var
-#   var_name: L:XML_hideryoke
+#   var_name: L:BR_hideryoke
   -
     type: var
-    var_name: L:XML_leatherr
+    var_name: L:BR_leatherr
 # -
 #   type: var
-#   var_name: L:XML_AircraftAtAnchorPosLat
+#   var_name: L:BR_AircraftAtAnchorPosLat
 # -
 #   type: var
-#   var_name: L:XML_AircraftAtAnchorPosLon
+#   var_name: L:BR_AircraftAtAnchorPosLon
 # -
 #   type: var
-#   var_name: L:XML_AircraftAtAnchorPosHDG
+#   var_name: L:BR_AircraftAtAnchorPosHDG
   -
     type: var
     var_name: L:HDG_BUG
-    unreliable: true
+    interpolate: Default
   -
     type: var
     var_name: L:TOGGLE_GYROPILOT
@@ -196,22 +231,19 @@ shared:
     var_name: L:TOGGLE_HDG_HOLD
   -
     type: var
-    var_name: L:XML_pitchref
+    var_name: L:BR_pitchref
   -
     type: var
-    var_name: L:XML_bankref
+    var_name: L:BR_bankref
   -
     type: var
-    var_name: L:XML_rudknob
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+    var_name: L:BR_rudknob
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
-  -
-    type: var
-    var_name: L:FUEL_Knob_Selector
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverMixtureHidden1
@@ -236,150 +268,144 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverPropellerHidden2
-  -
-    type: var
-    var_name: L:FailureTimer_1
-    unreliable: true
-  -
-    type: var
-    var_name: L:CriticalTimer_1
-    unreliable: true
-  -
-    type: var
-    var_name: L:FailureTimer_2
-    unreliable: true
-  -
-    type: var
-    var_name: L:CriticalTimer_2
-    unreliable: true
+# -
+#   type: var
+#   var_name: L:FailureTimer_1
+# -
+#   type: var
+#   var_name: L:CriticalTimer_1
+# -
+#   type: var
+#   var_name: L:FailureTimer_2
+# -
+#   type: var
+#   var_name: L:CriticalTimer_2
   -
     type: var
     var_name: L:Starter1IN
   -
     type: var
     var_name: L:StarterTimer1
-    unreliable: true
   -
     type: var
     var_name: L:Starter2IN
   -
     type: var
     var_name: L:StarterTimer2
-    unreliable: true
   -
     type: var
     var_name: L:LANDING_1_Retracted
   -
     type: var
-    var_name: L:XML_fireright
+    var_name: L:BR_fireright
   -
     type: var
-    var_name: L:XML_fireleft
+    var_name: L:BR_fireleft
   -
     type: var
-    var_name: L:XML_firepull
+    var_name: L:BR_firepull
   -
     type: var
-    var_name: L:XML_cockpithatch
+    var_name: L:BR_cockpithatch
   -
     type: var
-    var_name: L:XML_controlbox
+    var_name: L:BR_controlbox
   -
     type: var
-    var_name: L:XML_fwdhulldoor
+    var_name: L:BR_fwdhulldoor
   -
     type: var
-    var_name: L:XML_cabindoor
+    var_name: L:BR_cabindoor
   -
     type: var
-    var_name: L:XML_backdoor
+    var_name: L:BR_backdoor
   -
     type: var
-    var_name: L:XML_pilotwindow
+    var_name: L:BR_pilotwindow
   -
     type: var
-    var_name: L:XML_pilotwindowsound
+    var_name: L:BR_pilotwindowsound
   -
     type: var
-    var_name: L:XML_copilotwindowsound
+    var_name: L:BR_copilotwindowsound
   -
     type: var
-    var_name: L:XML_copilotwindow
+    var_name: L:BR_copilotwindow
   -
     type: var
-    var_name: L:XML_pilotwindowlock
+    var_name: L:BR_pilotwindowlock
   -
     type: var
-    var_name: L:XML_copilotwindowlock
+    var_name: L:BR_copilotwindowlock
 # -
 #   type: var
 #   var_name: L:AS530_Default_MapZoomRange
 # -
 #   type: var
 #   var_name: L:AS530_SelectedSource
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_2
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_2
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_3
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_4
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_3
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_4
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_LOGO_1
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_1
-  -
-    type: var
-    var_name: L:LIGHTING_WING_1
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LOGO_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
   -
     type: var
     var_name: L:TAILWHEEL LOCK ON
 # -
 #   type: var
 #   var_name: L:XMLVAR_Magneto_Starter_IsHeld
-  -
-    type: var
-    var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -395,30 +421,30 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Mode
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_ADF
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
   -
     type: var
-    var_name: L:XMLVAR_ADF_Mode
-  -
-    type: var
-    var_name: L:INSTRUMENT_ADF
-  -
-    type: var
-    var_name: L:INSTRUMENT_Course_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Course_2
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_1
-  -
-    type: var
-    var_name: L:LIGHTING_GLARESHIELD_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:XML_DOOR_Rear
+    var_name: L:BR_DOOR_Rear
   -
     type: var
     var_name: L:GNS_Brightness
@@ -433,118 +459,7 @@ shared:
 #   var_name: L:XMLVAR_Starter_State_MinReleaseTime
   -
     type: var
-    var_name: L:XML_traylock
-  -
-    type: var
-    var_name: L:ELECTRICAL_Starter_1
-  -
-    type: var
-    var_name: L:ELECTRICAL_Starter_2
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
-  -
-    type: var
-    var_name: L:CJ4_PFD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:CJ4_MFD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
-  -
-    type: var
-    var_name: L:DEICE_Airframe_1
-  -
-    type: var
-    var_name: L:DEICE_Airframe_2
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_Switch_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:XMLVAR_AileronTrim_Switch_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_PEDESTRAL
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_PEDESTRAL_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:Generic_Master_Caution_Active
-# -
-#   type: var
-#   var_name: L:Generic_Master_Warning_Active
-# -
-#   type: var
-#   var_name: L:PFD_BRG1_Source
-# -
-#   type: var
-#   var_name: L:PFD_BRG2_Source
-# -
-#   type: var
-#   var_name: L:PFD_CDI_Source
-# -
-#   type: var
-#   var_name: L:Glasscockpit_DmeSource
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:AS330_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS330_State
+    var_name: L:BR_traylock
 
 server:
   -

@@ -1,6 +1,7 @@
-# Version 1.1.3
+# Version 1.1.8
 
 include:
+  - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -237,9 +238,12 @@ shared:
   -
     type: var
     var_name: L:B747_8_MFD_NAV_MODE
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+    var_name: L:HH4_Exterior_Buoys
 # -
 #   type: var
 #   var_name: L:PROP_ROT_1
@@ -264,9 +268,37 @@ shared:
 # -
 #   type: var
 #   var_name: L:PROP_ROT_8
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+  -
+    type: var
+    var_name: L:AS225_Brightness_1
+    cancel_h_events: true
   -
     type: var
     var_name: L:EFB_Modern_avionics_hide
+  -
+    type: var
+    var_name: L:EFB_CROSS_CASE_1
+  -
+    type: var
+    var_name: L:EFB_CROSS_CASE_2
+  -
+    type: var
+    var_name: L:EFB_INIT_VAR
+  -
+    type: var
+    var_name: L:EFB_CROSS_CASE_3
+  -
+    type: var
+    var_name: L:EFB_CROSS_CASE_4
+  -
+    type: var
+    var_name: L:EFB_INIT_VAR_1
   -
     type: var
     var_name: L:HH4_WD_1
@@ -289,9 +321,6 @@ shared:
 #   var_name: L:XMLVAR_LeverThrottleHidden4
   -
     type: var
-    var_name: L:XMLVAR_CoolingFlaps_OIL
-  -
-    type: var
     var_name: L:H4_RAD_COWL_FLAPS_ENG1
   -
     type: var
@@ -311,45 +340,51 @@ shared:
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
-  -
-    type: var
-    var_name: L:XMLVAR_AileronTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
 # -
 #   type: var
 #   var_name: L:ELECTRICAL_APU_Starter
@@ -376,7 +411,7 @@ shared:
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:AS530_SelectedSource
+#   var_name: L:AP_KAP140_INSTALLED
 # -
 #   type: var
 #   var_name: L:AS530_ScreenLuminosity
@@ -394,25 +429,28 @@ shared:
 #   var_name: L:AS530_Default_MapShowCursor
 # -
 #   type: var
-#   var_name: L:AS530_Default_MapZoomRange
-# -
-#   type: var
 #   var_name: L:AS225_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS225_State
-# -
-#   type: var
-#   var_name: L:AS225_Brightness_Manual_1
-# -
-#   type: var
-#   var_name: L:AS225_Brightness_1
+  -
+    type: var
+    var_name: L:AS225_Brightness_Manual_1
 # -
 #   type: var
 #   var_name: L:AS330_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS330_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightCheckCompleted
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
@@ -434,6 +472,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+# -
+#   type: var
+#   var_name: L:KAP140_BARO_Display
 
 master:
   -

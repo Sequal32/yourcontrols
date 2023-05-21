@@ -1,7 +1,6 @@
 # Version 1.80
 
 include:
-  - definitions/modules/engines_heli.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
@@ -14,9 +13,9 @@ shared:
 # - # LVAR's
 #   type: var
 #   var_name: L:Sims.XPlane
-# -
-#   type: var
-#   var_name: L:Copilot.Display
+  -
+    type: var
+    var_name: L:Copilot.Display
 # -
 #   type: var
 #   var_name: L:SimState.View.EventBased
@@ -29,9 +28,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:Aircraft.Rotor.RPM.Percent
-  -
-    type: var
-    var_name: L:Aircraft.Warnings.Volt
+# -
+#   type: var
+#   var_name: L:Aircraft.Warnings.Volt
 # -
 #   type: var
 #   var_name: L:Aircraft.Transponder.Flash
@@ -47,8 +46,9 @@ shared:
   -
     type: ToggleSwitch
     var_name: L:Aircraft.Lights.Cabin.On
+    var_units: Bool
+    var_type: bool
     event_name: TOGGLE_CABIN_LIGHTS
-    use_calculator: true
   -
     type: var
     var_name: L:Doors.Hidden
@@ -58,9 +58,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:Aircraft.Input.Collective.Position
-  -
-    type: var
-    var_name: L:Aircraft.Lights.Landing.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Lights.Landing.On
 # -
 #   type: var
 #   var_name: L:BladeGroups.SwashCP
@@ -160,9 +160,9 @@ shared:
   -
     type: var
     var_name: L:Aircraft.Engine.1.Alternator.Enabled
-  -
-    type: var
-    var_name: L:Aircraft.Transponder.IdentTime
+# -
+#   type: var
+#   var_name: L:Aircraft.Transponder.IdentTime
   -
     type: var
     var_name: L:Aircraft.Engine.1.Input.MagnetosPosition
@@ -193,9 +193,11 @@ shared:
   -
     type: var
     var_name: L:Aircraft.Engine.1.Input.MixturePosition
+    unreliable: true
   -
     type: var
     var_name: L:Aircraft.Engine.1.Input.CarbHeatPosition
+    unreliable: true
   -
     type: var
     var_name: L:Doors.Open.2
@@ -247,9 +249,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:Aircraft.Gauges.CarbHeat
-  -
-    type: var
-    var_name: L:Aircraft.Lights.Strobe.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Lights.Strobe.On
 # -
 #   type: var
 #   var_name: L:Aircraft.Gauges.OilPressure
@@ -271,9 +273,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:Aircraft.Position.Heading.Magnetic.Value
-  -
-    type: var
-    var_name: L:Aircraft.Lights.Nav.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Lights.Nav.On
 # -
 #   type: var
 #   var_name: L:Aircraft.Rotor.RPM.Value
@@ -301,18 +303,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:Aircraft.IndicatedTorque
-  -
-    type: var
-    var_name: L:Aircraft.Engine.1.Combustion.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Engine.1.Combustion.On
 # -
 #   type: var
 #   var_name: L:Aircraft.Vibrations.Z
 # -
 #   type: var
 #   var_name: L:Aircraft.Gauges.CylTemp
-  -
-    type: var
-    var_name: L:Aircraft.Lights.Beacon.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Lights.Beacon.On
 # -
 #   type: var
 #   var_name: L:Aircraft.Beacon.Angle
@@ -343,12 +345,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Aircraft.DiskLiftLossMultiplier
-  -
-    type: var
-    var_name: L:Aircraft.EngineFailure
-  -
-    type: var
-    var_name: L:DidVarStartup
+# -
+#   type: var
+#   var_name: L:Aircraft.EngineFailure
+# -
+#   type: var
+#   var_name: L:DidVarStartup
   -
     type: var
     var_name: L:Aircraft.Clock.Reset
@@ -439,9 +441,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:Aircraft.Fuel.Total.Quantity
-  -
-    type: var
-    var_name: L:Aircraft.Lights.Taxi.On
+# -
+#   type: var
+#   var_name: L:Aircraft.Lights.Taxi.On
 # -
 #   type: var
 #   var_name: L:Aircraft.Engine.1.Torque.Smooth
@@ -499,6 +501,22 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+master:
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE1_SET
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: PROP_PITCH1_SET
+    interpolate: Default
 
 server:
   -

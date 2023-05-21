@@ -1,11 +1,9 @@
 # Version 1.0.6
 
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/Avionics/KAP140.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
@@ -225,9 +223,9 @@ shared:
   -
     type: var
     var_name: L:C172X_RBFPT
-  -
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
 # -
 #   type: var
 #   var_name: L:C172X_bitresult
@@ -444,15 +442,15 @@ shared:
   -
     type: var
     var_name: L:172X_AUDIO_Push_COM2_1
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
   -
     type: var
     var_name: L:172X_COM_SWAP
-  -
-    type: var
-    var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
   -
     type: var
     var_name: L:172X_AVFAN_BREAKER_PULLED
@@ -500,9 +498,9 @@ shared:
     type: var
     var_name: L:XMLVAR_Cabin_Air_1_Position
     unreliable: true
-  -
-    type: var
-    var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1
@@ -515,15 +513,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden2
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
@@ -620,9 +618,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:ADF_LARGE_KNOB
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
 # -
 #   type: var
 #   var_name: L:ADF_SMALL_KNOB
@@ -719,9 +717,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:LIGHTING_STROBE_0
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
@@ -960,18 +958,9 @@ shared:
 #   type: var
 #   var_name: L:XMLVAR_PITOT_BLOCKAGE
 
-  - # Floats
-    type: var
-    var_name: L:Generic_Gear_Advisory_Active
-  -
-    type: var
-    var_name: L:XMLVAR_DIM_Light_Switch
-  -
+  - # Float
     type: var
     var_name: L:SHOW_FLOATER_GEAR_KNOB
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
 
 server:
   -

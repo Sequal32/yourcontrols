@@ -1,10 +1,9 @@
-# Version 1.0.11 / 0.1.0 Enhanced
+# Version 1.0.11 / 0.1.11 Enhanced
 
 include:
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
-  - definitions/modules/Avionics/KAP140.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -55,9 +54,9 @@ shared:
     event_name: CABIN_LIGHTS_SET
     event_param: 4
 
-  - # LVAR's
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+# - # LVAR's
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
 # -
 #   type: var
 #   var_name: L:startereffect1_on
@@ -133,9 +132,9 @@ shared:
   -
     type: var
     var_name: L:RightFuelSelector
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Mode
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Mode
   -
     type: var
     var_name: L:DC3_fuelquantgauge
@@ -241,9 +240,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:totalhydraulicpress
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame
   -
     type: var
     var_name: L:LIGHTING_UVgauge
@@ -467,18 +466,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:HANDLING_AileronsTrim
-  -
-    type: var
-    var_name: L:ELECTRICAL_ExternalPower_1
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
-  -
-    type: var
-    var_name: L:DEICE_Airframe_1
-  -
-    type: var
-    var_name: L:DEICE_Propeller_1
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_ExternalPower_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Airframe_1
+# -
+#   type: var
+#   var_name: L:DEICE_Propeller_1
   -
     type: var
     var_name: L:DEICE_Switch_Engine
@@ -544,10 +543,13 @@ shared:
     var_name: L:qcoldcount
 # -
 #   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
+#   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:YourControlsPanelId
+#   var_name: L:KX155A_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_1_State
 # -
 #   type: var
 #   var_name: L:KX155A_2_ScreenLuminosity
@@ -560,12 +562,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:C300ADF_State
-# -
-#   type: var
-#   var_name: L:KX155A_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KX155A_1_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED

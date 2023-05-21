@@ -38,6 +38,15 @@ shared:
     event_name: TOGGLE_MASTER_BATTERY
     event_param: 3
 
+  - # Altimeter
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:3
+    var_units: Millibars scaler 16
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    cancel_h_events: true
+    event_param: 3
+
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
@@ -306,9 +315,9 @@ shared:
   -
     type: var
     var_name: L:WT_LNG_POWER_RESERVE_MANUAL
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+# -
+#   type: var
+#   var_name: L:XMLVAR_Autopilot_Altitude_Increment
   -
     type: var
     var_name: L:WT_Longitude_Engine_Run:1
@@ -318,9 +327,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
-  -
-    type: var
-    var_name: L:XMLVAR_BatterySTBY_SwitchState
+# -
+#   type: var
+#   var_name: L:XMLVAR_BatterySTBY_SwitchState
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
@@ -372,12 +381,12 @@ shared:
   -
     type: var
     var_name: L:WT_LNG_L_EMER_GEN_CONN
-  -
-    type: var
-    var_name: L:XMLVAR_STBYBattery_Test
-  -
-    type: var
-    var_name: L:XMLVAR_STBYBattery_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_STBYBattery_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_STBYBattery_IsHeld
   -
     type: var
     var_name: L:XMLVAR_APU_StarterKnob_Pos
@@ -453,9 +462,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden2
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
@@ -468,15 +477,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_Secondary_SwitchStateTimer
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:XMLVAR_AileronTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
@@ -516,12 +525,12 @@ shared:
   -
     type: var
     var_name: L:WTG3000_Control_Panel_MapShowCursor:2
-  -
-    type: var
-    var_name: L:ELECTRICAL_ExternalPower_1
-  -
-    type: var
-    var_name: L:ELECTRICAL_APU_Generator_1
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_ExternalPower_1
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_APU_Generator_1
 # -
 #   type: var
 #   var_name: L:LIGHTING_POTENTIOMETER_15
@@ -630,12 +639,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_IsDeiceAirFrame2
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
 # -
 #   type: var
 #   var_name: L:WT_LNavData_DTK_True
@@ -852,9 +861,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:HourMeter_State
-  -
-    type: var
-    var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
+#   var_name: L:WT_MINIMUMS_MODE
 # -
 #   type: var
 #   var_name: L:WTAP_GP_Approach_Mode

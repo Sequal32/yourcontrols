@@ -34,6 +34,13 @@ shared:
     index_reversed: true
     event_param: 2
 
+  - # ASOBO_PRESSURIZATION_Switch_Bleed_Template
+    type: NumSet
+    var_name: A:BLEED AIR SOURCE CONTROL
+    var_units: Enum
+    var_type: i32
+    event_name: BLEED_AIR_SOURCE_CONTROL_SET
+
   - # ASOBO_PRESSURIZATION_Switch_APU_Bleed_Template
     type: NumSet
     var_name: A:BLEED AIR APU
@@ -53,3 +60,12 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
+
+  - # ASOBO_INSTRUMENT_Indicator_CabinAltitude_Template
+    type: NumIncrement
+    var_name: A:PRESSURIZATION CABIN ALTITUDE GOAL
+    var_units: Feet
+    var_type: f64
+    up_event_name: PRESSURIZATION_PRESSURE_ALT_INC
+    down_event_name: PRESSURIZATION_PRESSURE_ALT_DEC
+    increment_by: 53

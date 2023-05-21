@@ -1,7 +1,6 @@
 # Version 1.5.0
 
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/autopilot.yaml
@@ -39,7 +38,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_3_SET
     index_reversed: true
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
     var_name: L:Wheelselector
   -
@@ -90,9 +89,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_ManualBrightness_Enabled_1
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Mode
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Mode
   -
     type: var
     var_name: L:SWITCH_Garmin
@@ -153,9 +152,9 @@ shared:
   -
     type: var
     var_name: L:LIGHTING_left_cpit
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:SWITCH_PrimerLock
@@ -171,99 +170,6 @@ shared:
   -
     type: var
     var_name: L:primerlock
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS530_SelectedSource
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Course_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_STROBE_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_BEACON_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_NAV_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_LANDING_1
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:AP_KAP140_INSTALLED
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
-# -
-#   type: var
-#   var_name: L:AS330_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS330_State
-# -
-#   type: var
-#   var_name: L:KAP140_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KAP140_State
-# -
-#   type: var
-#   var_name: L:AutopilotPreflightCheckCompleted
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:C300ADF_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:C300ADF_State
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:KAP140_BARO_Display
 
 server:
   -
