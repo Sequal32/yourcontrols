@@ -1,11 +1,10 @@
-# Version 1.0.0
+# Version 1.0.2
 
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/autopilot_heli.yaml
+  - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -55,6 +54,14 @@ shared:
     var_type: bool
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 1
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
 
   - # Interior
     type: NumSet
@@ -140,7 +147,7 @@ shared:
     event_param: 7
     index_reversed: true
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
     var_name: L:optionVertRefWindow
   -
@@ -272,9 +279,9 @@ shared:
   -
     type: var
     var_name: L:vemdBrightness
-  -
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
     var_name: L:ventFrontL
@@ -306,6 +313,12 @@ shared:
 #   var_name: L:hideHeatBlur
   -
     type: var
+    var_name: L:h125SearchLightDown
+  -
+    type: var
+    var_name: L:h125SearchLightRight
+  -
+    type: var
     var_name: L:floatsArmed
   -
     type: var
@@ -321,13 +334,16 @@ shared:
     var_name: L:twistGrip
   -
     type: var
+    var_name: L:starterSwitchLock
+  -
+    type: var
+    var_name: L:starterSwitch
+  -
+    type: var
     var_name: L:trimRelease
   -
     type: var
     var_name: L:trimRelease2
-  -
-    type: var
-    var_name: L:starterSwitch
 # -
 #   type: var
 #   var_name: L:exteriorSound
@@ -438,6 +454,9 @@ shared:
     var_name: L:vemd2Off
   -
     type: var
+    var_name: L:VemdEngPage
+  -
+    type: var
     var_name: L:vemdZpCorr
   -
     type: var
@@ -447,13 +466,13 @@ shared:
     var_name: L:switchNav1Nav2Gps
   -
     type: var
-    var_name: L:starterSwitchLock
-  -
-    type: var
     var_name: L:switchHornMute
 # -
 #   type: var
-#   var_name: L:hornCaution
+#   var_name: L:hornCaution285
+# -
+#   type: var
+#   var_name: L:hornCaution310
   -
     type: var
     var_name: L:fuelPump
@@ -477,9 +496,6 @@ shared:
     var_name: L:mirroDeice
   -
     type: var
-    var_name: L:searchLight
-  -
-    type: var
     var_name: L:switchBlowFloatsCover
 # -
 #   type: var
@@ -493,9 +509,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_ManualBrightness_Enabled_1
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE
@@ -529,6 +545,12 @@ shared:
   -
     type: var
     var_name: L:hideHeadsetRr
+  -
+    type: var
+    var_name: L:h125MirrorRight
+  -
+    type: var
+    var_name: L:h125MirrorDown
 # -
 #   type: var
 #   var_name: L:LIGHTING_POTENTIOMETER_2
@@ -556,9 +578,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:LIGHTING_CABIN_4
-  -
-    type: var
-    var_name: L:XMLVAR_Essential_Bus_ON
 # -
 #   type: var
 #   var_name: L:LIGHTING_RECOGNITION_1
@@ -589,12 +608,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_SelectedSource
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
   -
     type: var
     var_name: L:XmsnPressInit
@@ -636,7 +658,7 @@ master:
 server:
   -
     type: var
-    var_name: A:FUEL TANK AUX LEVEL
+    var_name: A:FUEL TANK CENTER LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true

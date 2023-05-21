@@ -1,10 +1,9 @@
-# Version 1.0.1
+# Version 1.0.2
 
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/autopilot_heli.yaml
+  - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/fuel.yaml
@@ -40,6 +39,14 @@ shared:
     var_type: bool
     event_name: FUELSYSTEM_VALVE_OPEN
     off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 2
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
     event_param: 2
 
   - # Interior
@@ -168,10 +175,16 @@ shared:
 #   var_name: L:hideHeatBlur
   -
     type: var
+    var_name: L:500SearchLightDown
+  -
+    type: var
+    var_name: L:500SearchLightRight
+  -
+    type: var
     var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:initCollGrip
   -
     type: var
     var_name: L:fuelCutOff
@@ -193,21 +206,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_ManualBrightness_Enabled_1
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel
 # -
 #   type: var
 #   var_name: L:buttonSound
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
 # -
 #   type: var
 #   var_name: L:LIGHTING_LANDING_1
@@ -225,9 +232,6 @@ shared:
 #   var_name: L:INSTRUMENT_Altimeter_1
 # -
 #   type: var
-#   var_name: L:INSTRUMENT_Altimeter_2
-# -
-#   type: var
 #   var_name: L:LIGHTING_GLARESHIELD_1
 # -
 #   type: var
@@ -238,9 +242,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:LIGHTING_PANEL_1
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
 # -
 #   type: var
 #   var_name: L:LIGHTING_RECOGNITION_1
@@ -259,6 +263,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
   -
     type: var
     var_name: L:XmsnPressInit
