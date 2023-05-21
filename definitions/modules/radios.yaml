@@ -210,36 +210,42 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: RADIO_COMMNAV1_TEST_TOGGLE
+    cancel_h_events: true
   -
     type: ToggleSwitch
     var_name: A:COM TEST:2
     var_units: Bool
     var_type: bool
     event_name: RADIO_COMMNAV2_TEST_TOGGLE
+    cancel_h_events: true
   -
     type: ToggleSwitch
     var_name: A:COM TEST:3
     var_units: Bool
     var_type: bool
     event_name: RADIO_COMMNAV3_TEST_TOGGLE
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:COM SPACING MODE:1
     var_units: Enum
     var_type: i32
     event_name: COM_1_SPACING_MODE_SWITCH
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:COM SPACING MODE:2
     var_units: Enum
     var_type: i32
     event_name: COM_2_SPACING_MODE_SWITCH
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:COM SPACING MODE:3
     var_units: Enum
     var_type: i32
     event_name: COM_3_SPACING_MODE_SWITCH
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:COM RECEIVE ALL
@@ -364,69 +370,75 @@ shared:
     var_name: A:TACAN ACTIVE CHANNEL:1
     var_units: Number
     var_type: i32
-    event_name: TACAN1_CHANNEL_SET
+    event_name: TACAN1_ACTIVE_CHANNEL_SET
     cancel_h_events: true
   -
     type: NumSet
     var_name: A:TACAN ACTIVE CHANNEL:2
     var_units: Number
     var_type: i32
-    event_name: TACAN2_CHANNEL_SET
+    event_name: TACAN2_ACTIVE_CHANNEL_SET
     cancel_h_events: true
   -
     type: NumSet
     var_name: A:TACAN STANDBY CHANNEL:1
     var_units: Number
     var_type: i32
-    event_name: TACAN1_STBY_CHANNEL_SET
+    event_name: TACAN1_STANDBY_CHANNEL_SET
     cancel_h_events: true
   -
     type: NumSet
     var_name: A:TACAN STANDBY CHANNEL:2
     var_units: Number
     var_type: i32
-    event_name: TACAN2_STBY_CHANNEL_SET
+    event_name: TACAN2_STANDBY_CHANNEL_SET
     cancel_h_events: true
   -
     type: NumSet
-    var_name: A:TACAN SOUND:1
+    var_name: A:TACAN ACTIVE MODE:1
     var_units: Bool
-    var_type: f64
-    event_name: RADIO_TACAN1_IDENT_SET
+    var_type: i32
+    event_name: TACAN1_ACTIVE_MODE_SET
+    cancel_h_events: true
   -
     type: NumSet
-    var_name: A:TACAN SOUND:2
+    var_name: A:TACAN ACTIVE MODE:2
     var_units: Bool
-    var_type: f64
-    event_name: RADIO_TACAN2_IDENT_SET
+    var_type: i32
+    event_name: TACAN2_ACTIVE_MODE_SET
+    cancel_h_events: true
   -
     type: NumSet
+    var_name: A:TACAN STANDBY MODE:1
+    var_units: Bool
+    var_type: i32
+    event_name: TACAN1_STANDBY_MODE_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:TACAN STANDBY MODE:2
+    var_units: Bool
+    var_type: i32
+    event_name: TACAN2_STANDBY_MODE_SET
+    cancel_h_events: true
+  -
+    type: NumIncrement
     var_name: A:TACAN VOLUME:1
     var_units: Percent
-    var_type: f64
-    event_name: TACAN1_VOLUME_SET
+    var_type: i32
+    up_event_name: TACAN1_VOLUME_INC
+    down_event_name: TACAN1_VOLUME_DEC
     cancel_h_events: true
+    increment_by: 2
   -
-    type: NumSet
+    type: NumIncrement
     var_name: A:TACAN VOLUME:2
     var_units: Percent
-    var_type: f64
-    event_name: TACAN2_VOLUME_SET
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:TACAN XY BAND:1
-    var_units: Enum
     var_type: i32
-    event_name: TACAN1_XY_BAND_SET
+    up_event_name: TACAN2_VOLUME_INC
+    down_event_name: TACAN2_VOLUME_DEC
     cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:TACAN XY BAND:2
-    var_units: Enum
-    var_type: i32
-    event_name: TACAN2_XY_BAND_SET
-    cancel_h_events: true
+    increment_by: 2
 
   - # Audio Panel
     type: NumIncrement
@@ -464,27 +476,32 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_ICS
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:INTERCOM MODE
     var_units: Enum
     var_type: i32
     event_name: INTERCOM_MODE_SET
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:MARKER SOUND:1
     var_units: Bool
     var_type: f64
     event_name: MARKER_SOUND_TOGGLE
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:MARKER BEACON TEST MUTE
     var_units: Enum
     var_type: i32
     event_name: MARKER_BEACON_TEST_MUTE
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:MARKER BEACON SENSITIVITY HIGH
     var_units: Enum
     var_type: i32
     event_name: MARKER_BEACON_SENSITIVITY_HIGH
+    cancel_h_events: true
