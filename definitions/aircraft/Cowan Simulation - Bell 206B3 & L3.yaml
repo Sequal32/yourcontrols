@@ -1,4 +1,4 @@
-# Version 1.0.3
+# Version 1.0.3 B3 / 1.0.2 L3
 
 include:
   - definitions/modules/Avionics/AS430.yaml
@@ -102,7 +102,7 @@ shared:
     event_param: 2
     index_reversed: true
 
-  - # LVAR's (trimmed)
+  - # LVAR's (B3, trimmed)
     type: var
     var_name: L:idleRel
   -
@@ -342,48 +342,13 @@ shared:
   -
     type: var
     var_name: L:headSetL
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Altimeter_1
-# -
-#   type: var
-#   var_name: L:DEICE_Pitot_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Course_1
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS530_SelectedSource
-# -
-#   type: var
-#   var_name: L:AS430_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS430_SelectedSource
-# -
-#   type: var
-#   var_name: L:XMLVAR_AudioPanel_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_NAV_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_STROBE_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_GLARESHIELD_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_PANEL_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-# -
-#   type: var
-#   var_name: L:LIGHTING_LANDING_3
+
+  - # L3
+    type: var
+    var_name: L:hidePatient
+  -
+    type: var
+    var_name: L:hideMedic
 
 master:
   -
@@ -492,6 +457,12 @@ server:
   -
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:14
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:15
     var_units: Pounds
     var_type: f64
     unreliable: true
