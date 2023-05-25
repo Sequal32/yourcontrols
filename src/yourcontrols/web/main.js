@@ -20,6 +20,7 @@ var sessionInput = document.getElementById("session-input");
 var name_input_join = document.getElementById("name-input-join");
 var theme_selector = document.getElementById("theme-select");
 var streamer_mode = document.getElementById("streamer-mode");
+var instructor_mode = document.getElementById("instructor-mode");
 
 var update_rate_input = document.getElementById("update-rate-input");
 var timeout_input = document.getElementById("timeout-input");
@@ -241,6 +242,7 @@ function LoadSettings(newSettings) {
 
     joinIpInput.value = newSettings.ip;
     streamer_mode.checked = newSettings.streamer_mode;
+    instructor_mode.checked = newSettings.instructor_mode;
 
     username.value = newSettings.name;
     timeout_input.value = newSettings.conn_timeout;
@@ -487,6 +489,7 @@ $("#settings-form").submit(function (e) {
         : null;
     newSettings.ui_dark_theme = theme_selector.checked;
     newSettings.streamer_mode = streamer_mode.checked;
+    newSettings.instructor_mode = instructor_mode.checked;
 
     for (key in newSettings) {
         if (newSettings[key] === null) {

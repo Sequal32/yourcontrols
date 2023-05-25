@@ -350,7 +350,7 @@ fn main() {
                         Payloads::PlayerJoined {
                             name,
                             in_control,
-                            is_observer,
+                            mut is_observer,
                             is_server,
                         } => {
                             info!(
@@ -366,6 +366,11 @@ fn main() {
                                     definitions.get_buffer_bytes().into_boxed_slice(),
                                     name.clone(),
                                 );
+
+                                if config.instructor_mode {
+                                    is_observer = true;
+                                    client.set_observer(name.clone(), true);
+                                }
                             }
 
                             app_interface.new_connection(&name);

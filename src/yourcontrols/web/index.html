@@ -192,7 +192,7 @@
             <h5 class="card-title">Settings</h5>
             <form class="needs-validation form-div" id="settings-form" novalidate>
               <div class="form-group col-sm-auto small-margin align-bottom">
-                <label for="aircraft-list">Active Aircraft</label>
+                <label for="aircraft-list">Select Aircraft</label>
                 <select id="aircraft-list" class="form-control themed themed">
                   <option selected value="" id="default-aircraft-option"></option>
                 </select>
@@ -212,16 +212,18 @@
                 <label for="update-rate-input">Update Rate</label>
                 <input type="number" class="form-control themed " id="update-rate-input" aria-describedby="ip-feedback"
                   required />
-                <small id="update-rate-input-help" class="form-text text-muted">
-                  Rate of aircraft data sent in hertz. Avoid setting higher than minimum FPS. Effective range is 10-60. Setting higher may be unstable.
+                <small class="form-text text-muted">
+                  Rate of aircraft data sent in hertz. Avoid setting higher than minimum FPS. Effective range is 10-60.
+                  Setting higher may be unstable.
                 </small>
               </div>
               <div class="form-group col-sm-auto bottom-margin" id="timeout-div">
                 <label for="timeout-input">Connection Timeout</label>
                 <input type="number" class="form-control themed " id="timeout-input" aria-describedby="ip-feedback"
                   required />
-                <small id="timeout-input-help" class="form-text text-muted">
-                  Seconds before the connection is dropped from inactivity. If you are experiencing random disconnects, try setting this number higher.
+                <small class="form-text text-muted">
+                  Seconds before the connection is dropped from inactivity. If you are experiencing random disconnects,
+                  try setting this number higher.
                 </small>
               </div>
               <div class="form-group col-sm-auto bottom-margin">
@@ -235,6 +237,18 @@
                   <input class="form-check-input" type="checkbox" id="streamer-mode" />
                   <label for="streamer-mode">Streamer Mode</label>
                 </div>
+                <small class="form-text text-muted checkbox-text">
+                  Hides your IP and the session code after connecting.
+                </small>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin">
+                <div class="form-check" id="buffer-div">
+                  <input class="form-check-input" type="checkbox" id="instructor-mode" />
+                  <label for="instructor-mode">Instructor Mode</label>
+                </div>
+                <small class="form-text text-muted checkbox-text">
+                  Players connecting to your server will not be able to manipulate the aircraft.
+                </small>
               </div>
               <div class="form-group form-row justify-content-center small-margin align-bottom">
                 <button type="submit" id="settings-button" class="btn btn-success">
