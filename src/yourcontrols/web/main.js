@@ -622,7 +622,7 @@ aircraftList.addAircraft = function (aircraftName) {
     const newButton = document.createElement("option");
     newButton.className =
         "list-group-item list-group-item-action aircraft-list-entry themed";
-    newButton.innerHTML = aircraftName;
+    newButton.innerHTML = aircraftName.replace(".yaml", "");
     newButton.value = aircraftName;
 
     aircraftList.appendChild(newButton);
