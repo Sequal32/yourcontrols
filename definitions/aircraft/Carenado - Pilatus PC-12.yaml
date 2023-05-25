@@ -1,7 +1,6 @@
 # Version 1.1.0
 
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
@@ -93,15 +92,6 @@ shared:
     type: CustomCalculator
     get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
     set: 6 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-
-  - # Cabin
-    type: NumIncrement
-    var_name: A:PRESSURIZATION CABIN ALTITUDE GOAL
-    var_units: Feet
-    var_type: f64
-    up_event_name: PRESSURIZATION_PRESSURE_ALT_INC
-    down_event_name: PRESSURIZATION_PRESSURE_ALT_DEC
-    increment_by: 53
 
   - # Doors
     type: ToggleSwitch
@@ -1359,9 +1349,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
-  -
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
 # -
 #   type: var
 #   var_name: L:AS530_ManualBrightness_Value_1
@@ -1374,12 +1364,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS430_ManualBrightness_Enabled_2
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
   -
     type: var
     var_name: L:XMLVAR_EpsState
@@ -1431,9 +1421,9 @@ shared:
   -
     type: var
     var_name: L:ASD_SWITCH_PC12_GEN1_DIR
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:_ButtonAnimVar
@@ -1617,9 +1607,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverPropellerHidden1
-  -
-    type: var
-    var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
   -
     type: var
     var_name: L:Backup VOR Pointer1
@@ -2106,21 +2096,21 @@ shared:
   -
     type: var
     var_name: L:EX500_MFD_MAP_ORIENTATION
-  -
-    type: var
-    var_name: L:RADIONAV_SOURCE
-  -
-    type: var
-    var_name: L:EADI_ScreenLuminosity
-  -
-    type: var
-    var_name: L:EADI_State
-  -
-    type: var
-    var_name: L:EHSI_ScreenLuminosity
-  -
-    type: var
-    var_name: L:EHSI_State
+# -
+#   type: var
+#   var_name: L:RADIONAV_SOURCE
+# -
+#   type: var
+#   var_name: L:EADI_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:EADI_State
+# -
+#   type: var
+#   var_name: L:EHSI_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:EHSI_State
 # -
 #   type: var
 #   var_name: L:Annunciations_Manager_Initialized

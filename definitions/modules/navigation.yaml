@@ -45,6 +45,14 @@ shared:
     increment_by: 10
   -
     type: NumSet
+    var_name: A:ADF CARD
+    var_units: Degrees
+    var_type: i32
+    event_name: ADF_CARD_SET
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: NumSet
     var_name: A:NAV OBS:1
     var_units: Degrees
     var_type: i32
@@ -77,7 +85,17 @@ shared:
     use_calculator: true
   -
     type: NumSet
-    var_name: A:ADF CARD
+    var_name: A:TACAN OBS:1
     var_units: Degrees
     var_type: i32
-    event_name: ADF_CARD_SET
+    event_name: TACAN1_SET
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:TACAN OBS:2
+    var_units: Degrees
+    var_type: i32
+    event_name: TACAN2_SET
+    cancel_h_events: true
+    use_calculator: true

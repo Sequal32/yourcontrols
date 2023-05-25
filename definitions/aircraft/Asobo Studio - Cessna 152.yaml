@@ -1,8 +1,8 @@
-# Version 0.1.79
+# Version 0.1.93
 
 include:
-  - definitions/modules/Avionics/Aera.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -17,21 +17,6 @@ include:
 shared:
   - # Interior
     type: NumSet
-    var_name: A:LIGHT PANEL:1
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT PANEL POWER SETTING:1
-    var_units: Percent
-    var_type: i32
-    event_name: PANEL_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
     var_name: A:LIGHT CABIN:1
     var_units: Bool
     var_type: i32
@@ -39,17 +24,38 @@ shared:
     event_param: 1
   -
     type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:1
-    var_units: Percent
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
     var_type: i32
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
     index_reversed: true
 
 server:
   -
     type: var
     var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
@@ -62,12 +68,6 @@ server:
   -
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:2
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:3
     var_units: Pounds
     var_type: f64
     unreliable: true

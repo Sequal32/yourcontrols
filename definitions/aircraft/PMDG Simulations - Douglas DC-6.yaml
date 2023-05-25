@@ -1,11 +1,10 @@
-# Version 2.0.47 (A/B)
+# Version 2.0.49 (A/B)
 
 include:
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/service.yaml
   - definitions/modules/slew.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
@@ -2590,12 +2589,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -2719,18 +2718,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_InertSep1_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:AS3000_Brightness_Manual
@@ -5662,6 +5661,9 @@ shared:
     type: var
     var_name: L:dc6_tab_drag_h
     unreliable: true
+  -
+    type: var
+    var_name: L:dc6_tab_stow_h
 # - # Mouse Up/Down Arrow
 #   type: var
 #   var_name: L:mpos

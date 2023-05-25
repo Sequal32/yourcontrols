@@ -1,10 +1,9 @@
-# Version 3.0.65
+# Version 3.0.69
 
 include:
   - definitions/modules/navigation.yaml
   - definitions/modules/physics_rad.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/service.yaml
   - definitions/modules/slew.yaml
   - definitions/modules/transponder.yaml
 
@@ -35,23 +34,6 @@ shared:
     type: ProgramActionEvent
     event_name: TOGGLE_LAUNCH_BAR_SWITCH
     action: TransferControls
-
-  - # Take control priority
-    type: ProgramAction
-    action: TakeControls
-    var_name: L:switch_1004_73X
-    var_type: f64
-    condition:
-      equals:
-        F64: 100.0
-  -
-    type: ProgramAction
-    action: TakeControls
-    var_name: L:switch_1005_73X
-    var_type: f64
-    condition:
-      equals:
-        F64: 100.0
 
 # - # LVAR's
 #   type: var
@@ -157,54 +139,54 @@ shared:
   -
     type: var
     var_name: L:visors_stow_unstow_R
-  -
-    type: var
-    var_name: L:FwdLeftCabinDoor
-  -
-    type: var
-    var_name: L:FwdRightCabinDoor
-  -
-    type: var
-    var_name: L:AftLeftCabinDoor
-  -
-    type: var
-    var_name: L:AftRightCabinDoor
-  -
-    type: var
-    var_name: L:OverwingFwdLeftEmerExit
-  -
-    type: var
-    var_name: L:OverwingFwdRightEmerExit
-  -
-    type: var
-    var_name: L:OverwingAftLeftEmerExit
-  -
-    type: var
-    var_name: L:OverwingAftRightEmerExit
-  -
-    type: var
-    var_name: L:FwdLwrCargoDoor
-  -
-    type: var
-    var_name: L:AftLwrCargoDoor
-  -
-    type: var
-    var_name: L:MainCargoDoor
-  -
-    type: var
-    var_name: L:MainCargoDoorRelief
-  -
-    type: var
-    var_name: L:AirStairs
-  -
-    type: var
-    var_name: L:AirStairRails
-  -
-    type: var
-    var_name: L:EEDoor
-  -
-    type: var
-    var_name: L:NGXWheelChocks
+# -
+#   type: var
+#   var_name: L:FwdLeftCabinDoor
+# -
+#   type: var
+#   var_name: L:FwdRightCabinDoor
+# -
+#   type: var
+#   var_name: L:AftLeftCabinDoor
+# -
+#   type: var
+#   var_name: L:AftRightCabinDoor
+# -
+#   type: var
+#   var_name: L:OverwingFwdLeftEmerExit
+# -
+#   type: var
+#   var_name: L:OverwingFwdRightEmerExit
+# -
+#   type: var
+#   var_name: L:OverwingAftLeftEmerExit
+# -
+#   type: var
+#   var_name: L:OverwingAftRightEmerExit
+# -
+#   type: var
+#   var_name: L:FwdLwrCargoDoor
+# -
+#   type: var
+#   var_name: L:AftLwrCargoDoor
+# -
+#   type: var
+#   var_name: L:MainCargoDoor
+# -
+#   type: var
+#   var_name: L:MainCargoDoorRelief
+# -
+#   type: var
+#   var_name: L:AirStairs
+# -
+#   type: var
+#   var_name: L:AirStairRails
+# -
+#   type: var
+#   var_name: L:EEDoor
+# -
+#   type: var
+#   var_name: L:NGXWheelChocks
 # -
 #   type: var
 #   var_name: L:NGXLeftInbdLESlat
@@ -295,7 +277,7 @@ shared:
   -
     type: var
     var_name: L:NGXGPUHoseWrapped
-  - # Hide Node for eyebrow window covers
+  - # Hide Node for Eyebrow Window Covers
     type: var
     var_name: L:switch_1014_73X
   -
@@ -1232,12 +1214,34 @@ shared:
     event_param: 11301
     on_condition_value: 100
     use_calculator: true
+  - # FIXED LANDING LIGHT LEFT Switch w/Pulse
+    type: NumIncrement
+    var_name: L:switch_113_73X
+    var_units: Number
+    var_type: f64
+    up_event_name: ROTOR_BRAKE
+    up_event_param: 11301
+    down_event_name: ROTOR_BRAKE
+    down_event_param: 11302
+    increment_by: 50
+    use_calculator: true
   - # FIXED LANDING LIGHT RIGHT Switch
     type: ToggleSwitch
     var_name: L:switch_114_73X
     event_name: ROTOR_BRAKE
     event_param: 11401
     on_condition_value: 100
+    use_calculator: true
+  - # FIXED LANDING LIGHT RIGHT Switch w/Pulse
+    type: NumIncrement
+    var_name: L:switch_114_73X
+    var_units: Number
+    var_type: f64
+    up_event_name: ROTOR_BRAKE
+    up_event_param: 11401
+    down_event_name: ROTOR_BRAKE
+    down_event_param: 11402
+    increment_by: 50
     use_calculator: true
   - # RUNWAY TURNOFF LIGHT LEFT Switch
     type: ToggleSwitch
@@ -1322,6 +1326,17 @@ shared:
     event_name: ROTOR_BRAKE
     event_param: 12201
     on_condition_value: 100
+    use_calculator: true
+  - # LOGO LIGHT Switch w/Pulse
+    type: NumIncrement
+    var_name: L:switch_122_73X
+    var_units: Number
+    var_type: f64
+    up_event_name: ROTOR_BRAKE
+    up_event_param: 12201
+    down_event_name: ROTOR_BRAKE
+    down_event_param: 12202
+    increment_by: 50
     use_calculator: true
   - # POSITION LIGHT Switch
     type: NumIncrement
@@ -1790,32 +1805,32 @@ shared:
 # - # PRESS MANUAL ANNUN
 #   type: var
 #   var_name: L:switch_216_73X
-#  - # FLIGHT ALTITUDE SELECTOR knob
-#    type: NumIncrement
-#    var_name: L:switch_218_73X
-#    var_units: Number
-#    var_type: f64
-#    up_event_name: ROTOR_BRAKE
-#    up_event_param: 21802
-#    down_event_name: ROTOR_BRAKE
-#    down_event_param: 21801
-#    increment_by: 10
-#    use_calculator: true
-#  - # LANDING ALTITUDE SELECTOR knob
-#    type: NumIncrement
-#    var_name: L:switch_220_73X
-#    var_units: Number
-#    var_type: f64
-#    up_event_name: ROTOR_BRAKE
-#    up_event_param: 22002
-#    down_event_name: ROTOR_BRAKE
-#    down_event_param: 22001
-#    increment_by: 10
-#    use_calculator: true
-# - # OUTFLOW VALVE POSITION Indicator Needle
+# - # FLIGHT ALTITUDE SELECTOR knob
+#   type: NumIncrement
+#   var_name: L:switch_218_73X
+#   var_units: Number
+#   var_type: f64
+#   up_event_name: ROTOR_BRAKE
+#   up_event_param: 21802
+#   down_event_name: ROTOR_BRAKE
+#   down_event_param: 21801
+#   increment_by: 10
+#   use_calculator: true
+# - # LANDING ALTITUDE SELECTOR knob
+#   type: NumIncrement
+#   var_name: L:switch_220_73X
+#   var_units: Number
+#   var_type: f64
+#   up_event_name: ROTOR_BRAKE
+#   up_event_param: 22002
+#   down_event_name: ROTOR_BRAKE
+#   down_event_param: 22001
+#   increment_by: 10
+#   use_calculator: true
+# - # OLD STYLE OUTFLOW VALVE POSITION Needle
 #   type: var
 #   var_name: L:switch_221_73X
-# -
+# - # NEW STYLE OUTFLOW VALVE POSITION Needle
 #   type: var
 #   var_name: L:OutflowValveNeedleVis
   - # OUTFLOW VALVE Switch
@@ -2985,17 +3000,17 @@ shared:
 # - # OVHT/DET ANNUN
 #   type: var
 #   var_name: L:switch_354_73X
-  - # CPT Minimums (MINS) Selector (middle)
-    type: NumIncrement
-    var_name: L:switch_355_73X
-    var_units: Number
-    var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 35502
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 35501
-    increment_by: 1
-    use_calculator: true
+# - # CPT Minimums (MINS) Selector (middle)
+#   type: NumIncrement
+#   var_name: L:switch_355_73X
+#   var_units: Number
+#   var_type: f64
+#   up_event_name: ROTOR_BRAKE
+#   up_event_param: 35502
+#   down_event_name: ROTOR_BRAKE
+#   down_event_param: 35501
+#   increment_by: 1
+#   use_calculator: true
   - # CPT Minimums (MINS) Reference Selector (outer)
     type: ToggleSwitch
     var_name: L:switch_356_73X
@@ -3080,17 +3095,17 @@ shared:
     add_by: 36404
     event_name: ROTOR_BRAKE
     use_calculator: true
-#  - # CPT BAROMETRIC (BARO) SELECTOR (middle)
-#    type: NumIncrement
-#    var_name: L:switch_365_73X
-#    var_units: Number
-#    var_type: f64
-#    up_event_name: ROTOR_BRAKE
-#    up_event_param: 36502
-#    down_event_name: ROTOR_BRAKE
-#    down_event_param: 36501
-#    increment_by: 1
-#    use_calculator: true
+# - # CPT BAROMETRIC (BARO) SELECTOR (middle)
+#   type: NumIncrement
+#   var_name: L:switch_365_73X
+#   var_units: Number
+#   var_type: f64
+#   up_event_name: ROTOR_BRAKE
+#   up_event_param: 36502
+#   down_event_name: ROTOR_BRAKE
+#   down_event_param: 36501
+#   increment_by: 1
+#   use_calculator: true
   - # CPT BAROMETRIC (BARO) REFERENCE SELECTOR (outer)
     type: ToggleSwitch
     var_name: L:switch_366_73X
@@ -3442,17 +3457,17 @@ shared:
   - # FO COURSE SELECTOR knob Collins/Honeywell (keep var)
     type: var
     var_name: L:switch_409_73X
-  - # FO Minimums (MINS) Selector (middle)
-    type: NumIncrement
-    var_name: L:switch_411_73X
-    var_units: Number
-    var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 41102
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 41101
-    increment_by: 1
-    use_calculator: true
+# - # FO Minimums (MINS) Selector (middle)
+#   type: NumIncrement
+#   var_name: L:switch_411_73X
+#   var_units: Number
+#   var_type: f64
+#   up_event_name: ROTOR_BRAKE
+#   up_event_param: 41102
+#   down_event_name: ROTOR_BRAKE
+#   down_event_param: 41101
+#   increment_by: 1
+#   use_calculator: true
   - # FO Minimums (MINS) Reference Selector (outer)
     type: ToggleSwitch
     var_name: L:switch_412_73X
@@ -3538,16 +3553,16 @@ shared:
     add_by: 42004
     event_name: ROTOR_BRAKE
     use_calculator: true
-#  - # FO BAROMETRIC (BARO) SELECTOR (middle)
-#    type: NumIncrement
-#    var_name: L:switch_421_73X
-#    var_type: f64
-#    up_event_name: ROTOR_BRAKE
-#    up_event_param: 42102
-#    down_event_name: ROTOR_BRAKE
-#    down_event_param: 42101
-#    increment_by: 1
-#    use_calculator: true
+# - # FO BAROMETRIC (BARO) SELECTOR (middle)
+#   type: NumIncrement
+#   var_name: L:switch_421_73X
+#   var_type: f64
+#   up_event_name: ROTOR_BRAKE
+#   up_event_param: 42102
+#   down_event_name: ROTOR_BRAKE
+#   down_event_param: 42101
+#   increment_by: 1
+#   use_calculator: true
   - # FO BAROMETRIC (BARO) REFERENCE SELECTOR (outer)
     type: ToggleSwitch
     var_name: L:switch_422_73X
@@ -3776,10 +3791,10 @@ shared:
     add_by: 44604
     event_name: ROTOR_BRAKE
     use_calculator: true
-  - # SPEEDBRAKES EXTENDED
-    type: var
-    var_name: L:switch_447_73X
-# - # Hydraulic Brake Pressure (HYD BRAKE PRESS) Indicator
+# - # SPEEDBRAKES EXTENDED ANNUN
+#   type: var
+#   var_name: L:switch_447_73X
+# - # HYDRAULIC BRAKE PRESS ANNUN
 #   type: var
 #   var_name: L:switch_448_73X
 # - # NOSE GEAR UNSAFE
@@ -3819,28 +3834,28 @@ shared:
 #   on_condition_value: 100
 #   use_calculator: true
   - # Gear Lever Up
-    type: customcalculator
+    type: CustomCalculator
     get: (L:switch_455_73X) 0 ==
     set: 1 (>K:GEAR_UP)
     condition:
       equals:
         F64: 1.0
   - # Gear Lever Up-Off
-    type: customcalculator
+    type: CustomCalculator
     get: (L:switch_455_73X) 30 ==
     set: 45501 (>K:ROTOR_BRAKE)
     condition:
       equals:
         F64: 1.0
   - # Gear Lever Down-Off
-    type: customcalculator
+    type: CustomCalculator
     get: (L:switch_455_73X) 30 ==
     set: 45502 (>K:ROTOR_BRAKE)
     condition:
       equals:
         F64: 1.0
   - # Gear Lever Down
-    type: customcalculator
+    type: CustomCalculator
     get: (L:switch_455_73X) 60 ==
     set: 1 (>K:GEAR_DOWN)
     condition:
@@ -3868,18 +3883,15 @@ shared:
 # - # AUTO BRAKE DISARM ANNUN
 #   type: var
 #   var_name: L:switch_459_73X
-  - # AUTOBRAKE BRAKE Selector Knob
-    type: NumIncrement
+  - # AUTO BRAKE Selector Knob
+    type: NumSet
     var_name: L:switch_460_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 46002
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 46001
-    increment_by: 10
-    use_calculator: true
-# - # AUTOBRAKE BRAKE Selector In/Out Animation
+    multiply_by: 0.1
+    event_name: "#70092"
+    is_user_event: true
+# - # AUTO BRAKE Selector In/Out Animation
 #   type: var
 #   var_name: L:switch_461_73X
 # - # ANTI-SKID INOP
@@ -4047,17 +4059,17 @@ shared:
 # - # Standby Altimeter 0.01 inHG Drum
 #   type: var
 #   var_name: L:switch_490_73X
-#  - # Standby Altimeter Baro Set Knob
-#    type: NumIncrement
-#    var_name: L:switch_492_73X
-#    var_units: Number
-#    var_type: f64
-#    up_event_name: ROTOR_BRAKE
-#    up_event_param: 49202
-#    down_event_name: ROTOR_BRAKE
-#    down_event_param: 49201
-#    increment_by: 1
-#    use_calculator: true
+# - # Standby Altimeter Baro Set Knob
+#   type: NumIncrement
+#   var_name: L:switch_492_73X
+#   var_units: Number
+#   var_type: f64
+#   up_event_name: ROTOR_BRAKE
+#   up_event_param: 49202
+#   down_event_name: ROTOR_BRAKE
+#   down_event_param: 49201
+#   increment_by: 1
+#   use_calculator: true
 # - # Standby Altimeter IAS Drum
 #   type: var
 #   var_name: L:switch_493_73X
@@ -5571,7 +5583,7 @@ shared:
 # - # Stabilizer Trim Wheel
 #   type: var
 #   var_name: L:switch_678_73X
-  - # SPEED BRAKE Lever
+  - # Speed Brake Lever
     type: NumSet
     var_name: L:switch_679_73X
     var_units: Number
@@ -5658,7 +5670,7 @@ shared:
     event_param: 68801
     on_condition_value: 100
     use_calculator: true
-# -
+# - # Left Engine Fire Warning ANNUN
 #   type: var
 #   var_name: L:switch_6972_73X
   - # Right Engine Start Lever
@@ -5668,21 +5680,23 @@ shared:
     event_param: 68901
     on_condition_value: 100
     use_calculator: true
-# -
+# - # Right Engine Fire Warning ANNUN
 #   type: var
 #   var_name: L:switch_6992_73X
 # - # Stabilizer Trim Indicator
 #   type: var
 #   var_name: L:switch_690_73X
-# - # PARK BRAKE Light ANNUN
+# - # Parking Brake Light ANNUN
 #   type: var
 #   var_name: L:switch_692_73X
-  - # PARKING BRAKE Lever
-    type: ToggleSwitch
+  - # Parking Brake Lever
+    type: NumSet
     var_name: L:switch_693_73X
+    var_units: Number
+    var_type: f64
+    multiply_by: -0.03
+    add_by: 69304
     event_name: ROTOR_BRAKE
-    event_param: 69301
-    on_condition_value: 100
     use_calculator: true
   - # Left Overheat Detector OVHT DET Switch
     type: NumIncrement
@@ -5738,10 +5752,10 @@ shared:
     down_event_param: 69801
     increment_by: 3
     use_calculator: true
-# -
+# - # APU Fire Warning ANNUN
 #   type: var
 #   var_name: L:switch_6982_73X
-  -
+  - # APU Fire Pull Animation
     type: ToggleSwitch
     var_name: L:switch_6981_73X
     event_name: ROTOR_BRAKE
@@ -6693,7 +6707,7 @@ shared:
     add_by: 725504
     event_name: ROTOR_BRAKE
     use_calculator: true
-  -
+  - # Hide Node for NAV Radio Panel Swap
     type: var
     var_name: L:NAV_MMR_Swap
   - # CPT VHF1 Transmitter Selector (MIC SELECTOR) Switch
@@ -8061,7 +8075,7 @@ shared:
   - # Hide Node for Overhead Swap
     type: var
     var_name: L:switch_894_73X
-  - # Hide Node for MCP Swap Collins MCP
+  - # Hide Node for MCP Swap
     type: var
     var_name: L:switch_900_73X
   - # FO VHF OFF switch
@@ -8249,18 +8263,18 @@ shared:
     event_param: 97801
     on_condition_value: 100
     use_calculator: true
-# - # Hide Node for aircon panel Swap
-#   type: var
-#   var_name: L:switch_970_73X
-# - # Hide Node for aircon panel Swap
-#   type: var
-#   var_name: L:switch_971_73X
-# - # Hide Node for Airstair annunciator Swap
-#   type: var
-#   var_name: L:switch_972_73X
-# - # Hide Node for Airstair annunciator Swap
-#   type: var
-#   var_name: L:switch_973_73X
+  - # Hide Node for Aircon Panel Swap
+    type: var
+    var_name: L:switch_970_73X
+  - # Hide Node for Aircon Panel Swap
+    type: var
+    var_name: L:switch_971_73X
+  - # Hide Node for Airstair Swap
+    type: var
+    var_name: L:switch_972_73X
+  - # Hide Node for Airstair Swap
+    type: var
+    var_name: L:switch_973_73X
   - # Galley Switch
     type: ToggleSwitch
     var_name: L:switch_974_73X
@@ -8362,9 +8376,9 @@ shared:
 # - # O2 Flow Indicator 1
 #   type: var
 #   var_name: L:switch_984_73X
-# - # Hide Node for ADI and ALT
-#   type: var
-#   var_name: L:switch_985_73X
+  - # Hide Node for ADI and ALT Swap
+    type: var
+    var_name: L:switch_985_73X
   - # ISFD HP IN Switch
     type: NumSet
     var_name: L:switch_986_73X
@@ -8410,17 +8424,17 @@ shared:
     add_by: 99004
     event_name: ROTOR_BRAKE
     use_calculator: true
-#  - # ISFD BARO Knob
-#    type: NumIncrement
-#    var_name: L:switch_991_73X
-#    var_units: Number
-#    var_type: f64
-#    up_event_name: ROTOR_BRAKE
-#    up_event_param: 99102
-#    down_event_name: ROTOR_BRAKE
-#    down_event_param: 99101
-#    increment_by: 1
-#    use_calculator: true
+# - # ISFD BARO Knob
+#   type: NumIncrement
+#   var_name: L:switch_991_73X
+#   var_units: Number
+#   var_type: f64
+#   up_event_name: ROTOR_BRAKE
+#   up_event_param: 99102
+#   down_event_name: ROTOR_BRAKE
+#   down_event_param: 99101
+#   increment_by: 1
+#   use_calculator: true
 # -
 #   type: var
 #   var_name: L:stick_shaking_EV
@@ -8489,7 +8503,7 @@ shared:
 # - # Yoke Counter 6
 #   type: var
 #   var_name: L:switch_1003_73X
-  - # CPT AP DISC
+  - # CPT Yoke AP Disengage
     type: NumSet
     var_name: L:switch_1004_73X
     var_units: Number
@@ -8498,7 +8512,7 @@ shared:
     add_by: 100404
     event_name: ROTOR_BRAKE
     use_calculator: true
-  - # FO AP DISC
+  - # FO Yoke AP Disengage
     type: NumSet
     var_name: L:switch_1005_73X
     var_units: Number
@@ -8665,7 +8679,7 @@ shared:
     down_event_param: 752202
     increment_by: 5
     use_calculator: true
-  - # AP DISC Left
+  - # AP DISC Left (does not exist)
     type: ToggleSwitch
     var_name: L:switch_1015_73X
     event_name: ROTOR_BRAKE
@@ -8823,9 +8837,9 @@ shared:
     add_by: 181504
     event_name: ROTOR_BRAKE
     use_calculator: true
-# -
-#   type: var
-#   var_name: L:hgs_projector_mover
+  -
+    type: var
+    var_name: L:hgs_projector_mover
   - # GRIMES LIGHT CPT
     type: ToggleSwitch
     var_name: L:switch_2020_73X
@@ -9367,9 +9381,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:NGXRightCoolingInletDuct
-  -
-    type: var
-    var_name: L:NGXTailskid
+#  -
+#    type: var
+#    var_name: L:NGXTailskid
 # -
 #   type: var
 #   var_name: L:7X7X_engine2_blurred
@@ -9751,12 +9765,12 @@ shared:
   -
     type: var
     var_name: L:switch_6891_73X
-  -
-    type: var
-    var_name: L:WasmInstrument_ScreenLuminosity
-  -
-    type: var
-    var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:WasmInstrument_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WasmInstrument_State
   -
     type: var
     var_name: L:NGXPilots
@@ -10208,7 +10222,7 @@ master:
     type: NumSet
     var_name: A:BRAKE LEFT POSITION EX1
     var_units: Position 32k
-    var_type: i32
+    var_type: f64
     add_by: -16384
     event_name: AXIS_LEFT_BRAKE_SET
     unreliable: true
@@ -10216,7 +10230,7 @@ master:
     type: NumSet
     var_name: A:BRAKE RIGHT POSITION EX1
     var_units: Position 32k
-    var_type: i32
+    var_type: f64
     add_by: -16384
     event_name: AXIS_RIGHT_BRAKE_SET
     unreliable: true
@@ -10225,6 +10239,18 @@ server:
   -
     type: var
     var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER2 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER3 LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true

@@ -1,5 +1,51 @@
 # YourControls Changelog
 
+## Version 2.7.7
+
+### Profiles
+
+- Added: Airbus A320neo by LatinVFR (v1.0.2).
+- Added: Bell 206L3 by Cowan Simulation (v1.0.2).
+- Updated: Airbus A318ceo by LatinVFR to v2.0.0.
+- Updated: Airbus A319ceo by LatinVFR to v2.0.0.
+- Updated: Airbus A321neo by LatinVFR to v2.0.1.
+- Updated: Airbus A32NX by FlyByWire to v0.10.0.
+- Updated: Airbus A339X by Headwind Simulations to v0.4.1.
+- Updated: Airbus H125 by Cowan Simulation to v1.0.2.
+- Updated: Bell 206B3 by Cowan Simulation to v1.0.3.
+- Updated: Cessna 414AW Chancellor by Flysimware to v4.3.3.
+- Updated: Discus-2c by Got Friends to v2.0.7.
+- Updated: Edgley EA-7 by Got Friends to v1.0.7.
+- Updated: Grumman G-21A by Microsoft & iniBuilds to v1.1.5.
+- Updated: Grumman JRF-6B Goose by Big Radials to v1.0.8.
+- Updated: Hughes H4 by Microsoft & Bluemesh to v1.1.8.
+- Updated: MD Helicopters 500E by Cowan Simulation to v1.0.2.
+- Updated: Piper PA-28 Warrior II by JustFlight to v0.5.6.
+- Updated: Piper PA-28R Arrow III by JustFlight to v0.10.6.
+- Updated: Piper PA-28R Turbo Arrow by JustFlight to v0.3.6.
+- Removed: FlyByWire A32NX Development/Experimental.
+- Removed: Pushback tug (conflicts with other add-ons).
+- Removed: Support for PMS50 GNS530 (deprecated).
+
+### Aircraft Fixes
+
+- General: Desync when pressing Garmin 330 numbers.
+- General: Lots of excess unsettable local var cleanup.
+- General: TACAN support updated per latest SDK.
+- Asobo/WT Longitude: Backup ADI barometer.
+- Microsoft PC-6: Dimmer brightness knobs.
+- Microsoft Volocity: Throttle/VS switch.
+- Big Radial JRF-6B: Added missing fuel valves.
+- Big Radial JRF-6B: Propeller starter animation.
+- Cowan H125: Corrected wrong fuel tank variable.
+- FSS E175: Updated slider ignores to stop EFB spam.
+- PMDG 737: Auto brake selectior knob desync.
+- PMDG 737: CPT and FO yoke AP disconnect switches.
+- PMDG 737: Disabled CPT and FO minimums selector knobs.
+- PMDG 737: Landing and logo light switches w/pulse option.
+- PMDG 737: Speed of parking brake set/release.
+- SWS RV-10: Garmin G5 power button.
+
 ## Version 2.7.6
 
 ### Changes
@@ -10,7 +56,7 @@
 #### 737 Issues
 
 - Recommend setting unmodified COLDDARK state before sharing.
-- Fuel state unsyncable. Simvars being overridden.
+- Persistent fuel state unsyncable. Simvars being overridden.
 - Vertical speed window does not go negative value.
 - Altimeter sync is disabled. Sim event is being overridden?
 - APU/ENG bus switches may need to be switched twice for effect.

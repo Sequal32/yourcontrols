@@ -1,10 +1,9 @@
-# Version 1.0.2
+# Version 1.0.3 B3 / 1.0.2 L3
 
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/autopilot_heli.yaml
+  - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/fuel.yaml
@@ -64,6 +63,13 @@ shared:
     var_type: f64
     event_name: LANDING_LIGHTS_SET
     event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:3
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 3
 
   - # Interior
     type: NumSet
@@ -96,7 +102,7 @@ shared:
     event_param: 2
     index_reversed: true
 
-  - # LVAR's (trimmed)
+  - # LVAR's (B3, trimmed)
     type: var
     var_name: L:idleRel
   -
@@ -228,6 +234,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:hideDownwash
+# -
+#   type: var
+#   var_name: L:hideHeatBlur
   -
     type: var
     var_name: L:exitFrontR
@@ -245,10 +257,19 @@ shared:
     var_name: L:windowVentPilot
   -
     type: var
+    var_name: L:206SearchLightDown
+  -
+    type: var
+    var_name: L:206SearchLightRight
+  -
+    type: var
     var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:trimRelease
+  -
+    type: var
+    var_name: L:trimRelease2
 # -
 #   type: var
 #   var_name: L:rotorBrakeActiveOverwrite
@@ -294,9 +315,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS430_ManualBrightness_Enabled_ID
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
   -
     type: var
     var_name: L:buttonAnnTest
@@ -312,54 +333,22 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:exteriorSound
   -
     type: var
     var_name: L:headSetR
   -
     type: var
     var_name: L:headSetL
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Altimeter_1
+
+  - # L3
+    type: var
+    var_name: L:hidePatient
   -
     type: var
-    var_name: L:DEICE_Pitot_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Course_1
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS530_SelectedSource
-# -
-#   type: var
-#   var_name: L:AS430_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS430_SelectedSource
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_NAV_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_STROBE_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_GLARESHIELD_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_PANEL_1
+    var_name: L:hideMedic
 
 master:
   -
@@ -456,6 +445,24 @@ server:
   -
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:13
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:14
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:15
     var_units: Pounds
     var_type: f64
     unreliable: true

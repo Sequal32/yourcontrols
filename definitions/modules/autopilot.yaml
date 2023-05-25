@@ -15,6 +15,12 @@ shared:
     event_name: AUTOPILOT_DISENGAGE_SET
   -
     type: ToggleSwitch
+    var_name: A:AUTOPILOT DISENGAGED
+    var_units: Bool
+    var_type: bool
+    event_name: AUTOPILOT_DISENGAGE_TOGGLE
+  -
+    type: ToggleSwitch
     var_name: A:AUTOPILOT HEADING LOCK
     var_units: Bool
     var_type: bool
@@ -232,6 +238,14 @@ shared:
     cancel_h_events: true
     use_calculator: true
   -
+    type: ToggleSwitch
+    var_name: A:TACAN DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TACAN_DRIVES_NAV1
+    cancel_h_events: true
+    use_calculator: true
+  -
     type: NumSet
     var_name: A:RUDDER TRIM DISABLED
     var_units: Bool
@@ -249,13 +263,3 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: ELEVATOR_TRIM_DISABLED_SET
-
-  - # LVAR's
-    type: var
-    var_name: L:XMLVAR_VNAVButtonValue
-  -
-    type: var
-    var_name: L:XMLVAR_SpeedIsManuallySet
-  -
-    type: var
-    var_name: L:XMLVAR_AirSpeedIsInMach

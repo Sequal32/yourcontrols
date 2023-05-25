@@ -1,7 +1,6 @@
 # Version 1.3
 
 include:
-  - definitions/modules/Avionics/AS225.yaml
   - definitions/modules/Avionics/AS3X.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
@@ -25,22 +24,7 @@ shared:
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
 
-  - # LVAR's
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
-# -
-#   type: var
-#   var_name: L:XMLVAR_VNAVButtonValue
-  -
+  - # LVAR's (trimmed)
     type: var
     var_name: L:CanopyHandle
   -
@@ -49,153 +33,13 @@ shared:
   -
     type: var
     var_name: L:SwitchCargo_2
-# -
-#   type: var
-#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden1
   -
     type: var
-    var_name: L:ENG FUEL VALVE:1
-# -
-#   type: var
-#   var_name: L:AS225_Brightness_1
+    var_name: L:AS225_Brightness_1
+    cancel_h_events: true
   -
     type: var
-    var_name: L:ParkingBrake_Position
-# -
-#   type: var
-#   var_name: L:XMLVAR_AirSpeedIsInMach
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
-# -
-#   type: var
-#   var_name: L:HANDLING_ElevatorTrim
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_1
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_GLARESHIELD_1
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_1_State
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_Master_Set
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_WarningIndex
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:MFD_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MFD_MapZoomRange
-# -
-#   type: var
-#   var_name: L:Glasscockpit_HSI_Arc
-# -
-#   type: var
-#   var_name: L:PFD_BRG1_Source
-# -
-#   type: var
-#   var_name: L:PFD_BRG2_Source
-# -
-#   type: var
-#   var_name: L:PFD_CDI_Source
-# -
-#   type: var
-#   var_name: L:GPS_Current_Phase
-# -
-#   type: var
-#   var_name: L:Glasscockpit_DmeSource
-# -
-#   type: var
-#   var_name: L:Glasscockpit_Wind_Mode
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_2_State
-# -
-#   type: var
-#   var_name: L:AS225_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS225_State
-# -
-#   type: var
-#   var_name: L:AS225_Brightness_Manual_1
-  -
-    type: var
-    var_name: L:LedTrim_ScreenLuminosity
-  -
-    type: var
-    var_name: L:LedTrim_State
-  -
-    type: var
-    var_name: L:LedTrimH_ScreenLuminosity
-  -
-    type: var
-    var_name: L:LedTrimH_State
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+    var_name: L:AS225_Brightness_Manual_1
 
 server:
   -

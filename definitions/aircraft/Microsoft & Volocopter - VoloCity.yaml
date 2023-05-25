@@ -1,7 +1,8 @@
+# Version 0.1.35
+
 include:
   - definitions/modules/Avionics/AS3X.yaml
   - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
@@ -10,166 +11,7 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # LVAR's
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ESU_01
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ESU_06
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_Warning_Master
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ESU_08
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_07
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_POSITION_HOLD
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_12
-# -
-#   type: var
-#   var_name: L:XMLVAR_VOLOCITY_COMMANDED_VERTICAL_SPEED
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_15
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_09
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_Caution_Master
-  -
-    type: var
-    var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_5
-  -
-    type: var
-    var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_2
-  -
-    type: var
-    var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_9
-  -
-    type: var
-    var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_7
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_OPD_LV_MAIN_02
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_OPD_LV_BAT_01
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ESU_04
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ARM_1
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ESU_03
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_17
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_10
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_05
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_02
-  -
-    type: var
-    var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_3
-  -
-    type: var
-    var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_4
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_06
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_01
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_08
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_Warning_Master_Waiting_For_Ack
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_14
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_Caution_Master_Waiting_For_Ack
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_13
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_OPD_LV_BAT_02
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ESU_07
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ARM_2
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ESU_09
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_OPD_LV_MAIN_01
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_11
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_16
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_03
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_04
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_EPU_18
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ESU_02
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ESU_05
-  -
-    type: var
-    var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_8
-  -
-    type: var
-    var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_6
-  -
-    type: var
-    var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_1
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_MOMENTARY_VS_TICK
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_MOMENTARY_VS_EXTERNAL
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_POSITION_HOLD_ACTIVE
-# -
+# - # LVAR's
 #   type: var
 #   var_name: L:XMLVAR_VOLOCITY_ROTOR_01_RPM
 # -
@@ -279,6 +121,165 @@ shared:
 #   var_name: L:XMLVAR_VOLOCITY_ROTOR_18_ROTATION_ANGLE
 # -
 #   type: var
+#   var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_1
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_02
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_11
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_OPD_LV_MAIN_02
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ESU_09
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_18
+# -
+#   type: var
+#   var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_2
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_Caution_Master_Waiting_For_Ack
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_13
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ESU_03
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_07
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ARM_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_8
+# -
+#   type: var
+#   var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_9
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_15
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_16
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ESU_04
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ESU_01
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ESU_02
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_Warning_Master_Waiting_For_Ack
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ESU_07
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ARM_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_VOLOCITY_MOMENTARY_VS_TICK
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_12
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_OPD_LV_MAIN_01
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_POSITION_HOLD
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_17
+# -
+#   type: var
+#   var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_3
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_06
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_14
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ESU_08
+# -
+#   type: var
+#   var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_4
+# -
+#   type: var
+#   var_name: L:XMLVAR_VOLOCITY_COMMANDED_VERTICAL_SPEED
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_04
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_Warning_Master
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_OPD_LV_BAT_01
+# -
+#   type: var
+#   var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_6
+# -
+#   type: var
+#   var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_5
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_08
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_09
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ESU_05
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_ESU_06
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_OPD_LV_BAT_02
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_Caution_Master
+# -
+#   type: var
+#   var_name: L:XMLVAR_Volocity_Battery_StateOfCharge_7
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_10
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_05
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_03
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_EPU_01
+# -
+#   type: var
+#   var_name: L:XMLVAR_VOLOCITY_MOMENTARY_VS_EXTERNAL
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+  -
+    type: var
+    var_name: L:XMLVAR_VOLOCITY_POSITION_HOLD_ACTIVE
+# -
+#   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
@@ -331,12 +332,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpit_Wind_Mode
-  -
-    type: var
-    var_name: L:WasmInstrument_ScreenLuminosity
-  -
-    type: var
-    var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:WasmInstrument_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WasmInstrument_State
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
@@ -346,15 +347,24 @@ shared:
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-  -
-    type: var
-    var_name: L:XMLVAR_VOLOCITY_ROTORS_RUNNING
+# -
+#   type: var
+#   var_name: L:XMLVAR_VOLOCITY_ROTORS_RUNNING
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+master:
+  -
+    type: NumSet
+    var_name: L:XMLVAR_VOLOCITY_COMMANDED_VERTICAL_SPEED
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_THROTTLE1_SET
+    interpolate: Default
 
 server:
   -

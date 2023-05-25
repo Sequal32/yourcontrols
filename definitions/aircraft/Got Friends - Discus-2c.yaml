@@ -1,4 +1,4 @@
-# Version 2.0.5.1
+# Version 2.0.7
 
 include:
   - definitions/modules/Avionics/Aera.yaml
@@ -30,6 +30,13 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+
+  - # Ventilation
+    type: NumSet
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
 
   - # Interior
     type: NumSet
@@ -103,7 +110,10 @@ shared:
 #   var_name: L:PILOT_ACTIVE
   -
     type: var
-    var_name: L:CHECKLIST_ANIM
+    var_name: L:RELEASE_CABLE_NEW
+  -
+    type: var
+    var_name: L:RELEASE_CABLE_OLD
   -
     type: var
     var_name: L:TEMP_IMPERIAL
@@ -122,18 +132,15 @@ shared:
   -
     type: var
     var_name: L:OXYGEN_KNOB
-  -
-    type: var
-    var_name: L:OXYGEN_SOUND
+# -
+#   type: var
+#   var_name: L:OXYGEN_SOUND
 # -
 #   type: var
 #   var_name: L:YOKE_TOGGLE
   -
     type: var
     var_name: L:YAW_TOGGLE
-  -
-    type: var
-    var_name: L:BEZEL_CAL
   -
     type: var
     var_name: L:COMPASS_ACTIVE
@@ -143,6 +150,12 @@ shared:
   -
     type: var
     var_name: L:GOPRO_ACTIVE
+# -
+#   type: var
+#   var_name: L:Vibration1
+# -
+#   type: var
+#   var_name: L:Vibration2
 # -
 #   type: var
 #   var_name: L:LVAR_SPOILERS_PERCENT
@@ -164,6 +177,9 @@ shared:
   -
     type: var
     var_name: L:IsFES
+# -
+#   type: var
+#   var_name: L:AdverseYaw
 # -
 #   type: var
 #   var_name: L:CANOPY_PERCENT_SOUND
@@ -200,9 +216,6 @@ shared:
   -
     type: var
     var_name: L:OXYGEN_QTY
-  -
-    type: var
-    var_name: L:KA_SOUND_ON
 # -
 #   type: var
 #   var_name: L:SIM_ACTIVE
@@ -263,6 +276,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:YAWSTRING_X_ANIM
+  -
+    type: var
+    var_name: L:BEZEL_CAL
+  -
+    type: var
+    var_name: L:KA_SOUND_ON
+  -
+    type: var
+    var_name: L:TOW_HANDLE
 # -
 #   type: var
 #   var_name: L:NETTO
@@ -275,12 +297,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
   -
     type: var
     var_name: L:RADAR_PING
@@ -644,12 +660,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:MFD_MapZoomRange
-  -
-    type: var
-    var_name: L:FLARM_ALERT_VOLUME
+# -
+#   type: var
+#   var_name: L:FLARM_ALERT_VOLUME
 # -
 #   type: var
 #   var_name: L:THUMB_ANIM
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
@@ -658,13 +677,10 @@ shared:
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
 # -
 #   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-  -
-    type: var
-    var_name: L:tablet_script_ScreenLuminosity
-  -
-    type: var
-    var_name: L:tablet_script_State
+#   var_name: L:tablet_script_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:tablet_script_State
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
@@ -677,30 +693,30 @@ shared:
 # -
 #   type: var
 #   var_name: L:Aera_State
-  -
-    type: var
-    var_name: L:WasmInstrument_ScreenLuminosity
-  -
-    type: var
-    var_name: L:WasmInstrument_State
-  -
-    type: var
-    var_name: L:AS92_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS92_State
-  -
-    type: var
-    var_name: L:AS21_ScreenLuminosity
-  -
-    type: var
-    var_name: L:AS21_State
-  -
-    type: var
-    var_name: L:lxnav_v80_script_ScreenLuminosity
-  -
-    type: var
-    var_name: L:lxnav_v80_script_State
+# -
+#   type: var
+#   var_name: L:WasmInstrument_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:AS92_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS92_State
+# -
+#   type: var
+#   var_name: L:AS21_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS21_State
+# -
+#   type: var
+#   var_name: L:lxnav_v80_script_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:lxnav_v80_script_State
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -708,7 +724,10 @@ shared:
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
-# - # FES
+# - # FES (trimmed)
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
 #   type: var
 #   var_name: L:PropAngle
 # -
@@ -726,18 +745,6 @@ shared:
   -
     type: var
     var_name: L:FES_ERROR
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:fes_fcu_script_ScreenLuminosity
-  -
-    type: var
-    var_name: L:fes_fcu_script_State
 
 server:
   -
@@ -779,4 +786,3 @@ server:
 
 ignore:
   - Aera#units_value
-  - Transponder_VFR

@@ -1,7 +1,6 @@
 # Version 1.4.0
 
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
@@ -14,20 +13,12 @@ include:
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-  - # Prop Sync
-    type: ToggleSwitch
-    var_name: A:PROP SYNC ACTIVE
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_PROPELLER_SYNC
-
   - # Doors
     type: ToggleSwitch
     var_name: A:EXIT OPEN:1
@@ -934,18 +925,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:PMS50_GTN750_INSTALLED
-  -
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
     var_name: L:GNS_Brightness
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
   -
     type: ToggleSwitch
     var_name: L:PROP_SYNC_ACTIVE_CAR
@@ -1014,9 +1005,9 @@ shared:
   -
     type: var
     var_name: L:AircraftLandingPulseInit
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden1

@@ -1,5 +1,6 @@
+# Version 0.1.74
+
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/autopilot.yaml
@@ -10,31 +11,30 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/passenger.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-  - # Aerobatics Trim Flap
-    type: CustomCalculator
-    get: -1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:5, Bool)
-    set: 5 -1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # Horizon
+  - # Horizon Switch
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:34
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 34
-  - # Directional
+  - # Directional Switch
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:35
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 35
+  - # Trim Flap Switch
+    type: CustomCalculator
+    get: -1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:5, Bool)
+    set: 5 -1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
   - # Interior
     type: NumSet
@@ -59,118 +59,6 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 10
     index_reversed: true
-
-  - # LVAR's
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_Starter_State
-# -
-#   type: var
-#   var_name: L:XMLVAR_Starter_State_IsDown
-# -
-#   type: var
-#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
-# -
-#   type: var
-#   var_name: L:AS430_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS430_SelectedSource
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
-  -
-    type: var
-    var_name: L:ELECTRICAL_Starter_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
-# -
-#   type: var
-#   var_name: L:LIGHTING_LANDING_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_NAV_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_STROBE_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_PANEL_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_POTENTIOMETER_10
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Altimeter_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:AS330_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS330_State
-# -
-#   type: var
-#   var_name: L:AS430_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS430_State
-# -
-#   type: var
-#   var_name: L:HourMeter_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:HourMeter_State
-# -
-#   type: var
-#   var_name: L:PGM1212_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:PGM1212_State
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   -

@@ -405,23 +405,6 @@ shared:
     get: 16 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:20, Bool)
     set: 20 16 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
-  - # Pressurization
-    type: NumIncrement
-    var_name: A:PRESSURIZATION CABIN ALTITUDE GOAL:1
-    var_units: Feet
-    var_type: f64
-    up_event_name: PRESSURIZATION_PRESSURE_ALT_INC
-    down_event_name: PRESSURIZATION_PRESSURE_ALT_DEC
-    increment_by: 36
-# -
-#   type: NumIncrement
-#   var_name: A:PRESSURIZATION CABIN ALTITUDE RATE
-#   var_units: Feet per minute
-#   var_type: f64
-#   up_event_name: PRESSURIZATION_CLIMB_RATE_INC
-#   down_event_name: PRESSURIZATION_CLIMB_RATE_DEC
-#   increment_by: 36
-
   - # Hydraulics
     type: ToggleSwitch
     var_name: A:HYDRAULIC SWITCH:1
@@ -1682,9 +1665,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:Tanks1_4_Balance
@@ -2297,9 +2280,9 @@ shared:
   -
     type: var
     var_name: L:ALT_ACQ
-  -
-    type: var
-    var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
   -
     type: var
     var_name: L:AUTOPILOT ALTITUDE LOCK VAR
@@ -2384,96 +2367,96 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_IE_Afterburner_4_Quit
-  -
-    type: var
-    var_name: L:HANDLING_AileronsTrim
-  -
-    type: var
-    var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
   -
     type: var
     var_name: L:HANDLING_Autobrakes_Position
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
-  -
-    type: var
-    var_name: L:DEICE_Pitot_2
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_3
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_4
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_5
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_7
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_8
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_9
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_10
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_3
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_11
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_6
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_5
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_2
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_3
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_4
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_1
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_2
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_3
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_LOGO_0
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_0
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_0
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_5
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_7
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_8
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_9
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_10
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_11
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_6
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_5
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LOGO_0
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_0
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_0
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Afterburner_1_LastThrottleInc
@@ -2489,90 +2472,90 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:DME1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:DME1_State
-  -
-    type: var
-    var_name: L:SCREEN_ScreenLuminosity
-  -
-    type: var
-    var_name: L:SCREEN_State
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveOrigin
-  -
-    type: var
-    var_name: L:Glasscockpits_FPLHaveDestination
-  -
-    type: var
-    var_name: L:A320_Neo_ATC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_ATC_State
-  -
-    type: var
-    var_name: L:MACH_ScreenLuminosity
-  -
-    type: var
-    var_name: L:MACH_State
-  -
-    type: var
-    var_name: L:ALT_ScreenLuminosity
-  -
-    type: var
-    var_name: L:ALT_State
-  -
-    type: var
-    var_name: L:Temps_ScreenLuminosity
-  -
-    type: var
-    var_name: L:Temps_State
-  -
-    type: var
-    var_name: L:TEMP_ScreenLuminosity
-  -
-    type: var
-    var_name: L:TEMP_State
-  -
-    type: var
-    var_name: L:GS2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:GS2_State
-  -
-    type: var
-    var_name: L:RADIOSCREEN_ScreenLuminosity
-  -
-    type: var
-    var_name: L:RADIOSCREEN_State
-  -
-    type: var
-    var_name: L:TFC_ScreenLuminosity
-  -
-    type: var
-    var_name: L:TFC_State
-  -
-    type: var
-    var_name: L:TGW_ScreenLuminosity
-  -
-    type: var
-    var_name: L:TGW_State
-  -
-    type: var
-    var_name: L:A320_Neo_MFD_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_MFD_State
-  -
-    type: var
-    var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-  -
-    type: var
-    var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:DME1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:DME1_State
+# -
+#   type: var
+#   var_name: L:SCREEN_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:SCREEN_State
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:A320_Neo_ATC_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:A320_Neo_ATC_State
+# -
+#   type: var
+#   var_name: L:MACH_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:MACH_State
+# -
+#   type: var
+#   var_name: L:ALT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:ALT_State
+# -
+#   type: var
+#   var_name: L:Temps_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:Temps_State
+# -
+#   type: var
+#   var_name: L:TEMP_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:TEMP_State
+# -
+#   type: var
+#   var_name: L:GS2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GS2_State
+# -
+#   type: var
+#   var_name: L:RADIOSCREEN_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:RADIOSCREEN_State
+# -
+#   type: var
+#   var_name: L:TFC_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:TFC_State
+# -
+#   type: var
+#   var_name: L:TGW_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:TGW_State
+# -
+#   type: var
+#   var_name: L:A320_Neo_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:A320_Neo_MFD_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
   -
     type: var
     var_name: L:MFD_MapShowCursor
@@ -2609,30 +2592,30 @@ shared:
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-  -
-    type: var
-    var_name: L:AIRLINER_TO_FLEX_TEMP
-  -
-    type: var
-    var_name: L:AIRLINER_CRUISE_ALTITUDE
+# -
+#   type: var
+#   var_name: L:AIRLINER_TO_FLEX_TEMP
+# -
+#   type: var
+#   var_name: L:AIRLINER_CRUISE_ALTITUDE
   -
     type: var
     var_name: L:A320_NEO_CDU_START_PAGE
   -
     type: var
     var_name: L:Fuel_Pump_Switch_A
-  -
-    type: var
-    var_name: L:A320_Neo_CDU_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_CDU_State
-  -
-    type: var
-    var_name: L:AIRLINER_FLIGHT_PHASE
-  -
-    type: var
-    var_name: L:FMC_UPDATE_CURRENT_PAGE
+# -
+#   type: var
+#   var_name: L:A320_Neo_CDU_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:A320_Neo_CDU_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_FLIGHT_PHASE
+# -
+#   type: var
+#   var_name: L:FMC_UPDATE_CURRENT_PAGE
   -
     type: var
     var_name: L:MODE_HEADING
@@ -2642,24 +2625,24 @@ shared:
 # -
 #   type: var
 #   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
-  -
-    type: var
-    var_name: L:A320_Neo_Clock_ScreenLuminosity
-  -
-    type: var
-    var_name: L:A320_Neo_Clock_State
-  -
-    type: var
-    var_name: L:RADIONAV_SOURCE
-  -
-    type: var
-    var_name: L:AIRLINER_V1_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_VR_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_V2_SPEED
+# -
+#   type: var
+#   var_name: L:A320_Neo_Clock_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:A320_Neo_Clock_State
+# -
+#   type: var
+#   var_name: L:RADIONAV_SOURCE
+# -
+#   type: var
+#   var_name: L:AIRLINER_V1_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VR_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_V2_SPEED
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX

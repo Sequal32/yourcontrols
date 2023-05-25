@@ -2,7 +2,6 @@
 
 include:
   - definitions/modules/Avionics/AS3X.yaml
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/GTN750.yaml
   - definitions/modules/Avionics/TDSNXi.yaml
@@ -20,6 +19,14 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # G5 Power
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:37
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 37
+
   - # Doors
     type: ToggleSwitch
     var_name: A:SMOKE ENABLE:6
@@ -262,9 +269,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:SWS_ELECTRICAL_Push_ELT_RESET
@@ -274,9 +281,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_Magneto_Starter_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
@@ -355,9 +362,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_AirSpeedIsInMach
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
 # -
 #   type: var
 #   var_name: L:LIGHTING_PANEL_2

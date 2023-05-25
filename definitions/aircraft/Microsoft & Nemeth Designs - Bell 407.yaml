@@ -2,7 +2,7 @@
 
 include:
   - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/autopilot_heli.yaml
+  - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -91,7 +91,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_5_SET
     index_reversed: true
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
     var_name: L:buttonLcdTest
 # -
@@ -258,9 +258,9 @@ shared:
   -
     type: var
     var_name: L:audioAud
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
   -
     type: var
     var_name: L:switchLandingLight
@@ -478,102 +478,6 @@ shared:
   -
     type: var
     var_name: L:audioTelephoneMode
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Enabled_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_ValueSUFFIX_ID
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_EnabledSUFFIX_ID
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Enabled_1
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
-# -
-#   type: var
-#   var_name: L:AS430_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS430_SelectedSource
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS530_SelectedSource
-  -
-    type: var
-    var_name: L:KX155A_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KX155A_1_State
-  -
-    type: var
-    var_name: L:KX155A_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KX155A_2_State
-  -
-    type: var
-    var_name: L:KR87_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KR87_State
-  -
-    type: var
-    var_name: L:KT76C_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KT76C_State
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
 
 master:
   -

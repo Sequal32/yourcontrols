@@ -1,10 +1,10 @@
+# Version 0.1.43
+
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/AS1000.yaml
   - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/Avionics/KAP140.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
@@ -276,6 +276,71 @@ shared:
     event_param: 11
     index_reversed: true
 
+  - # Dimmers
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:40
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 40
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:41
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 41
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:42
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 42
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:43
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 43
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:44
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 44
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:45
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 45
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:46
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 46
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:47
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 47
+    index_reversed: true
+
   - # LVAR's
     type: var
     var_name: L:PC6_GUSTLOCK_UNLOCKED
@@ -287,13 +352,13 @@ shared:
     var_name: L:PC6_IC_HIGH
   -
     type: var
-    var_name: L:LOCAL_milliBar_to_inHg
-  -
-    type: var
     var_name: L:XMLVAR_LLDG_LT_EXT
   -
     type: var
     var_name: L:XMLVAR_RLDG_LT_EXT
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
     var_name: L:HANDLING_X_Dir_Y_Dir_Position
@@ -312,9 +377,21 @@ shared:
   -
     type: var
     var_name: L:DigitalFuelMeter_FP5L_HL_AUX_LIGHT
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -324,15 +401,15 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Joystick_Stab_Trim
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:Condition_Lever_CutOff_1
@@ -369,42 +446,66 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_PLT_LIGHT_GEN_TEST
+# -
+#   type: var
+#   var_name: L:L:XMLVAR_STALL_WARN_TEST
+# -
+#   type: var
+#   var_name: L:L:XMLVAR_PROP_LOW_PITCH_TEST
+# -
+#   type: var
+#   var_name: L:L:XMLVAR_UNKNOWN_INOP_TEST
   -
     type: var
     var_name: L:XMLVAR_UNKNOWN_INOP_TEST
+# -
+#   type: var
+#   var_name: L:L:XMLVAR_PLT_LIGHT_GEN_TEST
   -
     type: var
     var_name: L:XMLVAR_FCU_HEATER_TEST
   -
     type: var
     var_name: L:FCU_HEATER_SWITCH
+# -
+#   type: var
+#   var_name: L:L:XMLVAR_FCU_HEATER_TEST
   -
     type: var
     var_name: L:XMLVAR_BOOSTER_PUMP_TEST
   -
     type: var
     var_name: L:PC6_AUX_FUEL_BOOST_PUMP
+# -
+#   type: var
+#   var_name: L:L:XMLVAR_BOOSTER_PUMP_TEST
   -
     type: var
     var_name: L:XMLVAR_FUEL_FILTER_CLOGGED_TEST
+# -
+#   type: var
+#   var_name: L:L:XMLVAR_FUEL_FILTER_CLOGGED_TEST
   -
     type: var
     var_name: L:XMLVAR_STARTER_ON_TEST
+# -
+#   type: var
+#   var_name: L:L:XMLVAR_STARTER_ON_TEST
   -
     type: var
     var_name: L:PC6_SKI_PUMP_PRESS
   -
     type: var
     var_name: L:PC6_SKI_RETRACT
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_2
-  -
-    type: var
-    var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
 # -
 #   type: var
 #   var_name: L:AS530_Default_MapZoomRange
@@ -417,9 +518,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS430_SelectedSource
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
   -
     type: var
     var_name: L:XMLVAR_Interrupt_Cover
@@ -438,30 +539,30 @@ shared:
   -
     type: var
     var_name: L:PC6_IDLECTRL_LEVER
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_2
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_11
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_11
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
@@ -492,45 +593,63 @@ shared:
   -
     type: var
     var_name: L:PC6_CB_CB_IND
-  -
-    type: var
-    var_name: L:XMLVAR_STALL_WARN_TEST_COMPLETE
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_40
-  -
-    type: var
-    var_name: L:XMLVAR_PROP_LOW_PITCH_TEST_COMPLETE
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_41
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_42
-  -
-    type: var
-    var_name: L:XMLVAR_PLT_LIGHT_GEN_TEST_COMPLETE
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_43
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_44
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_45
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_46
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_47
 # -
 #   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
+#   var_name: L:XMLVAR_STALL_WARN_TEST_COMPLETE
 # -
 #   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
+#   var_name: L:LIGHTING_POTENTIOMETER_40
+# -
+#   type: var
+#   var_name: L:XMLVAR_PROP_LOW_PITCH_TEST_COMPLETE
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_41
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_42
+# -
+#   type: var
+#   var_name: L:XMLVAR_PLT_LIGHT_GEN_TEST_COMPLETE
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_43
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_44
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_45
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_46
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_47
+# -
+#   type: var
+#   var_name: L:MSATR_CONDITION1_AMSn
+# -
+#   type: var
+#   var_name: L:MSATR_CONDITION1_CLS
+# -
+#   type: var
+#   var_name: L:MSATR_CONDITION1_AMS
+# -
+#   type: var
+#   var_name: L:MSATR_CONDITION1_CLnS
+# -
+#   type: var
+#   var_name: L:MSATR_CONDITION1_MS
+# -
+#   type: var
+#   var_name: L:MSATR_CONDITION1_MSn
+# -
+#   type: var
+#   var_name: L:MSATR_CONDITION1_ACLS
+# -
+#   type: var
+#   var_name: L:MSATR_CONDITION1_ACLnS
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -561,24 +680,24 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS330_State
-  -
-    type: var
-    var_name: L:KR87_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KR87_State
-  -
-    type: var
-    var_name: L:DigitalFuelMeter_FP5L_ScreenLuminosity
-  -
-    type: var
-    var_name: L:DigitalFuelMeter_FP5L_State
-  -
-    type: var
-    var_name: L:HourMeter_ScreenLuminosity
-  -
-    type: var
-    var_name: L:HourMeter_State
+# -
+#   type: var
+#   var_name: L:KR87_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KR87_State
+# -
+#   type: var
+#   var_name: L:DigitalFuelMeter_FP5L_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:DigitalFuelMeter_FP5L_State
+# -
+#   type: var
+#   var_name: L:HourMeter_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:HourMeter_State
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
@@ -601,9 +720,15 @@ shared:
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
-  - # Non-G950
+# - # G950 (trimmed)
+#   type: var
+#   var_name: L:AP_KAP140_INSTALLED
+  -
     type: var
     var_name: L:XMLVAR_LDG_LT_EXT
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
   -
     type: var
     var_name: L:XMLVAR_ANIM_WARNING_1
@@ -634,30 +759,54 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_ANIM_CAUTION_1
+# -
+#   type: var
+#   var_name: L:L:XMLVAR_REV_MODE_SEL
   -
     type: var
     var_name: L:XMLVAR_REV_MODE_SEL
-  -
-    type: var
-    var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
   -
     type: var
     var_name: L:XMLVAR_Autopilot_3_Status
-  -
-    type: var
-    var_name: L:Generic_Gear_Advisory_Active
-  -
-    type: var
-    var_name: L:XMLVAR_DIM_Light_Switch
-  -
-    type: var
-    var_name: L:ELECTRICAL_ExternalPower_1
+# -
+#   type: var
+#   var_name: L:Generic_Gear_Advisory_Active
+# -
+#   type: var
+#   var_name: L:XMLVAR_DIM_Light_Switch
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_ExternalPower_1
   -
     type: var
     var_name: L:XMLVAR_G950_GEN_BUS2_MOM_HI_COUNT
@@ -691,9 +840,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_G950_AP_MASTER_MOM_LO_COUNT
-  -
-    type: var
-    var_name: L:DEICE_Propeller_1
+# -
+#   type: var
+#   var_name: L:DEICE_Propeller_1
   -
     type: var
     var_name: L:XMLVAR_G950_LH_FUEL_PUMP_MOM_HI_COUNT
@@ -733,6 +882,33 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_emerg_fuelctrl_02_switch
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapShowCursor
   -
     type: var
     var_name: L:PC6_CB_
@@ -766,9 +942,6 @@ shared:
   -
     type: var
     var_name: L:PC6_CB_WX_RDR
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
 
 server:
   -

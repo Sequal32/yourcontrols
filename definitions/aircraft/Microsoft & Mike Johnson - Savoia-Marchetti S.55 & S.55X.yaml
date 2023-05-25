@@ -1,8 +1,6 @@
-# Version 1.5.3
+# Version 1.5.4
 
 include:
-  - definitions/modules/Avionics/AS225.yaml
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/autopilot.yaml
@@ -34,9 +32,9 @@ shared:
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
 
-  - # LVAR's
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+# - # LVAR's
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
 # -
 #   type: var
 #   var_name: L:XMLVAR_Lotus_Trim_Adjust
@@ -64,42 +62,38 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverMixtureHidden2
-  -
-    type: var
-    var_name: L:ApuInit
+# -
+#   type: var
+#   var_name: L:ApuInit
   -
     type: var
     var_name: L:XMLVAR_COM_DEC_RESET
-  -
-    type: var
-    var_name: L:ELECTRICAL_APU_Starter
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1
-  -
-    type: var
-    var_name: L:LIGHTING_GLARESHIELD_1
-  -
-    type: var
-    var_name: L:ELECTRICAL_Starter_1
-  -
-    type: var
-    var_name: L:ELECTRICAL_Starter_2
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_APU_Starter
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_1
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_2
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
 
   - # X variant
-    type: var
-    var_name: L:XMLVAR_Canopy_Left
-    unreliable: true
-  -
     type: var
     var_name: L:XMLVAR_Canopy_Right
     unreliable: true
@@ -111,6 +105,16 @@ shared:
     type: var
     var_name: L:XMLVAR_Window_Right
     unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Canopy_Left
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled
   -
     type: var
     var_name: L:Gyro_2_drift
@@ -143,12 +147,60 @@ shared:
     type: var
     var_name: L:XMLVAR_Window_Right_Norm
     unreliable: true
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   -

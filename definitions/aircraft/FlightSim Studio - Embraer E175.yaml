@@ -198,23 +198,6 @@ shared:
       - XPNDR_100_DEC
       - XPNDR_1000_DEC
 
-  - # Take control priority
-    type: ProgramAction
-    action: TakeControls
-    var_name: L:FSS_EXX_YOKE_TCS_L
-    var_type: f64
-    condition:
-      equals:
-        F64: 1.0
-  -
-    type: ProgramAction
-    action: TakeControls
-    var_name: L:FSS_EXX_YOKE_TCS_R
-    var_type: f64
-    condition:
-      equals:
-        F64: 1.0
-
 # - # LVAR's
 #   type: var
 #   var_name: L:AEROSOFT_ONE_MSFS_UTILITIES_CONFIG1
@@ -5270,7 +5253,92 @@ server:
     unreliable: true
 
 ignore:
-  - MCDU_LEFT#keyboardToggle
-  - MCDU_RIGHT#keyboardToggle
   - EFB#brightnessSlider
-  - WasmInstrument#brightnessSlider
+  - EFB#gforcefxslider
+  - EFB#keyboardToggle
+  - EFB#updateRate-PFD1
+  - EFB#updateRate-MFD1
+  - EFB#updateRate-MCDU1
+  - EFB#updateRate-ACP1
+  - EFB#updateRate-EICAS
+  - EFB#updateRate-EFB
+  - EFB#updateRate-PFD2
+  - EFB#updateRate-MFD2
+  - EFB#updateRate-MCDU2
+  - EFB#updateRate-ACP2
+  - EFB#updateRate-IESS
+
+  - MCDU_LEFT#brightnessSlider
+  - MCDU_LEFT#gforcefxslider
+  - MCDU_LEFT#keyboardToggle
+  - MCDU_LEFT#updateRate-PFD1
+  - MCDU_LEFT#updateRate-MFD1
+  - MCDU_LEFT#updateRate-MCDU1
+  - MCDU_LEFT#updateRate-ACP1
+  - MCDU_LEFT#updateRate-EICAS
+  - MCDU_LEFT#updateRate-EFB
+  - MCDU_LEFT#updateRate-PFD2
+  - MCDU_LEFT#updateRate-MFD2
+  - MCDU_LEFT#updateRate-MCDU2
+  - MCDU_LEFT#updateRate-ACP2
+  - MCDU_LEFT#updateRate-IESS
+
+  - MCDU_RIGHT#brightnessSlider
+  - MCDU_RIGHT#gforcefxslider
+  - MCDU_RIGHT#keyboardToggle
+  - MCDU_RIGHT#updateRate-PFD1
+  - MCDU_RIGHT#updateRate-MFD1
+  - MCDU_RIGHT#updateRate-MCDU1
+  - MCDU_RIGHT#updateRate-ACP1
+  - MCDU_RIGHT#updateRate-EICAS
+  - MCDU_RIGHT#updateRate-EFB
+  - MCDU_RIGHT#updateRate-PFD2
+  - MCDU_RIGHT#updateRate-MFD2
+  - MCDU_RIGHT#updateRate-MCDU2
+  - MCDU_RIGHT#updateRate-ACP2
+  - MCDU_RIGHT#updateRate-IESS
+
+  - MFD_LEFT#brightnessSlider
+  - MFD_LEFT#gforcefxslider
+  - MFD_LEFT#keyboardToggle
+  - MFD_LEFT#updateRate-PFD1
+  - MFD_LEFT#updateRate-MFD1
+  - MFD_LEFT#updateRate-MCDU1
+  - MFD_LEFT#updateRate-ACP1
+  - MFD_LEFT#updateRate-EICAS
+  - MFD_LEFT#updateRate-EFB
+  - MFD_LEFT#updateRate-PFD2
+  - MFD_LEFT#updateRate-MFD2
+  - MFD_LEFT#updateRate-MCDU2
+  - MFD_LEFT#updateRate-ACP2
+  - MFD_LEFT#updateRate-IESS
+
+  - MFD_RIGHT#brightnessSlider
+  - MFD_RIGHT#gforcefxslider
+  - MFD_RIGHT#keyboardToggle
+  - MFD_RIGHT#updateRate-PFD1
+  - MFD_RIGHT#updateRate-MFD1
+  - MFD_RIGHT#updateRate-MCDU1
+  - MFD_RIGHT#updateRate-ACP1
+  - MFD_RIGHT#updateRate-EICAS
+  - MFD_RIGHT#updateRate-EFB
+  - MFD_RIGHT#updateRate-PFD2
+  - MFD_RIGHT#updateRate-MFD2
+  - MFD_RIGHT#updateRate-MCDU2
+  - MFD_RIGHT#updateRate-ACP2
+  - MFD_RIGHT#updateRate-IESS
+
+  - FSSWasmInstrument#brightnessSlider
+  - FSSWasmInstrument#gforcefxslider
+  - FSSWasmInstrument#keyboardToggle
+  - FSSWasmInstrument#updateRate-PFD1
+  - FSSWasmInstrument#updateRate-MFD1
+  - FSSWasmInstrument#updateRate-MCDU1
+  - FSSWasmInstrument#updateRate-ACP1
+  - FSSWasmInstrument#updateRate-EICAS
+  - FSSWasmInstrument#updateRate-EFB
+  - FSSWasmInstrument#updateRate-PFD2
+  - FSSWasmInstrument#updateRate-MFD2
+  - FSSWasmInstrument#updateRate-MCDU2
+  - FSSWasmInstrument#updateRate-ACP2
+  - FSSWasmInstrument#updateRate-IESS

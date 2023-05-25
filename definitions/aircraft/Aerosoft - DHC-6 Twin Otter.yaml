@@ -1,11 +1,9 @@
 # Version 1.1.1
 
 include:
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
-  - definitions/modules/Avionics/KAP140.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -20,13 +18,7 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  -
-    type: ToggleSwitch
-    var_name: A:PANEL AUTO FEATHER SWITCH
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_AUTOFEATHER_ARM
-  -
+  - # Lights
     type: NumSet
     var_name: A:LIGHT LANDING:2
     var_units: Bool
@@ -139,9 +131,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:DHC6_WIPER_POS
-  -
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
     var_name: L:DHC6_ANNUN_TEST
@@ -391,9 +383,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:DHC6_FDR_TEST
@@ -418,9 +410,9 @@ shared:
   -
     type: var
     var_name: L:DHC6_STAB_DEICE_R_TEST
-  -
-    type: var
-    var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
 # -
 #   type: var
 #   var_name: L:AS530_ManualBrightness_Value
@@ -436,12 +428,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LTS_Test
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_Autopilot_Altitude_Increment
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
   -
     type: var
     var_name: L:DHC6_NO_SMOKING
@@ -574,9 +566,9 @@ shared:
   -
     type: var
     var_name: L:DHC6_BOOST_PUMP_SOUND_4
-  -
-    type: var
-    var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
   -
     type: var
     var_name: L:XMLVAR_DHC6_FIRE_BELL_MUTE_guard
@@ -619,30 +611,30 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_DHC6_IGNITION_MODE_switch
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:LIGHTING_WING_1
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
   -
     type: var
     var_name: L:DHC6_COCKPIT_LT
@@ -790,12 +782,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS430_State
-  -
-    type: var
-    var_name: L:KT76C_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KT76C_State
+# -
+#   type: var
+#   var_name: L:KT76C_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KT76C_State
 # -
 #   type: var
 #   var_name: L:KAP140_ScreenLuminosity
@@ -805,18 +797,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:AutopilotPreflightCheckCompleted
-  -
-    type: var
-    var_name: L:KR87_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KR87_State
-  -
-    type: var
-    var_name: L:WasmInstrument_ScreenLuminosity
-  -
-    type: var
-    var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:KR87_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KR87_State
+# -
+#   type: var
+#   var_name: L:WasmInstrument_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WasmInstrument_State
 # -
 #   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN

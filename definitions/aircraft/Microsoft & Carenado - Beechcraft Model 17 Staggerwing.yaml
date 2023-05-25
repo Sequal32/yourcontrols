@@ -2,8 +2,6 @@
 
 include:
   - definitions/modules/Avionics/Aera.yaml
-  - definitions/modules/Avionics/AS225.yaml
-  - definitions/modules/Avionics/AS330.yaml
   - definitions/modules/Avionics/ASCommon.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
@@ -63,7 +61,7 @@ shared:
     event_name: CABIN_LIGHTS_SET
     event_param: 2
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
     var_name: L:GAUGE_FUELFLOW_INIT
 # -
@@ -492,9 +490,9 @@ shared:
   -
     type: var
     var_name: L:ASD_FUEL_SELECTOR_MAIN_D17S
-  -
-    type: var
-    var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
     var_name: L:TABLET_BTN_EXT_PWR
@@ -552,9 +550,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_UNNAMED_MOM_HI_COUNT
-  -
-    type: var
-    var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverFlapsHidden
@@ -564,9 +562,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
-  -
-    type: var
-    var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
@@ -579,114 +577,6 @@ shared:
   -
     type: var
     var_name: L:CARVAR_Push_StructuralBar
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
-  -
-    type: var
-    var_name: L:ELECTRICAL_Starter_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:HANDLING_RudderTrim
-  -
-    type: var
-    var_name: L:INSTRUMENT_Course_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_1
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-# -
-#   type: var
-#   var_name: L:IsChangeDataFieldsMenuOn
-  -
-    type: var
-    var_name: L:KX155A_1_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KX155A_1_State
-# -
-#   type: var
-#   var_name: L:Aera_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:Aera_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:MFD_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MFD_MapZoomRange
-# -
-#   type: var
-#   var_name: L:Aera_IsPositionOverride
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   -
