@@ -1,10 +1,9 @@
-# Version 0.10.0 (March 24, 2023)
+# Version 0.10.0
 
 include:
   - definitions/modules/navigation.yaml
   - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/service.yaml
   - definitions/modules/slew.yaml
 
 shared:
@@ -170,18 +169,18 @@ shared:
     event_param: 3
   -
     type: ToggleSwitch
-    var_name: A:FUELSYSTEM VALVE SWITCH:8
+    var_name: A:FUELSYSTEM VALVE SWITCH:9
     var_units: Bool
     var_type: bool
     event_name: FUELSYSTEM_VALVE_TOGGLE
-    event_param: 8
+    event_param: 9
   -
     type: ToggleSwitch
-    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_name: A:FUELSYSTEM VALVE SWITCH:10
     var_units: Bool
     var_type: bool
-    event_name: FUELSYSTEM_PUMP_TOGGLE
-    event_param: 1
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 10
   -
     type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:2
@@ -196,13 +195,6 @@ shared:
     var_type: bool
     event_name: FUELSYSTEM_PUMP_TOGGLE
     event_param: 3
-  -
-    type: ToggleSwitch
-    var_name: A:FUELSYSTEM PUMP SWITCH:4
-    var_units: Bool
-    var_type: bool
-    event_name: FUELSYSTEM_PUMP_TOGGLE
-    event_param: 4
   -
     type: ToggleSwitch
     var_name: A:FUELSYSTEM PUMP SWITCH:5
@@ -324,13 +316,6 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:24
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_24_SET
     index_reversed: true
   -
     type: NumSet
@@ -628,11 +613,10 @@ shared:
     event_param: 0
   -
     type: NumSet
-    var_name: A:LIGHT BEACON:0
+    var_name: A:LIGHT BEACON
     var_units: Bool
     var_type: f64
     event_name: BEACON_LIGHTS_SET
-    event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT WING:0
@@ -823,12 +807,15 @@ shared:
   -
     type: var
     var_name: L:A32NX_OVHD_COND_CKPT_SELECTOR_KNOB
+    unreliable: true
   -
     type: var
     var_name: L:A32NX_OVHD_COND_FWD_SELECTOR_KNOB
+    unreliable: true
   -
     type: var
     var_name: L:A32NX_OVHD_COND_AFT_SELECTOR_KNOB
+    unreliable: true
   -
     type: var
     var_name: L:PUSH_OVHD_OXYGEN_CREW
@@ -1986,18 +1973,18 @@ shared:
   -
     type: var
     var_name: L:A32NX_OVHD_APU_START_PB_IS_ON
-  -
-    type: var
-    var_name: L:A32NX_OVHD_APU_START_PB_IS_AVAILABLE
+# -
+#   type: var
+#   var_name: L:A32NX_OVHD_APU_START_PB_IS_AVAILABLE
   -
     type: var
     var_name: L:LIGHTING_STROBE_0
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_2
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_3
 # -
 #   type: var
 #   var_name: L:A32NX_LGCIU_2_NOSE_GEAR_DOWNLOCKED
@@ -2010,12 +1997,18 @@ shared:
   -
     type: var
     var_name: L:A32NX_STBY_COMPASS_LIGHT_TOGGLE
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
   -
     type: var
     var_name: L:XMLVAR_Momentary_PUSH_OVHD_FUEL_XFEED_Pressed
+  -
+    type: var
+    var_name: L:XMLVAR_Momentary_PUSH_OVHD_FUEL_MODESEL_Pressed
+  -
+    type: var
+    var_name: L:A32NX_OVHD_FUEL_MODESEL_MANUAL
 # -
 #   type: var
 #   var_name: L:A32NX_ELAC_1_DIGITAL_OP_VALIDATED
@@ -2742,24 +2735,24 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_HYD_BRAKE_ALTN_ACC_PRESS
-  -
-    type: var
-    var_name: L:A32NX_MASTER_WARNING
+# -
+#   type: var
+#   var_name: L:A32NX_MASTER_WARNING
   -
     type: var
     var_name: L:PUSH_AUTOPILOT_MASTERAWARN_L
-  -
-    type: var
-    var_name: L:Generic_Master_Warning_Active
-  -
-    type: var
-    var_name: L:A32NX_MASTER_CAUTION
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:A32NX_MASTER_CAUTION
   -
     type: var
     var_name: L:PUSH_AUTOPILOT_MASTERCAUT_L
-  -
-    type: var
-    var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
   -
     type: var
     var_name: L:A32NX_COCKPIT_DOOR_LOCKED
@@ -2798,43 +2791,13 @@ shared:
     var_name: L:A32NX_DLS_ON
 # -
 #   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
-# -
-#   type: var
 #   var_name: L:A32NX_INITIAL_FLIGHT_PHASE
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:A32NX_ELEC_DC_HOT_1_BUS_IS_POWERED
-  -
-    type: var
-    var_name: L:AIRLINER_MINIMUM_DESCENT_ALTITUDE
-# -
-#   type: var
-#   var_name: L:A32NX_RADIO_RECEIVER_GS_DEVIATION
-# -
-#   type: var
-#   var_name: L:A32NX_RADIO_RECEIVER_GS_IS_VALID
-# -
-#   type: var
-#   var_name: L:A32NX_RADIO_RECEIVER_LOC_DEVIATION
-# -
-#   type: var
-#   var_name: L:A32NX_RADIO_RECEIVER_LOC_IS_VALID
-  -
-    type: var
-    var_name: L:A32NX_HOPPIE_ACTIVE
-# -
-#   type: var
 #   var_name: L:A32NX_STATUS_LEFT_LINE_8
-# -
-#   type: var
-#   var_name: L:A32NX_HOME_COCKPIT_ENABLED
 # -
 #   type: var
 #   var_name: L:A32NX_FWC_FLIGHT_PHASE
@@ -2864,10 +2827,31 @@ shared:
 #   var_name: L:A32NX_ADIRS_IR_1_BODY_NORMAL_ACC
 # -
 #   type: var
+#   var_name: L:A32NX_ELEC_DC_HOT_1_BUS_IS_POWERED
+  -
+    type: var
+    var_name: L:AIRLINER_MINIMUM_DESCENT_ALTITUDE
+# -
+#   type: var
+#   var_name: L:A32NX_RADIO_RECEIVER_GS_DEVIATION
+# -
+#   type: var
+#   var_name: L:A32NX_RADIO_RECEIVER_GS_IS_VALID
+# -
+#   type: var
+#   var_name: L:A32NX_RADIO_RECEIVER_LOC_DEVIATION
+# -
+#   type: var
+#   var_name: L:A32NX_RADIO_RECEIVER_LOC_IS_VALID
+# -
+#   type: var
 #   var_name: L:A32NX_ELEC_BAT_1_POTENTIAL
 # -
 #   type: var
 #   var_name: L:A32NX_ELEC_BAT_2_POTENTIAL
+  -
+    type: var
+    var_name: L:A32NX_HOPPIE_ACTIVE
 # -
 #   type: var
 #   var_name: L:A32NX.FlightPlan.Version
@@ -2891,6 +2875,9 @@ shared:
 #   var_name: L:A32NX_REALISTIC_TILLER_ENABLED
 # -
 #   type: var
+#   var_name: L:A32NX_HOME_COCKPIT_ENABLED
+# -
+#   type: var
 #   var_name: L:A32NX_SOUND_PASSENGER_AMBIENCE_ENABLED
 # -
 #   type: var
@@ -2904,6 +2891,17 @@ shared:
   -
     type: var
     var_name: L:A32NX_FO_SYNC_EFIS_ENABLED
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_GSX_PAYLOAD_SYNC_ENABLED
+  -
+    type: var
+    var_name: L:A32NX_EFB_USING_METRIC_UNIT
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_BOARDING_RATE
     cancel_h_events: true
 # -
 #   type: var
@@ -3021,66 +3019,6 @@ shared:
 #   var_name: L:A32NX_EFIS_R_ND_FM_MESSAGE_FLAGS
 # -
 #   type: var
-#   var_name: L:A32NX_PFD_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:A32NX_PFD_1_State
-# -
-#   type: var
-#   var_name: L:WasmInstrument_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:WasmInstrument_State
-# -
-#   type: var
-#   var_name: L:ND_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:ND_1_State
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_1_State
-# -
-#   type: var
-#   var_name: L:SD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:SD_State
-# -
-#   type: var
-#   var_name: L:A32NX_ADIRS_ADR_2_STATIC_AIR_TEMPERATURE
-# -
-#   type: var
-#   var_name: L:A32NX_ADIRS_ADR_2_TOTAL_AIR_TEMPERATURE
-# -
-#   type: var
-#   var_name: L:A32NX_ADIRS_ADR_2_ALTITUDE
-# -
-#   type: var
-#   var_name: L:A32NX_ADIRS_IR_2_BODY_NORMAL_ACC
-# -
-#   type: var
-#   var_name: L:ISIS_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:ISIS_State
-# -
-#   type: var
-#   var_name: L:A32NX_Clock_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:A32NX_Clock_State
-# -
-#   type: var
-#   var_name: L:DCDU_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:DCDU_State
-# -
-#   type: var
 #   var_name: L:A32NX_SPEEDS_MANAGED_PFD
 # -
 #   type: var
@@ -3115,15 +3053,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_TO_CONFIG_THS_ENTERED
-  -
-    type: var
-    var_name: L:AIRLINER_V1_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_V2_SPEED
-  -
-    type: var
-    var_name: L:AIRLINER_VR_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_V1_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_V2_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VR_SPEED
 # -
 #   type: var
 #   var_name: L:A32NX_LEFT_FLAPS_POSITION_PERCENT
@@ -3159,37 +3097,56 @@ shared:
   -
     type: var
     var_name: L:A32NX_FUEL_CENTER_DESIRED
+    cancel_h_events: true
     unreliable: true
   -
     type: var
     var_name: L:A32NX_FUEL_LEFT_MAIN_DESIRED
+    cancel_h_events: true
     unreliable: true
   -
     type: var
     var_name: L:A32NX_FUEL_LEFT_AUX_DESIRED
+    cancel_h_events: true
     unreliable: true
   -
     type: var
     var_name: L:A32NX_FUEL_RIGHT_MAIN_DESIRED
+    cancel_h_events: true
     unreliable: true
   -
     type: var
     var_name: L:A32NX_FUEL_RIGHT_AUX_DESIRED
+    cancel_h_events: true
     unreliable: true
   -
     type: var
     var_name: L:A32NX_EFB_REFUEL_RATE_SETTING
     cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_22_29_DESIRED
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_ENGINE_STATE:1
 # -
 #   type: var
 #   var_name: L:A32NX_FADEC_POWERED_ENG1
 # -
 #   type: var
+#   var_name: L:A32NX_FADEC_IGNITER_A_ACTIVE_ENG1
+# -
+#   type: var
+#   var_name: L:A32NX_FADEC_IGNITER_B_ACTIVE_ENG1
+# -
+#   type: var
+#   var_name: L:A32NX_ENGINE_STATE:2
+# -
+#   type: var
 #   var_name: L:A32NX_FADEC_POWERED_ENG2
+# -
+#   type: var
+#   var_name: L:A32NX_FADEC_IGNITER_A_ACTIVE_ENG2
+# -
+#   type: var
+#   var_name: L:A32NX_FADEC_IGNITER_B_ACTIVE_ENG2
 # -
 #   type: var
 #   var_name: L:A32NX_SPEEDS_VS
@@ -3220,9 +3177,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_SPEEDS_ALPHA_MAX_CALC
-  -
-    type: var
-    var_name: L:A32NX_FMGC_RADIONAV_TUNING_MODE
 # -
 #   type: var
 #   var_name: L:A32NX_EFIS_L_TO_WPT_IDENT_0
@@ -3258,9 +3212,6 @@ shared:
 #   var_name: L:A32NX_GPS_PRIMARY_LOST_MSG
   -
     type: var
-    var_name: L:RADIONAV ACTIVE:1
-  -
-    type: var
     var_name: L:A32NX_GOAROUND_HDG_MODE
 # -
 #   type: var
@@ -3285,16 +3236,37 @@ shared:
     var_name: L:A32NX_FMGC_TRUE_REF
 # -
 #   type: var
-#   var_name: L:A32NX_FLAPS_IN_MOTION
+#   var_name: L:A32NX_BRAKE_TEMPERATURE_1
+# -
+#   type: var
+#   var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_1
+# -
+#   type: var
+#   var_name: L:A32NX_BRAKE_TEMPERATURE_2
+# -
+#   type: var
+#   var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_2
+# -
+#   type: var
+#   var_name: L:A32NX_BRAKE_TEMPERATURE_3
+# -
+#   type: var
+#   var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_3
+# -
+#   type: var
+#   var_name: L:A32NX_BRAKE_TEMPERATURE_4
+# -
+#   type: var
+#   var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_4
 # -
 #   type: var
 #   var_name: L:A32NX_RA_1_RADIO_ALTITUDE
 # -
 #   type: var
 #   var_name: L:A32NX_RA_2_RADIO_ALTITUDE
-  -
-    type: var
-    var_name: L:AIRLINER_TO_FLEX_TEMP
+# -
+#   type: var
+#   var_name: L:AIRLINER_TO_FLEX_TEMP
   -
     type: var
     var_name: L:A32NX_FWS_TO_CONFIG_TEST
@@ -3379,6 +3351,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_FM2_DEST_LONG
+  -
+    type: var
+    var_name: L:A32NX_FM1_MINIMUM_DESCENT_ALTITUDE
+  -
+    type: var
+    var_name: L:A32NX_FM2_MINIMUM_DESCENT_ALTITUDE
+  -
+    type: var
+    var_name: L:A32NX_FM1_DECISION_HEIGHT
+  -
+    type: var
+    var_name: L:A32NX_FM2_DECISION_HEIGHT
   -
     type: var
     var_name: L:A32NX_FM1_THR_RED_ALT
@@ -3526,6 +3510,12 @@ shared:
 #   var_name: L:A32NX_PFD_2_State
 # -
 #   type: var
+#   var_name: L:WasmInstrument_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WasmInstrument_State
+# -
+#   type: var
 #   var_name: L:ND_2_ScreenLuminosity
 # -
 #   type: var
@@ -3568,13 +3558,58 @@ shared:
 #   var_name: L:A32NX_EXTRASHOST_State
 # -
 #   type: var
-#   var_name: L:A32NX_FUEL_USED:1
+#   var_name: L:A32NX_PFD_1_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:APU_BLEED_PRESSURE
+#   var_name: L:A32NX_PFD_1_State
 # -
 #   type: var
-#   var_name: L:A32NX_FUEL_USED:2
+#   var_name: L:ND_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:ND_1_State
+# -
+#   type: var
+#   var_name: L:A32NX_EWD_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:A32NX_EWD_1_State
+# -
+#   type: var
+#   var_name: L:SD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:SD_State
+# -
+#   type: var
+#   var_name: L:A32NX_ADIRS_ADR_2_STATIC_AIR_TEMPERATURE
+# -
+#   type: var
+#   var_name: L:A32NX_ADIRS_ADR_2_TOTAL_AIR_TEMPERATURE
+# -
+#   type: var
+#   var_name: L:A32NX_ADIRS_ADR_2_ALTITUDE
+# -
+#   type: var
+#   var_name: L:A32NX_ADIRS_IR_2_BODY_NORMAL_ACC
+# -
+#   type: var
+#   var_name: L:ISIS_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:ISIS_State
+# -
+#   type: var
+#   var_name: L:A32NX_Clock_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:A32NX_Clock_State
+# -
+#   type: var
+#   var_name: L:DCDU_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:DCDU_State
 # -
 #   type: var
 #   var_name: L:A32NX_FMGC_L_RNP
@@ -3589,10 +3624,16 @@ shared:
 #   var_name: L:A32NX_FMGC_R_NAV_ACCURACY_HIGH
 # -
 #   type: var
-#   var_name: L:A32NX_ENGINE_STATE:1
+#   var_name: L:A32NX_ADIRS_ADR_3_BARO_CORRECTED_ALTITUDE_1
 # -
 #   type: var
-#   var_name: L:A32NX_ENGINE_STATE:2
+#   var_name: L:A32NX_ADIRS_ADR_2_BARO_CORRECTED_ALTITUDE_1
+# -
+#   type: var
+#   var_name: L:A32NX_ADIRS_ADR_3_ALTITUDE
+  -
+    type: var
+    var_name: L:A32NX_FM1_NAV_DISCRETE
 # -
 #   type: var
 #   var_name: L:A32NX_LGCIU_1_NOSE_GEAR_COMPRESSED
@@ -3604,51 +3645,13 @@ shared:
 #   var_name: L:A32NX_APU_BLEED_AIR_VALVE_OPEN
 # -
 #   type: var
-#   var_name: L:A32NX_BRAKE_TEMPERATURE_1
-# -
-#   type: var
-#   var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_1
-# -
-#   type: var
-#   var_name: L:A32NX_BRAKE_TEMPERATURE_2
-# -
-#   type: var
-#   var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_2
-# -
-#   type: var
-#   var_name: L:A32NX_BRAKE_TEMPERATURE_3
-# -
-#   type: var
-#   var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_3
-# -
-#   type: var
-#   var_name: L:A32NX_BRAKE_TEMPERATURE_4
-# -
-#   type: var
-#   var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_4
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_1_6
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_7_13
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_14_21
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_22_29
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_BOARDING_STARTED_BY_USR
-    cancel_h_events: true
+#   var_name: L:APU_BLEED_PRESSURE
 # -
 #   type: var
 #   var_name: L:A32NX_NO_SMOKING_MEMO
+# -
+#   type: var
+#   var_name: L:A32NX_FLAPS_IN_MOTION
 # -
 #   type: var
 #   var_name: L:A32NX_FLAPS_CONF_INDEX
@@ -3663,15 +3666,16 @@ shared:
 #   var_name: L:A32NX_FM_HOLD_SPEED
 # -
 #   type: var
-#   var_name: L:A32NX_RMP_ILS_TUNED
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_14_21_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_7_13_DESIRED
-    cancel_h_events: true
+#   var_name: L:A32NX_FM1_HEALTHY_DISCRETE
+# -
+#   type: var
+#   var_name: L:A32NX_FM2_HEALTHY_DISCRETE
+# -
+#   type: var
+#   var_name: L:A32NX_FUEL_USED:1
+# -
+#   type: var
+#   var_name: L:A32NX_FUEL_USED:2
 # -
 #   type: var
 #   var_name: L:A32NX_EGPWC_DEST_LAT
@@ -3711,50 +3715,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_EGPWC_ND_R_TERRAIN_ACTIVE
-  -
-    type: var
-    var_name: L:A32NX_PAX_TOTAL_ROWS_1_6_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_WB_PER_PAX_WEIGHT
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_WB_PER_BAG_WEIGHT
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_CARGO_FWD_BAGGAGE_CONTAINER_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_CARGO_FWD_BAGGAGE_CONTAINER
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_CARGO_AFT_CONTAINER_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_CARGO_AFT_CONTAINER
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_CARGO_AFT_BAGGAGE_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_CARGO_AFT_BAGGAGE
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_CARGO_AFT_BULK_LOOSE_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_CARGO_AFT_BULK_LOOSE
-    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:A32NX_LOGGING_FLIGHT_CONTROLS_ENABLED
@@ -3842,9 +3802,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_AUTOPILOT_AUTOTHRUST_MODE
-  -
-    type: var
-    var_name: L:AIRLINER_VAPP_SPEED
+# -
+#   type: var
+#   var_name: L:AIRLINER_VAPP_SPEED
 # -
 #   type: var
 #   var_name: L:A32NX_FG_PHI_LIMIT
@@ -4105,9 +4065,6 @@ shared:
 #   var_name: L:A32NX_ADIRS_IR_1_VERTICAL_SPEED
 # -
 #   type: var
-#   var_name: L:A32NX_ADIRS_ADR_2_BARO_CORRECTED_ALTITUDE_1
-# -
-#   type: var
 #   var_name: L:A32NX_ADIRS_ADR_2_MACH
 # -
 #   type: var
@@ -4169,9 +4126,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_ADIRS_IR_2_VERTICAL_SPEED
-# -
-#   type: var
-#   var_name: L:A32NX_ADIRS_ADR_3_BARO_CORRECTED_ALTITUDE_1
 # -
 #   type: var
 #   var_name: L:A32NX_ADIRS_ADR_3_MACH
@@ -4808,6 +4762,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_HYD_RUDDER_LIMITER_FEEDBACK_ANGLE
+# -
+#   type: var
+#   var_name: L:A32NX_ELEC_DC_HOT_2_BUS_IS_POWERED
   -
     type: var
     var_name: L:A32NX_HYD_YELLOW_SYSTEM_1_SECTION_PRESSURE_SWITCH
@@ -4928,9 +4885,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_PUMP_STATE:2
-  -
-    type: var
-    var_name: L:A32NX_EFB_UNIT_CONVERSION_FACTOR
 # -
 #   type: var
 #   var_name: L:A32NX_COND_PACK_FLOW_VALVE_1_IS_OPEN
@@ -4985,9 +4939,34 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_ELEC_AC_GND_FLT_SVC_BUS_IS_POWERED
-# -
-#   type: var
-#   var_name: L:A32NX_ELEC_DC_HOT_2_BUS_IS_POWERED
+  -
+    type: var
+    var_name: L:FSDT_GSX_BOARDING_STATE
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSDT_GSX_DEBOARDING_STATE
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSDT_GSX_NUMPASSENGERS_BOARDING_TOTAL
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSDT_GSX_NUMPASSENGERS_DEBOARDING_TOTAL
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSDT_GSX_BOARDING_CARGO_PERCENT
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSDT_GSX_DEBOARDING_CARGO_PERCENT
+    cancel_h_events: true
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:A32NX_AUTOBRAKE_DISARM
@@ -5060,9 +5039,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_ADIRS_ADR_3_BARO_CORRECTION_2_INHG
-# -
-#   type: var
-#   var_name: L:A32NX_ADIRS_ADR_3_ALTITUDE
 # -
 #   type: var
 #   var_name: L:A32NX_ADIRS_ADR_3_BARO_CORRECTED_ALTITUDE_2
@@ -5155,9 +5131,6 @@ shared:
 #   var_name: L:A32NX_PRESS_SAFETY_VALVE_OPEN_PERCENTAGE
   -
     type: var
-    var_name: L:A32NX_DEPARTURE_ELEVATION
-  -
-    type: var
     var_name: L:A32NX_DESTINATION_QNH
 # -
 #   type: var
@@ -5189,15 +5162,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_APU_EGT
-  -
-    type: var
-    var_name: L:A32NX_APU_EGT_CAUTION
-  -
-    type: var
-    var_name: L:A32NX_APU_EGT_WARNING
-  -
-    type: var
-    var_name: L:A32NX_APU_LOW_FUEL_PRESSURE_FAULT
+# -
+#   type: var
+#   var_name: L:A32NX_APU_EGT_CAUTION
+# -
+#   type: var
+#   var_name: L:A32NX_APU_EGT_WARNING
+# -
+#   type: var
+#   var_name: L:A32NX_APU_LOW_FUEL_PRESSURE_FAULT
 # -
 #   type: var
 #   var_name: L:A32NX_APU_FLAP_FULLY_OPEN
@@ -5222,6 +5195,90 @@ shared:
   -
     type: var
     var_name: L:A32NX_OVHD_ELEC_COMMERCIAL_PB_HAS_FAULT
+  -
+    type: var
+    var_name: L:A32NX_PAX_A
+  -
+    type: var
+    var_name: L:A32NX_PAX_A_DESIRED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_PAX_B
+  -
+    type: var
+    var_name: L:A32NX_PAX_B_DESIRED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_PAX_C
+  -
+    type: var
+    var_name: L:A32NX_PAX_C_DESIRED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_PAX_D
+  -
+    type: var
+    var_name: L:A32NX_PAX_D_DESIRED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_CARGO_FWD_BAGGAGE_CONTAINER
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_CARGO_FWD_BAGGAGE_CONTAINER_DESIRED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_CARGO_AFT_CONTAINER
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_CARGO_AFT_CONTAINER_DESIRED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_CARGO_AFT_BAGGAGE
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_CARGO_AFT_BAGGAGE_DESIRED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_CARGO_AFT_BULK_LOOSE
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_CARGO_AFT_BULK_LOOSE_DESIRED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_BOARDING_STARTED_BY_USR
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_WB_PER_PAX_WEIGHT
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_WB_PER_BAG_WEIGHT
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_PAX_BOARDING
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_PAX_DEBOARDING
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_BOARDING_COMPLETE
+# -
+#   type: var
+#   var_name: L:A32NX_SOUND_PAX_AMBIENCE
 # -
 #   type: var
 #   var_name: L:A32NX_ELEC_GALLEY_IS_SHED
@@ -5851,15 +5908,6 @@ shared:
 #   var_name: L:A32NX_PNEU_ENG_1_HP_PRESSURE
 # -
 #   type: var
-#   var_name: L:A32NX_PNEU_ENG_1_TRANSFER_PRESSURE
-# -
-#   type: var
-#   var_name: L:A32NX_PNEU_ENG_1_PRECOOLER_INLET_PRESSURE
-# -
-#   type: var
-#   var_name: L:A32NX_PNEU_ENG_1_PRECOOLER_OUTLET_PRESSURE
-# -
-#   type: var
 #   var_name: L:A32NX_PNEU_ENG_1_STARTER_CONTAINER_PRESSURE
 # -
 #   type: var
@@ -5893,19 +5941,19 @@ shared:
 #   var_name: L:A32NX_PNEU_ENG_1_STARTER_VALVE_OPEN
 # -
 #   type: var
+#   var_name: L:A32NX_PNEU_ENG_1_TRANSFER_TRANSDUCER_PRESSURE
+# -
+#   type: var
+#   var_name: L:A32NX_PNEU_ENG_1_REGULATED_TRANSDUCER_PRESSURE
+# -
+#   type: var
+#   var_name: L:A32NX_PNEU_ENG_1_DIFFERENTIAL_TRANSDUCER_PRESSURE
+# -
+#   type: var
 #   var_name: L:A32NX_PNEU_ENG_2_IP_PRESSURE
 # -
 #   type: var
 #   var_name: L:A32NX_PNEU_ENG_2_HP_PRESSURE
-# -
-#   type: var
-#   var_name: L:A32NX_PNEU_ENG_2_TRANSFER_PRESSURE
-# -
-#   type: var
-#   var_name: L:A32NX_PNEU_ENG_2_PRECOOLER_INLET_PRESSURE
-# -
-#   type: var
-#   var_name: L:A32NX_PNEU_ENG_2_PRECOOLER_OUTLET_PRESSURE
 # -
 #   type: var
 #   var_name: L:A32NX_PNEU_ENG_2_STARTER_CONTAINER_PRESSURE
@@ -5939,6 +5987,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_PNEU_ENG_2_STARTER_VALVE_OPEN
+# -
+#   type: var
+#   var_name: L:A32NX_PNEU_ENG_2_TRANSFER_TRANSDUCER_PRESSURE
+# -
+#   type: var
+#   var_name: L:A32NX_PNEU_ENG_2_REGULATED_TRANSDUCER_PRESSURE
+# -
+#   type: var
+#   var_name: L:A32NX_PNEU_ENG_2_DIFFERENTIAL_TRANSDUCER_PRESSURE
 # -
 #   type: var
 #   var_name: L:A32NX_PNEU_WING_ANTI_ICE_1_VALVE_CLOSED
@@ -6044,6 +6101,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_EFIS_L_APPR_MSG_1
+  -
+    type: var
+    var_name: L:A32NX_FM2_NAV_DISCRETE
 # -
 #   type: var
 #   var_name: L:A32NX_Ewd_LOWER_LEFT_LINE_1
@@ -6116,33 +6176,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_FWC_CRC
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_LOWER_LEFT_LINE_8
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_LOWER_LEFT_LINE_9
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_LOWER_LEFT_LINE_10
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_LOWER_LEFT_LINE_11
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_LOWER_LEFT_LINE_12
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_LOWER_LEFT_LINE_13
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_LOWER_LEFT_LINE_14
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_LOWER_LEFT_LINE_15
-# -
-#   type: var
-#   var_name: L:A32NX_EWD_LOWER_LEFT_LINE_16
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
