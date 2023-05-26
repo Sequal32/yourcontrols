@@ -57,6 +57,7 @@ var networkLoss = document.getElementById("network-loss");
 var ping = document.getElementById("network-ping");
 
 var forceButton = document.getElementById("force-button");
+var observerButton = document.getElementById("observer-button");
 
 var is_connected = false;
 var is_client = false;
@@ -113,6 +114,7 @@ function FormButtonsDisabled(disabled) {
 function OnConnected() {
     connect_button.updatetext("danger", "Disconnect");
     server_button.updatetext("danger", "Stop Server");
+    observerButton.hidden = false;
 
     FormButtonsDisabled(false);
     is_connected = true;
@@ -171,6 +173,8 @@ function OnDisconnect(text) {
     joinIpInput.value = cacheIpInput;
     sessionInput.value = cacheSessionInput;
     forceButton.hidden = true;
+
+    observerButton.hidden = true;
 
     $("#session-id").hide()
     $("#external-ipv4").show();
@@ -331,10 +335,12 @@ function MessageReceived(data) {
         case "observing":
             rectangle_status.style.backgroundColor = "grey";
             forceButton.hidden = true;
+            observerButton.hidden = true;
             break;
         case "stop_observing":
             rectangle_status.style.backgroundColor = "red";
             forceButton.hidden = false;
+            observerButton.hidden = false;
             break;
         // Other client
         case "set_observing":
@@ -470,6 +476,13 @@ forceButton.addEventListener("click", function () {
     forceButton.hidden = true;
 });
 
+observerButton.addEventListener("click", function () {
+    invoke({
+        type: "goObserver",
+    });
+    observerButton.hidden = true;
+});
+
 $("input[type=radio][name=connectionRadios]").change(function () {
     $("#host-ip-radios").attr("hidden", $("#direct-radio").prop("checked"))
 })
@@ -502,8 +515,7 @@ $("#settings-form").submit(function (e) {
     });
 });
 
-$("#main-form-host").submit(function (e) {
-    e.preventDefault();
+$("#server-button").click(function (e) {
 
     if (is_connected) {
         invoke({
@@ -540,8 +552,7 @@ $("#main-form-host").submit(function (e) {
     });
 });
 
-$("#main-form-join").submit(function (e) {
-    e.preventDefault();
+$("#connect-button").click(function (e) {
 
     if (is_connected) {
         invoke({

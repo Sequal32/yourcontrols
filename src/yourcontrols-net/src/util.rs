@@ -200,6 +200,17 @@ pub trait TransferClient {
             .ok();
     }
 
+    fn set_self_observer(&self) {
+        self.get_transmitter()
+            .try_send((
+                Payloads::SetSelfObserver {
+                    name: self.get_server_name().to_string(),
+                },
+                None,
+            ))
+            .ok();
+    }
+
     fn set_observer(&self, target: String, is_observer: bool) {
         self.get_transmitter()
             .try_send((

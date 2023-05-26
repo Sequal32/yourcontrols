@@ -147,6 +147,22 @@ fn process_payload(
                 client.is_observer = *is_observer;
             }
         }
+        Payloads::SetSelfObserver { name } => {
+            if let Some(client) = state.clients.get_mut(name) {
+                client.is_observer = true;
+                send_to_all(
+                    Payloads::SetObserver {
+                        from: "SERVER".to_string(),
+                        to: name.clone(),
+                        is_observer: true,
+                    },
+                    None,
+                    state,
+                    net,
+                );
+            }
+            return;
+        }
         Payloads::Ready => {
             // Tell "host" to do a full sync
             if let Some(client) = state.clients.get(&state.in_control) {

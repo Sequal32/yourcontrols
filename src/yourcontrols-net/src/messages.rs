@@ -53,6 +53,9 @@ pub enum Payloads {
         to: String,
         is_observer: bool,
     },
+    SetSelfObserver {
+        name: String,
+    },
     // Ready to receive data
     Ready,
     // Hole punching payloads
@@ -105,6 +108,7 @@ fn get_packet_for_message(
         // Used
         Payloads::InvalidVersion {..} |
         Payloads::Heartbeat {..} |
+        Payloads::SetSelfObserver { .. } |
         Payloads::InvalidName {..} => Packet::reliable_unordered(target, payload_bytes),
         Payloads::PeerEstablished {..} |
         Payloads::RendezvousHandshake  {..} |

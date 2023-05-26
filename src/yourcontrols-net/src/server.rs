@@ -147,6 +147,9 @@ impl TransferStruct {
             // No processing needed
             Payloads::Update { .. } => {}
             Payloads::Ready => {}
+            Payloads::SetSelfObserver { .. } => {
+                should_relay = false;
+            }
             // Used
             Payloads::InitHandshake { name, version } => {
                 // Version check

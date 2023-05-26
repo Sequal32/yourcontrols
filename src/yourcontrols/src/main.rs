@@ -492,6 +492,13 @@ fn main() {
                                 }
                             };
                         }
+                        Payloads::SetSelfObserver { name } => {
+                            if client.is_host() {
+                                clients.set_observer(&name, true);
+                                app_interface.set_observing(&name, true);
+                                client.set_observer(name, true);
+                            }
+                        }
                     },
                     ReceiveMessage::Event(e) => match e {
                         Event::ConnectionEstablished => {
@@ -741,6 +748,14 @@ fn main() {
                     if let Some(client) = transfer_client.as_ref() {
                         info!("[CONTROL] Setting {} as observer. {}", target, is_observer);
                         client.set_observer(target, is_observer);
+                    }
+                }
+                AppMessage::GoObserver => {
+                    if let Some(client) = transfer_client.as_ref() {
+                        if let Some(client_name) = clients.get_client_in_control() {
+                            // Requests server to set self as observer
+                            client.set_self_observer();
+                        }
                     }
                 }
                 AppMessage::LoadAircraft { config_file_name } => {

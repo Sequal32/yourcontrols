@@ -60,6 +60,7 @@ pub enum AppMessage {
     UpdateConfig {
         new_config: simconfig::Config,
     },
+    GoObserver
 }
 
 fn get_message_str(type_string: &str, data: &str) -> String {

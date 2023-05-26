@@ -119,6 +119,7 @@ impl ServerState {
             | Payloads::PeerEstablished { .. }
             | Payloads::ConnectionDenied { .. }
             | Payloads::Heartbeat
+            | Payloads::SetSelfObserver { .. }
             | Payloads::PlayerLeft { .. } => return,
             // Used
             Payloads::AircraftDefinition { .. } | Payloads::Update { .. } => {}

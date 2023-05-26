@@ -59,6 +59,7 @@ impl TransferStruct {
             Payloads::PeerEstablished { .. } |
             Payloads::RequestHosting {..} |
             Payloads::Ready |
+            Payloads::SetSelfObserver { .. }|
             // No futher handling required
             Payloads::AircraftDefinition { .. } |
             Payloads::TransferControl { ..} |
