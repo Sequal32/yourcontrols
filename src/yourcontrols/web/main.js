@@ -23,7 +23,6 @@ var streamer_mode = document.getElementById("streamer-mode");
 var instructor_mode = document.getElementById("instructor-mode");
 var sound_muted = document.getElementById("sound-muted");
 
-var update_rate_input = document.getElementById("update-rate-input");
 var timeout_input = document.getElementById("timeout-input");
 
 var name_div = document.getElementById("name-div");
@@ -247,7 +246,6 @@ function LoadSettings(newSettings) {
 
     username.value = newSettings.name;
     timeout_input.value = newSettings.conn_timeout;
-    update_rate_input.value = newSettings.update_rate;
     theme_selector.checked = newSettings.ui_dark_theme;
 
     setTheme(newSettings.ui_dark_theme);
@@ -484,9 +482,6 @@ $("#settings-form").submit(function (e) {
     newSettings.name = username.value;
     newSettings.conn_timeout = ValidateInt(timeout_input)
         ? parseInt(timeout_input.value)
-        : null;
-    newSettings.update_rate = ValidateInt(update_rate_input)
-        ? parseInt(update_rate_input.value)
         : null;
     newSettings.ui_dark_theme = theme_selector.checked;
     newSettings.streamer_mode = streamer_mode.checked;

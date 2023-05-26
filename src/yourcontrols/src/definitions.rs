@@ -1505,22 +1505,12 @@ impl Definitions {
         (unreliable, regular)
     }
 
-    pub fn get_var_sync(
+    pub fn get_sync(
         &mut self,
         sync_permission: &SyncPermission,
     ) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
         let mut data = AllNeedSync::new();
-        data.avars = data.avars.drain().collect();
-        data.lvars = data.lvars.drain().collect();
-        self.filter_all_sync(data, sync_permission)
-    }
-
-    pub fn get_event_sync(
-        &mut self,
-        sync_permission: &SyncPermission,
-    ) -> (Option<AllNeedSync>, Option<AllNeedSync>) {
-        let mut data = AllNeedSync::new();
-        data.events = data.events.drain(..).collect();
+        std::mem::swap(&mut self.current_sync, &mut data);
         self.filter_all_sync(data, sync_permission)
     }
 

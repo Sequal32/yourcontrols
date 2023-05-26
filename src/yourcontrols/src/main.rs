@@ -74,10 +74,6 @@ fn write_configuration(config: &Config) {
     };
 }
 
-fn calculate_update_rate(update_rate: u16) -> f64 {
-    1.0 / update_rate as f64
-}
-
 #[allow(clippy::too_many_arguments)]
 fn start_client(
     timeout: u64,
@@ -190,9 +186,6 @@ fn main() {
     let mut transfer_client: Option<Box<dyn TransferClient>> = None;
 
     // Update rate counter
-    let mut update_rate_instant = Instant::now();
-    let mut update_rate = calculate_update_rate(config.update_rate);
-
     let mut definitions = Definitions::new();
 
     let mut ready_to_process_data = false;
@@ -578,9 +571,6 @@ fn main() {
 
             // Handle initial 3 second connection delay, allows lvars to be processed
             if let Some(true) = connection_time.map(|t| t.elapsed().as_secs() >= 3) {
-                // Update
-                let can_update_vars = update_rate_instant.elapsed().as_secs_f64() > update_rate;
-
                 // Do not let server send initial data - wait for data to get cleared on the previous loop
                 if !observing && ready_to_process_data {
                     let permission = SyncPermission {
@@ -589,13 +579,7 @@ fn main() {
                         is_init: false,
                     };
 
-                    if can_update_vars {
-                        write_update_data(definitions.get_var_sync(&permission), client, true);
-                    } else {
-                        write_update_data(definitions.get_event_sync(&permission), client, true);
-                    }
-
-                    update_rate_instant = Instant::now();
+                    write_update_data(definitions.get_sync(&permission), client, true);
                 }
 
                 // Tell server we're ready to receive data after 3 seconds
@@ -811,7 +795,6 @@ fn main() {
                     };
                 }
                 AppMessage::UpdateConfig { new_config: config } => {
-                    update_rate = calculate_update_rate(config.update_rate);
                     audio.mute(config.sound_muted);
                     write_configuration(&config);
                 }
