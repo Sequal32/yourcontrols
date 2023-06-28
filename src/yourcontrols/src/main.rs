@@ -752,10 +752,8 @@ fn main() {
                 }
                 AppMessage::GoObserver => {
                     if let Some(client) = transfer_client.as_ref() {
-                        if let Some(client_name) = clients.get_client_in_control() {
-                            // Requests server to set self as observer
-                            client.set_self_observer();
-                        }
+                        // Requests server to set self as observer
+                        client.set_self_observer();
                     }
                 }
                 AppMessage::LoadAircraft { config_file_name } => {
