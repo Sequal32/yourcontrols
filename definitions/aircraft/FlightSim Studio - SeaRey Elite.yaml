@@ -1,0 +1,348 @@
+# Version 1.0.3
+
+include:
+  - definitions/modules/Avionics/Aera.yaml
+  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Canopy
+    type: var
+    var_name: A:INTERACTIVE POINT GOAL
+    var_units: Percent
+    var_type: f64
+
+  - # Electrical
+    type: var
+    var_name: A:BUS BREAKER PULLED:1
+    var_units: Bool
+    var_type: bool
+  -
+    type: var
+    var_name: A:BUS BREAKER PULLED:3
+    var_units: Bool
+    var_type: bool
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 2
+
+  - # G5 Power
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:36
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 36
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+
+  - # LVAR's
+    type: var
+    var_name: L:SEAREY_SPAWN_MASTER_SW
+  -
+    type: var
+    var_name: L:CANOPY_REQUEST_STATE
+  -
+    type: var
+    var_name: L:CANOPY_POS
+  -
+    type: var
+    var_name: L:WALKAROUND_TIEDOWN
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:G5_SPAWN_STATE
+# -
+#   type: var
+#   var_name: L:G5_SPAWN_ON
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_BRIGHTNESS
+  -
+    type: var
+    var_name: L:SEAREY_CANOPY_REQUEST_STATE
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_LEFT_WHEEL_VISIBLE
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_RIGHT_WHEEL_VISIBLE
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_REAR_WHEEL_VISIBLE
+  -
+    type: var
+    var_name: L:WALKAROUND_RIGHT_AILERON
+  -
+    type: var
+    var_name: L:WALKAROUND_ELEVATOR
+  -
+    type: var
+    var_name: L:WALKAROUND_RUDDER
+  -
+    type: var
+    var_name: L:WALKAROUND_PROPELLER
+  -
+    type: var
+    var_name: L:WALKAROUND_PITOT_COVER
+  -
+    type: var
+    var_name: L:WALKAROUND_RIGHT_WHEEL
+  -
+    type: var
+    var_name: L:WALKAROUND_REAR_WHEEL
+  -
+    type: var
+    var_name: L:WALKAROUND_LEFT_WHEEL
+  -
+    type: var
+    var_name: L:CLICKSPOT_TENT_CHAIR_UNFOLDED
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_0
+  -
+    type: var
+    var_name: L:IC_A200_COM1_CHANNEL_SELECT
+  -
+    type: var
+    var_name: L:IC_A200_COM1_CHANNEL_TUNING
+  -
+    type: var
+    var_name: L:IC_A200_DIRECT_SELECTION
+  -
+    type: var
+    var_name: L:IC_A200_COM1_CHANNEL_FREQ
+  -
+    type: var
+    var_name: L:IC_A200_COM1_CHANNEL_SELECTED_INDEX
+  -
+    type: var
+    var_name: L:IC_A200_COM1_STEP_50KHZ
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:EIS_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:EIS_State
+# -
+#   type: var
+#   var_name: L:IsChangeDataFieldsMenuOn
+# -
+#   type: var
+#   var_name: L:Aera_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:Aera_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Aera_IsPositionOverride
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AS5_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS5_1_State
+# -
+#   type: var
+#   var_name: L:IC-A200_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:IC-A200_State
+# -
+#   type: var
+#   var_name: L:GTX-320_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTX-320_State
+# -
+#   type: var
+#   var_name: L:LedTrim_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LedTrim_State
+# -
+#   type: var
+#   var_name: L:GarminInReachMini_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GarminInReachMini_State
+# -
+#   type: var
+#   var_name: L:fss-efb-map_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:fss-efb-map_State
+# -
+#   type: var
+#   var_name: L:EFB_MapShowCursor
+# -
+#   type: var
+#   var_name: L:EFB_MapZoomRange
+# -
+#   type: var
+#   var_name: L:fss-efb-template_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:fss-efb-template_State
+# -
+#   type: var
+#   var_name: L:WalkaroundPanel_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WalkaroundPanel_State
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_UPDATE_COUNTER
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_UPDATE_RATE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_UPDATE_VARIANCE
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_CANOPY
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_BAGGAGE
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_BLOCKS
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_COPILOT
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_PITOTCOVER
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_SAFETYPIN
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - fss-efb-template#brightnessSlider
