@@ -1,11 +1,12 @@
-# Version 1.4.0
+# Version 2.0.1
 
 include:
   - definitions/modules/Avionics/AS430.yaml
   - definitions/modules/Avionics/AS530.yaml
   - definitions/modules/Avionics/ASCommon.yaml
-  - definitions/modules/Avionics/TDSNXi.yaml
   - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/Avionics/RDR2000.yaml
+  - definitions/modules/Avionics/TDSNXi.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -211,7 +212,7 @@ shared:
     event_name: CABIN_LIGHTS_SET
     event_param: 7
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
     var_name: L:SWITCH_APFD_MALIBU
   -
@@ -406,12 +407,12 @@ shared:
   -
     type: var
     var_name: L:TABLET_BTN_COPILOT_VIS
-# -
-#   type: var
-#   var_name: L:PILOT_VIS
-# -
-#   type: var
-#   var_name: L:COPILOT_VIS
+  -
+    type: var
+    var_name: L:PILOT_VIS
+  -
+    type: var
+    var_name: L:COPILOT_VIS
 # -
 #   type: var
 #   var_name: L:AUX_VOLTSBATT
@@ -423,13 +424,55 @@ shared:
     var_name: L:aux_max_oxy
 # -
 #   type: var
-#   var_name: L:CARENADO_GNS_GTN_VIS
+#   var_name: L:GTN750_INT_1_HIDDEN
+  -
+    type: var
+    var_name: L:GNS530_1_HIDDEN
+  -
+    type: var
+    var_name: L:CARENADO_GNS430530_HIDDEN
+  -
+    type: var
+    var_name: L:CARENADO_GTN750_HIDDEN
+  -
+    type: var
+    var_name: L:CARENADO_GTN750XI_HIDDEN
+  -
+    type: var
+    var_name: L:CARENADO_GTN750_ENABLED_BUTTON
+  -
+    type: var
+    var_name: L:CARENADO_GNS_GTN_VIS
 # -
 #   type: var
 #   var_name: L:GTN750_INT_HIDDEN
 # -
 #   type: var
 #   var_name: L:AS530_HIDDEN
+  -
+    type: var
+    var_name: L:CARENADO_GNS_GTNXI_VIS
+# -
+#   type: var
+#   var_name: L:GTN750XI_INT_HIDDEN
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+  -
+    type: var
+    var_name: L:XMLVAR_GPS_DISABLED_AS530
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InactiveVar
 # -
 #   type: var
 #   var_name: L:VAR_STARTER_SMOKE_STATE_OLD
@@ -544,12 +587,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:ENG_FUEL_FLOW_GPH_2
-  -
-    type: var
-    var_name: L:GPS_ACTIVE_FLIGHT_PLAN_2
-  -
-    type: var
-    var_name: L:GPS_ACTIVE_FLIGHT_PLAN_1
+# -
+#   type: var
+#   var_name: L:GPS_ACTIVE_FLIGHT_PLAN_2
+# -
+#   type: var
+#   var_name: L:GPS_ACTIVE_FLIGHT_PLAN_1
 # -
 #   type: var
 #   var_name: L:GPS_DRIVES_NAV1
@@ -807,19 +850,31 @@ shared:
 #   var_name: L:AUX_STATIC
   -
     type: var
-    var_name: L:XMLVAR_FUEL_CUTOFF1
-  -
-    type: var
-    var_name: L:XMLVAR_FUEL_CUTOFF2
+    var_name: L:AS530_1_HIDDEN
+# -
+#   type: var
+#   var_name: L:AS430_HIDDEN
+# -
+#   type: var
+#   var_name: L:CARVAR_FLAG_DOOR0
+# -
+#   type: var
+#   var_name: L:AS530_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_FUEL_CUTOFF1
+# -
+#   type: var
+#   var_name: L:XMLVAR_FUEL_CUTOFF2
   -
     type: var
     var_name: L:VAR_SW_TABLET
 # -
 #   type: var
 #   var_name: L:TABLET_ANIM
-# -
-#   type: var
-#   var_name: L:XMLVAR_LandingPulseState
+  -
+    type: var
+    var_name: L:XMLVAR_LandingPulseState
 # -
 #   type: var
 #   var_name: L:AUX_ANIM_STATIC_STICK
@@ -918,19 +973,31 @@ shared:
     var_name: L:TABLET_PAG
   -
     type: var
-    var_name: L:TABLET_BTN_COPILOT_DOOR
-  -
-    type: var
     var_name: L:TABLET_BTN_BAGAGE_DOOR
 # -
 #   type: var
 #   var_name: L:PMS50_GTN750_INSTALLED
 # -
 #   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
+#   var_name: L:TABLET_BTN_DONE_WAIT
+# -
+#   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
-  -
-    type: var
-    var_name: L:GNS_Brightness
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_2
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_2
 # -
 #   type: var
 #   var_name: L:XMLVAR_ADF_Frequency_10_Khz
@@ -938,10 +1005,8 @@ shared:
 #   type: var
 #   var_name: L:XMLVAR_AudioPanel_1
   -
-    type: ToggleSwitch
+    type: var
     var_name: L:PROP_SYNC_ACTIVE_CAR
-    event_name: TOGGLE_PROPELLER_SYNC
-    use_calculator: true
   -
     type: var
     var_name: L:ASD_SWITCH_TEST_PROP_SYNC
@@ -956,13 +1021,13 @@ shared:
     var_name: L:AircraftInitApFd
 # -
 #   type: var
-#   var_name: L:YokePilot
+#   var_name: L:XMLVAR_YokeHidden1
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden2
-  -
-    type: var
-    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
@@ -972,33 +1037,45 @@ shared:
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
+# -
+#   type: var
+#   var_name: L:YokePilot
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame
   -
     type: var
     var_name: L:TABLET_BTN_PILOT_DOOR
+  -
+    type: var
+    var_name: L:TABLET_BTN_COPILOT_DOOR
+# -
+#   type: var
+#   var_name: L:GTNXION_REMOVE_FLTPLAN
   -
     type: var
     var_name: L:SwitchState
   -
     type: var
     var_name: L:_ButtonAnimVar
+    unreliable: true
   -
     type: var
     var_name: L:_ButtonAnimVar_IsDown
-  -
-    type: var
-    var_name: L:_ButtonAnimVar_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:_ButtonAnimVar_MinReleaseTime
   -
     type: var
     var_name: L:ASD_SWITCH_TEST_PA44_SEMINOLE
-# -
-#   type: var
-#   var_name: L:XMLVAR_PUSH_TEST_BTN
-# -
-#   type: var
-#   var_name: L:XMLVAR_PUSH_PROP_SYNC_TEST_BTN
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_TEST_BTN
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_PROP_SYNC_TEST_BTN
+    unreliable: true
   -
     type: var
     var_name: L:AircraftStrobeBeaconInit
@@ -1032,24 +1109,27 @@ shared:
   -
     type: var
     var_name: L:CUSTOM_CRS_COMPASS_COPILOT
+# -
+#   type: var
+#   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
   -
     type: var
     var_name: L:AircraftKnobKDI572Init
 # -
 #   type: var
 #   var_name: L:>L:CARENADO_KDI572
-  -
-    type: var
-    var_name: L:currentModeSoundBtnUP
+# -
+#   type: var
+#   var_name: L:currentModeSoundBtnUP
   -
     type: var
     var_name: L:ChangePWR
-  -
-    type: var
-    var_name: L:currentModeSoundBtnDN
-  -
-    type: var
-    var_name: L:currentModeSoundBtnSEL
+# -
+#   type: var
+#   var_name: L:currentModeSoundBtnDN
+# -
+#   type: var
+#   var_name: L:currentModeSoundBtnSEL
   -
     type: var
     var_name: L:AircraftInitKnobEms
@@ -1086,171 +1166,6 @@ shared:
   -
     type: var
     var_name: L:CabinPersiana6
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS530_SelectedSource
-# -
-#   type: var
-#   var_name: L:AS430_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS430_SelectedSource
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_3
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_4
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_5
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_6
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_7
-  -
-    type: var
-    var_name: L:HANDLING_RudderTrim
-  -
-    type: var
-    var_name: L:LANDING_GEAR_Gear
-  -
-    type: var
-    var_name: L:DEICE_Pitot_1
-  -
-    type: var
-    var_name: L:DEICE_Propeller_1
-  -
-    type: var
-    var_name: L:DEICE_Airframe_1
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_1
-  -
-    type: var
-    var_name: L:LIGHTING_WING_1
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_2
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_3
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_1
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_2
-  -
-    type: var
-    var_name: L:INSTRUMENT_ADF
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:BUTTON_CLOCK_MODE
-  -
-    type: var
-    var_name: L:BUTTON_CLOCK_ON
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:RDR2000_SelectedSource
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-  -
-    type: var
-    var_name: L:RDR2000_Map_MapShowCursor
-  -
-    type: var
-    var_name: L:RDR2000_Map_MapZoomRange
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:AS430_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS430_2_State
-  -
-    type: var
-    var_name: L:KX155A_2_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KX155A_2_State
-  -
-    type: var
-    var_name: L:KR87_ScreenLuminosity
-  -
-    type: var
-    var_name: L:KR87_State
-# -
-#   type: var
-#   var_name: L:AS330_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS330_State
-  -
-    type: var
-    var_name: L:RDR2000_ScreenLuminosity
-  -
-    type: var
-    var_name: L:RDR2000_State
-# -
-#   type: var
-#   var_name: L:GTN750_INT_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN750_INT_State
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   -
