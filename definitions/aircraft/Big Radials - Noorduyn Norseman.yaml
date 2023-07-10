@@ -1,0 +1,676 @@
+# Version 1.0.3
+
+include:
+  - definitions/modules/Avionics/AS3X.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Breakers (won't sync)
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:3, Bool)
+    set: 3 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:12, Bool)
+    set: 12 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:17, Bool)
+    set: 17 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:36, Bool)
+    set: 36 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:43, Bool)
+    set: 43 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:1
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 1
+    index_reversed: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:3
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 3
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:2
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:1
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:3
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+
+  - # LVAR's
+    type: var
+    var_name: L:BR_Energized
+  -
+    type: var
+    var_name: L:BR_TVDeployed
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:BR_COMPASS_POWER
+# -
+#   type: var
+#   var_name: L:BR_CustomOilTemp
+# -
+#   type: var
+#   var_name: L:BR_CustomCHT
+# -
+#   type: var
+#   var_name: L:BR_CustomCarbTemp
+  -
+    type: var
+    var_name: L:BR_FuelBreakerPulled
+  -
+    type: var
+    var_name: L:BR_FuelPressureBreaker
+# -
+#   type: var
+#   var_name: L:BR_Start_RPM
+# -
+#   type: var
+#   var_name: L:BR_RPM_Growth_Rate
+# -
+#   type: var
+#   var_name: L:BR_RPM_Decay_Rate
+  -
+    type: var
+    var_name: L:BR_Starter1IN
+# -
+#   type: var
+#   var_name: L:BR_StarterTimer1
+# -
+#   type: var
+#   var_name: L:BR_PROPSTART_1_RPM
+# -
+#   type: var
+#   var_name: L:BR_MaxRPM
+  -
+    type: var
+    var_name: L:BR_Starter_Good
+  -
+    type: var
+    var_name: L:BR_Starter_Fail
+  -
+    type: var
+    var_name: L:BR_Energized_Counter
+  -
+    type: var
+    var_name: L:BR_Energized_Up
+  -
+    type: var
+    var_name: L:BR_UnderPrimed
+  -
+    type: var
+    var_name: L:BR_Primed
+  -
+    type: var
+    var_name: L:BR_ApronState
+  -
+    type: var
+    var_name: L:BR_LandingLightExtended
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:BR_Alternatestatic
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+  -
+    type: var
+    var_name: L:BR_pilotdoor
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BR_copilotdoor
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BR_leftcabindoor
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BR_rightcabindoor
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BR_PilotWindowPosition
+    unreliable: true
+  -
+    type: var
+    var_name: L:BR_CoPilotWindowPosition
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:BR_SND_DOORS_OPEN
+  -
+    type: var
+    var_name: L:BR_leftbench
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BR_rightbench
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:BR_YokeViz
+  -
+    type: var
+    var_name: L:BR_OilHeatLeverPosition
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:BR_OilLeverCoolingDelta
+  -
+    type: var
+    var_name: L:BR_CarbHeatLeverPosition
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:BR_CarbLeverHeatingDelta
+  -
+    type: var
+    var_name: L:BR_noseshutterAvailable
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BR_noseshutterPosition
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:BR_ShutterHeatingDelta
+  -
+    type: var
+    var_name: L:BR_MapLightPos
+    unreliable: true
+  -
+    type: var
+    var_name: L:BR_PitotFailChance
+  -
+    type: var
+    var_name: L:BR_PitotFail
+  -
+    type: var
+    var_name: L:BR_LPitotBlow
+  -
+    type: var
+    var_name: L:BR_RPitotBlow
+  -
+    type: var
+    var_name: L:BR_FuelSelectorOff
+  -
+    type: var
+    var_name: L:BR_FuelSelectorStart
+  -
+    type: var
+    var_name: L:BR_tvantennaposition
+    unreliable: true
+  -
+    type: var
+    var_name: L:BR_NorsemanTVShow
+  -
+    type: var
+    var_name: L:BR_AS3XFrame
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BR_WARNING_SCREEN
+  -
+    type: var
+    var_name: L:BR_crates
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BR_barrels
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_3
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_2
+# -
+#   type: var
+#   var_name: L:PROPSTART_1_ANGLE
+  -
+    type: var
+    var_name: L:XML_Covers
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:XML_Choks
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:Aera_Brightness_Manual
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_ADF
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_LOGO_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_PEDESTRAL
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_PEDESTRAL_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_Hours_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_Minutes_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Mode
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_Autopilot_Altitude_Increment
+# -
+#   type: var
+#   var_name: L:CJ4_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:CJ4_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:DEICE_Airframe_1
+# -
+#   type: var
+#   var_name: L:DEICE_Airframe_2
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:Glasscockpit_DmeSource
+  -
+    type: var
+    var_name: L:FUEL_Knob_Selector
+  -
+    type: var
+    var_name: L:XML_Cargo
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:XML_Pax
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:XML_Mixed
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BR_UnhideGPS
+  -
+    type: var
+    var_name: L:BR_GPSDoor
+  -
+    type: var
+    var_name: L:XML_GPSFrame
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_1_State
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_Master_Set
+# -
+#   type: var
+#   var_name: L:AS1000_Warnings_WarningIndex
+# -
+#   type: var
+#   var_name: L:MFD_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MFD_MapZoomRange
+# -
+#   type: var
+#   var_name: L:Glasscockpit_HSI_Arc
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpit_Wind_Mode
+# -
+#   type: var
+#   var_name: L:NorsemanTV_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:NorsemanTV_State
+# -
+#   type: var
+#   var_name: L:WarningPanel_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WarningPanel_State
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER2 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER3 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
