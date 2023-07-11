@@ -1,5 +1,48 @@
 # YourControls Changelog
 
+## Version 2.7.8
+
+### Program
+
+- Added: Clients can now put themselves into observer mode.
+- Added: Instructor mode. New connections are placed in observer mode automatically.
+- Fixed: Developer console flooded with errors leading to slideshow FPS.
+- Removed: Update rate selection. Application now sends data as fast as possible.
+
+### Profiles
+
+- Added: Cessna R182 II Skylane RG by Carenado (v1.0.2).
+- Added: DG Aviation DG1001E by Asobo Studio (v0.1.39).
+- Added: DG Aviation LS8-18 by Microsoft & FSS AG (v0.8.4).
+- Added: Noorduyn Norseman by Big Radials (v1.0.3).
+- Added: Piper PA-28-181 Archer II by Carenado (v1.0.1).
+- Added: SeaRey Elite by FlightSim Studio (v1.0.3).
+- Updated: Cessna 170B by Carenado to v2.0.0.
+- Updated: Cessna 172SP by WBSim to v1.0.7.
+- Updated: Cessna 337H Skymaster by Carenado to v2.0.1.
+- Updated: Cessna T182T Skylane by Carenado to v2.0.2.
+- Updated: Cirrus Vision Jet by FlightFX to v2.0.2.
+- Updated: Honda HondaJet by FlightFX to v2.0.0.
+- Updated: Mooney M20R Ovation by Carenado to v2.0.1.
+- Updated: Pilatus PC-6 by Milviz/BlackBird to v1.1.8.
+- Updated: Pilatus PC-12 by Carenado to v2.0.0.
+- Updated: Piper PA-28R Arrow III by Carenado to v2.0.0.
+- Updated: Piper PA-34T Seneca V by Carenado to v2.0.1.
+- Updated: Piper PA-44 Seminole by Carenado to v2.0.0.
+- Updated: Tecnam P92 by AeroSachs & Erasam to v1.5.0/v2.0.1.
+
+### Aircraft Fixes
+
+- General: Added GPS OBS toggle setting.
+- General: Added GPS OBS course setting.
+- Asobo A320: Disabled XPNDR number buttons.
+- Carenado 337H: Cowl flap switches.
+- Carenado PA-34T: Landing/Pulse light switch.
+- Carenado PC-12: Most menu desync on EX500.
+- FBW A32NX: Disabled broken sync of passengers.
+- FBW A32NX: Disabled XPNDR number buttons.
+- Milviz PC-6: All tablet desync and spam.
+
 ## Version 2.7.7
 
 ### Profiles

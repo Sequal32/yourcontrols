@@ -1,7 +1,7 @@
 # Version 0.1.101
 
 include:
-  - definitions/modules/autopilot_airliner.yaml
+  - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -1025,18 +1025,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:ELECTRICAL_ExternalPower_2
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_ForcedToSTD
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_SavedPressure
-  -
-    type: var
-    var_name: L:XMLVAR_Baro2_ForcedToSTD
-  -
-    type: var
-    var_name: L:XMLVAR_Baro2_SavedPressure
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_SavedPressure
   -
     type: var
     var_name: L:AP_SPEED_INTERVENTION_ACTIVE
@@ -1484,3 +1484,19 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+  - B747_8_ATC_BTN_0
+  - B747_8_ATC_BTN_1
+  - B747_8_ATC_BTN_2
+  - B747_8_ATC_BTN_3
+  - B747_8_ATC_BTN_4
+  - B747_8_ATC_BTN_5
+  - B747_8_ATC_BTN_6
+  - B747_8_ATC_BTN_7
+  - B747_8_ATC_BTN_CLR
+
+  - WT_B78_Throttle_1_Dec
+  - WT_B78_Throttle_2_Dec
+  - WT_B78_Throttle_3_Dec
+  - WT_B78_Throttle_4_Dec

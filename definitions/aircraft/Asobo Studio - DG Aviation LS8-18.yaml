@@ -1,0 +1,110 @@
+# Version 0.1.39
+
+include:
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/glider.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Electrical
+    type: CustomCalculator
+    get: 3 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 3 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 4 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 4 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:XMLVAR_Exclusive_Light_Last_Changed
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:ACD57_SCREEN_BRIGHTNESS_1_1
+  -
+    type: var
+    var_name: L:ACD57_BTN1_1_1
+  -
+    type: var
+    var_name: L:ACD57_BTN2_1_1
+  -
+    type: var
+    var_name: L:ACD57_BTN3_1_1
+  -
+    type: var
+    var_name: L:ACD57_BTN4_1_1
+  -
+    type: var
+    var_name: L:ACD57_ROTARY_OUTER_1_1
+    interpolate: Default
+  -
+    type: var
+    var_name: L:ACD57_ROTARY_INNER_1_1
+    interpolate: Default
+  -
+    type: var
+    var_name: L:ACD57_ROTARY_INNER_PUSH_1_1
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
+  -
+    type: var
+    var_name: L:XMLVAR_ASNAV_ZOOM
+
+server:
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

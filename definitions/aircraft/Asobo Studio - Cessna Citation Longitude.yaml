@@ -867,12 +867,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTAP_GP_Approach_Mode
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_ForcedToSTD
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_SavedPressure
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Value:2
@@ -882,12 +882,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveDestination
-  -
-    type: var
-    var_name: L:XMLVAR_Baro2_ForcedToSTD
-  -
-    type: var
-    var_name: L:XMLVAR_Baro2_SavedPressure
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_SavedPressure
 # -
 #   type: var
 #   var_name: L:FADEC_OIL_TEMP_LOW_AMBER_1
@@ -903,12 +903,14 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_LNG_ECS_ACTIVE
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Mode:1
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Running:1
+  -
+    type: var
+    var_name: L:WTFltTimer_Mode:1
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WTFltTimer_Running:1
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Reference_Time:1
@@ -921,12 +923,14 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Value:1
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Mode:2
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Running:2
+  -
+    type: var
+    var_name: L:WTFltTimer_Mode:2
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WTFltTimer_Running:2
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Reference_Time:2

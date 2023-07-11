@@ -1,4 +1,4 @@
-# Version 1.5.0
+# Version 2.0.2
 
 include:
   - definitions/modules/Avionics/AS1000.yaml
@@ -232,7 +232,71 @@ shared:
     event_param: 4
     index_reversed: true
 
-  - # LVAR's
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:XMLVAR_PUSH_BARO_BTN
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_BARO_P0
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_BARO_P0_LAST
+  -
+    type: var
+    var_name: L:XMLVAR_Barq_display_change
+  -
+    type: var
+    var_name: L:XMLVAR_AutopilotVS_Last
+  -
+    type: var
+    var_name: L:XMLVAR_AutopilotVS_change
+# -
+#   type: var
+#   var_name: L:XMLVAR_AUTOPILOT_MASTER_RUN
+# -
+#   type: var
+#   var_name: L:KASVsAltWheelUP
+# -
+#   type: var
+#   var_name: L:KASVsAltWheelDN
+# -
+#   type: var
+#   var_name: L:DIFALT
+  -
+    type: var
+    var_name: L:VSMODE
+  -
+    type: var
+    var_name: L:getActivePitchMode
+  -
+    type: var
+    var_name: L:getActiveRollMode
+  -
+    type: var
+    var_name: L:getArmedRollMode
+  -
+    type: var
+    var_name: L:getArmedPitchMode
+# -
+#   type: var
+#   var_name: L:AutopilotTest
+# -
+#   type: var
+#   var_name: L:AutopilotTestOFF
+  -
+    type: var
+    var_name: L:GAUGE_AP_UPDATE_INIT
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_BARO_P0_change
+  -
+    type: var
+    var_name: L:TRIMAPUP
+  -
+    type: var
+    var_name: L:TRIMAPDN
+  -
     type: var
     var_name: L:GAUGE_UPDATE_INIT
 # -
@@ -265,12 +329,12 @@ shared:
   -
     type: var
     var_name: L:TABLET_BTN_COPILOT_VIS
-# -
-#   type: var
-#   var_name: L:PILOT_VIS
-# -
-#   type: var
-#   var_name: L:COPILOT_VIS
+  -
+    type: var
+    var_name: L:PILOT_VIS
+  -
+    type: var
+    var_name: L:COPILOT_VIS
   -
     type: var
     var_name: L:VAR_SW_TABLET
@@ -354,15 +418,6 @@ shared:
     var_name: L:TABLET_PAG
   -
     type: var
-    var_name: L:TABLET_BTN_PILOT_DOOR
-  -
-    type: var
-    var_name: L:TABLET_BTN_COPILOT_DOOR
-  -
-    type: var
-    var_name: L:TABLET_BTN_BAGAGE_DOOR
-  -
-    type: var
     var_name: L:KNOB_CABIN_DEFOG_C182T
   -
     type: var
@@ -375,19 +430,10 @@ shared:
     var_name: L:ARMON
   -
     type: var
-    var_name: L:TRIMAPDN
-  -
-    type: var
     var_name: L:VSIAPDN
   -
     type: var
-    var_name: L:TRIMAPUP
-  -
-    type: var
     var_name: L:VSIAPUP
-  -
-    type: var
-    var_name: L:VSMODE
   -
     type: var
     var_name: L:ASD_KNOB_AP_MASTER
@@ -448,12 +494,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:ASD_BTN_ARM_MASTER_TIMER
-# -
-#   type: var
-#   var_name: L:ASD_BTN_BARO_MASTER_TIMER
-  -
-    type: var
-    var_name: L:BAROON
   -
     type: var
     var_name: L:CT182_btn_prop_heat
@@ -463,24 +503,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:M20R_BTN_ELT_NORMAL_TEST_TIMER
-  -
-    type: var
-    var_name: L:COSASBOOL
-# -
-#   type: var
-#   var_name: L:YokePilot
-# -
-#   type: var
-#   var_name: L:YokeCopilot
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
 # -
 #   type: var
-#   var_name: L:XMLVAR_VNAVButtonValue
+#   var_name: L:KAP140_Push_BARO
 # -
 #   type: var
 #   var_name: L:XMLVAR_BatterySTBY_SwitchState
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
 # -
 #   type: var
 #   var_name: L:XMLVAR_STBYBattery_Test
@@ -519,6 +553,9 @@ shared:
 #   var_name: L:XMLVAR_YokeHidden2
 # -
 #   type: var
+#   var_name: L:YokePilot
+# -
+#   type: var
 #   var_name: L:AS1000_PFD_ScreenLuminosity
 # -
 #   type: var
@@ -547,213 +584,48 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:YokeCopilot
   -
     type: var
     var_name: L:ASD_LEVER_C182T_OXYGENE
   -
     type: var
-    var_name: L:ASD_LEVER_C182T_DEFROST
+    var_name: L:TABLET_BTN_PILOT_DOOR
+  -
+    type: var
+    var_name: L:TABLET_BTN_COPILOT_DOOR
+  -
+    type: var
+    var_name: L:TABLET_BTN_BAGAGE_DOOR
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Propeller_1
   -
     type: var
-    var_name: L:HANDLING_RudderTrim
+    var_name: L:ControlPad_InnerMap_MapZoomRange
   -
     type: var
-    var_name: L:DEICE_Pitot_1
+    var_name: L:ControlPad_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:XMLVAR_Knob_Outer
   -
     type: var
-    var_name: L:DEICE_Propeller_1
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_SelectedNavIndex
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_SelectedComIndex
-# -
-#   type: var
-#   var_name: L:PFD_CDI_Source
-# -
-#   type: var
-#   var_name: L:PFD_InnerMap_MapZoomRange
-# -
-#   type: var
-#   var_name: L:PFD_InnerMap_MapShowCursor
-# -
-#   type: var
-#   var_name: L:AS1000_MID_Display_Backup_Active
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_SelectedNavIndex
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_SelectedComIndex
-# -
-#   type: var
-#   var_name: L:MFD_InnerMap_MapZoomRange
-# -
-#   type: var
-#   var_name: L:MFD_InnerMap_MapShowCursor
-  -
-    type: var
-    var_name: L:INSTRUMENT_Altimeter_1
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_3
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1
-  -
-    type: var
-    var_name: L:LIGHTING_PEDESTRAL_1
-  -
-    type: var
-    var_name: L:LIGHTING_POTENTIOMETER_4
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_2
-  -
-    type: var
-    var_name: L:LIGHTING_CABIN_1
-  -
-    type: var
-    var_name: L:LIGHTING_BEACON_1
-  -
-    type: var
-    var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:LIGHTING_TAXI_1
-  -
-    type: var
-    var_name: L:LIGHTING_NAV_0
-  -
-    type: var
-    var_name: L:LIGHTING_STROBE_0
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-  -
-    type: var
-    var_name: L:AP_KAP140_INSTALLED
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:TABLET_BTN_BACK
-  -
-    type: var
-    var_name: L:TABLET_BTN_NEXT
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:XMLVAR_IsDeiceAirFrame2
-# -
-#   type: var
-#   var_name: L:XMLVAR_SyntheticVision_On
-# -
-#   type: var
-#   var_name: L:XMLVAR_SyntheticVision_Off
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:Glasscockpit_Wind_Mode
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_Master_Set
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_WarningIndex
-# -
-#   type: var
-#   var_name: L:Annunciations_Manager_Initialized
-# -
-#   type: var
-#   var_name: L:Glasscockpit_HSI_Arc
-# -
-#   type: var
-#   var_name: L:PFD_BRG1_Source
-# -
-#   type: var
-#   var_name: L:PFD_BRG2_Source
-# -
-#   type: var
-#   var_name: L:Generic_Master_Warning_Active
-# -
-#   type: var
-#   var_name: L:Generic_Master_Caution_Active
-# -
-#   type: var
-#   var_name: L:GPS_Current_Phase
-# -
-#   type: var
-#   var_name: L:Glasscockpit_DmeSource
-# -
-#   type: var
-#   var_name: L:AS3000_MinimalsMode
-# -
-#   type: var
-#   var_name: L:AS3000_MinimalsValue
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_State
-# -
-#   type: var
-#   var_name: L:MFD_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MFD_MapZoomRange
-# -
-#   type: var
-#   var_name: L:Glasscockpit_MFD_Started
-# -
-#   type: var
-#   var_name: L:KAP140_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KAP140_State
-# -
-#   type: var
-#   var_name: L:AutopilotPreflightCheckCompleted
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:KAP140_BARO_Display
+    var_name: L:CUSTOM_AP_ALT_VAR_SET_ENGLISH
 
 server:
   -

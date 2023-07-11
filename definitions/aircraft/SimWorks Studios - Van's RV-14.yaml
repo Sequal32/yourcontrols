@@ -1,4 +1,4 @@
-# Version 1.3.2 (14 & 14A)
+# Version 1.3.3 (14 & 14A)
 
 include:
   - definitions/modules/Avionics/AS3X.yaml
@@ -106,7 +106,7 @@ shared:
     off_event_name: SMOKE_OFF
     event_param: 6
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
     var_name: L:SWS_ESI500_Instrument_Startup_Completed
   -
@@ -310,46 +310,13 @@ shared:
 #   var_name: L:GTN750_INT_HIDDEN
 # -
 #   type: var
-#   var_name: L:TDSGTNXI750U1_Brightness
+#   var_name: L:GTN750_EMB_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:AS530_ManualBrightness_Value_1
 # -
 #   type: var
 #   var_name: L:AS530_ManualBrightness_Enabled_1
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_LKnobInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_LKnobDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_LKnobCRSR
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobCRSR
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_HomeKey
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_DTOKey
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_NavSrc
   -
     type: var
     var_name: L:SWS_ESI500_Altimeter_Pressure
@@ -400,6 +367,12 @@ shared:
 #   var_name: L:AXIS_ELEVATOR_TRIM
 # -
 #   type: var
+#   var_name: L:TDSGTNXI750U1_ElectricalCircuit
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_1_Angle
 # -
 #   type: var
@@ -416,123 +389,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_2_RPM
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS530_SelectedSource
-# -
-#   type: var
-#   var_name: L:XMLVAR_AirSpeedIsInMach
-# -
-#   type: var
-#   var_name: L:DEICE_Pitot_1
-# -
-#   type: var
-#   var_name: L:HANDLING_RudderTrim
-# -
-#   type: var
-#   var_name: L:HANDLING_AileronsTrim
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_1_State
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_Master_Set
-# -
-#   type: var
-#   var_name: L:AS1000_Warnings_WarningIndex
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:MFD_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MFD_MapZoomRange
-# -
-#   type: var
-#   var_name: L:Glasscockpit_HSI_Arc
-# -
-#   type: var
-#   var_name: L:PFD_BRG1_Source
-# -
-#   type: var
-#   var_name: L:PFD_BRG2_Source
-# -
-#   type: var
-#   var_name: L:PFD_CDI_Source
-# -
-#   type: var
-#   var_name: L:Glasscockpit_DmeSource
-# -
-#   type: var
-#   var_name: L:GPS_Current_Phase
-# -
-#   type: var
-#   var_name: L:Glasscockpit_Wind_Mode
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_2_State
-# -
-#   type: var
-#   var_name: L:MFD_Main_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MFD_Main_MapZoomRange
-# -
-#   type: var
-#   var_name: L:HourMeter_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:HourMeter_State
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
   -

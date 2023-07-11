@@ -517,12 +517,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_MINIMUMS_MODE
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_ForcedToSTD
-  -
-    type: var
-    var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_SavedPressure
 # -
 #   type: var
 #   var_name: L:WTAP_GP_Approach_Mode
@@ -559,12 +559,14 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Baro3_SavedPressure
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Mode:1
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Running:1
+  -
+    type: var
+    var_name: L:WTFltTimer_Mode:1
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WTFltTimer_Running:1
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Reference_Time:1
@@ -577,12 +579,14 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Value:1
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Mode:2
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Running:2
+  -
+    type: var
+    var_name: L:WTFltTimer_Mode:2
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WTFltTimer_Running:2
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Reference_Time:2

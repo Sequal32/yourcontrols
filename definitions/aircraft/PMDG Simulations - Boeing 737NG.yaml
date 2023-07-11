@@ -1,4 +1,4 @@
-# Version 3.0.69
+# Version 3.0.65
 
 include:
   - definitions/modules/navigation.yaml
@@ -184,9 +184,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:EEDoor
-# -
-#   type: var
-#   var_name: L:NGXWheelChocks
+  -
+    type: var
+    var_name: L:NGXWheelChocks
 # -
 #   type: var
 #   var_name: L:NGXLeftInbdLESlat
@@ -1583,13 +1583,9 @@ shared:
 # - # AIRSTAIR ANNUN
 #   type: var
 #   var_name: L:switch_8951_73X
-  - # FO Map Pull
-    type: ToggleSwitch
-    var_name: L:switch_896_73X
-    event_name: ROTOR_BRAKE
-    event_param: 89601
-    on_condition_value: 100
-    use_calculator: true
+# - # LEFT FWD OVERWING ANNUN
+#   type: var
+#   var_name: L:switch_896_73X
 # - # LEFT AFT OVERWING ANNUN
 #   type: var
 #   var_name: L:switch_897_73X
@@ -2949,7 +2945,7 @@ shared:
     down_event_param: 34602
     increment_by: 50
     use_calculator: true
-  - # Master Fire Warning (FIRE WARN) Light Left Switch
+  - # CPT Master Fire Warning Switch
     type: NumSet
     var_name: L:switch_347_73X
     var_units: Number
@@ -2958,10 +2954,10 @@ shared:
     add_by: 34704
     event_name: ROTOR_BRAKE
     use_calculator: true
-# -
+# - # CPT Master Fire Warning ANNUN
 #   type: var
 #   var_name: L:switch_3471_73X
-  - # MASTER CAUTION Light Left Switch
+  - # CPT Master Caution Switch
     type: NumSet
     var_name: L:switch_348_73X
     var_units: Number
@@ -2970,10 +2966,10 @@ shared:
     add_by: 34804
     event_name: ROTOR_BRAKE
     use_calculator: true
-# -
+# - # CPT Master Caution ANNUN
 #   type: var
 #   var_name: L:switch_3481_73X
-  - # ANNUNCIATOR PANEL Switch
+  - # CPT Annunciator Panel (Recall) Switch
     type: NumSet
     var_name: L:switch_349_73X
     var_units: Number
@@ -3671,7 +3667,7 @@ shared:
 # - # FO AIR COND ANNUN
 #   type: var
 #   var_name: L:switch_4371_73X
-  - # FO ANNUNCIATOR PANEL Switch
+  - # FO Annunciator Panel (Recall) Switch
     type: NumSet
     var_name: L:switch_437_73X
     var_units: Number
@@ -3680,7 +3676,7 @@ shared:
     add_by: 43704
     event_name: ROTOR_BRAKE
     use_calculator: true
-  - # FO MASTER CAUTION Light Right Switch
+  - # FO Master Caution Switch
     type: NumSet
     var_name: L:switch_438_73X
     var_units: Number
@@ -3689,10 +3685,10 @@ shared:
     add_by: 43804
     event_name: ROTOR_BRAKE
     use_calculator: true
-# -
+# - # FO Master Caution ANNUN
 #   type: var
 #   var_name: L:switch_4381_73X
-  - # FO Master Fire Warning (FIRE WARN) Light Right Switch
+  - # FO Master Fire Warning Switch
     type: NumSet
     var_name: L:switch_439_73X
     var_units: Number
@@ -3701,7 +3697,7 @@ shared:
     add_by: 43904
     event_name: ROTOR_BRAKE
     use_calculator: true
-# -
+# - # FO Master Fire Warning ANNUN
 #   type: var
 #   var_name: L:switch_4391_73X
   - # MAIN PANEL DISPLAY UNITS (MAIN PANEL DUs) Selector
@@ -8943,9 +8939,9 @@ shared:
     type: var
     var_name: L:maplight_L_drag_h
     unreliable: true
-  -
-    type: var
-    var_name: L:mpos
+# -
+#   type: var
+#   var_name: L:mpos
   -
     type: var
     var_name: L:maplight_L_drag_v
