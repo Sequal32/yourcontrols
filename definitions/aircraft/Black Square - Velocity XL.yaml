@@ -1,0 +1,398 @@
+# Version 0.1.2
+
+include:
+  - definitions/modules/Avionics/AS3X.yaml
+  - definitions/modules/Avionics/TDSNXi.yaml
+  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Aircon blower
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:36
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 36
+
+  - # Inflate Panel
+    type: CustomCalculator
+    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+    set: 4 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:35, Bool)
+    set: 35 5 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+    set: 4 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:BKSQ_Turbocharged
+  -
+    type: var
+    var_name: L:BKSQ_TurbochargerSound
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:var_LeftCabinDoor
+  -
+    type: var
+    var_name: L:var_RightCabinDoor
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:BKSQ_MixtureLeverPosition_1
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:BKSQ_SOUND_IDENTIFIER
+# -
+#   type: var
+#   var_name: L:var_doorSealPressure
+  -
+    type: var
+    var_name: L:var_friction
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:BKSQ_BeepSound
+# -
+#   type: var
+#   var_name: L:BKSQ_AUTOPILOT_DISCONNECT_SOUND
+# -
+#   type: var
+#   var_name: L:var_GearWarningHorn
+  -
+    type: var
+    var_name: L:var_fanSpeed
+  -
+    type: var
+    var_name: L:var_blower
+  -
+    type: var
+    var_name: L:var_cabinTemperatureSetPoint
+# -
+#   type: var
+#   var_name: L:var_cabinTemperature
+# -
+#   type: var
+#   var_name: L:var_cabinVentTemperature
+  -
+    type: var
+    var_name: L:var_environmentalTempUnit
+  -
+    type: var
+    var_name: L:var_environmentalOatTimer
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_environmentalSetTimer
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_environmentalFanTimer
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_environmentalControlOn
+  -
+    type: var
+    var_name: L:var_environmentalAuto
+  -
+    type: var
+    var_name: L:var_environmentalDefrost
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
+#   var_name: L:GTN750_INT_HIDDEN
+# -
+#   type: var
+#   var_name: L:var_fanSpeed_lerp
+# -
+#   type: var
+#   var_name: L:var_blower_lerp
+# -
+#   type: var
+#   var_name: L:var_aDoorOpen
+# -
+#   type: var
+#   var_name: L:var_turbochargerRPM
+# -
+#   type: var
+#   var_name: L:var_scaledMaximumMixturePosition_1
+# -
+#   type: var
+#   var_name: L:BKSQ_PersistentIndicatedAirspeed
+# -
+#   type: var
+#   var_name: L:BKSQ_PersistentIndicatedAirspeedSound
+  -
+    type: var
+    var_name: L:starterSwitchPos
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:var_hideLeftStick
+# -
+#   type: var
+#   var_name: L:var_hideRightStick
+# -
+#   type: var
+#   var_name: L:var_GearLightTestButton
+# -
+#   type: var
+#   var_name: L:var_GearLightResetButton
+  -
+    type: var
+    var_name: L:var_EmergencyExtension
+# -
+#   type: var
+#   var_name: L:var_HaventPumpedThisInterval
+  -
+    type: var
+    var_name: L:var_GearLightTestButton_IsDown
+# -
+#   type: var
+#   var_name: L:var_GearLightTestButton_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_GearLightTestButton_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:var_GearLightResetButton_IsDown
+# -
+#   type: var
+#   var_name: L:var_GearLightResetButton_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_GearLightResetButton_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_Autopilot_Altitude_Increment
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:GTN750_Vol
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:var_PilotStickPtt
+  -
+    type: var
+    var_name: L:var_PilotStickPtt_IsDown
+# -
+#   type: var
+#   var_name: L:var_PilotStickPtt_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_PilotStickPtt_LeftLeaveToRun
+# -
+#   type: var
+#   var_name: L:var_CoPilotStickPtt
+  -
+    type: var
+    var_name: L:var_CoPilotStickPtt_IsDown
+# -
+#   type: var
+#   var_name: L:var_CoPilotStickPtt_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_CoPilotStickPtt_LeftLeaveToRun
+# -
+#   type: var
+#   var_name: L:var_PilotPtt
+  -
+    type: var
+    var_name: L:var_PilotPtt_IsDown
+# -
+#   type: var
+#   var_name: L:var_PilotPtt_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_PilotPtt_LeftLeaveToRun
+# -
+#   type: var
+#   var_name: L:var_CoPilotPtt
+  -
+    type: var
+    var_name: L:var_CoPilotPtt_IsDown
+# -
+#   type: var
+#   var_name: L:var_CoPilotPtt_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_CoPilotPtt_LeftLeaveToRun
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:var_ArmrestPosition
+    unreliable: true
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
