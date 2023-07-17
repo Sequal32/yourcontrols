@@ -8,6 +8,7 @@
 - Added: Beechcraft Bonanza A36 by Black Square (v0.1.1).
 - Added: Beechcraft King Air 350i by Black Square (v0.1.3).
 - Added: Cessna 208B Grand Caravan by Black Square (v0.1.4).
+- Added: Tecnam P2006T MkII by FlightSim Studio (v1.0.5).
 - Added: Velocity XL by Black Square (v0.1.2).
 
 ## Version 2.7.8
