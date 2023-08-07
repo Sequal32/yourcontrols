@@ -1,4 +1,4 @@
-# Version 1.0.1
+# Version 1.1.0
 
 include:
   - definitions/modules/Avionics/AS430.yaml
@@ -24,6 +24,38 @@ shared:
     type: CustomCalculator
     get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:8, Bool)
     set: 8 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_ON
+    off_event_name: FUELSYSTEM_PUMP_OFF
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_ON
+    off_event_name: FUELSYSTEM_PUMP_OFF
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
 
   - # Interior
     type: NumSet
@@ -87,7 +119,7 @@ shared:
     event_param: 6
     index_reversed: true
 
-  - # LVAR's (Passenger)
+  - # LVAR's (Passenger, trimmed)
     type: var
     var_name: L:Orbx_P750_CUSTOM_Avionics_Type
   -
@@ -119,52 +151,52 @@ shared:
     var_name: L:Orbx_P750_DOOR_Cockpit_Any_Open
   -
     type: var
-    var_name: L:Orbx_P750_LIGHTING_Map_Switch
-  -
-    type: var
     var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_1_Switch
-  -
-    type: var
-    var_name: L:Orbx_GMA345_Volume_Music_PILOT
-  -
-    type: var
-    var_name: L:Orbx_GMA345_Volume_ICS_COPILOT
-  -
-    type: var
-    var_name: L:Orbx_P750_ELECTRICAL_Bus_Tie_Cover
   -
     type: var
     var_name: L:Orbx_GMA345_Volume_Music_COPILOT
   -
     type: var
-    var_name: L:Orbx_P750_ANNUNC_DAYNIGHT
+    var_name: L:Orbx_P750_FUEL_DISPLAY_FRONT_TYPE
   -
     type: var
-    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_1_CB
+    var_name: L:Orbx_GMA345_Volume_Music_PILOT
   -
     type: var
-    var_name: L:Orbx_P750_SAFETY_Voice_Alarm
+    var_name: L:Orbx_P750_ELECTRICAL_Bus_Tie_Cover
+  -
+    type: var
+    var_name: L:Orbx_GMA345_Volume_ICS_COPILOT
   -
     type: var
     var_name: L:Orbx_P750_FUEL_SWITCH
   -
     type: var
-    var_name: L:Orbx_P750_LIGHTING_Map_Brightness
-  -
-    type: var
-    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_2_Switch
-  -
-    type: var
-    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_2_CB
-  -
-    type: var
-    var_name: L:Orbx_P750_FUEL_DISPLAY_FRONT_TYPE
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_1_CB
   -
     type: var
     var_name: L:Orbx_P750_FUEL_DISPLAY_REAR_TYPE
   -
     type: var
+    var_name: L:Orbx_P750_ANNUNC_DAYNIGHT
+  -
+    type: var
+    var_name: L:Orbx_P750_SAFETY_Voice_Alarm
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_2_Switch
+  -
+    type: var
+    var_name: L:Orbx_P750_LIGHTING_Map_Brightness
+  -
+    type: var
+    var_name: L:Orbx_P750_ELECTRICAL_Avionics_Bus_2_CB
+  -
+    type: var
     var_name: L:Orbx_55X_AUTOPILOT_MASTER
+  -
+    type: var
+    var_name: L:Orbx_P750_LIGHTING_Map_Switch
 # -
 #   type: var
 #   var_name: L:Orbx_P750_VAR_RPM_Np_Lights
@@ -342,9 +374,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_InertSep1_Deployment
-  -
-    type: var
-    var_name: L:XMLVAR_InertSep1_Active
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Active
   -
     type: var
     var_name: L:Orbx_P750_ELECTRICAL_Bus_Tie
@@ -467,10 +499,13 @@ shared:
     var_name: L:Orbx_P750_Tablet_IsVisible
 # -
 #   type: var
-#   var_name: L:GTN750_INT_HIDDEN
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
 # -
 #   type: var
-#   var_name: L:GTN750_INT_2_HIDDEN
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
   -
     type: var
     var_name: L:Vent_Cockpit_Left_LR_PositionX
@@ -595,209 +630,46 @@ shared:
   -
     type: var
     var_name: L:Orbx_P750_MISC_Cabin_Heater_Temperature
-# -
-#   type: var
-#   var_name: L:LIGHTING_LANDING_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_NAV_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_BEACON_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_STROBE_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_CABIN_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_PANEL_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:Condition_Lever_CutOff_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_POTENTIOMETER_2
-# -
-#   type: var
-#   var_name: L:LIGHTING_POTENTIOMETER_3
-# -
-#   type: var
-#   var_name: L:LIGHTING_POTENTIOMETER_4
-# -
-#   type: var
-#   var_name: L:LIGHTING_POTENTIOMETER_5
-# -
-#   type: var
-#   var_name: L:HANDLING_RudderTrim
-# -
-#   type: var
-#   var_name: L:HANDLING_ElevatorTrim
-# -
-#   type: var
-#   var_name: L:PMS50_GTN750_INSTALLED
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:Autopilot_55X_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:Autopilot_55X_State
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:Orbx_PAC750_EngineMonitor_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:Orbx_PAC750_EngineMonitor_State
-# -
-#   type: var
-#   var_name: L:AS330_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS330_State
-# -
-#   type: var
-#   var_name: L:AS430_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS430_State
-  -
+
+  - # HSI
     type: var
     var_name: L:HSI_MapShowCursor
   -
     type: var
     var_name: L:HSI_MapZoomRange
-# -
-#   type: var
-#   var_name: L:SN3500_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:SN3500_State
-# -
-#   type: var
-#   var_name: L:PFD_CDI_Source
-# -
-#   type: var
-#   var_name: L:GPS_Current_Phase
-# -
-#   type: var
-#   var_name: L:PFD_BRG1_Source
-# -
-#   type: var
-#   var_name: L:PFD_BRG2_Source
-# -
-#   type: var
-#   var_name: L:Glasscockpit_DmeSource
-# -
-#   type: var
-#   var_name: L:KR87_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KR87_State
-# -
-#   type: var
-#   var_name: L:GTN750_INT_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN750_INT_State
-# -
-#   type: var
-#   var_name: L:GTN750_INT_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN750_INT_2_State
-# -
-#   type: var
-#   var_name: L:Orbx_PAC750_Tablet_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:Orbx_PAC750_Tablet_State
-# -
-#   type: var
-#   var_name: L:Orbx_SA200_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:Orbx_SA200_State
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-  -
-    type: var
-    var_name: L:Orbx_P750_FUEL_FP5L_LowFuel
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-  -
+
+  - # Skydive
     type: var
     var_name: L:Orbx_P750_DOOR_Skydive
 
 server:
   -
     type: var
-    var_name: A:FUELSYSTEM TANK LEVEL:1
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: A:FUELSYSTEM TANK LEVEL:2
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: A:FUELSYSTEM TANK LEVEL:3
+    var_name: A:FUEL TANK LEFT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: A:FUELSYSTEM TANK LEVEL:4
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: A:FUELSYSTEM TANK LEVEL:5
+    var_name: A:FUEL TANK LEFT TIP LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
