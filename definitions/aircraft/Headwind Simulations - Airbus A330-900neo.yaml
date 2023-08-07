@@ -454,60 +454,36 @@ shared:
     event_param: 97
     index_reversed: true
 
-  - # Cabin Door
+  - # MID L Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
     event_param: 1
-  - # Jetway
+  - # FWD R Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_JETWAY
+    event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
-    use_calculator: true
-  - # Ramp Truck
+    event_param: 2
+  - # FWD/AFT R Cargo Doors
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_RAMPTRUCK
+    event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
-    use_calculator: true
-  - # Catering Truck
+    event_param: 3
+  - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:1
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_CATERING
-    cancel_h_events: true
-    use_calculator: true
-  - # Luggage Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:2
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_LUGGAGE
-    cancel_h_events: true
-    use_calculator: true
-  - # GPU
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:3
+    var_name: A:INTERACTIVE POINT GOAL:3
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
-    cancel_h_events: true
-    use_calculator: true
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:9
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
     cancel_h_events: true
     use_calculator: true
 

@@ -545,47 +545,47 @@ shared:
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 4
 
-  - # Jetway
+  - # FWD L Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:10
+    var_name: A:INTERACTIVE POINT GOAL:10
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_JETWAY
-    use_calculator: true
-  - # Ramp Truck
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 11
+  - # FWD R Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:10
+    var_name: A:INTERACTIVE POINT GOAL:11
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_RAMPTRUCK
-    use_calculator: true
-  - # Catering Truck
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 12
+  - # AFT R Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:1
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
-    event_name: REQUEST_CATERING
-    use_calculator: true
-  - # Luggage Truck
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+  - # FWD R Cargo Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:12
+    var_name: A:INTERACTIVE POINT GOAL:12
     var_units: Bool
     var_type: bool
-    event_name: REQUEST_LUGGAGE
-    use_calculator: true
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 13
+  - # AFT R Cargo Door
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:13
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 14
   - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:15
+    var_name: A:INTERACTIVE POINT GOAL:15
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
-    use_calculator: true
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:14
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
     use_calculator: true
 
   - # Lights

@@ -58,21 +58,21 @@ shared:
 
   - # Front left door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:2
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 3
   - # Rear left door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:1
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
   - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
@@ -217,9 +217,11 @@ shared:
   -
     type: var
     var_name: L:XMLVar_Pilot_Door_Handle_Position
+    unreliable: true
   -
     type: var
     var_name: L:XMLVar_Cabin_Door_Handle_Position
+    unreliable: true
   -
     type: var
     var_name: L:XMLVAR_BoostFuelPump
