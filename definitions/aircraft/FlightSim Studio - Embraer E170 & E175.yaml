@@ -23,6 +23,21 @@ shared:
     event_param: 4
     index_reversed: true
 
+  - # Altimeters
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:3
+    var_units: Millibars scaler 16
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:4
+    var_units: Millibars scaler 16
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 4
+
   - # Autopilot
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR
@@ -98,7 +113,7 @@ shared:
 
   - # Front Left Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -106,7 +121,7 @@ shared:
     event_param: 1
   - # Front Right Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:1
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -114,7 +129,7 @@ shared:
     event_param: 2
   - # Rear Left Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:2
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -122,7 +137,7 @@ shared:
     event_param: 3
   - # Rear Right Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:3
+    var_name: A:INTERACTIVE POINT GOAL:3
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -130,7 +145,7 @@ shared:
     event_param: 4
   - # Cargo Rear Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:4
+    var_name: A:INTERACTIVE POINT GOAL:4
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -138,7 +153,7 @@ shared:
     event_param: 5
   - # Cargo Forward Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:5
+    var_name: A:INTERACTIVE POINT GOAL:5
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -146,26 +161,18 @@ shared:
     event_param: 6
   - # GPU Panel
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:8
+    var_name: A:INTERACTIVE POINT GOAL:8
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     cancel_h_events: true
     event_param: 9
-  -
+  - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:8
+    var_name: A:INTERACTIVE POINT GOAL:8
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
-    cancel_h_events: true
-    use_calculator: true
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:9
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
     cancel_h_events: true
     use_calculator: true
 
@@ -648,52 +655,45 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_VIS_EXT_DOOR_REAR_CARGO
-  -
-    type: var
-    var_name: L:FSS_EXX_VIS_EXT_DOOR_REAR_MOVING
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_EXX_VIS_EXT_DOOR_REAR_MOVING
 # -
 #   type: var
 #   var_name: L:FSS_EXX_VIS_EXT_DOOR_FWD_CARGO
-  -
-    type: var
-    var_name: L:FSS_EXX_VIS_EXT_DOOR_FWD_MOVING
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_EXX_VIS_EXT_DOOR_FWD_MOVING
 # -
 #   type: var
 #   var_name: L:FSS_EXX_VIS_EXT_GPU_PANEL_DOOR
-  -
-    type: var
-    var_name: L:FSS_EXX_VIS_EXT_GPU_PANEL_DOOR_MOVING
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_EXX_VIS_EXT_GPU_PANEL_DOOR_MOVING
 # -
 #   type: var
 #   var_name: L:FSS_EXX_VIS_EXT_DOOR_FWD_LT
-  -
-    type: var
-    var_name: L:FSS_EXX_VIS_EXT_DOOR_FWD_LT_MOVING
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_EXX_VIS_EXT_DOOR_FWD_LT_MOVING
 # -
 #   type: var
 #   var_name: L:FSS_EXX_VIS_EXT_DOOR_FWD_RT
-  -
-    type: var
-    var_name: L:FSS_EXX_VIS_EXT_DOOR_FWD_RT_MOVING
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_EXX_VIS_EXT_DOOR_FWD_RT_MOVING
 # -
 #   type: var
 #   var_name: L:FSS_EXX_VIS_EXT_DOOR_REAR_LT
-  -
-    type: var
-    var_name: L:FSS_EXX_VIS_EXT_DOOR_REAR_LT_MOVING
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_EXX_VIS_EXT_DOOR_REAR_LT_MOVING
 # -
 #   type: var
 #   var_name: L:FSS_EXX_VIS_EXT_DOOR_REAR_RT
-  -
-    type: var
-    var_name: L:FSS_EXX_VIS_EXT_DOOR_REAR_RT_MOVING
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_EXX_VIS_EXT_DOOR_REAR_RT_MOVING
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EXT_ENG_L_FANBLADE_STEP
@@ -5267,6 +5267,7 @@ ignore:
   - EFB#updateRate-MCDU2
   - EFB#updateRate-ACP2
   - EFB#updateRate-IESS
+  - EFB#slider-cabin-ambience-volume
 
   - MCDU_LEFT#brightnessSlider
   - MCDU_LEFT#gforcefxslider
@@ -5282,6 +5283,7 @@ ignore:
   - MCDU_LEFT#updateRate-MCDU2
   - MCDU_LEFT#updateRate-ACP2
   - MCDU_LEFT#updateRate-IESS
+  - MCDU_LEFT#slider-cabin-ambience-volume
 
   - MCDU_RIGHT#brightnessSlider
   - MCDU_RIGHT#gforcefxslider
@@ -5297,6 +5299,7 @@ ignore:
   - MCDU_RIGHT#updateRate-MCDU2
   - MCDU_RIGHT#updateRate-ACP2
   - MCDU_RIGHT#updateRate-IESS
+  - MCDU_RIGHT#slider-cabin-ambience-volume
 
   - MFD_LEFT#brightnessSlider
   - MFD_LEFT#gforcefxslider
@@ -5312,6 +5315,7 @@ ignore:
   - MFD_LEFT#updateRate-MCDU2
   - MFD_LEFT#updateRate-ACP2
   - MFD_LEFT#updateRate-IESS
+  - MFD_LEFT#slider-cabin-ambience-volume
 
   - MFD_RIGHT#brightnessSlider
   - MFD_RIGHT#gforcefxslider
@@ -5327,6 +5331,7 @@ ignore:
   - MFD_RIGHT#updateRate-MCDU2
   - MFD_RIGHT#updateRate-ACP2
   - MFD_RIGHT#updateRate-IESS
+  - MFD_RIGHT#slider-cabin-ambience-volume
 
   - FSSWasmInstrument#brightnessSlider
   - FSSWasmInstrument#gforcefxslider
@@ -5342,3 +5347,4 @@ ignore:
   - FSSWasmInstrument#updateRate-MCDU2
   - FSSWasmInstrument#updateRate-ACP2
   - FSSWasmInstrument#updateRate-IESS
+  - FSSWasmInstrument#slider-cabin-ambience-volume
