@@ -95,18 +95,32 @@ shared:
 
   - # Doors
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:1
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
   -
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:2
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:5
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 6
 
   - # Pilot Altimeter
     type: NumSet
@@ -916,9 +930,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_CUSTOM_FUEL_SWITCH_CUTOFF_1
-  -
-    type: var
-    var_name: L:Condition_Lever_CutOff_1
+# -
+#   type: var
+#   var_name: L:Condition_Lever_CutOff_1
   -
     type: var
     var_name: L:XMLVAR_StrobeBeaconState

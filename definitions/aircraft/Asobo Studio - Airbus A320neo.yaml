@@ -189,47 +189,54 @@ shared:
     var_type: bool
     event_name: CABIN_NO_SMOKING_ALERT_SWITCH_TOGGLE
 
-  - # Jetway
+  - # FWD L Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_JETWAY
-    use_calculator: true
-  - # Ramp Truck
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  - # FWD R Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_RAMPTRUCK
-    use_calculator: true
-  - # Catering Truck
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+  - # AFT L Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:3
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
-    event_name: REQUEST_CATERING
-    use_calculator: true
-  - # Luggage Truck
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+  - # AFT R Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:5
+    var_name: A:INTERACTIVE POINT GOAL:3
     var_units: Bool
     var_type: bool
-    event_name: REQUEST_LUGGAGE
-    use_calculator: true
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+  - # AFT R Cargo Door
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 5
+  - # FWD R Cargo Door
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:5
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 6
   - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:8
+    var_name: A:INTERACTIVE POINT GOAL:8
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
-    use_calculator: true
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:9
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
     use_calculator: true
 
   - # Lights
@@ -505,7 +512,7 @@ shared:
     type: NumSet
     var_name: A:CIRCUIT POWER SETTING:77
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 77
     index_reversed: true

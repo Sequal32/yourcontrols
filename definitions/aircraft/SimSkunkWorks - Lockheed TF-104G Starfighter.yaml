@@ -11,12 +11,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Canopy (workaround)
+  - # Canopy
     type: ToggleSwitch
-    var_name: A:CANOPY OPEN
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
 
   - # Lights
     type: NumSet

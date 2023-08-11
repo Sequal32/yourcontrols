@@ -461,47 +461,26 @@ shared:
     var_type: i32
     event_name: TURBINE_IGNITION_SWITCH_SET4
 
-  - # Jetway
+  - # FWD L Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_JETWAY
-    use_calculator: true
-  - # Ramp Truck
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  - # AFT R Cargo Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_RAMPTRUCK
-    use_calculator: true
-  - # Catering Truck
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+  - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_CATERING
-    use_calculator: true
-  - # Luggage Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:1
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_LUGGAGE
-    use_calculator: true
-  - # GPU
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:2
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
-    use_calculator: true
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:3
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
     use_calculator: true
 
   - # Fuel Valves
@@ -1064,7 +1043,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING:3
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 3
     index_reversed: true
@@ -1087,7 +1066,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING:5
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 5
     index_reversed: true
@@ -1102,7 +1081,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:1
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 1
     index_reversed: true
@@ -1125,7 +1104,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:2
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 2
     index_reversed: true
@@ -1140,7 +1119,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:3
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 3
     index_reversed: true
@@ -1155,7 +1134,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:4
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 4
     index_reversed: true
@@ -1170,7 +1149,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:5
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 5
     index_reversed: true
@@ -1185,7 +1164,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:6
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 6
     index_reversed: true
@@ -1200,7 +1179,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:7
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 7
     index_reversed: true
@@ -1215,7 +1194,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:8
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 8
     index_reversed: true
@@ -1230,7 +1209,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:9
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 9
     index_reversed: true
@@ -1245,7 +1224,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:10
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 10
     index_reversed: true
@@ -1260,7 +1239,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:11
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 11
     index_reversed: true
@@ -1276,7 +1255,7 @@ shared:
     type: NumSet
     var_name: A:CIRCUIT POWER SETTING:70
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 70
     index_reversed: true

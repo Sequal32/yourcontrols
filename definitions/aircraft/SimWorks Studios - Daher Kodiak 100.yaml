@@ -150,7 +150,7 @@ shared:
     event_param: 1
   - # Pilot door
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -165,14 +165,14 @@ shared:
     event_param: 2
   - # Copilot door
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:1
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
   - # Storm window
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:2
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -187,7 +187,7 @@ shared:
     event_param: 3
   - # Rear top door
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:3
+    var_name: A:INTERACTIVE POINT GOAL:3
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -202,11 +202,18 @@ shared:
     event_param: 4
   - # Rear bottom door
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:4
+    var_name: A:INTERACTIVE POINT GOAL:4
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 5
+  - # Skydive door
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:5
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 6
 
 # - # LVAR's (Skydive trimmed)
 #   type: var
@@ -664,9 +671,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_InertSep1_Deployment
-  -
-    type: var
-    var_name: L:XMLVAR_InertSep1_Active
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Active
   -
     type: var
     var_name: L:SWS_Kodiak_TankSelector_1
@@ -682,9 +689,10 @@ shared:
   -
     type: var
     var_name: L:SWS_ENGINE_Lever_Condition_1
-  -
-    type: var
-    var_name: L:Condition_Lever_CutOff_1
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:Condition_Lever_CutOff_1
   -
     type: var
     var_name: L:KodiakAC_Initialised

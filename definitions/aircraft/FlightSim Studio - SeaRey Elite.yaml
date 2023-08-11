@@ -17,11 +17,13 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Canopy
-    type: var
-    var_name: A:INTERACTIVE POINT GOAL
+  - # Canopy (97% max)
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Percent
     var_type: f64
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
 
   - # Electrical
     type: var

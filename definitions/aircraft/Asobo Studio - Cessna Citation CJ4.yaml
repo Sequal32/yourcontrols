@@ -1,4 +1,4 @@
-# Version 0.1.93
+# Version 0.1.94
 
 include:
   - definitions/modules/autopilot.yaml
@@ -126,38 +126,20 @@ shared:
     var_type: bool
     event_name: ANTI_ICE_TOGGLE_ENG2
 
-  - # GPU
+  - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:2
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
     use_calculator: true
-    event_param: 2
-  - # GPU
+  -
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:3
+    var_name: A:INTERACTIVE POINT GOAL:3
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
     use_calculator: true
-    event_param: 3
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
-    use_calculator: true
-    event_param: 0
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:1
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
-    use_calculator: true
-    event_param: 1
 
   - # Pulse lights
     type: NumSet
@@ -450,12 +432,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:WT21_BETA_VERSION

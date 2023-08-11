@@ -1,0 +1,185 @@
+# Version 0.1.1
+
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Interior
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_TOGGLE
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+
+  - # LVAR's
+    type: var
+    var_name: L:Switch_Fuel_Master
+  -
+    type: var
+    var_name: L:Switch_Fuel_Value_1
+  -
+    type: var
+    var_name: L:Switch_Fuel_Value_2
+  -
+    type: var
+    var_name: L:Toggle_Door_1
+  -
+    type: var
+    var_name: L:Toggle_Door_2
+  -
+    type: var
+    var_name: L:Toggle_Buoy_1
+  -
+    type: var
+    var_name: L:Toggle_Buoy_2
+  -
+    type: var
+    var_name: L:Toggle_Engine_Handcraft_Flap_1
+  -
+    type: var
+    var_name: L:Engine_Handcraft_1
+  -
+    type: var
+    var_name: L:SWITCH_Radiostate
+  -
+    type: var
+    var_name: L:SWITCH_Netzausschalter
+  -
+    type: var
+    var_name: L:SW_Netzausschalter_Cover
+  -
+    type: var
+    var_name: L:SWITCH_Radiomaster
+  -
+    type: var
+    var_name: L:Toggle_Engine_Handcraft_Flap_2
+  -
+    type: var
+    var_name: L:Engine_Handcraft_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden2
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:Handcraft_Visibility_1
+  -
+    type: var
+    var_name: L:Handcraft_Visibility_2
+  -
+    type: var
+    var_name: L:SWITCH_Starter_1
+  -
+    type: var
+    var_name: L:SWITCH_Starter_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:Toggle_Door_3
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

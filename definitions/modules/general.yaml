@@ -41,7 +41,7 @@ shared:
     type: NumSet
     var_name: A:FLAPS HANDLE PERCENT
     var_units: Position 16k
-    var_type: i32
+    var_type: f64
     event_name: FLAPS_CONTINUOUS_SET
   -
     type: var
@@ -53,8 +53,9 @@ shared:
     type: NumSet
     var_name: A:SPOILERS HANDLE POSITION
     var_units: Position 16k
-    var_type: i32
+    var_type: f64
     event_name: SPOILERS_SET
+    unreliable: true
 
   - # ASOBO_HANDLING_Push_AutoSpoiler_Template
     type: ToggleSwitch

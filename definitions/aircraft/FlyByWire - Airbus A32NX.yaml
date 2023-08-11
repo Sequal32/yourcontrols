@@ -454,76 +454,60 @@ shared:
     event_param: 97
     index_reversed: true
 
-  - # Cabin Door
+  - # FWD L Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
     event_param: 1
-  - # Jetway
+  - # FWD R Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_JETWAY
+    event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
-    use_calculator: true
-  - # Ramp Truck
+    event_param: 2
+  - # AFT L Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_RAMPTRUCK
+    event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
-    use_calculator: true
-  - # Aft Door
+    event_param: 3
+  - # AFT R Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:3
+    var_name: A:INTERACTIVE POINT GOAL:3
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
     event_param: 4
-  - # Catering Truck
+  - # AFT R Cargo Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:3
+    var_name: A:INTERACTIVE POINT GOAL:4
     var_units: Bool
     var_type: bool
-    event_name: REQUEST_CATERING
+    event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
-    use_calculator: true
-  - # Cargo Door
+    event_param: 5
+  - # FWD R Cargo Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:5
+    var_name: A:INTERACTIVE POINT GOAL:5
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
     event_param: 6
-  - # Luggage Truck
+  - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:5
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_LUGGAGE
-    cancel_h_events: true
-    use_calculator: true
-  - # GPU
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:8
+    var_name: A:INTERACTIVE POINT GOAL:8
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
-    cancel_h_events: true
-    use_calculator: true
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:9
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
     cancel_h_events: true
     use_calculator: true
 
@@ -650,7 +634,7 @@ shared:
     type: NumSet
     var_name: A:CIRCUIT POWER SETTING:77
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 77
     index_reversed: true
@@ -665,7 +649,7 @@ shared:
     type: NumSet
     var_name: A:CIRCUIT POWER SETTING:80
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 80
     index_reversed: true
@@ -6248,22 +6232,18 @@ master:
   - # Throttles
     type: var
     var_name: L:A32NX_AUTOTHRUST_TLA:1
-    var_type: f64
     unreliable: true
   -
     type: var
     var_name: L:A32NX_AUTOTHRUST_TLA:2
-    var_type: f64
     unreliable: true
   -
     type: var
     var_name: L:A32NX_THROTTLE_MAPPING_INPUT:1
-    var_type: f64
     unreliable: true
   -
     type: var
     var_name: L:A32NX_THROTTLE_MAPPING_INPUT:2
-    var_type: f64
     unreliable: true
 
   - # Brake temp (sends A TON of data, keep slow update)
@@ -6285,68 +6265,6 @@ master:
     type: var
     var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_4
     var_type: i32
-    unreliable: true
-
-server:
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:1
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:2
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:3
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:4
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:5
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:6
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:7
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:8
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:9
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:10
-    var_units: Pounds
-    var_type: f64
     unreliable: true
 
 ignore:

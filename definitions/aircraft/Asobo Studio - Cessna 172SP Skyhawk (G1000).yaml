@@ -1,9 +1,8 @@
-# Version 0.1.90
+# Version 0.1.107
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/Avionics/AS1000.yaml
+  - definitions/modules/Avionics/GTN750.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
@@ -18,25 +17,18 @@ include:
 shared:
   - # Avionics Bus
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:11
+    var_name: A:CIRCUIT SWITCH ON:24
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 11
+    event_param: 24
   -
     type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:39
+    var_name: A:CIRCUIT SWITCH ON:25
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 39
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:40
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 40
+    event_param: 25
 
   - # Electrical
     type: ToggleSwitch
@@ -45,6 +37,13 @@ shared:
     var_type: bool
     event_name: TOGGLE_MASTER_BATTERY
     event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 2
   -
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
@@ -76,48 +75,41 @@ shared:
     type: event
     event_name: MAGNETO1_SET # backup for position
 
-  - # EGT Bug
-    type: NumSet
-    var_name: A:ENG EXHAUST GAS TEMPERATURE GES:1
-    var_units: Percent scaler 32k
-    var_type: i32
-    event_name: EGT1_SET
-
   - # Lights
     type: NumSet
     var_name: A:LIGHT NAV:0
     var_units: Bool
-    var_type: i32
+    var_type: f64
     event_name: NAV_LIGHTS_SET
     event_param: 0
   -
     type: NumSet
     var_name: A:LIGHT BEACON:1
     var_units: Bool
-    var_type: i32
+    var_type: f64
     event_name: BEACON_LIGHTS_SET
     event_param: 1
   -
     type: NumSet
+    var_name: A:LIGHT STROBE:0
+    var_units: Bool
+    var_type: f64
+    event_name: STROBES_SET
+    event_param: 0
+  -
+    type: NumSet
     var_name: A:LIGHT LANDING:1
     var_units: Bool
-    var_type: i32
+    var_type: f64
     event_name: LANDING_LIGHTS_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:LIGHT TAXI:1
     var_units: Bool
-    var_type: i32
+    var_type: f64
     event_name: TAXI_LIGHTS_SET
     event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT STROBE:0
-    var_units: Bool
-    var_type: i32
-    event_name: STROBES_SET
-    event_param: 0
 
   - # Interior
     type: NumSet
@@ -128,11 +120,11 @@ shared:
     event_param: 1
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
+    var_name: A:LIGHT PANEL POWER SETTING:1
     var_units: Percent
     var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
     index_reversed: true
   -
     type: NumSet
@@ -145,7 +137,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:1
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 1
     index_reversed: true
@@ -160,7 +152,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:2
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 2
     index_reversed: true
@@ -175,32 +167,18 @@ shared:
     type: NumSet
     var_name: A:LIGHT PEDESTRAL POWER SETTING:1
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
     event_param: 1
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT GLARESHIELD:1
-    var_units: Bool
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD POWER SETTING:1
+    var_name: A:LIGHT POTENTIOMETER:3
     var_units: Percent
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_POWER_SETTING_SET
-    event_param: 1
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
     index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD:2
-    var_units: Bool
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 2
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -211,30 +189,12 @@ shared:
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:7
+    var_name: A:LIGHT POTENTIOMETER:6
     var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 7
+    event_param: 6
     index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:15
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 15
-    index_reversed: true
-
-  - # LVAR's
-    type: var
-    var_name: L:XMLVAR_DayNightSwitch
-  -
-    type: var
-    var_name: L:XMLVAR_WarningsAttenuated
-  -
-    type: var
-    var_name: L:XMLVAR_GPS_Approach
 
 server:
   -
