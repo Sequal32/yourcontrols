@@ -231,6 +231,7 @@
 - FlyByWire A32NX: Reverted some changes that broke AP knobs in last update.
 
 ### Issues
+
 ![image](https://cdn.discordapp.com/attachments/765289974232252466/1028444695069737030/fbwkeepoff.png)
 
 ## Version 2.7.2
