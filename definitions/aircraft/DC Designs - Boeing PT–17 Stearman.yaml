@@ -1,8 +1,8 @@
-# Version 0.1.79
+# Version 1.0.6
 
 include:
-  - definitions/modules/Avionics/Aera.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -15,41 +15,37 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Interior
-    type: NumSet
-    var_name: A:LIGHT PANEL:1
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:19
     var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-    event_param: 1
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 19
+
+  - # LVAR's
+    type: var
+    var_name: L:RAD_Selector:1
   -
-    type: NumSet
-    var_name: A:LIGHT PANEL POWER SETTING:1
-    var_units: Percent
-    var_type: f64
-    event_name: PANEL_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
+    type: var
+    var_name: L:Control Lock
   -
-    type: NumSet
-    var_name: A:LIGHT CABIN:1
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 1
+    type: var
+    var_name: L:Crew Visibility
   -
-    type: NumSet
-    var_name: A:LIGHT CABIN POWER SETTING:1
-    var_units: Percent
-    var_type: f64
-    event_name: CABIN_LIGHTS_POWER_SETTING_SET
-    event_param: 1
-    index_reversed: true
+    type: var
+    var_name: L:Smoke Visibility
+  -
+    type: var
+    var_name: L:PILOT_VISIBLE
+  -
+    type: var
+    var_name: L:STUDENT_VISIBLE
 
 server:
   -
     type: var
-    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_name: A:FUEL TANK CENTER LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true

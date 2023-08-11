@@ -1,0 +1,1171 @@
+# Version 1.0.5
+
+include:
+  - definitions/modules/Avionics/AS1000.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Avionics master
+    type: CustomCalculator
+    get: 14 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+    set: 4 14 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 15 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
+    set: 5 15 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # Avionics bus
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:8, Bool)
+    set: 8 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 9 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
+    set: 3 9 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Battery
+    type: CustomCalculator
+    get: 3 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
+    set: 11 3 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+
+  - # Electric fan
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:59
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 59
+
+  - # Fuel
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:1
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:2
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:3
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 4
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:0
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Number
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:23
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 23
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:24
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 24
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:4
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 4
+
+  - # LVAR's
+    type: var
+    var_name: L:WALKAROUND_LEFT_TIEDOWN
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WALKAROUND_RIGHT_TIEDOWN
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WALKAROUND_LEFT_WHEEL_CHOCKS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WALKAROUND_RIGHT_WHEEL_CHOCKS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WALKAROUND_FRONT_WHEEL_CHOCKS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WALKAROUND_LEFT_PITOT_COVER
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WALKAROUND_RIGHT_PITOT_COVER
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_P2006T_PAPER_CHECKLIST_PLACED
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_OIL_LEVEL_PERCENT_1
+  -
+    type: var
+    var_name: L:FSS_P2006T_OPSMODE
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_PROPELLER_OFFSET_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_RPM_OVD_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_PROP_STOPPED_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_STARTER_LH
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_PROP_SIM_BUBBLING_LEFT
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_PROPELLER_STATE_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_OIL_LEVEL_PERCENT_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_PROPELLER_OFFSET_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_RPM_OVD_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_PROP_STOPPED_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_STARTER_RH
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_PROP_SIM_BUBBLING_RIGHT
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_PROPELLER_STATE_2
+  -
+    type: var
+    var_name: L:FSS_P2006T_DOOR_EMERGENCY_HANDLE
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_Yoke_R
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Yoke_R_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_STARTER_DIM_SCALE
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden2
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_LANDING_GEAR_TRANSITION_STOPPED
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness
+  -
+    type: var
+    var_name: L:FIRE_DETECT_TEST
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_IGNITION_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_IGNITION_2
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_BRIGHTNESS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_P2006T_TABLET_STORED
+  -
+    type: var
+    var_name: L:FSS_P2006T_PAPER_CHECKLIST_SIDE
+  -
+    type: var
+    var_name: L:FSS_P2006T_PERF_CHART_ACTIVE
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_TIRE_CHECK_LEFT
+  -
+    type: var
+    var_name: L:WALKAROUND_LEFT_WHEEL
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_LEFT_WHEEL_VISIBLE
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_LEFT_WHEEL_MOUSE_HOVER
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_TIRE_CHECK_RIGHT
+  -
+    type: var
+    var_name: L:WALKAROUND_RIGHT_WHEEL
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_RIGHT_WHEEL_VISIBLE
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_RIGHT_WHEEL_MOUSE_HOVER
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_TIRE_CHECK_FRONT
+  -
+    type: var
+    var_name: L:WALKAROUND_FRONT_WHEEL
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_FRONT_WHEEL_VISIBLE
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_FRONT_WHEEL_MOUSE_HOVER
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_PROPELLER_MANUAL_LEFT
+  -
+    type: var
+    var_name: L:WALKAROUND_LEFT_PROPELLER
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_PROPELLER_MANUAL_RIGHT
+  -
+    type: var
+    var_name: L:WALKAROUND_RIGHT_PROPELLER
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_AILERON_MANUAL_LEFT
+  -
+    type: var
+    var_name: L:WALKAROUND_LEFT_AILERON
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_AILERON_MANUAL_RIGHT
+  -
+    type: var
+    var_name: L:WALKAROUND_RIGHT_AILERON
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_ELEVATOR_MANUAL
+  -
+    type: var
+    var_name: L:WALKAROUND_ELEVATOR
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_LEFT_OIL_LEVEL_VISIBLE
+  -
+    type: var
+    var_name: L:WALKAROUND_LEFT_OIL_LEVEL
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_RIGHT_OIL_LEVEL_VISIBLE
+  -
+    type: var
+    var_name: L:WALKAROUND_RIGHT_OIL_LEVEL
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_P2006T_EMERGENCY_GEAR_LH_HANDLE
+  -
+    type: var
+    var_name: L:FSS_P2006T_EMERGENCY_GEAR_RH_HANDLE
+  -
+    type: var
+    var_name: L:FSS_P2006T_EMERGENCY_GEAR_PUMP_MAX_COUNT
+  -
+    type: var
+    var_name: L:FSS_P2006T_EMERGENCY_GEAR_PUMP_ON_TIME
+  -
+    type: var
+    var_name: L:FSS_P2006T_FAN_NOZZLE_FRONT_L
+  -
+    type: var
+    var_name: L:FSS_P2006T_FAN_NOZZLE_FRONT_R
+  -
+    type: var
+    var_name: L:FSS_P2006T_FAN_NOZZLE_BACK
+  -
+    type: var
+    var_name: L:FSS_P2006T_FAN_NOZZLE_BACK_L
+  -
+    type: var
+    var_name: L:FSS_P2006T_FAN_NOZZLE_BACK_R
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BACKUP_DISPLAY_BATTERY_TIME
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BACKUP_DISPLAY_BATTERY
+  -
+    type: var
+    var_name: L:FSS_P2006T_PREHEATER_ON_1
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_P2006T_PREHEATER_ON_2
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FUEL_PRESSURE_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_TEMP_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_THROTTLE_1
+  -
+    type: var
+    var_name: L:FSS_P2006T_ENGINE_SIM_CHOKE_1
+  -
+    type: var
+    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_HOLD_RPM_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_GAUGE_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_OVD_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_TEMP_OVD_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FUEL_PRESSURE_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_TEMP_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_THROTTLE_2
+  -
+    type: var
+    var_name: L:FSS_P2006T_ENGINE_SIM_CHOKE_2
+  -
+    type: var
+    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_HOLD_RPM_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_GAUGE_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_OVD_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_TEMP_OVD_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_AVIONIC_FAN
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_ELECTRIC_FAN
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_FUELPUMP_LH
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_FUELPUMP_RH
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_2
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+  -
+    type: var
+    var_name: L:FSS_AP_55X_MASTER_SWITCH
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_ELT_SWITCH
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_4
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BRAKE_SIM_EVENT_TYPE
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BRAKE_SIM_EVENT_PARAM_LEFT
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BRAKE_SIM_EVENT_PARAM_RIGHT
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:FSS_P2006T_BACKUP_BARO_PRESSURE_MB
+    interpolate: Default
+  -
+    type: var
+    var_name: L:FSS_P2006T_BACKUP_BARO_UNIT_IS_HG
+  -
+    type: var
+    var_name: L:FSS_P2006T_BACKUP_ALT_UNIT_IS_FT
+# -
+#   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_XTK
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_True
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_CDI_Scale
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Distance
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Destination_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Egress_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_DTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_XTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Tracking
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Transition_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Vector_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Course_To_Steer
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Suspended
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_BOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Distance_In_Leg
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_TOD
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_BOD
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOC_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_BOC_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOC_Distance_In_Leg
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_TOC
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_BOC
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_State
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Available
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Next_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Target_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_FPA
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_VNAV_Required_VS
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Alt_Capture_Type
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Service_Level
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_GP_FPA
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_OIL_LEVEL_PERCENT_SET_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_OIL_LEVEL_LITER_SET_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_OIL_LEVEL_LITER_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_OIL_LEVEL_PERCENT_SET_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_OIL_LEVEL_LITER_SET_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_OIL_LEVEL_LITER_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_TACH_TIME_SET_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_TACH_TIME_SET_2
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_CARB_HEAT_LEVER_1
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_CARB_HEAT_LEVER_2
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_ENGINE_CHOKE_1
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_ENGINE_CHOKE_2
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_YOKE_CWS
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_BACKUP_BATTERY_COVER
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_MASTER_BATTERY
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_PITOT_HEAT
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_AP_MASTER_SWITCH
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_AVIONICS_LH_SWITCH
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_AVIONICS_RH_SWITCH
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_CROSSBUS_LH_SWITCH
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_CROSSBUS_RH_SWITCH
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_STARTER_LH_BUTTON
+  -
+    type: var
+    var_name: L:FSS_P2006T_BINDING_STARTER_RH_BUTTON
+# -
+#   type: var
+#   var_name: L:WT1000_Fuel_GalRemaining
+# -
+#   type: var
+#   var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_State
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
+#   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
+#   var_name: L:WTG1000_Mod_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG1000_Mod_State
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_TACH_TIME_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_TACH_TIME_2
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_State
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Approach_Mode
+# -
+#   type: var
+#   var_name: L:WTG1000_PFD_Mod_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG1000_PFD_Mod_State
+# -
+#   type: var
+#   var_name: L:WasmInstrument_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:fss-efb-map_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:fss-efb-map_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:EFB_MapShowCursor
+# -
+#   type: var
+#   var_name: L:EFB_MapZoomRange
+# -
+#   type: var
+#   var_name: L:fss-efb-template_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:fss-efb-template_State
+# -
+#   type: var
+#   var_name: L:WalkaroundPanel_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WalkaroundPanel_State
+# -
+#   type: var
+#   var_name: L:AEROSOFT_ONE_MSFS_UTILITIES_CONFIG1
+# -
+#   type: var
+#   var_name: L:Sim_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:Sim_State
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BRAKE_SIM_USAGE
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BINDING_BRAKE_LEFT
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BINDING_BRAKE_RIGHT
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BRAKE_SIM_PRESSURE
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BRAKE_SIM_CONDITION
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_PROPELLER_AUDIO_PITCH_LEFT
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_PROPELLER_AUDIO_PITCH_RIGHT
+# -
+#   type: var
+#   var_name: L:OilPanel_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:OilPanel_1_State
+# -
+#   type: var
+#   var_name: L:OilPanel_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:OilPanel_2_State
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_UPDATE_COUNTER
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_UPDATE_RATE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_UPDATE_VARIANCE
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_CANOPY
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_BAGGAGE
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_BLOCKS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_COPILOT
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_PITOTCOVER
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_SAFETYPIN
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_GPU
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_OPSMODE
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_AIRCRAFT_OPTIONS_BRAKE
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:WT1000_AP_G1000_INSTALLED
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AP_KAP140_INSTALLED
+# -
+#   type: var
+#   var_name: L:WT1000_AP_KAP140_INSTALLED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - fss-efb-template#brightnessSlider
+  - fss-efb-template#efbOptionsContainer
+  - fss-efb-template#fss-nav-input-search
+  - FSS_P2006T_BRAKE_SIM_EVENT_AXIS_LEFT
+  - FSS_P2006T_BRAKE_SIM_EVENT_AXIS_RIGHT
+  - FSS_P2006T_BRAKE_SIM_CONDITION_SET
+
+  - fss-efb-template#efbPreflightButton1
+  - fss-efb-template#efbPreflightButton2
+  - fss-efb-template#efbPreflightButton3
+  - fss-efb-template#efbPreflightButton4
+  - fss-efb-template#efbPreflightButton5
+  - fss-efb-template#efbPreflightButton6
+  - fss-efb-template#efbPreflightButton7
+  - fss-efb-template#efbWeightsBar1
+  - fss-efb-template#efbWeightsBar2
+  - fss-efb-template#efbWeightsBar3
+  - fss-efb-template#efbWeightsBar4
+  - fss-efb-template#efbWeightsBar5
+  - fss-efb-template#efbWeightsBar6
+  - fss-efb-template#efbWeightsBar7
+  - fss-efb-template#efbWeightsBarContainer1
+  - fss-efb-template#efbWeightsBarContainer2
+  - fss-efb-template#efbWeightsBarContainer3
+  - fss-efb-template#efbWeightsBarContainer4
+  - fss-efb-template#efbWeightsBarContainer5
+  - fss-efb-template#efbWeightsBarContainer6
+  - fss-efb-template#efbWeightsBarContainer7

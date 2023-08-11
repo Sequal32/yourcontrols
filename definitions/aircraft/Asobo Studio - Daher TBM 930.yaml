@@ -1,4 +1,4 @@
-# Version 0.1.113 / 1.0.1 Enhanced
+# Version 0.1.115 / 1.0.1 Enhanced
 
 include:
   - definitions/modules/autopilot.yaml
@@ -58,21 +58,21 @@ shared:
 
   - # Front left door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:2
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 3
   - # Rear left door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:1
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
   - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
@@ -160,18 +160,15 @@ shared:
   - # LVAR's
     type: var
     var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
   -
     type: var
     var_name: L:XMLVAR_Elec_Generator_Switch_State
   -
     type: var
     var_name: L:XMLVAR_Elec_CrashBar_State
+  -
+    type: var
+    var_name: L:WT_TOGA_ACTIVE
   -
     type: var
     var_name: L:XMLVAR_Elec_Source_Switch_State
@@ -220,9 +217,11 @@ shared:
   -
     type: var
     var_name: L:XMLVar_Pilot_Door_Handle_Position
+    unreliable: true
   -
     type: var
     var_name: L:XMLVar_Cabin_Door_Handle_Position
+    unreliable: true
   -
     type: var
     var_name: L:XMLVAR_BoostFuelPump
@@ -241,18 +240,39 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
-  -
-    type: var
-    var_name: L:WTG3000_TBM930_Backlight
+# -
+#   type: var
+#   var_name: L:WTG3000_TBM930_Backlight
 # -
 #   type: var
 #   var_name: L:XMLVAR_PushXFR
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:XMLVAR_InertSep1_Deployment
 # -
 #   type: var
 #   var_name: L:XMLVAR_InertSep1_Active
+# -
+#   type: var
+#   var_name: L:WTG3000_Pfd_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Mfd_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Pfd_Backlight:2
+# -
+#   type: var
+#   var_name: L:WTG3000_Gtc_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Gtc_Backlight:2
 # -
 #   type: var
 #   var_name: L:LANDING_GEAR_Gear
@@ -301,6 +321,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
 # -
 #   type: var
 #   var_name: L:Generic_Master_Caution_Active
@@ -465,9 +488,6 @@ shared:
 #   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
 # -
 #   type: var
-#   var_name: L:YourControlsPanelId
-# -
-#   type: var
 #   var_name: L:WTG3000_PFD_1_ScreenLuminosity
 # -
 #   type: var
@@ -559,14 +579,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Baro3_SavedPressure
-  -
-    type: var
-    var_name: L:WTFltTimer_Mode:1
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:WTFltTimer_Running:1
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Mode:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Running:1
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Reference_Time:1
@@ -579,14 +597,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Value:1
-  -
-    type: var
-    var_name: L:WTFltTimer_Mode:2
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:WTFltTimer_Running:2
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Mode:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Running:2
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Reference_Time:2
@@ -608,6 +624,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTG3000_Weight_Fuel_Holding_Fuel
+# -
+#   type: var
+#   var_name: L:WTG3000_Auto_Backlight
 # -
 #   type: var
 #   var_name: L:WT1000_AP_G1000_INSTALLED

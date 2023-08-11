@@ -454,60 +454,36 @@ shared:
     event_param: 97
     index_reversed: true
 
-  - # Cabin Door
+  - # MID L Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
     event_param: 1
-  - # Jetway
+  - # FWD R Cabin Door
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_JETWAY
+    event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
-    use_calculator: true
-  - # Ramp Truck
+    event_param: 2
+  - # FWD/AFT R Cargo Doors
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:2
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_RAMPTRUCK
+    event_name: TOGGLE_AIRCRAFT_EXIT
     cancel_h_events: true
-    use_calculator: true
-  - # Catering Truck
+    event_param: 3
+  - # GPU Truck
     type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:1
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_CATERING
-    cancel_h_events: true
-    use_calculator: true
-  - # Luggage Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:2
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_LUGGAGE
-    cancel_h_events: true
-    use_calculator: true
-  - # GPU
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:3
+    var_name: A:INTERACTIVE POINT GOAL:3
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
-    cancel_h_events: true
-    use_calculator: true
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:9
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
     cancel_h_events: true
     use_calculator: true
 
@@ -634,7 +610,7 @@ shared:
     type: NumSet
     var_name: A:CIRCUIT POWER SETTING:77
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 77
     index_reversed: true
@@ -649,7 +625,7 @@ shared:
     type: NumSet
     var_name: A:CIRCUIT POWER SETTING:80
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
     event_param: 80
     index_reversed: true
@@ -4638,76 +4614,76 @@ shared:
   -
     type: var
     var_name: L:A32NX_OVHD_ELEC_COMMERCIAL_PB_HAS_FAULT
-  -
-    type: var
-    var_name: L:A32NX_PAX_A
-  -
-    type: var
-    var_name: L:A32NX_PAX_A_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_B
-  -
-    type: var
-    var_name: L:A32NX_PAX_B_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_C
-  -
-    type: var
-    var_name: L:A32NX_PAX_C_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_D
-  -
-    type: var
-    var_name: L:A32NX_PAX_D_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_E
-  -
-    type: var
-    var_name: L:A32NX_PAX_E_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_F
-  -
-    type: var
-    var_name: L:A32NX_PAX_F_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_G
-  -
-    type: var
-    var_name: L:A32NX_PAX_G_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_H
-  -
-    type: var
-    var_name: L:A32NX_PAX_H_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_I
-  -
-    type: var
-    var_name: L:A32NX_PAX_I_DESIRED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_PAX_J
-  -
-    type: var
-    var_name: L:A32NX_PAX_J_DESIRED
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_A
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_A_DESIRED
+#   cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_B
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_B_DESIRED
+#   cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_C
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_C_DESIRED
+#   cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_D
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_D_DESIRED
+#   cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_E
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_E_DESIRED
+#   cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_F
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_F_DESIRED
+#   cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_G
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_G_DESIRED
+#   cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_H
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_H_DESIRED
+#   cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_I
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_I_DESIRED
+#   cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_J
+# -
+#   type: var
+#   var_name: L:A32NX_PAX_J_DESIRED
+#   cancel_h_events: true
   -
     type: var
     var_name: L:A32NX_CARGO_FWD_BAGGAGE_CONTAINER
@@ -6286,22 +6262,18 @@ master:
   - # Throttles
     type: var
     var_name: L:A32NX_AUTOTHRUST_TLA:1
-    var_type: f64
     unreliable: true
   -
     type: var
     var_name: L:A32NX_AUTOTHRUST_TLA:2
-    var_type: f64
     unreliable: true
   -
     type: var
     var_name: L:A32NX_THROTTLE_MAPPING_INPUT:1
-    var_type: f64
     unreliable: true
   -
     type: var
     var_name: L:A32NX_THROTTLE_MAPPING_INPUT:2
-    var_type: f64
     unreliable: true
 
   - # Brake temp (sends A TON of data, keep slow update)
@@ -6343,104 +6315,6 @@ master:
     type: var
     var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_8
     var_type: i32
-    unreliable: true
-
-server:
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:1
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:2
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:3
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:4
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:5
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:6
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:7
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:8
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:9
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:10
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:11
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:12
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:13
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:14
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:15
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:16
-    var_units: Pounds
-    var_type: f64
     unreliable: true
 
 ignore:

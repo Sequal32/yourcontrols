@@ -1,4 +1,4 @@
-# Version 0.1.102 / 1.0.0 Enhanced
+# Version 0.1.106 / 1.0.0 Enhanced
 
 include:
   - definitions/modules/autopilot.yaml
@@ -21,22 +21,6 @@ shared:
     var_type: bool
     event_name: APU_STARTER
     off_event_name: APU_OFF_SWITCH
-
-  - # L BATT
-    type: CustomCalculator
-    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
-    set: 3 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # R BATT
-    type: CustomCalculator
-    get: 6 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
-    set: 4 6 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # STBY PWR
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL MASTER BATTERY:3
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_MASTER_BATTERY
-    event_param: 3
 
   - # Altimeter
     type: NumSet
@@ -87,6 +71,21 @@ shared:
     event_name: SET_EXTERNAL_POWER
     event_param: 1
     index_reversed: true
+  - # STBY PWR
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 3
+  - # L BATT
+    type: CustomCalculator
+    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
+    set: 3 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # R BATT
+    type: CustomCalculator
+    get: 6 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+    set: 4 6 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
   - # MAIN 1
     type: CustomCalculator
     get: 7 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
@@ -103,39 +102,40 @@ shared:
     type: CustomCalculator
     get: 6 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
     set: 2 6 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # Bus Tie
+    type: CustomCalculator
+    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
+    set: 6 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
-  - # GPU
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:2
+  - # Generators (not syncing)
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
-    var_type: bool
-    event_name: REQUEST_POWER_SUPPLY
-    use_calculator: true
-    event_param: 2
-  - # GPU
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:3
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_POWER_SUPPLY
-    use_calculator: true
-    event_param: 3
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:0
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
-    use_calculator: true
-    event_param: 0
-  - # Fuel Truck
-    type: ToggleSwitch
-    var_name: A:INTERACTIVE POINT OPEN:1
-    var_units: Bool
-    var_type: bool
-    event_name: REQUEST_FUEL_KEY
-    use_calculator: true
+    var_type: i32
+    event_name: ALTERNATOR_SET
     event_param: 1
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 2
+
+  - # GPU Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_POWER_SUPPLY
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:3
+    var_units: Bool
+    var_type: bool
+    event_name: REQUEST_POWER_SUPPLY
+    use_calculator: true
 
   - # Engines
     type: NumSet
@@ -189,7 +189,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT PANEL POWER SETTING:1
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 1
     index_reversed: true
@@ -204,7 +204,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:1
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 1
     index_reversed: true
@@ -219,7 +219,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:2
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 2
     index_reversed: true
@@ -234,7 +234,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:3
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 3
     index_reversed: true
@@ -327,6 +327,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
+  -
+    type: var
+    var_name: L:WT_TOGA_ACTIVE
 # -
 #   type: var
 #   var_name: L:XMLVAR_BatterySTBY_SwitchState
@@ -336,9 +339,30 @@ shared:
   -
     type: var
     var_name: L:WT_LNG_FUEL_PUMP_1_ON
-  -
-    type: var
-    var_name: L:WTG3000_Auto_Backlight
+# -
+#   type: var
+#   var_name: L:WTG3000_Mfd_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Pfd_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Pfd_Backlight:2
+# -
+#   type: var
+#   var_name: L:WTG3000_Gtc_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Gtc_Backlight:2
+# -
+#   type: var
+#   var_name: L:WTG3000_Gtc_Backlight:3
+# -
+#   type: var
+#   var_name: L:WTG3000_Gtc_Backlight:4
+# -
+#   type: var
+#   var_name: L:WTG3000_Auto_Backlight
   -
     type: var
     var_name: L:WT_LNG_L_MAIN_MISSION_CONN
@@ -387,9 +411,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_STBYBattery_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_APU_StarterKnob_Pos
+# -
+#   type: var
+#   var_name: L:XMLVAR_APU_StarterKnob_Pos
   -
     type: var
     var_name: L:WT_LNG_ENGINE_HALO_LIGHT_1
@@ -635,12 +659,6 @@ shared:
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
-# -
-#   type: var
 #   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
@@ -803,6 +821,21 @@ shared:
 #   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
 # -
 #   type: var
+#   var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Approach_Mode
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value:2
+# -
+#   type: var
 #   var_name: L:WTG3000_PFD_1_ScreenLuminosity
 # -
 #   type: var
@@ -863,31 +896,16 @@ shared:
 #   var_name: L:HourMeter_State
 # -
 #   type: var
-#   var_name: L:WT_MINIMUMS_MODE
+#   var_name: L:XMLVAR_Baro2_ForcedToSTD
 # -
 #   type: var
-#   var_name: L:WTAP_GP_Approach_Mode
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro1_ForcedToSTD
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro1_SavedPressure
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Value:2
+#   var_name: L:XMLVAR_Baro2_SavedPressure
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro2_ForcedToSTD
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro2_SavedPressure
 # -
 #   type: var
 #   var_name: L:FADEC_OIL_TEMP_LOW_AMBER_1
@@ -903,14 +921,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_LNG_ECS_ACTIVE
-  -
-    type: var
-    var_name: L:WTFltTimer_Mode:1
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:WTFltTimer_Running:1
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Mode:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Running:1
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Reference_Time:1
@@ -923,14 +939,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Value:1
-  -
-    type: var
-    var_name: L:WTFltTimer_Mode:2
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:WTFltTimer_Running:2
-    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Mode:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Running:2
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Reference_Time:2
@@ -1020,21 +1034,6 @@ shared:
 #   var_name: L:WT3000_Fuel_Burned
 # -
 #   type: var
-#   var_name: L:WT_LNG_LEFT_BRAKE_INPUT
-# -
-#   type: var
-#   var_name: L:WT_LNG_RIGHT_BRAKE_INPUT
-# -
-#   type: var
-#   var_name: L:WT_LNG_PARKING_BRAKE
-# -
-#   type: var
-#   var_name: L:WT_LNG_AILERONS_INPUT
-# -
-#   type: var
-#   var_name: L:WT_LNG_RUDDER_INPUT
-# -
-#   type: var
 #   var_name: L:WTG3000_MFD_1_Avionics_Status
 # -
 #   type: var
@@ -1060,6 +1059,24 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+# -
+#   type: var
+#   var_name: L:WT_LNG_LEFT_BRAKE_INPUT
+# -
+#   type: var
+#   var_name: L:WT_LNG_RIGHT_BRAKE_INPUT
+# -
+#   type: var
+#   var_name: L:WT_LNG_PARKING_BRAKE
+# -
+#   type: var
+#   var_name: L:WT_LNG_AILERONS_INPUT
+# -
+#   type: var
+#   var_name: L:WT_LNG_RUDDER_INPUT
+# -
+#   type: var
+#   var_name: L:WT_LNG_AVIONICS_POWER_ACTIVE
 
 server:
   -

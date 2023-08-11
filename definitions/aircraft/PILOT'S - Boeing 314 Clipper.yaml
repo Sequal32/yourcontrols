@@ -1,0 +1,700 @@
+# Version 1.6.2
+
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:3
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG3
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:4
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG4
+
+  - # Electrical
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:3
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER3_SET
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:4
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER4_SET
+  -
+    type: event
+    event_name: SET_STARTER3_HELD
+  -
+    type: event
+    event_name: SET_STARTER4_HELD
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:3
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO3_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:3
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO3_RIGHT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG LEFT MAGNETO:4
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO4_LEFT
+  -
+    type: NumSet
+    var_name: A:RECIP ENG RIGHT MAGNETO:4
+    var_units: Bool
+    var_type: f64
+    event_name: MAGNETO4_RIGHT
+  -
+    type: event
+    event_name: MAGNETO3_SET
+  -
+    type: event
+    event_name: MAGNETO4_SET
+
+  - # Engines
+    type: NumSet
+    var_name: A:RECIP ENG COWL FLAP POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: COWLFLAP3_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:RECIP ENG COWL FLAP POSITION:4
+    var_units: Position 16k
+    var_type: f64
+    event_name: COWLFLAP4_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE3_SET
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:4
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE4_SET
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: PROP_PITCH3_SET
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:4
+    var_units: Position 16k
+    var_type: f64
+    event_name: PROP_PITCH4_SET
+    interpolate: Default
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:RECIP ENG PRIMER:3
+    var_units: Percent
+    var_type: i32
+    event_name: TOGGLE_PRIMER3
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:RECIP ENG PRIMER:4
+    var_units: Percent
+    var_type: i32
+    event_name: TOGGLE_PRIMER4
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:3
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_3_SET
+  -
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:4
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_4_SET
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:5
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 5
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:6
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 6
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 10
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 11
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:13
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 13
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:14
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 14
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:15
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 15
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 16
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:18
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 18
+    index_reversed: true
+
+  - # Mooring switch
+    type: ToggleSwitch
+    var_name: A:IS LATITUDE LONGITUDE FREEZE ON
+    var_units: Bool
+    var_type: bool
+    event_name: FREEZE_LATITUDE_LONGITUDE_TOGGLE
+
+  - # LVAR's (314A)
+    type: var
+    var_name: L:CLIPPER_GYROPILOT_Attitude_Cage_1
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Attitude_1
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Attitude_Pitch_1
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Attitude_Pitch_1_LastKnown
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Attitude_Bank_1
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Attitude_Bank_1_LastKnown
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Attitude_Erection_Rate
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Attitude_Bank_1_LastKnown_1
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Needle_Rudder_Pressure
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Needle_Elevator_Pressure
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Needle_Aileron_Pressure
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Needle_Oil_Pressure
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Needle_ControlGain_Rudder
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Needle_ControlGain_Aileron
+# -
+#   type: var
+#   var_name: L:CLIPPER_GYROPILOT_Needle_ControlGain_Elevator
+  -
+    type: var
+    var_name: L:CLIPPER_GYROPILOT_Attitude_Set_Pitch_1
+  -
+    type: var
+    var_name: L:CLIPPER_GYROPILOT_Attitude_Set_Bank_1
+  -
+    type: var
+    var_name: L:CLIPPER_GYROPILOT_Attitude_Knob_Aircraft
+  -
+    type: var
+    var_name: L:CLIPPER_MISC_Switch_Warning_Lights_Test
+# -
+#   type: var
+#   var_name: L:CLIPPER_MISC_Light_Warning_Oil_Pressure_Low
+# -
+#   type: var
+#   var_name: L:CLIPPER_MISC_Light_Warning_Fuel_Pressure_Low
+# -
+#   type: var
+#   var_name: L:CLIPPER_MISC_Light_Warning_Vacuum_1
+# -
+#   type: var
+#   var_name: L:CLIPPER_MISC_Light_Warning_Vacuum_2
+# -
+#   type: var
+#   var_name: L:CLIPPER_MISC_Light_Warning_CO_1
+# -
+#   type: var
+#   var_name: L:CLIPPER_MISC_Light_Warning_CO_2
+# -
+#   type: var
+#   var_name: L:CLIPPER_MISC_Light_Warning_Oil_In_Temp
+  -
+    type: var
+    var_name: L:CLIPPER_FUEL_Knob_Fuel_Distributor_34
+  -
+    type: var
+    var_name: L:CLIPPER_FUEL_Knob_Fuel_Selector_Port_Tank
+  -
+    type: var
+    var_name: L:CLIPPER_FUEL_Knob_Fuel_Selector_Starboard_Tank
+  -
+    type: var
+    var_name: L:CLIPPER_FUEL_Knob_Fuel_Distributor_12
+# -
+#   type: var
+#   var_name: L:CLIPPER_MISC_Light_Warning_Engine_Fire
+  -
+    type: var
+    var_name: L:CLIPPER_FIRE_Knob_Bottle_Selector_1
+  -
+    type: var
+    var_name: L:CLIPPER_FIRE_Knob_Bottle_Selector_2
+  -
+    type: var
+    var_name: L:XMLVAR_CLIPPER_FIRE_Knob_Bottle_Selector_1_Animation_Position
+  -
+    type: var
+    var_name: L:XMLVAR_CLIPPER_FIRE_Knob_Bottle_Selector_2_Animation_Position
+  -
+    type: var
+    var_name: L:CLIPPER_ELECTRICAL_Switch_Gen2Batt_1
+  -
+    type: var
+    var_name: L:CLIPPER_ELECTRICAL_Switch_Gen2Batt_2
+  -
+    type: var
+    var_name: L:CLIPPER_FUEL_Knob_Fuel_HydroStab
+  -
+    type: var
+    var_name: L:CLIPPER_FUEL_Knob_Fuel_RefuelSelect
+  -
+    type: var
+    var_name: L:CLIPPER_ENGINE_Lever_Manifold_Lock
+  -
+    type: var
+    var_name: L:CLIPPER_ENGINE_Knob_Feather_Select
+  -
+    type: var
+    var_name: L:CLIPPER_ENGINE_Lever_Cowl_Flap_Lock
+  -
+    type: var
+    var_name: L:CLIPPER_INSTRUMENT_Drum_RDF_1_offset
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPPER_INSTRUMENT_Drum_RDF_2_offset
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden3
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden4
+  -
+    type: var
+    var_name: L:CLIPPER_GYROPILOT_Power_Levers
+  -
+    type: var
+    var_name: L:CLIPPER_GYROPILOT_Lever_Toggle
+  -
+    type: var
+    var_name: L:XMLVAR_Carb_Heat_Gauge_Knob12_State
+# -
+#   type: var
+#   var_name: L:(L:XMLVAR_Carb_Heat_Gauge_Knob12_State)
+  -
+    type: var
+    var_name: L:XMLVAR_Carb_Heat_Gauge_Knob34_State
+# -
+#   type: var
+#   var_name: L:(L:XMLVAR_Carb_Heat_Gauge_Knob34_State)
+  -
+    type: var
+    var_name: L:HANDLING_Switch_Flaps_Clipper_1
+  -
+    type: var
+    var_name: L:HANDLING_Switch_Flaps_Clipper_2
+  -
+    type: var
+    var_name: L:HANDLING_Switch_Flaps_Clipper
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+  -
+    type: var
+    var_name: L:CLIPPER_Handling_RudderPedals_L_Adjust_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPPER_Handling_RudderPedals_R_Adjust_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPPER_Handling_RudderPedals_L_Adjust_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPPER_Handling_RudderPedals_R_Adjust_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPPER_MISC_Push_Call_Radio
+  -
+    type: var
+    var_name: L:CLIPPER_MISC_Push_Call_Engineer
+  -
+    type: var
+    var_name: L:CLIPPER_MISC_Push_Call_Navigator
+  -
+    type: var
+    var_name: L:CLIPPER_MISC_Push_Call_Steward
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:2
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:3
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:4
+# -
+#   type: var
+#   var_name: L:CLIPPER_MISC_Light_Warning_Vacuum_Oil_In_Temp
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden3
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden4
+  -
+    type: var
+    var_name: L:CLIPPER_INSTRUMENT_Switch_Toggle_NAV_1
+  -
+    type: var
+    var_name: L:CLIPPER_INSTRUMENT_Switch_Toggle_NAV_2
+  -
+    type: var
+    var_name: L:CLIPPER_INSTRUMENT_Switch_Toggle_COM_1
+  -
+    type: var
+    var_name: L:CLIPPER_INSTRUMENT_Switch_Toggle_COM_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:CopilotVisible
+  -
+    type: var
+    var_name: L:CLIPPER_INSTRUMENT_Needle_Direction_Indicator_2_4
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPPER_INSTRUMENT_Needle_Direction_Indicator_2_5
+    unreliable: true
+  -
+    type: var
+    var_name: L:CLIPPER_Handling_Armrest_1_1
+  -
+    type: var
+    var_name: L:CLIPPER_Handling_Armrest_2_2
+  -
+    type: var
+    var_name: L:CLIPPER_Handling_Armrest_3_3
+  -
+    type: var
+    var_name: L:CLIPPER_Handling_Armrest_4_4
+  -
+    type: var
+    var_name: L:AIRCRAFT_Lever_Exit_1
+  -
+    type: var
+    var_name: L:AIRCRAFT_Lever_Exit_2
+  -
+    type: var
+    var_name: L:AIRCRAFT_Lever_Exit_3
+  -
+    type: var
+    var_name: L:AIRCRAFT_Lever_Exit_4
+  -
+    type: var
+    var_name: L:AIRCRAFT_Lever_Exit_5
+  -
+    type: var
+    var_name: L:AIRCRAFT_Lever_Exit_6
+  -
+    type: var
+    var_name: L:CLIPPER_Wing_Door_Starboard
+  -
+    type: var
+    var_name: L:CLIPPER_Wing_Door_Port
+  -
+    type: var
+    var_name: L:CLIPPER_MOORING_HOLD
+  -
+    type: var
+    var_name: L:CLIPPER_LANDING_LIGHTS_ACTIVE
+  -
+    type: var
+    var_name: L:LIGHTING_Switch_Light_LANDING_1
+  -
+    type: var
+    var_name: L:LIGHTING_Switch_Light_LANDING_2
+
+master:
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE3_SET
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:4
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE4_SET
+    interpolate: Default
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT TIP LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT TIP LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:10
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

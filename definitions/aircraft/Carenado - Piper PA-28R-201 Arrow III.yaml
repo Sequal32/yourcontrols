@@ -21,21 +21,21 @@ include:
 shared:
   - # Doors
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:0
+    var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 1
   -
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:1
+    var_name: A:INTERACTIVE POINT GOAL:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
   -
     type: ToggleSwitch
-    var_name: A:EXIT OPEN:3
+    var_name: A:INTERACTIVE POINT GOAL:3
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
@@ -121,7 +121,7 @@ shared:
     type: NumSet
     var_name: A:LIGHT CABIN POWER SETTING:1
     var_units: Percent
-    var_type: i32
+    var_type: f64
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 1
     index_reversed: true

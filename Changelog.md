@@ -1,5 +1,39 @@
 # YourControls Changelog
 
+## Version 2.7.10
+
+### Profiles
+
+- Added: Boeing 314 Clipper by PILOT'S (v1.6.2).
+- Added: Boeing PT–17 Stearman by DC Designs (v1.0.6).
+- Added: Dornier Do J Wal by Microsoft & Oliver Moser (v0.1.1).
+- Added: Latecoere 631 by Microsoft & Bluemesh (v1.0.6).
+- Updated: Asobo Boeing 747 and 787 to AAU2.
+
+### Aircraft Fixes
+
+- General: All doors and windows re-done, no more delayed sync.
+- ORBX P-750: Missing fuel valve sync preventing cold start.
+
+#### Issues for Asobo/Working Title
+
+- Asobo 747: COM STANDBY FREQUENCY does not update after a complete frequency is entered.
+- Asobo 787: Radio panels are completely broken.
+  - When solo, frequencies visually do not change when switching frequencies with native ATC menu.
+  - When multicrew, frequencies visually do not change when simvars are correctly syncing.
+  - STBY STEP buttons do nothing. COM STANDBY FREQUENCY does not change when stepping.
+
+## Version 2.7.9
+
+### Profiles
+
+- Added: Beechcraft Baron B58 by Black Square (v0.1.0).
+- Added: Beechcraft Bonanza A36 by Black Square (v0.1.1).
+- Added: Beechcraft King Air 350i by Black Square (v0.1.3).
+- Added: Cessna 208B Grand Caravan by Black Square (v0.1.4).
+- Added: Tecnam P2006T MkII by FlightSim Studio (v1.0.5).
+- Added: Velocity XL by Black Square (v0.1.2).
+
 ## Version 2.7.8
 
 ### Program
@@ -197,6 +231,7 @@
 - FlyByWire A32NX: Reverted some changes that broke AP knobs in last update.
 
 ### Issues
+
 ![image](https://cdn.discordapp.com/attachments/765289974232252466/1028444695069737030/fbwkeepoff.png)
 
 ## Version 2.7.2
