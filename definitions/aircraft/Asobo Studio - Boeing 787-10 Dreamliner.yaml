@@ -145,7 +145,6 @@ shared:
     var_type: i32
     event_name: APU_GENERATOR_SWITCH_SET
     event_param: 1
-    index_reversed: true
   -
     type: NumSet
     var_name: A:APU GENERATOR SWITCH:2
@@ -153,7 +152,6 @@ shared:
     var_type: i32
     event_name: APU_GENERATOR_SWITCH_SET
     event_param: 2
-    index_reversed: true
 
   - # Battery
     type: ToggleSwitch
@@ -352,19 +350,21 @@ shared:
     event_param: 4
 
   - # Hydraulics
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:1
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 1
+    index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:2
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 2
+    index_reversed: true
 
   - # IRS
     type: ToggleSwitch
@@ -1749,18 +1749,18 @@ shared:
 master:
   -
     type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_name: L:WT_Virtual_Throttle_Lever_Pos_1
     var_units: Position 16k
     var_type: f64
     event_name: THROTTLE1_SET
-    interpolate: Default
+    unreliable: true
   -
     type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_name: L:WT_Virtual_Throttle_Lever_Pos_2
     var_units: Position 16k
     var_type: f64
     event_name: THROTTLE2_SET
-    interpolate: Default
+    unreliable: true
 
 server:
   -
@@ -1833,6 +1833,8 @@ ignore:
   - B787_10_Com_1_BTN_5
   - B787_10_Com_1_BTN_6
   - B787_10_Com_1_BTN_7
+  - B787_10_Com_1_BTN_8
+  - B787_10_Com_1_BTN_9
   - B787_10_Com_1_clr
   - B787_10_Com_1_star
   - B787_10_Com_1_swap
@@ -1846,6 +1848,8 @@ ignore:
   - B787_10_Com_2_BTN_5
   - B787_10_Com_2_BTN_6
   - B787_10_Com_2_BTN_7
+  - B787_10_Com_2_BTN_8
+  - B787_10_Com_2_BTN_9
   - B787_10_Com_2_clr
   - B787_10_Com_2_star
   - B787_10_Com_2_swap
@@ -1859,6 +1863,8 @@ ignore:
   - B787_10_Com_3_BTN_5
   - B787_10_Com_3_BTN_6
   - B787_10_Com_3_BTN_7
+  - B787_10_Com_3_BTN_8
+  - B787_10_Com_3_BTN_9
   - B787_10_Com_3_clr
   - B787_10_Com_3_star
   - B787_10_Com_3_swap
