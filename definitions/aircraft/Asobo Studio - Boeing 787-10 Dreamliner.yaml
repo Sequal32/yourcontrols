@@ -1,4 +1,4 @@
-# Version 0.1.103
+# Version 0.1.106
 
 include:
   - definitions/modules/general.yaml
@@ -758,6 +758,9 @@ shared:
 
   - # LVAR's
     type: var
+    var_name: L:WT_TOGA_ACTIVE
+  -
+    type: var
     var_name: L:XMLVAR_SeatBelts
   -
     type: var
@@ -926,9 +929,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_TrimAir_R
-  -
-    type: var
-    var_name: L:(L:WT_PRESS_MAN_ALT_ON)
+# -
+#   type: var
+#   var_name: L:(L:WT_PRESS_MAN_ALT_ON)
   -
     type: var
     var_name: L:XMLVAR_Utility_Cabin
@@ -1028,6 +1031,9 @@ shared:
   -
     type: var
     var_name: L:AP_VS_ACTIVE
+  -
+    type: var
+    var_name: L:WT_EFB_POWER
 # -
 #   type: var
 #   var_name: L:WT_78_RUDDER_INPUT
@@ -1199,7 +1205,7 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_FuelBalance_Switch_On
-# - # Fix this Working Title
+# -
 #   type: var
 #   var_name: L:
 # -
@@ -1576,6 +1582,15 @@ shared:
 #   var_name: L:WTB78x_MFD_3_State
 # -
 #   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
+#   var_name: L:B787_10_SAI_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:B787_10_SAI_State
+# -
+#   type: var
 #   var_name: L:WTB78x_MCP_1_ScreenLuminosity
 # -
 #   type: var
@@ -1592,18 +1607,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTB78x_MCP_3_State
-# -
-#   type: var
-#   var_name: L:WTB78x_HUD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:WTB78x_HUD_State
-# -
-#   type: var
-#   var_name: L:B787_10_SAI_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:B787_10_SAI_State
 # -
 #   type: var
 #   var_name: L:B787_10_ALT_ScreenLuminosity
@@ -1628,6 +1631,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:B787_10_Com_3_State
+# -
+#   type: var
+#   var_name: L:WTB78x_HUD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTB78x_HUD_State
+# -
+#   type: var
+#   var_name: L:WTB78x_EFB_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTB78x_EFB_State
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
@@ -1742,9 +1757,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_FADEC_OIL_TEMP_LOW_RED_2
-  -
-    type: var
-    var_name: L:WT_TOGA_ACTIVE
 
 master:
   -

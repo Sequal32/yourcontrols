@@ -1,4 +1,4 @@
-# Version 0.1.115 / 1.0.1 Enhanced
+# Version 0.1.118 / 1.0.2 Enhanced
 
 include:
   - definitions/modules/autopilot.yaml
@@ -159,16 +159,22 @@ shared:
 
   - # LVAR's
     type: var
+    var_name: L:WT_TOGA_ACTIVE
+  -
+    type: var
     var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame2
   -
     type: var
     var_name: L:XMLVAR_Elec_Generator_Switch_State
   -
     type: var
     var_name: L:XMLVAR_Elec_CrashBar_State
-  -
-    type: var
-    var_name: L:WT_TOGA_ACTIVE
   -
     type: var
     var_name: L:XMLVAR_Elec_Source_Switch_State
@@ -246,12 +252,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_PushXFR
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:XMLVAR_InertSep1_Deployment
@@ -488,10 +488,43 @@ shared:
 #   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
 # -
 #   type: var
+#   var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Approach_Mode
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value:2
+# -
+#   type: var
 #   var_name: L:WTG3000_PFD_1_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:WTG3000_PFD_1_State
+# -
+#   type: var
+#   var_name: L:WT3000_Fuel_Burned
+# -
+#   type: var
+#   var_name: L:WT3000_Fuel_Remaining
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Aircraft_Weight
+# -
+#   type: var
+#   var_name: L:WT_Tbm930_Stby_Gen_Current
+# -
+#   type: var
+#   var_name: L:WT_Tbm930_Main_Gen_Current
+# -
+#   type: var
+#   var_name: L:WT_Tbm930_Battery_Current
 # -
 #   type: var
 #   var_name: L:WTG3000_PFD_2_ScreenLuminosity
@@ -510,6 +543,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
@@ -534,45 +573,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTG3000_GTC_2_State
-# -
-#   type: var
-#   var_name: L:WT_MINIMUMS_MODE
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro1_ForcedToSTD
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro1_SavedPressure
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Approach_Mode
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Value:2
-# -
-#   type: var
-#   var_name: L:WT3000_Fuel_Burned
-# -
-#   type: var
-#   var_name: L:WT3000_Fuel_Remaining
-# -
-#   type: var
-#   var_name: L:WTG3000_Weight_Fuel_Aircraft_Weight
-# -
-#   type: var
-#   var_name: L:WT_Tbm930_Stby_Gen_Current
-# -
-#   type: var
-#   var_name: L:WT_Tbm930_Main_Gen_Current
-# -
-#   type: var
-#   var_name: L:WT_Tbm930_Battery_Current
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:XMLVAR_Baro3_ForcedToSTD
@@ -633,6 +633,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_Tbm930_Battery_Load
+  -
+    type: var
+    var_name: L:XMLVAR_Source_Switch_State
 # -
 #   type: var
 #   var_name: L:WTG3000_MFD_1_Avionics_Status

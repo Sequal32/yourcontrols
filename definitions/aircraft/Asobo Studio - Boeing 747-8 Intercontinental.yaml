@@ -1,4 +1,4 @@
-# Version 0.1.106
+# Version 0.1.107
 
 include:
   - definitions/modules/general.yaml
@@ -1004,7 +1004,10 @@ shared:
     event_param: 111
     index_reversed: true
 
-# - # LVAR's
+  - # LVAR's
+    type: var
+    var_name: L:WT_TOGA_ACTIVE
+# -
 #   type: var
 #   var_name: L:WT_AVIONICS_CHECKLIST_AUTOCOMPLETE_PHASE
   -
@@ -1929,6 +1932,9 @@ shared:
 #   var_name: L:WTAP_VNav_Distance_To_BOD
 # -
 #   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
 # -
 #   type: var
@@ -1939,6 +1945,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTB748_CDU_2_State
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:B747_8_Com_1_ScreenLuminosity
@@ -2001,10 +2013,7 @@ shared:
 #   var_name: L:B747_8_RUDDER_State
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+#   var_name: L:XMLVAR_Baro1_SavedPressure
 # -
 #   type: var
 #   var_name: L:WT_FADEC_REF_TPR_1
@@ -2127,9 +2136,6 @@ shared:
 #   var_name: L:WT_FADEC_N2_RED_4
 # -
 #   type: var
-#   var_name: L:XMLVAR_Baro1_SavedPressure
-# -
-#   type: var
 #   var_name: L:AIRLINER_V1_SPEED
 # -
 #   type: var
@@ -2176,9 +2182,6 @@ shared:
   -
     type: var
     var_name: L:AP_CLBCON_ACTIVE
-  -
-    type: var
-    var_name: L:WT_TOGA_ACTIVE
 
 master:
   -
