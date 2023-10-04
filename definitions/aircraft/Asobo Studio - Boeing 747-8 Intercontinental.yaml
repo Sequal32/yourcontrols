@@ -1,6 +1,7 @@
 # Version 0.1.107
 
 include:
+  - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
@@ -311,18 +312,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_STARTER4
-  -
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:1
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET1
-  -
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:2
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET2
   -
     type: NumSet
     var_name: A:TURB ENG IGNITION SWITCH EX1:3
@@ -2184,20 +2173,6 @@ shared:
     var_name: L:AP_CLBCON_ACTIVE
 
 master:
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE1_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE2_SET
-    interpolate: Default
   -
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
