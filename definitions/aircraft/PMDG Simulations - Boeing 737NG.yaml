@@ -8641,12 +8641,20 @@ shared:
 # -
 #   type: var
 #   var_name: L:TestSwitch
-# - # Yoke Left Hide
-#   type: var
-#   var_name: L:switch_2007_73X
-# - # Yoke Right Hide
-#   type: var
-#   var_name: L:switch_2008_73X
+  - # CPT Yoke Hide
+    type: ToggleSwitch
+    var_name: L:switch_2007_73X
+    event_name: ROTOR_BRAKE
+    event_param: 200701
+    on_condition_value: 100
+    use_calculator: true
+  - # FO Yoke Hide
+    type: ToggleSwitch
+    var_name: L:switch_2008_73X
+    event_name: ROTOR_BRAKE
+    event_param: 200801
+    on_condition_value: 100
+    use_calculator: true
   - # CPT Checklist Vis
     type: var
     var_name: L:yoke_left_checklist
@@ -9855,10 +9863,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:ngx_wheelwell_lights
-  -
+  - # IRS L OFF Pull?
     type: var
     var_name: L:switch_259_73X
-  -
+  - # IRS R OFF Pull?
     type: var
     var_name: L:switch_260_73X
   -
