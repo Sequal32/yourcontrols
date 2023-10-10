@@ -1,5 +1,17 @@
 # YourControls Changelog
 
+## Version 2.7.12
+
+### Profiles
+
+- Updated: Tecnam P2006T by FlightSim Studio to v1.0.6.
+
+### Aircraft Fixes
+
+- Asobo 747/787: Baro minimums. Radio minimums unsyncable.
+- Asobo 787: Floppy yoke with autopilot on.
+- Asobo 787: Inverted elevator trim.
+
 ## Version 2.7.11
 
 - Cloud IPv6 should work again.
