@@ -1,5 +1,11 @@
 # YourControls Changelog
 
+## Version 2.7.12.1
+
+### Changes
+
+- Added: Separate FlyByWire A32NX profile for use with SimBridge.
+
 ## Version 2.7.12
 
 ### Profiles
