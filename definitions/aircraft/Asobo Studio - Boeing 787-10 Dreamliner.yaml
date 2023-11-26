@@ -1,12 +1,14 @@
-# Version 0.1.103
+# Version 0.1.106
 
 include:
-  - definitions/modules/general.yaml
+  - definitions/modules/commonlvars.yaml
+  - definitions/modules/engines.yaml
   - definitions/modules/navigation.yaml
+  - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
+  - definitions/modules/slew.yaml
   - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
 
 shared:
   - # Autopilot
@@ -145,7 +147,6 @@ shared:
     var_type: i32
     event_name: APU_GENERATOR_SWITCH_SET
     event_param: 1
-    index_reversed: true
   -
     type: NumSet
     var_name: A:APU GENERATOR SWITCH:2
@@ -153,7 +154,6 @@ shared:
     var_type: i32
     event_name: APU_GENERATOR_SWITCH_SET
     event_param: 2
-    index_reversed: true
 
   - # Battery
     type: ToggleSwitch
@@ -192,18 +192,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_STARTER2
-  -
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:1
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET1
-  -
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:2
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET2
 
   - # EPU
     type: NumSet
@@ -322,6 +310,49 @@ shared:
     event_name: FUELSYSTEM_VALVE_TOGGLE
     event_param: 9
 
+  - # General
+    type: NumSet
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: GEAR_SET
+  -
+    type: NumSet
+    var_name: A:BRAKE PARKING POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: PARKING_BRAKE_SET
+  -
+    type: NumSet
+    var_name: A:FLAPS HANDLE PERCENT
+    var_units: Position 16k
+    var_type: f64
+    event_name: FLAPS_CONTINUOUS_SET
+  -
+    type: var
+    var_name: A:FLAPS HANDLE INDEX
+    var_units: Number
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:SPOILERS HANDLE POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: SPOILERS_SET
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:SPOILERS ARMED
+    var_units: Bool
+    var_type: bool
+    event_name: SPOILERS_ARM_TOGGLE
+  -
+    type: NumSet
+    var_name: A:AUTO BRAKE SWITCH CB
+    var_units: Number
+    var_type: f64
+    event_name: SET_AUTOBRAKE_CONTROL
+
   - # Generators
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
@@ -352,19 +383,21 @@ shared:
     event_param: 4
 
   - # Hydraulics
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:1
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 1
+    index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:2
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 2
+    index_reversed: true
 
   - # IRS
     type: ToggleSwitch
@@ -725,6 +758,36 @@ shared:
     event_param: 30
     index_reversed: true
 
+  - # Trim
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: RUDDER_TRIM_SET_EX1
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: ELEVATOR_TRIM_SET
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AILERON TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: AILERON_TRIM_SET_EX1
+    unreliable: true
+
   - # Wipers
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:73
@@ -756,7 +819,15 @@ shared:
     event_param: 75
     index_reversed: true
 
+  - # YourControls Force Transfer Hotkey
+    type: ProgramActionEvent
+    event_name: TOGGLE_LAUNCH_BAR_SWITCH
+    action: TransferControls
+
   - # LVAR's
+    type: var
+    var_name: L:WT_TOGA_ACTIVE
+  -
     type: var
     var_name: L:XMLVAR_SeatBelts
   -
@@ -926,9 +997,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_TrimAir_R
-  -
-    type: var
-    var_name: L:(L:WT_PRESS_MAN_ALT_ON)
+# -
+#   type: var
+#   var_name: L:(L:WT_PRESS_MAN_ALT_ON)
   -
     type: var
     var_name: L:XMLVAR_Utility_Cabin
@@ -1028,6 +1099,9 @@ shared:
   -
     type: var
     var_name: L:AP_VS_ACTIVE
+  -
+    type: var
+    var_name: L:WT_EFB_POWER
 # -
 #   type: var
 #   var_name: L:WT_78_RUDDER_INPUT
@@ -1199,7 +1273,7 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_FuelBalance_Switch_On
-# - # Fix this Working Title
+# -
 #   type: var
 #   var_name: L:
 # -
@@ -1576,6 +1650,15 @@ shared:
 #   var_name: L:WTB78x_MFD_3_State
 # -
 #   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
+#   var_name: L:B787_10_SAI_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:B787_10_SAI_State
+# -
+#   type: var
 #   var_name: L:WTB78x_MCP_1_ScreenLuminosity
 # -
 #   type: var
@@ -1592,18 +1675,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTB78x_MCP_3_State
-# -
-#   type: var
-#   var_name: L:WTB78x_HUD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:WTB78x_HUD_State
-# -
-#   type: var
-#   var_name: L:B787_10_SAI_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:B787_10_SAI_State
 # -
 #   type: var
 #   var_name: L:B787_10_ALT_ScreenLuminosity
@@ -1628,6 +1699,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:B787_10_Com_3_State
+# -
+#   type: var
+#   var_name: L:WTB78x_HUD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTB78x_HUD_State
+# -
+#   type: var
+#   var_name: L:WTB78x_EFB_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTB78x_EFB_State
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
@@ -1742,25 +1825,45 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_FADEC_OIL_TEMP_LOW_RED_2
-  -
-    type: var
-    var_name: L:WT_TOGA_ACTIVE
 
 master:
   -
     type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_name: L:WT_78_ELEVATOR_INPUT
     var_units: Position 16k
     var_type: f64
-    event_name: THROTTLE1_SET
-    interpolate: Default
+    event_name: AXIS_ELEVATOR_SET
+    unreliable: true
   -
     type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_name: L:WT_78_AILERON_INPUT
     var_units: Position 16k
     var_type: f64
-    event_name: THROTTLE2_SET
-    interpolate: Default
+    event_name: AXIS_AILERONS_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: L:WT_78_RUDDER_INPUT
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_RUDDER_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:BRAKE LEFT POSITION EX1
+    var_units: Position 32k
+    var_type: f64
+    add_by: -16384
+    event_name: AXIS_LEFT_BRAKE_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:BRAKE RIGHT POSITION EX1
+    var_units: Position 32k
+    var_type: f64
+    add_by: -16384
+    event_name: AXIS_RIGHT_BRAKE_SET
+    unreliable: true
 
 server:
   -
@@ -1833,6 +1936,8 @@ ignore:
   - B787_10_Com_1_BTN_5
   - B787_10_Com_1_BTN_6
   - B787_10_Com_1_BTN_7
+  - B787_10_Com_1_BTN_8
+  - B787_10_Com_1_BTN_9
   - B787_10_Com_1_clr
   - B787_10_Com_1_star
   - B787_10_Com_1_swap
@@ -1846,6 +1951,8 @@ ignore:
   - B787_10_Com_2_BTN_5
   - B787_10_Com_2_BTN_6
   - B787_10_Com_2_BTN_7
+  - B787_10_Com_2_BTN_8
+  - B787_10_Com_2_BTN_9
   - B787_10_Com_2_clr
   - B787_10_Com_2_star
   - B787_10_Com_2_swap
@@ -1859,6 +1966,8 @@ ignore:
   - B787_10_Com_3_BTN_5
   - B787_10_Com_3_BTN_6
   - B787_10_Com_3_BTN_7
+  - B787_10_Com_3_BTN_8
+  - B787_10_Com_3_BTN_9
   - B787_10_Com_3_clr
   - B787_10_Com_3_star
   - B787_10_Com_3_swap
@@ -1870,5 +1979,7 @@ ignore:
   - AS01B_PFD_Mins_INC
   - AS01B_PFD_Mins_DEC
 
+  - WT_B78_Throttle_1_Inc
   - WT_B78_Throttle_1_Dec
+  - WT_B78_Throttle_2_Inc
   - WT_B78_Throttle_2_Dec

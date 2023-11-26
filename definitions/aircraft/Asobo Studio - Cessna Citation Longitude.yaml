@@ -1,4 +1,4 @@
-# Version 0.1.106 / 1.0.0 Enhanced
+# Version 0.1.108 / 1.0.0 Enhanced
 
 include:
   - definitions/modules/autopilot.yaml
@@ -290,6 +290,9 @@ shared:
 
   - # LVAR's
     type: var
+    var_name: L:WT_TOGA_ACTIVE
+  -
+    type: var
     var_name: L:WT_LNG_PTCU_MODE
   -
     type: var
@@ -327,9 +330,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
-  -
-    type: var
-    var_name: L:WT_TOGA_ACTIVE
 # -
 #   type: var
 #   var_name: L:XMLVAR_BatterySTBY_SwitchState
@@ -827,15 +827,6 @@ shared:
 #   var_name: L:WTAP_GP_Approach_Mode
 # -
 #   type: var
-#   var_name: L:XMLVAR_Baro1_ForcedToSTD
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro1_SavedPressure
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Value:2
-# -
-#   type: var
 #   var_name: L:WTG3000_PFD_1_ScreenLuminosity
 # -
 #   type: var
@@ -896,16 +887,25 @@ shared:
 #   var_name: L:HourMeter_State
 # -
 #   type: var
-#   var_name: L:XMLVAR_Baro2_ForcedToSTD
+#   var_name: L:XMLVAR_Baro1_ForcedToSTD
 # -
 #   type: var
-#   var_name: L:XMLVAR_Baro2_SavedPressure
+#   var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value:2
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_SavedPressure
 # -
 #   type: var
 #   var_name: L:FADEC_OIL_TEMP_LOW_AMBER_1
@@ -1037,10 +1037,10 @@ shared:
 #   var_name: L:WTG3000_MFD_1_Avionics_Status
 # -
 #   type: var
-#   var_name: L:WTG3000_PFD_2_Avionics_Status
+#   var_name: L:WTG3000_PFD_1_Avionics_Status
 # -
 #   type: var
-#   var_name: L:WTG3000_PFD_1_Avionics_Status
+#   var_name: L:WTG3000_PFD_2_Avionics_Status
 # -
 #   type: var
 #   var_name: L:WTG3000_GTC_1_Avionics_Status
@@ -1163,3 +1163,9 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+  - WT_Longitude_Throttle_1_Inc
+  - WT_Longitude_Throttle_1_Dec
+  - WT_Longitude_Throttle_2_Inc
+  - WT_Longitude_Throttle_2_Dec

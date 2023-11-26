@@ -1,4 +1,4 @@
-# Version 2.0.2
+# Version 2.2.2
 
 include:
   - definitions/modules/Avionics/AS3000.yaml
@@ -230,6 +230,10 @@ shared:
 #   var_name: L:SF50_deice_airboots_upperWing
   -
     type: var
+    var_name: L:SF50_vams_reg_shadow
+    cancel_h_events: true
+  -
+    type: var
     var_name: L:SF50_Autothrottle_Status
 # -
 #   type: var
@@ -377,6 +381,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:SF50_Courtesy_Mode_Timer
+  -
+    type: var
+    var_name: L:SF50_phone_vis
 # -
 #   type: var
 #   var_name: L:SF50_throttle_percentage
@@ -517,3 +524,7 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+  - VJ_Throttle_1_Inc
+  - VJ_Throttle_1_Dec

@@ -1,5 +1,49 @@
 # YourControls Changelog
 
+## Version 2.7.13
+
+### Changes
+
+- Added: Separate FlyByWire A32NX profile for use with SimBridge.
+
+## Version 2.7.12
+
+### Profiles
+
+- Updated: Tecnam P2006T by FlightSim Studio to v1.0.6.
+
+### Aircraft Fixes
+
+- Asobo 747/787: Baro minimums. Radio minimums unsyncable.
+- Asobo 787: Floppy yoke with autopilot on.
+- Asobo 787: Inverted elevator trim.
+
+## Version 2.7.11
+
+- Cloud IPv6 should work again.
+
+### Profiles
+
+- Added: Boeing 787-8 Dreamliner by Kurorin.
+- Updated: Airbus A320 Family by LatinVFR.
+- Updated: Cessna 310R by Milviz/Blackbird to v1.9.6.
+- Updated: Embraer E170/E175 by FlightSim Studio to v0.9.17.
+- Updated: Piper Arrow III by Just Flight to v0.10.8.
+- Updated: Piper Turbo Arrow III/IV by Just Flight to v0.5.8.
+- Updated: Piper Warrior II by Just Flight to v0.3.8.
+
+### Aircraft Fixes
+
+- Asobo 787: Throttle levers.
+- Asobo 787: APU generator switches.
+- Asobo 747/787: Hydraulic switches.
+- FBW A320: Removed outdated condition for ECAM buttons.
+
+#### Issues for Just Flight
+
+- Arrow/Turbo Arrow: Heading bug no longer changes with AUTOPILOT HEADING LOCK DIR, unsyncable.
+- Warrior: Works normally with AUTOPILOT HEADING LOCK DIR, syncable.
+
 ## Version 2.7.10
 
 ### Profiles

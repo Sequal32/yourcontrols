@@ -1,6 +1,7 @@
-# Version 0.1.106
+# Version 0.1.107
 
 include:
+  - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
@@ -313,18 +314,6 @@ shared:
     event_name: TOGGLE_STARTER4
   -
     type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:1
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET1
-  -
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:2
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET2
-  -
-    type: NumSet
     var_name: A:TURB ENG IGNITION SWITCH EX1:3
     var_units: Enum
     var_type: i32
@@ -552,33 +541,37 @@ shared:
     event_param: 4
 
   - # Hydraulics
-    type: ToggleSwitch
-    var_name: A:HYDRAULIC SWITCH:5
+    type: NumSet
+    var_name: A:HYDRAULIC SWITCH:1
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
-    event_param: 5
+    event_param: 1
+    index_reversed: true
   -
-    type: ToggleSwitch
-    var_name: A:HYDRAULIC SWITCH:6
+    type: NumSet
+    var_name: A:HYDRAULIC SWITCH:2
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
-    event_param: 6
+    event_param: 2
+    index_reversed: true
   -
-    type: ToggleSwitch
-    var_name: A:HYDRAULIC SWITCH:7
+    type: NumSet
+    var_name: A:HYDRAULIC SWITCH:3
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
-    event_param: 7
+    event_param: 3
+    index_reversed: true
   -
-    type: ToggleSwitch
-    var_name: A:HYDRAULIC SWITCH:8
+    type: NumSet
+    var_name: A:HYDRAULIC SWITCH:4
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
-    event_param: 8
+    event_param: 4
+    index_reversed: true
 
   - # IRS
     type: ToggleSwitch
@@ -1000,7 +993,10 @@ shared:
     event_param: 111
     index_reversed: true
 
-# - # LVAR's
+  - # LVAR's
+    type: var
+    var_name: L:WT_TOGA_ACTIVE
+# -
 #   type: var
 #   var_name: L:WT_AVIONICS_CHECKLIST_AUTOCOMPLETE_PHASE
   -
@@ -1925,6 +1921,9 @@ shared:
 #   var_name: L:WTAP_VNav_Distance_To_BOD
 # -
 #   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
 # -
 #   type: var
@@ -1935,6 +1934,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTB748_CDU_2_State
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:B747_8_Com_1_ScreenLuminosity
@@ -1997,10 +2002,7 @@ shared:
 #   var_name: L:B747_8_RUDDER_State
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+#   var_name: L:XMLVAR_Baro1_SavedPressure
 # -
 #   type: var
 #   var_name: L:WT_FADEC_REF_TPR_1
@@ -2123,9 +2125,6 @@ shared:
 #   var_name: L:WT_FADEC_N2_RED_4
 # -
 #   type: var
-#   var_name: L:XMLVAR_Baro1_SavedPressure
-# -
-#   type: var
 #   var_name: L:AIRLINER_V1_SPEED
 # -
 #   type: var
@@ -2172,25 +2171,8 @@ shared:
   -
     type: var
     var_name: L:AP_CLBCON_ACTIVE
-  -
-    type: var
-    var_name: L:WT_TOGA_ACTIVE
 
 master:
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE1_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE2_SET
-    interpolate: Default
   -
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
@@ -2378,7 +2360,11 @@ ignore:
   - B747_8_PFD_Mins_INC
   - B747_8_PFD_Mins_DEC
 
+  - WT_B78_Throttle_1_Inc
   - WT_B78_Throttle_1_Dec
+  - WT_B78_Throttle_2_Inc
   - WT_B78_Throttle_2_Dec
+  - WT_B78_Throttle_3_Inc
   - WT_B78_Throttle_3_Dec
+  - WT_B78_Throttle_4_Inc
   - WT_B78_Throttle_4_Dec
