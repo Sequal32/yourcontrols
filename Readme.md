@@ -8,7 +8,7 @@
 
 &nbsp;
 
-[![Documentation](/assets/Documentation.png)](https://docs.yourcontrols.one)
+[![Documentation](/assets/Documentation.png)](https://docs.yourcontrols.org)
 
 &nbsp;
 
