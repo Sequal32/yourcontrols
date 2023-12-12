@@ -1,22 +1,22 @@
 # Version 2.0.1
 
 include:
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
-  - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/Avionics/RDR2000.yaml
-  - definitions/modules/Avionics/TDSNXi.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_KT76C.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
   - definitions/modules/autopilot.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -1093,6 +1093,21 @@ shared:
   -
     type: var
     var_name: L:ASD_SWITCH_TEST_HIGHT_VOLTS_ANN
+# -
+#   type: var
+#   var_name: L:RDR2000_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:RDR2000_State
+  -
+    type: var
+    var_name: L:RDR2000_SelectedSource
+  -
+    type: var
+    var_name: L:RDR2000_Map_MapShowCursor
+  -
+    type: var
+    var_name: L:RDR2000_Map_MapZoomRange
 
 server:
   -

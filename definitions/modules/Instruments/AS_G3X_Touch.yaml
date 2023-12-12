@@ -1,0 +1,372 @@
+# Garmin G3X Touch by Asobo.
+
+shared:
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_ALT_HOLD_ON
+    off_event_name: AP_ALT_HOLD_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+    interpolate: Default
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_BC_HOLD_ON
+    off_event_name: AP_BC_HOLD_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT DISENGAGED
+    var_units: Bool
+    var_type: i32
+    event_name: AUTOPILOT_DISENGAGE_SET
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
+    var_units: Bool
+    var_type: bool
+    event_name: FLIGHT_LEVEL_CHANGE_ON
+    off_event_name: FLIGHT_LEVEL_CHANGE_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_HDG_HOLD_ON
+    off_event_name: AP_HDG_HOLD_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+    interpolate: Default
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MACH HOLD VAR:1
+    var_units: Mach
+    var_type: f64
+    multiply_by: 100
+    event_name: AP_MACH_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: true
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_ON
+    off_event_name: AP_MANAGED_SPEED_IN_MACH_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AUTOPILOT_ON
+    off_event_name: AUTOPILOT_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MAX BANK ID
+    var_units: Number
+    var_type: i32
+    event_name: AP_MAX_BANK_SET
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD_ON
+    off_event_name: AP_NAV1_HOLD_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_TO_GA
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_VS_ON
+    off_event_name: AP_VS_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 1
+    interpolate: Default
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT WING LEVELER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_WING_LEVELER_ON
+    off_event_name: AP_WING_LEVELER_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT YAW DAMPER
+    var_units: Bool
+    var_type: bool
+    event_name: YAW_DAMPER_ON
+    off_event_name: YAW_DAMPER_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT NAV SELECTED
+    var_units: Number
+    var_type: i32
+    event_name: AP_NAV_SELECT_SET
+    cancel_h_events: true
+
+  - # Transponder
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: Enum
+    var_type: i32
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:TRANSPONDER IDENT:1
+    var_units: Bool
+    var_type: bool
+    event_name: XPNDR_IDENT_ON
+    off_event_name: XPNDR_IDENT_OFF
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:TRANSPONDER CODE:1
+    var_units: Bco16
+    var_type: i32
+    event_name: XPNDR_SET
+    cancel_h_events: true
+
+  - # Events no simvar
+    type: event
+    event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_ON
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_OFF
+
+  - # LVAR's
+    type: var
+    var_name: L:AS3X_Touch_Brightness
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:AS3X_Touch_Brightness_Auto
+  -
+    type: var
+    var_name: L:AS3X_Touch_Brightness_IsAuto
+  -
+    type: var
+    var_name: L:AS3X_Touch_IsLocalVarDefined
+  -
+    type: var
+    var_name: L:AS3000_MinimalsMode
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:AS3000_MinimalsValue
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:Glasscockpit_DmeSource
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:Glasscockpit_HSI_Arc
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:Glasscockpit_Wind_Mode
+  -
+    type: var
+    var_name: L:Glasscockpit_SVTTerrain
+  -
+    type: var
+    var_name: L:PFD_DME_Displayed
+  -
+    type: var
+    var_name: L:PFD_BRG1_Source
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PFD_BRG2_Source
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PFD_CDI_Source
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:MFD_MapShowCursor
+  -
+    type: var
+    var_name: L:MFD_MapZoomRange
+  -
+    type: var
+    var_name: L:MFD_Main_MapShowCursor
+  -
+    type: var
+    var_name: L:MFD_Main_MapZoomRange
+  -
+    type: var
+    var_name: L:AP_NAV_SELECT_TMP
+
+# - # Ignore
+#   type: var
+#   var_name: L:AS3X_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_1_State
+# -
+#   type: var
+#   var_name: L:AS3X_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_2_State
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_1_State
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_2_State
+# -
+#   type: var
+#   var_name: L:AS3X_Touch_IsLocalVarDefined
+# -
+#   type: var
+#   var_name: L:GPS_Current_Phase
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:Annunciations_Manager_Initialized
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+ignore:
+  - AP_UP
+  - AP_DN
+  - AP_BARO_Up
+  - AP_BARO_Down
+  - AP_KNOB_Up
+  - AP_KNOB_Down
+  - Generic_Autopilot_Manual_Off
+
+# Transponder
+  - AS3X_Touch_1#xpdr_code
+  - AS3X_Touch_1#xpdr_mode
+  - AS3X_Touch_1#xpdr_btn
+  - AS3X_Touch_1#-2126745705
+  - AS3X_Touch_2#xpdr_code
+  - AS3X_Touch_2#xpdr_mode
+  - AS3X_Touch_2#xpdr_btn
+  - AS3X_Touch_2#-2126745705
+
+# STBY
+  - AS3X_Touch_1#com_standby
+  - AS3X_Touch_1#com_standby_btn
+  - AS3X_Touch_1#-2126745695
+  - AS3X_Touch_2#com_standby
+  - AS3X_Touch_2#com_standby_btn
+  - AS3X_Touch_2#-2126745695

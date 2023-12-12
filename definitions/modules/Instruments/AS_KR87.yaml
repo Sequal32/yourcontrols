@@ -1,0 +1,29 @@
+# BendixKing KR-87 ADF by Asobo.
+
+shared:
+  -
+    type: NumSet
+    var_name: A:ADF ACTIVE FREQUENCY:1
+    var_units: Frequency ADF BCD32
+    var_type: i32
+    event_name: ADF_ACTIVE_SET
+  -
+    type: NumSet
+    var_name: A:ADF STANDBY FREQUENCY:1
+    var_units: Frequency ADF BCD32
+    var_type: i32
+    event_name: ADF_STBY_SET
+  -
+    type: NumSet
+    var_name: A:ADF SOUND:1
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_ADF_IDENT_SET
+  -
+    type: NumIncrement
+    var_name: A:ADF VOLUME:1
+    var_units: Percent
+    var_type: i32
+    up_event_name: ADF_VOLUME_INC
+    down_event_name: ADF_VOLUME_DEC
+    increment_by: 2

@@ -1,33 +1,24 @@
-# This file only supports aircraft with a max of two engines. You can specify more in the individual profile.
-
 shared:
-  - # ASOBO_ENGINE_Switch_Master_Template
-    type: ToggleSwitch
-    var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
-    var_units: Bool
-    var_type: bool
-    event_name: ENGINE_MASTER_1_TOGGLE
   -
     type: ToggleSwitch
-    var_name: A:RECIP ENG ENGINE MASTER SWITCH:2
+    var_name: A:PANEL AUTO FEATHER SWITCH
     var_units: Bool
     var_type: bool
-    event_name: ENGINE_MASTER_2_TOGGLE
-
-  - # ASOBO_ENGINE_Push_Ignition_Template
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:1
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET1
+    event_name: TOGGLE_AUTOFEATHER_ARM
+  -
+    type: ToggleSwitch
+    var_name: A:PROP SYNC ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_PROPELLER_SYNC
   -
     type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:2
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET2
-
-  - # ASOBO_ENGINE_Lever_Primer_Template
+    var_name: A:RADIATOR COOLING FLAPS POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: RADIATOR_COOLING_FLAPS_SET
+    unreliable: true
+  -
     type: NumSet
     var_name: A:RECIP ENG PRIMER:1
     var_units: Percent
@@ -41,38 +32,45 @@ shared:
     var_type: i32
     event_name: TOGGLE_PRIMER2
     unreliable: true
-
-  - # ASOBO_ENGINE_Switch_PropSync_Template
-    type: ToggleSwitch
-    var_name: A:PROP SYNC ACTIVE
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_PROPELLER_SYNC
-
-  - # ASOBO_ENGINE_Switch_AutoFeather_Template (?)
-    type: ToggleSwitch
-    var_name: A:PANEL AUTO FEATHER SWITCH
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_AUTOFEATHER_ARM
-
-  - # ASOBO_ENGINE_Switch_Plasma_Template
+  -
     type: NumSet
-    var_name: A:PLASMA ON:1
-    var_units: Bool
+    var_name: A:RECIP ENG PRIMER:3
+    var_units: Percent
     var_type: i32
-    event_name: PLASMA_SET
-    event_param: 1
-
-  - # ASOBO_ENGINE_Lever_CoolingFlaps_Radiator_Template
-    type: NumSet
-    var_name: A:RADIATOR COOLING FLAPS POSITION
-    var_units: Position 16k
-    var_type: f64
-    event_name: RADIATOR_COOLING_FLAPS_SET
+    event_name: TOGGLE_PRIMER3
     unreliable: true
-
-  - # ASOBO_ENGINE_Lever_CowlFlaps_Template
+  -
+    type: NumSet
+    var_name: A:RECIP ENG PRIMER:4
+    var_units: Percent
+    var_type: i32
+    event_name: TOGGLE_PRIMER4
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: ENGINE_MASTER_1_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: ENGINE_MASTER_2_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:3
+    var_units: Bool
+    var_type: bool
+    event_name: ENGINE_MASTER_3_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: ENGINE_MASTER_4_TOGGLE
+  -
     type: NumSet
     var_name: A:RECIP ENG COWL FLAP POSITION:1
     var_units: Position 16k
@@ -86,49 +84,151 @@ shared:
     var_type: f64
     event_name: COWLFLAP2_SET
     unreliable: true
-
-  - # ASOBO_ENGINE_Lever_Mixture_Template
+  -
+    type: NumSet
+    var_name: A:RECIP ENG COWL FLAP POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: COWLFLAP3_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:RECIP ENG COWL FLAP POSITION:4
+    var_units: Position 16k
+    var_type: f64
+    event_name: COWLFLAP4_SET
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:TURB ENG AFTERBURNER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AFTERBURNER1
+  -
+    type: ToggleSwitch
+    var_name: A:TURB ENG AFTERBURNER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AFTERBURNER2
+  -
+    type: ToggleSwitch
+    var_name: A:TURB ENG AFTERBURNER:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AFTERBURNER3
+  -
+    type: ToggleSwitch
+    var_name: A:TURB ENG AFTERBURNER:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AFTERBURNER4
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET1
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET2
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:3
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET3
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:4
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET4
+  -
     type: NumSet
     var_name: A:GENERAL ENG MIXTURE LEVER POSITION:1
     var_units: Position 16k
     var_type: f64
     event_name: MIXTURE1_SET
-    interpolate: Default
+    unreliable: true
   -
     type: NumSet
     var_name: A:GENERAL ENG MIXTURE LEVER POSITION:2
     var_units: Position 16k
     var_type: f64
     event_name: MIXTURE2_SET
-    interpolate: Default
-
-  - # ASOBO_ENGINE_Lever_Propeller_Template
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE3_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:4
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE4_SET
+    unreliable: true
+  -
     type: NumSet
     var_name: A:GENERAL ENG PROPELLER LEVER POSITION:1
     var_units: Position 16k
     var_type: f64
     event_name: PROP_PITCH1_SET
-    interpolate: Default
+    unreliable: true
   -
     type: NumSet
     var_name: A:GENERAL ENG PROPELLER LEVER POSITION:2
     var_units: Position 16k
     var_type: f64
     event_name: PROP_PITCH2_SET
-    interpolate: Default
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: PROP_PITCH3_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:4
+    var_units: Position 16k
+    var_type: f64
+    event_name: PROP_PITCH4_SET
+    unreliable: true
 
 master:
-  - # ASOBO_ENGINE_Lever_Throttle_Template
+  -
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
     var_units: Position 16k
     var_type: f64
     event_name: THROTTLE1_SET
-    interpolate: Default
+    unreliable: true
   -
     type: NumSet
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
     var_units: Position 16k
     var_type: f64
     event_name: THROTTLE2_SET
-    interpolate: Default
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE3_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:4
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE4_SET
+    unreliable: true

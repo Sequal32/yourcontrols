@@ -1,0 +1,280 @@
+# Version 1.0.1
+
+include:
+  - definitions/modules/Instruments/AS_GTN650.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/controls_rotor.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines_rotor.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/rotorcraft.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: i32
+    event_name: ANTI_ICE_TOGGLE_ENG1
+
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+
+  - # Key
+    type: ToggleSwitch
+    var_name: A:TURB ENG IGNITION SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: TURBINE_IGNITION_SWITCH_TOGGLE
+    event_param: 1
+
+  - # Interior
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_ON
+    off_event_name: PANEL_LIGHTS_OFF
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+
+  - # Guns
+    type: event
+    event_name: TOGGLE_WATER_RUDDER
+  -
+    type: event
+    event_name: TOGGLE_VARIOMETER_SWITCH
+
+# - # LVAR's (trimmed)
+#   type: var
+#   var_name: L:530F_GunsActive
+# -
+#   type: var
+#   var_name: L:530F_LH_MG_Rotation
+# -
+#   type: var
+#   var_name: L:RandomSeed1
+# -
+#   type: var
+#   var_name: L:RandomSeed2
+# -
+#   type: var
+#   var_name: L:530F_LHFlashrotate
+# -
+#   type: var
+#   var_name: L:530F_RH_MG_Rotation
+# -
+#   type: var
+#   var_name: L:530F_RHFlashrotate
+# -
+#   type: var
+#   var_name: L:530F_GunsActiveSlow
+# -
+#   type: var
+#   var_name: L:530F_LHFNFlashrotate
+# -
+#   type: var
+#   var_name: L:530F_RHFNFlashrotate
+# -
+#   type: var
+#   var_name: L:530F_MuzzleFlash
+# -
+#   type: var
+#   var_name: L:530F_MuzzleFlash_Slow
+  -
+    type: var
+    var_name: L:530F_Cabin_Heat_ON
+  -
+    type: var
+    var_name: L:530F_WarnLightDim_ON
+# -
+#   type: var
+#   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
+  -
+    type: var
+    var_name: L:530F_VNE_Placards_ON
+  -
+    type: var
+    var_name: L:530F_OVSP_Test_ON
+  -
+    type: var
+    var_name: L:530F_Utility_Power_ON
+  -
+    type: var
+    var_name: L:530F_REIGN_Test_ON
+  -
+    type: var
+    var_name: L:530F_Fault_Test_ON
+  -
+    type: var
+    var_name: L:530F_IdleRelease
+  -
+    type: var
+    var_name: L:530F_ThrottleGrip
+    unreliable: true
+  -
+    type: var
+    var_name: L:530F_RotorBrakeForceOn
+  -
+    type: var
+    var_name: L:530F_LightTest
+  -
+    type: var
+    var_name: L:Marker_Button_Position
+  -
+    type: var
+    var_name: L:TEL_Button_Toggle
+  -
+    type: var
+    var_name: L:MUTE_Button_Toggle
+  -
+    type: var
+    var_name: L:XMLVAR_Pass_Volume
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:AS650_NAV_Freq_Modify
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
+  -
+    type: var
+    var_name: L:MUSIC_Button_Toggle
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:530F_Throttle_Init
+# -
+#   type: var
+#   var_name: L:530F_ThrottleState
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

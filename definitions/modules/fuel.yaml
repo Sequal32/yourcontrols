@@ -1,5 +1,3 @@
-# This file only supports aircraft with a max of two engines. You can specify more in the individual profile.
-
 shared:
   - # ASOBO_FUEL_Switch_Pump_Template (Also works for GENERAL ENG FUEL PUMP SWITCH)
     type: NumSet
@@ -13,6 +11,18 @@ shared:
     var_units: Enum
     var_type: i32
     event_name: ELECT_FUEL_PUMP2_SET
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:3
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP3_SET
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:4
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP4_SET
 
   - # ASOBO_FUEL_Knob_Selector_Template
     type: NumSet
@@ -26,6 +36,18 @@ shared:
     var_units: Enum
     var_type: i32
     event_name: FUEL_SELECTOR_2_SET
+  -
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:3
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_3_SET
+  -
+    type: NumSet
+    var_name: A:FUEL TANK SELECTOR:4
+    var_units: Enum
+    var_type: i32
+    event_name: FUEL_SELECTOR_4_SET
 
   - # ASOBO_FUEL_Switch_Transfer_Template
     type: NumSet
@@ -54,9 +76,9 @@ shared:
     var_units: Bool
     var_type: f64
     event_name: MANUAL_FUEL_PRESSURE_PUMP
+    event_param: 1
     use_calculator: true
     unreliable: true
-    event_param: 1
 
   - # ASOBO_FUEL_Condition_Lever_Template
     type: var
@@ -66,6 +88,16 @@ shared:
   -
     type: var
     var_name: A:TURB ENG CONDITION LEVER POSITION:2
+    var_units: Enum
+    var_type: i32
+  -
+    type: var
+    var_name: A:TURB ENG CONDITION LEVER POSITION:3
+    var_units: Enum
+    var_type: i32
+  -
+    type: var
+    var_name: A:TURB ENG CONDITION LEVER POSITION:4
     var_units: Enum
     var_type: i32
 
@@ -93,3 +125,27 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_FUEL_VALVE_ENG2
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL VALVE:3
+    var_units: Enum
+    var_type: i32
+    event_name: SET_FUEL_VALVE_ENG3
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG3
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL VALVE:4
+    var_units: Enum
+    var_type: i32
+    event_name: SET_FUEL_VALVE_ENG4
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG4

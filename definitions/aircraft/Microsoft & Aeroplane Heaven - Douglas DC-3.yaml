@@ -1,24 +1,32 @@
-# Version 1.0.11 / 0.1.11 Enhanced
+# Version 1.2.3 / 1.2.3 Enhanced
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/Instruments/AS_KT76C.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-  -
+  - # Gyropilot
+    type: var
+    var_name: A:AUTOPILOT PITCH HOLD REF
+    var_units: Degrees
+    var_type: f64
+    unreliable: true
+
+  - # Lights
     type: NumSet
     var_name: A:LIGHT LANDING:2
     var_units: Bool
@@ -56,9 +64,6 @@ shared:
 
 # - # LVAR's
 #   type: var
-#   var_name: L:LOCAL_milliBar_to_inHg
-# -
-#   type: var
 #   var_name: L:startereffect1_on
 # -
 #   type: var
@@ -78,9 +83,9 @@ shared:
   -
     type: var
     var_name: L:SWITCH_DoorLuggage
-  -
-    type: var
-    var_name: L:combustionachieved
+# -
+#   type: var
+#   var_name: L:combustionachieved
   -
     type: var
     var_name: L:Leftflapnoncombust
@@ -98,19 +103,56 @@ shared:
 #   var_name: L:Custom_prop_1
   -
     type: var
-    var_name: L:SPERRY_dgcage
+    var_name: L:sperry_knob_setter
   -
     type: var
-    var_name: L:SPERRY_switch_lights
+    var_name: L:Sperry_Rudder_Heading
+    unreliable: true
   -
     type: var
-    var_name: L:sperrycomplock
+    var_name: L:Sperry_Aileron
+    unreliable: true
   -
     type: var
-    var_name: L:SPERRY_gauge_attitude_wing
+    var_name: L:sperry_cage
   -
     type: var
-    var_name: L:SPERRY_knob_attitude_wing
+    var_name: L:Sperry_attitude_wing
+    unreliable: true
+  -
+    type: var
+    var_name: L:sperry_AP_Heading
+    unreliable: true
+  -
+    type: var
+    var_name: L:sperry_inuse
+# -
+#   type: var
+#   var_name: L:sperry_bank
+# -
+#   type: var
+#   var_name: L:sperry_degreediff
+  -
+    type: var
+    var_name: L:sperrybankinuse
+# -
+#   type: var
+#   var_name: L:powercheck
+  -
+    type: var
+    var_name: L:Sperry_Rudder_Heading_Knob
+    unreliable: true
+  -
+    type: var
+    var_name: L:Decision_Height
+  -
+    type: var
+    var_name: L:Sperry_Aileron_Bank_Knob
+    unreliable: true
+  -
+    type: var
+    var_name: L:Sperry_Lighting_Knob
+    unreliable: true
   -
     type: var
     var_name: L:switch_vorswap
@@ -138,9 +180,6 @@ shared:
   -
     type: var
     var_name: L:DC3_fuelquantgauge
-# -
-#   type: var
-#   var_name: L:powercheck
   -
     type: var
     var_name: L:LANDING_GEAR_Lever_Gear
@@ -351,21 +390,21 @@ shared:
   -
     type: var
     var_name: L:magpos2
-  -
-    type: var
-    var_name: L:radio_adf1000_knob
-  -
-    type: var
-    var_name: L:radio_adf100_knob
-  -
-    type: var
-    var_name: L:radio_adf10_knob
-  -
-    type: var
-    var_name: L:radio_adf1_knob
-  -
-    type: var
-    var_name: L:radio_adfdec_knob
+# -
+#   type: var
+#   var_name: L:radio_adf1000_knob
+# -
+#   type: var
+#   var_name: L:radio_adf100_knob
+# -
+#   type: var
+#   var_name: L:radio_adf10_knob
+# -
+#   type: var
+#   var_name: L:radio_adf1_knob
+# -
+#   type: var
+#   var_name: L:radio_adfdec_knob
 # -
 #   type: var
 #   var_name: L:wipersound
@@ -420,6 +459,7 @@ shared:
   -
     type: var
     var_name: L:DC3_nonAP_heading
+    unreliable: true
   -
     type: var
     var_name: L:frictionknob
@@ -546,12 +586,6 @@ shared:
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:KX155A_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KX155A_1_State
-# -
-#   type: var
 #   var_name: L:KX155A_2_ScreenLuminosity
 # -
 #   type: var
@@ -564,12 +598,30 @@ shared:
 #   var_name: L:C300ADF_State
 # -
 #   type: var
+#   var_name: L:KX155A_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_1_State
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
 server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER2 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
   -
     type: var
     var_name: A:FUEL TANK LEFT MAIN LEVEL
@@ -579,18 +631,6 @@ server:
   -
     type: var
     var_name: A:FUEL TANK RIGHT MAIN LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:FUEL TANK LEFT AUX LEVEL
-    var_units: Percent
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:FUEL TANK RIGHT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true

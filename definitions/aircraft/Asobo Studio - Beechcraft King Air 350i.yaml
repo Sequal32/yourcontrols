@@ -1,21 +1,36 @@
 # Version 0.1.83
 
 include:
-  - definitions/modules/Avionics/AS3X.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_G3X_Touch.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
+  - # Aux Tank Transfer
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:49
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 49
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:50
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 50
+
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
@@ -69,21 +84,6 @@ shared:
     event_name: TOGGLE_PROPELLER_DEICE
     event_param: 2
 
-  - # Fuel Transfer (dead switches SU5)
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:49
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 49
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:50
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 50
-
   - # Crossfeed
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:52
@@ -98,21 +98,6 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 53
-
-  - # Wipers
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:54
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 54
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:55
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 55
 
   - # Lights
     type: NumSet
@@ -238,24 +223,27 @@ shared:
     event_param: 11
     index_reversed: true
 
+  - # Wipers
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:54
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 54
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:55
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 55
+
   - # LVAR's
-    type: var
-    var_name: L:XMLVAR_DeiceWindshield_1
-  -
-    type: var
-    var_name: L:XMLVAR_DeiceWindshield_2
-  -
     type: var
     var_name: L:XMLVAR_DEICE_Aircraft_IsHeld
   -
     type: var
     var_name: L:XMLVAR_TANK_QUANTITY_Test_IsHeld
-# -
-#   type: var
-#   var_name: L:Condition_Lever_CutOff_1
-  -
-    type: var
-    var_name: L:Condition_Lever_CutOff_2
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status

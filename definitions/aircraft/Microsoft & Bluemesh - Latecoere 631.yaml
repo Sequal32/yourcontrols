@@ -1,15 +1,27 @@
-# Version 1.0.6
+# Version 1.0.8
 
 include:
-  - definitions/modules/Avionics/AS530.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/controls.yaml
+  - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
+  - definitions/modules/magnetos.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
+  - # Temporary
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+
   - # APU
     type: ToggleSwitch
     var_name: A:APU SWITCH
@@ -75,7 +87,7 @@ shared:
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 4
 
-  - # Altimeter
+  - # Altimeters
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:3
     var_units: Millibars scaler 16
@@ -183,54 +195,6 @@ shared:
     var_type: bool
 
   - # Magnetos
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_RIGHT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:2
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO2_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:2
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO2_RIGHT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_RIGHT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:4
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO4_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:4
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO4_RIGHT
-  -
     type: var
     var_name: A:RECIP ENG LEFT MAGNETO:5
     var_units: Bool
@@ -252,29 +216,25 @@ shared:
     var_type: f64
 
   - # Starters
-    type: NumSet
+    type: var
     var_name: A:GENERAL ENG STARTER:1
     var_units: Bool
     var_type: i32
-    event_name: STARTER1_SET
   -
-    type: NumSet
+    type: var
     var_name: A:GENERAL ENG STARTER:2
     var_units: Bool
     var_type: i32
-    event_name: STARTER2_SET
   -
-    type: NumSet
+    type: var
     var_name: A:GENERAL ENG STARTER:3
     var_units: Bool
     var_type: i32
-    event_name: STARTER3_SET
   -
-    type: NumSet
+    type: var
     var_name: A:GENERAL ENG STARTER:4
     var_units: Bool
     var_type: i32
-    event_name: STARTER4_SET
   -
     type: var
     var_name: A:GENERAL ENG STARTER:5
@@ -285,96 +245,8 @@ shared:
     var_name: A:GENERAL ENG STARTER:6
     var_units: Bool
     var_type: i32
-  -
-    type: event
-    event_name: SET_STARTER1_HELD
-  -
-    type: event
-    event_name: SET_STARTER2_HELD
-  -
-    type: event
-    event_name: SET_STARTER3_HELD
-  -
-    type: event
-    event_name: SET_STARTER4_HELD
-  -
-    type: event
-    event_name: SET_STARTER5_HELD
-  -
-    type: event
-    event_name: SET_STARTER6_HELD
 
   - # Engines
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP1_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:2
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP2_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP3_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:4
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP4_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:5
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP5_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:6
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP6_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: MIXTURE1_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:2
-    var_units: Position 16k
-    var_type: f64
-    event_name: MIXTURE2_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: MIXTURE3_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:4
-    var_units: Position 16k
-    var_type: f64
-    event_name: MIXTURE4_SET
-    interpolate: Default
-  -
     type: var
     var_name: A:GENERAL ENG MIXTURE LEVER POSITION:5
     var_units: Position 16k
@@ -386,34 +258,6 @@ shared:
     var_units: Position 16k
     var_type: f64
     unreliable: true
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: PROP_PITCH1_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:2
-    var_units: Position 16k
-    var_type: f64
-    event_name: PROP_PITCH2_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: PROP_PITCH3_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:4
-    var_units: Position 16k
-    var_type: f64
-    event_name: PROP_PITCH4_SET
-    interpolate: Default
   -
     type: var
     var_name: A:GENERAL ENG PROPELLER LEVER POSITION:5
@@ -722,16 +566,13 @@ shared:
 #   var_name: L:WATER_LEVEL_MUL
   -
     type: var
-    var_name: L:TUG_BOAT_SET
-  -
-    type: var
-    var_name: L:COVERS_SET
-  -
-    type: var
     var_name: L:DOCK_SET
   -
     type: var
     var_name: L:ANCHOR_SET
+  -
+    type: var
+    var_name: L:TUG_BOAT_SET
 # -
 #   type: var
 #   var_name: L:Clipboard_Throttle_Boat_Command_Progressive
@@ -742,16 +583,9 @@ shared:
     type: var
     var_name: L:Clipboard_Throttle_Boat_Command_bis
     unreliable: true
-  -
-    type: var
-    var_name: L:Gonio_Antenna_Angle
-    unreliable: true
 # -
 #   type: var
 #   var_name: L:AnemoRotation
-  -
-    type: var
-    var_name: L:FLAG_SET
 # -
 #   type: var
 #   var_name: L:RPM_FILTER_LOCAL_1
@@ -826,7 +660,17 @@ shared:
 #   var_name: L:Propeller_Angle_6
   -
     type: var
+    var_name: L:Gonio_Antenna_Angle
+    unreliable: true
+  -
+    type: var
     var_name: L:Door_Cockpit_Bar
+  -
+    type: var
+    var_name: L:COVERS_SET
+  -
+    type: var
+    var_name: L:FLAG_SET
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
@@ -924,36 +768,6 @@ shared:
     var_name: L:AVIONIC_SET
   -
     type: var
-    var_name: L:TUG_FORWARD
-  -
-    type: var
-    var_name: L:TUG_LEFT
-  -
-    type: var
-    var_name: L:TUG_RIGHT
-  -
-    type: var
-    var_name: L:FLAPS_DOWN
-  -
-    type: var
-    var_name: L:FLAPS_DELAY
-  -
-    type: var
-    var_name: L:Auto_Starting_Init
-  -
-    type: var
-    var_name: L:Auto_Start_delay
-  -
-    type: var
-    var_name: L:Cowl_Init
-  -
-    type: var
-    var_name: L:Cowl_Init_delay
-  -
-    type: var
-    var_name: L:Hohe_Var_Altitude
-  -
-    type: var
     var_name: L:Compas_Cap_1
     interpolate: Default
   -
@@ -966,66 +780,12 @@ shared:
     interpolate: Default
   -
     type: var
-    var_name: L:L_Switch_Servo_1
-# -
-#   type: var
-#   var_name: L:SERVO1
-# -
-#   type: var
-#   var_name: L:INIT_SERVO1
-  -
-    type: var
-    var_name: L:L_Switch_Servo_2
-# -
-#   type: var
-#   var_name: L:SERVO2
-# -
-#   type: var
-#   var_name: L:INIT_SERVO2
-  -
-    type: var
     var_name: L:My_Throttle_Friction
     unreliable: true
-# -
-#   type: var
-#   var_name: L:Custom_Oil_Temp_1
-# -
-#   type: var
-#   var_name: L:Compas_Nav_H_2
-  -
-    type: var
-    var_name: L:Local_Switch_Supply_Nav_Table_1
-  -
-    type: var
-    var_name: L:Local_Switch_Supply_Nav_Table_3
-# -
-#   type: var
-#   var_name: L:Compas_Nav_H
   -
     type: var
     var_name: L:SIF_FREQUENCE
-    interpolate: Default
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden3
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden4
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden5
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden6
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden7
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -1037,12 +797,6 @@ shared:
 #   var_name: L:HANDLING_ElevatorTrim
   -
     type: var
-    var_name: L:Local_Switch_Supply_Nav_Table_2
-  -
-    type: var
-    var_name: L:Push_Vion_press
-  -
-    type: var
     var_name: L:My_Increment_Var
   -
     type: var
@@ -1050,288 +804,21 @@ shared:
   -
     type: var
     var_name: L:My_Increment_Var_Nav
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_2_1
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_1
-# -
-#   type: var
-#   var_name: L:Custom_CHT_Temp_1
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_2_2
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_2
-# -
-#   type: var
-#   var_name: L:Custom_CHT_Temp_2
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_2_3
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_3
-# -
-#   type: var
-#   var_name: L:Custom_CHT_Temp_3
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_2_4
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_4
-# -
-#   type: var
-#   var_name: L:Custom_CHT_Temp_4
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_2_5
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_5
-# -
-#   type: var
-#   var_name: L:Custom_CHT_Temp_5
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_2_6
-# -
-#   type: var
-#   var_name: L:Custom_CHT_K_6
-# -
-#   type: var
-#   var_name: L:Custom_CHT_Temp_6
   -
     type: var
-    var_name: L:Local_Switch_temp_1
-  -
-    type: var
-    var_name: L:Local_Switch_temp_2
-# -
-#   type: var
-#   var_name: L:Custom_Oil_Temp_2
-  -
-    type: var
-    var_name: L:Local_Switch_temp_3
-# -
-#   type: var
-#   var_name: L:Custom_Oil_Temp_3
-  -
-    type: var
-    var_name: L:Local_Switch_temp_4
-# -
-#   type: var
-#   var_name: L:Custom_Oil_Temp_4
-  -
-    type: var
-    var_name: L:Local_Switch_temp_5
-# -
-#   type: var
-#   var_name: L:Custom_Oil_Temp_5
-  -
-    type: var
-    var_name: L:Local_Switch_temp_6
-# -
-#   type: var
-#   var_name: L:Custom_Oil_Temp_6
-# -
-#   type: var
-#   var_name: L:Custom_OIL_K_2_1
-# -
-#   type: var
-#   var_name: L:Custom_Oil_K_1
-# -
-#   type: var
-#   var_name: L:Custom_OIL_K_2_2
-# -
-#   type: var
-#   var_name: L:Custom_Oil_K_2
-# -
-#   type: var
-#   var_name: L:Custom_OIL_K_2_3
-# -
-#   type: var
-#   var_name: L:Custom_Oil_K_3
-# -
-#   type: var
-#   var_name: L:Custom_OIL_K_2_4
-# -
-#   type: var
-#   var_name: L:Custom_Oil_K_4
-# -
-#   type: var
-#   var_name: L:Custom_OIL_K_2_5
-# -
-#   type: var
-#   var_name: L:Custom_Oil_K_5
-# -
-#   type: var
-#   var_name: L:Custom_OIL_K_2_6
-# -
-#   type: var
-#   var_name: L:Custom_Oil_K_6
-  -
-    type: var
-    var_name: L:Local_Relais_Starter
-  -
-    type: var
-    var_name: L:Local_Switch_Heating_Oil_1
-  -
-    type: var
-    var_name: L:Local_Switch_Heating_Oil_2
-  -
-    type: var
-    var_name: L:Local_Switch_Heating_Oil_3
-  -
-    type: var
-    var_name: L:Local_Switch_Heating_Oil_4
-  -
-    type: var
-    var_name: L:Local_Switch_Heating_Oil_5
-  -
-    type: var
-    var_name: L:Local_Switch_Heating_Oil_6
-  -
-    type: var
-    var_name: L:Local_Switch_Supply_Instrument_2
-# -
-#   type: var
-#   var_name: L:Actual_Conso_Engine_1
-  -
-    type: var
-    var_name: L:Local_Switch_Supply_Instrument_1
-# -
-#   type: var
-#   var_name: L:TEMP_Conso_Engine_1
-# -
-#   type: var
-#   var_name: L:Actual_Conso_Engine_2
-# -
-#   type: var
-#   var_name: L:TEMP_Conso_Engine_2
-# -
-#   type: var
-#   var_name: L:Actual_Conso_Engine_3
-# -
-#   type: var
-#   var_name: L:TEMP_Conso_Engine_3
-# -
-#   type: var
-#   var_name: L:Actual_Conso_Engine_4
-# -
-#   type: var
-#   var_name: L:TEMP_Conso_Engine_4
-# -
-#   type: var
-#   var_name: L:Actual_Conso_Engine_5
-# -
-#   type: var
-#   var_name: L:TEMP_Conso_Engine_5
-# -
-#   type: var
-#   var_name: L:Actual_Conso_Engine_6
-# -
-#   type: var
-#   var_name: L:TEMP_Conso_Engine_6
-  -
-    type: var
-    var_name: L:Local_Switch_Telephone_Supply_4
-  -
-    type: var
-    var_name: L:Local_CowlFlaps_switch_1
-# -
-#   type: var
-#   var_name: L:Cowl_Flap_Smooth_Anim_1
-  -
-    type: var
-    var_name: L:Local_CowlFlaps_switch_2
-# -
-#   type: var
-#   var_name: L:Cowl_Flap_Smooth_Anim_2
-  -
-    type: var
-    var_name: L:Local_CowlFlaps_switch_3
-# -
-#   type: var
-#   var_name: L:Cowl_Flap_Smooth_Anim_3
-  -
-    type: var
-    var_name: L:Local_CowlFlaps_switch_4
-# -
-#   type: var
-#   var_name: L:Cowl_Flap_Smooth_Anim_4
-  -
-    type: var
-    var_name: L:Local_CowlFlaps_switch_5
-# -
-#   type: var
-#   var_name: L:Cowl_Flap_Smooth_Anim_5
-  -
-    type: var
-    var_name: L:Local_CowlFlaps_switch_6
-# -
-#   type: var
-#   var_name: L:Cowl_Flap_Smooth_Anim_6
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden3
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden4
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden5
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden6
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden3
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden4
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden5
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden6
-  -
-    type: var
-    var_name: L:My_Prop_pitch_Electrical
-  -
-    type: var
-    var_name: L:Local_Bus_Selector
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Enabled_1
-  -
-    type: var
-    var_name: L:AMORCE_VALVE
+    var_name: L:Hohe_Var_Altitude
 # -
 #   type: var
 #   var_name: L:LIGHTING_NAV_1
 # -
 #   type: var
 #   var_name: L:LIGHTING_LANDING_1
+  -
+    type: var
+    var_name: L:L_Switch_Servo_1
+  -
+    type: var
+    var_name: L:L_Switch_Servo_2
 # -
 #   type: var
 #   var_name: L:LIGHTING_PANEL_1
@@ -1406,6 +893,15 @@ shared:
     var_name: L:Local_Handle_Casier_1
   -
     type: var
+    var_name: L:Local_Switch_Supply_Nav_Table_1
+  -
+    type: var
+    var_name: L:Local_Switch_Supply_Nav_Table_2
+  -
+    type: var
+    var_name: L:Local_Switch_Supply_Nav_Table_3
+  -
+    type: var
     var_name: L:Local_Switch_Telephone_Supply_3
 # -
 #   type: var
@@ -1449,6 +945,27 @@ shared:
   -
     type: var
     var_name: L:Local_Magnetos_Cut
+  -
+    type: var
+    var_name: L:Local_Switch_temp_1
+  -
+    type: var
+    var_name: L:Local_Switch_temp_2
+  -
+    type: var
+    var_name: L:Local_Switch_temp_3
+  -
+    type: var
+    var_name: L:Local_Switch_temp_4
+  -
+    type: var
+    var_name: L:Local_Switch_temp_5
+  -
+    type: var
+    var_name: L:Local_Switch_temp_6
+  -
+    type: var
+    var_name: L:Local_Relais_Starter
 # -
 #   type: var
 #   var_name: L:ELECTRICAL_Starter_1
@@ -1469,13 +986,61 @@ shared:
 #   var_name: L:ELECTRICAL_Starter_6
   -
     type: var
+    var_name: L:Local_Switch_Heating_Oil_1
+  -
+    type: var
+    var_name: L:Local_Switch_Heating_Oil_2
+  -
+    type: var
+    var_name: L:Local_Switch_Heating_Oil_3
+  -
+    type: var
+    var_name: L:Local_Switch_Heating_Oil_4
+  -
+    type: var
+    var_name: L:Local_Switch_Heating_Oil_5
+  -
+    type: var
+    var_name: L:Local_Switch_Heating_Oil_6
+  -
+    type: var
+    var_name: L:Local_Switch_Supply_Instrument_1
+  -
+    type: var
+    var_name: L:Local_Switch_Supply_Instrument_2
+  -
+    type: var
+    var_name: L:Local_Switch_Telephone_Supply_4
+  -
+    type: var
     var_name: L:Local_Switch_Telephone_Mic_4
+  -
+    type: var
+    var_name: L:Local_CowlFlaps_switch_1
+  -
+    type: var
+    var_name: L:Local_CowlFlaps_switch_2
+  -
+    type: var
+    var_name: L:Local_CowlFlaps_switch_3
+  -
+    type: var
+    var_name: L:Local_CowlFlaps_switch_4
+  -
+    type: var
+    var_name: L:Local_CowlFlaps_switch_5
+  -
+    type: var
+    var_name: L:Local_CowlFlaps_switch_6
   -
     type: var
     var_name: L:Door_Cockpit_state
   -
     type: var
     var_name: L:Bedroom_Door_Lever
+  -
+    type: var
+    var_name: L:AMORCE_VALVE
   -
     type: var
     var_name: L:Dump_Switch_State_3
@@ -1529,6 +1094,9 @@ shared:
     var_name: L:Local_Switch_Deice_Prop_3
   -
     type: var
+    var_name: L:Local_Bus_Selector
+  -
+    type: var
     var_name: L:Local_Switch_prop_Warning_1
   -
     type: var
@@ -1554,36 +1122,227 @@ shared:
   -
     type: var
     var_name: L:Local_Apu_Off
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+  -
+    type: var
+    var_name: L:TUG_FORWARD
+  -
+    type: var
+    var_name: L:TUG_LEFT
+  -
+    type: var
+    var_name: L:TUG_RIGHT
+  -
+    type: var
+    var_name: L:FLAPS_DOWN
+  -
+    type: var
+    var_name: L:FLAPS_DELAY
+  -
+    type: var
+    var_name: L:Auto_Starting_Init
+  -
+    type: var
+    var_name: L:Auto_Start_delay
+  -
+    type: var
+    var_name: L:Cowl_Init
+  -
+    type: var
+    var_name: L:Cowl_Init_delay
+# -
+#   type: var
+#   var_name: L:SERVO1
+# -
+#   type: var
+#   var_name: L:INIT_SERVO1
+# -
+#   type: var
+#   var_name: L:SERVO2
+# -
+#   type: var
+#   var_name: L:INIT_SERVO2
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_2_1
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_1
+# -
+#   type: var
+#   var_name: L:Custom_CHT_Temp_1
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_2_2
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_2
+# -
+#   type: var
+#   var_name: L:Custom_CHT_Temp_2
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_2_3
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_3
+# -
+#   type: var
+#   var_name: L:Custom_CHT_Temp_3
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_2_4
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_4
+# -
+#   type: var
+#   var_name: L:Custom_CHT_Temp_4
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_2_5
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_5
+# -
+#   type: var
+#   var_name: L:Custom_CHT_Temp_5
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_2_6
+# -
+#   type: var
+#   var_name: L:Custom_CHT_K_6
+# -
+#   type: var
+#   var_name: L:Custom_CHT_Temp_6
+# -
+#   type: var
+#   var_name: L:Custom_OIL_K_2_1
+# -
+#   type: var
+#   var_name: L:Custom_Oil_K_1
+# -
+#   type: var
+#   var_name: L:Custom_Oil_Temp_1
+# -
+#   type: var
+#   var_name: L:Custom_OIL_K_2_2
+# -
+#   type: var
+#   var_name: L:Custom_Oil_K_2
+# -
+#   type: var
+#   var_name: L:Custom_Oil_Temp_2
+# -
+#   type: var
+#   var_name: L:Custom_OIL_K_2_3
+# -
+#   type: var
+#   var_name: L:Custom_Oil_K_3
+# -
+#   type: var
+#   var_name: L:Custom_Oil_Temp_3
+# -
+#   type: var
+#   var_name: L:Custom_OIL_K_2_4
+# -
+#   type: var
+#   var_name: L:Custom_Oil_K_4
+# -
+#   type: var
+#   var_name: L:Custom_Oil_Temp_4
+# -
+#   type: var
+#   var_name: L:Custom_OIL_K_2_5
+# -
+#   type: var
+#   var_name: L:Custom_Oil_K_5
+# -
+#   type: var
+#   var_name: L:Custom_Oil_Temp_5
+# -
+#   type: var
+#   var_name: L:Custom_OIL_K_2_6
+# -
+#   type: var
+#   var_name: L:Custom_Oil_K_6
+# -
+#   type: var
+#   var_name: L:Custom_Oil_Temp_6
+# -
+#   type: var
+#   var_name: L:Actual_Conso_Engine_1
+# -
+#   type: var
+#   var_name: L:TEMP_Conso_Engine_1
+# -
+#   type: var
+#   var_name: L:Actual_Conso_Engine_2
+# -
+#   type: var
+#   var_name: L:TEMP_Conso_Engine_2
+# -
+#   type: var
+#   var_name: L:Actual_Conso_Engine_3
+# -
+#   type: var
+#   var_name: L:TEMP_Conso_Engine_3
+# -
+#   type: var
+#   var_name: L:Actual_Conso_Engine_4
+# -
+#   type: var
+#   var_name: L:TEMP_Conso_Engine_4
+# -
+#   type: var
+#   var_name: L:Actual_Conso_Engine_5
+# -
+#   type: var
+#   var_name: L:TEMP_Conso_Engine_5
+# -
+#   type: var
+#   var_name: L:Actual_Conso_Engine_6
+# -
+#   type: var
+#   var_name: L:TEMP_Conso_Engine_6
+# -
+#   type: var
+#   var_name: L:Cowl_Flap_Smooth_Anim_1
+# -
+#   type: var
+#   var_name: L:Cowl_Flap_Smooth_Anim_2
+# -
+#   type: var
+#   var_name: L:Cowl_Flap_Smooth_Anim_3
+# -
+#   type: var
+#   var_name: L:Cowl_Flap_Smooth_Anim_4
+# -
+#   type: var
+#   var_name: L:Cowl_Flap_Smooth_Anim_5
+# -
+#   type: var
+#   var_name: L:Cowl_Flap_Smooth_Anim_6
+# -
+#   type: var
+#   var_name: L:Compas_Nav_H_2
+# -
+#   type: var
+#   var_name: L:Compas_Nav_H
+  -
+    type: var
+    var_name: L:Push_Vion_press
+  -
+    type: var
+    var_name: L:My_Prop_pitch_Electrical
 
 master:
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE1_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE2_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE3_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:4
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE4_SET
-    interpolate: Default
   -
     type: var
     var_name: A:GENERAL ENG THROTTLE LEVER POSITION:5

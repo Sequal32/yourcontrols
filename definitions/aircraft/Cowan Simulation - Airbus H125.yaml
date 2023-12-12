@@ -1,11 +1,14 @@
 # Version 1.0.2
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTN650.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
+  - definitions/modules/controls_rotor.yaml
+  - definitions/modules/engines_rotor.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
@@ -13,10 +16,25 @@ include:
   - definitions/modules/radios.yaml
   - definitions/modules/rotorcraft.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
+  - # Gyrocompass
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:29
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 29
+
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+
   - # Electrical
     type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
@@ -29,8 +47,12 @@ shared:
     var_name: A:CIRCUIT SWITCH ON:23
     var_units: Bool
     var_type: bool
-    event_name: ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE
-    event_param: 2
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 23
+  -
+    type: CustomCalculator
+    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
   -
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
@@ -48,12 +70,13 @@ shared:
     event_param: 2
 
   - # Hydraulics
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:1
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 1
+    index_reversed: true
 
   - # Lights
     type: NumSet
@@ -231,12 +254,13 @@ shared:
   -
     type: var
     var_name: L:buttonAnnTest
-# -
-#   type: var
-#   var_name: L:CollectiveGrip
   -
     type: var
-    var_name: L:collGripState
+    var_name: L:CollectiveGrip
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:collGripState
   -
     type: var
     var_name: L:exitFrontL
@@ -284,21 +308,36 @@ shared:
 #   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
+    var_name: L:floatsArmed
+  -
+    type: var
+    var_name: L:switchBlowFloats
+  -
+    type: var
+    var_name: L:floatsBlown
+  -
+    type: var
+    var_name: L:exitBaggageR
+  -
+    type: var
     var_name: L:ventFrontL
     unreliable: true
+  -
+    type: var
+    var_name: L:exitBaggageLAft
+  -
+    type: var
+    var_name: L:h125SearchLightDown
+  -
+    type: var
+    var_name: L:exitBaggageL
   -
     type: var
     var_name: L:ventFrontR
     unreliable: true
   -
     type: var
-    var_name: L:exitBaggageR
-  -
-    type: var
-    var_name: L:exitBaggageL
-  -
-    type: var
-    var_name: L:exitBaggageLAft
+    var_name: L:h125SearchLightRight
   -
     type: var
     var_name: L:hideDoorFL
@@ -311,24 +350,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:hideHeatBlur
-  -
-    type: var
-    var_name: L:h125SearchLightDown
-  -
-    type: var
-    var_name: L:h125SearchLightRight
-  -
-    type: var
-    var_name: L:floatsArmed
-  -
-    type: var
-    var_name: L:switchBlowFloats
-  -
-    type: var
-    var_name: L:floatsBlown
-  -
-    type: var
-    var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
+# -
+#   type: var
+#   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
   -
     type: var
     var_name: L:twistGrip
@@ -344,9 +368,6 @@ shared:
   -
     type: var
     var_name: L:trimRelease2
-# -
-#   type: var
-#   var_name: L:exteriorSound
   -
     type: var
     var_name: L:latchR1
@@ -371,81 +392,6 @@ shared:
   -
     type: var
     var_name: L:latchL2Aft
-# -
-#   type: var
-#   var_name: L:vemdInitStartTime
-# -
-#   type: var
-#   var_name: L:vemdInitTime
-# -
-#   type: var
-#   var_name: L:vemdInit0
-# -
-#   type: var
-#   var_name: L:vemdInitGps
-  -
-    type: var
-    var_name: L:vemdCurs
-  -
-    type: var
-    var_name: L:vemdPwrCkInit
-  -
-    type: var
-    var_name: L:vemdEew
-  -
-    type: var
-    var_name: L:vemdCrew
-  -
-    type: var
-    var_name: L:vemdPayload
-  -
-    type: var
-    var_name: L:vemdEewCorr
-  -
-    type: var
-    var_name: L:vemdCrewCorr
-  -
-    type: var
-    var_name: L:vemdPayloadCorr
-# -
-#   type: var
-#   var_name: L:vemdAllUpW
-# -
-#   type: var
-#   var_name: L:vemdFlash
-# -
-#   type: var
-#   var_name: L:vemdPcInitCleared
-# -
-#   type: var
-#   var_name: L:vemdPwrCkDelay
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Heat_1_Position
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Air_1_Position
-  -
-    type: var
-    var_name: L:vemdPwrCkPage
-# -
-#   type: var
-#   var_name: L:vemdFlightRun
-# -
-#   type: var
-#   var_name: L:vemdFlightTimeStart
-# -
-#   type: var
-#   var_name: L:vemdFlightTime
-  -
-    type: var
-    var_name: L:vemdPwrCkPageRslt
-  -
-    type: var
-    var_name: L:vemdPerformPage
-  -
-    type: var
-    var_name: L:vemdFlightRptPage
   -
     type: var
     var_name: L:vemd1Off
@@ -455,6 +401,39 @@ shared:
   -
     type: var
     var_name: L:VemdEngPage
+  -
+    type: var
+    var_name: L:vemdPwrCkInit
+  -
+    type: var
+    var_name: L:vemdPerformPage
+  -
+    type: var
+    var_name: L:vemdPcInitCleared
+  -
+    type: var
+    var_name: L:vemdPwrCkPage
+  -
+    type: var
+    var_name: L:vemdPwrCkPageRslt
+  -
+    type: var
+    var_name: L:vemdFlightRptPage
+  -
+    type: var
+    var_name: L:vemdCurs
+  -
+    type: var
+    var_name: L:vemdFlightRun
+  -
+    type: var
+    var_name: L:vemdEewCorr
+  -
+    type: var
+    var_name: L:vemdCrewCorr
+  -
+    type: var
+    var_name: L:vemdPayloadCorr
   -
     type: var
     var_name: L:vemdZpCorr
@@ -467,12 +446,6 @@ shared:
   -
     type: var
     var_name: L:switchHornMute
-# -
-#   type: var
-#   var_name: L:hornCaution285
-# -
-#   type: var
-#   var_name: L:hornCaution310
   -
     type: var
     var_name: L:fuelPump
@@ -497,30 +470,6 @@ shared:
   -
     type: var
     var_name: L:switchBlowFloatsCover
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Enabled_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Enabled_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_STATE
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_TEST_TIME
-  -
-    type: var
-    var_name: L:latchL3Aft
   -
     type: var
     var_name: L:extPwrCap
@@ -593,9 +542,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:LIGHTING_LANDING_1
-  -
-    type: var
-    var_name: L:AS650_NAV_Freq_Modify
+# -
+#   type: var
+#   var_name: L:AS650_NAV_Freq_Modify
 # -
 #   type: var
 #   var_name: L:AS430_MapZoomRange
@@ -610,50 +559,88 @@ shared:
 #   var_name: L:AS530_SelectedSource
 # -
 #   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
 #   var_name: L:XMLVAR_AudioPanel_1
 # -
 #   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:XMLVAR_Cabin_Heat_1_Position
+  -
+    type: var
+    var_name: L:XMLVAR_Cabin_Air_1_Position
 # -
 #   type: var
 #   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:exteriorSound
+# -
+#   type: var
+#   var_name: L:vemdInitStartTime
+# -
+#   type: var
+#   var_name: L:vemdInitTime
+# -
+#   type: var
+#   var_name: L:vemdInit0
+# -
+#   type: var
+#   var_name: L:vemdInitGps
   -
     type: var
-    var_name: L:XmsnPressInit
+    var_name: L:vemdEew
   -
     type: var
-    var_name: L:XmsnPressCorr
+    var_name: L:vemdCrew
   -
     type: var
-    var_name: L:xmsnPressCheck
+    var_name: L:vemdPayload
+# -
+#   type: var
+#   var_name: L:vemdAllUpW
+# -
+#   type: var
+#   var_name: L:vemdFlash
+# -
+#   type: var
+#   var_name: L:vemdPwrCkDelay
+# -
+#   type: var
+#   var_name: L:vemdFlightTimeStart
+# -
+#   type: var
+#   var_name: L:vemdFlightTime
+# -
+#   type: var
+#   var_name: L:hornCaution285
+# -
+#   type: var
+#   var_name: L:hornCaution310
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
   -
     type: var
-    var_name: L:XmsnTempInit
-  -
-    type: var
-    var_name: L:XmsnTempCorr
-  -
-    type: var
-    var_name: L:xmsnTempCheck
-
-master:
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
-    var_units: Position 16k
-    var_type: f64
-    event_name: HELICOPTER_THROTTLE_SET
-    interpolate: Default
-  -
-    type: var
-    var_name: A:COLLECTIVE POSITION
-    var_units: Percent
-    var_type: f64
-    interpolate: Default
-  -
-    type: var
-    var_name: L:CollectiveGrip
-    interpolate: Default
+    var_name: L:latchL3Aft
 
 server:
   -

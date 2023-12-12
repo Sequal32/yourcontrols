@@ -1,18 +1,18 @@
 # Version 1.4.0 (Wheels & Amphibian)
 
 include:
-  - definitions/modules/Avionics/AS1000.yaml
-  - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_G1000.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -137,8 +137,8 @@ shared:
     var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
-    cancel_h_events: true
     event_param: 3
+    cancel_h_events: true
 
   - # Pilot door handle
     type: ToggleSwitch
@@ -563,9 +563,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:HANDLING_AileronsTrim
-  -
-    type: var
-    var_name: L:XMLVAR_InterSep
+# -
+#   type: var
+#   var_name: L:XMLVAR_InterSep
 # -
 #   type: var
 #   var_name: L:LIGHTING_POTENTIOMETER_2
@@ -771,12 +771,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_Starter_IsHeld
-  -
-    type: var
-    var_name: L:XMLVAR_DeiceWindshield_1
-  -
-    type: var
-    var_name: L:XMLVAR_DeiceWindshield_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_DeiceWindshield_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_DeiceWindshield_2
   -
     type: var
     var_name: L:XMLVAR_DEICE_Aircraft_IsHeld

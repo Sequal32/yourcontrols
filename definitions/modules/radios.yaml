@@ -1,152 +1,64 @@
 shared:
-  - # NAV
+  - # ADF
     type: NumSet
-    var_name: A:NAV ACTIVE FREQUENCY:1
-    var_units: Hz
+    var_name: A:ADF ACTIVE FREQUENCY:1
+    var_units: Frequency ADF BCD32
     var_type: i32
-    event_name: NAV1_RADIO_SET_HZ
+    event_name: ADF_ACTIVE_SET
     cancel_h_events: true
   -
     type: NumSet
-    var_name: A:NAV ACTIVE FREQUENCY:2
-    var_units: Hz
+    var_name: A:ADF ACTIVE FREQUENCY:2
+    var_units: Frequency ADF BCD32
     var_type: i32
-    event_name: NAV2_RADIO_SET_HZ
+    event_name: ADF2_ACTIVE_SET
     cancel_h_events: true
   -
     type: NumSet
-    var_name: A:NAV ACTIVE FREQUENCY:3
-    var_units: Hz
+    var_name: A:ADF STANDBY FREQUENCY:1
+    var_units: Frequency ADF BCD32
     var_type: i32
-    event_name: NAV3_RADIO_SET_HZ
+    event_name: ADF_STBY_SET
     cancel_h_events: true
   -
     type: NumSet
-    var_name: A:NAV ACTIVE FREQUENCY:4
-    var_units: Hz
+    var_name: A:ADF STANDBY FREQUENCY:2
+    var_units: Frequency ADF BCD32
     var_type: i32
-    event_name: NAV4_RADIO_SET_HZ
+    event_name: ADF2_STBY_SET
     cancel_h_events: true
   -
     type: NumSet
-    var_name: A:NAV STANDBY FREQUENCY:1
-    var_units: Hz
-    var_type: i32
-    event_name: NAV1_STBY_SET_HZ
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:NAV STANDBY FREQUENCY:2
-    var_units: Hz
-    var_type: i32
-    event_name: NAV2_STBY_SET_HZ
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:NAV STANDBY FREQUENCY:3
-    var_units: Hz
-    var_type: i32
-    event_name: NAV3_STBY_SET_HZ
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:NAV STANDBY FREQUENCY:4
-    var_units: Hz
-    var_type: i32
-    event_name: NAV4_STBY_SET_HZ
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:NAV SOUND:1
+    var_name: A:ADF SOUND:1
     var_units: Bool
     var_type: f64
-    event_name: RADIO_VOR1_IDENT_SET
-    cancel_h_events: true
-  -
-    type: ToggleSwitch
-    var_name: A:NAV SOUND:1
-    var_units: Bool
-    var_type: bool
-    event_name: RADIO_VOR1_IDENT_TOGGLE
+    event_name: RADIO_ADF_IDENT_SET
     cancel_h_events: true
   -
     type: NumSet
-    var_name: A:NAV SOUND:2
+    var_name: A:ADF SOUND:2
     var_units: Bool
     var_type: f64
-    event_name: RADIO_VOR2_IDENT_SET
-    cancel_h_events: true
-  -
-    type: ToggleSwitch
-    var_name: A:NAV SOUND:2
-    var_units: Bool
-    var_type: bool
-    event_name: RADIO_VOR2_IDENT_TOGGLE
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:NAV SOUND:3
-    var_units: Bool
-    var_type: f64
-    event_name: RADIO_VOR3_IDENT_SET
-    cancel_h_events: true
-  -
-    type: ToggleSwitch
-    var_name: A:NAV SOUND:3
-    var_units: Bool
-    var_type: bool
-    event_name: RADIO_VOR3_IDENT_TOGGLE
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:NAV SOUND:4
-    var_units: Bool
-    var_type: f64
-    event_name: RADIO_VOR4_IDENT_SET
-    cancel_h_events: true
-  -
-    type: ToggleSwitch
-    var_name: A:NAV SOUND:4
-    var_units: Bool
-    var_type: bool
-    event_name: RADIO_VOR4_IDENT_TOGGLE
+    event_name: RADIO_ADF2_IDENT_SET
     cancel_h_events: true
   -
     type: NumIncrement
-    var_name: A:NAV VOLUME:1
+    var_name: A:ADF VOLUME:1
     var_units: Percent
     var_type: i32
-    up_event_name: NAV1_VOLUME_INC
-    down_event_name: NAV1_VOLUME_DEC
-    cancel_h_events: true
+    up_event_name: ADF_VOLUME_INC
+    down_event_name: ADF_VOLUME_DEC
     increment_by: 2
+    cancel_h_events: true
   -
     type: NumIncrement
-    var_name: A:NAV VOLUME:2
+    var_name: A:ADF VOLUME:2
     var_units: Percent
     var_type: i32
-    up_event_name: NAV2_VOLUME_INC
-    down_event_name: NAV2_VOLUME_DEC
-    cancel_h_events: true
+    up_event_name: ADF2_VOLUME_INC
+    down_event_name: ADF2_VOLUME_DEC
     increment_by: 2
-  -
-    type: NumIncrement
-    var_name: A:NAV VOLUME:3
-    var_units: Percent
-    var_type: i32
-    up_event_name: NAV3_VOLUME_INC
-    down_event_name: NAV3_VOLUME_DEC
     cancel_h_events: true
-    increment_by: 2
-  -
-    type: NumIncrement
-    var_name: A:NAV VOLUME:4
-    var_units: Percent
-    var_type: i32
-    up_event_name: NAV4_VOLUME_INC
-    down_event_name: NAV4_VOLUME_DEC
-    cancel_h_events: true
-    increment_by: 2
 
   - # COM
     type: NumSet
@@ -303,67 +215,6 @@ shared:
     event_name: COM3_RECEIVE_SELECT
     cancel_h_events: true
 
-  - # ADF
-    type: NumSet
-    var_name: A:ADF ACTIVE FREQUENCY:1
-    var_units: Frequency ADF BCD32
-    var_type: i32
-    event_name: ADF_ACTIVE_SET
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:ADF ACTIVE FREQUENCY:2
-    var_units: Frequency ADF BCD32
-    var_type: i32
-    event_name: ADF2_ACTIVE_SET
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:ADF STANDBY FREQUENCY:1
-    var_units: Frequency ADF BCD32
-    var_type: i32
-    event_name: ADF_STBY_SET
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:ADF STANDBY FREQUENCY:2
-    var_units: Frequency ADF BCD32
-    var_type: i32
-    event_name: ADF2_STBY_SET
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:ADF SOUND:1
-    var_units: Bool
-    var_type: f64
-    event_name: RADIO_ADF_IDENT_SET
-    cancel_h_events: true
-  -
-    type: NumSet
-    var_name: A:ADF SOUND:2
-    var_units: Bool
-    var_type: f64
-    event_name: RADIO_ADF2_IDENT_SET
-    cancel_h_events: true
-  -
-    type: NumIncrement
-    var_name: A:ADF VOLUME:1
-    var_units: Percent
-    var_type: i32
-    up_event_name: ADF_VOLUME_INC
-    down_event_name: ADF_VOLUME_DEC
-    cancel_h_events: true
-    increment_by: 2
-  -
-    type: NumIncrement
-    var_name: A:ADF VOLUME:2
-    var_units: Percent
-    var_type: i32
-    up_event_name: ADF2_VOLUME_INC
-    down_event_name: ADF2_VOLUME_DEC
-    cancel_h_events: true
-    increment_by: 2
-
   - # DME
     type: NumSet
     var_name: A:DME SOUND:1
@@ -391,6 +242,155 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: RADIO_DME2_IDENT_TOGGLE
+    cancel_h_events: true
+
+  - # NAV
+    type: NumSet
+    var_name: A:NAV ACTIVE FREQUENCY:1
+    var_units: Hz
+    var_type: i32
+    event_name: NAV1_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV ACTIVE FREQUENCY:2
+    var_units: Hz
+    var_type: i32
+    event_name: NAV2_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV ACTIVE FREQUENCY:3
+    var_units: Hz
+    var_type: i32
+    event_name: NAV3_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV ACTIVE FREQUENCY:4
+    var_units: Hz
+    var_type: i32
+    event_name: NAV4_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV STANDBY FREQUENCY:1
+    var_units: Hz
+    var_type: i32
+    event_name: NAV1_STBY_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV STANDBY FREQUENCY:2
+    var_units: Hz
+    var_type: i32
+    event_name: NAV2_STBY_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV STANDBY FREQUENCY:3
+    var_units: Hz
+    var_type: i32
+    event_name: NAV3_STBY_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV STANDBY FREQUENCY:4
+    var_units: Hz
+    var_type: i32
+    event_name: NAV4_STBY_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV SOUND:1
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_VOR1_IDENT_SET
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:NAV SOUND:1
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_VOR1_IDENT_TOGGLE
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV SOUND:2
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_VOR2_IDENT_SET
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:NAV SOUND:2
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_VOR2_IDENT_TOGGLE
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV SOUND:3
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_VOR3_IDENT_SET
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:NAV SOUND:3
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_VOR3_IDENT_TOGGLE
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:NAV SOUND:4
+    var_units: Bool
+    var_type: f64
+    event_name: RADIO_VOR4_IDENT_SET
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:NAV SOUND:4
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_VOR4_IDENT_TOGGLE
+    cancel_h_events: true
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:1
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV1_VOLUME_INC
+    down_event_name: NAV1_VOLUME_DEC
+    increment_by: 2
+    cancel_h_events: true
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:2
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV2_VOLUME_INC
+    down_event_name: NAV2_VOLUME_DEC
+    increment_by: 2
+    cancel_h_events: true
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:3
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV3_VOLUME_INC
+    down_event_name: NAV3_VOLUME_DEC
+    increment_by: 2
+    cancel_h_events: true
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:4
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV4_VOLUME_INC
+    down_event_name: NAV4_VOLUME_DEC
+    increment_by: 2
     cancel_h_events: true
 
   - # TACAN
@@ -456,8 +456,8 @@ shared:
     var_type: i32
     up_event_name: TACAN1_VOLUME_INC
     down_event_name: TACAN1_VOLUME_DEC
-    cancel_h_events: true
     increment_by: 2
+    cancel_h_events: true
   -
     type: NumIncrement
     var_name: A:TACAN VOLUME:2
@@ -465,18 +465,18 @@ shared:
     var_type: i32
     up_event_name: TACAN2_VOLUME_INC
     down_event_name: TACAN2_VOLUME_DEC
-    cancel_h_events: true
     increment_by: 2
+    cancel_h_events: true
 
   - # Audio Panel
     type: NumIncrement
     var_name: A:AUDIO PANEL VOLUME
     var_units: Percent
-    var_type: f64
+    var_type: i32
     up_event_name: AUDIO_PANEL_VOLUME_INC
     down_event_name: AUDIO_PANEL_VOLUME_DEC
-    cancel_h_events: true
     increment_by: 1
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:PILOT TRANSMITTER TYPE

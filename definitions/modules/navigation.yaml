@@ -5,16 +5,16 @@ shared:
     var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
-    cancel_h_events: true
     event_param: 1
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:2
     var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
-    cancel_h_events: true
     event_param: 2
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:AIRSPEED TRUE CALIBRATE
@@ -44,6 +44,13 @@ shared:
     down_event_name: DECREASE_DECISION_HEIGHT
     increment_by: 10
   -
+    type: NumSet
+    var_name: A:DECISION ALTITUDE MSL
+    var_units: Feet
+    var_type: f64
+    event_name: SET_DECISION_ALTITUDE_MSL
+    cancel_h_events: true
+  -
     type: ToggleSwitch
     var_name: A:GPS OBS ACTIVE
     var_units: Bool
@@ -55,7 +62,7 @@ shared:
     type: NumSet
     var_name: A:GPS OBS VALUE
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: GPS_OBS_SET
     cancel_h_events: true
     use_calculator: true
@@ -63,7 +70,7 @@ shared:
     type: NumSet
     var_name: A:ADF CARD
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: ADF_CARD_SET
     cancel_h_events: true
     use_calculator: true
@@ -71,7 +78,7 @@ shared:
     type: NumSet
     var_name: A:NAV OBS:1
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: VOR1_SET
     cancel_h_events: true
     use_calculator: true
@@ -79,7 +86,7 @@ shared:
     type: NumSet
     var_name: A:NAV OBS:2
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: VOR2_SET
     cancel_h_events: true
     use_calculator: true
@@ -87,7 +94,7 @@ shared:
     type: NumSet
     var_name: A:NAV OBS:3
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: VOR3_SET
     cancel_h_events: true
     use_calculator: true
@@ -95,7 +102,7 @@ shared:
     type: NumSet
     var_name: A:NAV OBS:4
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: VOR4_SET
     cancel_h_events: true
     use_calculator: true
@@ -103,7 +110,7 @@ shared:
     type: NumSet
     var_name: A:TACAN OBS:1
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: TACAN1_SET
     cancel_h_events: true
     use_calculator: true
@@ -111,7 +118,7 @@ shared:
     type: NumSet
     var_name: A:TACAN OBS:2
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: TACAN2_SET
     cancel_h_events: true
     use_calculator: true

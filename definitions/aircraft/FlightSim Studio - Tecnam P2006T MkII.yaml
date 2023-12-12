@@ -1,42 +1,40 @@
-# Version 1.0.5
+# Version 1.0.6
 
 include:
-  - definitions/modules/Avionics/AS1000.yaml
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
+  - definitions/modules/Instruments/AS_G1000.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics master
-    type: CustomCalculator
-    get: 14 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
-    set: 4 14 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # Deice
+    type: NumSet
+    var_name: A:RECIP ENG ALTERNATE AIR POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+    unreliable: true
   -
-    type: CustomCalculator
-    get: 15 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
-    set: 5 15 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # Avionics bus
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:8, Bool)
-    set: 8 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+    type: NumSet
+    var_name: A:RECIP ENG ALTERNATE AIR POSITION:2
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG2
+    unreliable: true
   -
-    type: CustomCalculator
-    get: 9 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
-    set: 3 9 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-
-  - # Battery
-    type: CustomCalculator
-    get: 3 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
-    set: 11 3 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
 
   - # Doors
     type: ToggleSwitch
@@ -274,6 +272,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:FSS_P2006T_SWITCH_CWS
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_Switch_Yoke_R
@@ -322,6 +323,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SWITCH_PITOT_HEAT
   -
     type: var
     var_name: L:FIRE_DETECT_TEST
@@ -665,6 +669,12 @@ shared:
     var_name: L:FSS_P2006T_BACKUP_ALT_UNIT_IS_FT
 # -
 #   type: var
+#   var_name: L:FSS_P2006T_AIRCRAFT_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_AIRCRAFT_BANK
+# -
+#   type: var
 #   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
 # -
 #   type: var
@@ -852,12 +862,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_ENGINE_TACH_TIME_SET_2
-  -
-    type: var
-    var_name: L:FSS_P2006T_BINDING_CARB_HEAT_LEVER_1
-  -
-    type: var
-    var_name: L:FSS_P2006T_BINDING_CARB_HEAT_LEVER_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BINDING_CARB_HEAT_LEVER_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BINDING_CARB_HEAT_LEVER_2
   -
     type: var
     var_name: L:FSS_P2006T_BINDING_ENGINE_CHOKE_1
@@ -980,9 +990,6 @@ shared:
 #   var_name: L:WalkaroundPanel_State
 # -
 #   type: var
-#   var_name: L:AEROSOFT_ONE_MSFS_UTILITIES_CONFIG1
-# -
-#   type: var
 #   var_name: L:Sim_ScreenLuminosity
 # -
 #   type: var
@@ -1002,6 +1009,11 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_BRAKE_SIM_CONDITION
+  - # Manually added
+    type: var
+    var_name: L:FSS_P2006T_BRAKE_SIM_CONDITION_SET
+    cancel_h_events: true
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_SOUND_PROPELLER_AUDIO_PITCH_LEFT
@@ -1073,16 +1085,16 @@ shared:
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
 # -
 #   type: var
-#   var_name: L:WT1000_AP_G1000_INSTALLED
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+#   var_name: L:WT1000_AP_G1000_INSTALLED
 # -
 #   type: var
 #   var_name: L:AP_KAP140_INSTALLED

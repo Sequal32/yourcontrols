@@ -1,14 +1,17 @@
-# Version 0.10.6
+# Version 0.10.8
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/TDSNXi.yaml
-  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -31,20 +34,6 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 10
     index_reversed: true
-
-  - # Autopilot
-    type: NumSet
-    var_name: A:AUTOPILOT HEADING LOCK DIR
-    var_units: Degrees
-    var_type: i32
-    event_name: HEADING_BUG_SET
-    use_calculator: true
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT ALTITUDE LOCK
-    var_units: Bool
-    var_type: bool
-    event_name: AP_PANEL_ALTITUDE_HOLD
 
   - # LVAR's
     type: var
@@ -97,9 +86,9 @@ shared:
   -
     type: var
     var_name: L:CoPilot_enabled
-  -
-    type: var
-    var_name: L:Radio_light_scaler
+# -
+#   type: var
+#   var_name: L:Radio_light_scaler
   -
     type: var
     var_name: L:GPS100_fascia_scaler
@@ -183,6 +172,7 @@ shared:
   -
     type: var
     var_name: L:DIRECTION_INDICATOR_bug
+    var_type: i32
     unreliable: true
 # -
 #   type: var
@@ -244,12 +234,12 @@ shared:
   -
     type: var
     var_name: L:LEFT_MISC_elt
-  -
-    type: var
-    var_name: L:LEFT_MISC_navgps
-  -
-    type: var
-    var_name: L:LEFT_MISC_press_test
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_navgps
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_press_test
   -
     type: var
     var_name: L:LEFT_MISC_press_test_IsDown
@@ -277,9 +267,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:LEFT_MISC_window
-# - # Open/Close Toggle
-#   type: var
-#   var_name: L:LEFT_MISC_window_LC
+  - # Open/Close Toggle
+    type: var
+    var_name: L:LEFT_MISC_window_LC
   -
     type: var
     var_name: L:LEFT_MISC_window_latch
@@ -334,27 +324,27 @@ shared:
   -
     type: var
     var_name: L:AUTOPILOT_onoff
-  -
+  - # Enable
     type: var
     var_name: L:AUTOPILOT_hdg
-  -
-    type: var
-    var_name: L:AUTOPILOT_alt
-  -
-    type: var
-    var_name: L:AUTOPILOT_alt_dn
-  -
-    type: var
-    var_name: L:AUTOPILOT_alt_up
-  -
-    type: var
-    var_name: L:AUTOPILOT_vs
-  -
-    type: var
-    var_name: L:AUTOPILOT_vs_dn
-  -
-    type: var
-    var_name: L:AUTOPILOT_vs_up
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_alt
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_alt_dn
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_alt_up
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_vs
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_vs_dn
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_vs_up
   -
     type: var
     var_name: L:AUTOPILOT_mode
@@ -941,9 +931,9 @@ shared:
   -
     type: var
     var_name: L:DOOR_upper_latch
-# - # Open/Close Toggle (half broken)
-#   type: var
-#   var_name: L:DOOR_door
+  - # Open/Close Toggle
+    type: var
+    var_name: L:DOOR_door
   -
     type: var
     var_name: L:KR85_mode_knob
@@ -1169,6 +1159,21 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:EFB_batt
+# -
+#   type: var
+#   var_name: L:EFBArrow3_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:EFBArrow3_State
+  -
+    type: var
+    var_name: L:EFB_HOME_RETURN
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
   -
     type: var
     var_name: L:Towbar
@@ -1189,19 +1194,10 @@ shared:
 #   var_name: L:TDSGTNXI_InactiveVar
 # -
 #   type: var
-#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
-# -
-#   type: var
 #   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
-# -
-#   type: var
-#   var_name: L:EFB_batt
-  -
-    type: var
-    var_name: L:EFB_HOME_RETURN
 # -
 #   type: var
 #   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
@@ -1363,6 +1359,9 @@ shared:
 #   var_name: L:WTAP_VNav_Alt_Capture_Type
 # -
 #   type: var
+#   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
 #   var_name: L:WT1000_AP_G1000_INSTALLED
   -
     type: var
@@ -1397,33 +1396,33 @@ shared:
 # -
 #   type: var
 #   var_name: L:sound_FuelSel_CW
-  -
-    type: var
-    var_name: L:CENTRE_LOWER_nav_light_on
+# -
+#   type: var
+#   var_name: L:CENTRE_LOWER_nav_light_on
 # -
 #   type: var
 #   var_name: L:sound_Switch_Large_Dn
-  -
-    type: var
-    var_name: L:Panel_light_scaler
-  -
-    type: var
-    var_name: L:CENTRE_LOWER_panel_light_on
+# -
+#   type: var
+#   var_name: L:Panel_light_scaler
+# -
+#   type: var
+#   var_name: L:CENTRE_LOWER_panel_light_on
   -
     type: var
     var_name: L:LOWER_park_brake
-  -
-    type: var
-    var_name: L:LOWER_rudder_trim
+# -
+#   type: var
+#   var_name: L:LOWER_rudder_trim
 # -
 #   type: var
 #   var_name: L:Cabin_door_sound
-# -
-#   type: var
-#   var_name: L:DOOR_lower_latch_old
-# -
-#   type: var
-#   var_name: L:DOOR_upper_latch_old
+  -
+    type: var
+    var_name: L:DOOR_lower_latch_old
+  -
+    type: var
+    var_name: L:DOOR_upper_latch_old
   -
     type: var
     var_name: L:Pilot_straps
@@ -1442,12 +1441,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:WasmInstrument_State
-# -
-#   type: var
-#   var_name: L:EFBArrow3_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:EFBArrow3_State
 # -
 #   type: var
 #   var_name: L:GTN750_INT_ScreenLuminosity
@@ -1501,7 +1494,7 @@ shared:
 #   var_name: L:JF_PA28_AP_roll
 # -
 #   type: var
-#   var_name: L:WT_GNS430_INSTALLED_false
+#   var_name: L:sound_Switch_Large_Up
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -1513,6 +1506,7 @@ master:
   -
     type: var
     var_name: L:DIRECTION_INDICATOR_card
+    var_type: i32
     unreliable: true
 
 server:

@@ -1,20 +1,21 @@
 # Version 1.0.2
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -101,7 +102,7 @@ shared:
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
     var_name: L:DHC2_TAB_RADIOS
   -
@@ -368,66 +369,6 @@ shared:
   -
     type: var
     var_name: L:DHC2_Anchors
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:KR87_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KR87_State
-# -
-#   type: var
-#   var_name: L:KAP140_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KAP140_State
-# -
-#   type: var
-#   var_name: L:AutopilotPreflightCheckCompleted
-# -
-#   type: var
-#   var_name: L:AS330_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS330_State
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:KAP140_BARO_Display
 
 server:
   -
