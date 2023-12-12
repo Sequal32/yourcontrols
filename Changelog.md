@@ -6,6 +6,7 @@
 
 - Brake pedals are now shared. (THE CAR TINA!)
 - Improved sync of autopilot modes on Garmin avionics.
+  - Not perfect, but better.
 - Increased base engine support to 4.
 - Updated glider support for SU14.
 - Updated rotorcraft support for SU14.
