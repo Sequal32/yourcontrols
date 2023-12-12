@@ -24,7 +24,7 @@
 - Updated: Bell 407 by Nemeth Designs (v0.3.6).
 - Updated: Cessna 310R by Milviz/Blackbird (v2.0.4).
 - Updated: Cirrus SR22T G6 by Asobo/Working Title (v0.2.13).
-- Updated: Douglas DC-3 by Aeroplane Heaven (v1.2.3).
+- Updated: Douglas DC-3 by Aeroplane Heaven (v1.2.5).
 - Updated: Hughes H4 Hercules by Bluemesh (v1.2.5).
 - Updated: Latecoere 631 by Bluemesh (v1.0.8).
 
