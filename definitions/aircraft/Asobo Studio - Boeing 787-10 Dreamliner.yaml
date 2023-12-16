@@ -1,12 +1,12 @@
-# Version 0.1.103
+# Version 0.1.109
 
 include:
+  - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/transponder.yaml
-  - definitions/modules/trim.yaml
 
 shared:
   - # Autopilot
@@ -17,20 +17,11 @@ shared:
     event_name: AUTOPILOT_ON
     off_event_name: AUTOPILOT_OFF
   -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT THROTTLE ARM
-    var_units: Bool
-    var_type: bool
-    event_name: AUTO_THROTTLE_ARM
+    type: event
+    event_name: AUTO_THROTTLE_TO_GA
   -
     type: event
     event_name: AUTO_THROTTLE_DISCONNECT
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
-    var_units: Bool
-    var_type: bool
-    event_name: AUTO_THROTTLE_TO_GA
   -
     type: NumSet
     var_name: A:AUTOPILOT DISENGAGED
@@ -68,9 +59,10 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:1
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: HEADING_BUG_SET
     event_param: 1
+    interpolate: Default
   -
     type: NumSet
     var_name: A:AUTOPILOT MAX BANK ID
@@ -130,6 +122,7 @@ shared:
     var_type: i32
     event_name: AP_VS_VAR_SET_ENGLISH
     event_param: 1
+    interpolate: Default
 
   - # APU
     type: ToggleSwitch
@@ -145,7 +138,6 @@ shared:
     var_type: i32
     event_name: APU_GENERATOR_SWITCH_SET
     event_param: 1
-    index_reversed: true
   -
     type: NumSet
     var_name: A:APU GENERATOR SWITCH:2
@@ -153,32 +145,6 @@ shared:
     var_type: i32
     event_name: APU_GENERATOR_SWITCH_SET
     event_param: 2
-    index_reversed: true
-
-  - # Battery
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL MASTER BATTERY:1
-    var_units: Bool
-    var_type: bool
-    event_name: MASTER_BATTERY_ON
-    off_event_name: MASTER_BATTERY_OFF
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL MASTER BATTERY:2
-    var_units: Bool
-    var_type: bool
-    event_name: MASTER_BATTERY_ON
-    off_event_name: MASTER_BATTERY_OFF
-    event_param: 2
-  -
-    type: CustomCalculator
-    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:8, Bool)
-    set: 8 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 3 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
-    set: 9 3 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
   - # Engines
     type: ToggleSwitch
@@ -192,43 +158,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_STARTER2
-  -
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:1
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET1
-  -
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:2
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET2
-
-  - # EPU
-    type: NumSet
-    var_name: A:EXTERNAL POWER ON:1
-    var_units: Bool
-    var_type: i32
-    event_name: SET_EXTERNAL_POWER
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:EXTERNAL POWER ON:2
-    var_units: Bool
-    var_type: i32
-    event_name: SET_EXTERNAL_POWER
-    event_param: 2
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:EXTERNAL POWER ON:3
-    var_units: Bool
-    var_type: i32
-    event_name: SET_EXTERNAL_POWER
-    event_param: 3
-    index_reversed: true
 
   - # Fuel
     type: ToggleSwitch
@@ -352,19 +281,21 @@ shared:
     event_param: 4
 
   - # Hydraulics
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:1
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 1
+    index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:2
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 2
+    index_reversed: true
 
   - # IRS
     type: ToggleSwitch
@@ -437,6 +368,37 @@ shared:
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
     use_calculator: true
+
+  - # Handling
+    type: NumSet
+    var_name: A:AUTO BRAKE SWITCH CB
+    var_units: Number
+    var_type: i32
+    event_name: SET_AUTOBRAKE_CONTROL
+  -
+    type: NumSet
+    var_name: A:BRAKE PARKING POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: PARKING_BRAKE_SET
+  -
+    type: NumSet
+    var_name: A:FLAPS HANDLE PERCENT
+    var_units: Position 16k
+    var_type: f64
+    event_name: FLAPS_CONTINUOUS_SET
+    unreliable: true
+  -
+    type: var
+    var_name: A:FLAPS HANDLE INDEX
+    var_units: Number
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: GEAR_SET
 
   - # Pressure
     type: NumIncrement
@@ -725,6 +687,36 @@ shared:
     event_param: 30
     index_reversed: true
 
+  - # Trim
+    type: NumSet
+    var_name: A:RUDDER TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: RUDDER_TRIM_SET_EX1
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ELEVATOR TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: ELEVATOR_TRIM_SET
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AILERON TRIM PCT
+    var_units: Percent scaler 16k
+    var_type: f64
+    event_name: AILERON_TRIM_SET_EX1
+    unreliable: true
+
   - # Wipers
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:73
@@ -756,7 +748,10 @@ shared:
     event_param: 75
     index_reversed: true
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:WT_TOGA_ACTIVE
+  -
     type: var
     var_name: L:XMLVAR_SeatBelts
   -
@@ -926,9 +921,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_TrimAir_R
-  -
-    type: var
-    var_name: L:(L:WT_PRESS_MAN_ALT_ON)
+# -
+#   type: var
+#   var_name: L:(L:WT_PRESS_MAN_ALT_ON)
   -
     type: var
     var_name: L:XMLVAR_Utility_Cabin
@@ -994,9 +989,9 @@ shared:
   -
     type: var
     var_name: L:WT_MFD_1_CONTRAST
-  -
-    type: var
-    var_name: L:WT_Boeing_Autothrottle_Status
+# -
+#   type: var
+#   var_name: L:WT_Boeing_Autothrottle_Status
   -
     type: var
     var_name: L:XMLVAR_MFD_Side_2
@@ -1007,8 +1002,11 @@ shared:
     type: var
     var_name: L:XMLVAR_FansLower
   -
-    type: var
+    type: NumSet
     var_name: L:AS01B_AUTO_THROTTLE_ARM_STATE
+    var_units: Number
+    var_type: f64
+    event_name: AUTO_THROTTLE_ARM
   -
     type: var
     var_name: L:EXT_PWR_COMMANDED:1
@@ -1028,21 +1026,9 @@ shared:
   -
     type: var
     var_name: L:AP_VS_ACTIVE
-# -
-#   type: var
-#   var_name: L:WT_78_RUDDER_INPUT
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-# -
-#   type: var
-#   var_name: L:WT_78_AILERON_INPUT
-# -
-#   type: var
-#   var_name: L:WT_78_ELEVATOR_INPUT
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:WT_EFB_POWER
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_Switch_1
@@ -1057,96 +1043,40 @@ shared:
 #   var_name: L:XMLVAR_ElevatorTrim_3_SwitchStateTimer
 # -
 #   type: var
-#   var_name: L:ParkingBrake_Position
-# -
-#   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_Switch_2
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_2_SwitchStateTimer
 # -
 #   type: var
-#   var_name: L:WT_SPEEDBRAKE_LEVER_POS
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverSpoilersHidden
-# -
-#   type: var
-#   var_name: L:XMLVAR_ThrottlePosition_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_ThrottlePosition_2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden2
-  -
-    type: var
-    var_name: L:XMLVAR_LightMasterActive
-  -
-    type: var
-    var_name: L:FMC_EXEC_ACTIVE
-# -
-#   type: var
 #   var_name: L:XMLVAR_RudderTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
-  -
-    type: var
-    var_name: L:B787_10_Hud_Brightness_Level:1
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:WT_787_Auto_Backlight
-  -
-    type: var
-    var_name: L:B787_10_Hud_Brightness_Use_Auto:1
-  -
-    type: var
-    var_name: L:B787_10_Hud_Brightness_Level:2
-    unreliable: true
-  -
-    type: var
-    var_name: L:B787_10_Hud_Brightness_Use_Auto:2
-  -
-    type: var
-    var_name: L:WT_PRESS_MAN_ALT_ON
 # -
 #   type: var
 #   var_name: L:XMLVAR_Starter1
 # -
 #   type: var
 #   var_name: L:XMLVAR_Starter2
-  -
-    type: var
-    var_name: L:XMLVAR_FuelBalance_Active
-  -
-    type: var
-    var_name: L:XMLVAR_FuelBalance_Fault
-  -
-    type: var
-    var_name: L:XMLVAR_ACDC_Bus_Connected
 # -
 #   type: var
 #   var_name: L:XMLVAR_APU_StarterKnob_Pos
+  -
+    type: var
+    var_name: L:XMLVAR_LightMasterActive
 # -
 #   type: var
-#   var_name: L:XMLVAR_LTS_Test
+#   var_name: L:XMLVAR_YokeHidden1
 # -
 #   type: var
-#   var_name: L:B787_10_PFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:B787_10_MFD_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:B787_10_MFD_2_ScreenLuminosity
+#   var_name: L:XMLVAR_YokeHidden2
   -
     type: var
     var_name: L:B787_Hud_Symbology_Decluttered_Inhibit:1
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
@@ -1159,6 +1089,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Value
+  -
+    type: var
+    var_name: L:WT_PRESS_MAN_ALT_ON
   -
     type: var
     var_name: L:WT_PRESS_LDG_ALT
@@ -1199,7 +1132,7 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_FuelBalance_Switch_On
-# - # Fix this Working Title
+# -
 #   type: var
 #   var_name: L:
 # -
@@ -1268,12 +1201,81 @@ shared:
 # -
 #   type: var
 #   var_name: L:LIGHTING_POTENTIOMETER_30
+  -
+    type: var
+    var_name: L:B787_10_Hud_Brightness_Level:1
+    unreliable: true
+  -
+    type: var
+    var_name: L:B787_10_Hud_Brightness_Level:2
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:LIGHTING_PANEL_3
 # -
 #   type: var
 #   var_name: L:LIGHTING_PANEL_4
+# -
+#   type: var
+#   var_name: L:XMLVAR_ACDC_Bus_Connected
+# -
+#   type: var
+#   var_name: L:B787_10_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:B787_10_MFD_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:B787_10_MFD_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WT_78_RUDDER_INPUT
+  -
+    type: var
+    var_name: L:WT_SPEEDBRAKE_LEVER_POS
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePosition_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePosition_1
+# -
+#   type: var
+#   var_name: L:WT_78_ELEVATOR_INPUT
+# -
+#   type: var
+#   var_name: L:WT_78_AILERON_INPUT
+# -
+#   type: var
+#   var_name: L:FMC_EXEC_ACTIVE
+# -
+#   type: var
+#   var_name: L:WT_787_Auto_Backlight
+  -
+    type: var
+    var_name: L:B787_10_Hud_Brightness_Use_Auto:1
+  -
+    type: var
+    var_name: L:B787_10_Hud_Brightness_Use_Auto:2
+  -
+    type: var
+    var_name: L:XMLVAR_FuelBalance_Active
+  -
+    type: var
+    var_name: L:XMLVAR_FuelBalance_Fault
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverSpoilersHidden
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
 # -
 #   type: var
 #   var_name: L:WT_AVIONICS_CHECKLIST_AUTOCOMPLETE_PHASE
@@ -1576,6 +1578,15 @@ shared:
 #   var_name: L:WTB78x_MFD_3_State
 # -
 #   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
+#   var_name: L:B787_10_SAI_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:B787_10_SAI_State
+# -
+#   type: var
 #   var_name: L:WTB78x_MCP_1_ScreenLuminosity
 # -
 #   type: var
@@ -1594,16 +1605,10 @@ shared:
 #   var_name: L:WTB78x_MCP_3_State
 # -
 #   type: var
-#   var_name: L:WTB78x_HUD_ScreenLuminosity
+#   var_name: L:Glasscockpits_FPLHaveOrigin
 # -
 #   type: var
-#   var_name: L:WTB78x_HUD_State
-# -
-#   type: var
-#   var_name: L:B787_10_SAI_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:B787_10_SAI_State
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:B787_10_ALT_ScreenLuminosity
@@ -1630,10 +1635,16 @@ shared:
 #   var_name: L:B787_10_Com_3_State
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
+#   var_name: L:WTB78x_HUD_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+#   var_name: L:WTB78x_HUD_State
+# -
+#   type: var
+#   var_name: L:WTB78x_EFB_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTB78x_EFB_State
 # -
 #   type: var
 #   var_name: L:WT_FADEC_REF_TPR_1
@@ -1682,9 +1693,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:B787_Irs_On_Bat
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro2_ForcedToSTD
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -1742,25 +1750,49 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_FADEC_OIL_TEMP_LOW_RED_2
+# -
+#   type: var
+#   var_name: L:VS_ACTIVE
+
+  - # Brakes
+    type: NumSet
+    var_name: A:BRAKE LEFT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    add_by: -16384
+    event_name: AXIS_LEFT_BRAKE_SET
+    unreliable: true
   -
-    type: var
-    var_name: L:WT_TOGA_ACTIVE
+    type: NumSet
+    var_name: A:BRAKE RIGHT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    add_by: -16384
+    event_name: AXIS_RIGHT_BRAKE_SET
+    unreliable: true
 
 master:
   -
     type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_name: L:WT_78_ELEVATOR_INPUT
     var_units: Position 16k
     var_type: f64
-    event_name: THROTTLE1_SET
-    interpolate: Default
+    event_name: AXIS_ELEVATOR_SET
+    unreliable: true
   -
     type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_name: L:WT_78_AILERON_INPUT
     var_units: Position 16k
     var_type: f64
-    event_name: THROTTLE2_SET
-    interpolate: Default
+    event_name: AXIS_AILERONS_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: L:WT_78_RUDDER_INPUT
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_RUDDER_SET
+    unreliable: true
 
 server:
   -
@@ -1833,6 +1865,8 @@ ignore:
   - B787_10_Com_1_BTN_5
   - B787_10_Com_1_BTN_6
   - B787_10_Com_1_BTN_7
+  - B787_10_Com_1_BTN_8
+  - B787_10_Com_1_BTN_9
   - B787_10_Com_1_clr
   - B787_10_Com_1_star
   - B787_10_Com_1_swap
@@ -1846,6 +1880,8 @@ ignore:
   - B787_10_Com_2_BTN_5
   - B787_10_Com_2_BTN_6
   - B787_10_Com_2_BTN_7
+  - B787_10_Com_2_BTN_8
+  - B787_10_Com_2_BTN_9
   - B787_10_Com_2_clr
   - B787_10_Com_2_star
   - B787_10_Com_2_swap
@@ -1859,6 +1895,8 @@ ignore:
   - B787_10_Com_3_BTN_5
   - B787_10_Com_3_BTN_6
   - B787_10_Com_3_BTN_7
+  - B787_10_Com_3_BTN_8
+  - B787_10_Com_3_BTN_9
   - B787_10_Com_3_clr
   - B787_10_Com_3_star
   - B787_10_Com_3_swap
@@ -1870,5 +1908,7 @@ ignore:
   - AS01B_PFD_Mins_INC
   - AS01B_PFD_Mins_DEC
 
+  - WT_B78_Throttle_1_Inc
   - WT_B78_Throttle_1_Dec
+  - WT_B78_Throttle_2_Inc
   - WT_B78_Throttle_2_Dec

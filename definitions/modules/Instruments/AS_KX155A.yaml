@@ -1,0 +1,165 @@
+# BendixKing KX-155A (and KX-155) NAV/COM by Asobo.
+
+shared:
+  - # COM
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:1
+    var_units: Hz
+    var_type: i32
+    event_name: COM_RADIO_SET_HZ
+  -
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:2
+    var_units: Hz
+    var_type: i32
+    event_name: COM2_RADIO_SET_HZ
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:1
+    var_units: Hz
+    var_type: i32
+    event_name: COM_STBY_RADIO_SET_HZ
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:2
+    var_units: Hz
+    var_type: i32
+    event_name: COM2_STBY_RADIO_SET_HZ
+  -
+    type: NumSet
+    var_name: A:COM1 STORED FREQUENCY
+    var_units: Hz
+    var_type: i32
+    event_name: COM1_STORED_FREQUENCY_SET_HZ
+  -
+    type: NumSet
+    var_name: A:COM2 STORED FREQUENCY
+    var_units: Hz
+    var_type: i32
+    event_name: COM2_STORED_FREQUENCY_SET_HZ
+  -
+    type: NumSet
+    var_name: A:COM VOLUME:1
+    var_units: Percent
+    var_type: i32
+    event_name: COM1_VOLUME_SET
+  -
+    type: NumSet
+    var_name: A:COM VOLUME:2
+    var_units: Percent
+    var_type: i32
+    event_name: COM2_VOLUME_SET
+  -
+    type: ToggleSwitch
+    var_name: A:COM TEST:1
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_COMMNAV1_TEST_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:COM TEST:2
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_COMMNAV2_TEST_TOGGLE
+  -
+    type: NumSet
+    var_name: A:COM SPACING MODE:1
+    var_units: Enum
+    var_type: i32
+    event_name: COM_1_SPACING_MODE_SWITCH
+  -
+    type: NumSet
+    var_name: A:COM SPACING MODE:2
+    var_units: Enum
+    var_type: i32
+    event_name: COM_2_SPACING_MODE_SWITCH
+  -
+    type: NumSet
+    var_name: A:COM RECEIVE ALL
+    var_units: Bool
+    var_type: f64
+    event_name: COM_RECEIVE_ALL_SET
+  -
+    type: NumSet
+    var_name: A:COM RECEIVE EX1:1
+    var_units: Bool
+    var_type: f64
+    event_name: COM1_RECEIVE_SELECT
+  -
+    type: NumSet
+    var_name: A:COM RECEIVE EX1:2
+    var_units: Bool
+    var_type: f64
+    event_name: COM2_RECEIVE_SELECT
+
+  - # NAV
+    type: NumSet
+    var_name: A:NAV ACTIVE FREQUENCY:1
+    var_units: Hz
+    var_type: i32
+    event_name: NAV1_RADIO_SET_HZ
+  -
+    type: NumSet
+    var_name: A:NAV ACTIVE FREQUENCY:2
+    var_units: Hz
+    var_type: i32
+    event_name: NAV2_RADIO_SET_HZ
+  -
+    type: NumSet
+    var_name: A:NAV STANDBY FREQUENCY:1
+    var_units: Hz
+    var_type: i32
+    event_name: NAV1_STBY_SET_HZ
+  -
+    type: NumSet
+    var_name: A:NAV STANDBY FREQUENCY:2
+    var_units: Hz
+    var_type: i32
+    event_name: NAV2_STBY_SET_HZ
+  -
+    type: ToggleSwitch
+    var_name: A:NAV SOUND:1
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_VOR1_IDENT_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:NAV SOUND:2
+    var_units: Bool
+    var_type: bool
+    event_name: RADIO_VOR2_IDENT_TOGGLE
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:1
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV1_VOLUME_INC
+    down_event_name: NAV1_VOLUME_DEC
+    increment_by: 2
+  -
+    type: NumIncrement
+    var_name: A:NAV VOLUME:2
+    var_units: Percent
+    var_type: i32
+    up_event_name: NAV2_VOLUME_INC
+    down_event_name: NAV2_VOLUME_DEC
+    increment_by: 2
+
+  - # Audio
+    type: ToggleSwitch
+    var_name: A:SPEAKER ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_SPEAKER
+  -
+    type: NumSet
+    var_name: A:PILOT TRANSMITTER TYPE
+    var_units: Enum
+    var_type: i32
+    event_name: PILOT_TRANSMITTER_SET
+  -
+    type: NumSet
+    var_name: A:COPILOT TRANSMITTER TYPE
+    var_units: Enum
+    var_type: i32
+    event_name: COPILOT_TRANSMITTER_SET

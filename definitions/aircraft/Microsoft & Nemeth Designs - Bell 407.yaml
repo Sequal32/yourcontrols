@@ -1,12 +1,13 @@
-# Version 0.3.0
+# Version 0.3.6
 
 include:
-  - definitions/modules/Avionics/AS530.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
   - definitions/modules/autopilot.yaml
+  - definitions/modules/controls_rotor.yaml
   - definitions/modules/electrical.yaml
+  - definitions/modules/engines_rotor.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
-  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/rotorcraft.yaml
@@ -16,10 +17,10 @@ include:
 
 shared:
   - # Deice
-    type: ToggleSwitch
-    var_name: A:PITOT HEAT:1
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: PITOT_HEAT_TOGGLE
     event_param: 1
   -
@@ -29,6 +30,12 @@ shared:
     var_type: bool
     event_name: ANTI_ICE_TOGGLE
     event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
 
   - # Engine
     type: ToggleSwitch
@@ -69,12 +76,50 @@ shared:
     event_param: 2
 
   - # Hydraulics
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:1
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 1
+    index_reversed: true
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT NAV
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_NAV_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT BEACON
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_BEACON_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT STROBE
+    var_units: Bool
+    var_type: bool
+    event_name: STROBES_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT RECOGNITION
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_RECOGNITION_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING
+    var_units: Bool
+    var_type: bool
+    event_name: LANDING_LIGHTS_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LOGO
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_LOGO_LIGHTS
 
   - # Interior
     type: NumSet
@@ -92,6 +137,36 @@ shared:
     index_reversed: true
 
   - # LVAR's (trimmed)
+    type: var
+    var_name: L:switchAuxSys
+  -
+    type: var
+    var_name: L:switchAttGyro
+  -
+    type: var
+    var_name: L:switchturnCoord
+  -
+    type: var
+    var_name: L:switchLtsCabinPass
+  -
+    type: var
+    var_name: L:switchGenerator
+  -
+    type: var
+    var_name: L:switchPrimaryCompassAdjust
+# -
+#   type: var
+#   var_name: L:comAdjInit
+# -
+#   type: var
+#   var_name: L:XmsnPressCorr
+# -
+#   type: var
+#   var_name: L:XmsnPressInit
+# -
+#   type: var
+#   var_name: L:XmsnTempCorr
+  -
     type: var
     var_name: L:buttonLcdTest
 # -
@@ -124,9 +199,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:beaconlightRotation
-# -
-#   type: var
-#   var_name: L:CollectiveGrip
+  -
+    type: var
+    var_name: L:CollectiveGrip
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:collGripState
@@ -153,19 +229,10 @@ shared:
 #   var_name: L:ngCheck
 # -
 #   type: var
-#   var_name: L:XmsnPressInit
-  -
-    type: var
-    var_name: L:XmsnPressCorr
-# -
-#   type: var
 #   var_name: L:xmsnPressCheck
 # -
 #   type: var
 #   var_name: L:XmsnTempInit
-  -
-    type: var
-    var_name: L:XmsnTempCorr
 # -
 #   type: var
 #   var_name: L:xmsnTempCheck
@@ -175,9 +242,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:engTempCheck
-  -
-    type: var
-    var_name: L:switchturnCoord
 # -
 #   type: var
 #   var_name: L:initFlag
@@ -190,9 +254,6 @@ shared:
   -
     type: var
     var_name: L:compassAdjustValue
-  -
-    type: var
-    var_name: L:switchAttGyro
 # -
 #   type: var
 #   var_name: L:switchSound
@@ -208,15 +269,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:initInstrLight
-  -
-    type: var
-    var_name: L:switchLtsCabinPass
 # -
 #   type: var
 #   var_name: L:initCabPass
-  -
-    type: var
-    var_name: L:switchGenerator
 # -
 #   type: var
 #   var_name: L:initGen
@@ -226,15 +281,9 @@ shared:
   -
     type: var
     var_name: L:hornMuted
-  -
-    type: var
-    var_name: L:hornCaution
-  -
-    type: var
-    var_name: L:switchPrimaryCompassAdjust
 # -
 #   type: var
-#   var_name: L:comAdjInit
+#   var_name: L:hornCaution
 # -
 #   type: var
 #   var_name: L:initCounter
@@ -246,90 +295,15 @@ shared:
     type: var
     var_name: L:windowVentCopilot
     unreliable: true
-  -
-    type: var
-    var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
+# -
+#   type: var
+#   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
 # -
 #   type: var
 #   var_name: L:collectiveSound
-# -
-#   type: var
-#   var_name: L:leverSound
-  -
-    type: var
-    var_name: L:audioAud
-# -
-#   type: var
-#   var_name: L:XMLVAR_AudioPanel_1
-  -
-    type: var
-    var_name: L:switchLandingLight
-  -
-    type: var
-    var_name: L:annFloatTest
-  -
-    type: var
-    var_name: L:buttonAnnTest
-  -
-    type: var
-    var_name: L:switchCautLtsMode
-  -
-    type: var
-    var_name: L:annFloatArm
-  -
-    type: var
-    var_name: L:annBaggaeDoor
-  -
-    type: var
-    var_name: L:fadecMode
-  -
-    type: var
-    var_name: L:annEngineChip
-  -
-    type: var
-    var_name: L:annBatRelay
-  -
-    type: var
-    var_name: L:annBatteryHot
-  -
-    type: var
-    var_name: L:buttonFireTest
-  -
-    type: var
-    var_name: L:annLitterDoor
-  -
-    type: var
-    var_name: L:annXmsnChip
-  -
-    type: var
-    var_name: L:buttonOvrspdTest
-  -
-    type: var
-    var_name: L:switchAuxSys
-  -
-    type: var
-    var_name: L:annHeaterOvertemp
-  -
-    type: var
-    var_name: L:annLeftFuelFilter
-  -
-    type: var
-    var_name: L:annTrChip
-  -
-    type: var
-    var_name: L:buttonInstrTest
-  -
-    type: var
-    var_name: L:switchPrimaryCompassMode
-  -
-    type: var
-    var_name: L:adfObs
   -
     type: var
     var_name: L:needleHsiMarker
-  -
-    type: var
-    var_name: L:NAV OBS:2
 # -
 #   type: var
 #   var_name: L:kohlsmanKnob
@@ -341,28 +315,16 @@ shared:
 #   var_name: L:knobAttCageSound
   -
     type: var
+    var_name: L:adfObs
+  -
+    type: var
     var_name: L:buttonXpndrVfr
   -
     type: var
-    var_name: L:xpndrVfr
-  -
-    type: var
-    var_name: L:gtx330 preset
-  -
-    type: var
-    var_name: L:xpndr setting number 0000
-  -
-    type: var
-    var_name: L:xpndr setting number 000
-  -
-    type: var
-    var_name: L:xpndr setting number 00
-  -
-    type: var
-    var_name: L:xpndr setting number 0
-  -
-    type: var
     var_name: L:buttonXpndrVfrPressed
+  -
+    type: var
+    var_name: L:xpndrVfr
 # -
 #   type: var
 #   var_name: L:buttonSound
@@ -372,15 +334,20 @@ shared:
   -
     type: var
     var_name: L:knobDefrost
+    unreliable: true
   -
     type: var
     var_name: L:knobFriction
-# -
-#   type: var
-#   var_name: L:TaxiLtsInit
+    unreliable: true
+  -
+    type: var
+    var_name: L:switchLandingLight
   -
     type: var
     var_name: L:buttonFloatTest
+  -
+    type: var
+    var_name: L:buttonFireTest
   -
     type: var
     var_name: L:switchStarter
@@ -411,10 +378,7 @@ shared:
     var_name: L:switchAircondAft
   -
     type: var
-    var_name: L:switchHeater
-# -
-#   type: var
-#   var_name: L:posLtsInit
+    var_name: L:switchCautLtsMode
   -
     type: var
     var_name: L:switchDefog
@@ -432,13 +396,25 @@ shared:
     var_name: L:buttonFadecMode
   -
     type: var
+    var_name: L:fadecMode
+  -
+    type: var
     var_name: L:buttonFuelQty
+  -
+    type: var
+    var_name: L:buttonAnnTest
+  -
+    type: var
+    var_name: L:buttonOvrspdTest
   -
     type: var
     var_name: L:testOvrspd
   -
     type: var
     var_name: L:buttonHornTest
+  -
+    type: var
+    var_name: L:buttonInstrTest
   -
     type: var
     var_name: L:buttonHornMute
@@ -453,6 +429,9 @@ shared:
     var_name: L:buttonChronoOatVolt
   -
     type: var
+    var_name: L:switchPrimaryCompassMode
+  -
+    type: var
     var_name: L:switchFuelValveCover
 # -
 #   type: var
@@ -460,15 +439,18 @@ shared:
   -
     type: var
     var_name: L:ventKnobPilot
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:pullKnobSound
   -
     type: var
     var_name: L:ventKnobCopilot
+    unreliable: true
   -
     type: var
     var_name: L:knobAcTemp
+    unreliable: true
   -
     type: var
     var_name: L:buttonAudioIcs
@@ -478,20 +460,93 @@ shared:
   -
     type: var
     var_name: L:audioTelephoneMode
-
-master:
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:gtx330 preset
+# -
+#   type: var
+#   var_name: L:xpndr setting number 0000
+# -
+#   type: var
+#   var_name: L:xpndr setting number 000
+# -
+#   type: var
+#   var_name: L:xpndr setting number 00
+# -
+#   type: var
+#   var_name: L:xpndr setting number 0
+# -
+#   type: var
+#   var_name: L:TaxiLtsInit
   -
     type: var
-    var_name: A:COLLECTIVE POSITION
-    var_units: Percent
-    var_type: f64
-    interpolate: Default
+    var_name: L:switchHeater
+# -
+#   type: var
+#   var_name: L:posLtsInit
   -
     type: var
-    var_name: L:CollectiveGrip
-    var_units: Percent
-    var_type: f64
-    interpolate: Default
+    var_name: L:auxInit
+  -
+    type: var
+    var_name: L:pedalStopTest
+  -
+    type: var
+    var_name: L:NAV OBS:2
+  -
+    type: var
+    var_name: L:audioAud
+  -
+    type: var
+    var_name: L:annFloatTest
+  -
+    type: var
+    var_name: L:annFloatArm
+  -
+    type: var
+    var_name: L:annBaggaeDoor
+  -
+    type: var
+    var_name: L:annEngineChip
+  -
+    type: var
+    var_name: L:annBatRelay
+  -
+    type: var
+    var_name: L:annBatteryHot
+  -
+    type: var
+    var_name: L:annLitterDoor
+  -
+    type: var
+    var_name: L:annXmsnChip
+  -
+    type: var
+    var_name: L:annHeaterOvertemp
+  -
+    type: var
+    var_name: L:annLeftFuelFilter
+  -
+    type: var
+    var_name: L:annTrChip
 
 server:
   -

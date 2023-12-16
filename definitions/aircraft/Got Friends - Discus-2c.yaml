@@ -1,18 +1,18 @@
 # Version 2.0.7
 
 include:
-  - definitions/modules/Avionics/Aera.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/Instruments/AS_FES_FCU.yaml
+  - definitions/modules/Instruments/AS_TT21.yaml
+  - definitions/modules/Instruments/AS_TY92.yaml
   - definitions/modules/autopilot.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
-  - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -30,6 +30,13 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+
+  - # FES
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_TOGGLE
 
   - # Ventilation
     type: NumSet
@@ -726,9 +733,6 @@ shared:
 
 # - # FES (trimmed)
 #   type: var
-#   var_name: L:LOCAL_milliBar_to_inHg
-# -
-#   type: var
 #   var_name: L:PropAngle
 # -
 #   type: var
@@ -739,12 +743,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:FES_ALARM
-  -
-    type: var
-    var_name: L:FES_OK
-  -
-    type: var
-    var_name: L:FES_ERROR
+# -
+#   type: var
+#   var_name: L:FES_OK
+# -
+#   type: var
+#   var_name: L:FES_ERROR
 
 server:
   -

@@ -1,13 +1,15 @@
 # Version 0.1.9
 
 include:
-  - definitions/modules/Avionics/Aera.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
+  - definitions/modules/Instruments/AS_Aera.yaml
   - definitions/modules/autopilot.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
+  - definitions/modules/magnetos.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -47,41 +49,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_STARTER3
-
-  - # Engines
-    type: NumSet
-    var_name: A:GENERAL ENG ANTI ICE POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: ANTI_ICE_GRADUAL_SET_ENG3
-  -
-    type: NumSet
-    var_name: A:RECIP ENG PRIMER:3
-    var_units: Percent
-    var_type: i32
-    event_name: TOGGLE_PRIMER3
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP3_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: MIXTURE3_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: PROP_PITCH3_SET
-    interpolate: Default
 
   - # Fuel
     type: ToggleSwitch
@@ -135,14 +102,6 @@ shared:
     event_name: FUEL_PUMP
     event_param: 3
 
-  - # Hydraulics
-    type: ToggleSwitch
-    var_name: A:HYDRAULIC SWITCH:2
-    var_units: Bool
-    var_type: bool
-    event_name: HYDRAULIC_SWITCH_TOGGLE
-    event_param: 2
-
   - # Copilot Altimeter
     type: NumSet
     var_name: A:KOHLSMAN SETTING MB:3
@@ -150,61 +109,6 @@ shared:
     var_type: f64
     event_name: KOHLSMAN_SET
     event_param: 3
-
-  - # Magnetos
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_RIGHT
-  -
-    type: event
-    event_name: MAGNETO1_SET
-  -
-    type: event
-    event_name: MAGNETO1_START
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:2
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO2_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:2
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO2_RIGHT
-  -
-    type: event
-    event_name: MAGNETO2_SET
-  -
-    type: event
-    event_name: MAGNETO2_START
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_RIGHT
-  -
-    type: event
-    event_name: MAGNETO3_SET
-  -
-    type: event
-    event_name: MAGNETO3_START
 
   - # Lights
     type: NumSet
@@ -754,15 +658,6 @@ shared:
   -
     type: var
     var_name: L:SWITCH_Radio_IC
-
-master:
-  - # ASOBO_ENGINE_Lever_Throttle_Template
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE3_SET
-    interpolate: Default
 
 server:
   -

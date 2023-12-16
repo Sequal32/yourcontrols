@@ -1,4 +1,5 @@
-# This file only supports aircraft with a max of two engines. You can specify more in the individual profile.
+include:
+  - definitions/modules/magnetos.yaml
 
 shared:
   - # ASOBO_ELECTRICAL_Switch_APU_Starter_Template
@@ -87,6 +88,32 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_ALTERNATOR2
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:3
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR3
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:4
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR4
 
   - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
     type: NumSet
@@ -94,18 +121,18 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: SET_EXTERNAL_POWER
+    event_param: 1
     cancel_h_events: true
     index_reversed: true
-    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:EXTERNAL POWER ON:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 1
     cancel_h_events: true
     index_reversed: true
-    event_param: 1
 
   - # ASOBO_ELECTRICAL_Push_Starter_Template
     type: NumSet
@@ -132,46 +159,38 @@ shared:
     var_type: bool
     event_name: TOGGLE_STARTER2
   -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:3
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER3_SET
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER3
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:4
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER4_SET
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER4
+  -
     type: event
     event_name: SET_STARTER1_HELD
   -
     type: event
     event_name: SET_STARTER2_HELD
-
-  - # ASOBO_ELECTRICAL_Switch_Master_Ignition_Template (?)
-    type: ToggleSwitch
-    var_name: A:MASTER IGNITION SWITCH
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_MASTER_IGNITION_SWITCH
-
-  - # ASOBO_ELECTRICAL_Switch_Magneto_Template
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_RIGHT
   -
     type: event
-    event_name: MAGNETO1_SET
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:2
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO2_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:2
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO2_RIGHT
+    event_name: SET_STARTER3_HELD
   -
     type: event
-    event_name: MAGNETO2_SET
+    event_name: SET_STARTER4_HELD

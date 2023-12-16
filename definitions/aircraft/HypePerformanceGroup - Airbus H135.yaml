@@ -1,18 +1,77 @@
-# Version 1.4.5
+# Version 447
 
 include:
-  - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/autopilot.yaml
-  - definitions/modules/deice.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/general.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/slew.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
+  - # Autopilot
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_HDG_HOLD
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_ALT_HOLD
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+    cancel_h_events: true
+
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: PITOT_HEAT_ON
+    off_event_name: PITOT_HEAT_OFF
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: PITOT_HEAT_ON
+    off_event_name: PITOT_HEAT_OFF
+    event_param: 2
+
   - # Electrical
     type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
@@ -53,10 +112,28 @@ shared:
     event_name: TOGGLE_ALTERNATOR2
   -
     type: ToggleSwitch
-    var_name: A:EXTERNAL POWER ON
+    var_name: A:GENERAL ENG STARTER:1
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
+    event_name: TOGGLE_STARTER1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER2
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET1
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET2
 
   - # Fuel
     type: ToggleSwitch
@@ -166,14 +243,10 @@ shared:
     var_type: bool
     event_name: PARKING_BRAKES
 
-  - # YourControls Force Transfer Hotkey
-    type: ProgramActionEvent
-    event_name: TOGGLE_LAUNCH_BAR_SWITCH
-    action: TransferControls
-
   - # LVAR's
     type: var
     var_name: L:DOORS_OFF
+    cancel_h_events: true
   -
     type: var
     var_name: L:TOGGLE_DOOR_FRONT_RIGHT
@@ -198,24 +271,25 @@ shared:
   -
     type: var
     var_name: L:EPU_MODEL_INHIBIT
+    cancel_h_events: true
   -
     type: var
     var_name: L:TABLET_OPEN
   -
     type: var
     var_name: L:Warning_MouseWheel
-  -
-    type: var
-    var_name: L:Engine1_Up
-  -
-    type: var
-    var_name: L:Engine1_Down
-  -
-    type: var
-    var_name: L:Engine2_Up
-  -
-    type: var
-    var_name: L:Engine2_Down
+# -
+#   type: var
+#   var_name: L:Engine1_Up
+# -
+#   type: var
+#   var_name: L:Engine1_Down
+# -
+#   type: var
+#   var_name: L:Engine2_Up
+# -
+#   type: var
+#   var_name: L:Engine2_Down
   -
     type: var
     var_name: L:PTSG_SYSTEM0
@@ -237,6 +311,7 @@ shared:
   -
     type: var
     var_name: L:ROTOR_BRAKE_ENABLED
+    cancel_h_events: true
   -
     type: var
     var_name: L:HEAT_KNOB
@@ -597,42 +672,43 @@ shared:
   -
     type: var
     var_name: L:X_AP_ALT_HOLD
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:PILOT_0_SHOW
 # -
 #   type: var
 #   var_name: L:PILOT_1_SHOW
-  -
-    type: var
-    var_name: L:MASTER_WARNING_1
-  -
-    type: var
-    var_name: L:MASTER_WARNING_2
-  -
-    type: var
-    var_name: L:MASTER_WARNING_3
-  -
-    type: var
-    var_name: L:MASTER_WARNING_4
-  -
-    type: var
-    var_name: L:MASTER_WARNING_5
-  -
-    type: var
-    var_name: L:MASTER_WARNING_6
-  -
-    type: var
-    var_name: L:MASTER_WARNING_7
-  -
-    type: var
-    var_name: L:MASTER_WARNING_8
-  -
-    type: var
-    var_name: L:MASTER_WARNING_9
-  -
-    type: var
-    var_name: L:MASTER_WARNING_10
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_1
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_2
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_3
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_4
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_5
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_6
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_7
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_8
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_9
+# -
+#   type: var
+#   var_name: L:MASTER_WARNING_10
   -
     type: var
     var_name: L:MASTER_WARNING_ENG1_Active
@@ -708,9 +784,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:HOV_LAT
+  -
+    type: var
+    var_name: L:HOV_LAT
+    cancel_h_events: true
   -
     type: var
     var_name: L:ROTOR_TRIM_RELEASED
@@ -738,15 +815,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:COLLECTIVE_BEEP_LEFT
-# -
-#   type: var
-#   var_name: L:HOV_LON
-# -
-#   type: var
-#   var_name: L:HOV_ALT
+  -
+    type: var
+    var_name: L:HOV_LON
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:HOV_ALT
+    cancel_h_events: true
   -
     type: var
     var_name: L:ROTOR_MODE
+    cancel_h_events: true
   -
     type: var
     var_name: L:ROTOR_ONLINE
@@ -1030,29 +1110,36 @@ shared:
 # -
 #   type: var
 #   var_name: L:DBG_WV_PWR
+  - # Manually added
+    type: var
+    var_name: L:H135_REPLAY_MODE
+    cancel_h_events: true
 
 master:
-  - # Controls
-    type: NumSet
-    var_name: A:ELEVATOR POSITION
-    var_units: Position 16k
-    var_type: f64
-    event_name: AXIS_ELEVATOR_SET
-    interpolate: InvertConstant
   -
     type: NumSet
     var_name: A:AILERON POSITION
     var_units: Position 16k
     var_type: f64
+    multiply_by: -1
     event_name: AXIS_AILERONS_SET
-    interpolate: InvertConstant
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ELEVATOR POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_ELEVATOR_SET
+    unreliable: true
   -
     type: NumSet
     var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
+    multiply_by: -1
     event_name: AXIS_RUDDER_SET
-    interpolate: InvertConstant
+    unreliable: true
   -
     type: NumSet
     var_name: L:ROTOR_COLLECTIVE
@@ -1138,9 +1225,6 @@ server:
     unreliable: true
 
 ignore:
-  - AS3000_TSC_Vertical_4#FlightModeToggleButton
-  - AS3000_TSC_Vertical_4#CasTitle
-
   - AS3000_TSC_Vertical_4#Com1Stby
   - AS3000_TSC_Vertical_4#Com2Stby
 

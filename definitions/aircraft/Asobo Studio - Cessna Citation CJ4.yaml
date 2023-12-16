@@ -1,16 +1,17 @@
-# Version 0.1.94
+# Version 0.1.98
 
 include:
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_G3000.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -125,6 +126,12 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: ANTI_ICE_TOGGLE_ENG2
+  -
+    type: ToggleSwitch
+    var_name: A:STRUCTURAL DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STRUCTURAL_DEICE
 
   - # GPU Truck
     type: ToggleSwitch
@@ -243,7 +250,10 @@ shared:
     event_param: 18
     index_reversed: true
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:WT_TOGA_ACTIVE
+  -
     type: var
     var_name: L:XMLVAR_Exclusive_Light_Last_Changed
   -
@@ -258,9 +268,6 @@ shared:
   -
     type: var
     var_name: L:PASSENGER_KNOB_AIR_3
-  -
-    type: var
-    var_name: L:WT_TOGA_ACTIVE
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
@@ -276,48 +283,12 @@ shared:
   -
     type: var
     var_name: L:CJ4_EMER_LIGHT_ARMED
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
-# -
-#   type: var
-#   var_name: L:CJ4_PFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:CJ4_MFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden2
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:DEICE_Airframe_1
-# -
-#   type: var
-#   var_name: L:DEICE_Airframe_2
-# -
-#   type: var
-#   var_name: L:XMLVAR_ThrottlePosition_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_ThrottlePosition_2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden2
 # -
 #   type: var
 #   var_name: L:XMLVAR_RudderTrim_Switch_1
@@ -336,12 +307,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_PEDESTRAL_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
-# -
-#   type: var
-#   var_name: L:WT21_AOA_PCT
   -
     type: var
     var_name: L:XMLVAR_Essential_Bus_ON
@@ -407,10 +372,22 @@ shared:
 #   var_name: L:LIGHTING_CABIN_3
 # -
 #   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
 #   var_name: L:DEICE_Pitot_1
 # -
 #   type: var
 #   var_name: L:DEICE_Pitot_2
+# -
+#   type: var
+#   var_name: L:DEICE_Airframe_1
+# -
+#   type: var
+#   var_name: L:DEICE_Airframe_2
 # -
 #   type: var
 #   var_name: L:LIGHTING_WING_1
@@ -428,7 +405,37 @@ shared:
 #   var_name: L:WT_Virtual_Throttle_Lever_Pos_2
 # -
 #   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
 #   var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:CJ4_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:CJ4_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePosition_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePosition_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:WT21_AOA_PCT
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId

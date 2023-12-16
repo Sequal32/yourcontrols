@@ -1,18 +1,17 @@
-# Version 1.0.7
+# Version 1.1.0
 
 include:
-  - definitions/modules/Avionics/AS1000.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_G1000.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
-  - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -69,6 +68,19 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_STARTER2
+
+  - # Engines
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET1
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET2
 
   - # Interior
     type: NumSet
@@ -201,25 +213,31 @@ shared:
 
 # - # LVAR's (trimmed)
 #   type: var
+#   var_name: L:WT_TOGA_ACTIVE
+  -
+    type: var
+    var_name: L:SYNC_MODE
+# -
+#   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
-    var_name: L:C510_Door_Pilot
+    var_name: L:C510_DOOR_Pilot
   -
     type: var
     var_name: L:C510_CARGO_Pilot
   -
     type: var
-    var_name: L:vis_ide_pitottubecovers
+    var_name: L:vis_ide_chocks
   -
     type: var
     var_name: L:vis_ide_carpet
   -
     type: var
-    var_name: L:vis_ide_chocks
+    var_name: L:vis_ide_engine_covers
   -
     type: var
-    var_name: L:vis_ide_engine_covers
+    var_name: L:vis_ide_pitottubecovers
   -
     type: var
     var_name: L:vis_ide_iDevice_Off
@@ -228,19 +246,7 @@ shared:
 #   var_name: L:XMLVAR_VNAVButtonValue
 # -
 #   type: var
-#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
-# -
-#   type: var
 #   var_name: L:HANDLING_ElevatorTrim
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverFlapsHidden
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden2
   -
     type: var
     var_name: L:XMLVAR_C510_VISOR_Pilot
@@ -290,7 +296,7 @@ shared:
     var_name: L:C510_Press_ID
   -
     type: var
-    var_name: L:C510_Oxygen_Supply_ID
+    var_name: L:C510_Oxygen_Supply
   -
     type: var
     var_name: L:C510_Pilot_Mic_ID
@@ -308,13 +314,10 @@ shared:
     var_name: L:C510_Checklist_Next_ID
   -
     type: var
-    var_name: L:C510_Safety_Switch_ID
+    var_name: L:C510_Safety_Switch
   -
     type: var
     var_name: L:C510_Toilet_ID
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:switch_fuel_right
@@ -323,64 +326,25 @@ shared:
     var_name: L:switch_fuel_left
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden2
-# -
-#   type: var
 #   var_name: L:LIGHTING_LANDING_1
 # -
 #   type: var
-#   var_name: L:XMLVAR_ELT_STATE
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_TEST_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
-# -
-#   type: var
-#   var_name: L:XMLVAR_AirSpeedIsInMach
-  -
-    type: var
-    var_name: L:XMLVAR_DeiceWindshield_1
-# -
-#   type: var
 #   var_name: L:DEICE_Airframe_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_Brightness
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_Brightness_IsAuto
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_Brightness
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_Brightness_IsAuto
+  -
+    type: var
+    var_name: L:XMLVAR_DeiceAirFrame_Auto
+  -
+    type: var
+    var_name: L:C510_Pitot_Switch_Position
   -
     type: var
     var_name: L:vis_ide_pitottubecovers_on
   -
     type: var
-    var_name: L:vis_ide_carpet_on
+    var_name: L:vis_ide_chocks_on
   -
     type: var
-    var_name: L:vis_ide_chocks_on
+    var_name: L:vis_ide_carpet_on
   -
     type: var
     var_name: L:vis_ide_engine_covers_on
@@ -390,9 +354,6 @@ shared:
   -
     type: var
     var_name: L:vis_ide_copilot_on
-  -
-    type: var
-    var_name: L:vis_ide_Cargo_on
   -
     type: var
     var_name: L:vis_ide_Pass_1
@@ -420,6 +381,9 @@ shared:
   -
     type: var
     var_name: L:Privacy_Curtain
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
   -
     type: var
     var_name: L:HANDLING_Autobrakes_Position
@@ -431,10 +395,418 @@ shared:
 #   var_name: L:HANDLING_AileronsTrim
 # -
 #   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
 #   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
   -
     type: var
     var_name: L:XMLVAR_Essential_Bus_ON
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:Throttle1_Pos
+# -
+#   type: var
+#   var_name: L:Throttle2_Pos
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_30
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_5
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_6
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_7
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:XMLVAR_PushXFR
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapShowCursor
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:Stall_Warn_Reset
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverFlapsHidden
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+  -
+    type: var
+    var_name: L:vis_ide_Cargo_on
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:WT1000_ControlPad_ModeInput_Inhibited
+# -
+#   type: var
+#   var_name: L:WT1000_ControlPad_Mode
+# -
+#   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_XTK
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_True
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_CDI_Scale
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Distance
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Destination_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Egress_Distance
+# -
+#   type: var
+#   var_name: L:XMLVAR_SpeedIsManuallySet
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_DTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_XTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Tracking
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Transition_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Vector_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Course_To_Steer
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Suspended
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_BOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Distance_In_Leg
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_TOD
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_BOD
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOC_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_BOC_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOC_Distance_In_Leg
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_TOC
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_BOC
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_State
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Available
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Next_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Target_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_FPA
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_VNAV_Required_VS
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Alt_Capture_Type
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Service_Level
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_GP_FPA
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+  -
+    type: var
+    var_name: L:Left_Engine_Anti_Ice_Cold_Caution
+  -
+    type: var
+    var_name: L:Right_Engine_Anti_Ice_Cold_Caution
+  -
+    type: var
+    var_name: L:Structural_Deice_Failure_Notification
+  -
+    type: var
+    var_name: L:Left_Engine_Anti_Ice_Cold_Advisory
+  -
+    type: var
+    var_name: L:Right_Engine_Anti_Ice_Cold_Advisory
+  -
+    type: var
+    var_name: L:WINDSHIELD_HEAT_TEST
+  -
+    type: var
+    var_name: L:Structural_Deice_Active_Notification
+# -
+#   type: var
+#   var_name: L:Stall_Warn_High
+# -
+#   type: var
+#   var_name: L:Stall_Warning_Speed
+# -
+#   type: var
+#   var_name: L:THROTTLE1_MODE
+# -
+#   type: var
+#   var_name: L:THROTTLE_N1_TARGET
+# -
+#   type: var
+#   var_name: L:THROTTLE2_MODE
+# -
+#   type: var
+#   var_name: L:LEFT_FUEL_TANK_QUANTITY_POUNDS
+# -
+#   type: var
+#   var_name: L:RIGHT_FUEL_TANK_QUANTITY_POUNDS
+# -
+#   type: var
+#   var_name: L:TOTAL_FUEL_TANK_QUANTITY_POUNDS
+# -
+#   type: var
+#   var_name: L:LEFT_ENGINE_FUEL_FLOW_PPH
+# -
+#   type: var
+#   var_name: L:RIGHT_ENGINE_FUEL_FLOW_PPH
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
+# -
+#   type: var
+#   var_name: L:WT1000_Fuel_GalRemaining
+# -
+#   type: var
+#   var_name: L:FADEC_ACTIVE
+# -
+#   type: var
+#   var_name: L:SYNC_FLAG
+# -
+#   type: var
+#   var_name: L:Vref
+
+master:
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE1_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:2
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE2_SET
+    use_calculator: true
+    unreliable: true
 
 server:
   -

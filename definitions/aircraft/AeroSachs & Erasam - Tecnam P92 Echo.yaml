@@ -1,16 +1,18 @@
-# Version 2.0.1 Freeware / 1.5.0 Payware
+# Version 2.0.1 Freeware / 1.6.0 Payware
 
 include:
-  - definitions/modules/Avionics/Aera.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
-  - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/Avionics/TDSNXi.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_Aera.yaml
+  - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/Instruments/AS_KT76C.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
@@ -42,44 +44,13 @@ shared:
 # -
 #   type: var
 #   var_name: L:GTN750_INT_HIDDEN
-# -
-#   type: var
-#   var_name: L:AS510_HIDDEN
+  -
+    type: var
+    var_name: L:AS510_HIDDEN
   -
     type: var
     var_name: L:Light_Cockpit_Dim
     cancel_h_events: true
-  -
-    type: var
-    var_name: L:GAU_RPM_SWITCH
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:GAU_AIRSPEED_SWITCH
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:GAU_FLAP_SWITCH
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:COCPIT_GAU_GLASS_VIS
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:COCPIT_GAU_VOR1_VIS
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:CopilotHidden
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:WheelsFairings_VIS
-    cancel_h_events: true
-# -
-#   type: var
-#   var_name: L:STALLWARNING
   -
     type: var
     var_name: L:Throttle_Friction_Lever
@@ -116,8 +87,51 @@ shared:
   -
     type: var
     var_name: L:RIGHT DOOR LEVER CONTROL
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+  -
+    type: var
+    var_name: L:COCPIT_GAU_GLASS_VIS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:CopilotHidden
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:COCPIT_GAU_VOR1_VIS
+    cancel_h_events: true
 
   - # 100hp, trimmed
+    type: var
+    var_name: L:GAU_RPM_SWITCH
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:GAU_AIRSPEED_SWITCH
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:GAU_FLAP_SWITCH
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WheelsFairings_VIS
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:STALLWARNING
+  -
     type: var
     var_name: L:PITOTCOVER_VIS
     cancel_h_events: true
@@ -129,39 +143,6 @@ shared:
     type: var
     var_name: L:TIEDOWNS_VIS
     cancel_h_events: true
-# -
-#   type: var
-#   var_name: L:XMLVAR_ENGINE_LEVER_Choke_Pulled
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_LKnobInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_LKnobDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_LKnobCRSR
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobCRSR
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_HomeKey
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_DTOKey
   -
     type: var
     var_name: L:EFB_book
@@ -169,18 +150,6 @@ shared:
     type: var
     var_name: L:BaggageHidden
     cancel_h_events: true
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_INSTALLED
-# -
-#   type: var
-#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_InactiveVar
-# -
-#   type: var
-#   var_name: L:CANOPY OPENED
 
 server:
   -

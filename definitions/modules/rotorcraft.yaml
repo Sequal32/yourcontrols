@@ -1,4 +1,12 @@
 shared:
+  - # ASOBO_ROTORCRAFT_Lever_Rotor_Brake_Template
+    type: NumSet
+    var_name: A:ROTOR BRAKE HANDLE POS
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_ROTOR_BRAKE_SET
+    unreliable: true
+
   - # ASOBO_ROTORCRAFT_Switch_Clutch_Template
     type: NumSet
     var_name: A:ROTOR CLUTCH SWITCH POS
@@ -25,13 +33,18 @@ shared:
     var_type: bool
     event_name: ROTOR_GOV_SWITCH_TOGGLE
 
-  - # ASOBO_ROTORCRAFT_Lever_Rotor_Brake_Template
-    type: NumSet
-    var_name: A:ROTOR BRAKE HANDLE POS
-    var_units: Position 16k
-    var_type: f64
-    event_name: AXIS_ROTOR_BRAKE_SET
-    interpolate: Default
+  - # Hover (currently not implemented)
+    type: event
+    event_name: AUTO_HOVER_ON
+  -
+    type: event
+    event_name: AUTO_HOVER_OFF
+  -
+    type: event
+    event_name: AUTO_HOVER_SET
+  -
+    type: event
+    event_name: AUTO_HOVER_TOGGLE
 
   - # ASOBO_HANDLING_Longitudinal_Lateral_Trim_Template
     type: NumSet
@@ -39,35 +52,11 @@ shared:
     var_units: Position 16k
     var_type: f64
     event_name: ROTOR_LATERAL_TRIM_SET
-    interpolate: Default
+    unreliable: true
   -
     type: NumSet
     var_name: A:ROTOR LONGITUDINAL TRIM PCT
     var_units: Position 16k
     var_type: f64
     event_name: ROTOR_LONGITUDINAL_TRIM_SET
-    interpolate: Default
-
-master:
-  - # ASOBO_HANDLING_Yoke_Template
-    type: NumSet
-    var_name: A:YOKE X POSITION
-    var_units: Position 16k
-    var_type: f64
-    event_name: AXIS_CYCLIC_LATERAL_SET
-    interpolate: InvertConstant
-  -
-    type: NumSet
-    var_name: A:YOKE Y POSITION
-    var_units: Position 16k
-    var_type: f64
-    event_name: AXIS_CYCLIC_LONGITUDINAL_SET
-    interpolate: InvertConstant
-
-  - # ASOBO_ROTORCRAFT_Tail_Rotor_Pedal_Template (AXIS_TAIL_ROTOR_SET currently doesn't work)
-    type: NumSet
-    var_name: A:TAIL ROTOR PEDAL POSITION
-    var_units: Position 32k
-    var_type: f64
-    event_name: AXIS_RUDDER_SET
-    interpolate: InvertConstant
+    unreliable: true

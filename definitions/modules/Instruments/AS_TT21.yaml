@@ -1,0 +1,27 @@
+# Trig Avionics TT21 transponder by Asobo.
+
+shared:
+  -
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: Enum
+    var_type: i32
+  -
+    type: ToggleSwitch
+    var_name: A:TRANSPONDER IDENT:1
+    var_units: Bool
+    var_type: bool
+    event_name: XPNDR_IDENT_ON
+    off_event_name: XPNDR_IDENT_OFF
+  -
+    type: NumSet
+    var_name: A:TRANSPONDER CODE:1
+    var_units: Bco16
+    var_type: f64
+    event_name: XPNDR_SET
+
+ignore:
+  - Transponder_Code_INC
+  - Transponder_Code_DEC
+  - Transponder_ENTER
+  - Transponder_VFR

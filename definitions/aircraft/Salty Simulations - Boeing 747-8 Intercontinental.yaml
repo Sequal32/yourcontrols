@@ -1,10 +1,12 @@
 # Version 0.6.0
 
 include:
+  - definitions/modules/controls.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -30,33 +32,34 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
     cancel_h_events: true
     use_calculator: true
-    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
     cancel_h_events: true
     use_calculator: true
-    event_param: 2
   -
     type: NumSet
     var_name: A:AUTOPILOT HEADING LOCK DIR:1
     var_units: Degrees
-    var_type: i32
+    var_type: f64
     event_name: HEADING_BUG_SET
     event_param: 1
+    interpolate: Default
   -
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
     var_units: Feet
     var_type: i32
     event_name: AP_ALT_VAR_SET_ENGLISH
-    cancel_h_events: true
     event_param: 3
+    cancel_h_events: true
   -
     type: NumSet
     var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
@@ -68,7 +71,7 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
     var_units: Knots
-    var_type: i32
+    var_type: f64
     event_name: AP_SPD_VAR_SET
     event_param: 1
   -
@@ -116,7 +119,7 @@ shared:
     type: NumSet
     var_name: A:AUTOPILOT MAX BANK ID
     var_units: Number
-    var_type: f64
+    var_type: i32
     event_name: AP_MAX_BANK_SET
   -
     type: NumSet
@@ -214,32 +217,32 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
-    index_reversed: true
     event_param: 1
+    index_reversed: true
   -
     type: NumSet
     var_name: A:BLEED AIR ENGINE:2
     var_units: Bool
     var_type: i32
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
-    index_reversed: true
     event_param: 2
+    index_reversed: true
   -
     type: NumSet
     var_name: A:BLEED AIR ENGINE:3
     var_units: Bool
     var_type: i32
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
-    index_reversed: true
     event_param: 3
+    index_reversed: true
   -
     type: NumSet
     var_name: A:BLEED AIR ENGINE:4
     var_units: Bool
     var_type: i32
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
-    index_reversed: true
     event_param: 4
+    index_reversed: true
   -
     type: ToggleSwitch
     var_name: A:PRESSURIZATION DUMP SWITCH
@@ -273,51 +276,12 @@ shared:
     set: 4 6 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
   -
     type: NumSet
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:3
-    var_units: Bool
-    var_type: i32
-    event_name: ALTERNATOR_SET
-    event_param: 3
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:4
-    var_units: Bool
-    var_type: i32
-    event_name: ALTERNATOR_SET
-    event_param: 4
-  -
-    type: NumSet
     var_name: A:EXTERNAL POWER ON:2
     var_units: Bool
     var_type: i32
     event_name: SET_EXTERNAL_POWER
-    index_reversed: true
     event_param: 2
-
-  - # Engines
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG STARTER:3
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_STARTER3
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG STARTER:4
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_STARTER4
-  -
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:3
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET3
-  -
-    type: NumSet
-    var_name: A:TURB ENG IGNITION SWITCH EX1:4
-    var_units: Enum
-    var_type: i32
-    event_name: TURBINE_IGNITION_SWITCH_SET4
+    index_reversed: true
 
   - # Fuel
     type: ToggleSwitch
@@ -517,33 +481,37 @@ shared:
     event_param: 16
 
   - # Hydraulics
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:1
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 1
+    index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:2
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 2
+    index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:3
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 3
+    index_reversed: true
   -
-    type: ToggleSwitch
+    type: NumSet
     var_name: A:HYDRAULIC SWITCH:4
     var_units: Bool
-    var_type: bool
+    var_type: i32
     event_name: HYDRAULIC_SWITCH_TOGGLE
     event_param: 4
+    index_reversed: true
 
   - # FWD L Cabin Door
     type: ToggleSwitch
@@ -1737,22 +1705,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-
-master:
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE3_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:4
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE4_SET
-    interpolate: Default
 
 server:
   -

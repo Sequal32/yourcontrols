@@ -1,16 +1,18 @@
 # Version 0.1.3
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/TDSNXi.yaml
-  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
   - definitions/modules/autopilot.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/pressurization.yaml
@@ -621,12 +623,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:var_cdiTimerSeconds
-  -
-    type: var
-    var_name: L:var_AltimeterTest
-  -
-    type: var
-    var_name: L:var_RadarAltimeterTest
+# -
+#   type: var
+#   var_name: L:var_AltimeterTest
+# -
+#   type: var
+#   var_name: L:var_RadarAltimeterTest
   -
     type: var
     var_name: L:var_starterInUseSeconds_L
@@ -1604,9 +1606,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:Condition_Lever_CutOff_1
-  -
-    type: var
-    var_name: L:Condition_Lever_CutOff_2
+# -
+#   type: var
+#   var_name: L:Condition_Lever_CutOff_2
   -
     type: var
     var_name: L:var_FirewallValveCover_L

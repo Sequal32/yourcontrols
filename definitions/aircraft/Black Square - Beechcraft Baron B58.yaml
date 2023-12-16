@@ -1,21 +1,23 @@
 # Version 0.1.0
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/TDSNXi.yaml
-  - definitions/modules/Avionics/GTN750.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml # 327
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
   - definitions/modules/autopilot.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -527,6 +529,7 @@ shared:
   -
     type: var
     var_name: L:var_pressurizationGoal
+    unreliable: true
   -
     type: var
     var_name: L:var_pressurizationPress
@@ -1060,6 +1063,7 @@ shared:
   -
     type: var
     var_name: L:var_FrictionLock
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim

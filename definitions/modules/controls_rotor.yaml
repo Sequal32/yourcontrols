@@ -1,0 +1,25 @@
+master:
+  -
+    type: NumSet
+    var_name: A:YOKE X POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_CYCLIC_LATERAL_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:YOKE Y POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_CYCLIC_LONGITUDINAL_SET
+    unreliable: true
+  - # AXIS_TAIL_ROTOR_SET is not working
+    type: NumSet
+    var_name: A:TAIL ROTOR PEDAL POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_RUDDER_SET
+    unreliable: true

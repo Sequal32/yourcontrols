@@ -2,11 +2,13 @@
 
 include:
   - definitions/modules/autopilot.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
@@ -15,111 +17,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Deice
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:3
-    var_units: Bool
-    var_type: bool
-    event_name: ANTI_ICE_TOGGLE_ENG3
-  -
-    type: ToggleSwitch
-    var_name: A:ENG ANTI ICE:4
-    var_units: Bool
-    var_type: bool
-    event_name: ANTI_ICE_TOGGLE_ENG4
-
-  - # Electrical
-    type: NumSet
-    var_name: A:GENERAL ENG STARTER:3
-    var_units: Bool
-    var_type: i32
-    event_name: STARTER3_SET
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG STARTER:4
-    var_units: Bool
-    var_type: i32
-    event_name: STARTER4_SET
-  -
-    type: event
-    event_name: SET_STARTER3_HELD
-  -
-    type: event
-    event_name: SET_STARTER4_HELD
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_RIGHT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:4
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO4_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:4
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO4_RIGHT
-  -
-    type: event
-    event_name: MAGNETO3_SET
-  -
-    type: event
-    event_name: MAGNETO4_SET
-
-  - # Engines
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP3_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:RECIP ENG COWL FLAP POSITION:4
-    var_units: Position 16k
-    var_type: f64
-    event_name: COWLFLAP4_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: MIXTURE3_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:4
-    var_units: Position 16k
-    var_type: f64
-    event_name: MIXTURE4_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: PROP_PITCH3_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:4
-    var_units: Position 16k
-    var_type: f64
-    event_name: PROP_PITCH4_SET
-    interpolate: Default
-
   - # Fuel
     type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:1
@@ -127,32 +24,6 @@ shared:
     var_type: bool
     event_name: FUELSYSTEM_VALVE_TOGGLE
     event_param: 1
-  -
-    type: NumSet
-    var_name: A:RECIP ENG PRIMER:3
-    var_units: Percent
-    var_type: i32
-    event_name: TOGGLE_PRIMER3
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:RECIP ENG PRIMER:4
-    var_units: Percent
-    var_type: i32
-    event_name: TOGGLE_PRIMER4
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:FUEL TANK SELECTOR:3
-    var_units: Enum
-    var_type: i32
-    event_name: FUEL_SELECTOR_3_SET
-  -
-    type: NumSet
-    var_name: A:FUEL TANK SELECTOR:4
-    var_units: Enum
-    var_type: i32
-    event_name: FUEL_SELECTOR_4_SET
 
   - # Lights
     type: NumSet
@@ -471,9 +342,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:ENG FUEL VALVE:1
-  -
-    type: var
-    var_name: L:ENG FUEL VALVE:2
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:2
   -
     type: var
     var_name: L:ENG FUEL VALVE:3
@@ -572,22 +443,6 @@ shared:
   -
     type: var
     var_name: L:LIGHTING_Switch_Light_LANDING_2
-
-master:
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE3_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:4
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE4_SET
-    interpolate: Default
 
 server:
   -

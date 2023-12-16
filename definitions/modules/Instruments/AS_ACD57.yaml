@@ -1,0 +1,121 @@
+# Air Avionics ACD-57 (AIR Control Display) by Asobo.
+
+shared:
+  - # Altimeter
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:1
+    var_units: Millibars scaler 16
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 1
+    cancel_h_events: true
+
+  - # Transponder
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: Enum
+    var_type: i32
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:TRANSPONDER IDENT:1
+    var_units: Bool
+    var_type: i32
+    event_name: XPNDR_IDENT_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:TRANSPONDER CODE:1
+    var_units: Bco16
+    var_type: i32
+    event_name: XPNDR_SET
+    cancel_h_events: true
+
+  - # Radio
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:1
+    var_units: Hz
+    var_type: i32
+    event_name: COM_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:COM ACTIVE FREQUENCY:2
+    var_units: Hz
+    var_type: i32
+    event_name: COM2_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:1
+    var_units: Hz
+    var_type: i32
+    event_name: COM_STBY_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:COM STANDBY FREQUENCY:2
+    var_units: Hz
+    var_type: i32
+    event_name: COM2_STBY_RADIO_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:COM1 STORED FREQUENCY
+    var_units: Hz
+    var_type: i32
+    event_name: COM1_STORED_FREQUENCY_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:COM2 STORED FREQUENCY
+    var_units: Hz
+    var_type: i32
+    event_name: COM2_STORED_FREQUENCY_SET_HZ
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:COM VOLUME:1
+    var_units: Percent
+    var_type: i32
+    event_name: COM1_VOLUME_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:COM VOLUME:2
+    var_units: Percent
+    var_type: i32
+    event_name: COM2_VOLUME_SET
+    cancel_h_events: true
+
+  - # LVAR's
+    type: var
+    var_name: L:ACD57_BTN1_1_1
+  -
+    type: var
+    var_name: L:ACD57_BTN2_1_1
+  -
+    type: var
+    var_name: L:ACD57_BTN3_1_1
+  -
+    type: var
+    var_name: L:ACD57_BTN4_1_1
+# - # Desync
+#   type: var
+#   var_name: L:ACD57_ROTARY_OUTER_1_1
+# -
+#   type: var
+#   var_name: L:ACD57_ROTARY_INNER_PUSH_1_1
+# -
+#   type: var
+#   var_name: L:ACD57_ROTARY_INNER_1_1
+# -
+#   type: var
+#   var_name: L:ACD57_SCREEN_BRIGHTNESS_1_1
+
+# - # Ignore
+#   type: var
+#   var_name: L:ACD57_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:ACD57_State

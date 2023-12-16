@@ -1,32 +1,26 @@
-# Version 1.1.9
+# Version 2.0.4
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
-  - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/Avionics/TDSNXi.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
-  - # Avionics Power
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:35
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 35
-  -
+  - # G5 Power
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:55
     var_units: Bool
@@ -40,19 +34,6 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 56
-
-  - # Breakers (incomplete)
-    type: ToggleSwitch
-    var_name: A:BREAKER XPNDR
-    var_units: Bool
-    var_type: bool
-    event_name: BREAKER_XPNDR_TOGGLE
-  -
-    type: ToggleSwitch
-    var_name: A:BREAKER AUTOPILOT
-    var_units: Bool
-    var_type: bool
-    event_name: BREAKER_AUTOPILOT_TOGGLE
 
   - # Lights
     type: ToggleSwitch
@@ -249,12 +230,36 @@ shared:
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:C310_PROP_FEATHER_LEFT
+# -
+#   type: var
+#   var_name: L:C310_DEICE_BOOTS_CYCLE
+# -
+#   type: var
+#   var_name: L:C310_Door_0_OpenPercent
   -
     type: var
-    var_name: L:C310_Landing_Light_Left
+    var_name: L:C310_LEng_Door_OPEN
+# -
+#   type: var
+#   var_name: L:C310_PROP_NORMAL_2
+# -
+#   type: var
+#   var_name: L:C310_PROP_ANGLE_2
+# -
+#   type: var
+#   var_name: L:C310_PROP_FEATHER_RIGHT
+# -
+#   type: var
+#   var_name: L:C310_Landing_Light_Right
   -
     type: var
-    var_name: L:C310_Landing_Light_Right
+    var_name: L:C310_REng_Door_OPEN
+# -
+#   type: var
+#   var_name: L:C310_Landing_Light_Left
 # -
 #   type: var
 #   var_name: L:C310_PROP_NORMAL_1
@@ -263,19 +268,7 @@ shared:
 #   var_name: L:C310_PROP_ANGLE_1
 # -
 #   type: var
-#   var_name: L:C310_PROP_NORMAL_2
-# -
-#   type: var
-#   var_name: L:C310_PROP_ANGLE_2
-  -
-    type: var
-    var_name: L:C310_Bent_Blur
-  -
-    type: var
-    var_name: L:C310_PROP_PITCH_FINE_LEFT
-  -
-    type: var
-    var_name: L:C310_PROP_PITCH_FINE_RIGHT
+#   var_name: L:C310_Bent_Blur
   -
     type: var
     var_name: L:C310_TAB_CHOCKS
@@ -290,15 +283,6 @@ shared:
     var_name: L:C310_ENGINE_FLAGS
   -
     type: var
-    var_name: L:C310_LEng_Door_OPEN
-  -
-    type: var
-    var_name: L:C310_REng_Door_OPEN
-# -
-#   type: var
-#   var_name: L:C310_Door_0_OpenPercent
-  -
-    type: var
     var_name: L:C310_TAB_530
   -
     type: var
@@ -306,9 +290,6 @@ shared:
   -
     type: var
     var_name: L:C310_TAB_TDS
-  -
-    type: var
-    var_name: L:C310_DEICE_BOOTS_CYCLE
   -
     type: var
     var_name: L:C310_TAB_USER_REG
@@ -326,73 +307,35 @@ shared:
     var_name: L:C310_Control_Lock
 # -
 #   type: var
-#   var_name: L:HANDLING_ElevatorTrim
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_Switch_Yoke
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_Yoke_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:C310_YokeHidden1
-# -
-#   type: var
-#   var_name: L:C310_YokeHidden2
-# -
-#   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_Switch_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
-  -
-    type: var
-    var_name: L:C310_FAIL_LEFT_ENGINE
-  -
-    type: var
-    var_name: L:C310_FAIL_RIGHT_ENGINE
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden2
   -
     type: var
     var_name: L:C310_SW_COWL_LEFT
-  -
-    type: var
-    var_name: L:C310_SW_COWL_LEFT_PCT
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:C310_SW_COWL_LEFT_PCT
   -
     type: var
     var_name: L:C310_SW_COWL_RIGHT
-  -
-    type: var
-    var_name: L:C310_SW_COWL_RIGHT_PCT
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:C310_SW_COWL_RIGHT_PCT
   -
     type: var
     var_name: L:C310_SW_ALTERNATE_AIR_LEFT
+    unreliable: true
   -
     type: var
     var_name: L:C310_SW_ALTERNATE_AIR_RIGHT
+    unreliable: true
   -
     type: var
     var_name: L:C310_SW_PRIMER
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden2
   -
     type: var
     var_name: L:C310_SW_FUEL_SEL_LEFT
@@ -404,31 +347,22 @@ shared:
     var_name: L:C310_SW_FUEL_IND
   -
     type: var
-    var_name: L:FuelTankSwitch
-  -
-    type: var
     var_name: L:C310_Electrical_Crash_Bar
   -
     type: var
     var_name: L:C310_Engine_Crash_Bar
-  -
-    type: var
-    var_name: L:C310_SW_ALTERNATOR_LEFT
-  -
-    type: var
-    var_name: L:C310_SW_ALTERNATOR_RIGHT
 # -
 #   type: var
-#   var_name: L:XMLVAR_Starter_State
+#   var_name: L:C310_SW_ALTERNATOR_LEFT
+# -
+#   type: var
+#   var_name: L:C310_SW_ALTERNATOR_RIGHT
 # -
 #   type: var
 #   var_name: L:XMLVAR_Starter_State_IsDown
 # -
 #   type: var
 #   var_name: L:XMLVAR_Starter_State_MinReleaseTime
-# -
-#   type: var
-#   var_name: L:C310_Airspeed_Indicated
   -
     type: var
     var_name: L:C310_SW_EDML_L
@@ -443,247 +377,52 @@ shared:
     var_name: L:C310_SW_EDMR_R
   -
     type: var
-    var_name: L:C310_CB_CLOCK
-  -
-    type: var
-    var_name: L:C310_TAB_G5
-  -
-    type: var
-    var_name: L:C310_FLAG_HDG
-  -
-    type: var
-    var_name: L:C310_SW_NAV_SOURCE
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_INSTALLED
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
-  -
-    type: var
-    var_name: L:C310_FLAG_NAV
-  -
-    type: var
-    var_name: L:C310_FLAG_NAV_GS
-# -
-#   type: var
-#   var_name: L:C310_GSI_NAV_NEEDLE
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_GlidePathValueActive
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_GlidePathValueAngle
-# -
-#   type: var
-#   var_name: L:PMS50_GTN750_RUNNING
-# -
-#   type: var
-#   var_name: L:PMS50_GTN750_HIDDEN
-# -
-#   type: var
-#   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
-# -
-#   type: var
-#   var_name: L:GTN750_HSI_GSI_NEEDLE
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_ToFromFlag
-  -
-    type: var
     var_name: L:C310_SW_NAV_SELECTOR
   -
     type: var
     var_name: L:C310_ELEC_AMP_knob
-# -
-#   type: var
-#   var_name: L:C310_ELEC_AMMETER_NEEDLE
-# -
-#   type: var
-#   var_name: L:C310_ENG_EGT1
-# -
-#   type: var
-#   var_name: L:C310_ENG_EGT2
-# -
-#   type: var
-#   var_name: L:C310_ENG_MANIFOLD_PRESSURE_1
-# -
-#   type: var
-#   var_name: L:C310_ENG_MANIFOLD_PRESSURE_2
-# -
-#   type: var
-#   var_name: L:C310_ENG_CHT1
-# -
-#   type: var
-#   var_name: L:C310_ENG_CHT2
-# -
-#   type: var
-#   var_name: L:C310_Fuel_Flow_Left
-# -
-#   type: var
-#   var_name: L:C310_Fuel_Flow_Right
-# -
-#   type: var
-#   var_name: L:C310_FUEL_DISP_L
-# -
-#   type: var
-#   var_name: L:C310_FUEL_DISP_R
-# -
-#   type: var
-#   var_name: L:C310_ENG_OIL_PRESSURE_1
-# -
-#   type: var
-#   var_name: L:C310_ENG_OIL_PRESSURE_2
-# -
-#   type: var
-#   var_name: L:C310_SUCTION
-# -
-#   type: var
-#   var_name: L:C310_ENG_RPM_1
-# -
-#   type: var
-#   var_name: L:C310_ENG_RPM_2
-# -
-#   type: var
-#   var_name: L:C310_ENG_OIL_TEMPERATURE_1
-# -
-#   type: var
-#   var_name: L:C310_ENG_OIL_TEMPERATURE_2
-# -
-#   type: var
-#   var_name: L:C310_OAT
   -
     type: var
     var_name: L:C310_Fuel_Low_L_Test
   -
     type: var
-    var_name: L:C310_Fuel_Low_L_BBO
-  -
-    type: var
-    var_name: L:C310_WL_FUEL_LOW_L
-  -
-    type: var
     var_name: L:C310_Fuel_Low_R_Test
-  -
-    type: var
-    var_name: L:C310_Fuel_Low_R_BBO
-  -
-    type: var
-    var_name: L:C310_WL_FUEL_LOW_R
   -
     type: var
     var_name: L:C310_Alt_Fail_L_Test
   -
     type: var
-    var_name: L:C310_Alt_Fail_L_BBO
-  -
-    type: var
-    var_name: L:C310_WL_ALT_FAIL_L
-  -
-    type: var
     var_name: L:C310_Alt_Fail_R_Test
-  -
-    type: var
-    var_name: L:C310_Alt_Fail_R_BBO
-  -
-    type: var
-    var_name: L:C310_WL_ALT_FAIL_R
   -
     type: var
     var_name: L:C310_Fuel_Aux_L_Test
   -
     type: var
-    var_name: L:C310_Fuel_Aux_L_BBO
-  -
-    type: var
-    var_name: L:C310_WL_FUEL_AUX_LEFT
-  -
-    type: var
     var_name: L:C310_Fuel_Aux_R_Test
-  -
-    type: var
-    var_name: L:C310_Fuel_Aux_R_BBO
-  -
-    type: var
-    var_name: L:C310_WL_FUEL_AUX_RIGHT
   -
     type: var
     var_name: L:C310_Gear_Unsafe_Test
   -
     type: var
-    var_name: L:C310_Gear_Unsafe_BBO
-  -
-    type: var
-    var_name: L:C310_WL_GEAR_UNSAFE
-  -
-    type: var
     var_name: L:C310_Gear_Left_Test
-  -
-    type: var
-    var_name: L:C310_Gear_Left_BBO
-  -
-    type: var
-    var_name: L:C310_WL_GEAR_LEFT
   -
     type: var
     var_name: L:C310_Gear_Nose_Test
   -
     type: var
-    var_name: L:C310_Gear_Nose_BBO
-  -
-    type: var
-    var_name: L:C310_WL_Gear_Nose
-  -
-    type: var
     var_name: L:C310_Gear_Right_Test
-  -
-    type: var
-    var_name: L:C310_Gear_Right_BBO
-  -
-    type: var
-    var_name: L:C310_WL_Gear_Right
   -
     type: var
     var_name: L:C310_Deice_Press_Test
   -
     type: var
-    var_name: L:C310_Deice_Press_BBO
-  -
-    type: var
-    var_name: L:C310_WL_Deice_Press
-  -
-    type: var
     var_name: L:C310_Turnbank_Fail_Test
-  -
-    type: var
-    var_name: L:C310_Turnbank_Fail_BBO
-  -
-    type: var
-    var_name: L:C310_WL_Turnbank_Fail
   -
     type: var
     var_name: L:C310_Low_Volt_Test
   -
     type: var
-    var_name: L:C310_Low_Volt_BBO
-  -
-    type: var
-    var_name: L:C310_WL_LOW_VOLT
-  -
-    type: var
     var_name: L:C310_Overheat_Test
-  -
-    type: var
-    var_name: L:C310_Overheat_BBO
-  -
-    type: var
-    var_name: L:C310_WL_OVERHEAT
-  -
-    type: var
-    var_name: L:C310_L_Vac_Fail
-  -
-    type: var
-    var_name: L:C310_R_Vac_Fail
   -
     type: var
     var_name: L:C310_SW_LIGHTS_DEICE
@@ -693,15 +432,19 @@ shared:
   -
     type: var
     var_name: L:C310_SW_DEFROST
+    unreliable: true
   -
     type: var
     var_name: L:C310_SW_TEMP_CONTROL
+    unreliable: true
   -
     type: var
     var_name: L:C310_SW_CABIN_AIR
+    unreliable: true
   -
     type: var
     var_name: L:C310_SW_FWD_CABIN_AIR
+    unreliable: true
   -
     type: var
     var_name: L:C310_SW_HEATER
@@ -723,45 +466,28 @@ shared:
   -
     type: var
     var_name: L:C310_SW_FLOOD_LEFT
+    unreliable: true
   -
     type: var
     var_name: L:C310_SW_FLOOD_CENTER
+    unreliable: true
   -
     type: var
     var_name: L:WindowShadeLeft
+    unreliable: true
   -
     type: var
     var_name: L:WindowShadeRight
-# -
-#   type: var
-#   var_name: L:C310_AirflowPercent
+    unreliable: true
   -
     type: var
     var_name: L:C310_Handle_Position
   -
     type: var
-    var_name: L:C310_Handle_Timer1
-  -
-    type: var
-    var_name: L:C310_Handle_OPEN
-  -
-    type: var
-    var_name: L:C310_Handle_Timer2
-  -
-    type: var
     var_name: L:C310_Toggle_Door_OPEN
   -
     type: var
-    var_name: L:C310_Window_OPEN
-  -
-    type: var
     var_name: L:C310_Toggle_Window_OPEN
-  -
-    type: var
-    var_name: L:C310_RSTR_GO
-  -
-    type: var
-    var_name: L:C310_TAB_HIDE_COPILOT
 # -
 #   type: var
 #   var_name: L:C310_Toggle_YokeHidden1
@@ -797,9 +523,6 @@ shared:
     var_name: L:C310_Hat
 # -
 #   type: var
-#   var_name: L:C310_BottleRoll
-# -
-#   type: var
 #   var_name: L:C310_Toggle_Tablet_Hidden
 # -
 #   type: var
@@ -809,130 +532,7 @@ shared:
     var_name: L:C310_Tablet_Screen_On
   -
     type: var
-    var_name: L:C310_SHARD_WINDSH_SW
-  -
-    type: var
-    var_name: L:C310_SHARD_PROP_DEICE_SW
-  -
-    type: var
-    var_name: L:C310_SHARD_DEICE_SWITCH
-  -
-    type: var
-    var_name: L:C310_SHARD_STRUCT_ICE_PCT
-# -
-#   type: var
-#   var_name: L:C310_FUEL_MAIN_1
-# -
-#   type: var
-#   var_name: L:C310_FUEL_MAIN_2
-# -
-#   type: var
-#   var_name: L:C310_FUEL_AUX_1
-# -
-#   type: var
-#   var_name: L:C310_FUEL_AUX_2
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_1
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_2
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_3
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_4
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_5
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_6
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_7
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_8
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_9
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_10
-  -
-    type: var
-    var_name: L:C310_PAYLOAD_11
-# -
-#   type: var
-#   var_name: L:C310_AIRSPEED_TRUE
-  -
-    type: var
-    var_name: L:C310_FD_SPOILERS_SET
-  -
-    type: var
-    var_name: L:C310_NAV_OBS_1
-  -
-    type: var
-    var_name: L:C310_NAV_OBS_2
-  -
-    type: var
-    var_name: L:C310_CB_SYNC_FLAG
-  -
-    type: var
-    var_name: L:C310_CB_CABIN_LIGHTS
-  -
-    type: var
-    var_name: L:C310_CB_FLT_INST_LIGHTS
-  -
-    type: var
-    var_name: L:C310_CB_ENG_SW_LIGHTS
-  -
-    type: var
-    var_name: L:C310_CB_PITOT_HEAT
-  -
-    type: var
-    var_name: L:C310_CB_FLAP_MOTOR
-  -
-    type: var
-    var_name: L:C310_CB_START
-  -
-    type: var
-    var_name: L:C310_CB_TURNBANK
-  -
-    type: var
-    var_name: L:C310_CB_GEAR_MOTOR
-  -
-    type: var
-    var_name: L:C310_CB_GEAR_WARN
-  -
-    type: var
-    var_name: L:C310_CB_COM1
-  -
-    type: var
-    var_name: L:C310_CB_COM2
-  -
-    type: var
-    var_name: L:C310_CB_GPS
-  -
-    type: var
-    var_name: L:C310_CB_NAV1
-  -
-    type: var
-    var_name: L:C310_CB_NAV2
-  -
-    type: var
-    var_name: L:C310_CB_ADF
-  -
-    type: var
-    var_name: L:C310_CB_XPDR_1
-  -
-    type: var
-    var_name: L:C310_CB_GYRO
-  -
-    type: var
-    var_name: L:C310_CB_COMP
+    var_name: L:C310_CB_ALTERNATOR_L
   -
     type: var
     var_name: L:C310_CB_ALTERNATOR_R
@@ -980,10 +580,22 @@ shared:
     var_name: L:C310_CB_LAND_LIGHT_R
   -
     type: var
+    var_name: L:C310_CB_CABIN_LIGHTS
+  -
+    type: var
     var_name: L:C310_CB_RADIO_LIGHTS
   -
     type: var
+    var_name: L:C310_CB_FLT_INST_LIGHTS
+  -
+    type: var
+    var_name: L:C310_CB_ENG_SW_LIGHTS
+  -
+    type: var
     var_name: L:C310_CB_SURFACE_DEICE
+  -
+    type: var
+    var_name: L:C310_CB_PITOT_HEAT
   -
     type: var
     var_name: L:C310_CB_CABIN_HEAT
@@ -998,10 +610,46 @@ shared:
     var_name: L:C310_CB_FUEL_FLOW_R
   -
     type: var
+    var_name: L:C310_CB_FLAP_MOTOR
+  -
+    type: var
+    var_name: L:C310_CB_START
+  -
+    type: var
     var_name: L:C310_CB_ELEV_TRIM
   -
     type: var
+    var_name: L:C310_CB_TURNBANK
+  -
+    type: var
+    var_name: L:C310_CB_GEAR_MOTOR
+  -
+    type: var
+    var_name: L:C310_CB_GEAR_WARN
+  -
+    type: var
     var_name: L:C310_CB_CIGAR
+  -
+    type: var
+    var_name: L:C310_CB_CLOCK
+  -
+    type: var
+    var_name: L:C310_CB_COM1
+  -
+    type: var
+    var_name: L:C310_CB_COM2
+  -
+    type: var
+    var_name: L:C310_CB_GPS
+  -
+    type: var
+    var_name: L:C310_CB_NAV1
+  -
+    type: var
+    var_name: L:C310_CB_NAV2
+  -
+    type: var
+    var_name: L:C310_CB_ADF
   -
     type: var
     var_name: L:C310_CB_TIMER
@@ -1013,13 +661,19 @@ shared:
     var_name: L:C310_CB_SPEAKER_AUDIO
   -
     type: var
+    var_name: L:C310_CB_XPDR_1
+  -
+    type: var
+    var_name: L:C310_CB_GYRO
+  -
+    type: var
     var_name: L:C310_CB_HEAT_DAT
   -
     type: var
+    var_name: L:C310_CB_COMP
+  -
+    type: var
     var_name: L:C310_CB_EQUIP_FAN
-# -
-#   type: var
-#   var_name: L:XMLVAR_AudioPanel_1
   -
     type: var
     var_name: L:Marker_Button_Position
@@ -1028,28 +682,10 @@ shared:
     var_name: L:TEL_Button_Toggle
   -
     type: var
-    var_name: L:MUSIC_Button_Toggle
-  -
-    type: var
     var_name: L:MUTE_Button_Toggle
   -
     type: var
     var_name: L:XMLVAR_Pass_Volume
-# -
-#   type: var
-#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Enabled_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Enabled_1
 # -
 #   type: var
 #   var_name: L:TDSGTNXI750U1_LKnobInc
@@ -1118,31 +754,13 @@ shared:
 #   var_name: L:TDSGTNXI750U2_NavSrc
 # -
 #   type: var
-#   var_name: L:GTN750_INT_HIDDEN
-# -
-#   type: var
-#   var_name: L:GTN650_INT_2_HIDDEN
-# -
-#   type: var
-#   var_name: L:AS530_HIDDEN
-# -
-#   type: var
-#   var_name: L:AS430_HIDDEN
-  -
-    type: var
-    var_name: L:C310_TAB_RADIO
-# -
-#   type: var
-#   var_name: L:PMS50_GTN750_INSTALLED
-# -
-#   type: var
-#   var_name: L:HANDLING_AileronsTrim
-# -
-#   type: var
 #   var_name: L:HANDLING_RudderTrim
 # -
 #   type: var
 #   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
@@ -1170,6 +788,9 @@ shared:
   -
     type: var
     var_name: L:C310_EDMR_STEP
+  -
+    type: var
+    var_name: L:C310_EDMR_FORC
 # -
 #   type: var
 #   var_name: L:INSTRUMENT_Course_2
@@ -1179,12 +800,21 @@ shared:
 # -
 #   type: var
 #   var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:C310_Window_OPEN
   -
     type: var
     var_name: L:C310_Egg_Count
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
   -
     type: var
-    var_name: L:C310_CB_ALTERNATOR_L
+    var_name: L:MUSIC_Button_Toggle
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
 # -
 #   type: var
 #   var_name: L:AS530_Default_MapZoomRange
@@ -1197,96 +827,519 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:C310_FAIL_LEFT_ENGINE
+  -
+    type: var
+    var_name: L:C310_FAIL_RIGHT_ENGINE
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+  -
+    type: var
+    var_name: L:C310_SW_NAV_SOURCE
+# -
+#   type: var
+#   var_name: L:C310_Handle_Timer1
+  -
+    type: var
+    var_name: L:C310_Handle_OPEN
+# -
+#   type: var
+#   var_name: L:C310_Handle_Timer2
+  -
+    type: var
+    var_name: L:C310_RSTR_GO
+# -
+#   type: var
+#   var_name: L:C310_BottleRoll
+  -
+    type: var
+    var_name: L:C310_TAB_RADIO
+# -
+#   type: var
+#   var_name: L:C310_ELEV_TRIM_DOWN_LIMIT
+# -
+#   type: var
+#   var_name: L:C310_ELEV_TRIM_UP_LIMIT
+# -
+#   type: var
+#   var_name: L:C310_ELEV_TRIM_INDICATOR
+# -
+#   type: var
+#   var_name: L:C310_ELEV_TRIM_POSITION
+# -
+#   type: var
+#   var_name: L:C310_ELEV_TRIM_NEUTRAL
+# -
+#   type: var
+#   var_name: L:C310_AIL_TRIM
+# -
+#   type: var
+#   var_name: L:C310_AIL_TRIM_PCT
+# -
+#   type: var
+#   var_name: L:C310_RUD_TRIM
+# -
+#   type: var
+#   var_name: L:C310_RUD_TRIM_PCT
+# -
+#   type: var
+#   var_name: L:C310_FUEL_MAIN_1
+# -
+#   type: var
+#   var_name: L:C310_FUEL_MAIN_2
+# -
+#   type: var
+#   var_name: L:C310_FUEL_AUX_1
+# -
+#   type: var
+#   var_name: L:C310_FUEL_AUX_2
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_1
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_2
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_3
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_4
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_5
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_6
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_7
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_8
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_9
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_10
+# -
+#   type: var
+#   var_name: L:C310_PAYLOAD_11
+  -
+    type: var
+    var_name: L:C310_CB_SYNC_FLAG
+# -
+#   type: var
+#   var_name: L:AS530_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
+# -
+#   type: var
+#   var_name: L:GTN750_INT_HIDDEN
+# -
+#   type: var
+#   var_name: L:GTN650_INT_2_HIDDEN
+# -
+#   type: var
+#   var_name: L:AS530_HIDDEN
+# -
+#   type: var
+#   var_name: L:AS430_HIDDEN
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InactiveVar
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+# -
+#   type: var
+#   var_name: L:C310_ELE_TRIM_INDIC
+# -
+#   type: var
+#   var_name: L:C310_ELE_TRIM_INDIC_SCALED
+# -
+#   type: var
+#   var_name: L:AS430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:C310_ENG_EGT1
+# -
+#   type: var
+#   var_name: L:C310_FLAG_HDG
+# -
+#   type: var
+#   var_name: L:C310_ENG_CHT2
+# -
+#   type: var
+#   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
+# -
+#   type: var
+#   var_name: L:C310_ENG_OIL_PRESSURE_1
+  -
+    type: var
+    var_name: L:FuelTankSwitch
+# -
+#   type: var
+#   var_name: L:C310_OAT
+# -
+#   type: var
+#   var_name: L:C310_FUEL_DISP_L
+# -
+#   type: var
+#   var_name: L:C310_Airspeed_Indicated
+# -
+#   type: var
+#   var_name: L:C310_GSI_NAV_NEEDLE
+# -
+#   type: var
+#   var_name: L:C310_AIL_TRIM_INDIC
+# -
+#   type: var
+#   var_name: L:C310_RUD_TRIM_INDIC
+# -
+#   type: var
+#   var_name: L:C310_SUCTION
+# -
+#   type: var
+#   var_name: L:C310_ENG_OIL_TEMPERATURE_1
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_GlidePathValueActive
+# -
+#   type: var
+#   var_name: L:C310_AIL_TRIM_INDIC_SCALED
+# -
+#   type: var
+#   var_name: L:C310_ELEC_AMMETER_NEEDLE
+# -
+#   type: var
+#   var_name: L:C310_FUEL_DISP_R
+# -
+#   type: var
+#   var_name: L:C310_ENG_MANIFOLD_PRESSURE_1
+# -
+#   type: var
+#   var_name: L:C310_ENG_RPM_1
+# -
+#   type: var
+#   var_name: L:C310_ENG_EGT2
+# -
+#   type: var
+#   var_name: L:C310_AirflowPercent
+# -
+#   type: var
+#   var_name: L:C310_ENG_OIL_TEMPERATURE_2
+# -
+#   type: var
+#   var_name: L:C310_ENG_RPM_2
+# -
+#   type: var
+#   var_name: L:C310_ENG_CHT1
+# -
+#   type: var
+#   var_name: L:C310_Fuel_Flow_Left
+# -
+#   type: var
+#   var_name: L:C310_ENG_OIL_PRESSURE_2
+# -
+#   type: var
+#   var_name: L:C310_ENG_MANIFOLD_PRESSURE_2
+# -
+#   type: var
+#   var_name: L:C310_Fuel_Flow_Right
+  -
+    type: var
+    var_name: L:C310_Fuel_Low_L_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_FUEL_LOW_L
+  -
+    type: var
+    var_name: L:C310_Fuel_Low_R_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_FUEL_LOW_R
+  -
+    type: var
+    var_name: L:C310_Alt_Fail_L_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_ALT_FAIL_L
+  -
+    type: var
+    var_name: L:C310_Alt_Fail_R_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_ALT_FAIL_R
+  -
+    type: var
+    var_name: L:C310_Fuel_Aux_L_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_FUEL_AUX_LEFT
+  -
+    type: var
+    var_name: L:C310_Fuel_Aux_R_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_FUEL_AUX_RIGHT
+  -
+    type: var
+    var_name: L:C310_Gear_Unsafe_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_GEAR_UNSAFE
+  -
+    type: var
+    var_name: L:C310_Gear_Left_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_GEAR_LEFT
+  -
+    type: var
+    var_name: L:C310_Gear_Nose_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_Gear_NOSE
+  -
+    type: var
+    var_name: L:C310_Gear_Right_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_Gear_RIGHT
+  -
+    type: var
+    var_name: L:C310_Deice_Press_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_Deice_Press
+  -
+    type: var
+    var_name: L:C310_Turnbank_Fail_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_Turnbank_Fail
+  -
+    type: var
+    var_name: L:C310_Low_Volt_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_LOW_VOLT
+  -
+    type: var
+    var_name: L:C310_Overheat_BBO
+# -
+#   type: var
+#   var_name: L:C310_WL_OVERHEAT
+  -
+    type: var
+    var_name: L:C310_L_Vac_Fail
+  -
+    type: var
+    var_name: L:C310_R_Vac_Fail
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:C310_YokeHidden1
+# -
+#   type: var
+#   var_name: L:C310_YokeHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden2
+  -
+    type: var
+    var_name: L:C310_TAB_G5
+  -
+    type: var
+    var_name: L:C310_TAB_HIDE_COPILOT
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
 # -
 #   type: var
 #   var_name: L:PMS50_GTN650_INSTALLED
 # -
 #   type: var
-#   var_name: L:AP_KAP140_INSTALLED
-# -
-#   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:WasmInstrument_ScreenLuminosity
+#   var_name: L:AP_KAP140_INSTALLED
 # -
 #   type: var
-#   var_name: L:WasmInstrument_State
-# -
-#   type: var
-#   var_name: L:AS330_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS330_State
-# -
-#   type: var
-#   var_name: L:KAP140_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KAP140_State
-# -
-#   type: var
-#   var_name: L:AutopilotPreflightCheckCompleted
-# -
-#   type: var
-#   var_name: L:GTN750_INT_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN750_INT_State
-# -
-#   type: var
-#   var_name: L:GTN650_INT_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN650_INT_2_State
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:AS430_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS430_State
-# -
-#   type: var
-#   var_name: L:KR87_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KR87_State
-# -
-#   type: var
-#   var_name: L:MV_EFB_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:MV_EFB_State
+#   var_name: L:C310_WASM_VER
   -
     type: var
-    var_name: L:C310_TAB_DENY_STATUS
+    var_name: L:C310_RSTR_Air
+# -
+#   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_XTK
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_True
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_CDI_Scale
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Distance
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Destination_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Egress_Distance
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WTGNS_ADSB_OPER
+# -
+#   type: var
+#   var_name: L:C310_CABIN_FAN
+# -
+#   type: var
+#   var_name: L:C310_ADF_NEEDLE
+# -
+#   type: var
+#   var_name: L:C310_SW_STARTER_LEFT
+# -
+#   type: var
+#   var_name: L:C310_SW_STARTER_RIGHT
+# -
+#   type: var
+#   var_name: L:C310_SW_BRAKE_LEFT
+# -
+#   type: var
+#   var_name: L:C310_SW_BRAKE_RIGHT
+# -
+#   type: var
+#   var_name: L:C310_SW_BRAKE_PARKING
+# -
+#   type: var
+#   var_name: L:C310_SW_FLAPS
   -
     type: var
-    var_name: L:C310_INSPECT_OPTION
+    var_name: L:C310_SW_DOOR_SEAL
+  -
+    type: var
+    var_name: L:C310_SW_FLOOD_RIGHT
+  -
+    type: var
+    var_name: L:C310_NAV_LIGHT_LEFT
+  -
+    type: var
+    var_name: L:C310_NAV_LIGHT_RIGHT
+# -
+#   type: var
+#   var_name: L:C310_BEACON_LIGHT
+# -
+#   type: var
+#   var_name: L:C310_TAXI_LIGHT
+  -
+    type: var
+    var_name: L:C310_CB_LKR_FUEL_L
+  -
+    type: var
+    var_name: L:C310_CB_LKR_FUEL_R
+  -
+    type: var
+    var_name: L:C310_CB_STALL_WARN
+  -
+    type: var
+    var_name: L:C310_CB_PROP_SYNC
+  -
+    type: var
+    var_name: L:C310_CB_XPDR_2
+  -
+    type: var
+    var_name: L:C310_CB_RADAR
+  -
+    type: var
+    var_name: L:C310_CB_INTERIOR_COMM
+  -
+    type: var
+    var_name: L:C310_CB_WX1000
+  -
+    type: var
+    var_name: L:C310_CB_RADIO_ALT
+  -
+    type: var
+    var_name: L:C310_CB_ENC_ALT
   -
     type: var
     var_name: L:C310_TAB_FRONT_DOOR
   -
     type: var
-    var_name: L:C310_TAB_REAR_DOOR
+    var_name: L:C310_TAB_NOSE_DOOR
   -
     type: var
-    var_name: L:C310_TAB_NOSE_DOOR
+    var_name: L:C310_TAB_REAR_DOOR
   -
     type: var
     var_name: L:C310_TAB_LEFT_LOCKER
@@ -1295,16 +1348,58 @@ shared:
     var_name: L:C310_TAB_RIGHT_LOCKER
   -
     type: var
-    var_name: L:C310_TAB_EXHAUST
+    var_name: L:C310_TAB_PITOT
   -
     type: var
     var_name: L:C310_TAB_INTAKE
   -
     type: var
-    var_name: L:C310_TAB_PITOT
+    var_name: L:C310_TAB_EXHAUST
   -
     type: var
     var_name: L:C310_TAB_LOCK
+  -
+    type: var
+    var_name: L:C310_TAB_HOBBS
+  -
+    type: var
+    var_name: L:C310_DIRT_MINUTES
+  -
+    type: var
+    var_name: L:C310_TAB_DIRT
+  -
+    type: var
+    var_name: L:C310_TAB_DIRT_RATE
+  -
+    type: var
+    var_name: L:C310_TAB_ELE_TRIM_BASE
+  -
+    type: var
+    var_name: L:C310_TAB_AIL_TRIM_BASE
+  -
+    type: var
+    var_name: L:C310_TAB_RUD_TRIM_BASE
+  -
+    type: var
+    var_name: L:C310_TAB_LEFT_BAGS
+  -
+    type: var
+    var_name: L:C310_TAB_RIGHT_BAGS
+  -
+    type: var
+    var_name: L:C310_TAB_REAR_BAGS
+# -
+#   type: var
+#   var_name: L:C310_TAB_FUEL_MAIN_LEFT
+# -
+#   type: var
+#   var_name: L:C310_TAB_FUEL_MAIN_RIGHT
+# -
+#   type: var
+#   var_name: L:C310_TAB_FUEL_AUX_LEFT
+# -
+#   type: var
+#   var_name: L:C310_TAB_FUEL_AUX_RIGHT
   -
     type: var
     var_name: L:C310_TAB_RIGHT_FRONT
@@ -1322,34 +1417,7 @@ shared:
     var_name: L:C310_TAB_REAR_RIGHT
   -
     type: var
-    var_name: L:C310_TAB_REAR_BAGS
-  -
-    type: var
     var_name: L:C310_TAB_NOSE_BAGS
-  -
-    type: var
-    var_name: L:C310_TAB_LEFT_BAGS
-  -
-    type: var
-    var_name: L:C310_TAB_RIGHT_BAGS
-  -
-    type: var
-    var_name: L:C310_TAB_COMFORT_INDEX
-  -
-    type: var
-    var_name: L:C310_TAB_CLIMATE_INDEX
-  -
-    type: var
-    var_name: L:C310_TAB_REPAIR_STATUS
-  -
-    type: var
-    var_name: L:C310_TAB_DIRT
-  -
-    type: var
-    var_name: L:C310_TAB_DIRT_RATE
-  -
-    type: var
-    var_name: L:C310_TAB_WASH
   -
     type: var
     var_name: L:C310_TAB_DEFAULT
@@ -1383,96 +1451,172 @@ shared:
   -
     type: var
     var_name: L:C310_TAB_FREQUENT
+# -
+#   type: var
+#   var_name: L:C310_TAB_CHG_MAIN_LEFT
+# -
+#   type: var
+#   var_name: L:C310_TAB_CHG_MAIN_RIGHT
+# -
+#   type: var
+#   var_name: L:C310_TAB_CHG_AUX_LEFT
+# -
+#   type: var
+#   var_name: L:C310_TAB_CHG_AUX_RIGHT
+  -
+    type: var
+    var_name: L:C310_TAB_DENY_STATUS
   -
     type: var
     var_name: L:C310_TAB_STAT_BATTERY
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_LBRAKE
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_RBRAKE
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_NGEAR
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_LGEAR
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_RGEAR
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_LFLAP
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_RFLAP
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_CYL_1
-  -
-    type: var
-    var_name: L:C310_TAB_STAT_CYL_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_PLUG_1
-  -
-    type: var
-    var_name: L:C310_TAB_STAT_PLUG_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_LMAG_1
-  -
-    type: var
-    var_name: L:C310_TAB_STAT_LMAG_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_RMAG_1
-  -
-    type: var
-    var_name: L:C310_TAB_STAT_RMAG_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_START_1
-  -
-    type: var
-    var_name: L:C310_TAB_STAT_START_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_ALT_1
-  -
-    type: var
-    var_name: L:C310_TAB_STAT_ALT_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_FUELPUMP_1
-  -
-    type: var
-    var_name: L:C310_TAB_STAT_FUELPUMP_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_AUXPUMP_1
-  -
-    type: var
-    var_name: L:C310_TAB_STAT_AUXPUMP_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_VACPUMP_1
-  -
-    type: var
-    var_name: L:C310_TAB_STAT_VACPUMP_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_OIL_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_STAT_CYL_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_STAT_PLUG_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_STAT_LMAG_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_STAT_RMAG_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_STAT_START_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_STAT_ALT_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_STAT_FUELPUMP_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_STAT_AUXPUMP_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_STAT_VACPUMP_2
+    unreliable: true
   -
     type: var
     var_name: L:C310_TAB_STAT_OIL_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:C310_TAB_WASH
+  -
+    type: var
+    var_name: L:C310_TABLET_HIDE
+  -
+    type: var
+    var_name: L:C310_TABLET_SHOW
+  -
+    type: var
+    var_name: L:C310_Passenger_Steps
+  -
+    type: var
+    var_name: L:C310_FUEL_OVERRIDE_1
+  -
+    type: var
+    var_name: L:C310_FUEL_OVER_TEMP_1
+  -
+    type: var
+    var_name: L:C310_FUEL_OVERRIDE_2
+  -
+    type: var
+    var_name: L:C310_FUEL_OVER_TEMP_2
 # -
 #   type: var
-#   var_name: L:MV_DME_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:MV_DME_State
+#   var_name: L:310_PERF_TRIGGERS
+  -
+    type: var
+    var_name: L:C310_PRIME_LEFT
+  -
+    type: var
+    var_name: L:C310_PRIME_RIGHT
+  -
+    type: var
+    var_name: L:C310_FAIL_ALT1
+  -
+    type: var
+    var_name: L:C310_FAIL_ALT2
 # -
 #   type: var
 #   var_name: L:C310_DME_MILES
@@ -1484,58 +1628,499 @@ shared:
 #   var_name: L:C310_DME_MINS
 # -
 #   type: var
+#   var_name: L:C310_SHARD_PITOT_ICE_PCT
+# -
+#   type: var
+#   var_name: L:C310_FLAG_NAV
+# -
+#   type: var
+#   var_name: L:C310_FLAG_NAV_GS
+# -
+#   type: var
+#   var_name: L:C310_EDML_CHT_1
+# -
+#   type: var
+#   var_name: L:C310_EDML_EGT_1
+# -
+#   type: var
+#   var_name: L:C310_EDML_CHT_2
+# -
+#   type: var
+#   var_name: L:C310_EDML_EGT_2
+# -
+#   type: var
+#   var_name: L:C310_EDML_CHT_3
+# -
+#   type: var
+#   var_name: L:C310_EDML_EGT_3
+# -
+#   type: var
+#   var_name: L:C310_EDML_CHT_4
+# -
+#   type: var
+#   var_name: L:C310_EDML_EGT_4
+# -
+#   type: var
+#   var_name: L:C310_EDML_CHT_5
+# -
+#   type: var
+#   var_name: L:C310_EDML_EGT_5
+# -
+#   type: var
+#   var_name: L:C310_EDML_CHT_6
+# -
+#   type: var
+#   var_name: L:C310_EDML_EGT_6
+# -
+#   type: var
+#   var_name: L:C310_EDML_TIT
+# -
+#   type: var
+#   var_name: L:C310_EDML_OIL
+# -
+#   type: var
+#   var_name: L:C310_EDML_HP
+# -
+#   type: var
+#   var_name: L:C310_EDMR_CHT_1
+# -
+#   type: var
+#   var_name: L:C310_EDMR_EGT_1
+# -
+#   type: var
+#   var_name: L:C310_EDMR_CHT_2
+# -
+#   type: var
+#   var_name: L:C310_EDMR_EGT_2
+# -
+#   type: var
+#   var_name: L:C310_EDMR_CHT_3
+# -
+#   type: var
+#   var_name: L:C310_EDMR_EGT_3
+# -
+#   type: var
+#   var_name: L:C310_EDMR_CHT_4
+# -
+#   type: var
+#   var_name: L:C310_EDMR_EGT_4
+# -
+#   type: var
+#   var_name: L:C310_EDMR_CHT_5
+# -
+#   type: var
+#   var_name: L:C310_EDMR_EGT_5
+# -
+#   type: var
+#   var_name: L:C310_EDMR_CHT_6
+# -
+#   type: var
+#   var_name: L:C310_EDMR_EGT_6
+# -
+#   type: var
+#   var_name: L:C310_EDMR_TIT
+# -
+#   type: var
+#   var_name: L:C310_EDMR_OIL
+# -
+#   type: var
+#   var_name: L:C310_EDMR_HP
+# -
+#   type: var
+#   var_name: L:C310_LIGHT_LANDING_LEFT_ON
+# -
+#   type: var
+#   var_name: L:C310_LIGHT_LANDING_RIGHT_ON
+# -
+#   type: var
+#   var_name: L:C310_ELE_DIVISOR
+# -
+#   type: var
+#   var_name: L:C310_ELE_GATE
+# -
+#   type: var
+#   var_name: L:C310_ELE_SYNC
+# -
+#   type: var
+#   var_name: L:C310_ELE_SIM_POS
+# -
+#   type: var
+#   var_name: L:C310_ELE_TRIM_CUR_POS
+# -
+#   type: var
+#   var_name: L:C310_AIL_SIM_POS
+# -
+#   type: var
+#   var_name: L:C310_AIL_TRIM_CUR_POS
+# -
+#   type: var
+#   var_name: L:C310_RUD_SIM_POS
+# -
+#   type: var
+#   var_name: L:C310_RUD_TRIM_CUR_POS
+# -
+#   type: var
+#   var_name: L:C310_ELE_TRIM_UP_LIMIT
+# -
+#   type: var
+#   var_name: L:C310_ELE_TRIM_DOWN_LIMIT
+# -
+#   type: var
+#   var_name: L:C310_AIL_TRIM_RIGHT_LIMIT
+# -
+#   type: var
+#   var_name: L:C310_AIL_TRIM_LEFT_LIMIT
+# -
+#   type: var
+#   var_name: L:C310_RUD_TRIM_RIGHT_LIMIT
+# -
+#   type: var
+#   var_name: L:C310_RUD_TRIM_LEFT_LIMIT
+# -
+#   type: var
+#   var_name: L:C310_ELE_TRIM_BASE_ADJUST
+# -
+#   type: var
+#   var_name: L:C310_ELE_TRIM_DELTA
+# -
+#   type: var
+#   var_name: L:C310_AIL_TRIM_BASE_ADJUST
+# -
+#   type: var
+#   var_name: L:C310_AIL_TRIM_DELTA
+# -
+#   type: var
+#   var_name: L:C310_RUD_TRIM_BASE_ADJUST
+# -
+#   type: var
+#   var_name: L:C310_RUD_TRIM_DELTA
+  -
+    type: var
+    var_name: L:C310_YAW_LIMITER
+# -
+#   type: var
+#   var_name: L:C310_TEMP_SWITCH
+# -
+#   type: var
+#   var_name: L:C310_TEMP_CABIN_AIR
+# -
+#   type: var
+#   var_name: L:C310_TEMP_FWD_CABIN_AIR
+# -
+#   type: var
+#   var_name: L:C310_TEMP_HEATER
+# -
+#   type: var
+#   var_name: L:C310_TEMP_FAN
+# -
+#   type: var
+#   var_name: L:C310_TEMP_CABIN
+# -
+#   type: var
+#   var_name: L:C310_TEMP_TARGET
+# -
+#   type: var
+#   var_name: L:C310_TEMP_ROC
+# -
+#   type: var
+#   var_name: L:C310_TEMP_OVERHEAT
+# -
+#   type: var
+#   var_name: L:C310_LEFT_FUEL_PUMP
+# -
+#   type: var
+#   var_name: L:C310_RIGHT_FUEL_PUMP
+  -
+    type: var
+    var_name: L:C310_ICE_SHARD_HIT
+# -
+#   type: var
+#   var_name: L:C310_FD_AOA_HORN
+# -
+#   type: var
+#   var_name: L:C310_FD_AOA
+# -
+#   type: var
+#   var_name: L:C310_FD_AOA_STALL
+# -
+#   type: var
+#   var_name: L:C310_BUZZER
+# -
+#   type: var
+#   var_name: L:C310_ALTITUDE_ALERT
+# -
+#   type: var
+#   var_name: L:C310_EN_ENGINE1
+# -
+#   type: var
+#   var_name: L:C310_EN_ENGINE2
+# -
+#   type: var
+#   var_name: L:C310_COM_VOLUME
+# -
+#   type: var
+#   var_name: L:C310_NAV_VOLUME
+# -
+#   type: var
+#   var_name: L:C310_ADF_VOLUME
+# -
+#   type: var
+#   var_name: L:C310_SW_BATTERY
+# -
+#   type: var
+#   var_name: L:C310_SW_MAG_LEFT_1
+# -
+#   type: var
+#   var_name: L:C310_SW_MAG_LEFT_2
+# -
+#   type: var
+#   var_name: L:C310_SW_MAG_RIGHT_1
+# -
+#   type: var
+#   var_name: L:C310_SW_MAG_RIGHT_2
+# -
+#   type: var
+#   var_name: L:C310_SW_THROTTLE_LEFT
+# -
+#   type: var
+#   var_name: L:C310_SW_THROTTLE_RIGHT
+# -
+#   type: var
+#   var_name: L:C310_SW_MIXTURE_LEFT
+# -
+#   type: var
+#   var_name: L:C310_SW_MIXTURE_RIGHT
+# -
+#   type: var
+#   var_name: L:C310_SW_PROP_LEFT
+# -
+#   type: var
+#   var_name: L:C310_SW_PROP_RIGHT
+# -
+#   type: var
+#   var_name: L:C310_SW_ELEVATOR_TRIM
+# -
+#   type: var
+#   var_name: L:C310_SW_RUDDER_TRIM
+# -
+#   type: var
+#   var_name: L:C310_SW_AILERON_TRIM
+# -
+#   type: var
+#   var_name: L:C310_SW_BEACON_LIGHT
+# -
+#   type: var
+#   var_name: L:C310_SW_NAV_LIGHT
+# -
+#   type: var
+#   var_name: L:C310_SW_STROBE_LIGHT
+# -
+#   type: var
+#   var_name: L:C310_SW_DEICE_PROP
+# -
+#   type: var
+#   var_name: L:C310_SW_PITOT_HEAT
+# -
+#   type: var
+#   var_name: L:C310_SW_TAXI_LIGHT
+# -
+#   type: var
+#   var_name: L:C310_SW_AVIONICS
+# -
+#   type: var
+#   var_name: L:C310_SW_GEAR_HANDLE
+  -
+    type: var
+    var_name: L:C310_REDS_CHOCKS
+# -
+#   type: var
+#   var_name: L:C310_FD_SPOILERS_SET
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_DTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_XTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Tracking
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Transition_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Vector_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Course_To_Steer
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Suspended
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_State
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Available
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Next_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Target_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_FPA
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_VNAV_Required_VS
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Alt_Capture_Type
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Service_Level
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_GP_FPA
+# -
+#   type: var
+#   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
+#   var_name: L:C310_TAB_COMFORT_INDEX
+# -
+#   type: var
+#   var_name: L:C310_TAB_CLIMATE_INDEX
+# -
+#   type: var
+#   var_name: L:WT1000_AP_G1000_INSTALLED
+# -
+#   type: var
+#   var_name: L:WasmInstrument_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightCheckCompleted
+# -
+#   type: var
+#   var_name: L:WT_GNS530_INSTALLED_1
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
+#   var_name: L:WT_GNS430_INSTALLED_1
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+# -
+#   type: var
+#   var_name: L:GTN750_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN750_INT_State
+# -
+#   type: var
+#   var_name: L:GTN650_INT_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN650_INT_2_State
+# -
+#   type: var
+#   var_name: L:KR87_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KR87_State
+# -
+#   type: var
+#   var_name: L:MV_EFB_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:MV_EFB_State
+  -
+    type: var
+    var_name: L:C310_INSPECT_OPTION
+# -
+#   type: var
+#   var_name: L:C310_TAB_REPAIR_STATUS
+# -
+#   type: var
+#   var_name: L:MV_DME_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:MV_DME_State
+# -
+#   type: var
 #   var_name: L:MV_EDM_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:MV_EDM_State
 # -
 #   type: var
-#   var_name: L:C310_EDML_HP
-# -
-#   type: var
 #   var_name: L:C310_EDML_DOT
 # -
 #   type: var
-#   var_name: L:C310_EDML_EGT_1
+#   var_name: L:C310_EDML_EGT_REAL
 # -
 #   type: var
-#   var_name: L:C310_EDML_EGT_2
-# -
-#   type: var
-#   var_name: L:C310_EDML_EGT_3
-# -
-#   type: var
-#   var_name: L:C310_EDML_EGT_4
-# -
-#   type: var
-#   var_name: L:C310_EDML_EGT_5
-# -
-#   type: var
-#   var_name: L:C310_EDML_EGT_6
-# -
-#   type: var
-#   var_name: L:C310_EDML_OIL
-# -
-#   type: var
-#   var_name: L:C310_EDML_CHT_1
-# -
-#   type: var
-#   var_name: L:C310_EDML_CHT_2
-# -
-#   type: var
-#   var_name: L:C310_EDML_CHT_3
-# -
-#   type: var
-#   var_name: L:C310_EDML_CHT_4
-# -
-#   type: var
-#   var_name: L:C310_EDML_CHT_5
-# -
-#   type: var
-#   var_name: L:C310_EDML_CHT_6
-# -
-#   type: var
-#   var_name: L:C310_EDML_TIT
+#   var_name: L:C310_EDML_CHT_REAL
 # -
 #   type: var
 #   var_name: L:MV_EDM_1_ScreenLuminosity
@@ -1544,52 +2129,13 @@ shared:
 #   var_name: L:MV_EDM_1_State
 # -
 #   type: var
-#   var_name: L:C310_EDMR_HP
-# -
-#   type: var
 #   var_name: L:C310_EDMR_DOT
 # -
 #   type: var
-#   var_name: L:C310_EDMR_EGT_1
+#   var_name: L:C310_EDMR_EGT_REAL
 # -
 #   type: var
-#   var_name: L:C310_EDMR_EGT_2
-# -
-#   type: var
-#   var_name: L:C310_EDMR_EGT_3
-# -
-#   type: var
-#   var_name: L:C310_EDMR_EGT_4
-# -
-#   type: var
-#   var_name: L:C310_EDMR_EGT_5
-# -
-#   type: var
-#   var_name: L:C310_EDMR_EGT_6
-# -
-#   type: var
-#   var_name: L:C310_EDMR_OIL
-# -
-#   type: var
-#   var_name: L:C310_EDMR_CHT_1
-# -
-#   type: var
-#   var_name: L:C310_EDMR_CHT_2
-# -
-#   type: var
-#   var_name: L:C310_EDMR_CHT_3
-# -
-#   type: var
-#   var_name: L:C310_EDMR_CHT_4
-# -
-#   type: var
-#   var_name: L:C310_EDMR_CHT_5
-# -
-#   type: var
-#   var_name: L:C310_EDMR_CHT_6
-# -
-#   type: var
-#   var_name: L:C310_EDMR_TIT
+#   var_name: L:C310_EDMR_CHT_REAL
 # -
 #   type: var
 #   var_name: L:KX155A_1_ScreenLuminosity
@@ -1628,337 +2174,16 @@ shared:
 #   var_name: L:PFD_CDI_Source
 # -
 #   type: var
-#   var_name: L:Glasscockpit_DmeSource
+#   var_name: L:GPS_Current_Phase
 # -
 #   type: var
-#   var_name: L:GPS_Current_Phase
+#   var_name: L:Glasscockpit_DmeSource
 # -
 #   type: var
 #   var_name: L:MV_HM_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:MV_HM_State
-  -
-    type: var
-    var_name: L:C310_TAB_HOBBS
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-  -
-    type: var
-    var_name: L:C310_WASM_VER
-  -
-    type: var
-    var_name: L:C310_RSTR_Air
-  -
-    type: var
-    var_name: L:C310_CABIN_FAN
-# -
-#   type: var
-#   var_name: L:C310_ADF_NEEDLE
-  -
-    type: var
-    var_name: L:C310_SW_STARTER_LEFT
-  -
-    type: var
-    var_name: L:C310_SW_STARTER_RIGHT
-  -
-    type: var
-    var_name: L:C310_SW_BRAKE_LEFT
-  -
-    type: var
-    var_name: L:C310_SW_BRAKE_RIGHT
-  -
-    type: var
-    var_name: L:C310_SW_BRAKE_PARKING
-  -
-    type: var
-    var_name: L:C310_SW_FLAPS
-  -
-    type: var
-    var_name: L:C310_SW_DOOR_SEAL
-  -
-    type: var
-    var_name: L:C310_SW_FLOOD_RIGHT
-  -
-    type: var
-    var_name: L:C310_NAV_LIGHT_LEFT
-  -
-    type: var
-    var_name: L:C310_NAV_LIGHT_RIGHT
-  -
-    type: var
-    var_name: L:C310_BEACON_LIGHT
-  -
-    type: var
-    var_name: L:C310_TAXI_LIGHT
-  -
-    type: var
-    var_name: L:C310_CB_LKR_FUEL_L
-  -
-    type: var
-    var_name: L:C310_CB_LKR_FUEL_R
-  -
-    type: var
-    var_name: L:C310_CB_STALL_WARN
-  -
-    type: var
-    var_name: L:C310_CB_PROP_SYNC
-  -
-    type: var
-    var_name: L:C310_CB_XPDR_2
-  -
-    type: var
-    var_name: L:C310_CB_RADAR
-  -
-    type: var
-    var_name: L:C310_CB_INTERIOR_COMM
-  -
-    type: var
-    var_name: L:C310_CB_WX1000
-  -
-    type: var
-    var_name: L:C310_CB_RADIO_ALT
-  -
-    type: var
-    var_name: L:C310_CB_ENC_ALT
-  -
-    type: var
-    var_name: L:C310_DIRT_MINUTES
-# -
-#   type: var
-#   var_name: L:C310_TAB_FUEL_MAIN_LEFT
-# -
-#   type: var
-#   var_name: L:C310_TAB_FUEL_MAIN_RIGHT
-# -
-#   type: var
-#   var_name: L:C310_TAB_FUEL_AUX_LEFT
-# -
-#   type: var
-#   var_name: L:C310_TAB_FUEL_AUX_RIGHT
-# -
-#   type: var
-#   var_name: L:C310_TAB_CHG_MAIN_LEFT
-# -
-#   type: var
-#   var_name: L:C310_TAB_CHG_MAIN_RIGHT
-# -
-#   type: var
-#   var_name: L:C310_TAB_CHG_AUX_LEFT
-# -
-#   type: var
-#   var_name: L:C310_TAB_CHG_AUX_RIGHT
-  -
-    type: var
-    var_name: L:C310_TABLET_HIDE
-  -
-    type: var
-    var_name: L:C310_TABLET_SHOW
-  -
-    type: var
-    var_name: L:C310_Passenger_Steps
-  -
-    type: var
-    var_name: L:C310_FUEL_OVERRIDE_1
-  -
-    type: var
-    var_name: L:C310_FUEL_OVER_TEMP_1
-  -
-    type: var
-    var_name: L:C310_FUEL_OVERRIDE_2
-  -
-    type: var
-    var_name: L:C310_FUEL_OVER_TEMP_2
-# -
-#   type: var
-#   var_name: L:310_PERF_TRIGGERS
-  -
-    type: var
-    var_name: L:C310_PRIME_LEFT
-  -
-    type: var
-    var_name: L:C310_PRIME_RIGHT
-  -
-    type: var
-    var_name: L:C310_FAIL_ALT1
-  -
-    type: var
-    var_name: L:C310_FAIL_ALT2
-  -
-    type: var
-    var_name: L:C310_SHARD_PITOT_ICE_PCT
-  -
-    type: var
-    var_name: L:C310_EDMR_FORC
-  -
-    type: var
-    var_name: L:C310_LIGHT_LANDING_LEFT_ON
-  -
-    type: var
-    var_name: L:C310_LIGHT_LANDING_RIGHT_ON
-  -
-    type: var
-    var_name: L:C310_YAW_LIMITER
-  -
-    type: var
-    var_name: L:C310_TEMP_SWITCH
-  -
-    type: var
-    var_name: L:C310_TEMP_CABIN_AIR
-  -
-    type: var
-    var_name: L:C310_TEMP_FWD_CABIN_AIR
-  -
-    type: var
-    var_name: L:C310_TEMP_HEATER
-  -
-    type: var
-    var_name: L:C310_TEMP_FAN
-# -
-#   type: var
-#   var_name: L:C310_TEMP_CABIN
-# -
-#   type: var
-#   var_name: L:C310_TEMP_TARGET
-# -
-#   type: var
-#   var_name: L:C310_TEMP_ROC
-# -
-#   type: var
-#   var_name: L:C310_TEMP_OVERHEAT
-  -
-    type: var
-    var_name: L:C310_LEFT_FUEL_PUMP
-  -
-    type: var
-    var_name: L:C310_RIGHT_FUEL_PUMP
-  -
-    type: var
-    var_name: L:C310_ICE_SHARD_HIT
-  -
-    type: var
-    var_name: L:C310_FD_AOA_HORN
-# -
-#   type: var
-#   var_name: L:C310_FD_AOA
-# -
-#   type: var
-#   var_name: L:C310_FD_AOA_STALL
-  -
-    type: var
-    var_name: L:C310_BUZZER
-  -
-    type: var
-    var_name: L:C310_ALTITUDE_ALERT
-  -
-    type: var
-    var_name: L:C310_EN_ENGINE1
-  -
-    type: var
-    var_name: L:C310_EN_ENGINE2
-  -
-    type: var
-    var_name: L:C310_COM_VOLUME
-  -
-    type: var
-    var_name: L:C310_NAV_VOLUME
-  -
-    type: var
-    var_name: L:C310_ADF_VOLUME
-  -
-    type: var
-    var_name: L:C310_SW_BATTERY
-  -
-    type: var
-    var_name: L:C310_SW_MAG_LEFT_1
-  -
-    type: var
-    var_name: L:C310_SW_MAG_LEFT_2
-  -
-    type: var
-    var_name: L:C310_SW_MAG_RIGHT_1
-  -
-    type: var
-    var_name: L:C310_SW_MAG_RIGHT_2
-# -
-#   type: var
-#   var_name: L:C310_SW_THROTTLE_LEFT
-# -
-#   type: var
-#   var_name: L:C310_SW_THROTTLE_RIGHT
-# -
-#   type: var
-#   var_name: L:C310_SW_MIXTURE_LEFT
-# -
-#   type: var
-#   var_name: L:C310_SW_MIXTURE_RIGHT
-# -
-#   type: var
-#   var_name: L:C310_SW_PROP_LEFT
-# -
-#   type: var
-#   var_name: L:C310_SW_PROP_RIGHT
-# -
-#   type: var
-#   var_name: L:C310_SW_ELEVATOR_TRIM
-  -
-    type: var
-    var_name: L:C310_SW_RUDDER_TRIM
-  -
-    type: var
-    var_name: L:C310_SW_AILERON_TRIM
-  -
-    type: var
-    var_name: L:C310_SW_BEACON_LIGHT
-  -
-    type: var
-    var_name: L:C310_SW_NAV_LIGHT
-  -
-    type: var
-    var_name: L:C310_SW_STROBE_LIGHT
-  -
-    type: var
-    var_name: L:C310_SW_DEICE_PROP
-  -
-    type: var
-    var_name: L:C310_SW_PITOT_HEAT
-  -
-    type: var
-    var_name: L:C310_SW_TAXI_LIGHT
-  -
-    type: var
-    var_name: L:C310_SW_AVIONICS
-  -
-    type: var
-    var_name: L:C310_SW_GEAR_HANDLE
-# -
-#   type: var
-#   var_name: L:C310_EDML_EGT_REAL
-# -
-#   type: var
-#   var_name: L:C310_EDML_CHT_REAL
-# -
-#   type: var
-#   var_name: L:C310_EDMR_EGT_REAL
-# -
-#   type: var
-#   var_name: L:C310_EDMR_CHT_REAL
-  -
-    type: var
-    var_name: L:C310_REDS_CHOCKS
 # -
 #   type: var
 #   var_name: L:C310_TRB_EARPAIN
@@ -1970,13 +2195,19 @@ shared:
 #   var_name: L:C310_TRB_G
 # -
 #   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:KAP140_BARO_Display
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:KAP140_BARO_Display
 
 server:
   -
@@ -2077,3 +2308,6 @@ ignore:
   - MV_EFB#input_external_tank_left
   - MV_EFB#input_fuselage_clean
   - MV_EFB#input_rate_of_change
+  - MV_EFB#input_ail_trim_base
+  - MV_EFB#input_ele_trim_base
+  - MV_EFB#input_rud_trim_base

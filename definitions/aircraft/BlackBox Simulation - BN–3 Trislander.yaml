@@ -1,19 +1,20 @@
 # Version 1.1.6
 
 include:
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/ASCommon.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/Instruments/AS_KT76C.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -32,16 +33,10 @@ shared:
     var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
-    cancel_h_events: true
     event_param: 3
+    cancel_h_events: true
 
   - # Engines
-    type: NumSet
-    var_name: A:GENERAL ENG ANTI ICE POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: ANTI_ICE_GRADUAL_SET_ENG3
-  -
     type: ToggleSwitch
     var_name: A:GENERAL ENG FUEL VALVE:3
     var_units: Bool
@@ -53,32 +48,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_STARTER3
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_RIGHT
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: MIXTURE3_SET
-    interpolate: Default
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: PROP_PITCH3_SET
-    interpolate: Default
 
   - # Fuel
     type: ToggleSwitch
@@ -598,15 +567,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:KAP140_BARO_Display
-
-master:
-  - # ASOBO_ENGINE_Lever_Throttle_Template
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE3_SET
-    interpolate: Default
 
 server:
   -

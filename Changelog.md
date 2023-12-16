@@ -1,5 +1,124 @@
 # YourControls Changelog
 
+## Version 2.8.0
+
+### Changes
+
+- Brake pedals are now shared. (THE CAR TINA!)
+- Improved sync of autopilot modes on Garmin avionics.
+  - Not perfect, but better.
+- Increased base engine support to 4.
+- Updated glider support for SU14.
+- Updated rotorcraft support for SU14.
+
+### Profiles
+
+- Added: Bell 222B by Cowan Simulation (v1.0.2).
+- Added: Boeing 787-9 Dreamliner by Horizon Simulations (v1.0.1).
+- Added: Guimbal Cabri G2 by Asobo Studio (v0.1.20).
+- Added: Juice Goose UTV by Parallel 42 (v1.1.0).
+- Added: MD Helicopters 530F by Shrike Simulations (v1.0.1).
+- Readded: Airbus H125 by RotorSimPilot & Airland (v1.3.9).
+- Updated: Airbus A320neo by FlyByWire (v0.11.1).
+- Updated: Airbus A330-900neo by Headwind Simulations (v0.5.8).
+- Updated: Airbus H135 by HypePerformanceGroup (Build 447).
+- Updated: Bell 407 by Nemeth Designs (v0.3.6).
+- Updated: Cessna 310R by Milviz/Blackbird (v2.0.4).
+- Updated: Cirrus SR22T G6 by Asobo/Working Title (v0.2.13).
+- Updated: Douglas DC-3 by Aeroplane Heaven (v1.2.5).
+- Updated: Hughes H4 Hercules by Bluemesh (v1.2.5).
+- Updated: Latecoere 631 by Bluemesh (v1.0.8).
+
+### Aircraft Fixes
+
+- Asobo 747: Taxi light flashing.
+- Asobo 747/787: TO/GA switch event.
+- Asobo CJ4: TO/GA switch event.
+- Asobo CJ4: Wing/Eng deice switch event.
+- Asobo TBM930: Right seat PFD altimeter.
+- Asobo Longitude: Auto throttle arm.
+- Asobo Longitude: Deice switch inaccuracies.
+- Asobo Longitude: Spoiler lever range.
+- Asobo Longitude: TO/GA switch event.
+- CowanSim: Collective twists are now shared.
+- CowanSim: Gyrocompass slave switches.
+- CowanSim: Hydraulic and deice switches.
+- DCD Concorde: APU bleed and generator events.
+- DCD Concorde: Disabled XPNDR number buttons.
+- DCD Concorde: Hydraulic and engine bleed switches.
+- Deejing RV-7: G5 power button.
+- FBW A320: Enabled saved NAV frequencies.
+- FBW A320: Landing lights RETRACT.
+- FBW A320: Potential causes of bad FPS.
+- FBW A320: Potential gear desync.
+- FBW A320: Strobe no longer on when OFF.
+- FlightFX Vision Jet: Auto throttle arm.
+- FSS E170/E175: Yoke and pedals for v0.9.19.
+- G1000/G3000: CDI/NAV mode skipping.
+- G3000: Saved barometer pressure desync.
+- G3X/G1000/G3000: Added mach airspeed sync.
+- Got Friends Discus-2c: FES power switch.
+- HPG H135: Engine starter consistency.
+- HPG H135: Numerous tablet desyncs.
+- Headwind A330: Cabin and cargo doors.
+- Headwind A330: Enabled saved NAV frequencies.
+- Headwind A330: Potential causes of bad FPS.
+- Headwind A330: Potential gear desync.
+- Headwind A330: Strobe no longer on when OFF.
+- Milviz 310R: G5 power buttons.
+- Nemeth B407: Logo light switch.
+- PMDG 737: Added tablet Home events.
+- PMDG 737: Potential causes of bad FPS.
+- PMDG 737: Tablet brightness.
+
+### New Issues
+
+- G1000/G3000: Flight director disabled to prevent breaking autopilot.
+
+## Version 2.7.13
+
+### Changes
+
+- Added: Separate FlyByWire A32NX profile for use with SimBridge.
+
+## Version 2.7.12
+
+### Profiles
+
+- Updated: Tecnam P2006T by FlightSim Studio (v1.0.6).
+
+### Aircraft Fixes
+
+- Asobo 747/787: Baro minimums. Radio minimums unsyncable.
+- Asobo 787: Floppy yoke with autopilot on.
+- Asobo 787: Inverted elevator trim.
+
+## Version 2.7.11
+
+- Cloud IPv6 should work again.
+
+### Profiles
+
+- Added: Boeing 787-8 Dreamliner by Kurorin (v2.1.1).
+- Updated: Airbus A320 Family by LatinVFR.
+- Updated: Cessna 310R by Milviz/Blackbird (v1.9.6).
+- Updated: Embraer E170/E175 by FlightSim Studio (v0.9.17).
+- Updated: Piper Arrow III by Just Flight (v0.10.8).
+- Updated: Piper Turbo Arrow III/IV by Just Flight (v0.5.8).
+- Updated: Piper Warrior II by Just Flight (v0.3.8).
+
+### Aircraft Fixes
+
+- Asobo 787: Throttle levers.
+- Asobo 787: APU generator switches.
+- Asobo 747/787: Hydraulic switches.
+- FBW A320: Removed outdated condition for ECAM buttons.
+
+#### Issues for Just Flight
+
+- Arrow/Turbo Arrow: Heading bug no longer changes with AUTOPILOT HEADING LOCK DIR, unsyncable.
+- Warrior: Works normally with AUTOPILOT HEADING LOCK DIR, syncable.
+
 ## Version 2.7.10
 
 ### Profiles
@@ -51,19 +170,19 @@
 - Added: Noorduyn Norseman by Big Radials (v1.0.3).
 - Added: Piper PA-28-181 Archer II by Carenado (v1.0.1).
 - Added: SeaRey Elite by FlightSim Studio (v1.0.3).
-- Updated: Cessna 170B by Carenado to v2.0.0.
-- Updated: Cessna 172SP by WBSim to v1.0.7.
-- Updated: Cessna 337H Skymaster by Carenado to v2.0.1.
-- Updated: Cessna T182T Skylane by Carenado to v2.0.2.
-- Updated: Cirrus Vision Jet by FlightFX to v2.0.2.
-- Updated: Honda HondaJet by FlightFX to v2.0.0.
-- Updated: Mooney M20R Ovation by Carenado to v2.0.1.
-- Updated: Pilatus PC-6 by Milviz/BlackBird to v1.1.8.
-- Updated: Pilatus PC-12 by Carenado to v2.0.0.
-- Updated: Piper PA-28R Arrow III by Carenado to v2.0.0.
-- Updated: Piper PA-34T Seneca V by Carenado to v2.0.1.
-- Updated: Piper PA-44 Seminole by Carenado to v2.0.0.
-- Updated: Tecnam P92 by AeroSachs & Erasam to v1.5.0/v2.0.1.
+- Updated: Cessna 170B by Carenado (v2.0.0).
+- Updated: Cessna 172SP by WBSim (v1.0.7).
+- Updated: Cessna 337H Skymaster by Carenado (v2.0.1).
+- Updated: Cessna T182T Skylane by Carenado (v2.0.2).
+- Updated: Cirrus Vision Jet by FlightFX (v2.0.2).
+- Updated: Honda HA-420 HondaJet FlightFX (v2.0.0).
+- Updated: Mooney M20R Ovation by Carenado (v2.0.1).
+- Updated: Pilatus PC-6 by Milviz/BlackBird (v1.1.8).
+- Updated: Pilatus PC-12 by Carenado (v2.0.0).
+- Updated: Piper PA-28R Arrow III by Carenado (v2.0.0).
+- Updated: Piper PA-34T Seneca V by Carenado (v2.0.1).
+- Updated: Piper PA-44 Seminole by Carenado (v2.0.0).
+- Updated: Tecnam P92 by AeroSachs & Erasam (v1.5.0/v2.0.1).
 
 ### Aircraft Fixes
 
@@ -73,8 +192,8 @@
 - Carenado 337H: Cowl flap switches.
 - Carenado PA-34T: Landing/Pulse light switch.
 - Carenado PC-12: Most menu desync on EX500.
-- FBW A32NX: Disabled broken sync of passengers.
-- FBW A32NX: Disabled XPNDR number buttons.
+- FBW A320: Disabled broken sync of passengers.
+- FBW A320: Disabled XPNDR number buttons.
 - Milviz PC-6: All tablet desync and spam.
 
 ## Version 2.7.7
@@ -83,23 +202,23 @@
 
 - Added: Airbus A320neo by LatinVFR (v1.0.2).
 - Added: Bell 206L3 by Cowan Simulation (v1.0.2).
-- Updated: Airbus A318ceo by LatinVFR to v2.0.0.
-- Updated: Airbus A319ceo by LatinVFR to v2.0.0.
-- Updated: Airbus A321neo by LatinVFR to v2.0.1.
-- Updated: Airbus A32NX by FlyByWire to v0.10.0.
-- Updated: Airbus A339X by Headwind Simulations to v0.4.1.
-- Updated: Airbus H125 by Cowan Simulation to v1.0.2.
-- Updated: Bell 206B3 by Cowan Simulation to v1.0.3.
-- Updated: Cessna 414AW Chancellor by Flysimware to v4.3.3.
-- Updated: Discus-2c by Got Friends to v2.0.7.
-- Updated: Edgley EA-7 by Got Friends to v1.0.7.
-- Updated: Grumman G-21A by Microsoft & iniBuilds to v1.1.5.
-- Updated: Grumman JRF-6B Goose by Big Radials to v1.0.8.
-- Updated: Hughes H4 by Microsoft & Bluemesh to v1.1.8.
-- Updated: MD Helicopters 500E by Cowan Simulation to v1.0.2.
-- Updated: Piper PA-28 Warrior II by JustFlight to v0.5.6.
-- Updated: Piper PA-28R Arrow III by JustFlight to v0.10.6.
-- Updated: Piper PA-28R Turbo Arrow by JustFlight to v0.3.6.
+- Updated: Airbus A318ceo by LatinVFR (v2.0.0).
+- Updated: Airbus A319ceo by LatinVFR (v2.0.0).
+- Updated: Airbus A321neo by LatinVFR (v2.0.1).
+- Updated: Airbus A320neo by FlyByWire (v0.10.0).
+- Updated: Airbus A330-900neo by Headwind Simulations (v0.4.1).
+- Updated: Airbus H125 by Cowan Simulation (v1.0.2).
+- Updated: Bell 206B3 by Cowan Simulation (v1.0.3).
+- Updated: Cessna 414AW Chancellor by Flysimware (v4.3.3).
+- Updated: Discus-2c by Got Friends (v2.0.7).
+- Updated: Edgley EA-7 by Got Friends (v1.0.7).
+- Updated: Grumman G-21A by Microsoft & iniBuilds (v1.1.5).
+- Updated: Grumman JRF-6B Goose by Big Radials (v1.0.8).
+- Updated: Hughes H4 by Microsoft & Bluemesh (v1.1.8).
+- Updated: MD Helicopters 500E by Cowan Simulation (v1.0.2).
+- Updated: Piper PA-28 Warrior II by JustFlight (v0.5.6).
+- Updated: Piper PA-28R Arrow III by JustFlight (v0.10.6).
+- Updated: Piper PA-28R Turbo Arrow by JustFlight (v0.3.6).
 - Removed: FlyByWire A32NX Development/Experimental.
 - Removed: Pushback tug (conflicts with other add-ons).
 - Removed: Support for PMS50 GNS530 (deprecated).
@@ -153,20 +272,20 @@
   - Do not use standby freq/swap. Enter directly into active.
 - Added: MD Helicopters 500E by Cowan Simulation (v1.0.1).
 - Added: Van's RV-10 by SimWorks Studios (v1.0.3).
-- Updated: A32NX (Dev/Exp) by FlyByWire to March 24, 2023.
+- Updated: Airbus A320neo (Dev/Exp) by FlyByWire to March 24, 2023.
 - Updated: AAU1-Brief updates for Longitude, TBM, and CJ4.
-- Updated: Airbus A339X by Headwind Simulations to v0.3.3.
-- Updated: Cessna 152 by JPLogistics & WBSim to v2.0.6.
-- Updated: Cirrus Vision Jet G2 by FlightFX to v1.2.3.
-- Updated: Robinson R44 by RotorSimPilot & Airland to v1.4.
-- Readded: Douglas DC-6 by PMDG Simulations v2.0.47.
+- Updated: Airbus A330-900neo by Headwind Simulations (v0.3.3).
+- Updated: Cessna 152 by JPLogistics & WBSim (v2.0.6).
+- Updated: Cirrus Vision Jet G2 by FlightFX (v1.2.3).
+- Updated: Robinson R44 by RotorSimPilot & Airland (v1.4).
+- Readded: Douglas DC-6 by PMDG Simulations (v2.0.47).
   - Fuel and service repair still not synced.
 - Removed: Numerous profiles of discontinued enhancement mods.
 
 ### Aircraft Fixes
 
-- A32NX: AUX fuel tanks not filling through EFB.
-- TBM930: Pilot and copilot reading lights.
+- FBW A320: AUX fuel tanks not filling through EFB.
+- Asobo TBM930: Pilot and copilot reading lights.
 
 ## Version 2.7.4
 
@@ -180,28 +299,28 @@
 - Added: Grumman G-21A Goose by Microsoft & iniBuilds (v1.1.2).
 - Added: Hughes H4 Hercules by Microsoft & Bluemesh (v1.1.3).
 - Added: PAC P-750 XSTOL by ORBX (v1.0.1).
-- Updated: Aeroplane Heaven C140 to v1.5.0.
-- Updated: Aerosoft DHC-6 Twin Otter to v1.1.1.
-- Updated: Carenado PC-12 to v1.1.0.
-- Updated: DC Designs Concorde to v1.0.6.
-- Updated: FlyByWire A32NX (Stable) to v0.9.1.
+- Updated: Aeroplane Heaven C140 (v1.5.0).
+- Updated: Aerosoft DHC-6 Twin Otter (v1.1.1).
+- Updated: Carenado PC-12 (v1.1.0).
+- Updated: DC Designs Concorde (v1.0.6).
+- Updated: FlyByWire A32NX (Stable) (v0.9.1).
 - Updated: FlyByWire A32NX (Dev/Exp) to December 24, 2022.
-- Updated: Flysimware C414AW Chancellor to v3.2.3.
-- Updated: Headwind A339X to v0.3.1.
-- Updated: LatinVFR A319ceo to v1.0.7.
-- Updated: LatinVFR A321neo to v1.2.10.
-- Updated: Microsoft Bonanza V35 to v1.6.0.
-- Updated: Microsoft Junkers Ju 52 to v0.1.9.
-- Updated: Milviz C310R to v1.1.9.
-- Updated: Milviz PC-6 to v1.1.2.
+- Updated: Flysimware C414AW Chancellor (v3.2.3).
+- Updated: Headwind A330-900neo (v0.3.1).
+- Updated: LatinVFR A319ceo (v1.0.7).
+- Updated: LatinVFR A321neo (v1.2.10).
+- Updated: Microsoft Bonanza V35 (v1.6.0).
+- Updated: Microsoft Junkers Ju 52 (v0.1.9).
+- Updated: Milviz 310R (v1.1.9).
+- Updated: Milviz PC-6 (v1.1.2).
 - Updated: Salty Simulations 747-8i (Dev) to December 4, 2022.
-- Updated: SimSkunkWorks TF-104G Starfighter to v3.3.1.
-- Updated: SimWorks Studios Kodiak 100 II & III to v1.4.0.
+- Updated: SimSkunkWorks TF-104G Starfighter (v3.3.1).
+- Updated: SimWorks Studios Kodiak 100 II & III (v1.4.0).
 
 ### Changes
 
-- All aircraft: Removed unsettable circuit failure variables.
-- All Carenado: Re-enabled tablet button sync of pilot models.
+- General: Removed unsettable circuit failure variables.
+- Carenado: Re-enabled tablet button sync of pilot models.
 - Aerosoft DHC-6: Fixed cabin general, reading, emergency, and FO ceiling lights.
 - Aerosoft DHC-6: Fixed cockpit caution, entrance, and skydiver day/night lights.
 - Big Radials JRF-6B: Fixed manual fuel pump lever.
@@ -263,15 +382,14 @@
 - Added: Discus2c by GotFriends (v2.0.4).
 - Added: Edgley EA-7 Optica by GotFriends (v1.0.3).
 - Added: Hondajet by FlightFX (v1.0.6).
-  - WT G3000 currently not supported, setting route won't sync.
 - Added: Junkers F 13 by Microsoft (v0.1.1).
 - Added: Junkers Ju 52 by Microsoft (v0.1.8).
 - Added: Pilatus PC-12 by Carenado (v1.0.3).
 - Added: Piper PA-28R Arrow III by Carenado (v1.5.0).
 - Added: Piper PA-44 Seminole by Carenado (v1.8.0).
 - Added: Schleicher AS33Me by MADolo Simulations (1.51).
-- Updated: Flysimware C414AW Chancellor to v3.2.0.
-- Updated: SimWorks Studios RV-14 to v1.3.2.
+- Updated: Flysimware C414AW Chancellor (v3.2.0).
+- Updated: SimWorks Studios RV-14 (v1.3.2).
 
 ### Aircraft Fixes
 
@@ -326,19 +444,18 @@
 - Added: Basic support for GTNXi 750 by TDS Sim Software (v1.0.1.8).
 - Added: Basic support for G1000 NXi by Working Title (v1.0.1).
 - Updated: ASOBO aircraft for Sim Update 9 (v1.25.7.0).
-- Updated: Carenado M20R to v1.5.1.
-- Updated: Carenado Seneca V to v1.4.0.
+- Updated: Carenado M20R (v1.5.1).
+- Updated: Carenado Seneca V (v1.4.0).
 - Updated: FlyByWire A32NX to May 18, 2022.
-  - EFB not updated.
-- Updated: Headwind A330-900 to v0.200.
-- Updated: HypePerformanceGroup H135 to v1.4.5.
-- Updated: JustFlight Arrow III to v0.10.5.
-- Updated: Mrtommymxr C172 to v0.3.
-- Updated: Mrtommymxr DA62X to v0.7.
-- Updated: Mrtommymxr DA40NGX to v0.8.6.
-- Updated: RotorSimPilot R44 to v1.2.8.
-- Updated: SaltySimulations 747 to v0.5.1.
-- Updated: Working Title CJ4 to v0.12.13.
+- Updated: Headwind A339X (v0.200).
+- Updated: HypePerformanceGroup H135 (v1.4.5).
+- Updated: JustFlight Arrow III (v0.10.5).
+- Updated: Mrtommymxr C172 (v0.3).
+- Updated: Mrtommymxr DA62X (v0.7).
+- Updated: Mrtommymxr DA40NGX (v0.8.6).
+- Updated: RotorSimPilot R44 (v1.2.8).
+- Updated: SaltySimulations 747 (v0.5.1).
+- Updated: Working Title CJ4 (v0.12.13).
 - Removed: Aerosoft CRJ (being re-evaluated).
 - Removed: Frett G36 (deprecated).
 - Removed: PMDG DC-6 (being re-created).
@@ -391,7 +508,7 @@
 - A32NX: Mach airspeed knob.
 - Carenado M20R: Interior and exterior lights.
 - Carenado Seneca V: Added TDS GTN support.
-- Headwind A339: ATC ground services.
+- Headwind A339X: ATC ground services.
 - HPG H135: Barometer desync with MFD knobs.
 - HPG H135: Excessive data spam while in hover mode.
 - HPG H135: Tablet autopilot button desync.

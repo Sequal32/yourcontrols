@@ -4,7 +4,6 @@ include:
   - definitions/modules/navigation.yaml
   - definitions/modules/physics_rad.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/slew.yaml
   - definitions/modules/transponder.yaml
 
 shared:
@@ -29,6 +28,13 @@ shared:
     var_type: f64
     event_name: AILERON_TRIM_SET_EX1
     unreliable: true
+
+  - # Slew
+    type: ToggleSwitch
+    var_name: A:IS SLEW ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: SLEW_TOGGLE
 
   - # YourControls Force Transfer Hotkey
     type: ProgramActionEvent
@@ -3192,9 +3198,10 @@ shared:
     add_by: 37504
     event_name: ROTOR_BRAKE
     use_calculator: true
-  - # CPT COURSE SELECTOR knob Collins/Honeywell (keep var)
+  - # CPT Course Selector knob Collins/Honeywell (keep var)
     type: var
     var_name: L:switch_376_73X
+    unreliable: true
   - # FLIGHT DIRECTOR (F/D) Switch Collins/Honeywell
     type: ToggleSwitch
     var_name: L:switch_378_73X
@@ -3251,6 +3258,7 @@ shared:
   - # IAS/MACH Selector knob Collins/Honeywell (keep var)
     type: var
     var_name: L:switch_384_73X
+    unreliable: true
   - # VNAV Switch Collins/Honeywell
     type: NumSet
     var_name: L:switch_386_73X
@@ -3283,9 +3291,10 @@ shared:
     down_event_param: 38901
     increment_by: 10
     use_calculator: true
-  - # HEADING Selector knob Collins/Honeywell (keep var)
+  - # Heading Selector knob Collins/Honeywell (keep var)
     type: var
     var_name: L:switch_390_73X
+    unreliable: true
   - # Level Change (LVL CHG) Switch Collins/Honeywell
     type: NumSet
     var_name: L:switch_391_73X
@@ -3373,6 +3382,7 @@ shared:
   - # Altitude Selector (SEL) knob Collins/Honeywell (keep var)
     type: var
     var_name: L:switch_400_73X
+    unreliable: true
   - # ALT INTV Switch Collins/Honeywell
     type: NumSet
     var_name: L:switch_885_73X
@@ -3382,9 +3392,10 @@ shared:
     add_by: 88504
     event_name: ROTOR_BRAKE
     use_calculator: true
-  - # Vertical Speed Thumbwheel Collins/Honeywell (keep var)
+  - # Vertical Speed (V/S) Thumbwheel Collins/Honeywell (keep var)
     type: var
     var_name: L:switch_401_73X
+    unreliable: true
   - # Command Engage (CMD A) Switch A Collins/Honeywell
     type: NumSet
     var_name: L:switch_402_73X
@@ -3450,9 +3461,10 @@ shared:
 # - # MA Annunciator Collins/Honeywell
 #   type: var
 #   var_name: L:switch_408_73X
-  - # FO COURSE SELECTOR knob Collins/Honeywell (keep var)
+  - # FO Course Selector knob Collins/Honeywell (keep var)
     type: var
     var_name: L:switch_409_73X
+    unreliable: true
 # - # FO Minimums (MINS) Selector (middle)
 #   type: NumIncrement
 #   var_name: L:switch_411_73X
@@ -8641,12 +8653,20 @@ shared:
 # -
 #   type: var
 #   var_name: L:TestSwitch
-# - # Yoke Left Hide
-#   type: var
-#   var_name: L:switch_2007_73X
-# - # Yoke Right Hide
-#   type: var
-#   var_name: L:switch_2008_73X
+  - # CPT Yoke Hide
+    type: ToggleSwitch
+    var_name: L:switch_2007_73X
+    event_name: ROTOR_BRAKE
+    event_param: 200701
+    on_condition_value: 100
+    use_calculator: true
+  - # FO Yoke Hide
+    type: ToggleSwitch
+    var_name: L:switch_2008_73X
+    event_name: ROTOR_BRAKE
+    event_param: 200801
+    on_condition_value: 100
+    use_calculator: true
   - # CPT Checklist Vis
     type: var
     var_name: L:yoke_left_checklist
@@ -9371,6 +9391,12 @@ shared:
     var_name: L:tablet_vis
   -
     type: var
+    var_name: L:tablet_home_btn_CA
+  -
+    type: var
+    var_name: L:tablet_home_btn_FO
+  -
+    type: var
     var_name: L:tablet_power_btn_CA
   -
     type: var
@@ -9855,10 +9881,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:ngx_wheelwell_lights
-  -
+  - # IRS L OFF Pull?
     type: var
     var_name: L:switch_259_73X
-  -
+  - # IRS R OFF Pull?
     type: var
     var_name: L:switch_260_73X
   -
@@ -10181,6 +10207,23 @@ shared:
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
+  - # Brakes
+    type: NumSet
+    var_name: A:BRAKE LEFT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    add_by: -16384
+    event_name: AXIS_LEFT_BRAKE_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:BRAKE RIGHT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    add_by: -16384
+    event_name: AXIS_RIGHT_BRAKE_SET
+    unreliable: true
+
 master:
   -
     type: NumSet
@@ -10214,28 +10257,12 @@ master:
     unreliable: true
   -
     type: NumSet
-    var_name: A:RUDDER PEDAL POSITION
+    var_name: A:RUDDER POSITION
     var_units: Position 16k
     var_type: f64
     multiply_by: -1
     event_name: AXIS_RUDDER_SET
     use_calculator: true
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:BRAKE LEFT POSITION EX1
-    var_units: Position 32k
-    var_type: f64
-    add_by: -16384
-    event_name: AXIS_LEFT_BRAKE_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:BRAKE RIGHT POSITION EX1
-    var_units: Position 32k
-    var_type: f64
-    add_by: -16384
-    event_name: AXIS_RIGHT_BRAKE_SET
     unreliable: true
 
 server:
@@ -10467,3 +10494,36 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+  - PMDGTablet#efb_preferences_brightness
+  - PMDGTablet#efb_preferences_simbrief_id
+  - PMDGTablet#efb_dashboard_weather_icao
+  - PMDGTablet#efb_navigraph_searchfield
+
+  - PMDGTablet#opt_takeoff_airport_icao
+  - PMDGTablet#opt_takeoff_airport_name
+  - PMDGTablet#opt_takeoff_airport_altitude
+  - PMDGTablet#opt_takeoff_runway_length
+  - PMDGTablet#opt_takeoff_weight
+  - PMDGTablet#opt_takeoff_cg
+  - PMDGTablet#opt_takeoff_windspeed
+  - PMDGTablet#opt_takeoff_oat
+  - PMDGTablet#opt_takeoff_barometer
+
+  - PMDGTablet#opt_landingdispatch_airport_icao
+  - PMDGTablet#opt_landingdispatch_airport_name
+  - PMDGTablet#opt_landingdispatch_airport_altitude
+  - PMDGTablet#opt_landingdispatch_runway_length
+  - PMDGTablet#opt_landingdispatch_windspeed
+  - PMDGTablet#opt_landingdispatch_oat
+  - PMDGTablet#opt_landingdispatch_barometer
+
+  - PMDGTablet#opt_landingenroute_airport_icao
+  - PMDGTablet#opt_landingenroute_airport_name
+  - PMDGTablet#opt_landingenroute_airport_altitude
+  - PMDGTablet#opt_landingenroute_runway_length
+  - PMDGTablet#opt_landingenroute_weight
+  - PMDGTablet#opt_landingenroute_windspeed
+  - PMDGTablet#opt_landingenroute_oat
+  - PMDGTablet#opt_landingenroute_barometer

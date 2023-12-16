@@ -1,21 +1,23 @@
 # Version 0.1.4
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/TDSNXi.yaml
-  - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml # 327
+  - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -54,8 +56,8 @@ shared:
     var_units: Millibars scaler 16
     var_type: f64
     event_name: KOHLSMAN_SET
-    cancel_h_events: true
     event_param: 3
+    cancel_h_events: true
 
   - # Avionics
     type: ToggleSwitch
@@ -503,9 +505,9 @@ shared:
   -
     type: var
     var_name: L:var_radarMode
-  -
-    type: var
-    var_name: L:XMLVAR_InterSep
+# -
+#   type: var
+#   var_name: L:XMLVAR_InterSep
   -
     type: var
     var_name: L:var_cabinTemperatureKnob

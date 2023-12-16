@@ -1,0 +1,40 @@
+shared:
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE1_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:2
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE2_SET
+    unreliable: true
+
+master:
+  -
+    type: NumSet
+    var_name: A:COLLECTIVE HANDLE POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: 2
+    add_by: -16384
+    event_name: AXIS_COLLECTIVE_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:HELICOPTER MASTER THROTTLE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: HELICOPTER_THROTTLE1_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:HELICOPTER MASTER THROTTLE POSITION:2
+    var_units: Position 16k
+    var_type: f64
+    event_name: HELICOPTER_THROTTLE2_SET
+    unreliable: true

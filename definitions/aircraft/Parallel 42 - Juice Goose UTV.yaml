@@ -1,0 +1,471 @@
+# Version 1.1.0
+
+include:
+  - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
+
+shared:
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT NAV
+    var_units: Bool
+    var_type: f64
+    event_name: NAV_LIGHTS_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:LIGHT RECOGNITION
+    var_units: Bool
+    var_type: f64
+    event_name: RECOGNITION_LIGHTS_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI
+    var_units: Bool
+    var_type: f64
+    event_name: TAXI_LIGHTS_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LOGO
+    var_units: Bool
+    var_type: f64
+    event_name: LOGO_LIGHTS_SET
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE
+    var_units: Bool
+    var_type: f64
+    event_name: STROBES_SET
+    cancel_h_events: true
+
+  - # Glove box
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+
+  - # LVAR's
+    type: var
+    var_name: L:p42_mav_physics
+# -
+#   type: var
+#   var_name: L:p42_mav_wake_state
+# -
+#   type: var
+#   var_name: L:p42_mav_antenna_lx
+# -
+#   type: var
+#   var_name: L:p42_mav_antenna_lz
+# -
+#   type: var
+#   var_name: L:p42_mav_antenna_rx
+# -
+#   type: var
+#   var_name: L:p42_mav_antenna_rz
+# -
+#   type: var
+#   var_name: L:p42_mav_cup_x
+# -
+#   type: var
+#   var_name: L:p42_mav_cup_z
+# -
+#   type: var
+#   var_name: L:p42_mav_plate_pos
+  -
+    type: var
+    var_name: L:p42_mav_opt_windshield
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:p42_mav_opt_doors
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:p42_mav_opt_roof
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:p42_mav_opt_guard_front
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:p42_mav_opt_antennas
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:p42_mav_opt_lightbar_roof
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:p42_mav_door_l_x
+# -
+#   type: var
+#   var_name: L:p42_mav_door_r_x
+# -
+#   type: var
+#   var_name: L:p42_mav_keyfob_z
+# -
+#   type: var
+#   var_name: L:p42_mav_keyfob_x
+  -
+    type: var
+    var_name: L:p42_mav_cup_visibility
+  -
+    type: var
+    var_name: L:p42_mav_dash_open
+  -
+    type: var
+    var_name: L:p42_mav_button_wake_state
+  -
+    type: var
+    var_name: L:p42_mav_capacitor_activate
+  -
+    type: var
+    var_name: L:p42_mav_capacitor_boost
+  -
+    type: var
+    var_name: L:p42_mav_dsc_active
+  -
+    type: var
+    var_name: L:p42_mav_rwd_only
+  -
+    type: var
+    var_name: L:p42_mav_climb_assist
+# -
+#   type: var
+#   var_name: L:p42_mav_commanded_power
+  -
+    type: var
+    var_name: L:p42_mav_speaker_on
+  -
+    type: var
+    var_name: L:p42_mav_speaker_volume
+# -
+#   type: var
+#   var_name: L:p42_mav_hvac_fans_angle
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rl_angle
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rr_angle
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fl_angle
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fr_angle
+# -
+#   type: var
+#   var_name: L:p42_mav_surface_volatility
+  -
+    type: var
+    var_name: L:p42_mav_color_antennas
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:p42_mav_color_underglow
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:p42_mav_ready
+# -
+#   type: var
+#   var_name: L:p42_mav_transmission
+  -
+    type: var
+    var_name: L:p42_mav_cruise_active
+  -
+    type: var
+    var_name: L:p42_mav_cruise_speed
+# -
+#   type: var
+#   var_name: L:p42_mav_debug_0
+# -
+#   type: var
+#   var_name: L:p42_mav_debug_1
+# -
+#   type: var
+#   var_name: L:p42_mav_debug_2
+# -
+#   type: var
+#   var_name: L:p42_mav_debug_3
+# -
+#   type: var
+#   var_name: L:p42_mav_scrape_l
+# -
+#   type: var
+#   var_name: L:p42_mav_scrape_r
+# -
+#   type: var
+#   var_name: L:p42_mav_scrape_f
+# -
+#   type: var
+#   var_name: L:p42_mav_scrape_b
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rl_rpm
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rr_rpm
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fl_rpm
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fr_rpm
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rl_skid
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rr_skid
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fl_skid
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fr_skid
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rl_temp
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rr_temp
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fl_temp
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fr_temp
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rl_slide
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_rr_slide
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fl_slide
+# -
+#   type: var
+#   var_name: L:p42_mav_wheel_fr_slide
+# -
+#   type: var
+#   var_name: L:p42_mav_brake_state
+# -
+#   type: var
+#   var_name: L:p42_mav_brake_pressure_fl
+# -
+#   type: var
+#   var_name: L:p42_mav_brake_pressure_fr
+# -
+#   type: var
+#   var_name: L:p42_mav_brake_pressure_rr
+# -
+#   type: var
+#   var_name: L:p42_mav_brake_pressure_rl
+# -
+#   type: var
+#   var_name: L:p42_mav_susp_rl_pps
+# -
+#   type: var
+#   var_name: L:p42_mav_susp_rr_pps
+# -
+#   type: var
+#   var_name: L:p42_mav_susp_fl_pps
+# -
+#   type: var
+#   var_name: L:p42_mav_susp_fr_pps
+  -
+    type: var
+    var_name: L:p42_mav_winch_enabled
+# -
+#   type: var
+#   var_name: L:p42_mav_winch_lon
+# -
+#   type: var
+#   var_name: L:p42_mav_winch_lat
+# -
+#   type: var
+#   var_name: L:p42_mav_winch_alt
+# -
+#   type: var
+#   var_name: L:p42_mav_winch_dist
+# -
+#   type: var
+#   var_name: L:p42_mav_winch_c_length_down
+# -
+#   type: var
+#   var_name: L:p42_mav_winch_c_length_up
+  -
+    type: var
+    var_name: L:p42_mav_flaps_decr
+  -
+    type: var
+    var_name: L:p42_mav_flaps_incr
+# -
+#   type: var
+#   var_name: L:p42_mav_engine_rpm
+# -
+#   type: var
+#   var_name: L:p42_mav_engine_force
+# -
+#   type: var
+#   var_name: L:p42_mav_engine_power
+# -
+#   type: var
+#   var_name: L:p42_mav_regen_force
+  -
+    type: var
+    var_name: L:p42_mav_capacitor
+# -
+#   type: var
+#   var_name: L:p42_mav_accelerator
+# -
+#   type: var
+#   var_name: L:p42_mav_plate_vel
+# -
+#   type: var
+#   var_name: L:p42_mav_antenna_lv
+# -
+#   type: var
+#   var_name: L:p42_mav_antenna_rv
+# -
+#   type: var
+#   var_name: L:p42_mav_keyfob_v
+# -
+#   type: var
+#   var_name: L:p42_mav_pack_temperature
+# -
+#   type: var
+#   var_name: L:p42_mav_motor_temperature
+# -
+#   type: var
+#   var_name: L:p42_mav_hvac_temperature
+# -
+#   type: var
+#   var_name: L:p42_mav_hvac_fans
+# -
+#   type: var
+#   var_name: L:p42_mav_hvac_fans_rpm
+# -
+#   type: var
+#   var_name: L:p42_mav_hvac_heating
+# -
+#   type: var
+#   var_name: L:p42_mav_hvac_cooling
+# -
+#   type: var
+#   var_name: L:p42_mav_dsc_state
+  -
+    type: var
+    var_name: L:p42_mav_horn_state
+  -
+    type: var
+    var_name: L:p42_mav_settings_effects
+# -
+#   type: var
+#   var_name: L:p42_mav_stg_perf_vfx
+  -
+    type: var
+    var_name: L:p42_mav_relocating
+# -
+#   type: var
+#   var_name: L:p42_mav_reset_upright
+# -
+#   type: var
+#   var_name: L:p42_mav_max_q
+# -
+#   type: var
+#   var_name: L:p42_mav_alert
+  -
+    type: var
+    var_name: L:p42_mav_stg_ctrls_accel_rev
+  -
+    type: var
+    var_name: L:p42_mav_stg_ctrls_regen
+# -
+#   type: var
+#   var_name: L:p42_mav_caution
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+master:
+  - # Wheel
+    type: NumSet
+    var_name: A:RUDDER POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_AILERONS_SET
+    use_calculator: true
+    unreliable: true
+  - # Throttle/Brake (unsettable but useable)
+    type: NumSet
+    var_name: L:p42_mav_accelerator
+    var_type: f64
+    multiply_by: 16384
+    event_name: AXIS_RUDDER_SET
+    use_calculator: true
+    unreliable: true
+
+server:
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

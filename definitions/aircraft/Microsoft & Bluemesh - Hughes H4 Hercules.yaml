@@ -1,78 +1,109 @@
-# Version 1.1.8
+# Version 1.2.5
 
 include:
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTR225.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
+  - # Magnetos
+    type: var
+    var_name: A:RECIP ENG LEFT MAGNETO:5
+    var_units: Bool
+    var_type: f64
+  -
+    type: var
+    var_name: A:RECIP ENG RIGHT MAGNETO:5
+    var_units: Bool
+    var_type: f64
+  -
+    type: var
+    var_name: A:RECIP ENG LEFT MAGNETO:6
+    var_units: Bool
+    var_type: f64
+  -
+    type: var
+    var_name: A:RECIP ENG RIGHT MAGNETO:6
+    var_units: Bool
+    var_type: f64
+  -
+    type: var
+    var_name: A:RECIP ENG LEFT MAGNETO:7
+    var_units: Bool
+    var_type: f64
+  -
+    type: var
+    var_name: A:RECIP ENG RIGHT MAGNETO:7
+    var_units: Bool
+    var_type: f64
+  -
+    type: var
+    var_name: A:RECIP ENG LEFT MAGNETO:8
+    var_units: Bool
+    var_type: f64
+  -
+    type: var
+    var_name: A:RECIP ENG RIGHT MAGNETO:8
+    var_units: Bool
+    var_type: f64
+  -
+    type: var
+    var_name: A:GENERAL ENG STARTER:5
+    var_units: Bool
+    var_type: i32
+  -
+    type: var
+    var_name: A:GENERAL ENG STARTER:6
+    var_units: Bool
+    var_type: i32
+  -
+    type: var
+    var_name: A:GENERAL ENG STARTER:7
+    var_units: Bool
+    var_type: i32
+  -
+    type: var
+    var_name: A:GENERAL ENG STARTER:8
+    var_units: Bool
+    var_type: i32
+
   - # Engines
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_RIGHT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:4
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO4_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:4
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO4_RIGHT
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG STARTER:3
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_STARTER3
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG STARTER:4
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_STARTER4
-  -
-    type: NumSet
-    var_name: A:RECIP ENG PRIMER:3
+    type: var
+    var_name: A:RECIP ENG PRIMER:5
     var_units: Percent
     var_type: i32
-    event_name: TOGGLE_PRIMER3
     unreliable: true
   -
-    type: NumSet
-    var_name: A:RECIP ENG PRIMER:4
+    type: var
+    var_name: A:RECIP ENG PRIMER:6
     var_units: Percent
     var_type: i32
-    event_name: TOGGLE_PRIMER4
     unreliable: true
   -
-    type: NumSet
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:3
-    var_units: Bool
+    type: var
+    var_name: A:RECIP ENG PRIMER:7
+    var_units: Percent
     var_type: i32
-    event_name: ALTERNATOR_SET
-    event_param: 3
+    unreliable: true
+  -
+    type: var
+    var_name: A:RECIP ENG PRIMER:8
+    var_units: Percent
+    var_type: i32
+    unreliable: true
 
   - # Fuel
     type: ToggleSwitch
@@ -188,6 +219,34 @@ shared:
     event_param: 16
   -
     type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:17
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 17
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:18
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 18
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:19
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 19
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:20
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 20
+  -
+    type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:21
     var_units: Bool
     var_type: bool
@@ -238,18 +297,41 @@ shared:
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
-    var_name: L:XMLVAR_SeatBelts
-  -
-    type: var
-    var_name: L:B747_8_MFD_NAV_MODE
+    var_name: L:CARRIAGE_HERCULES_SET
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
-    var_name: L:HH4_Exterior_Buoys
+    var_name: L:Tug_Boat_Switch_State
+# -
+#   type: var
+#   var_name: L:Tug_Boat_Is_Visible
+# -
+#   type: var
+#   var_name: L:Rope_Attach_Support
+# -
+#   type: var
+#   var_name: L:Clipboard_Throttle_Boat_Command_Progressive
+  -
+    type: var
+    var_name: L:Tug_Boat_Box_Controller_Speed_Local
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:TUG_IS_SAILING
+  -
+    type: var
+    var_name: L:Tug_Boat_Box_Controller_Direction_Local
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:Tug_Boat_Turn
+# -
+#   type: var
+#   var_name: L:BOAT_IS_SAILING
 # -
 #   type: var
 #   var_name: L:PROP_ROT_1
@@ -274,19 +356,51 @@ shared:
 # -
 #   type: var
 #   var_name: L:PROP_ROT_8
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Enabled_1
   -
     type: var
-    var_name: L:AS225_Brightness_1
-    cancel_h_events: true
+    var_name: L:HH4_Exterior_Buoys
+  -
+    type: var
+    var_name: L:Local_FE_Throttle_5
+    unreliable: true
+  -
+    type: var
+    var_name: L:Local_FE_Throttle_8
+    unreliable: true
+  -
+    type: var
+    var_name: L:Local_FE_Throttle_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:Local_FE_Throttle_3
+    unreliable: true
+  -
+    type: var
+    var_name: L:Local_FE_Throttle_7
+    unreliable: true
+  -
+    type: var
+    var_name: L:Local_FE_Throttle_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:Local_FE_Throttle_6
+    unreliable: true
+  -
+    type: var
+    var_name: L:Local_Throttle_Friction
+    unreliable: true
+  -
+    type: var
+    var_name: L:Local_FE_Throttle_4
+    unreliable: true
   -
     type: var
     var_name: L:EFB_Modern_avionics_hide
+  -
+    type: var
+    var_name: L:EFB_TUG_BOX_hide
   -
     type: var
     var_name: L:EFB_CROSS_CASE_1
@@ -313,18 +427,6 @@ shared:
     type: var
     var_name: L:HH4_WD_2
     unreliable: true
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden3
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden4
   -
     type: var
     var_name: L:H4_RAD_COWL_FLAPS_ENG1
@@ -337,6 +439,18 @@ shared:
   -
     type: var
     var_name: L:H4_RAD_COWL_FLAPS_ENG4
+  -
+    type: var
+    var_name: L:H4_RAD_COWL_FLAPS_ENG5
+  -
+    type: var
+    var_name: L:H4_RAD_COWL_FLAPS_ENG6
+  -
+    type: var
+    var_name: L:H4_RAD_COWL_FLAPS_ENG7
+  -
+    type: var
+    var_name: L:H4_RAD_COWL_FLAPS_ENG8
 # -
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden1
@@ -370,6 +484,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_SelectedSource
+  -
+    type: var
+    var_name: L:Local_Throttle_Transfer
 # -
 #   type: var
 #   var_name: L:DEICE_Pitot_1
@@ -414,89 +531,72 @@ shared:
 #   var_name: L:ELECTRICAL_Starter_4
 # -
 #   type: var
-#   var_name: L:YourControlsPanelId
+#   var_name: L:ELECTRICAL_Starter_5
 # -
 #   type: var
-#   var_name: L:AP_KAP140_INSTALLED
+#   var_name: L:ELECTRICAL_Starter_6
 # -
 #   type: var
-#   var_name: L:AS530_ScreenLuminosity
+#   var_name: L:ELECTRICAL_Starter_7
 # -
 #   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:AS225_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS225_State
+#   var_name: L:ELECTRICAL_Starter_8
   -
     type: var
-    var_name: L:AS225_Brightness_Manual_1
-# -
-#   type: var
-#   var_name: L:AS330_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS330_State
-# -
-#   type: var
-#   var_name: L:KAP140_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KAP140_State
-# -
-#   type: var
-#   var_name: L:AutopilotPreflightCheckCompleted
-# -
-#   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
-# -
-#   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
-# -
-#   type: var
-#   var_name: L:KAP140_BARO_Display
+    var_name: L:Switch_General_Prop
+  -
+    type: var
+    var_name: L:Switch_General_Prop_1
+  -
+    type: var
+    var_name: L:Switch_General_Prop_2
+  -
+    type: var
+    var_name: L:Switch_General_Prop_3
+  -
+    type: var
+    var_name: L:Switch_General_Prop_4
+  -
+    type: var
+    var_name: L:Switch_General_Prop_5
+  -
+    type: var
+    var_name: L:Switch_General_Prop_6
+  -
+    type: var
+    var_name: L:Switch_General_Prop_7
+  -
+    type: var
+    var_name: L:Switch_General_Prop_8
+  -
+    type: var
+    var_name: L:BTCI_CTDN
 
 master:
   -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:3
+    type: var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:5
     var_units: Position 16k
     var_type: f64
-    event_name: THROTTLE3_SET
-    interpolate: Default
+    unreliable: true
   -
-    type: NumSet
-    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:4
+    type: var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:6
     var_units: Position 16k
     var_type: f64
-    event_name: THROTTLE4_SET
-    interpolate: Default
+    unreliable: true
+  -
+    type: var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:7
+    var_units: Position 16k
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:8
+    var_units: Position 16k
+    var_type: f64
+    unreliable: true
 
 server:
   -

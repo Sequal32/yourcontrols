@@ -11,12 +11,14 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Baro1_SavedPressure
+    interpolate: Default
   -
     type: var
     var_name: L:XMLVAR_Baro2_ForcedToSTD
   -
     type: var
     var_name: L:XMLVAR_Baro2_SavedPressure
+    interpolate: Default
   -
     type: var
     var_name: L:XMLVAR_PushXFR
@@ -26,6 +28,28 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_VNAVButtonValue
+
+  - # Deice
+    type: var
+    var_name: L:DEICE_Airframe_1
+  -
+    type: var
+    var_name: L:DEICE_Airframe_2
+  -
+    type: var
+    var_name: L:XMLVAR_DeiceWindshield_1
+  -
+    type: var
+    var_name: L:XMLVAR_DeiceWindshield_2
+  -
+    type: var
+    var_name: L:XMLVAR_InterSep
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Deployment
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Active
 
   - # Electrical
     type: var
@@ -84,11 +108,17 @@ shared:
     var_name: L:Condition_Lever_CutOff_1
   -
     type: var
+    var_name: L:Condition_Lever_CutOff_2
+  -
+    type: var
     var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled
 
   - # Fuel
     type: var
     var_name: L:ENG FUEL VALVE:1
+  -
+    type: var
+    var_name: L:ENG FUEL VALVE:2
 
   - # Handling
     type: var
@@ -132,6 +162,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
 
   - # Radio
     type: var
@@ -214,10 +247,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Value:2
-  -
-    type: var
-    var_name: L:WTGarmin_Nav_ActiveNavSource:1
-    cancel_h_events: true
   -
     type: var
     var_name: L:WT_AP_FPA_Target:1

@@ -1,10 +1,12 @@
 # Version 0.1.109
 
 include:
+  - definitions/modules/controls.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
@@ -196,6 +198,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 1
+    cancel_h_events: true
   - # FWD R Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:1
@@ -203,6 +206,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
+    cancel_h_events: true
   - # AFT L Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:2
@@ -210,6 +214,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 3
+    cancel_h_events: true
   - # AFT R Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:3
@@ -217,6 +222,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 4
+    cancel_h_events: true
   - # AFT R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:4
@@ -224,6 +230,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 5
+    cancel_h_events: true
   - # FWD R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:5
@@ -231,12 +238,14 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 6
+    cancel_h_events: true
   - # GPU Truck
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:8
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
+    cancel_h_events: true
     use_calculator: true
 
   - # Lights

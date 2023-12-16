@@ -1,11 +1,12 @@
-# Version 2.0.49 (A/B)
+# Version 2.0.51 (A/B)
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/controls.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/magnetos.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/physics.yaml
   - definitions/modules/radios.yaml
-  - definitions/modules/slew.yaml
   - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
@@ -23,54 +24,6 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: PARKING_BRAKES
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_RIGHT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:2
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO2_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:2
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO2_RIGHT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:3
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO3_RIGHT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:4
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO4_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:4
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO4_RIGHT
 
   - # Main Cabin Exit
     type: ToggleSwitch
@@ -121,11 +74,6 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 7
-
-  - # YourControls Force Transfer Hotkey
-    type: ProgramActionEvent
-    event_name: TOGGLE_LAUNCH_BAR_SWITCH
-    action: TransferControls
 
   - # LVAR's
     type: var
@@ -6111,44 +6059,6 @@ shared:
 #   var_name: L:WasmInstrument_State
 
 master:
-  - # Surfaces (yoke inherited)
-    type: NumSet
-    var_name: A:ELEVATOR POSITION
-    var_units: Position 16k
-    var_type: f64
-    event_name: AXIS_ELEVATOR_SET
-    interpolate: InvertConstant
-  -
-    type: NumSet
-    var_name: A:AILERON POSITION
-    var_units: Position 16k
-    var_type: f64
-    event_name: AXIS_AILERONS_SET
-    interpolate: InvertConstant
-  -
-    type: NumSet
-    var_name: A:RUDDER POSITION
-    var_units: Position 16k
-    var_type: f64
-    event_name: AXIS_RUDDER_SET
-    interpolate: InvertConstant
-  -
-    type: NumSet
-    var_name: A:BRAKE LEFT POSITION EX1
-    var_units: Position 32k
-    var_type: i32
-    event_name: AXIS_LEFT_BRAKE_SET
-    add_by: -16384
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:BRAKE RIGHT POSITION EX1
-    var_units: Position 32k
-    var_type: i32
-    event_name: AXIS_RIGHT_BRAKE_SET
-    add_by: -16384
-    unreliable: true
-
   - # CPT Throttle Engine 1
     type: var
     var_name: L:dc6_511_obj
@@ -6183,6 +6093,54 @@ master:
 #   interpolate: Default
 
 server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER2 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT TIP LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT TIP LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
   -
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:1

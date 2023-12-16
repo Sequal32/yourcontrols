@@ -1,20 +1,22 @@
-# Version 1.1.8
+# Version 1.1.8 (do not add G1000)
 
 include:
-  - definitions/modules/Avionics/AS430.yaml
-  - definitions/modules/Avionics/AS530.yaml
-  - definitions/modules/Avionics/AS1000.yaml
-  - definitions/modules/Avionics/GTN750.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -556,6 +558,105 @@ shared:
   -
     type: var
     var_name: L:PC6_WaterRudderFailPos
+
+  - # Import of G1000 module
+    type: var
+    var_name: L:AS1000_PFD_Brightness
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:AS1000_PFD_Brightness_IsAuto
+  -
+    type: var
+    var_name: L:AS1000_PFD_SelectedNavIndex
+  -
+    type: var
+    var_name: L:AS1000_PFD_SelectedComIndex
+  -
+    type: var
+    var_name: L:AS1000_MFD_Brightness
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:AS1000_MFD_Brightness_IsAuto
+  -
+    type: var
+    var_name: L:AS1000_MFD_SelectedNavIndex
+  -
+    type: var
+    var_name: L:AS1000_MFD_SelectedComIndex
+  -
+    type: var
+    var_name: L:AS1000_MID_Display_Backup_Active
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:AS3000_MinimalsMode
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:AS3000_MinimalsValue
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:Glasscockpit_HSI_Arc
+  -
+    type: var
+    var_name: L:Glasscockpit_DmeSource
+  -
+    type: var
+    var_name: L:Glasscockpit_MFD_Started
+  -
+    type: var
+    var_name: L:Glasscockpit_Wind_Mode
+  -
+    type: var
+    var_name: L:PFD_BRG1_Source
+  -
+    type: var
+    var_name: L:PFD_BRG2_Source
+  -
+    type: NumSet
+    var_name: L:PFD_CDI_Source
+    var_units: Number
+    var_type: f64
+    event_name: AP_NAV_SELECT_SET
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PFD_InnerMap_MapZoomRange
+  -
+    type: var
+    var_name: L:PFD_InnerMap_MapShowCursor
+  -
+    type: var
+    var_name: L:MFD_InnerMap_MapZoomRange
+  -
+    type: var
+    var_name: L:MFD_InnerMap_MapShowCursor
+  -
+    type: var
+    var_name: L:XMLVAR_SyntheticVision_On
+  -
+    type: var
+    var_name: L:XMLVAR_SyntheticVision_Off
+  -
+    type: var
+    var_name: L:_SelectedSource
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
 
 server:
   -

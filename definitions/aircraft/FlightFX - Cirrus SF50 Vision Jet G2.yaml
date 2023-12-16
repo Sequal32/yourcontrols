@@ -1,17 +1,17 @@
-# Version 2.0.2
+# Version 2.2.2
 
 include:
-  - definitions/modules/Avionics/AS3000.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_G3000.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -40,6 +40,7 @@ shared:
     var_units: Position 16k
     var_type: f64
     event_name: ANTI_ICE_GRADUAL_SET_ENG1
+    unreliable: true
 
   - # Interior
     type: NumSet
@@ -230,7 +231,12 @@ shared:
 #   var_name: L:SF50_deice_airboots_upperWing
   -
     type: var
-    var_name: L:SF50_Autothrottle_Status
+    var_name: L:SF50_vams_reg_shadow
+    cancel_h_events: true
+  -
+    type: CustomCalculator
+    get: "1 0 (L:SF50_Autothrottle_Status, number) ? "
+    set: "(>K:AUTO_THROTTLE_ARM)"
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
@@ -377,6 +383,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:SF50_Courtesy_Mode_Timer
+  -
+    type: var
+    var_name: L:SF50_phone_vis
 # -
 #   type: var
 #   var_name: L:SF50_throttle_percentage
@@ -517,3 +526,7 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+  - VJ_Throttle_1_Inc
+  - VJ_Throttle_1_Dec

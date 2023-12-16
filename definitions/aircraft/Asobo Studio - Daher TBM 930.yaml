@@ -1,17 +1,18 @@
-# Version 0.1.115 / 1.0.1 Enhanced
+# Version 0.1.119 / 1.0.2 Enhanced
 
 include:
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/AS_G3000.yaml
+  - definitions/modules/controls.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -77,6 +78,15 @@ shared:
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
     use_calculator: true
+
+  - # R PFD Altimeter
+    type: NumSet
+    var_name: A:KOHLSMAN SETTING MB:3
+    var_units: Millibars scaler 16
+    var_type: f64
+    event_name: KOHLSMAN_SET
+    event_param: 3
+    cancel_h_events: true
 
   - # STBY Gen
     type: CustomCalculator
@@ -157,18 +167,24 @@ shared:
     get: 19 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:17, Bool)
     set: 17 19 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:WT_TOGA_ACTIVE
+  -
     type: var
     var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame2
   -
     type: var
     var_name: L:XMLVAR_Elec_Generator_Switch_State
   -
     type: var
     var_name: L:XMLVAR_Elec_CrashBar_State
-  -
-    type: var
-    var_name: L:WT_TOGA_ACTIVE
   -
     type: var
     var_name: L:XMLVAR_Elec_Source_Switch_State
@@ -246,12 +262,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_PushXFR
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-# -
-#   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
 # -
 #   type: var
 #   var_name: L:XMLVAR_InertSep1_Deployment
@@ -488,10 +498,43 @@ shared:
 #   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
 # -
 #   type: var
+#   var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Approach_Mode
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value:2
+# -
+#   type: var
 #   var_name: L:WTG3000_PFD_1_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:WTG3000_PFD_1_State
+# -
+#   type: var
+#   var_name: L:WT3000_Fuel_Burned
+# -
+#   type: var
+#   var_name: L:WT3000_Fuel_Remaining
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Aircraft_Weight
+# -
+#   type: var
+#   var_name: L:WT_Tbm930_Stby_Gen_Current
+# -
+#   type: var
+#   var_name: L:WT_Tbm930_Main_Gen_Current
+# -
+#   type: var
+#   var_name: L:WT_Tbm930_Battery_Current
 # -
 #   type: var
 #   var_name: L:WTG3000_PFD_2_ScreenLuminosity
@@ -510,6 +553,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
@@ -534,51 +583,13 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTG3000_GTC_2_State
-# -
-#   type: var
-#   var_name: L:WT_MINIMUMS_MODE
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro1_ForcedToSTD
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro1_SavedPressure
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Approach_Mode
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Value:2
-# -
-#   type: var
-#   var_name: L:WT3000_Fuel_Burned
-# -
-#   type: var
-#   var_name: L:WT3000_Fuel_Remaining
-# -
-#   type: var
-#   var_name: L:WTG3000_Weight_Fuel_Aircraft_Weight
-# -
-#   type: var
-#   var_name: L:WT_Tbm930_Stby_Gen_Current
-# -
-#   type: var
-#   var_name: L:WT_Tbm930_Main_Gen_Current
-# -
-#   type: var
-#   var_name: L:WT_Tbm930_Battery_Current
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
   -
     type: var
     var_name: L:XMLVAR_Baro3_ForcedToSTD
   -
     type: var
     var_name: L:XMLVAR_Baro3_SavedPressure
+    interpolate: Default
 # -
 #   type: var
 #   var_name: L:WTFltTimer_Mode:1
@@ -633,15 +644,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_Tbm930_Battery_Load
+  -
+    type: var
+    var_name: L:XMLVAR_Source_Switch_State
 # -
 #   type: var
 #   var_name: L:WTG3000_MFD_1_Avionics_Status
-  -
-    type: var
-    var_name: L:WTG3000_Control_Panel_MapShowCursor:1
-  -
-    type: var
-    var_name: L:WTG3000_Control_Panel_MapShowCursor:2
+# -
+#   type: var
+#   var_name: L:WTG3000_Control_Panel_MapShowCursor:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Control_Panel_MapShowCursor:2
 # -
 #   type: var
 #   var_name: L:WTG3000_PFD_1_Avionics_Status

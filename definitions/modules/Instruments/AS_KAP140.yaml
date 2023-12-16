@@ -1,0 +1,102 @@
+# BendixKing KAP140 autopilot by Asobo.
+
+shared:
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_HDG_HOLD_ON
+    off_event_name: AP_HDG_HOLD_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+    interpolate: Default
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_ALT_HOLD_ON
+    off_event_name: AP_ALT_HOLD_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_VS_ON
+    off_event_name: AP_PANEL_VS_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 1
+    interpolate: Default
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT APPROACH HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_APR_HOLD_ON
+    off_event_name: AP_APR_HOLD_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_BC_HOLD_ON
+    off_event_name: AP_BC_HOLD_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT WING LEVELER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_WING_LEVELER_ON
+    off_event_name: AP_WING_LEVELER_OFF
+
+  - # Temporary
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+
+ignore:
+  - KAP140_Push_AP
+  - KAP140_Push_HDG
+  - KAP140_Push_NAV
+  - KAP140_Push_APR
+  - KAP140_Push_REV
+  - KAP140_Push_ALT
+  - KAP140_Push_UP
+  - KAP140_Push_DN
+  - KAP140_Knob_Inner_INC
+  - KAP140_Knob_Inner_DEC
+  - KAP140_Knob_Outer_INC
+  - KAP140_Knob_Outer_DEC
