@@ -142,44 +142,16 @@ shared:
 
   - # Deice
     type: NumSet
-    var_name: A:PITOT HEAT SWITCH:1
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:2
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:3
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 3
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:4
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 4
-  -
-    type: NumSet
     var_name: A:STRUCTURAL DEICE SWITCH
     var_units: Enum
     var_type: i32
     event_name: TOGGLE_STRUCTURAL_DEICE
   -
-    type: NumSet
+    type: ToggleSwitch
     var_name: A:WINDSHIELD DEICE SWITCH
-    var_units: Enum
-    var_type: i32
-    event_name: WINDSHIELD_DEICE_SET
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
   -
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:1
@@ -1116,9 +1088,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverThrottleHidden4
-  -
-    type: var
-    var_name: L:FMC_EXEC_ACTIVE
+# -
+#   type: var
+#   var_name: L:FMC_EXEC_ACTIVE
 # -
 #   type: var
 #   var_name: L:XMLVAR_RudderTrim_Switch_1

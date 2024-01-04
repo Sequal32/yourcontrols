@@ -499,8 +499,9 @@ shared:
     type: NumSet
     var_name: A:TRANSPONDER CODE:1
     var_units: Bco16
-    var_type: f64
+    var_type: i32
     event_name: XPNDR_SET
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:TRANSPONDER IDENT:1
@@ -508,6 +509,7 @@ shared:
     var_type: bool
     event_name: XPNDR_IDENT_ON
     off_event_name: XPNDR_IDENT_OFF
+    event_param: 1
 
   - # Lights
     type: NumSet

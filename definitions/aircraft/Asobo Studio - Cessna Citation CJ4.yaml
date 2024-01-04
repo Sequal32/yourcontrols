@@ -3,7 +3,6 @@
 include:
   - definitions/modules/Instruments/AS_G3000.yaml
   - definitions/modules/controls.yaml
-  - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/handling.yaml
@@ -103,14 +102,14 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
@@ -472,9 +471,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTAP_VNav_Distance_To_TOD
-  -
-    type: var
-    var_name: L:FMC_EXEC_ACTIVE
+# -
+#   type: var
+#   var_name: L:FMC_EXEC_ACTIVE
   -
     type: var
     var_name: L:WT_CMU_DATALINK_RCVD
@@ -502,171 +501,22 @@ shared:
   -
     type: var
     var_name: L:WT_CJ4_DISPLAY_MSG
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_DTK
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_XTK
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Is_Tracking
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Tracked_Leg_Index
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Transition_Mode
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Tracked_Vector_Index
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Course_To_Steer
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Is_Suspended
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Leg_Distance_Along
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Vector_Distance_Along
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Along_Track_Speed
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_State
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Path_Available
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Constraint_Altitude
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Target_Altitude
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Vertical_Deviation
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Vertical_Deviation
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Distance
-# -
-#   type: var
-#   var_name: L:WTAP_GP_FPA
-# -
-#   type: var
-#   var_name: L:WT_LNavData_DTK_True
-# -
-#   type: var
-#   var_name: L:WT_LNavData_DTK_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_XTK
-# -
-#   type: var
-#   var_name: L:WT_LNavData_CDI_Scale
-# -
-#   type: var
-#   var_name: L:WTWT21_LNavData_CDI_Scale_Label
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Bearing_True
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Distance
-# -
-#   type: var
-#   var_name: L:WTWT21_LNavData_Nominal_Leg_Index
-# -
-#   type: var
-#   var_name: L:WTWT21_LNavData_Destination_Distance_Direct
-# -
-#   type: var
-#   var_name: L:WTWT21_LNavData_Faf_Distance
-# -
-#   type: var
-#   var_name: L:WT21_PFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:WT21_PFD_State
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Approach_Mode
-# -
-#   type: var
-#   var_name: L:WT21_MFD_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:WT21_MFD_1_State
-# -
-#   type: var
-#   var_name: L:FADEC_TGT_N1_1
-# -
-#   type: var
-#   var_name: L:FADEC_TGT_N1_2
-# -
-#   type: var
-#   var_name: L:WT21_MFD_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:WT21_MFD_2_State
-# -
-#   type: var
-#   var_name: L:WT21_FMC_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:WT21_FMC_1_State
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Required_VS
-# -
-#   type: var
-#   var_name: L:WT_AP_FPA_Target:1
-# -
-#   type: var
-#   var_name: L:WT21_FMC_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:WT21_FMC_2_State
-# -
-#   type: var
-#   var_name: L:CJ4_SAI_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:CJ4_SAI_State
-# -
-#   type: var
-#   var_name: L:HourMeter_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:HourMeter_State
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+master:
+  -
+    type: NumSet
+    var_name: L:WT_Virtual_Throttle_Lever_Pos_1
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE1_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: L:WT_Virtual_Throttle_Lever_Pos_2
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE2_SET
+    unreliable: true
 
 server:
   -

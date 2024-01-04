@@ -8,7 +8,6 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/trim.yaml
@@ -75,6 +74,19 @@ shared:
     get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
     set: 6 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
+  - # Engines
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER1_SET
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER2_SET
+
   - # Generators (not syncing)
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
@@ -105,19 +117,6 @@ shared:
     event_name: REQUEST_POWER_SUPPLY
     use_calculator: true
 
-  - # Engines
-    type: NumSet
-    var_name: A:GENERAL ENG STARTER:1
-    var_units: Bool
-    var_type: i32
-    event_name: STARTER1_SET
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG STARTER:2
-    var_units: Bool
-    var_type: i32
-    event_name: STARTER2_SET
-
   - # Handling
     type: NumSet
     var_name: A:BRAKE PARKING POSITION
@@ -142,6 +141,13 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: GEAR_SET
+
+  - # Pressurization
+    type: NumSet
+    var_name: A:PRESSURIZATION DUMP SWITCH
+    var_units: Bool
+    var_type: i32
+    event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
 
   - # Lights
     type: NumSet
@@ -576,48 +582,48 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTG3000_Pfd_Backlight:2
-  -
-    type: var
-    var_name: L:WT_LNG_L_MAIN_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_INT1_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_INT2_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_MISSION_EMER_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_EMER_BATT_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_MISSION_GEN_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_MAIN_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_INT1_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_INT2_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_MISSION_EMER_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_BUS_TIE_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_EMER_BATT_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_MISSION_GEN_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_EMER_GEN_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_MAIN_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_INT1_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_INT2_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_MISSION_EMER_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_EMER_BATT_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_MISSION_GEN_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_MAIN_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_INT1_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_INT2_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_MISSION_EMER_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_BUS_TIE_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_EMER_BATT_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_MISSION_GEN_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_EMER_GEN_CONN
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
@@ -1178,3 +1184,47 @@ ignore:
   - WT_Longitude_Throttle_1_Dec
   - WT_Longitude_Throttle_2_Inc
   - WT_Longitude_Throttle_2_Dec
+
+# Audio Box
+  - WTG3000_GTC_1#-1430431224
+  - WTG3000_GTC_2#526748149
+  - WTG3000_GTC_2#-1430431223
+  - WTG3000_GTC_3#526748149
+  - WTG3000_GTC_3#-1430431223
+  - WTG3000_GTC_4#-1430431224
+
+# STBY Box
+  - WTG3000_GTC_1#1188903370
+  - WTG3000_GTC_1#1468959928
+  - WTG3000_GTC_1#2066884492
+  - WTG3000_GTC_1#-1171069062
+  - WTG3000_GTC_1#-1555674680
+  - WTG3000_GTC_1#-1555674681
+  - WTG3000_GTC_2#1188903370
+  - WTG3000_GTC_2#1468959928
+  - WTG3000_GTC_2#2066884492
+  - WTG3000_GTC_2#-1171069062
+  - WTG3000_GTC_2#-1555674680
+  - WTG3000_GTC_2#-1555674681
+  - WTG3000_GTC_3#1188903370
+  - WTG3000_GTC_3#1468959928
+  - WTG3000_GTC_3#2066884492
+  - WTG3000_GTC_3#-1171069062
+  - WTG3000_GTC_3#-1555674680
+  - WTG3000_GTC_3#-1555674681
+  - WTG3000_GTC_4#1188903370
+  - WTG3000_GTC_4#1468959928
+  - WTG3000_GTC_4#2066884492
+  - WTG3000_GTC_4#-1171069062
+  - WTG3000_GTC_4#-1555674680
+  - WTG3000_GTC_4#-1555674681
+
+# XPNDR Box
+  - WTG3000_GTC_2#1091177850
+  - WTG3000_GTC_2#256782690
+  - WTG3000_GTC_3#1091177850
+  - WTG3000_GTC_3#256782690
+
+# XPNDR Mode Box
+  - WTG3000_GTC_2#-1430431224
+  - WTG3000_GTC_3#-1430431224
