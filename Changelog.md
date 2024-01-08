@@ -1,5 +1,19 @@
 # YourControls Changelog
 
+## Version 2.8.1
+
+### Profiles
+
+- Added: Robinson R66 by Cowan Simulation (v1.0.0).
+- Removed: Cessna 510 Mustang by Cockspur.
+- Updated: Embraer E170/E175 by FlightSim Studio (v0.9.22).
+- Updated: HA-420 HondaJet by FlightFX (v2.1.2).
+- Updated: MD Helicopters 500E by Cowan Simulation (v2.0.0).
+
+### Aircraft Fixes
+
+- Asobo CJ4 - Throttle levers not going past first detent.
+
 ## Version 2.8.0
 
 ### Changes
