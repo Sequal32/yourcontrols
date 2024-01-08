@@ -17,13 +17,6 @@ shared:
         Bool: false
     unreliable: true
   -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT ALTITUDE LOCK
-    var_units: Bool
-    var_type: bool
-    event_name: AP_ALT_HOLD_ON
-    off_event_name: AP_ALT_HOLD_OFF
-  -
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
     var_units: Feet
@@ -160,6 +153,9 @@ shared:
     off_event_name: YAW_DAMPER_OFF
 
   - # Events no simvar
+    type: event
+    event_name: AP_ALT_HOLD
+  -
     type: event
     event_name: AP_APR_HOLD
   -
