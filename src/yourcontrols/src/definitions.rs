@@ -136,15 +136,15 @@ fn evalute_condition(
         }
     }
 
-    if var_data.var_name.starts_with("L:") {
-        lvarstransfer
-            .get_var(&var_data.var_name)
-            .map(|x| evalute_condition_values(condition, &VarReaderTypes::F64(x)))
-            .unwrap_or(true)
-    } else {
-        avarstransfer
+    if var_data.var_name.starts_with("A:") {
+         avarstransfer
             .get_var(&var_data.var_name)
             .map(|x| evalute_condition_values(condition, x))
+            .unwrap_or(true)
+    } else {
+       lvarstransfer
+            .get_var(&var_data.var_name)
+            .map(|x| evalute_condition_values(condition, &VarReaderTypes::F64(x)))
             .unwrap_or(true)
     }
 }
@@ -637,12 +637,7 @@ impl Definitions {
         var_units: Option<&str>,
         var_type: InDataTypes,
     ) -> Result<(String, VarType), Error> {
-        if var_name.starts_with("L:") {
-            // Keep var_name with L: in it to pass to execute_calculator code
-            self.add_local_variable(category, var_name, var_units)?;
-
-            Ok((var_name.to_string(), VarType::LocalVar))
-        } else {
+        if var_name.starts_with("A:") {
             let actual_var_name = get_real_var_name(var_name);
 
             if let Some(var_units) = var_units {
@@ -652,6 +647,11 @@ impl Definitions {
             }
 
             Ok((actual_var_name, VarType::AircraftVar))
+        } else {
+            // Keep var_name with L: in it to pass to execute_calculator code
+            self.add_local_variable(category, var_name, var_units)?;
+
+            Ok((var_name.to_string(), VarType::LocalVar))
         }
     }
 
