@@ -1,5 +1,21 @@
 # YourControls Changelog
 
+## Version 2.8.2
+
+### Profiles
+
+- Added: Cessna A-37B Dragonfly by VrilleAPlat (v1.1.2).
+- Added: Cessna T-37B Tweet by VrilleAPlat (v1.5).
+- Added: Dornier Do X by Microsoft & Oliver Moser (v0.1.11).
+- Added: Fokker F.VII by Microsoft & ORBX (v1.1.33).
+- Added: Ford 4-AT-E Trimotor by Microsoft & Aeroplane Heaven (v0.1.23).
+- Updated: Bell 47G-2 by FlyInside (v2.73).
+- Updated: Schleicher AS 33 Me by MADolo Simulations (v2.0.2).
+
+### Aircraft Fixes
+
+- JF Arrow(s) - HDG bug workaround, since JustFlight has yet to fix simvar.
+
 ## Version 2.8.1
 
 ### Profiles
