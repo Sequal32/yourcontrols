@@ -261,9 +261,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:LEFT_MISC_lv_LeftLeaveToRun
-  -
-    type: var
-    var_name: L:LEFT_MISC_prime
+# -
+#   type: var
+#   var_name: L:LEFT_MISC_prime
   -
     type: var
     var_name: L:LEFT_MISC_prime_IsDown
@@ -1399,9 +1399,14 @@ shared:
   -
     type: var
     var_name: L:PitotCovers_vis
-# -
-#   type: var
-#   var_name: L:HSI_HDG_tooltip
+  -
+    type: NumSet
+    var_name: L:HSI_HDG_tooltip
+    var_units: Number
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    use_calculator: true
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:LEFT_LOWER_ignition_old
