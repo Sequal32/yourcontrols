@@ -1,0 +1,436 @@
+# Version 2.73
+
+include:
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_KT76C.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Alternator.Enabled) 0 ==
+    set: 0 (>Z:Aircraft.Engine.1.Alternator.Enabled)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Alternator.Enabled) 1 ==
+    set: 1 (>Z:Aircraft.Engine.1.Alternator.Enabled)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.Avionics.Enabled) 0 ==
+    set: 0 (>Z:Aircraft.Systems.Avionics.Enabled)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.Avionics.Enabled) 1 ==
+    set: 1 (>Z:Aircraft.Systems.Avionics.Enabled)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Electric.Battery.On) 0 ==
+    set: 0 (>Z:Aircraft.Electric.Battery.On)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Electric.Battery.On) 1 ==
+    set: 1 (>Z:Aircraft.Electric.Battery.On)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 0 ==
+    set: 0 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 25 ==
+    set: 25 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 50 ==
+    set: 50 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 75 ==
+    set: 75 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 100 ==
+    set: 100 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.PistonGoverner.On) 0 ==
+    set: 0 (>Z:Aircraft.Systems.PistonGoverner.On)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.PistonGoverner.On) 1 ==
+    set: 1 (>Z:Aircraft.Systems.PistonGoverner.On)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.Instruments.Enabled) 0 ==
+    set: 0 (>Z:Aircraft.Systems.Instruments.Enabled)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.Instruments.Enabled) 1 ==
+    set: 1 (>Z:Aircraft.Systems.Instruments.Enabled)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MagnetosPosition) 0 ==
+    set: 0 (>Z:Aircraft.Engine.1.Input.MagnetosPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MagnetosPosition) 1 ==
+    set: 1 (>Z:Aircraft.Engine.1.Input.MagnetosPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MagnetosPosition) 2 ==
+    set: 2 (>Z:Aircraft.Engine.1.Input.MagnetosPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MagnetosPosition) 3 ==
+    set: 3 (>Z:Aircraft.Engine.1.Input.MagnetosPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 0 ==
+    set: 0 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 25 ==
+    set: 25 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 50 ==
+    set: 50 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 75 ==
+    set: 75 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 100 ==
+    set: 100 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Gauges.DisplayOilTemp) 0 ==
+    set: 0 (>Z:Aircraft.Gauges.DisplayOilTemp)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Gauges.DisplayOilTemp) 1 ==
+    set: 1 (>Z:Aircraft.Gauges.DisplayOilTemp)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.Fuel.Primer.Switch) 0 ==
+    set: 0 (>Z:Aircraft.Systems.Fuel.Primer.Switch)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.Fuel.Primer.Switch) 1 ==
+    set: 1 (>Z:Aircraft.Systems.Fuel.Primer.Switch)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.Starter.Switch) 0 ==
+    set: 0 (>Z:Aircraft.Systems.Starter.Switch)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Systems.Starter.Switch) 1 ==
+    set: 1 (>Z:Aircraft.Systems.Starter.Switch)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Doors.Hidden) 0 ==
+    set: 0 (>Z:Doors.Hidden)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Doors.Hidden) 1 ==
+    set: 1 (>Z:Doors.Hidden)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Doors.Open.1) 0 ==
+    set: 0 (>Z:Doors.Open.1)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Doors.Open.1) 1 ==
+    set: 1 (>Z:Doors.Open.1)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Doors.Open.2) 0 ==
+    set: 0 (>Z:Doors.Open.2)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Doors.Open.2) 1 ==
+    set: 1 (>Z:Doors.Open.2)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Copilot.Display) 0 ==
+    set: 0 (>Z:Copilot.Display)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Copilot.Display) 1 ==
+    set: 1 (>Z:Copilot.Display)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Vis.Headset1) 0 ==
+    set: 0 (>Z:Vis.Headset1)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Vis.Headset1) 1 ==
+    set: 1 (>Z:Vis.Headset1)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Vis.Headset2) 0 ==
+    set: 0 (>Z:Vis.Headset2)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Vis.Headset2) 1 ==
+    set: 1 (>Z:Vis.Headset2)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Windows.FR) 0 ==
+    set: 0 (>Z:Windows.FR)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Windows.FR) 1 ==
+    set: 1 (>Z:Windows.FR)
+    condition:
+      equals:
+        F64: 1.0
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT STROBE
+    var_units: Bool
+    var_type: bool
+    event_name: STROBES_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TAXI_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING
+    var_units: Bool
+    var_type: bool
+    event_name: LANDING_LIGHTS_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT BEACON
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_BEACON_LIGHTS
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT NAV
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_NAV_LIGHTS
+
+  - # Temporary
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+
+master:
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE1_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:1
+    var_units: Position 32k
+    var_type: f64
+    add_by: -16384
+    event_name: PROP_PITCH1_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:YOKE X POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_CYCLIC_LATERAL_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:YOKE Y POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_CYCLIC_LONGITUDINAL_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:RUDDER POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_RUDDER_SET
+    use_calculator: true
+    unreliable: true
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
