@@ -388,9 +388,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AUTO_ELEV_AP
-# -
-#   type: var
-#   var_name: L:FSS_EXX_STEERING_HANDLE
+  -
+    type: var
+    var_name: L:FSS_EXX_STEERING_HANDLE
+    unreliable: true
   -
     type: var
     var_name: L:FSS_EXX_GNDOBJ_CONE_ENG_L
@@ -1494,12 +1495,14 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_PRESS_BRAKE_PEDAL_L
-# -
-#   type: var
-#   var_name: L:FSS_EXX_INP_BRAKE_PEDAL_L
-# -
-#   type: var
-#   var_name: L:FSS_EXX_INP_BRAKE_PEDAL_R
+  -
+    type: var
+    var_name: L:FSS_EXX_INP_BRAKE_PEDAL_L
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSS_EXX_INP_BRAKE_PEDAL_R
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_EXTLT_GLARESHIELD_SET
@@ -5815,23 +5818,11 @@ master:
   -
     type: var
     var_name: L:FSS_EXX_LEVER_THROTTLE_L_MOUSE_INP
-    unreliable: true
+    interpolate: Default
   -
     type: var
     var_name: L:FSS_EXX_LEVER_THROTTLE_R_MOUSE_INP
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_INP_BRAKE_PEDAL_L
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_INP_BRAKE_PEDAL_R
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_STEERING_HANDLE
-    unreliable: true
+    interpolate: Default
 
 server:
   -
