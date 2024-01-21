@@ -1,0 +1,1077 @@
+# Version 1.5
+
+include:
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/controls.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: PITOT_HEAT_ON
+    off_event_name: PITOT_HEAT_OFF
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER1_SET
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER2_SET
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_ON
+    off_event_name: FUELSYSTEM_PUMP_OFF
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:3
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:5
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 5
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:8
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 8
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:9
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 9
+
+  - # INV Main
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:35
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 35
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:36
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 36
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
+    set: 6 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:7, Bool)
+    set: 7 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Radios
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:22
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 22
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:27
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 27
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: bool
+    event_name: BEACON_LIGHTS_ON
+    off_event_name: BEACON_LIGHTS_OFF
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT NAV:1
+    var_units: Bool
+    var_type: bool
+    event_name: NAV_LIGHTS_ON
+    off_event_name: NAV_LIGHTS_OFF
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    var_type: bool
+    event_name: TAXI_LIGHTS_ON
+    off_event_name: TAXI_LIGHTS_OFF
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: bool
+    event_name: LANDING_LIGHTS_ON
+    off_event_name: LANDING_LIGHTS_OFF
+    event_param: 1
+
+  - # Interior
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_ON
+    off_event_name: PANEL_LIGHTS_OFF
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:2
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_ON
+    off_event_name: PANEL_LIGHTS_OFF
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 11
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: bool
+    event_name: GLARESHIELD_LIGHTS_ON
+    off_event_name: GLARESHIELD_LIGHTS_OFF
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 10
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT GLARESHIELD:2
+    var_units: Bool
+    var_type: bool
+    event_name: GLARESHIELD_LIGHTS_ON
+    off_event_name: GLARESHIELD_LIGHTS_OFF
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+
+  - # Smoke
+    type: NumSet
+    var_name: A:LIGHT WING:0
+    var_units: Bool
+    var_type: i32
+    event_name: WING_LIGHTS_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT LOGO:0
+    var_units: Bool
+    var_type: i32
+    event_name: LOGO_LIGHTS_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT RECOGNITION:0
+    var_units: Bool
+    var_type: i32
+    event_name: RECOGNITION_LIGHTS_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL:0
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 0
+
+  - # LVAR's
+    type: var
+    var_name: L:InversionPedales
+  -
+    type: var
+    var_name: L:ADFExist
+  -
+    type: var
+    var_name: L:Pilote_VIS
+  -
+    type: var
+    var_name: L:CoPilote_VIS
+  -
+    type: var
+    var_name: L:SmokeSystemExist
+  -
+    type: var
+    var_name: L:EngineStartMode
+# -
+#   type: var
+#   var_name: L:CdeVolets
+# -
+#   type: var
+#   var_name: L:CdeAfrein
+# -
+#   type: var
+#   var_name: L:EtatBatterie
+# -
+#   type: var
+#   var_name: L:EtatLeftGenerator
+# -
+#   type: var
+#   var_name: L:EtatRightGenerator
+# -
+#   type: var
+#   var_name: L:EtatPitot
+  -
+    type: var
+    var_name: L:AirCond
+    unreliable: true
+  -
+    type: var
+    var_name: L:RamAir
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:Baro_1
+# -
+#   type: var
+#   var_name: L:Baro_2
+# -
+#   type: var
+#   var_name: L:EtatBoostPump
+  -
+    type: var
+    var_name: L:BtnHAPos
+    interpolate: Default
+  -
+    type: var
+    var_name: L:BtnHADrPos
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:HDGCompas
+  -
+    type: var
+    var_name: L:INDEXHORLOGE
+    interpolate: Default
+  -
+    type: var
+    var_name: L:EtatGyroOUTINFAST
+  -
+    type: var
+    var_name: L:EtatFuelLTR
+  -
+    type: var
+    var_name: L:EtatFuelSysEmerg
+  -
+    type: var
+    var_name: L:EtatFuelSysEmergSecur
+  -
+    type: var
+    var_name: L:EmerValve1
+  -
+    type: var
+    var_name: L:EmerValve2
+  -
+    type: var
+    var_name: L:EtatXPDRAntenna
+  -
+    type: var
+    var_name: L:EtatLeftGeneratorSecur
+  -
+    type: var
+    var_name: L:EtatRightGeneratorSecur
+# -
+#   type: var
+#   var_name: L:ChargeGMin
+# -
+#   type: var
+#   var_name: L:ChargeGMax
+  -
+    type: var
+    var_name: L:EtatInverter
+  -
+    type: var
+    var_name: L:NavVol
+    unreliable: true
+  -
+    type: var
+    var_name: L:TACANVol
+    unreliable: true
+  -
+    type: var
+    var_name: L:ADFVol
+    unreliable: true
+  -
+    type: var
+    var_name: L:UHFVol
+    unreliable: true
+  -
+    type: var
+    var_name: L:DMEMode
+  -
+    type: var
+    var_name: L:UHFMode
+  -
+    type: var
+    var_name: L:UHFMPGMode
+  -
+    type: var
+    var_name: L:IFFMode
+  -
+    type: var
+    var_name: L:EtatIFF3A
+  -
+    type: var
+    var_name: L:EtatIFFC
+# -
+#   type: var
+#   var_name: L:EtatDefrost
+  -
+    type: var
+    var_name: L:EtatBloqueManche
+  -
+    type: var
+    var_name: L:NoseWheelSteering
+  -
+    type: var
+    var_name: L:EtatRetro
+  -
+    type: var
+    var_name: L:DMEDisplayDim
+  -
+    type: var
+    var_name: L:FuiteCentral
+  -
+    type: var
+    var_name: L:LLKaput
+  -
+    type: var
+    var_name: L:CanopyKaput
+# -
+#   type: var
+#   var_name: L:Eng1CoolDmg
+  -
+    type: var
+    var_name: L:PerturbENG1
+# -
+#   type: var
+#   var_name: L:Eng2CoolDmg
+  -
+    type: var
+    var_name: L:PerturbENG2
+# -
+#   type: var
+#   var_name: L:TaxiLight
+# -
+#   type: var
+#   var_name: L:LandingLight
+# -
+#   type: var
+#   var_name: L:StrobeLight
+# -
+#   type: var
+#   var_name: L:NavLight1
+# -
+#   type: var
+#   var_name: L:NavLight2
+# -
+#   type: var
+#   var_name: L:BeaconLight
+  -
+    type: var
+    var_name: L:HACage
+  -
+    type: var
+    var_name: L:HADrCage
+# -
+#   type: var
+#   var_name: L:LPot2
+# -
+#   type: var
+#   var_name: L:LPot5
+# -
+#   type: var
+#   var_name: L:LPot10
+# -
+#   type: var
+#   var_name: L:LPot11
+  -
+    type: var
+    var_name: L:EtatWLight
+  -
+    type: var
+    var_name: L:OptionStart
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PortesTrainKaput
+  -
+    type: var
+    var_name: L:OptionHotStart
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:ADFFreq
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:COM1Hz
+# -
+#   type: var
+#   var_name: L:NAV1Hz
+# -
+#   type: var
+#   var_name: L:TACChan
+  -
+    type: var
+    var_name: L:TACMode
+# -
+#   type: var
+#   var_name: L:XPDRCode
+  -
+    type: var
+    var_name: L:Depart
+  -
+    type: var
+    var_name: L:EtatCanopy
+  -
+    type: var
+    var_name: L:EtatCanopyReel
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:HANDLING_AILERON_ELEVATOR_Trim_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:ClickLGOver
+# -
+#   type: var
+#   var_name: L:LGOverrideTimer
+  -
+    type: var
+    var_name: L:ClickLGOverDr
+  -
+    type: var
+    var_name: L:InitSouris
+# -
+#   type: var
+#   var_name: L:Changed
+# -
+#   type: var
+#   var_name: L:ACOnline
+  -
+    type: var
+    var_name: L:FastSlave
+  -
+    type: var
+    var_name: L:TestFuelQTY
+  -
+    type: var
+    var_name: L:TestFuelGravity
+  -
+    type: var
+    var_name: L:TestEngIce
+  -
+    type: var
+    var_name: L:TestFireDetect
+  -
+    type: var
+    var_name: L:TestOverHeatDetect
+# -
+#   type: var
+#   var_name: L:ChangedEng1
+  -
+    type: var
+    var_name: L:EtatLeftStarter
+  -
+    type: var
+    var_name: L:Eng1HungStart
+# -
+#   type: var
+#   var_name: L:HungRPM1
+# -
+#   type: var
+#   var_name: L:AirStartTimerLeft
+# -
+#   type: var
+#   var_name: L:ChangedEng2
+  -
+    type: var
+    var_name: L:EtatRightStarter
+  -
+    type: var
+    var_name: L:Eng2HungStart
+# -
+#   type: var
+#   var_name: L:HungRPM2
+# -
+#   type: var
+#   var_name: L:AirStartTimerRight
+  -
+    type: var
+    var_name: L:ClicGLoad
+  -
+    type: var
+    var_name: L:TestLGWLight
+# -
+#   type: var
+#   var_name: L:DebutDrift
+  -
+    type: var
+    var_name: L:DMEModeSens
+  -
+    type: var
+    var_name: L:VORMKRTest
+  -
+    type: var
+    var_name: L:UHFModeSens
+# -
+#   type: var
+#   var_name: L:UHFFreq
+  -
+    type: var
+    var_name: L:UHFMPGModeSens
+  -
+    type: var
+    var_name: L:UHFChan
+  -
+    type: var
+    var_name: L:Squelch
+  -
+    type: var
+    var_name: L:UHFCouv
+  -
+    type: var
+    var_name: L:IFFM1
+  -
+    type: var
+    var_name: L:IFFModeSens
+  -
+    type: var
+    var_name: L:ClicIDT
+  -
+    type: var
+    var_name: L:CANOPYLOCKED
+# -
+#   type: var
+#   var_name: L:Ouverture
+  -
+    type: var
+    var_name: L:ClickHSL
+  -
+    type: var
+    var_name: L:HornSilence
+  -
+    type: var
+    var_name: L:ClickHSR
+  -
+    type: var
+    var_name: L:ClickNWS
+  -
+    type: var
+    var_name: L:ClickDMED
+  -
+    type: var
+    var_name: L:DMEDisplayPage
+  -
+    type: var
+    var_name: L:TestMKR
+  -
+    type: var
+    var_name: L:TestBoostPump
+  -
+    type: var
+    var_name: L:TestCanopyLock
+  -
+    type: var
+    var_name: L:TestTOTrim
+  -
+    type: var
+    var_name: L:TestLGF
+  -
+    type: var
+    var_name: L:TestLGL
+  -
+    type: var
+    var_name: L:TestLGR
+  -
+    type: var
+    var_name: L:SmokeMaster
+  -
+    type: var
+    var_name: L:SmokeWhite
+  -
+    type: var
+    var_name: L:SmokeRed
+  -
+    type: var
+    var_name: L:SmokeGreen
+  -
+    type: var
+    var_name: L:SmokeBlue
+  -
+    type: var
+    var_name: L:ClickPadOn
+  -
+    type: var
+    var_name: L:PadPower
+# -
+#   type: var
+#   var_name: L:PadTimerLoad
+  -
+    type: var
+    var_name: L:numPage
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PadNewLoadLine
+# -
+#   type: var
+#   var_name: L:PadDisk
+  -
+    type: var
+    var_name: L:EtatLandingLight
+  -
+    type: var
+    var_name: L:EtatPosLight
+  -
+    type: var
+    var_name: L:ChangedWL
+  -
+    type: var
+    var_name: L:WLMode
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:AttBankTarget
+# -
+#   type: var
+#   var_name: L:BankDrift
+# -
+#   type: var
+#   var_name: L:HATimeCage
+# -
+#   type: var
+#   var_name: L:EtatLeftIgnition
+# -
+#   type: var
+#   var_name: L:DeflectDr
+# -
+#   type: var
+#   var_name: L:GyroDrift
+# -
+#   type: var
+#   var_name: L:AttPitchTargetDr
+# -
+#   type: var
+#   var_name: L:PitchDriftDr
+# -
+#   type: var
+#   var_name: L:HADrTimeCage
+# -
+#   type: var
+#   var_name: L:Eng2OverHeatSimu
+# -
+#   type: var
+#   var_name: L:Eng1OverHeatSimu
+# -
+#   type: var
+#   var_name: L:CapADF
+# -
+#   type: var
+#   var_name: L:TimerADF
+# -
+#   type: var
+#   var_name: L:EtatRightIgnition
+# -
+#   type: var
+#   var_name: L:AttBankTargetDr
+# -
+#   type: var
+#   var_name: L:BankDriftDr
+# -
+#   type: var
+#   var_name: L:AttPitchTarget
+# -
+#   type: var
+#   var_name: L:PitchDrift
+# -
+#   type: var
+#   var_name: L:DeflectGa
+# -
+#   type: var
+#   var_name: L:VoyantICE
+# -
+#   type: var
+#   var_name: L:AlimGravite
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+  -
+    type: var
+    var_name: L:InitialisationVar
+# -
+#   type: var
+#   var_name: L:SeuilENG1
+# -
+#   type: var
+#   var_name: L:SeuilENG2
+# -
+#   type: var
+#   var_name: L:AttTimer
+# -
+#   type: var
+#   var_name: L:AttTimerDr
+# -
+#   type: var
+#   var_name: L:GyroTimer
+# -
+#   type: var
+#   var_name: L:RamRair
+# -
+#   type: var
+#   var_name: L:LPot6
+# -
+#   type: var
+#   var_name: L:LPot7
+# -
+#   type: var
+#   var_name: L:TaxiLightCopy
+# -
+#   type: var
+#   var_name: L:LandingLightCopy
+# -
+#   type: var
+#   var_name: L:NavLight1Copy
+# -
+#   type: var
+#   var_name: L:NavLight2Copy
+# -
+#   type: var
+#   var_name: L:StrobeLightCopy
+# -
+#   type: var
+#   var_name: L:BeaconLightCopy
+# -
+#   type: var
+#   var_name: L:EtatLeftGeneratorCopy
+# -
+#   type: var
+#   var_name: L:EtatRightGeneratorCopy
+# -
+#   type: var
+#   var_name: L:Baro_1Copy
+# -
+#   type: var
+#   var_name: L:Baro_2Copy
+# -
+#   type: var
+#   var_name: L:Emervalve1Copy
+# -
+#   type: var
+#   var_name: L:Emervalve2Copy
+# -
+#   type: var
+#   var_name: L:InvTank
+  -
+    type: var
+    var_name: L:FuiteCentralTest
+# -
+#   type: var
+#   var_name: L:LLKaputAngleG
+# -
+#   type: var
+#   var_name: L:LLKaputAngleD
+# -
+#   type: var
+#   var_name: L:T37_Warning_Landing_Gear
+# -
+#   type: var
+#   var_name: L:SonLibre
+  -
+    type: var
+    var_name: L:PitchDriftOn
+# -
+#   type: var
+#   var_name: L:AttPichTarget
+# -
+#   type: var
+#   var_name: L:AttPichTargetDr
+# -
+#   type: var
+#   var_name: L:BankDriftInit
+# -
+#   type: var
+#   var_name: L:PitchDriftInit
+# -
+#   type: var
+#   var_name: L:BankDriftInitDr
+# -
+#   type: var
+#   var_name: L:PitchDriftInitDr
+# -
+#   type: var
+#   var_name: L:TimerENG1
+# -
+#   type: var
+#   var_name: L:TimerENG2
+# -
+#   type: var
+#   var_name: L:TimerOverH1
+# -
+#   type: var
+#   var_name: L:TimerOverH2
+# -
+#   type: var
+#   var_name: L:PrecRPM1
+# -
+#   type: var
+#   var_name: L:PrecRPM2
+# -
+#   type: var
+#   var_name: L:GyroTimeSlave
+# -
+#   type: var
+#   var_name: L:GyroDriftInit
+# -
+#   type: var
+#   var_name: L:Eng1Start
+# -
+#   type: var
+#   var_name: L:Eng2Start
+# -
+#   type: var
+#   var_name: L:Eng1HotStart
+# -
+#   type: var
+#   var_name: L:Eng2HotStart
+  -
+    type: var
+    var_name: L:Eng1HotStartBurnt
+  -
+    type: var
+    var_name: L:Eng1HotStartAbort
+  -
+    type: var
+    var_name: L:Eng1HSAbortInit
+  -
+    type: var
+    var_name: L:Eng2HotStartBurnt
+  -
+    type: var
+    var_name: L:Eng2HotStartAbort
+  -
+    type: var
+    var_name: L:Eng2HSAbortInit
+  -
+    type: var
+    var_name: L:Eng1HotStartOverHeat
+# -
+#   type: var
+#   var_name: L:Eng1HSMaxTemp
+# -
+#   type: var
+#   var_name: L:OverHeat1Timer
+  -
+    type: var
+    var_name: L:Eng2HotStartOverHeat
+# -
+#   type: var
+#   var_name: L:Eng2HSMaxTemp
+# -
+#   type: var
+#   var_name: L:OverHeat2Timer
+  -
+    type: var
+    var_name: L:AlreadyDmgEng1
+  -
+    type: var
+    var_name: L:AlreadyDmgEng2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:VAPDMEDisplay_class_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:VAPDMEDisplay_class_State
+# -
+#   type: var
+#   var_name: L:VAPad_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:VAPad_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+server:
+  -
+    type: var
+    var_name: A:FUELSYSTEM TANK LEVEL:1
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUELSYSTEM TANK LEVEL:2
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUELSYSTEM TANK LEVEL:3
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
