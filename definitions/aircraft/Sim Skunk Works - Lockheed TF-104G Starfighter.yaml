@@ -1,10 +1,9 @@
-# Version 3.3.1
+# Version 3.3.11
 
 include:
   - definitions/modules/controls.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/electrical.yaml
-  - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/handling.yaml
   - definitions/modules/navigation.yaml
@@ -20,6 +19,13 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 1
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG1
 
   - # Lights
     type: NumSet
@@ -99,10 +105,115 @@ shared:
     var_name: L:analog_CLOCK_START
 # -
 #   type: var
-#   var_name: L:kneeboard_open
+#   var_name: L:ENGINE_SMOKE_ENABLED
+  -
+    type: var
+    var_name: L:hydraulic_door
+  -
+    type: var
+    var_name: L:CHUTE_STATUS
+  -
+    type: var
+    var_name: L:rat_out
+# -
+#   type: var
+#   var_name: L:windmilling
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_1
+# -
+#   type: var
+#   var_name: L:NOZZLE_POS
+# -
+#   type: var
+#   var_name: L:aeroelastic_tips
+# -
+#   type: var
+#   var_name: L:front_pilot_head_anim
+# -
+#   type: var
+#   var_name: L:rat_spinning
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_3
+  -
+    type: var
+    var_name: L:CHUTE_BAY
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_2
+# -
+#   type: var
+#   var_name: L:rear_pilot_head_anim
+  -
+    type: var
+    var_name: L:wing_flag_mouvers
+  -
+    type: var
+    var_name: L:breakers_door
+# -
+#   type: var
+#   var_name: L:apc_vanes
+# -
+#   type: var
+#   var_name: L:boundary_layer_door_4
+  -
+    type: var
+    var_name: L:tailhook_pos
+# -
+#   type: var
+#   var_name: L:ptt_enabled
+# -
+#   type: var
+#   var_name: L:drag_chute_deploy_animation
+# -
+#   type: var
+#   var_name: L:pilot_vis_tag_front
+# -
+#   type: var
+#   var_name: L:pilot_vis_tag_rear
+  -
+    type: var
+    var_name: L:ammenicoli
+# -
+#   type: var
+#   var_name: L:UALLERA_P
 # -
 #   type: var
 #   var_name: L:custom_event_id
+  -
+    type: var
+    var_name: L:starter1
+  -
+    type: var
+    var_name: L:starter0
+  -
+    type: var
+    var_name: L:external_store_jettison_cover
+  -
+    type: var
+    var_name: L:external_store_jettison
+  -
+    type: var
+    var_name: L:generator1_switch
+  -
+    type: var
+    var_name: L:generator2_switch
+  -
+    type: var
+    var_name: L:generator1_cover
+  -
+    type: var
+    var_name: L:generator2_cover
+  -
+    type: var
+    var_name: L:storm_lights
+  -
+    type: var
+    var_name: L:extra_timer
+  -
+    type: var
+    var_name: L:fixed_freq_reset
   -
     type: var
     var_name: L:opt_sight_cage
@@ -114,19 +225,25 @@ shared:
     var_name: L:opt_sight_mils_frame
   -
     type: var
-    var_name: L:air_fresh_scoop_lever
+    var_name: L:ptt_right_gear
   -
     type: var
-    var_name: L:tendina_frame
+    var_name: L:ptt_nose_gear
   -
     type: var
-    var_name: L:tendina
+    var_name: L:ptt_left_gear
   -
     type: var
-    var_name: L:ptt_gear_unsafe_light
+    var_name: L:ptt_tip_light_left
   -
     type: var
-    var_name: L:RUDDER_TRIM_POS
+    var_name: L:ptt_tip_light_right
+  -
+    type: var
+    var_name: L:ptt_pyl_light_left
+  -
+    type: var
+    var_name: L:ptt_pyl_light_right
   -
     type: var
     var_name: L:cockpit_temp
@@ -147,16 +264,10 @@ shared:
     var_name: L:suit_face_plate
   -
     type: var
-    var_name: L:oxy_supply_lever_suit
+    var_name: L:tacan_volume
   -
     type: var
-    var_name: L:extra_timer
-  -
-    type: var
-    var_name: L:storm_lights
-  -
-    type: var
-    var_name: L:fixed_freq_reset
+    var_name: L:SOUND_CLICK_2
   -
     type: var
     var_name: L:tail_hook_light
@@ -168,49 +279,7 @@ shared:
     var_name: L:tail_kook_extend_button
   -
     type: var
-    var_name: L:mirrors_swivel_front
-  -
-    type: var
-    var_name: L:mirrors_swivel_rear
-  -
-    type: var
     var_name: L:dim_bright_lights
-  -
-    type: var
-    var_name: L:ptt_tip_light_left
-  -
-    type: var
-    var_name: L:ptt_tip_light_right
-  -
-    type: var
-    var_name: L:ptt_pyl_light_left
-  -
-    type: var
-    var_name: L:ptt_pyl_light_right
-  -
-    type: var
-    var_name: L:frontpanel_lid_toggle
-  -
-    type: var
-    var_name: L:rearpanel_lid_toggle
-  -
-    type: var
-    var_name: L:clock_ring
-  -
-    type: var
-    var_name: L:clock_set_button_anim
-  -
-    type: var
-    var_name: L:generator1_switch
-  -
-    type: var
-    var_name: L:generator2_switch
-  -
-    type: var
-    var_name: L:generator2_cover
-  -
-    type: var
-    var_name: L:generator1_cover
 # -
 #   type: var
 #   var_name: L:stick_visibility
@@ -219,16 +288,52 @@ shared:
 #   var_name: L:stick_visibility_rear
   -
     type: var
-    var_name: L:ptt_right_gear
+    var_name: L:knob_anemo_bug
   -
     type: var
-    var_name: L:ptt_nose_gear
+    var_name: L:ClickStart
   -
     type: var
-    var_name: L:ptt_left_gear
+    var_name: L:att_offset2
+    unreliable: true
   -
     type: var
-    var_name: L:ptt_master_caution
+    var_name: L:stby_attitude_erect
+  -
+    type: var
+    var_name: L:att_bar_pos2
+    unreliable: true
+  -
+    type: var
+    var_name: L:att_offset
+    unreliable: true
+  -
+    type: var
+    var_name: L:G_reset
+  -
+    type: var
+    var_name: L:clock_ring
+  -
+    type: var
+    var_name: L:clock_set_button_anim
+  -
+    type: var
+    var_name: L:ptt_ln3_heat
+  -
+    type: var
+    var_name: L:ptt_ln3_align
+  -
+    type: var
+    var_name: L:phi_dist_switch
+  -
+    type: var
+    var_name: L:PHI_grivation
+  -
+    type: var
+    var_name: L:PHI_grivation 
+  -
+    type: var
+    var_name: L:RUDDER_TRIM_POS
   -
     type: var
     var_name: L:nasarr15_lid
@@ -244,183 +349,393 @@ shared:
   -
     type: var
     var_name: L:com1_tone
-  -
-    type: var
-    var_name: L:tacan_volume
-  -
-    type: var
-    var_name: L:SOUND_CLICK_2
-  -
-    type: var
-    var_name: L:G_reset
-  -
-    type: var
-    var_name: L:PHI_grivation
-  -
-    type: var
-    var_name: L:PHI_grivation 
-  -
-    type: var
-    var_name: L:phi_dist_switch
-  -
-    type: var
-    var_name: L:ptt_ln3_align
-  -
-    type: var
-    var_name: L:ptt_ln3_heat
-  -
-    type: var
-    var_name: L:att_offset
-  -
-    type: var
-    var_name: L:att_offset2
-  -
-    type: var
-    var_name: L:stby_attitude_erect
-  -
-    type: var
-    var_name: L:att_bar_pos2
-  -
-    type: var
-    var_name: L:ClickStart
-  -
-    type: var
-    var_name: L:knob_anemo_bug
-  -
-    type: var
-    var_name: L:external_store_jettison_cover
-  -
-    type: var
-    var_name: L:external_store_jettison
-  -
-    type: var
-    var_name: L:starter1
-  -
-    type: var
-    var_name: L:starter0
-  -
-    type: var
-    var_name: L:CHUTE_STATUS
 # -
 #   type: var
-#   var_name: L:drag_chute_deploy_animation
+#   var_name: L:kneeboard_open
+  -
+    type: var
+    var_name: L:tendina
+  -
+    type: var
+    var_name: L:tendina_frame
+  -
+    type: var
+    var_name: L:frontpanel_lid_toggle
+  -
+    type: var
+    var_name: L:rearpanel_lid_toggle
+  -
+    type: var
+    var_name: L:mirrors_swivel_front
+  -
+    type: var
+    var_name: L:mirrors_swivel_rear
+  -
+    type: var
+    var_name: L:ptt_master_caution
+  -
+    type: var
+    var_name: L:tacan_1ch
 # -
 #   type: var
-#   var_name: L:drag_chute_drop_animation
+#   var_name: L:scheduled_egt
+  -
+    type: var
+    var_name: L:drum_phi_hundreds
 # -
 #   type: var
-#   var_name: L:pilot_vis_tag_front
+#   var_name: L:oxy_quantity_needle
 # -
 #   type: var
-#   var_name: L:pilot_vis_tag_rear
+#   var_name: L:attitude_indicator_flag
   -
     type: var
-    var_name: L:ammenicoli
+    var_name: L:com1_MHz
   -
     type: var
-    var_name: L:UALLERA_P
-  -
-    type: var
-    var_name: L:ptt_enabled
-  -
-    type: var
-    var_name: L:ENGINE_SMOKE_ENABLED
+    var_name: L:nasarr15_gain
 # -
 #   type: var
-#   var_name: L:canopy_glasses_vis_tag
+#   var_name: L:oxy_press
+# -
+#   type: var
+#   var_name: L:cit
+# -
+#   type: var
+#   var_name: L:oxy_blinker
   -
     type: var
-    var_name: L:panic_fuel_boost_pump
+    var_name: L:pedal_adjust
   -
     type: var
-    var_name: L:warn_light_test
+    var_name: L:T2Reset
+# -
+#   type: var
+#   var_name: L:needle_tsi
   -
     type: var
-    var_name: L:panic_fix_freq
+    var_name: L:refuel_switch
   -
     type: var
-    var_name: L:panic_void_line
-  -
-    type: var
-    var_name: L:panic_fuel_low
-  -
-    type: var
-    var_name: L:panic_gen1_out
-  -
-    type: var
-    var_name: L:panic_gen2_out
-  -
-    type: var
-    var_name: L:panic_dc_bus_out
-  -
-    type: var
-    var_name: L:panic_auto_pitch
-  -
-    type: var
-    var_name: L:panic_hydr_sys_out
-  -
-    type: var
-    var_name: L:panic_canopy
-  -
-    type: var
-    var_name: L:panic_anti_ice
-  -
-    type: var
-    var_name: L:panic_eng_oil
-  -
-    type: var
-    var_name: L:panic_in_nav
-  -
-    type: var
-    var_name: L:cabin_press
-  -
-    type: var
-    var_name: L:lgear_unsafe
-  -
-    type: var
-    var_name: L:master_caution
-  -
-    type: var
-    var_name: L:light_annunciator_slow
-  -
-    type: var
-    var_name: L:fire_warn_light_test
-  -
-    type: var
-    var_name: L:trim_elevator_neutral
-  -
-    type: var
-    var_name: L:trim_aileron_neutral
-  -
-    type: var
-    var_name: L:trim_rudder_neutral
+    var_name: L:manual_gear_handle
   -
     type: var
     var_name: L:antiskid_switch
+# -
+#   type: var
+#   var_name: L:ball_tsi
   -
     type: var
-    var_name: L:tip_light_left
+    var_name: L:sif_mode3_2nd_digit
   -
     type: var
-    var_name: L:tip_light_right
+    var_name: L:pitot_switch
   -
     type: var
-    var_name: L:pyl_light_left
+    var_name: L:phi_station_selector
   -
     type: var
-    var_name: L:pyl_light_right
+    var_name: L:com1_function_mode
+  -
+    type: var
+    var_name: L:com1_presel_mode
+  -
+    type: var
+    var_name: L:hydra_sys_failed
+# -
+#   type: var
+#   var_name: L:LE_flaps_ind
+  -
+    type: var
+    var_name: L:tacan_mode
+  -
+    type: var
+    var_name: L:CH_SELECTED
+# -
+#   type: var
+#   var_name: L:needle_mach
+  -
+    type: var
+    var_name: L:nasarr15_clplane_hundreds
+  -
+    type: var
+    var_name: L:pitch_damper_cover
+  -
+    type: var
+    var_name: L:nav_lights
+# -
+#   type: var
+#   var_name: L:ATTITUDE_BANK
+  -
+    type: var
+    var_name: L:canopy_handle
+  -
+    type: var
+    var_name: L:handle_dragchute
+  -
+    type: var
+    var_name: L:dummy_object
+  -
+    type: var
+    var_name: L:sif_mode1_1st_digit
+  -
+    type: var
+    var_name: L:drum_mils_tens
+  -
+    type: var
+    var_name: L:fuel_ext_reading_toggle
+  -
+    type: var
+    var_name: L:PHI_selected_mode
+# -
+#   type: var
+#   var_name: L:needle_altimeter_10thousands
+  -
+    type: var
+    var_name: L:PITCH_DAMPER
+  -
+    type: var
+    var_name: L:com1_drum_MHz
+  -
+    type: var
+    var_name: L:switch_landing_light
+  -
+    type: var
+    var_name: L:emergency_nozzles
+# -
+#   type: var
+#   var_name: L:attitude_indicator_stdby_flag
+  -
+    type: var
+    var_name: L:drum_phi_units
+# -
+#   type: var
+#   var_name: L:needle_fuel_external_left
+  -
+    type: var
+    var_name: L:instrument_lights
+  -
+    type: var
+    var_name: L:sight_dimmer_control
+  -
+    type: var
+    var_name: L:YAW_DAMPER
+  -
+    type: var
+    var_name: L:oxy_normal_lever
+# -
+#   type: var
+#   var_name: L:needle_kcas
+  -
+    type: var
+    var_name: L:iff_mode3_switch
+  -
+    type: var
+    var_name: L:com1_drum_KHz
+  -
+    type: var
+    var_name: L:lever_landing_gear
+  -
+    type: var
+    var_name: L:apc_cutout_cover
+  -
+    type: var
+    var_name: L:AttSetInit2
+# -
+#   type: var
+#   var_name: L:needle_altimeter_hundreds
+  -
+    type: var
+    var_name: L:sif_mode1_2nd_digit
+# -
+#   type: var
+#   var_name: L:THROTTLE_LEVER_POSITION
+  -
+    type: var
+    var_name: L:phi_obs
+  -
+    type: var
+    var_name: L:drum_mils_hundreds
+  -
+    type: var
+    var_name: L:roll_damper_cover
+  -
+    type: var
+    var_name: L:nasarr15_range
+  -
+    type: var
+    var_name: L:nasarr15_range_ndx
+  -
+    type: var
+    var_name: L:opt_sight_switch
+  -
+    type: var
+    var_name: L:tacan_ch_selected
+# -
+#   type: var
+#   var_name: L:tacan_ch_displayed
+  -
+    type: var
+    var_name: L:tacan_y_mode
+  -
+    type: var
+    var_name: L:tacan_10ch
+# -
+#   type: var
+#   var_name: L:ATTITUDE_PITCH
+  -
+    type: var
+    var_name: L:fuel_shutoff_cover
   -
     type: var
     var_name: L:ln3_mode_selector
+  -
+    type: var
+    var_name: L:ROLL_DAMPER
+  -
+    type: var
+    var_name: L:nasarr15_clplane_thousands
+  -
+    type: var
+    var_name: L:yaw_damper_cover
+  -
+    type: var
+    var_name: L:nasarr15_antenna_tilt
+# -
+#   type: var
+#   var_name: L:needle_altimeter_thousands
+# -
+#   type: var
+#   var_name: L:altimeter_warning
+  -
+    type: var
+    var_name: L:drum_mils_units
+  -
+    type: var
+    var_name: L:oxy_supply_lever
+  -
+    type: var
+    var_name: L:sif_mode3_1st_digit
+# -
+#   type: var
+#   var_name: L:needle_eng_oil_psi
+  -
+    type: var
+    var_name: L:lights_flood_switch
+# -
+#   type: var
+#   var_name: L:needle_fuel_external_right
+  -
+    type: var
+    var_name: L:iff_mode_selector
+# -
+#   type: var
+#   var_name: L:ATTITUDE_STDBY_PITCH
+  -
+    type: var
+    var_name: L:nasarr15_clplane_tens
+  -
+    type: var
+    var_name: L:com1_KHz
+  -
+    type: var
+    var_name: L:canopy_defog
+  -
+    type: var
+    var_name: L:wlight_test_pos
+# -
+#   type: var
+#   var_name: L:apc_meter_reading
+  -
+    type: var
+    var_name: L:external_store_selector
+  -
+    type: var
+    var_name: L:lights_beacon
+  -
+    type: var
+    var_name: L:nasarr15_mode
+  -
+    type: var
+    var_name: L:com1_drum_10KHz
+  -
+    type: var
+    var_name: L:throttle_stop
+  -
+    type: var
+    var_name: L:fuel_refuelling_selector
+# -
+#   type: var
+#   var_name: L:KOHLSMAN_HG
+  -
+    type: var
+    var_name: L:drum_phi_tens
+# -
+#   type: var
+#   var_name: L:needle_fuel_internal
+  -
+    type: var
+    var_name: L:console_lights
+  -
+    type: var
+    var_name: L:com1_drum_10MHz
+  -
+    type: var
+    var_name: L:oxy_emergency_lever
+  -
+    type: var
+    var_name: L:iff_emer_switch
+  -
+    type: var
+    var_name: L:apc_cutout_switch
+# -
+#   type: var
+#   var_name: L:ATTITUDE_STDBY_BANK
+  -
+    type: var
+    var_name: L:com1_10MHz
+# -
+#   type: var
+#   var_name: L:needle_fuel_flow
+# -
+#   type: var
+#   var_name: L:TE_flaps_ind
+# -
+#   type: var
+#   var_name: L:PHI_card_key
+  -
+    type: var
+    var_name: L:refuel_switch_cover
+  -
+    type: var
+    var_name: L:nasarr15_clplane_units
+# -
+#   type: var
+#   var_name: L:needle_cabin_press
+  -
+    type: var
+    var_name: L:switch_airbrake
+# -
+#   type: var
+#   var_name: L:phi_nav_needle
+# -
+#   type: var
+#   var_name: L:trim_elevator_neutral
+  -
+    type: var
+    var_name: L:warn_light_test
+# -
+#   type: var
+#   var_name: L:trim_aileron_neutral
+# -
+#   type: var
+#   var_name: L:trim_rudder_neutral
 # -
 #   type: var
 #   var_name: L:ln3_align_light
   -
     type: var
     var_name: L:ln3_warmup_light
-  -
-    type: var
-    var_name: L:nasarr15_range
   -
     type: var
     var_name: L:nasarr15_radar_lock
@@ -442,402 +757,93 @@ shared:
   -
     type: var
     var_name: L:nasarr_xmtr_off
+# -
+#   type: var
+#   var_name: L:panic_fuel_boost_pump
+# -
+#   type: var
+#   var_name: L:panic_fix_freq
+# -
+#   type: var
+#   var_name: L:panic_void_line
+# -
+#   type: var
+#   var_name: L:panic_fuel_low
+# -
+#   type: var
+#   var_name: L:panic_gen1_out
+# -
+#   type: var
+#   var_name: L:panic_gen2_out
+# -
+#   type: var
+#   var_name: L:panic_dc_bus_out
+# -
+#   type: var
+#   var_name: L:panic_auto_pitch
+# -
+#   type: var
+#   var_name: L:panic_hydr_sys_out
+# -
+#   type: var
+#   var_name: L:panic_canopy
+# -
+#   type: var
+#   var_name: L:panic_anti_ice
+# -
+#   type: var
+#   var_name: L:panic_eng_oil
+# -
+#   type: var
+#   var_name: L:panic_in_nav
   -
     type: var
-    var_name: L:nasarr15_mode
+    var_name: L:cabin_press
+# -
+#   type: var
+#   var_name: L:lgear_unsafe
   -
     type: var
-    var_name: L:nasarr_lock
+    var_name: L:master_caution
   -
     type: var
-    var_name: L:instrument_lights
+    var_name: L:light_annunciator_slow
   -
     type: var
-    var_name: L:console_lights
+    var_name: L:fire_warn_light_test
+  -
+    type: var
+    var_name: L:tip_light_left
+  -
+    type: var
+    var_name: L:tip_light_right
+  -
+    type: var
+    var_name: L:pyl_light_left
+  -
+    type: var
+    var_name: L:pyl_light_right
+# -
+#   type: var
+#   var_name: L:lgear_light_vis_tag
 # -
 #   type: var
 #   var_name: L:tablet_visible
-  -
-    type: var
-    var_name: L:C2_visibility_Local
-  -
-    type: var
-    var_name: L:C2_visibility
-  -
-    type: var
-    var_name: L:Q7_visibility_Local
-  -
-    type: var
-    var_name: L:Q7_visibility
-  -
-    type: var
-    var_name: L:switch_airbrake
-  -
-    type: var
-    var_name: L:lgear_light_vis_tag
 # -
 #   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+#   var_name: L:C2_visibility_Local
 # -
 #   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
-  -
-    type: var
-    var_name: L:hydraulic_door
+#   var_name: L:C2_visibility
 # -
 #   type: var
-#   var_name: L:boundary_layer_door_4
-  -
-    type: var
-    var_name: L:rat_out
-  -
-    type: var
-    var_name: L:windmilling
-  -
-    type: var
-    var_name: L:wing_flag_mouvers
+#   var_name: L:Q7_visibility_Local
 # -
 #   type: var
-#   var_name: L:boundary_layer_door_3
+#   var_name: L:Q7_visibility
 # -
 #   type: var
-#   var_name: L:apc_vanes
-  -
-    type: var
-    var_name: L:CHUTE_BAY
-# -
-#   type: var
-#   var_name: L:NOZZLE_POS
-# -
-#   type: var
-#   var_name: L:aeroelastic_tips
-  -
-    type: var
-    var_name: L:breakers_door
-  -
-    type: var
-    var_name: L:tailhook_pos
-# -
-#   type: var
-#   var_name: L:rat_spinning
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_1
-# -
-#   type: var
-#   var_name: L:boundary_layer_door_2
-  -
-    type: var
-    var_name: L:com1_function_mode
-  -
-    type: var
-    var_name: L:emergency_nozzles
-  -
-    type: var
-    var_name: L:drum_phi_hundreds
-  -
-    type: var
-    var_name: L:drum_phi_units
-  -
-    type: var
-    var_name: L:refuel_switch
-# -
-#   type: var
-#   var_name: L:apc_meter_reading
-  -
-    type: var
-    var_name: L:sif_mode1_1st_digit
-  -
-    type: var
-    var_name: L:lever_landing_gear
-  -
-    type: var
-    var_name: L:nasarr15_clplane_tens
-  -
-    type: var
-    var_name: L:com1_MHz
-# -
-#   type: var
-#   var_name: L:needle_fuel_internal
-  -
-    type: var
-    var_name: L:lights_flood_switch
-  -
-    type: var
-    var_name: L:opt_sight_switch
-  -
-    type: var
-    var_name: L:drum_mils_hundreds
-# -
-#   type: var
-#   var_name: L:needle_fuel_flow
-# -
-#   type: var
-#   var_name: L:LE_flaps_ind
-  -
-    type: var
-    var_name: L:wlight_test_pos
-  -
-    type: var
-    var_name: L:nasarr15_antenna_tilt
-# -
-#   type: var
-#   var_name: L:phi_nav_needle
-# -
-#   type: var
-#   var_name: L:ATTITUDE_STDBY_BANK
-  -
-    type: var
-    var_name: L:pitot_switch
-  -
-    type: var
-    var_name: L:switch_landing_light
-  -
-    type: var
-    var_name: L:phi_obs
-  -
-    type: var
-    var_name: L:nasarr15_clplane_units
-  -
-    type: var
-    var_name: L:apc_cutout_switch
-  -
-    type: var
-    var_name: L:iff_emer_switch
-  -
-    type: var
-    var_name: L:yaw_damper_cover
-  -
-    type: var
-    var_name: L:canopy_handle
-# -
-#   type: var
-#   var_name: L:needle_cabin_press
-  -
-    type: var
-    var_name: L:fuel_shutoff_cover
-  -
-    type: var
-    var_name: L:nasarr15_range_ndx
-  -
-    type: var
-    var_name: L:sight_dimmer_control
-# -
-#   type: var
-#   var_name: L:needle_eng_oil_psi
-# -
-#   type: var
-#   var_name: L:PHI_card_key
-# -
-#   type: var
-#   var_name: L:needle_fuel_external_left
-  -
-    type: var
-    var_name: L:refuel_switch_cover
-  -
-    type: var
-    var_name: L:pedal_adjust
-  -
-    type: var
-    var_name: L:tacan_1ch
-  -
-    type: var
-    var_name: L:oxy_normal_lever
-  -
-    type: var
-    var_name: L:tacan_ch_selected
-  -
-    type: var
-    var_name: L:tacan_ch_displayed
-  -
-    type: var
-    var_name: L:tacan_y_mode
-  -
-    type: var
-    var_name: L:tacan_10ch
-  -
-    type: var
-    var_name: L:CH_SELECTED
-  -
-    type: var
-    var_name: L:attitude_indicator_flag
-  -
-    type: var
-    var_name: L:ROLL_DAMPER
-  -
-    type: var
-    var_name: L:handle_dragchute
-  -
-    type: var
-    var_name: L:sif_mode1_2nd_digit
-  -
-    type: var
-    var_name: L:tacan_mode
-  -
-    type: var
-    var_name: L:YAW_DAMPER
-# -
-#   type: var
-#   var_name: L:ATTITUDE_STDBY_PITCH
-  -
-    type: var
-    var_name: L:nasarr15_clplane_hundreds
-# -
-#   type: var
-#   var_name: L:TE_flaps_ind
-# -
-#   type: var
-#   var_name: L:needle_altimeter_thousands
-  -
-    type: var
-    var_name: L:PHI_selected_mode
-  -
-    type: var
-    var_name: L:iff_mode3_switch
-# -
-#   type: var
-#   var_name: L:needle_fuel_external_right
-  -
-    type: var
-    var_name: L:torch_light
-  -
-    type: var
-    var_name: L:drum_phi_tens
-  -
-    type: var
-    var_name: L:iff_mode_selector
-  -
-    type: var
-    var_name: L:nasarr15_clplane_thousands
-  -
-    type: var
-    var_name: L:fuel_refuelling_selector
-# -
-#   type: var
-#   var_name: L:oxy_blinker
-  -
-    type: var
-    var_name: L:drum_mils_tens
-  -
-    type: var
-    var_name: L:sif_mode3_1st_digit
-  -
-    type: var
-    var_name: L:com1_presel_mode
-  -
-    type: var
-    var_name: L:manual_gear_handle
-  -
-    type: var
-    var_name: L:drum_mils_units
-  -
-    type: var
-    var_name: L:fuel_ext_reading_toggle
-  -
-    type: var
-    var_name: L:com1_10MHz
-  -
-    type: var
-    var_name: L:roll_damper_cover
-# -
-#   type: var
-#   var_name: L:cit
-  -
-    type: var
-    var_name: L:oxy_emergency_lever
-  -
-    type: var
-    var_name: L:T2Reset
-  -
-    type: var
-    var_name: L:hydra_sys_failed
-  -
-    type: var
-    var_name: L:pedal_fore_aft
-# -
-#   type: var
-#   var_name: L:ATTITUDE_PITCH
-  -
-    type: var
-    var_name: L:phi_station_selector
-# -
-#   type: var
-#   var_name: L:needle_altimeter_10thousands
-  -
-    type: var
-    var_name: L:oxy_supply_lever
-# -
-#   type: var
-#   var_name: L:ATTITUDE_BANK
-  -
-    type: var
-    var_name: L:dummy_object
-  -
-    type: var
-    var_name: L:canopy_defog
-  -
-    type: var
-    var_name: L:attitude_indicator_stdby_flag
-  -
-    type: var
-    var_name: L:pitch_damper_cover
-# -
-#   type: var
-#   var_name: L:needle_altimeter_hundreds
-  -
-    type: var
-    var_name: L:nasarr15_gain
-# -
-#   type: var
-#   var_name: L:THROTTLE_LEVER_POSITION
-# -
-#   type: var
-#   var_name: L:oxy_press
-  -
-    type: var
-    var_name: L:PITCH_DAMPER
-# -
-#   type: var
-#   var_name: L:scheduled_egt
-# -
-#   type: var
-#   var_name: L:needle_tsi
-  -
-    type: var
-    var_name: L:sif_mode3_2nd_digit
-# -
-#   type: var
-#   var_name: L:needle_mach
-# -
-#   type: var
-#   var_name: L:oxy_quantity_needle
-  -
-    type: var
-    var_name: L:lights_beacon
-  -
-    type: var
-    var_name: L:KOHLSMAN_HG
-  -
-    type: var
-    var_name: L:external_store_selector
-  -
-    type: var
-    var_name: L:nav_lights
-  -
-    type: var
-    var_name: L:com1_KHz
-  -
-    type: var
-    var_name: L:apc_cutout_cover
-  -
-    type: var
-    var_name: L:AttSetInit2
-# -
-#   type: var
-#   var_name: L:ball_tsi
-# -
-#   type: var
-#   var_name: L:needle_kcas
+#   var_name: L:canopy_glasses_vis_tag
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
@@ -861,13 +867,11 @@ shared:
 #   var_name: L:bleed_air
   -
     type: var
+    var_name: L:pedal_fore_aft
+    unreliable: true
+  -
+    type: var
     var_name: L:flap_assy
-  -
-    type: var
-    var_name: L:front_pilot_head_anim
-  -
-    type: var
-    var_name: L:rear_pilot_head_anim
   -
     type: var
     var_name: L:fuel_shutoff_switch
@@ -877,12 +881,12 @@ shared:
   -
     type: var
     var_name: L:fuel_qty_cit_test
-  -
-    type: var
-    var_name: L:loc_drag_index
-  -
-    type: var
-    var_name: L:loc_total_di
+# -
+#   type: var
+#   var_name: L:loc_drag_index
+# -
+#   type: var
+#   var_name: L:loc_total_di
   -
     type: var
     var_name: L:cartridge_sound_pyl
@@ -892,33 +896,33 @@ shared:
   -
     type: var
     var_name: L:normal_gear_disabled
+  -
+    type: var
+    var_name: L:airbrake_extended
 # -
 #   type: var
 #   var_name: L:LKCAS
   -
     type: var
     var_name: L:fresh_air_scoop
-  -
-    type: var
-    var_name: L:EPUActive
-  -
-    type: var
-    var_name: L:throttle_stop
-  -
-    type: var
-    var_name: L:XMLVAR_air_hose
+# -
+#   type: var
+#   var_name: L:EPUActive
+# -
+#   type: var
+#   var_name: L:XMLVAR_air_hose
   -
     type: var
     var_name: L:flood_lights
+  -
+    type: var
+    var_name: L:torch_light
 # -
 #   type: var
 #   var_name: L:apc_derivative
-  -
-    type: var
-    var_name: L:L_shaker
 # -
 #   type: var
-#   var_name: L:altimeter_warning
+#   var_name: L:L_shaker
 # -
 #   type: var
 #   var_name: L:volt_meter_needle
@@ -963,16 +967,7 @@ shared:
     var_name: L:nav1_frequency_BCD
   -
     type: var
-    var_name: L:com1_drum_KHz
-  -
-    type: var
-    var_name: L:com1_drum_10KHz
-  -
-    type: var
-    var_name: L:com1_drum_MHz
-  -
-    type: var
-    var_name: L:com1_drum_10MHz
+    var_name: L:tacan_native
   -
     type: var
     var_name: L:com1_presel_drum
@@ -1000,12 +995,18 @@ shared:
   -
     type: var
     var_name: L:master_caution_reset
-  -
-    type: var
-    var_name: L:master_failures
+# -
+#   type: var
+#   var_name: L:master_failures
   -
     type: var
     var_name: L:iff_squack_switch
+  -
+    type: var
+    var_name: L:tablet_visible_rear
+  -
+    type: var
+    var_name: L:kneeboard_open_rear
   -
     type: var
     var_name: L:reticle_mode
@@ -1015,6 +1016,7 @@ shared:
   -
     type: var
     var_name: L:gse_set
+    cancel_h_events: true
   -
     type: var
     var_name: L:gunsight_enabled
