@@ -1,4 +1,4 @@
-# Version 0.2.13
+# Version 0.2.14
 
 include:
   - definitions/modules/Instruments/AS_G1000.yaml
@@ -96,15 +96,18 @@ shared:
     event_name: CABIN_LIGHTS_SET
     event_param: 7
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
     var_name: L:SunVisor_Right
   -
     type: var
     var_name: L:Handrest
   -
-    type: var
+    type: NumSet
     var_name: L:WT_SR22T_MIXTURE_LEVER_POS
+    var_units: Number
+    var_type: f64
+    event_name: MIXTURE1_SET
     unreliable: true
   -
     type: var
