@@ -1,5 +1,17 @@
 # YourControls Changelog
 
+## Version 2.8.3
+
+### Profiles
+
+- Updated: Bell 206B-3 JetRanger III by Cowan Simulation (v2.0.0).
+- Updated: Lockheed TF-104G Starfighter by Sim Skunk Works (v3.3.11).
+
+### Aircraft Fixes
+
+- B747/B787/Longitude - Spoiler lever now actually extends spoilers.
+- SR22T - Mixture lever now actually mixes.
+
 ## Version 2.8.2
 
 ### Profiles
