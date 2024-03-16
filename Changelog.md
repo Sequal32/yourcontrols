@@ -1,5 +1,23 @@
 # YourControls Changelog
 
+## Version 2.8.4
+
+### Profiles
+
+- Added: Airbus A330-900neo by LatinVFR (v1.0.4).
+- Added: Denarq mod of Carenado Beechcraft Model D18S (v1.4).
+- Added: Duckworks mod of Aeroplane Heaven Douglas DC-3 (v0.4.3).
+- Changed: Asobo PC-6 Porter renamed to Microsoft.
+- Removed: Boeing 247D by Wing42 (Abandonware).
+- Updated: Airbus H125 by Cowan Simulation (v2.0.0).
+- Updated: Bell 206L-3 LongRanger III by Cowan Simulation (v2.0.0).
+- Updated: Bell 222B by Cowan Simulation (v2.0.0).
+- Updated: Cessna 414AW Chancellor by Flysimware (v4.4.5).
+
+### Aircraft Fixes
+
+- G1000/G3000: Re-enabled flight director (update your TDS GTN750).
+
 ## Version 2.8.3
 
 ### Profiles
@@ -9,8 +27,8 @@
 
 ### Aircraft Fixes
 
-- B747/B787/Longitude - Spoiler lever now actually extends spoilers.
-- SR22T - Mixture lever now actually mixes.
+- B747/B787/Longitude: Spoiler lever now actually extends spoilers.
+- SR22T: Mixture lever now actually mixes.
 
 ## Version 2.8.2
 
@@ -26,7 +44,7 @@
 
 ### Aircraft Fixes
 
-- JF Arrow(s) - HDG bug workaround, since JustFlight has yet to fix simvar.
+- JF Arrow(s): HDG bug workaround, since JustFlight has yet to fix simvar.
 
 ## Version 2.8.1
 
@@ -40,7 +58,7 @@
 
 ### Aircraft Fixes
 
-- Asobo CJ4 - Throttle levers not going past first detent.
+- Asobo CJ4: Throttle levers not going past first detent.
 
 ## Version 2.8.0
 
