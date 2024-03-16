@@ -1,4 +1,4 @@
-# Version 1.0.1
+# Version 1.0.2
 
 include:
   - definitions/modules/Instruments/AS_GTN650.yaml
@@ -100,6 +100,111 @@ shared:
 
 # - # LVAR's (trimmed)
 #   type: var
+#   var_name: L:BB_CFG_ITT_BASE_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG1_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG1_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG2_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG2_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG3_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG3_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG4_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG4_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG5_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG5_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG6_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG6_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_SCALAR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_AMBTEMP_SCALAR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_AMBDENS_SCALAR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_AIRCOOLING_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_TORQUEBASE_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_TORQUE_STG1_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_TORQUE_STG2_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_TORQUE_STG3_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_RISE_ON_START_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_FALL_POST_START_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_FALL_ON_SHUTDOWN_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_NORMAL_START_PEAK_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_LOW_NG_PER_PCT_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_RISE_STARTER_ONLY_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_RISE_NORMAL_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_FALL_NORMAL_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_START_TARGET_NG_PCT
+# -
+#   type: var
+#   var_name: L:BB_CFG_START_MIXTURE_THRESHOLD_PCT
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_HOTSTART_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_HOTSTART_ENGINE_DAMAGE_TIMER_SEC
+  -
+    type: var
+    var_name: L:BB_CFG_ITT_HOTSTART_ENGINE_FAILURE_ENABLED
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
 #   var_name: L:530F_GunsActive
 # -
 #   type: var
@@ -128,6 +233,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:530F_RHFNFlashrotate
+# -
+#   type: var
+#   var_name: L:530F_IsMarketplace
 # -
 #   type: var
 #   var_name: L:530F_MuzzleFlash
@@ -164,7 +272,7 @@ shared:
   -
     type: var
     var_name: L:530F_ThrottleGrip
-    unreliable: true
+    interpolate: Default
   -
     type: var
     var_name: L:530F_RotorBrakeForceOn
@@ -216,6 +324,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:530F_ThrottleState
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:530F_EngOutWarn_ON
+# -
+#   type: var
+#   var_name: L:BB_OUT_ITT_TEMP
 
 server:
   -

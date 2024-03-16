@@ -1,0 +1,858 @@
+# Version 0.1.23
+
+include:
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/controls.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/transponder.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Fuel
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL VALVE:1
+    var_units: Enum
+    var_type: i32
+    event_name: SET_FUEL_VALVE_ENG1
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL VALVE:2
+    var_units: Enum
+    var_type: i32
+    event_name: SET_FUEL_VALVE_ENG2
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL VALVE:3
+    var_units: Enum
+    var_type: i32
+    event_name: SET_FUEL_VALVE_ENG3
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT NAV:2
+    var_units: Bool
+    var_type: f64
+    event_name: NAV_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:8
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 8
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:2
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 7
+    index_reversed: true
+
+# - # LVAR's (trimmed)
+#   type: var
+#   var_name: L:Ford_Prop1_Still_Viz
+# -
+#   type: var
+#   var_name: L:Ford_Prop1_Slow_Viz
+# -
+#   type: var
+#   var_name: L:Ford_Prop1_Blurred_Viz
+# -
+#   type: var
+#   var_name: L:Ford_Prop1_Rotatiom
+# -
+#   type: var
+#   var_name: L:Ford_PropDisplayStill
+# -
+#   type: var
+#   var_name: L:Ford_Prop1_Comb_Elap
+# -
+#   type: var
+#   var_name: L:Ford_PropDisplaySlow
+# -
+#   type: var
+#   var_name: L:Ford_PropDisplayBlurred
+# -
+#   type: var
+#   var_name: L:Ford_Prop2_Still_Viz
+# -
+#   type: var
+#   var_name: L:Ford_Prop2_Slow_Viz
+# -
+#   type: var
+#   var_name: L:Ford_Prop2_Blurred_Viz
+# -
+#   type: var
+#   var_name: L:Ford_Prop2_Rotatiom
+# -
+#   type: var
+#   var_name: L:Ford_Prop2_Comb_Elap
+# -
+#   type: var
+#   var_name: L:Ford_Prop3_Still_Viz
+# -
+#   type: var
+#   var_name: L:Ford_Prop3_Slow_Viz
+# -
+#   type: var
+#   var_name: L:Ford_Prop3_Blurred_Viz
+# -
+#   type: var
+#   var_name: L:Ford_Prop3_Rotatiom
+# -
+#   type: var
+#   var_name: L:Ford_Prop3_Comb_Elap
+# -
+#   type: var
+#   var_name: L:startereffect1_on
+# -
+#   type: var
+#   var_name: L:exhaust_l_count
+# -
+#   type: var
+#   var_name: L:startereffect2_on
+# -
+#   type: var
+#   var_name: L:exhaust_c_count
+# -
+#   type: var
+#   var_name: L:startereffect3_on
+# -
+#   type: var
+#   var_name: L:exhaust_r_count
+# -
+#   type: var
+#   var_name: L:slewused
+  -
+    type: var
+    var_name: L:Ford_Doormain_Switch
+  -
+    type: var
+    var_name: L:Ford_DoorLuggage_Switch
+  -
+    type: var
+    var_name: L:DOOR_Rear_handle
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:GET_STATE_EXTERNAL
+  -
+    type: var
+    var_name: L:LOCAL_VAR_TO_WATCH
+  -
+    type: var
+    var_name: L:SWITCH_vorswap
+  -
+    type: var
+    var_name: L:Ford_VoltAmp_Switch
+  -
+    type: var
+    var_name: L:Ford_Panel_Type_Sel
+  -
+    type: var
+    var_name: L:Ford_Panel_Type
+  -
+    type: var
+    var_name: L:Ford_AP_Heading_Knob
+    unreliable: true
+  -
+    type: var
+    var_name: L:Ford_AP_Heading
+    interpolate: Default
+  -
+    type: var
+    var_name: L:Ford_Sperry_Rudder_Heading
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:Ford_Magneto1_Select
+# -
+#   type: var
+#   var_name: L:Ford_Magneto2_Select
+# -
+#   type: var
+#   var_name: L:Ford_Magneto3_Select
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:Ford_MOUSEPOS_X
+# -
+#   type: var
+#   var_name: L:Ford_MOUSEPOS_Y
+# -
+#   type: var
+#   var_name: L:Ford_Brake_X
+# -
+#   type: var
+#   var_name: L:Ford_Brake_Y
+  -
+    type: var
+    var_name: L:Ford_Primer_Select
+  -
+    type: var
+    var_name: L:Ford_Primer_Unlocked
+  -
+    type: var
+    var_name: L:Ford_FuelSwitchLeft
+# -
+#   type: var
+#   var_name: L:Ford_FuelSelector_Left
+  -
+    type: var
+    var_name: L:Ford_FuelSwitchRight
+# -
+#   type: var
+#   var_name: L:Ford_FuelSelector_Right
+  -
+    type: var
+    var_name: L:Ford_FuelReserve_On
+  -
+    type: var
+    var_name: L:Ford_Fuel_Master_Off:2
+  -
+    type: var
+    var_name: L:Ford_Sperry_Power_Push
+  -
+    type: var
+    var_name: L:Ford_Sperry_Plane_Heading_Caged
+    unreliable: true
+  -
+    type: var
+    var_name: L:Ford_Sperry_Rudder_Heading_Knob
+    unreliable: true
+  -
+    type: var
+    var_name: L:Ford_Sperry_Aileron_Bank_Knob
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Aileron
+  -
+    type: var
+    var_name: L:Ford_Sperry_Elevator_Pitch_Knob
+    unreliable: true
+  -
+    type: var
+    var_name: L:Ford_Sperry_Attitude_Caged
+  -
+    type: var
+    var_name: L:Ford_Sperry_Plane_Miniature_Knob
+    unreliable: true
+  -
+    type: var
+    var_name: L:Ford_Sperry_Plane_Miniature
+    unreliable: true
+  -
+    type: var
+    var_name: L:Ford_Sperry_Lighting_Knob
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_ADF
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:Ford_COM1_Frequency
+# -
+#   type: var
+#   var_name: L:Ford_COM1_Fract
+# -
+#   type: var
+#   var_name: L:Ford_COM1_Frequency_Mhz
+# -
+#   type: var
+#   var_name: L:Ford_NAV1_Frequency
+# -
+#   type: var
+#   var_name: L:Ford_NAV1_Fract
+# -
+#   type: var
+#   var_name: L:Ford_NAV1_Frequency_Mhz
+# -
+#   type: var
+#   var_name: L:Ford_ADF_Freq_100
+  -
+    type: var
+    var_name: L:Ford_ADF_Freq_0
+# -
+#   type: var
+#   var_name: L:Ford_ADF_Freq_10
+# -
+#   type: var
+#   var_name: L:Ford_ADF_Freq_1
+# -
+#   type: var
+#   var_name: L:Ford_ADF_Frequency_Khz
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:Ford_Starter_Switch_Left
+  -
+    type: var
+    var_name: L:Ford_Starter_Switch_Center
+  -
+    type: var
+    var_name: L:Ford_Starter_Switch_Right
+  -
+    type: var
+    var_name: L:Ford_Starter_Solenoid_Left
+    unreliable: true
+  -
+    type: var
+    var_name: L:Ford_Starter_Custom_Left
+  -
+    type: var
+    var_name: L:Ford_Starter_Solenoid_Center
+    unreliable: true
+  -
+    type: var
+    var_name: L:Ford_Starter_Custom_Center
+  -
+    type: var
+    var_name: L:Ford_Starter_Solenoid_Right
+    unreliable: true
+  -
+    type: var
+    var_name: L:Ford_Starter_Custom_Right
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:Ford_Primer_Pump
+# -
+#   type: var
+#   var_name: L:Ford_Primer_Sound
+  -
+    type: var
+    var_name: L:Ford_Primer1_Count
+  -
+    type: var
+    var_name: L:Ford_Primer2_Count
+  -
+    type: var
+    var_name: L:Ford_Primer3_Count
+  -
+    type: var
+    var_name: L:Ford_Pilot_Sliding_Window
+  -
+    type: var
+    var_name: L:Ford_Copilot_Sliding_Window
+  -
+    type: var
+    var_name: L:SWITCH_Battery
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp1
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp1_BaseEngOut
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp2
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp2_BaseEngOut
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp3
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp3_BaseEngOut
+# -
+#   type: var
+#   var_name: L:Ford_Panel_Type_Prev
+  -
+    type: var
+    var_name: L:Ford_Init
+# -
+#   type: var
+#   var_name: L:Ford_RandFact1
+# -
+#   type: var
+#   var_name: L:Ford_Rand1
+# -
+#   type: var
+#   var_name: L:Ford_RandFact2
+# -
+#   type: var
+#   var_name: L:Ford_Rand2
+# -
+#   type: var
+#   var_name: L:Ford_RandFact3
+# -
+#   type: var
+#   var_name: L:Ford_Rand3
+# -
+#   type: var
+#   var_name: L:Ford_RpmNeedleVib
+# -
+#   type: var
+#   var_name: L:Ford_Rpm1_Needle
+# -
+#   type: var
+#   var_name: L:Ford_Rpm2_Needle
+# -
+#   type: var
+#   var_name: L:Ford_Rpm3_Needle
+# -
+#   type: var
+#   var_name: L:Ford_OilPressNeedleVib
+# -
+#   type: var
+#   var_name: L:Ford_OilPress1_Needle
+# -
+#   type: var
+#   var_name: L:Ford_OilPress2_Needle
+# -
+#   type: var
+#   var_name: L:Ford_OilPress3_Needle
+# -
+#   type: var
+#   var_name: L:Ford_RandTime
+# -
+#   type: var
+#   var_name: L:Ford_VoltAmp_Amp_Needle
+# -
+#   type: var
+#   var_name: L:Ford_VoltAmp_Volt_Needle
+# -
+#   type: var
+#   var_name: L:Ford_Panel_Type_Count
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Elev_Trim
+# -
+#   type: var
+#   var_name: L:modern_HSI_flag_NAV
+# -
+#   type: var
+#   var_name: L:modern_HSI_flag_GS
+# -
+#   type: var
+#   var_name: L:modern_HSI_flag_hdg
+  -
+    type: var
+    var_name: L:Ford_Magneto1_Test_Manual
+# -
+#   type: var
+#   var_name: L:Ford_Magneto1_pos
+  -
+    type: var
+    var_name: L:Ford_Magneto1_Ok
+  -
+    type: var
+    var_name: L:Ford_Magneto2_Test_Manual
+# -
+#   type: var
+#   var_name: L:Ford_Magneto2_pos
+  -
+    type: var
+    var_name: L:Ford_Magneto2_Ok
+  -
+    type: var
+    var_name: L:Ford_Magneto3_Test_Manual
+# -
+#   type: var
+#   var_name: L:Ford_Magneto3_pos
+  -
+    type: var
+    var_name: L:Ford_Magneto3_Ok
+  -
+    type: var
+    var_name: L:Ford_Magneto1_Test_Auto
+# -
+#   type: var
+#   var_name: L:Ford_Magneto1_Secs
+  -
+    type: var
+    var_name: L:Ford_Magneto2_Test_Auto
+# -
+#   type: var
+#   var_name: L:Ford_Magneto2_Secs
+  -
+    type: var
+    var_name: L:Ford_Magneto3_Test_Auto
+# -
+#   type: var
+#   var_name: L:Ford_Magneto3_Secs
+# -
+#   type: var
+#   var_name: L:Ford_Starter_Left_Timer
+# -
+#   type: var
+#   var_name: L:Ford_Starter_Left_Ready
+# -
+#   type: var
+#   var_name: L:Ford_Starter_Left_PowerAvail
+# -
+#   type: var
+#   var_name: L:Ford_Elapsed
+  -
+    type: var
+    var_name: L:Ford_Starter1_CombOnOff
+# -
+#   type: var
+#   var_name: L:Ford_Starter1_Elapsed
+  -
+    type: var
+    var_name: L:Ford_Primer1_Base
+  -
+    type: var
+    var_name: L:Ford_Primer1_Over
+# -
+#   type: var
+#   var_name: L:Ford_Starter1_CombSecs
+# -
+#   type: var
+#   var_name: L:Ford_Starter1_NoCombSecs
+# -
+#   type: var
+#   var_name: L:Ford_Starter_Center_Timer
+# -
+#   type: var
+#   var_name: L:Ford_Starter_Center_Ready
+# -
+#   type: var
+#   var_name: L:Ford_Starter_Center_PowerAvail
+  -
+    type: var
+    var_name: L:Ford_Starter2_CombOnOff
+# -
+#   type: var
+#   var_name: L:Ford_Starter2_Elapsed
+  -
+    type: var
+    var_name: L:Ford_Primer2_Base
+  -
+    type: var
+    var_name: L:Ford_Primer2_Over
+# -
+#   type: var
+#   var_name: L:Ford_Starter2_CombSecs
+# -
+#   type: var
+#   var_name: L:Ford_Starter2_NoCombSecs
+# -
+#   type: var
+#   var_name: L:Ford_Starter_Right_Timer
+# -
+#   type: var
+#   var_name: L:Ford_Starter_Right_Ready
+# -
+#   type: var
+#   var_name: L:Ford_Starter_Right_PowerAvail
+  -
+    type: var
+    var_name: L:Ford_Starter3_CombOnOff
+# -
+#   type: var
+#   var_name: L:Ford_Starter3_Elapsed
+  -
+    type: var
+    var_name: L:Ford_Primer3_Base
+  -
+    type: var
+    var_name: L:Ford_Primer3_Over
+# -
+#   type: var
+#   var_name: L:Ford_Starter3_CombSecs
+# -
+#   type: var
+#   var_name: L:Ford_Starter3_NoCombSecs
+# -
+#   type: var
+#   var_name: L:Ford_Fuel_Config1
+# -
+#   type: var
+#   var_name: L:Ford_Fuel_Config2
+# -
+#   type: var
+#   var_name: L:Ford_Fuel_Config3
+# -
+#   type: var
+#   var_name: L:Ford_Fuel1Cut_Secs
+# -
+#   type: var
+#   var_name: L:Ford_Fuel2Cut_Secs
+# -
+#   type: var
+#   var_name: L:Ford_Fuel3Cut_Secs
+# -
+#   type: var
+#   var_name: L:Ford_FuelUpdate1
+# -
+#   type: var
+#   var_name: L:Ford_FuelUpdate2
+# -
+#   type: var
+#   var_name: L:Ford_FuelUpdate3
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp1_Rise
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp2_Rise
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp3_Rise
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp_SATTTemp
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp1_Conv
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp2_Conv
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp3_Conv
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp1_TempReached
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp1_CoolTime
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp2_TempReached
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp2_CoolTime
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp3_TempReached
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp3_CoolTime
+# -
+#   type: var
+#   var_name: L:Ford_OilTempNeedleVib
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp1_Needle
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp2_Needle
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp3_Needle
+# -
+#   type: var
+#   var_name: L:Ford_OilTemp2_Needle_Modern
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Attitude_Pitch
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Attitude_Bank
+  -
+    type: var
+    var_name: L:Ford_AP_Master
+  - # Not settable
+    type: var
+    var_name: L:Ford_Sperry_Elevator_Follow_Up
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Rudder_Heading_LockDir
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Rudder_Heading_Gyro
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Rudder_Delta_Heading
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Rudder_DiffAngle
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Rudder_Turn
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Rudder_Trim
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Rudder_Heading_Prev
+# -
+#   type: var
+#   var_name: L:Ford_Sperry_Rudder_TrackAngle
+# -
+#   type: var
+#   var_name: L:Ford_AP_Heading_DiffAngle
+# -
+#   type: var
+#   var_name: L:Ford_AP_Heading_TrackAngle
+# -
+#   type: var
+#   var_name: L:Ford_FuelNeedleVib
+# -
+#   type: var
+#   var_name: L:Ford_FuelNeedleFactor
+# -
+#   type: var
+#   var_name: L:Ford_Fuel_Tank_Left_Main_Quantity
+# -
+#   type: var
+#   var_name: L:Ford_Fuel_Tank_Right_Main_Quantity
+# -
+#   type: var
+#   var_name: L:Ford_Fuel_Tank_Center_Quantity
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

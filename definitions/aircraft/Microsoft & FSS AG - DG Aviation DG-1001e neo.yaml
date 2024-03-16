@@ -14,15 +14,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Ballast
-    type: ToggleSwitch
-    var_name: A:WATER BALLAST VALVE:3
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_WATER_BALLAST_VALVE
-    event_param: 3
-    use_calculator: true
-
   - # Canopy
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:0
@@ -235,6 +226,7 @@ shared:
     type: var
     var_name: L:FSS_EXX_EFB_GV_BRIGHTNESS
     cancel_h_events: true
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:FES_FCU_LIGHT_ALARM

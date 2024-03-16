@@ -499,8 +499,9 @@ shared:
     type: NumSet
     var_name: A:TRANSPONDER CODE:1
     var_units: Bco16
-    var_type: f64
+    var_type: i32
     event_name: XPNDR_SET
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:TRANSPONDER IDENT:1
@@ -508,6 +509,7 @@ shared:
     var_type: bool
     event_name: XPNDR_IDENT_ON
     off_event_name: XPNDR_IDENT_OFF
+    event_param: 1
 
   - # Lights
     type: NumSet
@@ -2264,12 +2266,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COCKPIT_COFFEE_R_HIDDEN
-  -
-    type: var
-    var_name: L:A32NX_MCDU_L_BRIGHTNESS
-  -
-    type: var
-    var_name: L:A32NX_MCDU_R_BRIGHTNESS
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_L_BRIGHTNESS
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_R_BRIGHTNESS
   -
     type: NumSet
     var_name: L:A32NX_SPOILERS_ARMED
@@ -2423,54 +2425,54 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_EFB_BRIGHTNESS
-  -
-    type: var
-    var_name: L:A32NX_MCDU_L_ANNUNC_FAIL
-  -
-    type: var
-    var_name: L:A32NX_MCDU_L_ANNUNC_FMGC
-  -
-    type: var
-    var_name: L:A32NX_MCDU_L_ANNUNC_MCDU_MENU
-  -
-    type: var
-    var_name: L:A32NX_MCDU_L_ANNUNC_FM1
-  -
-    type: var
-    var_name: L:A32NX_MCDU_L_ANNUNC_IND
-  -
-    type: var
-    var_name: L:A32NX_MCDU_L_ANNUNC_RDY
-  -
-    type: var
-    var_name: L:A32NX_MCDU_L_ANNUNC_BLANK
-  -
-    type: var
-    var_name: L:A32NX_MCDU_L_ANNUNC_FM2
-  -
-    type: var
-    var_name: L:A32NX_MCDU_R_ANNUNC_FAIL
-  -
-    type: var
-    var_name: L:A32NX_MCDU_R_ANNUNC_FMGC
-  -
-    type: var
-    var_name: L:A32NX_MCDU_R_ANNUNC_MCDU_MENU
-  -
-    type: var
-    var_name: L:A32NX_MCDU_R_ANNUNC_FM1
-  -
-    type: var
-    var_name: L:A32NX_MCDU_R_ANNUNC_IND
-  -
-    type: var
-    var_name: L:A32NX_MCDU_R_ANNUNC_RDY
-  -
-    type: var
-    var_name: L:A32NX_MCDU_R_ANNUNC_BLANK
-  -
-    type: var
-    var_name: L:A32NX_MCDU_R_ANNUNC_FM2
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_L_ANNUNC_FAIL
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_L_ANNUNC_FMGC
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_L_ANNUNC_MCDU_MENU
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_L_ANNUNC_FM1
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_L_ANNUNC_IND
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_L_ANNUNC_RDY
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_L_ANNUNC_BLANK
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_L_ANNUNC_FM2
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_R_ANNUNC_FAIL
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_R_ANNUNC_FMGC
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_R_ANNUNC_MCDU_MENU
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_R_ANNUNC_FM1
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_R_ANNUNC_IND
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_R_ANNUNC_RDY
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_R_ANNUNC_BLANK
+# -
+#   type: var
+#   var_name: L:A32NX_MCDU_R_ANNUNC_FM2
 # -
 #   type: var
 #   var_name: L:A32NX_GPWS_Warning_Active
@@ -6441,6 +6443,150 @@ ignore:
   - A320_Neo_ATC_BTN_6
   - A320_Neo_ATC_BTN_7
   - A320_Neo_ATC_BTN_CLR
+
+  - A320_Neo_CDU_1_BTN_L1
+  - A320_Neo_CDU_1_BTN_L2
+  - A320_Neo_CDU_1_BTN_L3
+  - A320_Neo_CDU_1_BTN_L4
+  - A320_Neo_CDU_1_BTN_L5
+  - A320_Neo_CDU_1_BTN_L6
+  - A320_Neo_CDU_1_BTN_R1
+  - A320_Neo_CDU_1_BTN_R2
+  - A320_Neo_CDU_1_BTN_R3
+  - A320_Neo_CDU_1_BTN_R4
+  - A320_Neo_CDU_1_BTN_R5
+  - A320_Neo_CDU_1_BTN_R6
+  - A320_Neo_CDU_1_BTN_0
+  - A320_Neo_CDU_1_BTN_1
+  - A320_Neo_CDU_1_BTN_2
+  - A320_Neo_CDU_1_BTN_3
+  - A320_Neo_CDU_1_BTN_4
+  - A320_Neo_CDU_1_BTN_5
+  - A320_Neo_CDU_1_BTN_6
+  - A320_Neo_CDU_1_BTN_7
+  - A320_Neo_CDU_1_BTN_8
+  - A320_Neo_CDU_1_BTN_9
+  - A320_Neo_CDU_1_BTN_DOT
+  - A320_Neo_CDU_1_BTN_PLUSMINUS
+  - A320_Neo_CDU_1_BTN_A
+  - A320_Neo_CDU_1_BTN_B
+  - A320_Neo_CDU_1_BTN_C
+  - A320_Neo_CDU_1_BTN_D
+  - A320_Neo_CDU_1_BTN_E
+  - A320_Neo_CDU_1_BTN_F
+  - A320_Neo_CDU_1_BTN_G
+  - A320_Neo_CDU_1_BTN_H
+  - A320_Neo_CDU_1_BTN_I
+  - A320_Neo_CDU_1_BTN_J
+  - A320_Neo_CDU_1_BTN_K
+  - A320_Neo_CDU_1_BTN_L
+  - A320_Neo_CDU_1_BTN_M
+  - A320_Neo_CDU_1_BTN_N
+  - A320_Neo_CDU_1_BTN_O
+  - A320_Neo_CDU_1_BTN_P
+  - A320_Neo_CDU_1_BTN_Q
+  - A320_Neo_CDU_1_BTN_R
+  - A320_Neo_CDU_1_BTN_S
+  - A320_Neo_CDU_1_BTN_T
+  - A320_Neo_CDU_1_BTN_U
+  - A320_Neo_CDU_1_BTN_V
+  - A320_Neo_CDU_1_BTN_W
+  - A320_Neo_CDU_1_BTN_X
+  - A320_Neo_CDU_1_BTN_Y
+  - A320_Neo_CDU_1_BTN_Z
+  - A320_Neo_CDU_1_BTN_DIV
+  - A320_Neo_CDU_1_BTN_SP
+  - A320_Neo_CDU_1_BTN_OVFY
+  - A320_Neo_CDU_1_BTN_CLR
+  - A320_Neo_CDU_1_BTN_CLR_Held
+  - A320_Neo_CDU_1_BTN_DIR
+  - A320_Neo_CDU_1_BTN_PROG
+  - A320_Neo_CDU_1_BTN_PERF
+  - A320_Neo_CDU_1_BTN_INIT
+  - A320_Neo_CDU_1_BTN_DATA
+  - A320_Neo_CDU_1_BTN_FPLN
+  - A320_Neo_CDU_1_BTN_RAD
+  - A320_Neo_CDU_1_BTN_FUEL
+  - A320_Neo_CDU_1_BTN_SEC
+  - A320_Neo_CDU_1_BTN_ATC
+  - A320_Neo_CDU_1_BTN_MENU
+  - A320_Neo_CDU_1_BTN_AIRPORT
+  - A320_Neo_CDU_1_BTN_PREVPAGE
+  - A320_Neo_CDU_1_BTN_UP
+  - A320_Neo_CDU_1_BTN_NEXTPAGE
+  - A320_Neo_CDU_1_BTN_DOWN
+
+  - A320_Neo_CDU_2_BTN_L1
+  - A320_Neo_CDU_2_BTN_L2
+  - A320_Neo_CDU_2_BTN_L3
+  - A320_Neo_CDU_2_BTN_L4
+  - A320_Neo_CDU_2_BTN_L5
+  - A320_Neo_CDU_2_BTN_L6
+  - A320_Neo_CDU_2_BTN_R1
+  - A320_Neo_CDU_2_BTN_R2
+  - A320_Neo_CDU_2_BTN_R3
+  - A320_Neo_CDU_2_BTN_R4
+  - A320_Neo_CDU_2_BTN_R5
+  - A320_Neo_CDU_2_BTN_R6
+  - A320_Neo_CDU_2_BTN_0
+  - A320_Neo_CDU_2_BTN_1
+  - A320_Neo_CDU_2_BTN_2
+  - A320_Neo_CDU_2_BTN_3
+  - A320_Neo_CDU_2_BTN_4
+  - A320_Neo_CDU_2_BTN_5
+  - A320_Neo_CDU_2_BTN_6
+  - A320_Neo_CDU_2_BTN_7
+  - A320_Neo_CDU_2_BTN_8
+  - A320_Neo_CDU_2_BTN_9
+  - A320_Neo_CDU_2_BTN_DOT
+  - A320_Neo_CDU_2_BTN_PLUSMINUS
+  - A320_Neo_CDU_2_BTN_A
+  - A320_Neo_CDU_2_BTN_B
+  - A320_Neo_CDU_2_BTN_C
+  - A320_Neo_CDU_2_BTN_D
+  - A320_Neo_CDU_2_BTN_E
+  - A320_Neo_CDU_2_BTN_F
+  - A320_Neo_CDU_2_BTN_G
+  - A320_Neo_CDU_2_BTN_H
+  - A320_Neo_CDU_2_BTN_I
+  - A320_Neo_CDU_2_BTN_J
+  - A320_Neo_CDU_2_BTN_K
+  - A320_Neo_CDU_2_BTN_L
+  - A320_Neo_CDU_2_BTN_M
+  - A320_Neo_CDU_2_BTN_N
+  - A320_Neo_CDU_2_BTN_O
+  - A320_Neo_CDU_2_BTN_P
+  - A320_Neo_CDU_2_BTN_Q
+  - A320_Neo_CDU_2_BTN_R
+  - A320_Neo_CDU_2_BTN_S
+  - A320_Neo_CDU_2_BTN_T
+  - A320_Neo_CDU_2_BTN_U
+  - A320_Neo_CDU_2_BTN_V
+  - A320_Neo_CDU_2_BTN_W
+  - A320_Neo_CDU_2_BTN_X
+  - A320_Neo_CDU_2_BTN_Y
+  - A320_Neo_CDU_2_BTN_Z
+  - A320_Neo_CDU_2_BTN_DIV
+  - A320_Neo_CDU_2_BTN_SP
+  - A320_Neo_CDU_2_BTN_OVFY
+  - A320_Neo_CDU_2_BTN_CLR
+  - A320_Neo_CDU_2_BTN_CLR_Held
+  - A320_Neo_CDU_2_BTN_DIR
+  - A320_Neo_CDU_2_BTN_PROG
+  - A320_Neo_CDU_2_BTN_PERF
+  - A320_Neo_CDU_2_BTN_INIT
+  - A320_Neo_CDU_2_BTN_DATA
+  - A320_Neo_CDU_2_BTN_FPLN
+  - A320_Neo_CDU_2_BTN_RAD
+  - A320_Neo_CDU_2_BTN_FUEL
+  - A320_Neo_CDU_2_BTN_SEC
+  - A320_Neo_CDU_2_BTN_ATC
+  - A320_Neo_CDU_2_BTN_MENU
+  - A320_Neo_CDU_2_BTN_AIRPORT
+  - A320_Neo_CDU_2_BTN_PREVPAGE
+  - A320_Neo_CDU_2_BTN_UP
+  - A320_Neo_CDU_2_BTN_NEXTPAGE
+  - A320_Neo_CDU_2_BTN_DOWN
 
 # EFB mouse
   - EB_EVENTS

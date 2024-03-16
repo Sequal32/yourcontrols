@@ -204,35 +204,6 @@ shared:
     event_param: 4
     index_reversed: true
 
-  - # Deice
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:1
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:2
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:3
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 3
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:4
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 4
-
   - # Engines
     type: NumSet
     var_name: A:GENERAL ENG STARTER:1
@@ -518,6 +489,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 11
+    cancel_h_events: true
   - # FWD R Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:11
@@ -525,6 +497,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 12
+    cancel_h_events: true
   - # AFT R Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:1
@@ -532,6 +505,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
+    cancel_h_events: true
   - # FWD R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:12
@@ -539,6 +513,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 13
+    cancel_h_events: true
   - # AFT R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:13
@@ -546,6 +521,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 14
+    cancel_h_events: true
   - # GPU Truck
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:15
@@ -1499,8 +1475,11 @@ shared:
 #   type: var
 #   var_name: L:XMLVAR_ThrottlePosition_4
   -
-    type: var
+    type: NumSet
     var_name: L:WT_SPEEDBRAKE_LEVER_POS
+    var_units: Number
+    var_type: f64
+    event_name: SPOILERS_SET
     unreliable: true
 # -
 #   type: var
@@ -2297,7 +2276,7 @@ ignore:
 
   - B747_8_PFD_Mins_INC
   - B747_8_PFD_Mins_DEC
-
+# Throttle Scroll
   - WT_B78_Throttle_1_Inc
   - WT_B78_Throttle_1_Dec
   - WT_B78_Throttle_2_Inc

@@ -19,14 +19,14 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
@@ -736,3 +736,10 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+# XPNDR Box
+  - WTG3000_GTC_1#-1082943814
+  - WTG3000_GTC_1#-1083241709
+  - WTG3000_GTC_2#-1082943814
+  - WTG3000_GTC_2#-1083241709

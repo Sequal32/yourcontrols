@@ -1,12 +1,11 @@
 # Version 2.0.6
 
 include:
-  - definitions/modules/Instruments/AS_KT76C.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/Instruments/AS_KAP140.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/Instruments/TDS_GTNXi.yaml
-  - definitions/modules/autopilot.yaml
   - definitions/modules/controls.yaml
-  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
@@ -70,6 +69,28 @@ shared:
     type: CustomCalculator
     get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:17, Bool)
     set: 17 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Deice
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+
+  - # EGT Bug
+    type: NumSet
+    var_name: A:ENG EXHAUST GAS TEMPERATURE GES:1
+    var_units: Percent scaler 32k
+    var_type: i32
+    event_name: EGT1_SET
 
   - # Lights
     type: NumSet
@@ -183,338 +204,147 @@ shared:
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
-# -
-#   type: var
-#   var_name: L:XMLVAR_FUEL_FLOW_TARGET
-# -
-#   type: var
-#   var_name: L:XMLVAR_PUMPED_FUEL
-# -
-#   type: var
-#   var_name: L:XMLVAR_Engine_Condition
-# -
-#   type: var
-#   var_name: L:XMLVAR_Fuel_Evaporating
-  -
-    type: var
-    var_name: L:XMLVAR_C152X_CANOPY_OPEN
-  -
-    type: var
-    var_name: L:XMLVAR_C152X_PLAYSSONOFF
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_CDI_KNOB_COURSE_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_CDI_KNOB_COURSE_2
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_KNOB_HEADING_2
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_ADF_Knob_1
-  -
-    type: var
-    var_name: L:XMLVAR_C152X_INIT_XPNDR_STATE
-  -
-    type: var
-    var_name: L:C152X_XPNDR_KNOB
-# -
-#   type: var
-#   var_name: L:startflight_oil_temp
-# -
-#   type: var
-#   var_name: L:C152X_SUMP_OIL_TEMPERATURE
-  -
-    type: var
-    var_name: L:C152X_APVIZ
-# -
-#   type: var
-#   var_name: L:152X_E_Starter_Temperature
-# -
-#   type: var
-#   var_name: L:GTN750_INT_HIDDEN
-  -
-    type: var
-    var_name: L:C152X_XPNDR
-# -
-#   type: var
-#   var_name: L:C152X_PITOT_TIME
-# -
-#   type: var
-#   var_name: L:C152X_STATIC_PORT_BLOCKAGE
-# -
-#   type: var
-#   var_name: L:STARTER1_RES
-# -
-#   type: var
-#   var_name: L:STARTER2_RES
-# -
-#   type: var
-#   var_name: L:152X_E_Battery_Relay_Control
-# -
-#   type: var
-#   var_name: L:152X_E_Battery_Relay_Contact_State
-# -
-#   type: var
-#   var_name: L:152X_E_Alternator_Relay_Control
-# -
-#   type: var
-#   var_name: L:152X_E_Alternator_Relay_Contact_State
-  -
-    type: var
-    var_name: L:C152X_MAINTENANCE_ON
-# -
-#   type: var
-#   var_name: L:C152X_FOULING_TIME
-  -
-    type: var
-    var_name: L:C152X_Fouling
-  -
-    type: var
-    var_name: L:RANDMAG
-# -
-#   type: var
-#   var_name: L:C152X_FOULING_TIME2
-# -
-#   type: var
-#   var_name: L:C152X_OILREM
-# -
-#   type: var
-#   var_name: L:NO_OIL_COUNTDOWN
-# -
-#   type: var
-#   var_name: L:C152X_MAINTENANCE_TIME
-# -
-#   type: var
-#   var_name: L:C152X_bitresult
-  -
-    type: var
-    var_name: L:C152X_GTN750
-  -
-    type: var
-    var_name: L:C152X_ADF
-  -
-    type: var
-    var_name: L:C152X_DMEVIZ
-  -
-    type: var
-    var_name: L:C152X_EGT
   -
     type: var
     var_name: L:C152X_WA_duck
   -
     type: var
     var_name: L:C152X_CHOCKSL
+    cancel_h_events: true
   -
     type: var
     var_name: L:C152X_CHOCKSR
+    cancel_h_events: true
   -
     type: var
     var_name: L:C152X_ENG_COVER
+    cancel_h_events: true
   -
     type: var
     var_name: L:C152X_PITOT_COVER
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:XMLVAR_Magneto_Starter_IsHeld
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden1
-# -
-#   type: var
-#   var_name: L:ENG FUEL VALVE:1
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden2
-# -
-#   type: var
 #   var_name: L:HANDLING_ElevatorTrim
 # -
 #   type: var
-#   var_name: L:ParkingBrake_Position
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_Autopilot_1
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_Heading_1
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_Navigation_1
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_Approach_1
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_BackCourse_1
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_Altitude_1
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_VerticalSpeed_Up_1
+#   var_name: L:AUTOPILOT_Push_Autopilot_1
 # -
 #   type: var
-#   var_name: L:KAP140_ButtonUpPress
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_VerticalSpeed_Down_1
+#   var_name: L:AUTOPILOT_Push_Heading_1
 # -
 #   type: var
-#   var_name: L:KAP140_ButtonDnPress
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_FlightLevelChange_1
+#   var_name: L:AUTOPILOT_Push_Navigation_1
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_Push_Approach_1
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_Push_BackCourse_1
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_Push_Altitude_1
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_Push_FlightLevelChange_1
 # -
 #   type: var
 #   var_name: L:KAP140_ButtonBaroPress
-  -
-    type: var
-    var_name: L:AUTOPILOT_Push_VerticalSpeed_1
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_Push_VerticalSpeed_1
 # -
 #   type: var
 #   var_name: L:KAP140_Inner_Knob
 # -
 #   type: var
 #   var_name: L:KAP140_Outer_Knob
+  -
+    type: var
+    var_name: L:C152X_XPNDR_KNOB
 # -
 #   type: var
-#   var_name: L:AutopilotPreflightShowEverything
+#   var_name: L:ADF_Push_ADF_1
 # -
 #   type: var
-#   var_name: L:AutopilotPreflightCheckCompleted
-  -
-    type: var
-    var_name: L:ADF_Push_ADF_1
-  -
-    type: var
-    var_name: L:ADF_Push_BFO_1
-  -
-    type: var
-    var_name: L:ADF_Push_FRQ_1
-  -
-    type: var
-    var_name: L:ADF_Push_FLT_1
-  -
-    type: var
-    var_name: L:ADF_Push_SetReset_1
-  -
-    type: var
-    var_name: L:adfButtonDown
+#   var_name: L:ADF_Push_BFO_1
+# -
+#   type: var
+#   var_name: L:ADF_Push_FRQ_1
+# -
+#   type: var
+#   var_name: L:ADF_Push_FLT_1
+# -
+#   type: var
+#   var_name: L:ADF_Push_SetReset_1
 # -
 #   type: var
 #   var_name: L:ADF_LARGE_KNOB
 # -
 #   type: var
-#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
-# -
-#   type: var
 #   var_name: L:ADF_SMALL_KNOB
 # -
 #   type: var
-#   var_name: L:XMLVAR_ADF_Mode
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+  -
+    type: var
+    var_name: L:INSTRUMENT_ADF_Knob_1
+    unreliable: true
 # -
 #   type: var
-#   var_name: L:XMLVAR_RADAR_PING
-# -
-#   type: var
-#   var_name: L:XMLVAR_HEADING_DEGREES
+#   var_name: L:XMLVAR_ADF_CARD_ADJUST
   -
     type: var
     var_name: L:XMLVAR_ADF_CARD_VARIANCE
+    interpolate: Default
 # -
 #   type: var
-#   var_name: L:XMLVAR_ADF_CARD_POSITION
+#   var_name: L:INSTRUMENT_Knob_Heading_2
 # -
 #   type: var
-#   var_name: L:XMLVAR_ADF_NEEDLE_POSITION
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_MODE_SEL
-  -
-    type: var
-    var_name: L:XMLVAR_ADF_CARD_ADJUST
+#   var_name: L:INSTRUMENT_CDI_Knob_Course_1
 # -
 #   type: var
-#   var_name: L:C152X_IAS
-# -
-#   type: var
-#   var_name: L:XMLVAR_ATTITUDE_PITCH_DEGREES
-# -
-#   type: var
-#   var_name: L:RANDPITCH
-# -
-#   type: var
-#   var_name: L:XMLVAR_ATTITUDE_BANK_DEGREES
-# -
-#   type: var
-#   var_name: L:RANDBANK
-# -
-#   type: var
-#   var_name: L:XMLVAR_Hours_Delta
-# -
-#   type: var
-#   var_name: L:XMLVAR_Minutes_Delta
-# -
-#   type: var
-#   var_name: L:C152X_ALTITUDE
-# -
-#   type: var
-#   var_name: L:XMLVAR_WHISKEY_COMPASS
-# -
-#   type: var
-#   var_name: L:C152X_AMMETER_CURRENT
-  -
-    type: var
-    var_name: L:XMLVAR_CABIN_HEAT_1_POSITION
-    unreliable: true
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Air_1_Position
-    unreliable: true
+#   var_name: L:INSTRUMENT_CDI_Knob_Course_2
 # -
 #   type: var
 #   var_name: L:COM_Knob_MHz_1_1
-  -
-    type: var
-    var_name: L:XMLVAR_COM1_MODE_SPACING
 # -
 #   type: var
 #   var_name: L:COM_Knob_KHz_1
   -
     type: var
-    var_name: L:XMLVAR_COM2_MODE_SPACING
+    var_name: L:XMLVAR_COM1_MODE_SPACING
 # -
 #   type: var
 #   var_name: L:NAV_Knob_MHz_1_1
-  -
-    type: var
-    var_name: L:XMLVAR_NAV1_MODE_SPACING
 # -
 #   type: var
 #   var_name: L:NAV_Knob_KHz_1
+  -
+    type: var
+    var_name: L:XMLVAR_NAV1_MODE_SPACING
 # -
 #   type: var
 #   var_name: L:COM_Knob_MHz_2_2
 # -
 #   type: var
 #   var_name: L:COM_Knob_KHz_2
+  -
+    type: var
+    var_name: L:XMLVAR_COM2_MODE_SPACING
 # -
 #   type: var
 #   var_name: L:NAV_Knob_MHz_2_2
-  -
-    type: var
-    var_name: L:XMLVAR_NAV2_MODE_SPACING
 # -
 #   type: var
 #   var_name: L:NAV_Knob_KHz_2
+  -
+    type: var
+    var_name: L:XMLVAR_NAV2_MODE_SPACING
 # -
 #   type: var
 #   var_name: L:COM_Knob_MHz_3_3
@@ -529,13 +359,7 @@ shared:
 #   var_name: L:NAV_Knob_KHz_3
   -
     type: var
-    var_name: L:XMLVAR_AUDIO_EXT_SEL
-  -
-    type: var
     var_name: L:C152X_DME_POWER
-  -
-    type: var
-    var_name: L:C152X_TABLET
   -
     type: var
     var_name: L:C152X_Intercom
@@ -544,10 +368,11 @@ shared:
     var_name: L:C152X_MARKER_TEST
   -
     type: var
-    var_name: L:C152X_PilotsState
+    var_name: L:C152X_TABLET
   -
     type: var
-    var_name: L:C152X_CoPilotsState
+    var_name: L:C152X_PILOTsState
+    cancel_h_events: true
   -
     type: var
     var_name: L:C152X_PILOT_SEAT
@@ -555,6 +380,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:PILOT_window_Interacting
+  -
+    type: var
+    var_name: L:C152X_COPILOTsState
+    cancel_h_events: true
   -
     type: var
     var_name: L:C152X_COPILOT_SEAT
@@ -570,10 +399,31 @@ shared:
 #   var_name: L:DEICE_Pitot_1
 # -
 #   type: var
+#   var_name: L:XMLVAR_PUMPED_FUEL
+# -
+#   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Mode
+# -
+#   type: var
+#   var_name: L:XMLVAR_Hours_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_Minutes_Delta
 # -
 #   type: var
 #   var_name: L:INSTRUMENT_Altimeter_1
@@ -606,10 +456,197 @@ shared:
 #   var_name: L:LIGHTING_CABIN_1
   -
     type: var
-    var_name: L:KAP140_RightBlockMode
+    var_name: L:XMLVAR_Cabin_Air_1_Position
+    unreliable: true
   -
     type: var
-    var_name: L:KR87_RightDisplayMode
+    var_name: L:XMLVAR_Cabin_Heat_1_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_AUDIO_EXT_SEL
+# -
+#   type: var
+#   var_name: L:KAP140_RightBlockMode
+# -
+#   type: var
+#   var_name: L:KR87_RightDisplayMode
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_CARD_POSITION
+# -
+#   type: var
+#   var_name: L:XMLVAR_FUEL_FLOW_TARGET
+# -
+#   type: var
+#   var_name: L:XMLVAR_Engine_Condition
+# -
+#   type: var
+#   var_name: L:XMLVAR_Fuel_Evaporating
+# -
+#   type: var
+#   var_name: L:XMLVAR_C152X_CANOPY_OPEN
+  -
+    type: var
+    var_name: L:XMLVAR_C152X_PLAYSSONOFF
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:XMLVAR_C152X_INIT_XPNDR_STATE
+# -
+#   type: var
+#   var_name: L:startflight_oil_temp
+# -
+#   type: var
+#   var_name: L:C152X_SUMP_OIL_TEMPERATURE
+  -
+    type: var
+    var_name: L:C152X_APVIZ
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:152X_E_Starter_Temperature
+# -
+#   type: var
+#   var_name: L:GTN750_INT_HIDDEN
+  -
+    type: var
+    var_name: L:C152X_XPNDR
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:C152X_PITOT_TIME
+# -
+#   type: var
+#   var_name: L:C152X_STATIC_PORT_BLOCKAGE
+# -
+#   type: var
+#   var_name: L:STARTER1_RES
+# -
+#   type: var
+#   var_name: L:STARTER2_RES
+# -
+#   type: var
+#   var_name: L:152X_E_Battery_Relay_Control
+# -
+#   type: var
+#   var_name: L:152X_E_Battery_Relay_Contact_State
+# -
+#   type: var
+#   var_name: L:152X_E_Alternator_Relay_Control
+# -
+#   type: var
+#   var_name: L:152X_E_Alternator_Relay_Contact_State
+  -
+    type: var
+    var_name: L:C152X_MAINTENANCE_ON
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:C152X_FOULING_TIME
+# -
+#   type: var
+#   var_name: L:C152X_Fouling
+# -
+#   type: var
+#   var_name: L:RANDMAG
+# -
+#   type: var
+#   var_name: L:C152X_FOULING_TIME2
+# -
+#   type: var
+#   var_name: L:C152X_OILREM
+# -
+#   type: var
+#   var_name: L:NO_OIL_COUNTDOWN
+# -
+#   type: var
+#   var_name: L:C152X_MAINTENANCE_TIME
+# -
+#   type: var
+#   var_name: L:C152X_bitresult
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_Push_VerticalSpeed_Up_1
+# -
+#   type: var
+#   var_name: L:KAP140_ButtonUpPress
+# -
+#   type: var
+#   var_name: L:AUTOPILOT_Push_VerticalSpeed_Down_1
+# -
+#   type: var
+#   var_name: L:KAP140_ButtonDnPress
+# -
+#   type: var
+#   var_name: L:adfButtonDown
+# -
+#   type: var
+#   var_name: L:RANDPITCH
+# -
+#   type: var
+#   var_name: L:RANDBANK
+  -
+    type: var
+    var_name: L:C152X_GTN750
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_ATTITUDE_PITCH_DEGREES
+# -
+#   type: var
+#   var_name: L:XMLVAR_HEADING_DEGREES
+# -
+#   type: var
+#   var_name: L:C152X_ALTITUDE
+# -
+#   type: var
+#   var_name: L:C152X_AMMETER_CURRENT
+# -
+#   type: var
+#   var_name: L:XMLVAR_ATTITUDE_BANK_DEGREES
+  -
+    type: var
+    var_name: L:C152X_ADF
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_NEEDLE_POSITION
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_MODE_SEL
+# -
+#   type: var
+#   var_name: L:XMLVAR_WHISKEY_COMPASS
+# -
+#   type: var
+#   var_name: L:C152X_IAS
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightShowEverything
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightCheckCompleted
+# -
+#   type: var
+#   var_name: L:XMLVAR_RADAR_PING
+  -
+    type: var
+    var_name: L:C152X_DMEVIZ
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C152X_EGT
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
 # -
 #   type: var
 #   var_name: L:START_VOL_UP
@@ -619,12 +656,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
-# -
-#   type: var
-#   var_name: L:XMLVAR_PITOT_BLOCKAGE
-# -
-#   type: var
-#   var_name: L:C152X_IAS_OLD
 # -
 #   type: var
 #   var_name: L:recorddelay
@@ -667,18 +698,24 @@ shared:
   -
     type: var
     var_name: L:ADF_ALARM
-  -
-    type: var
-    var_name: L:KAP140_NAVARM
-  -
-    type: var
-    var_name: L:KAP140_APRARM
-  -
-    type: var
-    var_name: L:KAP140_REVARM
-  -
-    type: var
-    var_name: L:KAP140_ALTARM
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:KAP140_NAVARM
+# -
+#   type: var
+#   var_name: L:KAP140_APRARM
+# -
+#   type: var
+#   var_name: L:KAP140_REVARM
+# -
+#   type: var
+#   var_name: L:KAP140_ALTARM
 # -
 #   type: var
 #   var_name: L:KAP140_RightBlock
@@ -694,12 +731,14 @@ shared:
 # -
 #   type: var
 #   var_name: L:EFB_State
-# -
-#   type: var
-#   var_name: L:C152X_BATTERY_CHARGE
+  -
+    type: var
+    var_name: L:C152X_BATTERY_CHARGE
+    cancel_h_events: true
   -
     type: var
     var_name: L:C152X_SSONOFF
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:C152XIP_ScreenLuminosity
@@ -726,6 +765,12 @@ shared:
 #   var_name: L:C152XAUX_State
 # -
 #   type: var
+#   var_name: L:XMLVAR_PITOT_BLOCKAGE
+# -
+#   type: var
+#   var_name: L:C152X_IAS_OLD
+# -
+#   type: var
 #   var_name: L:C152X_STARTER_AMPS
 # -
 #   type: var
@@ -735,10 +780,57 @@ shared:
 #   var_name: L:152X_E_Starter_Temperature_Res
 # -
 #   type: var
+#   var_name: L:KAP140_BARO_Display
+# -
+#   type: var
+#   var_name: L:KAP140_LEAVING_ALT
+# -
+#   type: var
+#   var_name: L:KAP140_BEEP
+# -
+#   type: var
+#   var_name: L:KAP140_TRIM
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:GNS530BOOTCOMPLETE
+# -
+#   type: var
+#   var_name: L:KAP140_APPROACHING_ALT
+# -
+#   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+  - # Manually added
+    type: var
+    var_name: L:XMLVAR_OIL_TOPUP
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:XMLVAR_ENGHEALTH
+    cancel_h_events: true
+
+master:
+  -
+    type: var
+    var_name: L:C152X_FOULING_TIME
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_FOULING_TIME2
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_OILREM
+    var_type: i32
+    unreliable: true
 
 server:
   -
@@ -779,7 +871,6 @@ server:
     unreliable: true
 
 ignore:
-  - EFB#leftSide
   - EFB#Img
   - EFB#pwup
   - EFB#pwdn
@@ -789,9 +880,15 @@ ignore:
   - EFB#fcdn
   - EFB#rcup
   - EFB#rcdn
-  - EFB#rfup
-  - EFB#rfdn
   - EFB#lfup
   - EFB#lfdn
+  - EFB#rfup
+  - EFB#rfdn
   - EFB#ttleft
   - EFB#ttright
+
+  - KR87#OilDisplay
+  - KR87#OilPercent
+
+  - KAP140_Push_UP_short_press
+  - KAP140_Push_DN_short_press

@@ -1,9 +1,10 @@
-# Version 2.0.0
+# Version 1.0.1
 
 include:
   - definitions/modules/Instruments/AS_G3X.yaml
-  - definitions/modules/Instruments/AS_GNS430.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTN650.yaml
+  - definitions/modules/Instruments/AS_GTR225.yaml
   - definitions/modules/Instruments/AS_GTX330.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/Instruments/TDS_GTNXi.yaml
@@ -39,7 +40,8 @@ shared:
     var_name: A:FUELSYSTEM VALVE SWITCH:1
     var_units: Bool
     var_type: bool
-    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
     event_param: 1
   -
     type: ToggleSwitch
@@ -50,52 +52,34 @@ shared:
     off_event_name: FUELSYSTEM_VALVE_CLOSE
     event_param: 2
 
-  - # Gyrocompass
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:59
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 59
-
-  - # Gyroscope
-    type: ToggleSwitch
-    var_name: A:TURN INDICATOR SWITCH
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_TURN_INDICATOR_SWITCH
-
-  - # Hydraulics
-    type: NumSet
-    var_name: A:HYDRAULIC SWITCH:1
-    var_units: Bool
-    var_type: i32
-    event_name: HYDRAULIC_SWITCH_TOGGLE
-    event_param: 1
-    index_reversed: true
-
-  - # Lights
-    type: NumSet
-    var_name: A:LIGHT LANDING:2
-    var_units: Bool
-    var_type: f64
-    event_name: LANDING_LIGHTS_SET
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT LANDING:3
-    var_units: Bool
-    var_type: f64
-    event_name: LANDING_LIGHTS_SET
-    event_param: 3
-
   - # Interior
     type: NumSet
-    var_name: A:LIGHT GLARESHIELD:1
+    var_name: A:LIGHT CABIN:1
     var_units: Bool
     var_type: i32
-    event_name: GLARESHIELD_LIGHTS_SET
+    event_name: CABIN_LIGHTS_SET
     event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_7_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTAL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTAL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_6_SET
+    index_reversed: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -106,278 +90,171 @@ shared:
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT PANEL:1
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:2
+    var_name: A:LIGHT POTENTIOMETER:4
     var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 2
+    event_param: 4
     index_reversed: true
 
   - # LVAR's (trimmed)
     type: var
-    var_name: L:CS206L_GOV_TARGET
+    var_name: L:CSR66_FOAT_COAT_VOLT
   -
     type: var
-    var_name: L:CS206L_GTN_OPTION
+    var_name: L:CSR66_HIDE_PANEL_SIDEPOD
   -
     type: var
-    var_name: L:COWANSIM_LIGHT_LANDING_UP_DOWN
+    var_name: L:CSR66_AMBIENT_OTHERWISE_VOLTS
   -
     type: var
-    var_name: L:COWANSIM_LIGHT_LANDING_LR
+    var_name: L:CSR66_MAPLIGHT_RIGHT
   -
     type: var
-    var_name: L:CS206L_INSTR_OPTION
+    var_name: L:CSR66_MAPLIGHT_UP
+  -
+    type: var
+    var_name: L:CSR66_GOV_TARGET
+  -
+    type: var
+    var_name: L:CSR66_CYCLIC_TABLES_ROTATION
+    unreliable: true
+  -
+    type: var
+    var_name: L:CSR66_COLLECTIVE_FRICTION
+  -
+    type: var
+    var_name: L:CSR66_CYCLIC_FRICTION
+  -
+    type: var
+    var_name: L:CSR66_GTN_OPTION
+  -
+    type: var
+    var_name: L:CSR66_INSTRUMENTATION_OPTION
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_1
+#   var_name: L:TDSGTNXI750U1_ElectricalCircuit
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_2
+#   var_name: L:TDSGTNXI650U2_ElectricalCircuit
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_3
+#   var_name: L:CSR66_WeightStation_1
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_4
+#   var_name: L:CSR66_WeightStation_2
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_5
+#   var_name: L:CSR66_WeightStation_3
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_6
+#   var_name: L:CSR66_WeightStation_4
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_7
+#   var_name: L:CSR66_WeightStation_5
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_8
+#   var_name: L:CSR66_WeightStation_6
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_9
+#   var_name: L:CSR66_WeightStation_7
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_10
+#   var_name: L:CSR66_WeightStation_8
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_11
+#   var_name: L:CSR66_WeightStation_9
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_12
+#   var_name: L:CSR66_WeightStation_10
 # -
 #   type: var
-#   var_name: L:CS206_WeightStation_13
-# -
-#   type: var
-#   var_name: L:CS206_WeightStation_14
+#   var_name: L:CSR66_WeightStation_11
   -
     type: var
     var_name: L:CSR66_RCA2610_BRIGHTNESS
-    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
   -
     type: var
-    var_name: L:pilotWindow
+    var_name: L:CSR66_SOLO_PIN
   -
     type: var
-    var_name: L:headSetR
+    var_name: L:UpperWindow
   -
     type: var
-    var_name: L:headSetL
+    var_name: L:VisorWindow
 # -
 #   type: var
-#   var_name: L:hideDownwash
-# -
-#   type: var
-#   var_name: L:hideHeatBlur
+#   var_name: L:CSR66_FuelAnnTimer
   -
     type: var
-    var_name: L:COWANSIM_ENGINE_Idle_1_Released
-  -
-    type: var
-    var_name: L:COWANSIM_Throttle_1_Lever_Percent
-    interpolate: Default
-# -
-#   type: var
-#   var_name: L:initSysChk
-# -
-#   type: var
-#   var_name: L:chrono init
-# -
-#   type: var
-#   var_name: L:Offset chrono
-# -
-#   type: var
-#   var_name: L:beaconlightRotation
-  -
-    type: var
-    var_name: L:CollectiveGrip
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:collGripState
-# -
-#   type: var
-#   var_name: L:initCollGrip
-# -
-#   type: var
-#   var_name: L:torqueCheck
-# -
-#   type: var
-#   var_name: L:fuelPressCheck
-# -
-#   type: var
-#   var_name: L:ampCheck
-# -
-#   type: var
-#   var_name: L:mgtCheck
-# -
-#   type: var
-#   var_name: L:fuelQtyCheck
-# -
-#   type: var
-#   var_name: L:ngCheck
-# -
-#   type: var
-#   var_name: L:XmsnPressInit
-# -
-#   type: var
-#   var_name: L:XmsnPressCorr
-# -
-#   type: var
-#   var_name: L:xmsnPressCheck
-# -
-#   type: var
-#   var_name: L:XmsnTempInit
-# -
-#   type: var
-#   var_name: L:XmsnTempCorr
-# -
-#   type: var
-#   var_name: L:xmsnTempCheck
-# -
-#   type: var
-#   var_name: L:engPressCheck
-# -
-#   type: var
-#   var_name: L:engTempCheck
-  -
-    type: var
-    var_name: L:switchturnCoord
-# -
-#   type: var
-#   var_name: L:initFlag
-# -
-#   type: var
-#   var_name: L:rotorCheck
-# -
-#   type: var
-#   var_name: L:nrCheck
-  -
-    type: var
-    var_name: L:compassAdjustValue
-  -
-    type: var
-    var_name: L:switchAttGyro
-# -
-#   type: var
-#   var_name: L:switchSound
-# -
-#   type: var
-#   var_name: L:initPanelLight
-# -
-#   type: var
-#   var_name: L:initAttGyro
-# -
-#   type: var
-#   var_name: L:initTurnCoord
-# -
-#   type: var
-#   var_name: L:initInstrLight
-  -
-    type: var
-    var_name: L:switchLtsCabinPass
-# -
-#   type: var
-#   var_name: L:initCabPass
-  -
-    type: var
-    var_name: L:switchGenerator
-# -
-#   type: var
-#   var_name: L:initGen
-# -
-#   type: var
-#   var_name: L:hornFadecTest
-  -
-    type: var
-    var_name: L:hornMuted
-# -
-#   type: var
-#   var_name: L:hornCaution
-  -
-    type: var
-    var_name: L:switchPrimaryCompassAdjust
-# -
-#   type: var
-#   var_name: L:comAdjInit
-# -
-#   type: var
-#   var_name: L:initCounter
+    var_name: L:CSR66_Hyd_Switch
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
-    var_name: L:exitRearL
+    var_name: L:floatsArmed
   -
     type: var
-    var_name: L:exitFrontL
+    var_name: L:floatsBlown
   -
     type: var
-    var_name: L:exitFrontR
+    var_name: L:CSR66_DoorFLOpen
   -
     type: var
-    var_name: L:exitRearR
+    var_name: L:CSR66_DoorRROpen
+  -
+    type: var
+    var_name: L:CSR66_DoorFROpen
+  -
+    type: var
+    var_name: L:CSR66_DoorRLOpen
 # -
 #   type: var
 #   var_name: L:COWANSIM_Throttle_1_Lever_Position
 # -
 #   type: var
-#   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
   -
     type: var
-    var_name: L:trimRelease
+    var_name: L:COWANSIM_Throttle_1_Lever_Percent
+    interpolate: Default
   -
     type: var
-    var_name: L:trimRelease2
+    var_name: L:FuelValveGard
   -
     type: var
-    var_name: L:IgniterRelight
+    var_name: L:FuelValveGard_2
   -
     type: var
-    var_name: L:BlowerSwitch
+    var_name: L:CSR66_AC_CIRCUIT
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PEDESTAL_1
   -
     type: var
-    var_name: L:FwdBlowerSwitch
-  -
-    type: var
-    var_name: L:AftBlowerSwitch
-  -
-    type: var
-    var_name: L:switchCautLtsMode
-  -
-    type: var
-    var_name: L:buttonTOTTest
-  -
-    type: var
-    var_name: L:testRadioAlt
+    var_name: L:CSR66_CHECKLIST
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InactiveVar
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
 # -
 #   type: var
 #   var_name: L:TDSGTNXI750U1_LKnobInc
@@ -440,31 +317,55 @@ shared:
 #   var_name: L:TDSGTNXI650U2_DTOKey
   -
     type: var
-    var_name: L:buttonAnnTest
+    var_name: L:CSR66_TEST_ANN
+  -
+    type: var
+    var_name: L:CSR66_Hyd_Breaker_Pulled
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_4
 # -
 #   type: var
 #   var_name: L:LIGHTING_LANDING_1
 # -
 #   type: var
-#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+#   var_name: L:ELECTRICAL_Starter_1
 # -
 #   type: var
-#   var_name: L:TDSGTNXI_InactiveVar
+#   var_name: L:XMLVAR_ELT_TEST_TIME
 # -
 #   type: var
-#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+#   var_name: L:XMLVAR_ELT_STATE
 # -
 #   type: var
-#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
   -
     type: var
     var_name: L:COWANSIM_Throttle_1_Position
     interpolate: Default
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:COWANSIM_ENGINE_Idle_1_Released
 
 server:
   -
     type: var
-    var_name: A:FUEL TANK CENTER LEVEL
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
@@ -531,24 +432,6 @@ server:
   -
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:11
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:12
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:13
-    var_units: Pounds
-    var_type: f64
-    unreliable: true
-  -
-    type: var
-    var_name: A:PAYLOAD STATION WEIGHT:14
     var_units: Pounds
     var_type: f64
     unreliable: true

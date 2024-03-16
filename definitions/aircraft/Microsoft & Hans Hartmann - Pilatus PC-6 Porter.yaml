@@ -1,8 +1,9 @@
-# Version 0.1.46 (do not add G1000)
+# Version 0.1.56
 
 include:
   - definitions/modules/Instruments/AS_GNS430.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
   - definitions/modules/Instruments/AS_KAP140.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/controls.yaml
@@ -14,7 +15,6 @@ include:
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
-  - definitions/modules/transponder.yaml
   - definitions/modules/trim.yaml
 
 shared:
@@ -83,6 +83,14 @@ shared:
     var_units: Enum
     var_type: i32
     event_name: ELECT_FUEL_PUMP2_SET
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_OPEN
+    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_param: 1
 
   - # Lights
     type: NumSet
@@ -212,6 +220,9 @@ shared:
     var_name: L:PC6_IC_HIGH
   -
     type: var
+    var_name: L:PC6_IDLECTRL_LOCK
+  -
+    type: var
     var_name: L:XMLVAR_RLDG_LT_EXT
   -
     type: var
@@ -224,16 +235,10 @@ shared:
     var_name: L:HANDLING_X_Dir_Y_Dir_Position
   -
     type: var
-    var_name: L:AttiBars_Pos
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+    var_name: L:PC6_StabTrim_Switch
   -
     type: var
-    var_name: L:PC6_IDLECTRL_LOCK
+    var_name: L:AttiBars_Pos
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE
@@ -300,9 +305,6 @@ shared:
   -
     type: var
     var_name: L:FCU_HEATER_SWITCH
-  -
-    type: var
-    var_name: L:PC6_AUX_FUEL_BOOST_PUMP
 # -
 #   type: var
 #   var_name: L:ParkingBrake_Position
@@ -411,30 +413,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:LIGHTING_POTENTIOMETER_47
-# -
-#   type: var
-#   var_name: L:MSATR_CONDITION1_AMSn
-# -
-#   type: var
-#   var_name: L:MSATR_CONDITION1_CLS
-# -
-#   type: var
-#   var_name: L:MSATR_CONDITION1_AMS
-# -
-#   type: var
-#   var_name: L:MSATR_CONDITION1_CLnS
-# -
-#   type: var
-#   var_name: L:MSATR_CONDITION1_MS
-# -
-#   type: var
-#   var_name: L:MSATR_CONDITION1_MSn
-# -
-#   type: var
-#   var_name: L:MSATR_CONDITION1_ACLS
-# -
-#   type: var
-#   var_name: L:MSATR_CONDITION1_ACLnS
+  -
+    type: var
+    var_name: L:PC6_FSV_OPEN_TRIGGER
+  -
+    type: var
+    var_name: L:PC6_FSV_CLOSE_TRIGGER
   -
     type: var
     var_name: L:XMLVAR_Joystick_Ail_Trim
@@ -459,44 +443,11 @@ shared:
   -
     type: var
     var_name: L:DigitalFuelMeter_FP5L_HL_AUX_LIGHT
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Enabled_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Enabled_1
-# - # Junk
-#   type: var
-#   var_name: L:L:XMLVAR_STALL_WARN_TEST
-# -
-#   type: var
-#   var_name: L:L:XMLVAR_PROP_LOW_PITCH_TEST
-# -
-#   type: var
-#   var_name: L:L:XMLVAR_UNKNOWN_INOP_TEST
-# -
-#   type: var
-#   var_name: L:L:XMLVAR_PLT_LIGHT_GEN_TEST
-# -
-#   type: var
-#   var_name: L:L:XMLVAR_FCU_HEATER_TEST
-# -
-#   type: var
-#   var_name: L:L:XMLVAR_BOOSTER_PUMP_TEST
-# -
-#   type: var
-#   var_name: L:L:XMLVAR_FUEL_FILTER_CLOGGED_TEST
-# -
-#   type: var
-#   var_name: L:L:XMLVAR_STARTER_ON_TEST
 
   - # G950 (trimmed)
+    type: var
+    var_name: L:PC6_stabtrim_alternate_switch
+  -
     type: var
     var_name: L:XMLVAR_REV_MODE_SEL
 # -
@@ -618,25 +569,10 @@ shared:
     var_name: L:XMLVAR_emerg_fuelctrl_02_switch
 # -
 #   type: var
-#   var_name: L:AS1000_PFD_SelectedNavIndex
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_SelectedComIndex
-# -
-#   type: var
-#   var_name: L:PFD_CDI_Source
-# -
-#   type: var
 #   var_name: L:PFD_InnerMap_MapZoomRange
 # -
 #   type: var
 #   var_name: L:PFD_InnerMap_MapShowCursor
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_SelectedNavIndex
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_SelectedComIndex
 # -
 #   type: var
 #   var_name: L:MFD_InnerMap_MapZoomRange
@@ -775,13 +711,6 @@ shared:
   -
     type: var
     var_name: L:_SelectedSource
-  -
-    type: ToggleSwitch
-    var_name: A:GPS DRIVES NAV1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_GPS_DRIVES_NAV1
-    cancel_h_events: true
 
 server:
   -
@@ -854,6 +783,8 @@ server:
 ignore:
   - AP_UP
   - AP_DN
+  - AP_BARO_Up
+  - AP_BARO_Down
   - AP_KNOB_Up
   - AP_KNOB_Down
   - Generic_Autopilot_Manual_Off

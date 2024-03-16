@@ -1,0 +1,504 @@
+# Version 2.0.2
+
+include:
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/controls.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/glider.yaml
+  - definitions/modules/handling.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  -
+    type: CustomCalculator
+    get: (Z:B21_ADI_BUTTON_1_TOGGLE) 0 ==
+    set: 0 (>Z:B21_ADI_BUTTON_1_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_ADI_BUTTON_1_TOGGLE) 1 ==
+    set: 1 (>Z:B21_ADI_BUTTON_1_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_ADI_BUTTON_2_TOGGLE) 0 ==
+    set: 0 (>Z:B21_ADI_BUTTON_2_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_ADI_BUTTON_2_TOGGLE) 1 ==
+    set: 1 (>Z:B21_ADI_BUTTON_2_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_ADI_BUTTON_3_TOGGLE) 0 ==
+    set: 0 (>Z:B21_ADI_BUTTON_3_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_ADI_BUTTON_3_TOGGLE) 1 ==
+    set: 1 (>Z:B21_ADI_BUTTON_3_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_ENGINE_MASTER_TOGGLE) 0 ==
+    set: 0 (>Z:B21_ENGINE_MASTER_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_ENGINE_MASTER_TOGGLE) 1 ==
+    set: 1 (>Z:B21_ENGINE_MASTER_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_LX_MULTIGAUGE_BUTTON_1_TOGGLE) 0 ==
+    set: 0 (>Z:B21_LX_MULTIGAUGE_BUTTON_1_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_LX_MULTIGAUGE_BUTTON_1_TOGGLE) 1 ==
+    set: 1 (>Z:B21_LX_MULTIGAUGE_BUTTON_1_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_LX_MULTIGAUGE_BUTTON_2_TOGGLE) 0 ==
+    set: 0 (>Z:B21_LX_MULTIGAUGE_BUTTON_2_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_LX_MULTIGAUGE_BUTTON_2_TOGGLE) 1 ==
+    set: 1 (>Z:B21_LX_MULTIGAUGE_BUTTON_2_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_LX_MULTIGAUGE_BUTTON_3_TOGGLE) 0 ==
+    set: 0 (>Z:B21_LX_MULTIGAUGE_BUTTON_3_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_LX_MULTIGAUGE_BUTTON_3_TOGGLE) 1 ==
+    set: 1 (>Z:B21_LX_MULTIGAUGE_BUTTON_3_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_1_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_BUTTON_1_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_1_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_BUTTON_1_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_2_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_BUTTON_2_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_2_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_BUTTON_2_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_3_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_BUTTON_3_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_3_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_BUTTON_3_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_4_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_BUTTON_4_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_4_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_BUTTON_4_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_5_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_BUTTON_5_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_5_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_BUTTON_5_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_6_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_BUTTON_6_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_6_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_BUTTON_6_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_7_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_BUTTON_7_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_7_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_BUTTON_7_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_8_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_BUTTON_8_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_BUTTON_8_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_BUTTON_8_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_1_UP_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_DIAL_1_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_1_UP_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_DIAL_1_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_1_DOWN_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_DIAL_1_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_1_DOWN_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_DIAL_1_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_2_UP_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_DIAL_2_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_2_UP_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_DIAL_2_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_2_DOWN_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_DIAL_2_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_2_DOWN_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_DIAL_2_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_3_UP_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_DIAL_3_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_3_UP_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_DIAL_3_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_3_DOWN_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_DIAL_3_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_3_DOWN_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_DIAL_3_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_4_UP_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_DIAL_4_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_4_UP_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_DIAL_4_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_4_DOWN_TOGGLE) 0 ==
+    set: 0 (>Z:B21_NAV_LX_DIAL_4_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_NAV_LX_DIAL_4_DOWN_TOGGLE) 1 ==
+    set: 1 (>Z:B21_NAV_LX_DIAL_4_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_MC_UP_TOGGLE) 0 ==
+    set: 0 (>Z:B21_VARIO_LX_MC_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_MC_UP_TOGGLE) 1 ==
+    set: 1 (>Z:B21_VARIO_LX_MC_UP_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_MC_DOWN_TOGGLE) 0 ==
+    set: 0 (>Z:B21_VARIO_LX_MC_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_MC_DOWN_TOGGLE) 1 ==
+    set: 1 (>Z:B21_VARIO_LX_MC_DOWN_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_BUTTON_1_TOGGLE) 0 ==
+    set: 0 (>Z:B21_VARIO_LX_BUTTON_1_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_BUTTON_1_TOGGLE) 1 ==
+    set: 1 (>Z:B21_VARIO_LX_BUTTON_1_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_BUTTON_2_TOGGLE) 0 ==
+    set: 0 (>Z:B21_VARIO_LX_BUTTON_2_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_BUTTON_2_TOGGLE) 1 ==
+    set: 1 (>Z:B21_VARIO_LX_BUTTON_2_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_BUTTON_3_TOGGLE) 0 ==
+    set: 0 (>Z:B21_VARIO_LX_BUTTON_3_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_VARIO_LX_BUTTON_3_TOGGLE) 1 ==
+    set: 1 (>Z:B21_VARIO_LX_BUTTON_3_TOGGLE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_TOW_RELEASE) 0 ==
+    set: 0 (>Z:B21_TOW_RELEASE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:B21_TOW_RELEASE) 1 ==
+    set: 1 (>Z:B21_TOW_RELEASE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:PILOT_HIDE) 0 ==
+    set: 0 (>Z:PILOT_HIDE)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:PILOT_HIDE) 1 ==
+    set: 1 (>Z:PILOT_HIDE)
+    condition:
+      equals:
+        F64: 1.0
+
+  - # Battery
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+
+  - # Canopy
+    type: var
+    var_name: A:CANOPY OPEN
+    var_units: Bool
+    var_type: bool
+
+  - # Strobe
+    type: ToggleSwitch
+    var_name: A:LIGHT STROBE:1
+    var_units: Bool
+    var_type: bool
+    event_name: STROBES_TOGGLE
+    event_param: 1
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - basic_altimeter_script#basic_altimeter_background_click
+  - basic_vario_script#basic_vario_background_click
