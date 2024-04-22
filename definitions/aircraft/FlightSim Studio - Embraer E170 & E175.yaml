@@ -1,4 +1,4 @@
-# Version 0.9.22
+# Version 0.9.26
 
 include:
   - definitions/modules/controls.yaml
@@ -24,19 +24,11 @@ shared:
     event_param: 4
 
   - # Autopilot
-    type: NumSet
-    var_name: A:AUTOPILOT HEADING LOCK DIR:1
-    var_units: Degrees
-    var_type: f64
-    event_name: HEADING_BUG_SET
-    event_param: 1
-    interpolate: Default
-  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT ALTITUDE LOCK
     var_units: Bool
     var_type: bool
-    event_name: AP_PANEL_ALTITUDE_HOLD
+    event_name: AP_ALT_HOLD
 
   - # Cargo Rear Door
     type: ToggleSwitch
@@ -335,10 +327,7 @@ shared:
     var_name: L:FSS_EXX_PDSTL_PWR_IGNITION_MODE_LT
   -
     type: var
-    var_name: L:FSS_EXX_CHECKLIST_LET_PEDESTAL
-  -
-    type: var
-    var_name: L:FSS_EXX_CHECKLIST_LET_YOKE
+    var_name: L:FSS_EXX_CHECKLIST_ON_YOKE
   -
     type: var
     var_name: L:FSS_EXX_REVPANEL_L_DISPLAY
@@ -387,7 +376,10 @@ shared:
 #   var_name: L:FSS_EXX_AUTO_TRIM_AP
 # -
 #   type: var
-#   var_name: L:FSS_EXX_AUTO_ELEV_AP
+#   var_name: L:FSS_EXX_YOKE_X
+# -
+#   type: var
+#   var_name: L:FSS_EXX_YOKE_Y
   -
     type: var
     var_name: L:FSS_EXX_STEERING_HANDLE
@@ -454,18 +446,6 @@ shared:
     var_name: L:FSS_EXX_DCP_R_MODES_BRG_D
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_DISP_L_MIN_SEL_OUTER_KNOB
-# -
-#   type: var
-#   var_name: L:FSS_EXX_GSHIELD_DISP_L_MIN_SEL_INNER_KNOB_VAL
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_DISP_R_MIN_SEL_OUTER_KNOB
-# -
-#   type: var
-#   var_name: L:FSS_EXX_GSHIELD_DISP_R_MIN_SEL_INNER_KNOB_VAL
-  -
-    type: var
     var_name: L:FSS_EXX_SEAT_PILOT_HEIGHT
     unreliable: true
   -
@@ -480,9 +460,6 @@ shared:
     type: var
     var_name: L:FSS_EXX_SEAT_COPILOT_POS
     unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_NAVILS_ENABLED
   -
     type: var
     var_name: L:FSS_E19X_STEEP_APPR_AVAILABLE
@@ -501,6 +478,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_ENABLE_TELEMETRY
+  -
+    type: var
+    var_name: L:FSS_EXX_AUTO_TCS_ENABLED
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SPOILER_L5_MOVING
@@ -591,42 +571,53 @@ shared:
   -
     type: var
     var_name: L:FSS_EXX_WINDOW_R
-# -
-#   type: var
-#   var_name: L:FSS_EXX_EXT_SPOILER_R1_POS
-# -
-#   type: var
-#   var_name: L:FSS_EXX_EXT_SPOILER_L2_POS
-# -
-#   type: var
-#   var_name: L:FSS_EXX_EXT_SPOILER_R5_POS
-# -
-#   type: var
-#   var_name: L:FSS_EXX_EXT_SPOILER_L5_POS
-# -
-#   type: var
-#   var_name: L:FSS_EXX_EXT_SPOILER_R3_POS
-# -
-#   type: var
-#   var_name: L:FSS_EXX_EXT_SPOILER_L3_POS
+  -
+    type: var
+    var_name: L:FSS_EXX_WHEEL_COVER_SHOW_DEFAULT
+  -
+    type: var
+    var_name: L:FSS_EXX_WHEEL_COVER_L
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_EXX_WHEEL_COVER_R
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EXT_SPOILER_L4_POS
 # -
 #   type: var
-#   var_name: L:FSS_EXX_EXT_ENG_R_FANBLADE_STEP
-# -
-#   type: var
-#   var_name: L:FSS_EXX_EXT_SPOILER_R2_POS
-# -
-#   type: var
-#   var_name: L:FSS_EXX_EXT_SPOILER_R4_POS
+#   var_name: L:FSS_EXX_EXT_SPOILER_L2_POS
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EXT_ENG_L_FANBLADE_STEP
 # -
 #   type: var
+#   var_name: L:FSS_EXX_EXT_SPOILER_R5_POS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_EXT_SPOILER_L3_POS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_EXT_ENG_R_FANBLADE_STEP
+# -
+#   type: var
+#   var_name: L:FSS_EXX_EXT_SPOILER_R4_POS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_EXT_SPOILER_R1_POS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_EXT_SPOILER_R3_POS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_EXT_SPOILER_L5_POS
+# -
+#   type: var
 #   var_name: L:FSS_EXX_EXT_SPOILER_L1_POS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_EXT_SPOILER_R2_POS
   -
     type: var
     var_name: L:FSS_EXX_SAFETY_PIN_LDGGEAR_L
@@ -802,13 +793,10 @@ shared:
     var_name: L:FSS_EXX_YOKE_AP_L
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_AFCS_AP_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_AP
   -
     type: var
     var_name: L:FSS_EXX_YOKE_TCS_L
-  -
-    type: var
-    var_name: L:FSS_EXX_AFCS_TCS
 # -
 #   type: var
 #   var_name: L:FSS_EXX_TRIM_PITCH_YOKE_DN
@@ -939,7 +927,7 @@ shared:
     var_name: L:FSS_EXX_DCP_L_MODES_VL
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_AFCS_SRC_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_SRC
   -
     type: var
     var_name: L:FSS_EXX_DCP_L_MODES_PREV
@@ -987,34 +975,37 @@ shared:
     var_name: L:FSS_EXX_DCP_R_MODES_FPR
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_SPEEDM_CTL_SEL_KNOB
+#   var_name: L:FSS_EXX_FGC_ROT_POS_SPD
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_MACH_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_SPD_SRC
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_AFCS_AT_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_SPD_UNIT
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_APP_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_AT
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_HDG_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_APP
+  -
+    type: var
+    var_name: L:FSS_EXX_FGC_BTN_HDG
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_SPEEDM_SEL_HDG_KNOB
+#   var_name: L:FSS_EXX_FGC_ROT_POS_HDG
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_SPEEDM_SEL_HDG_BUTTON
+#   var_name: L:FSS_EXX_FGC_BTN_HDG_SYNC
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_NAV_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_NAV
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_BANK_ANGLE
+    var_name: L:FSS_EXX_FGC_BTN_BANK
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_AFCS_YD_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_YD
   - # Enable for Yaw Damper
     type: var
     var_name: L:FSS_EXX_CAS_AF_VAL
@@ -1023,35 +1014,34 @@ shared:
     var_name: L:FSS_EXX_CAS_AF_ID
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_FLCH_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_FLCH
 # - # Disable cause premature level off - use simvar
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_ALT_BUTTON
+#   var_name: L:FSS_EXX_FGC_BTN_ALT
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_ALT_SELECTOR
+#   var_name: L:FSS_EXX_FGC_ROT_POS_ALT
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_ALT_SEL_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_ALT_UNIT
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_FPA_BUTTON
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_FPA_SELECTOR
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_VS_BUTTON
+    var_name: L:FSS_EXX_FGC_BTN_FPA
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_VS_SELECTOR
+#   var_name: L:FSS_EXX_FGC_ROT_POS_FPA
+  -
+    type: var
+    var_name: L:FSS_EXX_FGC_BTN_VS
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_VS_SELECTOR_UP
+#   var_name: L:FSS_EXX_FGC_ROT_POS_VS
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_VS_SELECTOR_DN
+#   var_name: L:FSS_EXX_FGC_ROT_POS_VS_UP
+# -
+#   type: var
+#   var_name: L:FSS_EXX_FGC_ROT_POS_VS_DN
   -
     type: var
     var_name: L:FSS_EXX_LANDINGGEAR_BV_LEVER
@@ -1102,6 +1092,9 @@ shared:
     var_name: L:FSS_EXX_AUTOBRAKE
   -
     type: var
+    var_name: L:FSS_EXX_MAIN_LG_WRN_INHIB_COVER
+  -
+    type: var
     var_name: L:FSS_EXX_LG_WRN_INHIB
   -
     type: var
@@ -1141,6 +1134,9 @@ shared:
     type: var
     var_name: L:FSS_EXX_CPLT_BV_PDSTL_KNOB
     unreliable: true
+  -
+    type: var
+    var_name: L:FSS_EXX_OVHD_OVHD_APU_EMER_COVER
   -
     type: var
     var_name: L:FSS_EXX_FUEL_CAS_MSG_DISPLAYED
@@ -1229,6 +1225,9 @@ shared:
     var_name: L:FSS_EXX_AUDIO_L_MIC_BV_VHF3_BTN
   -
     type: var
+    var_name: L:FSS_EXX_AUDIO_L_MIC_PA_BTN
+  -
+    type: var
     var_name: L:FSS_EXX_AUDIO_L_AUD_BV_VHF1_BTN
   -
     type: var
@@ -1236,6 +1235,9 @@ shared:
   -
     type: var
     var_name: L:FSS_EXX_AUDIO_L_AUD_BV_VHF3_BTN
+  -
+    type: var
+    var_name: L:FSS_EXX_AUDIO_L_AUD_PA_BTN
   -
     type: var
     var_name: L:FSS_EXX_AUDIO_L_AUD_BV_NAV1_BTN
@@ -1260,6 +1262,9 @@ shared:
 # - # ATC menu
 #   type: var
 #   var_name: L:FSS_EXX_AUDIO_L_TEL_RAMP_BTN
+  -
+    type: var
+    var_name: L:FSS_EXX_AUDIO_L_TEL_CAB_BTN
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AUDIO_L_VOLUME_ROTARY
@@ -1274,6 +1279,9 @@ shared:
     var_name: L:FSS_EXX_AUDIO_R_MIC_BV_VHF3_BTN
   -
     type: var
+    var_name: L:FSS_EXX_AUDIO_R_MIC_PA_BTN
+  -
+    type: var
     var_name: L:FSS_EXX_AUDIO_R_AUD_BV_VHF1_BTN
   -
     type: var
@@ -1281,6 +1289,9 @@ shared:
   -
     type: var
     var_name: L:FSS_EXX_AUDIO_R_AUD_BV_VHF3_BTN
+  -
+    type: var
+    var_name: L:FSS_EXX_AUDIO_R_AUD_PA_BTN
   -
     type: var
     var_name: L:FSS_EXX_AUDIO_R_AUD_BV_NAV1_BTN
@@ -1305,6 +1316,9 @@ shared:
 # - # ATC menu
 #   type: var
 #   var_name: L:FSS_EXX_AUDIO_R_TEL_RAMP_BTN
+  -
+    type: var
+    var_name: L:FSS_EXX_AUDIO_R_TEL_CAB_BTN
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AUDIO_R_VOLUME_ROTARY
@@ -1366,16 +1380,31 @@ shared:
     var_name: L:FSS_EXX_FCMODE_ELV
   -
     type: var
+    var_name: L:FSS_EXX_PDSTL_FCMODE_ELV_COVER
+  -
+    type: var
     var_name: L:FSS_EXX_FCMODE_RDR
+  -
+    type: var
+    var_name: L:FSS_EXX_PDSTL_FCMODE_RDR_COVER
   -
     type: var
     var_name: L:FSS_EXX_FCMODE_SPOILER
   -
     type: var
+    var_name: L:FSS_EXX_PDSTL_FCMODE_SPOILER_COVER
+  -
+    type: var
     var_name: L:FSS_EXX_TRIM_SYS1_CUTOUT
   -
     type: var
+    var_name: L:FSS_EXX_PDSTL_TRIM_SYS1_CUTOUT_COVER
+  -
+    type: var
     var_name: L:FSS_EXX_TRIM_SYS2_CUTOUT
+  -
+    type: var
+    var_name: L:FSS_EXX_PDSTL_TRIM_SYS2_CUTOUT_COVER
 # -
 #   type: var
 #   var_name: L:FSS_EXX_TRIM_YAW
@@ -1432,6 +1461,9 @@ shared:
     var_name: L:FSS_EXX_DOORCTRL_INHIB
   -
     type: var
+    var_name: L:FSS_EXX_DOORCTRL_TEST
+  -
+    type: var
     var_name: L:FSS_EXX_EICAS_DECLUTTER_CANCEL
   -
     type: var
@@ -1448,9 +1480,15 @@ shared:
   -
     type: var
     var_name: L:FSS_EXX_TRASHCAN_COPILOT
-# -
-#   type: var
-#   var_name: L:FSS_EXX_YOKE_HIDDEN_L
+  -
+    type: var
+    var_name: L:FSS_EXX_PDSTL_GND_PROX_FLAP_OVRD_COVER
+  -
+    type: var
+    var_name: L:FSS_EXX_PA_PEDESTAL_PILOT
+  -
+    type: var
+    var_name: L:FSS_EXX_PA_PEDESTAL_COPILOT
   -
     type: var
     var_name: L:FSS_EXX_REARDOOR_POS
@@ -1469,6 +1507,12 @@ shared:
   -
     type: var
     var_name: L:FSS_EXX_SEAT_COPILOT_ARMREST_L
+  -
+    type: var
+    var_name: L:FSS_EXX_COCKPIT_HEADPHONE_L
+  -
+    type: var
+    var_name: L:FSS_EXX_COCKPIT_HEADPHONE_R
   -
     type: var
     var_name: L:FSS_E19X_HGS_PILOT_BRT
@@ -1556,7 +1600,7 @@ shared:
 #   var_name: L:FSS_EXX_DCP_R_CRS_VAL
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_CTL_KNOB_VAL
+    var_name: L:FSS_EXX_FGC_ROT_VAL_SPD
     interpolate: Default
 # -
 #   type: var
@@ -1572,10 +1616,10 @@ shared:
 #   var_name: L:FSS_EXX_EVT_AP_MACH_SEL_INC
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_AFCS_AT_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_AT
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_SPEEDM_APP_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_APP
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_AP_APR_HOLD_TOGGLE
@@ -1587,7 +1631,7 @@ shared:
 #   var_name: L:FSS_EXX_EVT_AP_APR_HOLD_ON
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_AFCS_AP_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_AP
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AP_OFF
@@ -1599,7 +1643,7 @@ shared:
 #   var_name: L:FSS_EXX_AP_TOGGLE
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_SPEEDM_HDG_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_HDG
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_AP_HDG_HOLD_TOGGLE
@@ -1609,9 +1653,10 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_AP_HDG_HOLD_ON
-# -
-#   type: var
-#   var_name: L:FSS_EXX_GSHIELD_SPEEDM_SEL_HDG_KNOB_VAL
+  -
+    type: var
+    var_name: L:FSS_EXX_FGC_ROT_VAL_HDG
+    interpolate: Default
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_HDG_BUG_SET
@@ -1623,7 +1668,7 @@ shared:
 #   var_name: L:FSS_EXX_EVT_AP_HDG_SEL_INC
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_SPEEDM_NAV_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_NAV
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_AP_NAV_HOLD_TOGGLE
@@ -1635,7 +1680,7 @@ shared:
 #   var_name: L:FSS_EXX_EVT_AP_NAV_HOLD_ON
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_SPEEDM_BANK_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_BANK
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_BANK_HOLD
@@ -1647,7 +1692,7 @@ shared:
 #   var_name: L:FSS_EXX_EVT_BANK_HOLD_ON
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_AFCS_YD_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_YD
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_YAW_DAMPER_TOGGLE
@@ -1662,7 +1707,7 @@ shared:
 #   var_name: L:FSS_EXX_EVT_YAW_DAMPER_SET
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_FLCH_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_FLCH
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_AP_FLCH_TOGGLE
@@ -1683,7 +1728,7 @@ shared:
 #   var_name: L:FSS_EXX_EVT_AP_ALT_HOLD_ON
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_ALT_KNOB_VAL
+    var_name: L:FSS_EXX_FGC_ROT_VAL_ALT
     interpolate: Default
 # -
 #   type: var
@@ -1693,7 +1738,11 @@ shared:
 #   var_name: L:FSS_EXX_EVT_AP_ALT_SEL_INC
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_FPA_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_FPA
+  -
+    type: var
+    var_name: L:FSS_EXX_FGC_ROT_VAL_FPA
+    interpolate: Default
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EVT_AP_VS_HOLD
@@ -1705,7 +1754,7 @@ shared:
 #   var_name: L:FSS_EXX_EVT_AP_VS_HOLD_ON
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_VS_SELECTED
+    var_name: L:FSS_EXX_FGC_ROT_VAL_VS
     interpolate: Default
 # -
 #   type: var
@@ -1802,8 +1851,17 @@ shared:
 #   var_name: L:FSS_EXX_EVT_EXTLT_BEACON_TOGGLE
   -
     type: var
+    var_name: L:FSS_EXX_AUDIO_BTN_MIC_PA
+  -
+    type: var
+    var_name: L:FSS_EXX_AUDIO_L_AUD_PA
+  -
+    type: var
     var_name: L:FSS_EXX_AUDIO_L_VOLUME_VALUE
     interpolate: Default
+  -
+    type: var
+    var_name: L:FSS_EXX_AUDIO_R_AUD_PA
   -
     type: var
     var_name: L:FSS_EXX_AUDIO_R_VOLUME_VALUE
@@ -1954,13 +2012,19 @@ shared:
     var_name: L:FSS_EXX_INST_NO_GSHIELD_LEDS
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_VNAV_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_SRC_L
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_ALT_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_SRC_R
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_VERTG_VS_LIGHT
+#   var_name: L:FSS_EXX_FGC_LT_VNAV
+# -
+#   type: var
+#   var_name: L:FSS_EXX_FGC_LT_ALT
+# -
+#   type: var
+#   var_name: L:FSS_EXX_FGC_LT_VS
   -
     type: var
     var_name: L:FSS_EXX_REVPANEL_L_ADS
@@ -2071,9 +2135,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AUDIO_L_MIC_BV_VHF3_LIGHT
-  -
-    type: var
-    var_name: L:FSS_EXX_AUDIO_L_INOP_INACTIVE
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AUDIO_L_AUD_BV_VHF1_LIGHT
@@ -2115,6 +2176,9 @@ shared:
 #   var_name: L:FSS_EXX_AUDIO_L_TEL_RAMP_LIGHT
   -
     type: var
+    var_name: L:FSS_EXX_AUDIO_L_TEL_CAB_BTN_LIGHT
+  -
+    type: var
     var_name: L:FSS_EXX_AUDIO_L_INOP_ACTIVE
 # -
 #   type: var
@@ -2125,9 +2189,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AUDIO_R_MIC_BV_VHF3_LIGHT
-  -
-    type: var
-    var_name: L:FSS_EXX_AUDIO_R_INOP_INACTIVE
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AUDIO_R_AUD_BV_VHF1_LIGHT
@@ -2169,10 +2230,10 @@ shared:
 #   var_name: L:FSS_EXX_AUDIO_R_TEL_RAMP_LIGHT
   -
     type: var
+    var_name: L:FSS_EXX_AUDIO_R_TEL_CAB_BTN_LIGHT
+  -
+    type: var
     var_name: L:FSS_EXX_AUDIO_R_INOP_ACTIVE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_CUSTOM_AUTOTHROTTLE_ACTIVE
 # -
 #   type: var
 #   var_name: L:FSS_EXX_THR_COMMANDED_N1_L
@@ -2235,25 +2296,31 @@ shared:
 #   var_name: L:FSS_E19X_HGS_COPILOT_LINEWIDTH
 # -
 #   type: var
-#   var_name: L:FSS_EXX_GSHIELD_AP_HOLD_BANK_REF
+#   var_name: L:FSS_EXX_AP_BANK_HOLD
 # -
 #   type: var
-#   var_name: L:FSS_EXX_WINDOW_L_POS
+#   var_name: L:FSS_EXX_TRIM_ELEV_HOLD_ENABLED
 # -
 #   type: var
-#   var_name: L:FSS_EXX_REARDOOR_ANIM_POS
+#   var_name: L:FSS_EXX_TRIM_ELEV_HOLD
+# -
+#   type: var
+#   var_name: L:FSS_EXX_WIPER_SPEED_RT
   -
     type: var
     var_name: L:FSS_EXX_TEST
 # -
 #   type: var
-#   var_name: L:FSS_EXX_WIPER_SPEED_RT
-# -
-#   type: var
 #   var_name: L:FSS_EXX_WINDOW_R_POS
 # -
 #   type: var
+#   var_name: L:FSS_EXX_WINDOW_L_POS
+# -
+#   type: var
 #   var_name: L:FSS_EXX_WIPER_SPEED_LT
+# -
+#   type: var
+#   var_name: L:FSS_EXX_REARDOOR_ANIM_POS
   -
     type: var
     var_name: L:FSS_EXX_CABIN_CONFIG
@@ -2302,6 +2369,12 @@ shared:
   -
     type: var
     var_name: L:FSS_EXX_INST_NO_AUTOBRAKE
+  -
+    type: var
+    var_name: L:FSS_EXX_SHOW_PILOT
+  -
+    type: var
+    var_name: L:FSS_EXX_SHOW_COPILOT
 # -
 #   type: var
 #   var_name: L:FSS_EXX_COLLIDER_DRONE
@@ -2336,31 +2409,7 @@ shared:
     unreliable: true
   -
     type: var
-    var_name: L:FSS_EXX_GSHIELD_AFCS_FD_L_BUTTON
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_AFCS_FD_R_BUTTON
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_CTL_KNOB
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_FMS_KTS
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_FMS_MACH
-# -
-#   type: var
-#   var_name: L:FSS_EXX_SND_GENERIC_VOL
-  -
-    type: var
     var_name: L:FSS_EXX_NAV_PILOT_SRC
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_ALT_ACCEL
-  -
-    type: var
-    var_name: L:FSS_EXX_FD_USE_FPV
 # -
 #   type: var
 #   var_name: L:FSS_EXX_THR_CALIBRATION_LT_VAL
@@ -2460,9 +2509,6 @@ shared:
 #   var_name: L:FSS_EXX_SYS_PERF_MCDU_RIGHT
 # -
 #   type: var
-#   var_name: L:FSS_EXX_SYS_PERF_MCDU_RIGHT_HIGHEST
-# -
-#   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_MCDU_LEFT
 # -
 #   type: var
@@ -2473,6 +2519,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_ELEC_PWR_COPIL_MCDU
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_PERF_MCDU_RIGHT_HIGHEST
 # -
 #   type: var
 #   var_name: L:FSS_EXX_ELEC_PWR_PILOT_MCDU
@@ -2517,13 +2566,13 @@ shared:
 #   var_name: L:FSS_EXX_SYS_PERF_IESS
 # -
 #   type: var
-#   var_name: L:FSS_EXX_SYS_PERF_IESS_HIGHEST
-# -
-#   type: var
 #   var_name: L:FSS_EXX_ELEC_PWR_IESS
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_IESS_FPS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_PERF_IESS_HIGHEST
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_EICAS_TARGET_FPS
@@ -2532,10 +2581,10 @@ shared:
 #   var_name: L:FSS_EXX_SYS_PERF_EICAS
 # -
 #   type: var
-#   var_name: L:FSS_EXX_SYS_PERF_EICAS_FPS
+#   var_name: L:FSS_EXX_ELEC_PWR_EICAS
 # -
 #   type: var
-#   var_name: L:FSS_EXX_ELEC_PWR_EICAS
+#   var_name: L:FSS_EXX_SYS_PERF_EICAS_FPS
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_EICAS_HIGHEST
@@ -2748,6 +2797,9 @@ shared:
 #   var_name: L:FSS_EXX_SYS_PERF_PFD_PILOT
 # -
 #   type: var
+#   var_name: L:FSS_EXX_SYS_PERF_PFD_PILOT_HIGHEST
+# -
+#   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_PFD_COPIL
 # -
 #   type: var
@@ -2755,9 +2807,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_PFD_PILOT_FPS
-# -
-#   type: var
-#   var_name: L:FSS_EXX_SYS_PERF_PFD_PILOT_HIGHEST
 # -
 #   type: var
 #   var_name: L:FSS_EXX_ELEC_PWR_COPIL_PFD
@@ -2818,9 +2867,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_PFD_GV_HDG_SELECTED_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_MFD_GV_MAP_PLAN_DRIFT_DEG
 # -
 #   type: var
 #   var_name: L:FSS_EXX_MFD_GV_MAP_PLAN_LATERAL_DEVIATION
@@ -3856,6 +3902,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_MFD_DEBUG_FUEL
+  -
+    type: var
+    var_name: L:FSS_EXX_ACF_SUBTYPE
 # -
 #   type: var
 #   var_name: L:FSS_EXX_THR_CALIBRATION_CUR_LT_MAX_HI
@@ -4027,13 +4076,7 @@ shared:
     var_name: L:FSS_EXX_ELEC_PWR_SOUNDLOGIC
 # -
 #   type: var
-#   var_name: L:FSS_EXX_AC_CABIN_VALUE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_AC_COCKPIT_VALUE
-  -
-    type: var
-    var_name: L:FSS_EXX_SOUND_BOARDING_STATUS
+#   var_name: L:FSS_EXX_SYS_PERF_SOUNDLOGIC_FPS
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_SOUNDLOGIC
@@ -4042,25 +4085,91 @@ shared:
 #   var_name: L:FSS_EXX_SYS_PERF_SOUNDLOGIC_HIGHEST
 # -
 #   type: var
-#   var_name: L:FSS_EXX_SYS_PERF_SOUNDLOGIC_FPS
+#   var_name: L:FSS_EXX_AC_CABIN_VALUE
 # -
 #   type: var
-#   var_name: L:FSS_EXX_PFD_GV_MIN_SEL_INNER_KNOB_1
+#   var_name: L:FSS_EXX_AC_COCKPIT_VALUE
 # -
 #   type: var
-#   var_name: L:FSS_EXX_PFD_GV_MIN_SEL_INNER_KNOB_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_MIN_SEL_OUTER_KNOB_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_MIN_SEL_OUTER_KNOB_2
+#   var_name: L:SoundAltAlerter
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SOUND_LNG_SPD
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SOUND_FUEL_PUMPS_ACTIVE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_CUSTOM_AUTOTHROTTLE_SERVO_L
+# -
+#   type: var
+#   var_name: L:FSS_EXX_CUSTOM_AUTOTHROTTLE_SERVO_R
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SOUND_AUTOTHROTTLE_SERVO
+# -
+#   type: var
+#   var_name: L:CockpitIntercomMessage
+# -
+#   type: var
+#   var_name: L:FSS_EXX_BATTERY_IN_USE
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_PASSENGER_ANNOUNCEMENT_VOL
+  -
+    type: var
+    var_name: L:FSS_EXX_AUDIO_AUD_PA_BTN
+  -
+    type: var
+    var_name: L:FSS_EXX_AUDIO_TEL_CAB_BTN
+# -
+#   type: var
+#   var_name: L:FlightPhaseTest
+# -
+#   type: var
+#   var_name: L:PaxBoardingMusic
+# -
+#   type: var
+#   var_name: L:PaxWelcomeOnBoardCrew
+# -
+#   type: var
+#   var_name: L:PaxWelcomeOnBoardCaptain
+# -
+#   type: var
+#   var_name: L:PaxDoorsAutomaticCrosscheck
+# -
+#   type: var
+#   var_name: L:PaxSafetyDemo
+# -
+#   type: var
+#   var_name: L:PaxSeatsForTakeOffCaptain
+# -
+#   type: var
+#   var_name: L:PaxServiceCrew
+# -
+#   type: var
+#   var_name: L:PaxSalesCrew
+# -
+#   type: var
+#   var_name: L:PaxTopOfClimb
+# -
+#   type: var
+#   var_name: L:PaxTopOfDescendCrew
+# -
+#   type: var
+#   var_name: L:PaxBeforeLanding
+# -
+#   type: var
+#   var_name: L:PaxSeatsForLanding
+# -
+#   type: var
+#   var_name: L:PaxAfterLanding
+# -
+#   type: var
+#   var_name: L:PaxManualCrossCheck
+# -
+#   type: var
+#   var_name: L:PaxBoardingCompleted
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_FSSWASMINSTRUMENT
@@ -4073,6 +4182,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_FSSWASMINSTRUMENT_HIGHEST
+# -
+#   type: var
+#   var_name: L:NULL_MOUSEPOS
+# -
+#   type: var
+#   var_name: L:NULL_MOUSEBTN
+# -
+#   type: var
+#   var_name: L:NULL_KEY
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AEROSOFT_ONE_VERSION_BOOLEAN
@@ -4097,15 +4215,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_STBYCLOCK_GV_HYD_DAY
-  -
-    type: var
-    var_name: L:FSS_EXX_AUDIOCOM_GV_AUDIO_FOCUS_CHANNEL
-  -
-    type: var
-    var_name: L:FSS_EXX_AUDIOCOM_GV_AUDIO_FOCUS_VALUE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_AUDIOCOM_GV_HYD_DAY
 # -
 #   type: var
 #   var_name: L:FSS_EXX_MFD_GV_ELECT_SPLIT_APU_LINE
@@ -4403,9 +4512,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_FIRST_CAS_DISPLAYED
-  -
-    type: var
-    var_name: L:FSS_EXX_LANDINGGEAR_BV_DN_LOCK_RELEASE
 # -
 #   type: var
 #   var_name: L:FSS_EXX_EQUIP_FANS_HIGH
@@ -4471,9 +4577,6 @@ shared:
 #   var_name: L:FSS_EXX_ELEC_PWR_BATT2_DURATION
 # -
 #   type: var
-#   var_name: L:FSS_EXX_BATTERY_IN_USE
-# -
-#   type: var
 #   var_name: L:FSS_EXX_ELEC_PWR_CAS_MSG_STARTED
 # -
 #   type: var
@@ -4535,12 +4638,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_STBYCOMPASS_GV_Z_VAL
-# -
-#   type: var
-#   var_name: L:FSS_EXX_YOKE_X
-# -
-#   type: var
-#   var_name: L:FSS_EXX_YOKE_Y
 # -
 #   type: var
 #   var_name: L:FSS_EXX_PITCH_TRIM_SND
@@ -4852,6 +4949,641 @@ shared:
 #   var_name: L:FSS_EXX_LVAR_MON_TEST9
 # -
 #   type: var
+#   var_name: L:FSS_WASM_ACTIVATION_STATE
+# -
+#   type: var
+#   var_name: L:FSS_JETWAY_CHECK
+# -
+#   type: var
+#   var_name: L:FSS_JETWAY_CHECK_RESULT
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAV_PILOT_DEV_LAT
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAV_PILOT_DEV_VERT
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAV_PILOT_DIR
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAV_PILOT_CRS
+  -
+    type: var
+    var_name: L:FSS_EXX_NAV_PILOT_MODE
+  -
+    type: var
+    var_name: L:FSS_EXX_NAV_PILOT_MODE_FMS
+  -
+    type: var
+    var_name: L:FSS_EXX_NAV_PILOT_MODE_VL
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAV_COPILOT_DEV_LAT
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAV_COPILOT_DEV_VERT
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAV_COPILOT_DIR
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAV_COPILOT_CRS
+  -
+    type: var
+    var_name: L:FSS_EXX_NAV_COPILOT_MODE
+  -
+    type: var
+    var_name: L:FSS_EXX_NAV_COPILOT_MODE_FMS
+  -
+    type: var
+    var_name: L:FSS_EXX_NAV_COPILOT_MODE_VL
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_NAVILS_LOC
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_RAW_NAVILS_LOC
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DT_NAVILS_LOC
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_T_NAVILS_LOC
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_PTERM_NAVILS_LOC
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ITERM_NAVILS_LOC
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DTERM_NAVILS_LOC
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ERRSUM_NAVILS_LOC
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_NAVILS_LOC
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_RAW_NAVILS_LOC
+  -
+    type: var
+    var_name: L:FSS_EXX_AUTOLAND_ENABLED
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_LOC_P
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_LOC_I
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_LOC_D
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_LOC_R
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_LOC_F
+  -
+    type: var
+    var_name: L:FSS_EXX_NAVILS_LOC_RESET
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_LOC_E_ANGLE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_LOC_E_DIST
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_RAW_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DT_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_T_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_PTERM_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ITERM_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DTERM_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ERRSUM_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_RAW_NAVILS_LOC_ALIGN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_AP_PITCH_HOLD
+  -
+    type: var
+    var_name: L:FSS_EXX_FGC_BTN_VNAV
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_L_BARO_VAL_INHG
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_L_BARO_VAL_HPA
+  -
+    type: var
+    var_name: L:FSS_EXX_DCP_L_BARO_IS_STD
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_L_MIN_ALT_RA
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_L_MIN_ALT_BARO
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_L_CRS_PAIRED
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_R_BARO_VAL_INHG
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_R_BARO_VAL_HPA
+  -
+    type: var
+    var_name: L:FSS_EXX_DCP_R_BARO_IS_STD
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_R_MIN_ALT_RA
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_R_MIN_ALT_BARO
+# -
+#   type: var
+#   var_name: L:FSS_EXX_DCP_R_CRS_PAIRED
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_RAW_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DT_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_T_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_PTERM_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ITERM_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DTERM_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ERRSUM_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_RAW_NAVILS_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_GS_P
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_GS_I
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_GS_D
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_GS_R
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_GS_F
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_GS_ALT
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_GS_E_GS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_GS_E_FPA
+# -
+#   type: var
+#   var_name: L:FSS_EXX_NAVILS_GS_E_ALT
+  -
+    type: var
+    var_name: L:FSS_EXX_NAVILS_GS_RESET
+  -
+    type: var
+    var_name: L:FSS_EXX_AUTOLAND_STATE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_NAVILS_GS_FLARE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_RAW_NAVILS_GS_FLARE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DT_NAVILS_GS_FLARE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_T_NAVILS_GS_FLARE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_PTERM_NAVILS_GS_FLARE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ITERM_NAVILS_GS_FLARE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DTERM_NAVILS_GS_FLARE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ERRSUM_NAVILS_GS_FLARE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_NAVILS_GS_FLARE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_RAW_NAVILS_GS_FLARE
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_SPEEDM_FMS_KTS
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_SPEEDM_FMS_MODE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_R_DN_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_L_UP_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_L_DN_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_AT_SPD_TARGET
+# -
+#   type: var
+#   var_name: L:FSS_EXX_AT_HOLD_MODE
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_PTT_BUTTON
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_FLOODLT_L_BRT_VAL
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_FLOODLT_R_BRT_VAL
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_CHARTLT_L_BRT_VAL
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_CHARTLT_R_BRT_VAL
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_READINGLT_L_BRT_VAL
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_READINGLT_R_BRT_VAL
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_GSHIELDLT_L_BRT_VAL
+    unreliable: true
+  -
+    type: var
+    var_name: L:FSS_EXX_GSHIELD_GSHIELDLT_R_BRT_VAL
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:FSS_EXX_EXT_GPU_STATE
+  -
+    type: var
+    var_name: L:FSS_EXX_LANDINGGEAR_BV_DN_LOCK_RELEASE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_FLAPS_GV_LEVER
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SND_AUTOBRAKE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_AUTOBRAKE_RTO_STATE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_AUTOBRAKE_LDG_STATE
+# -
+#   type: var
+#   var_name: L:FSS_EXX_RTO_AIRB_RESET_SND
+# -
+#   type: var
+#   var_name: L:FSS_EXX_TRIM_ELEV_PCT_HOLD
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_INP_RAW_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DT_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_T_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_PTERM_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ITERM_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_DTERM_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_ERRSUM_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_OUT_RAW_PID_TRIM_PITCH
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_TRIM_PITCH_P
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_TRIM_PITCH_I
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_TRIM_PITCH_D
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_TRIM_PITCH_R
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_TRIM_PITCH_INP_F
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_TRIM_PITCH_OUT_F
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_TRIM_PITCH_EP
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_TRIM_PITCH_EY
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PID_TRIM_PITCH_MAX_I
+  -
+    type: var
+    var_name: L:FSS_EXX_IESS_BV_ILS_BTN
+  -
+    type: var
+    var_name: L:FSS_EXX_IESS_BV_CAGE_BTN
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_VERTICAL_FD_MODE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_VERTICAL_FD_MODE_ARM_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_LATERAL_FD_MODE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_LATERAL_FD_MODE_ARM_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_ALT_SELECTED_M_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_VS_SELECTED_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECTED_IAS_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECTED_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECT_UNIT_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECT_SOURCE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_ALT_SEL_FT_M
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AP_TCS_ENGGAGE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_APPROACH_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_OVSPEED_BPOLE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LSA_WARN_RANGE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LOW_SPEED_AWARENESS_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_TREND_VECTOR_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_ALT_TREND_VECTOR_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPEED_IDEAL_FLAP_VALUE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AP_FD_BANK_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AP_FD_PITCH_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_ANGLE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_ERROR_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_PFPA_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_AP_DISC_ALERT_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_CUE_SHOW_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_TO_MODE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_SHOW_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_TO_VERT_ANGLE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_TO_HORZ_ANGLE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPR_SHOW_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPR_ANGLE_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LANDING_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_KNOTS_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_MACH_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_VERTICAL_FD_MODE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_VERTICAL_FD_MODE_ARM_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_LATERAL_FD_MODE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_LATERAL_FD_MODE_ARM_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_L_UP_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_L_DN_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_R_DN_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_ALT_SELECTED_M_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_VS_SELECTED_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECTED_IAS_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECTED_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECT_UNIT_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECT_SOURCE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_HDG_SELECTED_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AP_TCS_ENGGAGE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_APPROACH_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_OVSPEED_BPOLE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LSA_WARN_RANGE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LOW_SPEED_AWARENESS_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_TREND_VECTOR_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_ALT_TREND_VECTOR_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPEED_IDEAL_FLAP_VALUE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AP_FD_BANK_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AP_FD_PITCH_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_ANGLE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_ERROR_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_PFPA_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FMA_AP_DISC_ALERT_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_CUE_SHOW_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_TO_MODE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_SHOW_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_TO_VERT_ANGLE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_TO_HORZ_ANGLE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPR_SHOW_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_FD_FPR_ANGLE_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LANDING_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_KNOTS_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_MACH_2
+# -
+#   type: var
 #   var_name: L:FSS_EXX_AUTOTHROTTLE_SPDT_P
 # -
 #   type: var
@@ -4886,15 +5618,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_TODATASET_FLEX_TEMP
-# -
-#   type: var
-#   var_name: L:FSS_WASM_ACTIVATION_STATE
-# -
-#   type: var
-#   var_name: L:FSS_JETWAY_CHECK
-# -
-#   type: var
-#   var_name: L:FSS_JETWAY_CHECK_RESULT
+  -
+    type: var
+    var_name: L:FSS_EXX_AUTOTHROTTLE_OVRD_ACTIVE
 # -
 #   type: var
 #   var_name: L:FSS_EXX_STBYCLOCK_GV_CHR_VAL
@@ -4922,18 +5648,6 @@ shared:
   -
     type: var
     var_name: L:THROTTLE_BV_TO_MODE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_VERTICAL_FD_MODE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_VERTICAL_FD_MODE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_CUSTOM_AUTOTHROTTLE_SERVO_L
-# -
-#   type: var
-#   var_name: L:FSS_EXX_CUSTOM_AUTOTHROTTLE_SERVO_R
 # -
 #   type: var
 #   var_name: L:FSS_EXX_AUTOTHROTTLE_CONTR_OUT
@@ -4982,645 +5696,15 @@ shared:
   -
     type: var
     var_name: L:FSS_EXX_TODATASET_ANTIICE_MODE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_L_UP_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_L_DN_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_R_DN_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_L_UP_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_L_DN_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_AT_R_DN_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_NAV_PILOT_DEV_LAT
-# -
-#   type: var
-#   var_name: L:FSS_EXX_NAV_PILOT_DEV_VERT
-# -
-#   type: var
-#   var_name: L:FSS_EXX_NAV_PILOT_DIR
-# -
-#   type: var
-#   var_name: L:FSS_EXX_NAV_PILOT_CRS
   -
     type: var
-    var_name: L:FSS_EXX_NAV_PILOT_MODE
+    var_name: L:FSS_EXX_GSHIELD_AFCS_FD_L_BUTTON
   -
     type: var
-    var_name: L:FSS_EXX_NAV_PILOT_MODE_FMS
-  -
-    type: var
-    var_name: L:FSS_EXX_NAV_PILOT_MODE_VL
+    var_name: L:FSS_EXX_GSHIELD_AFCS_FD_R_BUTTON
 # -
 #   type: var
-#   var_name: L:FSS_EXX_NAV_COPILOT_DEV_LAT
-# -
-#   type: var
-#   var_name: L:FSS_EXX_NAV_COPILOT_DEV_VERT
-# -
-#   type: var
-#   var_name: L:FSS_EXX_NAV_COPILOT_DIR
-# -
-#   type: var
-#   var_name: L:FSS_EXX_NAV_COPILOT_CRS
-  -
-    type: var
-    var_name: L:FSS_EXX_NAV_COPILOT_MODE
-  -
-    type: var
-    var_name: L:FSS_EXX_NAV_COPILOT_MODE_FMS
-  -
-    type: var
-    var_name: L:FSS_EXX_NAV_COPILOT_MODE_VL
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_PTT_BUTTON
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_FLOODLT_L_BRT_VAL
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_FLOODLT_R_BRT_VAL
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_CHARTLT_L_BRT_VAL
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_CHARTLT_R_BRT_VAL
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_READINGLT_L_BRT_VAL
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_READINGLT_R_BRT_VAL
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_GSHIELDLT_L_BRT_VAL
-    unreliable: true
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_GSHIELDLT_R_BRT_VAL
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_L_BARO_VAL_INHG
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_L_BARO_VAL_HPA
-  -
-    type: var
-    var_name: L:FSS_EXX_DCP_L_BARO_IS_STD
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_L_MIN_ALT_RA
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_L_MIN_ALT_BARO
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_L_CRS_PAIRED
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_R_BARO_VAL_INHG
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_R_BARO_VAL_HPA
-  -
-    type: var
-    var_name: L:FSS_EXX_DCP_R_BARO_IS_STD
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_R_MIN_ALT_RA
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_R_MIN_ALT_BARO
-# -
-#   type: var
-#   var_name: L:FSS_EXX_DCP_R_CRS_PAIRED
-# -
-#   type: var
-#   var_name: L:FSS_EXX_NAVILS_HOLD_BANK
-# -
-#   type: var
-#   var_name: L:FSS_EXX_NAVILS_HOLD_PITCH
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_SPEEDM_FMS_MODE
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_FPA_SEL_VAL
-    interpolate: Default
-  -
-    type: var
-    var_name: L:FSS_EXX_GSHIELD_VERTG_VNAV_BUTTON
-# -
-#   type: var
-#   var_name: L:FSS_EXX_EXT_GPU_STATE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_SND_AUTOBRAKE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_AUTOBRAKE_RTO_STATE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_AUTOBRAKE_LDG_STATE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_RTO_AIRB_RESET_SND
-  -
-    type: var
-    var_name: L:FSS_EXX_IESS_BV_ILS_BTN
-  -
-    type: var
-    var_name: L:FSS_EXX_IESS_BV_CAGE_BTN
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_HEADING_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BANK_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_PITCH_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPEED_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ALTITUDE_FT_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ALTITUDE_M_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_GROUNDSPEED_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_VSPD_VAL_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ALT_SELECTED_M_1
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_ALT_SEL_COLOUR_1
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_ALT_SEL_ONGROUND_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_VS_SELECTED_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_VERTICAL_FD_MODE_ARM_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_LATERAL_FD_MODE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_LATERAL_FD_MODE_ARM_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECTED_IAS_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECTED_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECT_UNIT_1
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECT_SOURCE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ALT_SEL_FT_M
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_HSI_BUTTON_MODE_1
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_HDG_SELECT_STATUS_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AP_TCS_ENGGAGE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AP_SOURCE_SELECT_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_APPROACH_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BARO_SET_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BARO_SET_HPA_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BARO_SET_STD_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BARO_SET_UNIT_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_RADIO_ALT_READOUT_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_MIN_ALT_LEQ_MINIMUMS_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AP_FD_BANK_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AP_FD_PITCH_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_FD_FPV_DIFF_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_FD_PITCH_DIFF_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_OVSPEED_BPOLE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LSA_WARN_RANGE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LOW_SPEED_AWARENESS_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_TREND_VECTOR_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ALT_TREND_VECTOR_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPEED_IDEAL_FLAP_VALUE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPEED_IDEAL_FLAP_SHOW_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_HSI_CDI_NEEDLE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_HSI_CDI_NEEDLE_VLD_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_CUE_SHOW_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_TO_MODE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_SHOW_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_ANGLE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_ERROR_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_PFPA_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_TO_VERT_ANGLE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_TO_HORZ_ANGLE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPR_SHOW_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_FD_OVSP
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPR_ANGLE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SHOW_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SHOW_HORIZONTAL_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SHOW_VERTICAL_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_VERTICAL_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SCALE_VERTICAL_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_LATERAL_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_TARGET_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SRC_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DC_CDI_NEEDLE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DC_CDI_TOFROM_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DC_CDI_CRS_1
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_DC_NAVSRC_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LANDING_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_AP_DISC_ALERT_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_PNS_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_LATERAL_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_LATERAL_SHOW_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_VERT_SCALE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_VERT_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_VERT_SHOW_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_HSI_PNS_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_HSI_LATERAL_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_HSI_LATERAL_COURSE_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_HSI_LATERAL_FROMTO_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_HEADING_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BANK_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_PITCH_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPEED_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ALTITUDE_FT_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ALTITUDE_M_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_GROUNDSPEED_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_VSPD_VAL_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ALT_SELECTED_M_2
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_ALT_SEL_COLOUR_2
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_ALT_SEL_ONGROUND_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_VS_SELECTED_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_VERTICAL_FD_MODE_ARM_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_LATERAL_FD_MODE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_LATERAL_FD_MODE_ARM_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECTED_IAS_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECTED_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECT_UNIT_2
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_AIRSPD_SELECT_SOURCE_2
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_HSI_BUTTON_MODE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_HDG_SELECTED_2
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_HDG_SELECT_STATUS_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AP_TCS_ENGGAGE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AP_SOURCE_SELECT_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_APPROACH_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BARO_SET_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BARO_SET_HPA_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BARO_SET_STD_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_BARO_SET_UNIT_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_RADIO_ALT_READOUT_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_MIN_ALT_LEQ_MINIMUMS_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AP_FD_BANK_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AP_FD_PITCH_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_FD_FPV_DIFF_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_FD_PITCH_DIFF_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_OVSPEED_BPOLE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LSA_WARN_RANGE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LOW_SPEED_AWARENESS_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_TREND_VECTOR_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ALT_TREND_VECTOR_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPEED_IDEAL_FLAP_VALUE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPEED_IDEAL_FLAP_SHOW_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_HSI_CDI_NEEDLE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_HSI_CDI_NEEDLE_VLD_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_CUE_SHOW_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_TO_MODE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_SHOW_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_ANGLE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_ERROR_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPA_PFPA_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_TO_VERT_ANGLE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_TO_HORZ_ANGLE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPR_SHOW_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FD_FPR_ANGLE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SHOW_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SHOW_HORIZONTAL_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SHOW_VERTICAL_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_VERTICAL_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SCALE_VERTICAL_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_LATERAL_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_TARGET_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_ADI_DEVIATION_SRC_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DC_CDI_NEEDLE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DC_CDI_TOFROM_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DC_CDI_CRS_2
-  -
-    type: var
-    var_name: L:FSS_EXX_PFD_GV_DC_NAVSRC_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_AIRSPD_LANDING_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_FMA_AP_DISC_ALERT_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_PNS_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_LATERAL_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_LATERAL_SHOW_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_VERT_SCALE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_VERT_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_VERT_SHOW_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_HSI_PNS_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_HSI_LATERAL_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_HSI_LATERAL_COURSE_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_HSI_LATERAL_FROMTO_2
+#   var_name: L:FSS_EXX_SND_GENERIC_VOL
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_PERF_SIM_TARGET_FPS
@@ -5638,15 +5722,6 @@ shared:
 #   var_name: L:FSS_EXX_SYS_PERF_SIM_FPS
   -
     type: var
-    var_name: L:FSS_EXX_EFB_GV_PASSENGER_ANNOUNCEMENT_VOL
-  -
-    type: var
-    var_name: L:FSS_EXX_EFB_GV_CABIN_MUSIC
-# -
-#   type: var
-#   var_name: L:FSS_EXX_IESS_IRS_ALIGN_MODE
-  -
-    type: var
     var_name: L:FSS_EXX_MCDU_CRZALT
 # -
 #   type: var
@@ -5662,34 +5737,10 @@ shared:
     var_name: L:MFD_LEFT_MapZoomRange
   -
     type: var
-    var_name: L:MFD_RIGHT_MapShowCursor
-  -
-    type: var
-    var_name: L:MFD_RIGHT_MapZoomRange
+    var_name: L:FSS_EXX_EFB_GV_CABIN_MUSIC
 # -
 #   type: var
-#   var_name: L:FSS_EXX_IESS_IRS_ALIGN_DONE
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_LAT_SHOW_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_VERT_SHOW_1
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_LAT_SHOW_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_PFD_GV_DEV_VERT_SHOW_2
-# -
-#   type: var
-#   var_name: L:FSS_EXX_SYS_PERF_MFD_LEFT_SIMVARS
-# -
-#   type: var
-#   var_name: L:FSS_EXX_SYS_PERF_MFD_LEFT_SIMVARS_HIGHEST
-# -
-#   type: var
-#   var_name: L:FSS_EXX_SYS_PERF_MFD_RIGHT_SIMVARS
+#   var_name: L:FSS_EXX_IESS_IRS_ALIGN_MODE
 # -
 #   type: var
 #   var_name: L:FSS_EXX_IRS_ALIGN_ENDTIME
@@ -5698,16 +5749,52 @@ shared:
 #   var_name: L:FSS_EXX_IESS_IRS_ALIGN
 # -
 #   type: var
+#   var_name: L:FSS_EXX_IESS_IRS_ALIGN_DONE
+# -
+#   type: var
 #   var_name: L:FSS_EXX_PFD_IRS_ALIGN
+  -
+    type: var
+    var_name: L:FSS_EXX_PFD_GV_ALT_SEL_COLOUR_1
 # -
 #   type: var
 #   var_name: L:FSS_EXX_PFD_GV_ALT_SEL_FLASHING_1
 # -
 #   type: var
-#   var_name: L:FSS_EXX_CAS_SCROLL_OFFSET
+#   var_name: L:FSS_EXX_MFD_GV_MAP_PLAN_DRIFT_DEG
 # -
 #   type: var
-#   var_name: L:FSS_EXX_SYS_PERF_MFD_RIGHT_SIMVARS_HIGHEST
+#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_VERT_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_DEV_ADI_VERT_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_DEV_VERT_SHOW_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_DEV_VERT_SHOW_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_DEV_LAT_SHOW_1
+# -
+#   type: var
+#   var_name: L:FSS_EXX_PFD_GV_DEV_LAT_SHOW_2
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_PERF_MFD_LEFT_SIMVARS
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_PERF_MFD_LEFT_SIMVARS_HIGHEST
+  -
+    type: var
+    var_name: L:MFD_RIGHT_MapShowCursor
+  -
+    type: var
+    var_name: L:MFD_RIGHT_MapZoomRange
+# -
+#   type: var
+#   var_name: L:FSS_EXX_CAS_SCROLL_OFFSET
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
@@ -5717,6 +5804,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_CAS_TEST_OFF_ID
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_PERF_MFD_RIGHT_SIMVARS
 # -
 #   type: var
 #   var_name: L:FSS_EXX_CAS_SAMPLE_ID
@@ -5810,6 +5900,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_EXX_CAS_WARN_VAL
+# -
+#   type: var
+#   var_name: L:FSS_EXX_SYS_PERF_MFD_RIGHT_SIMVARS_HIGHEST
+# -
+#   type: var
+#   var_name: L:FSS_EXX_MASTER_WARN_MUTE_CHIME
 # -
 #   type: var
 #   var_name: L:FSS_EXX_SYS_WASM_FAIL_TEST
