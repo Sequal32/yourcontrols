@@ -5,7 +5,6 @@ use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 pub struct LVar {
-    pub integer: i32,
     pub floating: f64,
 }
 
@@ -45,7 +44,6 @@ struct InterpolateMapping {
 pub struct InterpolateData {
     pub name: String,
     pub value: f64,
-    pub time: f64,
 }
 
 #[derive(Deserialize, Debug)]

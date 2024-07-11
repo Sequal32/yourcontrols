@@ -95,7 +95,7 @@ impl ServerState {
             net,
         );
 
-        self.in_control = name.clone();
+        self.in_control.clone_from(&name);
         self.hoster = name;
     }
 
@@ -173,7 +173,7 @@ impl ServerState {
                 return;
             }
             Payloads::TransferControl { to, .. } => {
-                self.in_control = to.clone();
+                self.in_control.clone_from(to);
             }
             Payloads::SetObserver {
                 to, is_observer, ..

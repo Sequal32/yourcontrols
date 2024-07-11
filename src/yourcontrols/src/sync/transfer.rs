@@ -204,10 +204,10 @@ impl AircraftVars {
         &mut self,
         data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA,
     ) -> Result<SimValue, io::Error> {
-        let vars = match self.reader.read_from_bytes(
-            data.dwDefineCount,
-            std::ptr::addr_of!(data.dwData) as *const u32,
-        ) {
+        let vars = match self
+            .reader
+            .read_from_bytes(data.dwDefineCount, std::ptr::addr_of!(data.dwData))
+        {
             Ok(v) => v,
             Err(e) => return Err(e),
         };

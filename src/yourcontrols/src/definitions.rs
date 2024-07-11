@@ -854,15 +854,12 @@ impl Definitions {
         Ok(())
     }
 
-    fn add_num_increment_generic<T: ToString>(
+    fn add_num_increment_generic<T: Default + ToString>(
         &mut self,
         data_type: InDataTypes,
         category: &str,
         var: NumIncrementEntry<T>,
-    ) -> Result<(Box<NumIncrement<T>>, String), Error>
-    where
-        T: Default,
-    {
+    ) -> Result<(Box<NumIncrement<T>>, String), Error> {
         let (var_string, _) =
             self.add_var_string(category, &var.var_name, var.var_units.as_deref(), data_type)?;
 
@@ -1536,7 +1533,6 @@ impl Definitions {
 
         let mut interpolation_data = Vec::new();
 
-        let data = data;
         // Add some local computed components
         // self.physics_corrector.add_components(&mut data);
 
@@ -1569,7 +1565,6 @@ impl Definitions {
                                 interpolation_data.push(InterpolateData {
                                     name: var_name.clone(),
                                     value: data.get_as_f64(),
-                                    time,
                                 });
                             } else {
                                 // Set data right away

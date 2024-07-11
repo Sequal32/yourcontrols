@@ -762,7 +762,7 @@ fn main() {
                         "[DEFINITIONS] {} aircraft config selected.",
                         config_file_name
                     );
-                    config_to_load = config_file_name.clone();
+                    config_to_load.clone_from(&config_file_name);
                 }
                 AppMessage::Startup => {
                     // List aircraft

@@ -5,7 +5,6 @@ use std::{collections::HashMap, net::SocketAddr};
 pub struct SessionInfo {
     pub hoster_addr: SocketAddr,
     pub hoster_endpoints: Vec<SocketAddr>,
-    pub connected_clients: Vec<SocketAddr>,
 }
 
 impl SessionInfo {
@@ -13,7 +12,6 @@ impl SessionInfo {
         Self {
             hoster_addr,
             hoster_endpoints,
-            connected_clients: Vec::new(),
         }
     }
 }

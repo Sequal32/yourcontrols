@@ -136,7 +136,7 @@ fn process_payload(
             return;
         }
         Payloads::TransferControl { from: _, to } => {
-            state.in_control = to.clone();
+            state.in_control.clone_from(to);
         }
         Payloads::SetObserver {
             from: _,
@@ -293,7 +293,7 @@ pub fn run_hoster(servers: Arc<Mutex<Servers>>, port: u16) {
                                 if client.addr != addr {
                                     true
                                 } else {
-                                    removed_name = name.clone();
+                                    removed_name.clone_from(name);
                                     false
                                 }
                             });
