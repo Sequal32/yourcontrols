@@ -249,7 +249,7 @@ fn main() {
             // Simconnect message
             while let Ok(message) = conn.get_next_message() {
                 match message {
-                    DispatchResult::SimobjectData(data) => {
+                    DispatchResult::SimObjectData(data) => {
                         definitions.process_sim_object_data(data);
                     }
                     // Exception occured
