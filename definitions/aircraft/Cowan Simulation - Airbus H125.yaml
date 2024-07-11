@@ -1,4 +1,4 @@
-# Version 2.0.0
+# Version 2.1.0
 
 include:
   - definitions/modules/Instruments/AS_G3X.yaml
@@ -9,6 +9,7 @@ include:
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/Instruments/TDS_GTNXi.yaml
   - definitions/modules/controls_rotor.yaml
+  - definitions/modules/electrical.yaml
   - definitions/modules/engines_rotor.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -20,33 +21,20 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # COM1/NAV1
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:15
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 15
+
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
     var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
-    event_param: 1
-
-  - # Electrical
-    type: ToggleSwitch
-    var_name: A:ELECTRICAL MASTER BATTERY:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_MASTER_BATTERY
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_ALTERNATOR1
-  -
-    type: ToggleSwitch
-    var_name: A:AVIONICS MASTER SWITCH:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_AVIONICS_MASTER
     event_param: 1
 
   - # Fuel
@@ -61,8 +49,7 @@ shared:
     var_name: A:FUELSYSTEM VALVE SWITCH:2
     var_units: Bool
     var_type: bool
-    event_name: FUELSYSTEM_VALVE_OPEN
-    off_event_name: FUELSYSTEM_VALVE_CLOSE
+    event_name: FUELSYSTEM_VALVE_TOGGLE
     event_param: 2
 
   - # Gyrocompass
@@ -114,11 +101,11 @@ shared:
     event_param: 1
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
+    var_name: A:LIGHT POTENTIOMETER:4
     var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
+    event_param: 4
     index_reversed: true
   -
     type: NumSet
@@ -129,11 +116,11 @@ shared:
     event_param: 1
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
+    var_name: A:LIGHT POTENTIOMETER:8
     var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
+    event_param: 8
     index_reversed: true
   -
     type: NumSet

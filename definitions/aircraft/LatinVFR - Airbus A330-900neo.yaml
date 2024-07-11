@@ -1,4 +1,4 @@
-# Version 1.0.4 (same as Asobo A320)
+# Version 1.0.6 (based on Asobo A320)
 
 include:
   - definitions/aircraft/Asobo Studio - Airbus A320neo.yaml
@@ -180,52 +180,13 @@ shared:
     var_name: L:LVFR_ADIRS3_STATE
 # -
 #   type: var
-#   var_name: L:LVFR_EFB_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:LVFR_EFB_State
-  -
-    type: var
-    var_name: L:LVFR_SYSTEM_SIMBRIEF_IMPORTER_STATE
-# -
-#   type: var
-#   var_name: L:LVFR_Airbus_CDU_3_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:LVFR_Airbus_CDU_3_State
-# -
-#   type: var
-#   var_name: L:LVFR_Airbus_MFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:LVFR_Airbus_MFD_State
-# -
-#   type: var
-#   var_name: L:LVFR_Airbus_CDU_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:LVFR_Airbus_CDU_1_State
-# -
-#   type: var
-#   var_name: L:LVFR_Airbus_FCU_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:LVFR_Airbus_FCU_State
-# -
-#   type: var
-#   var_name: L:LVFR_CUSTOM_VNAV_PATH_DESCENT
-# -
-#   type: var
-#   var_name: L:LVFR_BAT_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:LVFR_BAT_State
-# -
-#   type: var
 #   var_name: L:LVFR_Airbus_PFD_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:LVFR_Airbus_PFD_State
+# -
+#   type: var
+#   var_name: L:LVFR_CUSTOM_VNAV_PATH_DESCENT
 # -
 #   type: var
 #   var_name: L:LVFR_Airbus_EICAS_1_ScreenLuminosity
@@ -261,6 +222,69 @@ shared:
 #   var_name: L:LVFR_SECTOR_TEMP_BULK
 # -
 #   type: var
+#   var_name: L:LVFR_Airbus_FCU_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_FCU_State
+# -
+#   type: var
+#   var_name: L:LVFR_EFB_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_EFB_State
+# -
+#   type: var
+#   var_name: L:SoundSystems_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:SoundSystems_State
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_BAT1
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_BAT2
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_BAT_BOTH_POWERED
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_AC_PWR
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_LDG
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_APU_BUS
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_GEAR_LEVER_POS
+# -
+#   type: var
+#   var_name: L:LVFR_GPWS_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_GPWS_State
+  -
+    type: var
+    var_name: L:LVFR_CDU_MDA
+  -
+    type: var
+    var_name: L:LVFR_CDU_DH
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:MDA
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:DH
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_MFD_State
+# -
+#   type: var
 #   var_name: L:LVFR_Airbus_EICAS_2_ScreenLuminosity
 # -
 #   type: var
@@ -271,6 +295,36 @@ shared:
 # -
 #   type: var
 #   var_name: L:LVFR_Airbus_Clock_State
+  -
+    type: var
+    var_name: L:LVFR_SYSTEM_SIMBRIEF_IMPORTER_STATE
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_CDU_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_CDU_1_State
+# -
+#   type: var
+#   var_name: L:LVFR_BAT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_BAT_State
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_CDU_3_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_CDU_3_State
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:DHBottomBorder
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:DHUpperBorder
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:GPWS_MinimumsMDA
 
 server:
   -
@@ -297,15 +351,3 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
-
-ignore:
-  - LVFR_EFB#-730561704
-  - LVFR_EFB#2117358877
-  - LVFR_EFB#-97203651
-  - LVFR_EFB#-620001156
-  - LVFR_EFB#1164182477
-  - LVFR_EFB#395644218
-  - LVFR_EFB#1756655189
-  - LVFR_EFB#245003559
-  - LVFR_EFB#1923620682
-  - LVFR_EFB#277864199
