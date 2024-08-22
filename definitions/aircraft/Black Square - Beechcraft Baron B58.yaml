@@ -4,10 +4,10 @@ include:
   - definitions/modules/Instruments/AS_GNS430.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
   - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/Instruments/BKSQ_KFC150.yaml
   - definitions/modules/Instruments/PMS50_GNS.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/Instruments/TDS_GTNXi.yaml
-  - definitions/modules/autopilot.yaml
   - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -317,9 +317,10 @@ shared:
     type: var
     var_name: L:var_manualExtensionHandleTurns
     unreliable: true
-# -
-#   type: var
-#   var_name: L:var_AutopilotStartupCounter
+  - # Test button
+    type: var
+    var_name: L:var_AutopilotStartupCounter
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:var_propSyncIndicatorPosition
@@ -463,9 +464,9 @@ shared:
   -
     type: var
     var_name: L:var_RNAV_DMERADIALMODE
-  -
-    type: var
-    var_name: L:var_RNAV_CHECKMODE
+# -
+#   type: var
+#   var_name: L:var_RNAV_CHECKMODE
 # -
 #   type: var
 #   var_name: L:var_RNAV_OBS
@@ -704,9 +705,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:BKSQ_AUTOPILOT_DISCONNECT_SOUND
-# -
-#   type: var
-#   var_name: L:var_AutopilotTest
+  -
+    type: var
+    var_name: L:var_AutopilotTest
 # -
 #   type: var
 #   var_name: L:var_FuelEvaporationRate_L
