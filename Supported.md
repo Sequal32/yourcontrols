@@ -88,6 +88,8 @@
 - Just Flight - Piper PA-28-161 Warrior II # v0.3.8
 - Just Flight - Piper PA-28R-201 Arrow III # v0.10.8
 - Just Flight - Piper PA-28R-201T Turbo Arrow III & IV # v0.5.8
+- jXt Simulations - Bell 429 GlobalRanger # v0.1.0
+- jXt Simulations - Bell 505 Jet Ranger X # v0.3.0
 - Kurorin - Boeing 787-8 Dreamliner # v3.0.1
 - LatinVFR - Airbus A318ceo # v2.1.10
 - LatinVFR - Airbus A319ceo # v2.1.10
