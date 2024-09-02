@@ -71,7 +71,6 @@
 - Erasam - Tecnam P92 Echo # v2.0.1
 - FlightFX - Cirrus SF50 Vision Jet G2 # v2.3.5
 - FlightFX - Honda HA-420 HondaJet # v2.1.2
-- FlightSim Studio - Embraer E17X/E19X/Freighter # v0.9.22
 - FlightSim Studio - SeaRey Elite # v1.0.3
 - FlightSim Studio - Tecnam P2006T MkII # v1.1.2
 - FlyByWire Simulations - Airbus A320neo # v0.11.1
