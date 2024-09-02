@@ -139,4 +139,4 @@
 - SimWorks Studios - Van's RV-14 # v1.3.3
 - VrilleAPlat - Cessna A-37B Dragonfly # v1.1.2
 - VrilleAPlat - Cessna T-37B Tweet # v1.5
-- WB-Sim - Cessna 172SP Classic # v1.0.8
+- WB-Sim - Cessna 172SP Classic # v1.0.9
