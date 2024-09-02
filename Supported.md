@@ -124,7 +124,7 @@
 - Milviz/Blackbird Sims - Cessna 310R # v2.0.4
 - Milviz/Blackbird Sims - Pilatus PC-6 Porter # v1.1.8
 - ORBX - PAC P-750 XSTOL # v1.1.0
-- Parallel 42 - FreedomFox & Fox2 # v1.0.0
+- Parallel 42 - FreedomFox & Fox2 # v1.2.2
 - Parallel 42 - Juice Goose UTV # v1.1.0
 - PILOT'S - Boeing 314 Clipper # v1.6.2
 - PMDG Simulations - Boeing 737NG Series # v3.0.65
