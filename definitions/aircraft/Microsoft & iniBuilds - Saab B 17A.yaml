@@ -1,0 +1,630 @@
+# Version 1.0.12
+
+include:
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/controls.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
+  - definitions/modules/magnetos.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_ON
+    off_event_name: FUELSYSTEM_PUMP_OFF
+    event_param: 2
+
+  - # Oil Radiator
+    type: NumSet
+    var_name: A:OIL COOLING FLAPS POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: OIL_COOLING_FLAPS_SET
+    unreliable: true
+
+  - # Tank select
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:3
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:4
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:5
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 5
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:6
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 6
+    index_reversed: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: f64
+    event_name: BEACON_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:3
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 3
+
+  - # Interior
+    type: NumSet
+    var_name: LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+
+  - # LVAR's
+    type: var
+    var_name: L:BombDoorCrank
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:half_light_half
+  -
+    type: var
+    var_name: L:Radio_Squelch
+  -
+    type: var
+    var_name: L:Radio_Com_Source
+  -
+    type: var
+    var_name: L:Radio_StandbyFreq_Section
+  -
+    type: var
+    var_name: L:Radio_FreqSection_Changed
+# -
+#   type: var
+#   var_name: L:Radio_Swap_Pressed
+# -
+#   type: var
+#   var_name: L:Radio_COM1_Volume
+  -
+    type: var
+    var_name: L:Radio_OnOff
+  -
+    type: var
+    var_name: L:XPDR_IDENT
+  -
+    type: var
+    var_name: L:XPDR_On
+  -
+    type: var
+    var_name: L:XPDR_Off
+  -
+    type: var
+    var_name: L:XPDR_ALT
+  -
+    type: var
+    var_name: L:XPDR_STBY
+# -
+#   type: var
+#   var_name: L:XPDR_VFR
+  -
+    type: var
+    var_name: L:XPDR_Func
+  -
+    type: var
+    var_name: L:XPDR_CRSR
+  -
+    type: var
+    var_name: L:XPDR_StartStop
+  -
+    type: var
+    var_name: L:XPDR_CLR
+# -
+#   type: var
+#   var_name: L:XPDR_0
+# -
+#   type: var
+#   var_name: L:XPDR_1
+# -
+#   type: var
+#   var_name: L:XPDR_2
+# -
+#   type: var
+#   var_name: L:XPDR_3
+# -
+#   type: var
+#   var_name: L:XPDR_4
+# -
+#   type: var
+#   var_name: L:XPDR_5
+# -
+#   type: var
+#   var_name: L:XPDR_6
+# -
+#   type: var
+#   var_name: L:XPDR_7
+# -
+#   type: var
+#   var_name: L:XPDR_8
+# -
+#   type: var
+#   var_name: L:XPDR_9
+  -
+    type: var
+    var_name: L:vac_source
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:TOGGLE_PRIMER
+  -
+    type: var
+    var_name: L:FUEL_gauge_Select
+# - # Does nothing
+#   type: var
+#   var_name: L:FUEL_Tank_Select
+  -
+    type: var
+    var_name: L:half_light
+  -
+    type: var
+    var_name: L:Stopwatch_Start
+  -
+    type: var
+    var_name: L:Flight_timer_Start
+  -
+    type: var
+    var_name: L:EFB_SHOWHIDE
+# -
+#   type: var
+#   var_name: L:__KNOB_Switch_Radio_OnVolume
+# -
+#   type: var
+#   var_name: L:__KNOB_Switch_Radio_RotaryScan
+  -
+    type: var
+    var_name: L:VOLT_TOGGLE
+# -
+#   type: var
+#   var_name: L:knob_voltamps
+# -
+#   type: var
+#   var_name: L:
+# -
+#   type: var
+#   var_name: L:__KNOB_ADI_Knob
+  -
+    type: var
+    var_name: L:Compass_Needle
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:__KNOB_Knob_AltMili_Display
+  -
+    type: var
+    var_name: L:StarterCover
+  -
+    type: var
+    var_name: L:Starter
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+  -
+    type: var
+    var_name: L:Cowling_flaps
+    unreliable: true
+  -
+    type: var
+    var_name: L:Knob_OXY_A
+    unreliable: true
+  -
+    type: var
+    var_name: L:Knob_OXY_B
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:Fuel_Pump
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+  -
+    type: var
+    var_name: L:nav_light
+  -
+    type: var
+    var_name: L:Switch_Side_Lights
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_3
+  -
+    type: var
+    var_name: L:Comp_Light
+    unreliable: true
+  -
+    type: var
+    var_name: L:Canopy_Front_TESTER
+# -
+#   type: var
+#   var_name: L:Canopy_Front
+  -
+    type: var
+    var_name: L:Canopy_Front_Window
+  -
+    type: var
+    var_name: L:Canopy_Rear
+  -
+    type: var
+    var_name: L:Stopwatch_StartStop
+  -
+    type: var
+    var_name: L:FlightTimer_StartStop
+  -
+    type: var
+    var_name: L:batt_temp
+  -
+    type: var
+    var_name: L:Switch_Batt_Temp_test
+# -
+#   type: var
+#   var_name: L:TRIGGER_SET
+# -
+#   type: var
+#   var_name: L:DELAY_START
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_trigger
+# -
+#   type: var
+#   var_name: L:Cowling_flaps2
+# -
+#   type: var
+#   var_name: L:Knob_OXY_A2
+# -
+#   type: var
+#   var_name: L:Knob_OXY_B2
+# -
+#   type: var
+#   var_name: L:OxyPressure
+# -
+#   type: var
+#   var_name: L:OxyPressurevol
+  -
+    type: var
+    var_name: L:GEARBANGED
+# -
+#   type: var
+#   var_name: L:emggas
+# -
+#   type: var
+#   var_name: L:FUEL_gauge
+# -
+#   type: var
+#   var_name: L:Comp_Light2
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_stopwatch
+# -
+#   type: var
+#   var_name: L:DELAY_START_stopwatch
+# -
+#   type: var
+#   var_name: L:stopwatch_timer
+# -
+#   type: var
+#   var_name: L:Pause_time_stopwatch
+# -
+#   type: var
+#   var_name: L:Pause_count_stopwatch
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_stopwatch_reset
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_trigger_stopwatch
+# -
+#   type: var
+#   var_name: L:HUZZAH_stopwatch
+# -
+#   type: var
+#   var_name: L:stopwatch
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_Flight_timer
+# -
+#   type: var
+#   var_name: L:DELAY_START_Flight_timer
+# -
+#   type: var
+#   var_name: L:Flight_timer_timer
+# -
+#   type: var
+#   var_name: L:Pause_time_Flight_timer
+# -
+#   type: var
+#   var_name: L:Pause_count_Flight_timer
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_Flight_timer_reset
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_trigger_Flight_timer
+# -
+#   type: var
+#   var_name: L:HUZZAH_Flight_timer
+# -
+#   type: var
+#   var_name: L:Flight_timer
+# -
+#   type: var
+#   var_name: L:Bomb_emis
+# -
+#   type: var
+#   var_name: L:SIMTIME_MILLI
+# -
+#   type: var
+#   var_name: L:Canopy_Front_TESTER_timer
+# -
+#   type: var
+#   var_name: L:DELAY_START_Canopy_Front_TESTER
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_Canopy_Front_TESTER
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_trigger_Canopy_Front_TESTER
+# -
+#   type: var
+#   var_name: L:HUZZAH_Canopy_Front_TESTER
+# -
+#   type: var
+#   var_name: L:Canopy_Front_TESTER_Opening
+# -
+#   type: var
+#   var_name: L:Canopy_Front_TESTER_Opening_Timer
+# -
+#   type: var
+#   var_name: L:Canopy_Front_Window_timer
+# -
+#   type: var
+#   var_name: L:DELAY_START_Canopy_Front_Window
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_Canopy_Front_Window
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_trigger_Canopy_Front_Window
+# -
+#   type: var
+#   var_name: L:HUZZAH_Canopy_Front_Window
+# -
+#   type: var
+#   var_name: L:Canopy_Front_Window_Opening
+# -
+#   type: var
+#   var_name: L:Canopy_Front_Window_Opening_Timer
+# -
+#   type: var
+#   var_name: L:Canopy_Rear_timer
+# -
+#   type: var
+#   var_name: L:DELAY_START_Canopy_Rear
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_Canopy_Rear
+# -
+#   type: var
+#   var_name: L:ELAPSED_TIME_trigger_Canopy_Rear
+# -
+#   type: var
+#   var_name: L:HUZZAH_Canopy_Rear
+# -
+#   type: var
+#   var_name: L:Canopy_Rear_Opening
+# -
+#   type: var
+#   var_name: L:Canopy_Rear_Opening_Timer
+  -
+    type: var
+    var_name: L:dash
+  -
+    type: var
+    var_name: L:dash_language
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:Hobs6
+# -
+#   type: var
+#   var_name: L:Hobs5
+# -
+#   type: var
+#   var_name: L:Hobs4
+# -
+#   type: var
+#   var_name: L:Hobs3
+# -
+#   type: var
+#   var_name: L:Hobs2
+# -
+#   type: var
+#   var_name: L:Hobs1
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT AUX LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

@@ -112,6 +112,7 @@
 - Microsoft & Hans Hartmann - Pilatus PC-6 Porter # v0.1.56
 - Microsoft & iniBuilds - Curtiss JN-4D Jenny # v1.1.10
 - Microsoft & iniBuilds - Grumman G-21A Goose # v1.1.10
+- Microsoft & iniBuilds - Saab B 17A # v1.0.12
 - Microsoft & Mike Johnson - Savoia-Marchetti S.55 & 55X # v1.5.4
 - Microsoft & Nemeth Designs - Bell 407 # v0.3.6
 - Microsoft & Oliver Moser - Dornier Do J Wal # v0.1.3
