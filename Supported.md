@@ -135,8 +135,8 @@
 - Shrike Simulations - MD Helicopters 530F # v1.0.2
 - Sim Skunk Works - Lockheed TF-104G Starfighter # v3.3.11
 - SimWorks Studios - Daher Kodiak 100 # v1.4.0
-- SimWorks Studios - Van's RV-10 # v1.0.5
-- SimWorks Studios - Van's RV-14 # v1.3.3
+- SimWorks Studios - Van's RV-10 # v1.1.0
+- SimWorks Studios - Van's RV-14 # v1.4.0
 - VrilleAPlat - Cessna A-37B Dragonfly # v1.1.2
 - VrilleAPlat - Cessna T-37B Tweet # v1.5
 - WB-Sim - Cessna 172SP Classic # v1.0.9
