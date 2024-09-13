@@ -69,6 +69,25 @@ shared:
     event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
     cancel_h_events: true
 
+  - # Brakes
+    type: NumSet
+    var_name: L:A32NX_LEFT_BRAKE_PEDAL_INPUT
+    var_type: f64
+    multiply_by: 327.68
+    add_by: -16384
+    event_name: AXIS_LEFT_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: L:A32NX_RIGHT_BRAKE_PEDAL_INPUT
+    var_type: f64
+    multiply_by: 327.68
+    add_by: -16384
+    event_name: AXIS_RIGHT_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+
   - # Deice
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:1
@@ -6360,25 +6379,6 @@ shared:
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
-  - # Brakes
-    type: NumSet
-    var_name: L:A32NX_LEFT_BRAKE_PEDAL_INPUT
-    var_type: f64
-    multiply_by: 327.68
-    add_by: -16384
-    event_name: AXIS_LEFT_BRAKE_SET
-    use_calculator: true
-    unreliable: true
-  -
-    type: NumSet
-    var_name: L:A32NX_RIGHT_BRAKE_PEDAL_INPUT
-    var_type: f64
-    multiply_by: 327.68
-    add_by: -16384
-    event_name: AXIS_RIGHT_BRAKE_SET
-    use_calculator: true
-    unreliable: true
-
 master:
   - # Controls
     type: NumSet
@@ -6426,16 +6426,12 @@ master:
     interpolate: Default
 
   - # Throttles
-    type: NumSet
+    type: var
     var_name: L:A32NX_AUTOTHRUST_TLA:1
-    var_type: f64
-    event_name: THROTTLE1_SET
     interpolate: Default
   -
-    type: NumSet
+    type: var
     var_name: L:A32NX_AUTOTHRUST_TLA:2
-    var_type: f64
-    event_name: THROTTLE2_SET
     interpolate: Default
 
   - # Brake temp (sends A TON of data, keep slow update)
@@ -6476,6 +6472,33 @@ master:
   -
     type: var
     var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_8
+    var_type: i32
+    unreliable: true
+
+server:
+  -
+    type: var
+    var_name: L:A32NX_FUEL_LEFT_PRE
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_RIGHT_PRE
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_AUX_LEFT_PRE
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_AUX_RIGHT_PRE
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_CENTER_PRE
     var_type: i32
     unreliable: true
 
@@ -6750,3 +6773,8 @@ ignore:
   - EFB#561431572
   - EFB#878834964
   - EFB#-1497639004
+
+# EFB Refuel bar
+  - EFB#-1299300527
+  - EFB#-771149527
+  - EFB#670372333
