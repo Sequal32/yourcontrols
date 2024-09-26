@@ -42,8 +42,8 @@
 - Asobo Studio - Zlin Shock Ultra # v0.1.81
 - Big Radials - Grumman JRF-6B Goose # v1.0.9
 - Big Radials - Noorduyn Norseman # v1.0.3
-- Black Square - Beechcraft Baron B58 # v0.1.0
-- Black Square - Beechcraft Bonanza A36 # v0.1.1
+- Black Square - Beechcraft Baron B58 # v0.1.1
+- Black Square - Beechcraft Bonanza A36 # v0.1.2
 - Black Square - Beechcraft King Air 350i # v0.1.3
 - Black Square - Cessna 208B Grand Caravan # v0.1.4
 - Black Square - Velocity XL # v0.1.2
