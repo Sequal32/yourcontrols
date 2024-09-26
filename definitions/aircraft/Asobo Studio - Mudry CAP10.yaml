@@ -32,10 +32,6 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 35
-  - # Trim Flap Switch
-    type: CustomCalculator
-    get: -1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:5, Bool)
-    set: 5 -1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
   - # Interior
     type: NumSet

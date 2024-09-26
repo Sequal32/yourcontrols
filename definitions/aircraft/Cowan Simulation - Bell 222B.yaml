@@ -82,14 +82,14 @@ shared:
 #   type: CustomCalculator
 #   get: 4 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
 #   set: 11 4 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # Bat 1 Intcon (broken)
-    type: CustomCalculator
-    get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BATTERY CONNECTION ON:1, Bool)
-    set: 1 11 (>K:2:ELECTRICAL_BUS_TO_BATTERY_CONNECTION_TOGGLE)
-  - # Bat 2 Intcon (broken)
-    type: CustomCalculator
-    get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BATTERY CONNECTION ON:2, Bool)
-    set: 2 11 (>K:2:ELECTRICAL_BUS_TO_BATTERY_CONNECTION_TOGGLE)
+# - # Bat 1 Intcon (broken and sim errors)
+#   type: CustomCalculator
+#   get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BATTERY CONNECTION ON:1, Bool)
+#   set: 1 11 (>K:2:ELECTRICAL_BUS_TO_BATTERY_CONNECTION_TOGGLE)
+# - # Bat 2 Intcon (broken and sim errors)
+#   type: CustomCalculator
+#   get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BATTERY CONNECTION ON:2, Bool)
+#   set: 2 11 (>K:2:ELECTRICAL_BUS_TO_BATTERY_CONNECTION_TOGGLE)
   - # STBY ATTD
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:18

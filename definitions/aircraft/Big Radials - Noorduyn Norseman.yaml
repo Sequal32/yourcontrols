@@ -16,27 +16,6 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Breakers (won't sync)
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:3, Bool)
-    set: 3 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:12, Bool)
-    set: 12 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:17, Bool)
-    set: 17 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:36, Bool)
-    set: 36 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT BREAKER PULLED:43, Bool)
-    set: 43 1 (>K:2:ELECTRICAL_CIRCUIT_BREAKER_TOGGLE)
-
   - # Fuel
     type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:1
