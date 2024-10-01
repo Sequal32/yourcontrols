@@ -1,4 +1,4 @@
-# Version 4.4.5
+# Version 4.5.0
 
 include:
   - definitions/modules/Instruments/AS_GNS530.yaml
@@ -671,6 +671,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:Initial_Mixture_Position
+  -
+    type: var
+    var_name: L:NAVCOM_TRANSPONDER_ON_Push
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
@@ -682,76 +685,76 @@ shared:
     var_name: L:HOTSPOT_FUEL_SUMP_2
   -
     type: var
-    var_name: L:LOCKER_WING_L_LEVER
+    var_name: L:LOCKER_NOSE_3_LEVER
   -
     type: var
-    var_name: L:FUEL_CAP_RIGHT
-# -
-#   type: var
-#   var_name: L:LANDING_LIGHT_MOTOR
+    var_name: L:LOCKER_NOSE_2_LEVER
   -
     type: var
     var_name: L:ENGINE_DOOR_LEFT
+  -
+    type: var
+    var_name: L:HYD_RESERVOIR
+  -
+    type: var
+    var_name: L:LOCKER_WING_L_LEVER
+# -
+#   type: var
+#   var_name: L:STEERING_UPPER
+# -
+#   type: var
+#   var_name: L:STEERING
+  -
+    type: var
+    var_name: L:AC_INLET
+  -
+    type: var
+    var_name: L:LOCKER_NOSE_3_BUTTON
+  -
+    type: var
+    var_name: L:FUEL_CAP_LEFT
+  -
+    type: var
+    var_name: L:LOCKER_WING_L
+# -
+#   type: var
+#   var_name: L:STRUCTURAL_DEICE_CYCLE
+# -
+#   type: var
+#   var_name: L:Prop2Rotation
+  -
+    type: var
+    var_name: L:LOCKER_NOSE_1_BUTTON
 # -
 #   type: var
 #   var_name: L:Prop1Rotation
 # -
 #   type: var
-#   var_name: L:STRUCTURAL_DEICE_CYCLE
+#   var_name: L:LANDING_LIGHT_MOTOR
   -
     type: var
-    var_name: L:ENGINE_OIL_RIGHT
-  -
-    type: var
-    var_name: L:LOCKER_WING_R_LEVER
+    var_name: L:LOCKER_WING_R
   -
     type: var
     var_name: L:LOCKER_NOSE_1_LEVER
-# -
-#   type: var
-#   var_name: L:STEERING
+  -
+    type: var
+    var_name: L:LOCKER_WING_R_LEVER
   -
     type: var
     var_name: L:ENGINE_OIL_LEFT
   -
     type: var
     var_name: L:LOCKER_NOSE_2_BUTTON
-# -
-#   type: var
-#   var_name: L:STEERING_UPPER
   -
     type: var
-    var_name: L:LOCKER_NOSE_3_LEVER
-  -
-    type: var
-    var_name: L:LOCKER_NOSE_1_BUTTON
-  -
-    type: var
-    var_name: L:LOCKER_NOSE_2_LEVER
-  -
-    type: var
-    var_name: L:FUEL_CAP_LEFT
-  -
-    type: var
-    var_name: L:LOCKER_WING_R
-  -
-    type: var
-    var_name: L:AC_INLET
+    var_name: L:FUEL_CAP_RIGHT
   -
     type: var
     var_name: L:ENGINE_DOOR_RIGHT
   -
     type: var
-    var_name: L:LOCKER_WING_L
-  -
-    type: var
-    var_name: L:HYD_RESERVOIR
-# -
-#   type: var
-#   var_name: L:Prop2Rotation
-  -
-    type: var
-    var_name: L:LOCKER_NOSE_3_BUTTON
+    var_name: L:ENGINE_OIL_RIGHT
   -
     type: var
     var_name: L:DEICE_PROP
@@ -1035,6 +1038,9 @@ shared:
     type: var
     var_name: L:GENERIC_Momentary_DAVTRON_SWITCH_SET
   -
+    type: var
+    var_name: L:AUTOPILOT_MASTER_DISCONNECT_YOKE
+  -
     type: ToggleSwitch
     var_name: L:PILOT_FD_SYNC_SWITCH
     var_units: Bool
@@ -1111,6 +1117,9 @@ shared:
     var_name: L:EFB_PUSH_POWER
   -
     type: var
+    var_name: L:EFB_SHOW_HIDE
+  -
+    type: var
     var_name: L:DOOR_LIGHT1
   -
     type: var
@@ -1124,9 +1133,6 @@ shared:
   -
     type: var
     var_name: L:AP_DISCONNECT
-  -
-    type: var
-    var_name: L:AUTOPILOT_MASTER_DISCONNECT_YOKE
   -
     type: var
     var_name: L:XMLVAR_COPILOT_Knob_Attitude_Bars_Position
@@ -1706,22 +1712,22 @@ shared:
     var_name: L:RUDDER_LOCK
 # -
 #   type: var
-#   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
-# -
-#   type: var
-#   var_name: L:MIXTURE1_Pos
-# -
-#   type: var
 #   var_name: L:GTN750_HSI_GSI_NEEDLE
 # -
 #   type: var
 #   var_name: L:GTN750_HSI_GSI_NEEDLE_VALID
 # -
 #   type: var
-#   var_name: L:MIXTURE2_Pos
+#   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
 # -
 #   type: var
 #   var_name: L:PHASE_ANIM
+# -
+#   type: var
+#   var_name: L:MIXTURE2_Pos
+# -
+#   type: var
+#   var_name: L:MIXTURE1_Pos
 # -
 #   type: var
 #   var_name: L:BATTERY_DEAD
@@ -1815,9 +1821,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:DMEC1077B_State
-  -
-    type: var
-    var_name: L:MIN_OUT
+# -
+#   type: var
+#   var_name: L:MIN_OUT
 # -
 #   type: var
 #   var_name: L:C1038A_ScreenLuminosity
@@ -1923,9 +1929,6 @@ shared:
     var_name: L:GENERIC_AUTOPILOT_BC
   -
     type: var
-    var_name: L:GENERIC_AP_MASTER
-  -
-    type: var
     var_name: L:GENERIC_XPNDR_SBY
   -
     type: var
@@ -1954,9 +1957,6 @@ shared:
   -
     type: var
     var_name: L:GENERIC_AUTOPILOT_NAV
-  -
-    type: var
-    var_name: L:GENERIC_AP_YAW_DAMPER
   -
     type: var
     var_name: L:GENERIC_XPNDR_OFF
