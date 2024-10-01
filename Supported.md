@@ -76,6 +76,7 @@
 - FlyByWire Simulations - Airbus A320neo # v0.11.1
 - FlyInside - Bell 47G-2 # v2.73
 - Flysimware - Cessna 414AW Chancellor # v4.4.5
+- Flysimware - Grumman G-44A Widgeon # v1.8.2
 - Got Friends - Discus-2c # v2.0.7
 - Got Friends - Edgley EA-7 Optica # v1.0.7
 - Headwind Simulations - Airbus A330-900neo # v0.5.8
