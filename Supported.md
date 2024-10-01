@@ -82,7 +82,7 @@
 - Headwind Simulations - Airbus A330-900neo # v0.5.8
 - Horizon Simulations - Boeing 787-9 Dreamliner # v1.0.1
 - HypePerformanceGroup - Airbus H135 # Build 447
-- IRIS Simulations - Grob G115E Tutor T.1 # v2.3.7
+- IRIS Simulations - Grob G115E Tutor T.1 # v2.4.0
 - IRIS Simulations - Jabiru J160 & J170 # v1.5.6
 - JPLogistics & WB-Sim - Cessna 152 # v2.0.6
 - Just Flight - Piper PA-28-161 Warrior II # v0.3.8
