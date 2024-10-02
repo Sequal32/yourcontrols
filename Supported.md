@@ -110,7 +110,6 @@
 - Microsoft & Carenado - Beechcraft Model D18S (Denarq Mod) # v1.4
 - Microsoft & Carenado - Cessna 195 Businessliner # v1.4.2
 - Microsoft & FSS AG - DG Aviation DG-1001e neo # v0.8.7
-- Microsoft & Hans Hartmann - Pilatus PC-6 Porter # v0.1.56
 - Microsoft & iniBuilds - Airbus A320neo # v1.0.17 Enhanced
 - Microsoft & iniBuilds - Curtiss JN-4D Jenny # v1.1.10
 - Microsoft & iniBuilds - Grumman G-21A Goose # v1.1.10
