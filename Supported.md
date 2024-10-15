@@ -10,22 +10,22 @@
 - Asobo Studio - Beechcraft Baron G58 # v0.1.77
 - Asobo Studio - Beechcraft Bonanza G36 # v0.1.89
 - Asobo Studio - Beechcraft King Air 350i # v0.1.83
-- Asobo Studio - Boeing 747-8 Intercontinental # v0.1.109
-- Asobo Studio - Boeing 787-10 Dreamliner # v0.1.109
+- Asobo Studio - Boeing 747-8 Intercontinental # v0.1.112
+- Asobo Studio - Boeing 787-10 Dreamliner # v0.1.110
 - Asobo Studio - Boeing FA-18E Superhornet # v0.1.29
 - Asobo Studio - Cessna 152 # v0.1.93
 - Asobo Studio - Cessna 172SP Skyhawk # v0.1.90
 - Asobo Studio - Cessna 172SP Skyhawk (G1000) # v0.1.107
 - Asobo Studio - Cessna 208B Grand Caravan EX # v0.1.102
 - Asobo Studio - Cessna Citation CJ4 # v0.1.98
-- Asobo Studio - Cessna Citation Longitude # v0.1.109 / 1.0.0 Enhanced
+- Asobo Studio - Cessna Citation Longitude # v0.1.110 / 1.0.0 Enhanced
 - Asobo Studio - Cirrus SR22T G6 GTS # v0.2.18
 - Asobo Studio - CubCrafters NXCub # v0.1.40
 - Asobo Studio - CubCrafters XCub # v0.1.100
-- Asobo Studio - Daher TBM 930 # v0.1.119 / 1.0.2 Enhanced
+- Asobo Studio - Daher TBM 930 # v0.1.120 / 1.0.2 Enhanced
 - Asobo Studio - DG Aviation LS8-18 # v0.1.41
 - Asobo Studio - Diamond DA40-NG # v0.1.93
-- Asobo Studio - Diamond DA40-TDI # v0.1.76
+- Asobo Studio - Diamond DA40-TDI # v0.1.77
 - Asobo Studio - Diamond DA62 # v0.1.97
 - Asobo Studio - Diamond DV20 # v0.1.72
 - Asobo Studio - Extra 330LT # v0.1.78
