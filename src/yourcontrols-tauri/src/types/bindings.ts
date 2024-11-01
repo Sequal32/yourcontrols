@@ -7,6 +7,9 @@
 export const commands = {
 async getAircraftConfigs() : Promise<{ [key in string]: AircraftConfig[] }> {
     return await TAURI_INVOKE("get_aircraft_configs");
+},
+async saveSettings(username: string, aircraft: string, instructorMode: boolean, streamerMode: boolean) : Promise<null> {
+    return await TAURI_INVOKE("save_settings", { username, aircraft, instructorMode, streamerMode });
 }
 }
 

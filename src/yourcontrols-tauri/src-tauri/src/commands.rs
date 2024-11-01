@@ -1,5 +1,6 @@
 use std::{collections::HashMap, fs::read_dir};
 
+use log::{error, info};
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
@@ -49,4 +50,22 @@ pub fn get_aircraft_configs() -> Result<HashMap<String, Vec<AircraftConfig>>, St
     }
 
     Ok(aircraft_configs)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn save_settings(
+    username: String,
+    aircraft: String,
+    instructor_mode: bool,
+    streamer_mode: bool,
+) -> Result<(), String> {
+    info!(
+        "{} {} {} {}",
+        username, aircraft, instructor_mode, streamer_mode
+    );
+
+    error!("save_settings: Not yet implemented!");
+
+    Ok(())
 }

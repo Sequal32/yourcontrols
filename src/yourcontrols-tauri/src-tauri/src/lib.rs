@@ -8,6 +8,7 @@ pub fn run() {
         .error_handling(tauri_specta::ErrorHandlingMode::Throw)
         .commands(tauri_specta::collect_commands![
             commands::get_aircraft_configs,
+            commands::save_settings,
         ]);
 
     #[cfg(debug_assertions)]
@@ -23,7 +24,6 @@ pub fn run() {
         .invoke_handler(builder.invoke_handler())
         .setup(move |app| {
             builder.mount_events(app);
-
             Ok(())
         })
         .run(tauri::generate_context!())
