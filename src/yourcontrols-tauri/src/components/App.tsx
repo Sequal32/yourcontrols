@@ -18,8 +18,22 @@ const App: React.FC = () => {
     root.classList.add(systemTheme);
   }, []);
 
+  const disableContextMenuInProduction = (
+    e: React.MouseEvent<HTMLDivElement>,
+  ) => {
+    // Check if dev environment or target is an input field
+    if (import.meta.env.DEV || e.target instanceof HTMLInputElement) {
+      return;
+    }
+
+    e.preventDefault();
+  };
+
   return (
-    <div className="flex h-screen w-screen select-none flex-col p-2">
+    <div
+      className="flex h-screen w-screen select-none flex-col p-2"
+      onContextMenu={disableContextMenuInProduction}
+    >
       <Settings />
       <Tabs defaultValue="join" className="mt-2 h-full">
         <TabsList className="grid grid-cols-2">

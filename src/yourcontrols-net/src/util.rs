@@ -1,6 +1,6 @@
 use crossbeam_channel::{Receiver, Sender};
 use dns_lookup::lookup_host;
-use dotenv_codegen::dotenv;
+use dotenvy_macro::dotenv;
 use laminar::Metrics;
 use socket2::{Domain, Socket, Type};
 use std::net::UdpSocket;

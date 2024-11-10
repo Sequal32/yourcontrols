@@ -51,6 +51,7 @@ const Settings: React.FC = () => {
   const [aircraftConfigs, setAircraftConfigs] =
     useState<Awaited<ReturnType<typeof commands.getAircraftConfigs>>>();
 
+  // TODO: sort aircraftConfigs category alphabetically
   useEffect(() => {
     commands
       .getAircraftConfigs()

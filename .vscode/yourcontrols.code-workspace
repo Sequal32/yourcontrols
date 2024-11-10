@@ -1,0 +1,128 @@
+{
+  "folders": [
+    {
+      "name": "yourcontrols",
+      "path": "../src/yourcontrols"
+    },
+    // {
+    //   "path": "../src/yourcontrols-discord"
+    // },
+    // {
+    //   "name": "gauge",
+    //   "path": "../src/yourcontrols-gauge"
+    // },
+    // {
+    //   "name": "hoster",
+    //   "path": "../src/yourcontrols-hoster"
+    // },
+    // {
+    //   "name": "net",
+    //   "path": "../src/yourcontrols-net"
+    // },
+    // {
+    //   "name": "server",
+    //   "path": "../src/yourcontrols-server"
+    // },
+    {
+      "name": "tauri",
+      "path": "../src/yourcontrols-tauri"
+    },
+    // {
+    //   "name": "types",
+    //   "path": "../src/yourcontrols-types"
+    // },
+    {
+      "name": "project",
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "rust-analyzer.imports.granularity.enforce": true
+  },
+  "launch": {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "lldb",
+        "request": "launch",
+        "name": "Tauri Development Debug",
+        "cargo": {
+          "args": [
+            "build",
+            "--manifest-path=${workspaceFolder:tauri}/src-tauri/Cargo.toml",
+            "--no-default-features"
+          ]
+        },
+        // task for the `beforeDevCommand` if used, must be configured in `.vscode/tasks.json`
+        "preLaunchTask": "tauri-ui:dev"
+      },
+      {
+        "type": "lldb",
+        "request": "launch",
+        "name": "Tauri Production Debug",
+        "cargo": {
+          "args": [
+            "build",
+            "--release",
+            "--manifest-path=${workspaceFolder:tauri}/src-tauri/Cargo.toml"
+          ]
+        },
+        // task for the `beforeBuildCommand` if used, must be configured in `.vscode/tasks.json`
+        "preLaunchTask": "tauri-ui:build"
+      },
+      {
+        "name": "Launch App Debug",
+        "type": "cppvsdbg",
+        "request": "launch",
+        // change the exe name to your actual exe name
+        // (to debug release builds, change `target/debug` to `release/debug`)
+        "program": "${workspaceFolder:project}/target/debug/yourcontrols-tauri.exe",
+        "cwd": "${workspaceFolder:tauri}",
+        "preLaunchTask": "tauri-ui:dev"
+      }
+    ]
+  },
+  "tasks": {
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "tauri-build:debug",
+        "options": { "cwd": "${workspaceFolder:tauri}" },
+        "type": "cargo",
+        "command": "build"
+      },
+      {
+        "label": "tauri-ui:build",
+        "options": { "cwd": "${workspaceFolder:tauri}" },
+        "type": "shell",
+        // change this to your `beforeBuildCommand`:
+        "command": "pnpm",
+        "args": ["build"]
+      },
+      {
+        "label": "tauri-ui:dev",
+        "options": { "cwd": "${workspaceFolder:tauri}" },
+        "type": "shell",
+        // `dev` keeps running in the background
+        // ideally you should also configure a `problemMatcher`
+        // see https://code.visualstudio.com/docs/editor/tasks#_can-a-background-task-be-used-as-a-prelaunchtask-in-launchjson
+        "isBackground": true,
+        // change this to your `beforeDevCommand`:
+        "command": "pnpm",
+        "args": ["dev"]
+      },
+      {
+        "label": "tauri-dev",
+        "dependsOn": ["tauri-build:debug", "tauri-ui:dev"],
+        "group": {
+          "kind": "build"
+        }
+      }
+    ]
+  }
+}
