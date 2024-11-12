@@ -9,9 +9,3 @@ pub struct Settings {
 }
 
 unsafe impl Send for Settings {}
-
-impl Settings {
-    pub fn new() -> Self {
-        Self::default()
-    }
-}

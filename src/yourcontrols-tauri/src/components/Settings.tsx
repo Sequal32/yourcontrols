@@ -58,9 +58,7 @@ const Settings: React.FC = () => {
       .then((payload) => {
         setAircraftConfigs(payload);
       })
-      .catch((error) => {
-        console.error("getAircraftConfigs", error);
-      });
+      .catch(console.error);
   }, []);
 
   const onSubmit = ({
@@ -71,7 +69,9 @@ const Settings: React.FC = () => {
   }: z.infer<typeof formSchema>) => {
     console.log("onSubmit", username, aircraft);
 
-    commands.saveSettings(username, aircraft, instructorMode, streamerMode);
+    commands
+      .saveSettings(username, aircraft, instructorMode, streamerMode)
+      .catch(console.error);
   };
 
   return (

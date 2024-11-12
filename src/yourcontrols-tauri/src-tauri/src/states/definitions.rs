@@ -6,8 +6,8 @@ pub struct DefinitionsWrapper(pub definitions::Definitions);
 
 unsafe impl Send for DefinitionsWrapper {}
 
-impl DefinitionsWrapper {
-    pub fn new() -> Self {
+impl Default for DefinitionsWrapper {
+    fn default() -> Self {
         Self(definitions::Definitions::new())
     }
 }

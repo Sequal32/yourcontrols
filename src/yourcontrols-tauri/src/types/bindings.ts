@@ -11,8 +11,8 @@ async getAircraftConfigs() : Promise<{ [key in string]: AircraftConfig[] }> {
 async saveSettings(username: string, aircraft: string, instructorMode: boolean, streamerMode: boolean) : Promise<null> {
     return await TAURI_INVOKE("save_settings", { username, aircraft, instructorMode, streamerMode });
 },
-async startServer(method: ConnectionMethod) : Promise<void> {
-    await TAURI_INVOKE("start_server", { method });
+async startServer(method: ConnectionMethod) : Promise<null> {
+    return await TAURI_INVOKE("start_server", { method });
 }
 }
 

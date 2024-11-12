@@ -484,7 +484,7 @@ impl Server {
 
     pub fn start(&mut self, is_ipv6: bool, port: u16, upnp: bool) -> Result<(), Error> {
         let socket =
-            Socket::from_udp_socket(get_socket_duplex(port), get_socket_config(self.timeout))?;
+            Socket::from_udp_socket(get_socket_duplex(port)?, get_socket_config(self.timeout))?;
         // Attempt to port forward
         if upnp && !is_ipv6 {
             self.last_port_forward_result = Some(self.port_forward(port));

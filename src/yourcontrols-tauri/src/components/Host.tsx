@@ -6,9 +6,11 @@ import { Form } from "@ui/form";
 import { useForm } from "react-hook-form";
 import StyledFormField from "@/components/StyledFormField";
 import { commands } from "@/types/bindings";
+import { useToast } from "@/hooks/use-toast";
 
 // TODO: FormSchema
 const Host: React.FC = () => {
+  const { toast } = useToast();
   const form = useForm({
     defaultValues: {
       ipVersion: "ipv4",
@@ -19,7 +21,14 @@ const Host: React.FC = () => {
   // TODO
   const onSubmit = (data: any) => {
     console.log(data);
-    commands.startServer("relay");
+    commands.startServer("direct").catch((err) => {
+      toast({
+        duration: 7000,
+        variant: "destructive",
+        title: "Could not start server!",
+        description: err,
+      });
+    });
   };
 
   return (

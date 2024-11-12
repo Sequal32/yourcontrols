@@ -1,4 +1,4 @@
-use std::sync::Mutex;
+use tauri_plugin_log::fern;
 
 mod commands;
 mod corrector;
@@ -12,6 +12,9 @@ mod states {
 
     pub mod settings;
     pub use settings::*;
+
+    pub mod transfer_client;
+    pub use transfer_client::*;
 }
 mod sync;
 mod syncdefs;
@@ -22,10 +25,16 @@ pub const AIRCRAFT_DEFINITIONS_PATH: &str = "F:/yourcontrols/definitions/aircraf
 
 pub type Result<T> = std::result::Result<T, Error>;
 
-#[derive(Debug, thiserror::Error)]
+#[derive(thiserror::Error, Debug)]
 pub enum Error {
-    #[error(transparent)]
+    #[error("{0}")]
+    String(std::string::String),
+    #[error("IO error occurred, check the logs for more information!")]
     Io(#[from] std::io::Error),
+    #[error("An error occurred, check the logs for more information!")]
+    Yourcontrols(#[from] yourcontrols_types::Error),
+    #[error(transparent)]
+    Anyhow(#[from] anyhow::Error),
 }
 
 impl serde::Serialize for Error {
@@ -33,7 +42,15 @@ impl serde::Serialize for Error {
     where
         S: serde::ser::Serializer,
     {
-        serializer.serialize_str(self.to_string().as_ref())
+        let log_error = match self {
+            Error::String(x) => x.clone(),
+            Error::Io(x) => x.to_string(),
+            Error::Yourcontrols(x) => x.to_string(),
+            Error::Anyhow(x) => x.to_string(),
+        };
+        log::error!("{log_error}");
+
+        serializer.serialize_str(&self.to_string())
     }
 }
 
@@ -68,11 +85,23 @@ pub fn run() {
     }
 
     tauri::Builder::default()
-        .plugin(tauri_plugin_log::Builder::new().build())
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .with_colors(fern::colors::ColoredLevelConfig {
+                    error: fern::colors::Color::Red,
+                    warn: fern::colors::Color::Yellow,
+                    info: fern::colors::Color::Green,
+                    debug: fern::colors::Color::Magenta,
+                    trace: fern::colors::Color::Blue,
+                })
+                .rotation_strategy(tauri_plugin_log::RotationStrategy::KeepAll)
+                .build(),
+        )
         .invoke_handler(tauri_specta_builder.invoke_handler())
-        .manage(Mutex::new(states::SimConnectorWrapper::new()))
-        .manage(Mutex::new(states::DefinitionsWrapper::new()))
-        .manage(Mutex::new(states::Settings::new()))
+        .manage(states::SimConnectorState::default())
+        .manage(states::DefinitionsState::default())
+        .manage(states::SettingsState::default())
+        .manage(states::TransferClientState::default())
         .setup(move |app| {
             tauri_specta_builder.mount_events(app);
             Ok(())
