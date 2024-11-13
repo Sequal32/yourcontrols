@@ -13,6 +13,15 @@ async saveSettings(username: string, aircraft: string, instructorMode: boolean, 
 },
 async startServer(method: ConnectionMethod) : Promise<null> {
     return await TAURI_INVOKE("start_server", { method });
+},
+async disconnect() : Promise<void> {
+    await TAURI_INVOKE("disconnect");
+},
+async transferControl(target: string) : Promise<void> {
+    await TAURI_INVOKE("transfer_control", { target });
+},
+async goObserver() : Promise<void> {
+    await TAURI_INVOKE("go_observer");
 }
 }
 

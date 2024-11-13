@@ -669,10 +669,9 @@ impl TransferClient for Server {
     }
 
     fn get_session_id(&self) -> Option<String> {
-        if let Some(transfer) = self.transfer.as_ref() {
-            return Some(transfer.lock().unwrap().session_id.clone());
-        }
-        None
+        self.transfer
+            .as_ref()
+            .map(|t| t.lock().unwrap().session_id.clone())
     }
 
     fn stop(&mut self, reason: String) {

@@ -23,7 +23,7 @@ const Host: React.FC = () => {
     console.log(data);
     commands.startServer("direct").catch((err) => {
       toast({
-        duration: 7000,
+        duration: 5000,
         variant: "destructive",
         title: "Could not start server!",
         description: err,

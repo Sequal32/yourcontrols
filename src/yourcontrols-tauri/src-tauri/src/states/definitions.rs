@@ -1,6 +1,6 @@
 use crate::definitions;
 
-pub type DefinitionsState = std::sync::Mutex<DefinitionsWrapper>;
+pub type DefinitionsState = std::sync::Arc<std::sync::Mutex<DefinitionsWrapper>>;
 
 pub struct DefinitionsWrapper(pub definitions::Definitions);
 

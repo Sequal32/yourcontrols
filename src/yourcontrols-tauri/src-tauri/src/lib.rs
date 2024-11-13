@@ -4,20 +4,26 @@ mod commands;
 mod corrector;
 mod definitions;
 mod states {
+    pub mod client_manager;
+    pub use client_manager::*;
+
     pub mod definitions;
     pub use definitions::*;
-
-    pub mod sim_connector;
-    pub use sim_connector::*;
 
     pub mod settings;
     pub use settings::*;
 
+    pub mod sim_connector;
+    pub use sim_connector::*;
+
     pub mod transfer_client;
     pub use transfer_client::*;
 }
+mod client_manager;
+mod simconfig;
 mod sync;
 mod syncdefs;
+mod update;
 mod util;
 mod varreader;
 
@@ -42,6 +48,7 @@ impl serde::Serialize for Error {
     where
         S: serde::ser::Serializer,
     {
+        // automatically log errors that get send to the frontend
         let log_error = match self {
             Error::String(x) => x.clone(),
             Error::Io(x) => x.to_string(),
@@ -68,6 +75,9 @@ pub fn run() {
             commands::get_aircraft_configs,
             commands::save_settings,
             commands::start_server,
+            commands::disconnect,
+            commands::transfer_control,
+            commands::go_observer,
         ]);
 
     #[cfg(debug_assertions)]
@@ -102,10 +112,11 @@ pub fn run() {
         .manage(states::DefinitionsState::default())
         .manage(states::SettingsState::default())
         .manage(states::TransferClientState::default())
+        .manage(states::ClientManagerState::default())
         .setup(move |app| {
             tauri_specta_builder.mount_events(app);
             Ok(())
         })
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("error while running application");
 }
