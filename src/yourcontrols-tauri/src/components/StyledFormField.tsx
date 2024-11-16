@@ -8,13 +8,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@ui/form";
+import { Skeleton } from "@ui/skeleton";
 
 interface SimplifiedFormFieldProps
   extends React.ComponentProps<typeof FormField> {
   // TODO: remove any
   control: Control<any>;
   label: string;
-  description?: string;
+  description?: string | null;
+  loadingDescription?: boolean;
 }
 
 const StyledFormField: React.FC<SimplifiedFormFieldProps> = ({
@@ -30,7 +32,11 @@ const StyledFormField: React.FC<SimplifiedFormFieldProps> = ({
         <div className="space-y-0.5">
           <FormLabel className="text-base">{label}</FormLabel>
           <FormMessage>
-            <FormDescription>{description}</FormDescription>
+            {description !== null ? (
+              <FormDescription>{description}</FormDescription>
+            ) : (
+              <Skeleton className="h-[20px] w-[90px]" />
+            )}
           </FormMessage>
         </div>
         <FormControl>{formControl(r)}</FormControl>

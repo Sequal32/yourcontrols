@@ -22,12 +22,30 @@ async transferControl(target: string) : Promise<void> {
 },
 async goObserver() : Promise<void> {
     await TAURI_INVOKE("go_observer");
+},
+async getPublicIp(isIpv6: boolean) : Promise<string | null> {
+    return await TAURI_INVOKE("get_public_ip", { isIpv6 });
 }
 }
 
 /** user-defined events **/
 
 
+export const events = __makeEvents__<{
+clientFailEvent: ClientFailEvent,
+gainControlEvent: GainControlEvent,
+loseControlEvent: LoseControlEvent,
+metricsEvent: MetricsEvent,
+serverFailEvent: ServerFailEvent,
+setInControlEvent: SetInControlEvent
+}>({
+clientFailEvent: "client-fail-event",
+gainControlEvent: "gain-control-event",
+loseControlEvent: "lose-control-event",
+metricsEvent: "metrics-event",
+serverFailEvent: "server-fail-event",
+setInControlEvent: "set-in-control-event"
+})
 
 /** user-defined constants **/
 
@@ -36,7 +54,13 @@ async goObserver() : Promise<void> {
 /** user-defined types **/
 
 export type AircraftConfig = { name: string; path: string }
+export type ClientFailEvent = string
 export type ConnectionMethod = "direct" | "relay" | "cloudServer"
+export type GainControlEvent = null
+export type LoseControlEvent = null
+export type MetricsEvent = { sent_packets: number; received_packets: number; sent_bandwidth: number; received_bandwidth: number; packet_loss: number; ping: number }
+export type ServerFailEvent = string
+export type SetInControlEvent = string
 
 /** tauri-specta globals **/
 

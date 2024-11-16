@@ -31,22 +31,24 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="flex h-screen w-screen select-none flex-col p-2"
+      className="flex h-screen w-screen select-none justify-center p-2"
       onContextMenu={disableContextMenuInProduction}
     >
-      <Settings />
-      <Tabs defaultValue="join" className="mt-2 h-full">
-        <TabsList className="grid grid-cols-2">
-          <TabsTrigger value="join">Join</TabsTrigger>
-          <TabsTrigger value="host">Host</TabsTrigger>
-        </TabsList>
-        <TabsContent value="join">
-          <Join />
-        </TabsContent>
-        <TabsContent value="host">
-          <Host />
-        </TabsContent>
-      </Tabs>
+      <div className="flex w-full max-w-screen-lg flex-col">
+        <Settings />
+        <Tabs defaultValue="join" className="mt-2 h-full">
+          <TabsList className="grid grid-cols-2">
+            <TabsTrigger value="join">Join</TabsTrigger>
+            <TabsTrigger value="host">Host</TabsTrigger>
+          </TabsList>
+          <TabsContent value="join">
+            <Join />
+          </TabsContent>
+          <TabsContent value="host">
+            <Host />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };

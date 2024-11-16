@@ -1,27 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/card";
 import { Button } from "@ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@ui/toggle-group";
 import { Form } from "@ui/form";
 import { useForm } from "react-hook-form";
 import StyledFormField from "@/components/StyledFormField";
-import { commands } from "@/types/bindings";
+import {
+  commands,
+  events,
+  MetricsEvent,
+  ConnectionMethod,
+} from "@/types/bindings";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formSchema = z.object({
+  ipVersion: z
+    .string({ required_error: "IP Version is required!" })
+    .trim()
+    .min(1, { message: "IP Version is required" }),
+  hostingMethode: z
+    .string({ required_error: "Hosting Mode is required!" })
+    .min(1, { message: "Hosting Mode is required" }),
+});
 
 // TODO: FormSchema
 const Host: React.FC = () => {
   const { toast } = useToast();
   const form = useForm({
+    resolver: zodResolver(formSchema),
+    reValidateMode: "onSubmit",
     defaultValues: {
       ipVersion: "ipv4",
-      hostingMode: "p2p",
+      hostingMethode: "relay",
     },
   });
 
+  const [publicIp, setPublicIp] = useState<string | null>(null);
+  const [metrics, setMetrics] = useState<MetricsEvent>();
+
+  useEffect(() => {
+    const metricsEventPromise = events.metricsEvent.listen((data) => {
+      setMetrics(data.payload);
+    });
+
+    return () => {
+      metricsEventPromise.then((unlisten) => unlisten());
+    };
+  }, []);
+
+  // TODO: store in atom
+  useEffect(() => {
+    setPublicIp(null);
+    const is_ipv6 = form.getValues("ipVersion") === "ipv6";
+
+    commands
+      .getPublicIp(is_ipv6)
+      .then((ip) => {
+        setPublicIp(ip);
+      })
+      .catch(() => {
+        setPublicIp("Could not fetch public IP");
+      });
+  }, [form.getValues("ipVersion")]);
+
   // TODO
-  const onSubmit = (data: any) => {
-    console.log(data);
-    commands.startServer("direct").catch((err) => {
+  const onSubmit = ({
+    ipVersion,
+    hostingMethode,
+  }: z.infer<typeof formSchema>) => {
+    commands.startServer(hostingMethode as any).catch((err) => {
       toast({
         duration: 5000,
         variant: "destructive",
@@ -43,6 +92,7 @@ const Host: React.FC = () => {
               control={form.control}
               name="ipVersion"
               label="IP Version"
+              description={publicIp}
               render={({ field }) => (
                 <ToggleGroup
                   type="single"
@@ -61,8 +111,8 @@ const Host: React.FC = () => {
 
             <StyledFormField
               control={form.control}
-              name="hostingMode"
-              label="Hosting Mode"
+              name="hostingMethode"
+              label="Hosting Methode"
               render={({ field }) => (
                 <ToggleGroup
                   type="single"
@@ -73,18 +123,21 @@ const Host: React.FC = () => {
                     field.onChange(v);
                   }}
                 >
-                  <ToggleGroupItem value="p2p">Cloud P2P</ToggleGroupItem>
-                  <ToggleGroupItem value="host">Cloud Host</ToggleGroupItem>
+                  <ToggleGroupItem value="relay">Cloud P2P</ToggleGroupItem>
+                  <ToggleGroupItem value="cloudServer">
+                    Cloud Host
+                  </ToggleGroupItem>
                   <ToggleGroupItem value="direct">Direct</ToggleGroupItem>
                 </ToggleGroup>
               )}
             />
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full">
+          <CardFooter className="flex w-full justify-center">
+            <Button type="submit" className="w-full max-w-3xl">
               Start Server
             </Button>
           </CardFooter>
+          {JSON.stringify(metrics)}
         </Card>
       </form>
     </Form>

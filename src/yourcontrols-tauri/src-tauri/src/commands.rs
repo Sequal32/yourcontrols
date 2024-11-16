@@ -11,18 +11,20 @@ use serde::{Deserialize, Serialize};
 use simconnect::DispatchResult;
 use specta::Type;
 use tauri::State;
+use tauri_specta::Event as _;
 use yourcontrols_net::{Client, Event, Payloads, ReceiveMessage, Server, TransferClient};
 use yourcontrols_types::AllNeedSync;
 
 use crate::{
     client_manager::ClientManager,
     definitions::{self, ProgramAction, SyncPermission},
+    events,
     simconfig::Config,
     states,
     sync::control::Control,
     update::Updater,
     util::get_hostname_ip,
-    Result, AIRCRAFT_DEFINITIONS_PATH,
+    Result, AIRCRAFT_DEFINITIONS_PATH, IP_V4_LOOKUP_ENDPOINT, IP_V6_LOOKUP_ENDPOINT,
 };
 
 #[derive(Serialize, Deserialize, Type, Debug)]
@@ -181,6 +183,7 @@ fn connect_to_sim(
 #[tauri::command]
 #[specta::specta]
 pub fn start_server(
+    app_handle: tauri::AppHandle,
     sim_connect_state: State<'_, states::SimConnectorState>,
     definitions_state: State<'_, states::DefinitionsState>,
     settings_state: State<'_, states::SettingsState>,
@@ -217,7 +220,8 @@ pub fn start_server(
                 // username.clone(),
                 "username".to_string(),
                 // updater.get_version().to_string(),
-                "0.0.0".to_string(),
+                // TODO: version from toml?
+                "2.8.5".to_string(),
                 // config.conn_timeout,
                 10,
             ));
@@ -242,7 +246,8 @@ pub fn start_server(
                 // username.clone(),
                 "username".to_string(),
                 // updater.get_version().to_string(),
-                "0.0.0".to_string(),
+                // TODO: version from toml?
+                "2.8.5".to_string(),
                 // config.conn_timeout,
                 10,
             ));
@@ -335,17 +340,6 @@ pub fn start_server(
                 while let Ok(message) = client.get_next_message() {
                     match message {
                         ReceiveMessage::Payload(payload) => match payload {
-                            // Unused
-                            Payloads::Handshake { .. }
-                            | Payloads::RendezvousHandshake { .. }
-                            | Payloads::HostingReceived { .. }
-                            | Payloads::AttemptConnection { .. }
-                            | Payloads::PeerEstablished { .. }
-                            | Payloads::InvalidVersion { .. }
-                            | Payloads::InvalidName { .. }
-                            | Payloads::RequestHosting { .. }
-                            | Payloads::InitHandshake { .. }
-                            | Payloads::Heartbeat => {}
                             // Used
                             Payloads::Update {
                                 data,
@@ -387,24 +381,32 @@ pub fn start_server(
                                 // Someone is transferring controls to us
                                 definitions.reset_sync();
                                 if to == client.get_server_name() {
-                                    log::info!("[CONTROL] Taking control from {}", from);
+                                    log::info!("Taking control from {}", from);
                                     control.take_control(conn, &definitions.lvarstransfer.transfer);
-                                    // TODO
-                                    // app_interface.gain_control();
+
+                                    if let Err(e) = events::control::GainControlEvent.emit(&app_handle){
+                                        log::error!( "Could not emit GainControlEvent: {:?}", e);
+                                    }
+
                                     clients.set_no_control();
                                 // Someone else has controls, if we have controls we let go and listen for their messages
                                 } else {
                                     if from == client.get_server_name() {
-                                        // TODO
-                                        // app_interface.lose_control();
+                                        if let Err(e) = events::control::LoseControlEvent.emit(&app_handle){
+                                            log::error!( "Could not emit LoseControlEvent: {:?}", e);
+                                        }
+
                                         control.lose_control(
                                             conn,
                                             &definitions.lvarstransfer.transfer,
                                         );
                                     }
-                                    log::info!("[CONTROL] {} is now in control.", to);
-                                    // TODO
-                                    // app_interface.set_incontrol(&to);
+                                    log::info!("{} is now in control.", to);
+
+                                    if let Err(e) = events::control::SetInControlEvent(to.clone()).emit(&app_handle){
+                                        log::error!( "Could not emit SetInControlEvent: {:?}", e);
+                                    }
+
                                     clients.set_client_control(to);
                                 }
                             }
@@ -415,7 +417,7 @@ pub fn start_server(
                                 is_server,
                             } => {
                                 log::info!(
-                                    "[NETWORK] {} connected. In control: {}, observing: {}, server: {}",
+                                    "{} connected. In control: {}, observing: {}, server: {}",
                                     name,
                                     in_control,
                                     is_observer,
@@ -444,8 +446,10 @@ pub fn start_server(
                                 clients.set_observer(&name, is_observer);
 
                                 if in_control {
-                                    // TODO
-                                    // app_interface.set_incontrol(&name);
+                                    if let Err(e) = events::control::SetInControlEvent(name.clone()).emit(&app_handle){
+                                        log::error!( "Could not emit SetInControlEvent: {:?}", e);
+                                    }
+
                                     clients.set_client_control(name);
                                 }
                             }
@@ -460,7 +464,7 @@ pub fn start_server(
                                 }
                             }
                             Payloads::PlayerLeft { name } => {
-                                log::info!("[NETWORK] {} lost connection.", name);
+                                log::info!("{} lost connection.", name);
 
                                 clients.remove_client(&name);
                                 // User may have been in control
@@ -468,12 +472,11 @@ pub fn start_server(
                                     clients.set_no_control();
                                     // Transfer control to myself if I'm server
                                     if client.is_host() {
-                                        log::info!(
-                                            "[CONTROL] {} had control, taking control back.",
-                                            name
-                                        );
-                                        // TODO
-                                        // app_interface.gain_control();
+                                        log::info!("{} had control, taking control back.", name);
+
+                                        if let Err(e) = events::control::GainControlEvent.emit(&app_handle){
+                                            log::error!( "Could not emit GainControlEvent: {:?}", e);
+                                        }
 
                                         control.take_control(
                                             conn,
@@ -494,7 +497,7 @@ pub fn start_server(
                             } => {
                                 if to == client.get_server_name() {
                                     log::info!(
-                                        "[CONTROL] Server set us to observing? {}",
+                                        "Server set us to observing? {}",
                                         is_observer
                                     );
                                     observing = is_observer;
@@ -505,7 +508,7 @@ pub fn start_server(
                                         definitions.reset_sync();
                                     }
                                 } else {
-                                    log::info!("[CONTROL] {} is observing? {}", to, is_observer);
+                                    log::info!("{} is observing? {}", to, is_observer);
                                     clients.set_observer(&to, is_observer);
                                     // TODO
                                     // app_interface.set_observing(&to, is_observer);
@@ -527,7 +530,7 @@ pub fn start_server(
                             Payloads::AircraftDefinition { bytes } => {
                                 match definitions.load_config_from_bytes(bytes) {
                                     Ok(_) => {
-                                        log::info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events from the server", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
+                                        log::info!("Loaded and mapped {} aircraft vars, {} local vars, and {} events from the server", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
                                         control.on_connected(conn);
 
                                         let def_connect_result = definitions.on_connected(conn);
@@ -541,7 +544,7 @@ pub fn start_server(
                                         );
                                     }
                                     Err(e) => {
-                                        log::error!("[DEFINITIONS] Could not load server sent configuration file: {}", e);
+                                        log::error!("Could not load server sent configuration file: {}", e);
                                     }
                                 }
                                 // Start the connection timer to wait to send the ready payload
@@ -561,17 +564,16 @@ pub fn start_server(
                                 ) {
                                     Ok(new_client) => {
                                         log::info!(
-                                            "[NETWORK] New client started to connect to hosted server."
+                                            "New client started to connect to hosted server."
                                         );
                                         *client = Box::new(new_client);
                                     }
                                     Err(e) => {
-                                        // TODO
-                                        // app_interface.client_fail(e.to_string().as_str());
-                                        log::error!(
-                                            "[NETWORK] Could not start new hoster client! Reason: {}",
-                                            e
-                                        );
+                                        if let Err(e) =  events::ClientFailEvent(e.to_string()).emit(&app_handle){
+                                            log::error!( "Could not emit ClientFailEvent: {:?}", e);
+                                        }
+
+                                        log::error!("Could not start new hoster client! Reason: {}", e);
                                     }
                                 };
                             }
@@ -585,6 +587,7 @@ pub fn start_server(
                                     client.set_observer(name, true);
                                 }
                             }
+                            _ => log::debug!("Payload not handled: {:?}", payload),
                         },
                         ReceiveMessage::Event(e) => match e {
                             Event::ConnectionEstablished => {
@@ -598,8 +601,11 @@ pub fn start_server(
                                     }
                                     // Unfreeze aircraft
                                     control.take_control(conn, &definitions.lvarstransfer.transfer);
-                                    // TODO
-                                    // app_interface.gain_control();
+
+                                    if let Err(e) = events::control::GainControlEvent.emit(&app_handle){
+                                        log::error!( "Could not emit GainControlEvent: {:?}", e);
+                                    }
+
                                     // Not really used by the host
                                     connection_time = Some(Instant::now());
                                 } else {
@@ -607,12 +613,14 @@ pub fn start_server(
 
                                     // TODO
                                     // app_interface.connected();
-                                    // app_interface.lose_control();
+                                    if let Err(e) = events::control::LoseControlEvent.emit(&app_handle){
+                                        log::error!( "Could not emit LoseControlEvent: {:?}", e);
+                                    }
                                 }
                             }
                             Event::ConnectionLost(reason) => {
-                                log::info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
-                                // TAKE BACK CONTROL
+                                log::info!("Server/Client stopped. Reason: {}", reason);
+                                // TAKEING BACK CONTROL
                                 control.take_control(conn, &definitions.lvarstransfer.transfer);
 
                                 clients.reset();
@@ -624,26 +632,24 @@ pub fn start_server(
                                 //     log::warn!("[AUDIO] Error playing audio: {}", e);
                                 // }
 
-                                // TODO
-                                // app_interface.client_fail(&reason);
+                                if let Err(e) = events::ClientFailEvent(reason).emit(&app_handle){
+                                    log::error!( "Could not emit ClientFailEvent: {:?}", e);
+                                }
                             }
                             Event::UnablePunchthrough => {
-                                // TODO
-                                //     app_interface.client_fail(
-                                //     "Could not connect to host! Please port forward or use 'Cloud Host'!",
-                                // )
+                                if let Err(e) = events::ClientFailEvent("Could not connect to host! Please port forward or use 'Cloud Host'!".to_string()).emit(&app_handle){
+                                    log::error!( "Could not emit ClientFailEvent: {:?}", e);
+                                }
                             }
-
                             Event::SessionIdFetchFailed => {
-                                // TODO
-                                // app_interface.server_fail(
-                                //     "Could not connect to Cloud Server to fetch session ID.",
-                                // )
+                                if let Err(e) = events::ServerFailEvent("Could not connect to Cloud Server to fetch session ID.".to_string()).emit(&app_handle){
+                                    log::error!( "Could not emit ServerFailEvent: {:?}", e);
+                                }
                             }
-
                             Event::Metrics(metrics) => {
-                                // TODO
-                                // app_interface.send_network(&metrics);
+                                if let Err(e) = events::MetricsEvent::from(metrics).emit(&app_handle){
+                                    log::error!( "Could not emit MetricsEvent: {:?}", e);
+                                }
                             }
                         },
                     }
@@ -712,55 +718,67 @@ pub fn start_server(
     Ok(())
 }
 
-fn connect() {}
+#[tauri::command]
+#[specta::specta]
+#[allow(clippy::too_many_arguments)]
+pub fn connect(
+    app_handle: tauri::AppHandle,
+    sim_connect_state: State<'_, states::SimConnectorState>,
+    definitions_state: State<'_, states::DefinitionsState>,
+    transfer_client_state: State<'_, states::TransferClientState>,
+    username: String,
+    session_id: Option<String>,
+    isipv6: bool,
+    ip: Option<IpAddr>,
+    hostname: Option<String>,
+    port: Option<u16>,
+    method: ConnectionMethod,
+) -> Result<()> {
+    // TODO
+    let updater = Updater::new();
+    let config = Config::default();
 
-// AppMessage::Connect {
-//     session_id,
-//     username,
-//     method,
-//     ip,
-//     port,
-//     isipv6,
-//     hostname,
-// } => {
-//     let connected = connect_to_sim(&mut conn, &mut definitions);
+    {
+        let mut sim_connect_mutex = sim_connect_state.lock().unwrap();
+        let mut definitions_mutex = definitions_state.lock().unwrap();
 
-//     if connected {
-//         // Display attempting to start server
-//         app_interface.attempt();
+        connect_to_sim(&mut sim_connect_mutex.0, &mut definitions_mutex.0)?;
+    }
 
-//         match start_client(
-//             config.conn_timeout,
-//             username.clone(),
-//             session_id,
-//             updater.get_version().to_string(),
-//             isipv6,
-//             ip,
-//             hostname,
-//             port,
-//             method,
-//         ) {
-//             Ok(client) => {
-//                 info!("[NETWORK] Client started.");
-//                 transfer_client = Some(Box::new(client));
-//             }
-//             Err(e) => {
-//                 app_interface.client_fail(e.to_string().as_str());
-//                 error!("[NETWORK] Could not start client! Reason: {}", e);
-//             }
-//         }
+    // Display attempting to start server
+    // TODO
+    // app_interface.attempt();
 
-//         // Write config with new values
-//         config.name = username;
-//         config.port = port.unwrap_or(config.port);
-//         config.ip = if let Some(ip) = ip {
-//             ip.to_string()
-//         } else {
-//             String::new()
-//         };
-//         write_configuration(&config);
-//     }
-// }
+    match start_client(
+        config.conn_timeout,
+        username.clone(),
+        session_id,
+        updater.get_version().to_string(),
+        isipv6,
+        ip,
+        hostname,
+        port,
+        method,
+    ) {
+        Ok(new_client) => {
+            log::info!("Client started.");
+
+            *transfer_client_state.lock().unwrap() =
+                Some(states::TransferClientWrapper(Box::new(new_client)));
+        }
+        Err(e) => {
+            // TODO: maybe don't use events here
+
+            if let Err(e) = events::client_fail::ClientFailEvent(e.to_string()).emit(&app_handle) {
+                log::error!("Could not emit ClientFailEvent: {:?}", e);
+            }
+
+            log::error!("Could not start client! Reason: {}", e);
+        }
+    }
+
+    Ok(())
+}
 
 #[tauri::command]
 #[specta::specta]
@@ -793,7 +811,7 @@ fn set_observer() {}
 // } => {
 //     clients.set_observer(&target, is_observer);
 //     if let Some(client) = transfer_client.as_ref() {
-//         info!("[CONTROL] Setting {} as observer. {}", target, is_observer);
+//         info!("Setting {} as observer. {}", target, is_observer);
 //         client.set_observer(target, is_observer);
 //     }
 // }
@@ -821,7 +839,7 @@ fn load_aircraft() {}
 // AppMessage::LoadAircraft { config_file_name } => {
 //     // Load config
 //     info!(
-//         "[DEFINITIONS] {} aircraft config selected.",
+//         "{} aircraft config selected.",
 //         config_file_name
 //     );
 //     config_to_load.clone_from(&config_file_name);
@@ -832,7 +850,7 @@ fn startup() {}
 //     // List aircraft
 //     if let Ok(configs) = get_aircraft_configs() {
 //         info!(
-//             "[DEFINITIONS] Found {} configuration file(s).",
+//             "Found {} configuration file(s).",
 //             configs.len()
 //         );
 
@@ -879,3 +897,27 @@ fn update_config() {}
 //     audio.mute(config.sound_muted);
 //     write_configuration(&config);
 // }
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_public_ip(is_ipv6: bool) -> Result<Option<String>> {
+    // TODO: if streamer mode return nothing
+    // return Ok(None);
+
+    let endpoint = if is_ipv6 {
+        IP_V6_LOOKUP_ENDPOINT
+    } else {
+        IP_V4_LOOKUP_ENDPOINT
+    };
+
+    let user_agent = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
+
+    let c = reqwest::ClientBuilder::new()
+        .user_agent(user_agent)
+        .build()?;
+
+    let response = c.get(endpoint).send().await?;
+    let text = response.text().await?;
+
+    Ok(Some(text))
+}

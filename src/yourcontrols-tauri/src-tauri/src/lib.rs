@@ -19,6 +19,18 @@ mod states {
     pub mod transfer_client;
     pub use transfer_client::*;
 }
+mod events {
+    pub mod client_fail;
+    pub use client_fail::*;
+
+    pub mod control;
+
+    pub mod metrics;
+    pub use metrics::*;
+
+    pub mod server_fail;
+    pub use server_fail::*;
+}
 mod client_manager;
 mod simconfig;
 mod sync;
@@ -27,7 +39,10 @@ mod update;
 mod util;
 mod varreader;
 
+// TODO: move to a config file
 pub const AIRCRAFT_DEFINITIONS_PATH: &str = "F:/yourcontrols/definitions/aircraft/";
+pub const IP_V4_LOOKUP_ENDPOINT: &str = "https://api.ipify.org";
+pub const IP_V6_LOOKUP_ENDPOINT: &str = "https://api64.ipify.org";
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -41,6 +56,8 @@ pub enum Error {
     Yourcontrols(#[from] yourcontrols_types::Error),
     #[error(transparent)]
     Anyhow(#[from] anyhow::Error),
+    #[error(transparent)]
+    Reqwest(#[from] reqwest::Error),
 }
 
 impl serde::Serialize for Error {
@@ -54,8 +71,9 @@ impl serde::Serialize for Error {
             Error::Io(x) => x.to_string(),
             Error::Yourcontrols(x) => x.to_string(),
             Error::Anyhow(x) => x.to_string(),
+            Error::Reqwest(x) => x.to_string(),
         };
-        log::error!("{log_error}");
+        log::error!(target: "tauri_backend", "{log_error}");
 
         serializer.serialize_str(&self.to_string())
     }
@@ -78,6 +96,15 @@ pub fn run() {
             commands::disconnect,
             commands::transfer_control,
             commands::go_observer,
+            commands::get_public_ip,
+        ])
+        .events(tauri_specta::collect_events![
+            events::ClientFailEvent,
+            events::ServerFailEvent,
+            events::control::GainControlEvent,
+            events::control::LoseControlEvent,
+            events::control::SetInControlEvent,
+            events::MetricsEvent,
         ]);
 
     #[cfg(debug_assertions)]
