@@ -5,15 +5,14 @@ import { ToggleGroup, ToggleGroupItem } from "@ui/toggle-group";
 import { Form } from "@ui/form";
 import { useForm } from "react-hook-form";
 import StyledFormField from "@/components/StyledFormField";
-import {
-  commands,
-  events,
-  MetricsEvent,
-  ConnectionMethod,
-} from "@/types/bindings";
+import { commands, events, MetricsEvent } from "@/types/bindings";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Accordion, AccordionContent, AccordionItem } from "@ui/accordion";
+import { Input } from "@ui/input";
+import { appState as appStateAtom } from "@/atoms/appState";
+import { useSetAtom } from "jotai";
 
 const formSchema = z.object({
   ipVersion: z
@@ -37,6 +36,8 @@ const Host: React.FC = () => {
     },
   });
 
+  const setAppState = useSetAtom(appStateAtom);
+
   const [publicIp, setPublicIp] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<MetricsEvent>();
 
@@ -50,7 +51,7 @@ const Host: React.FC = () => {
     };
   }, []);
 
-  // TODO: store in atom
+  // TODO: store in atom?
   useEffect(() => {
     setPublicIp(null);
     const is_ipv6 = form.getValues("ipVersion") === "ipv6";
@@ -70,14 +71,19 @@ const Host: React.FC = () => {
     ipVersion,
     hostingMethode,
   }: z.infer<typeof formSchema>) => {
-    commands.startServer(hostingMethode as any).catch((err) => {
-      toast({
-        duration: 5000,
-        variant: "destructive",
-        title: "Could not start server!",
-        description: err,
+    commands
+      .startServer(hostingMethode as any)
+      .then(() => {
+        setAppState("hosting");
+      })
+      .catch((err) => {
+        toast({
+          duration: 5000,
+          variant: "destructive",
+          title: "Could not start server!",
+          description: err,
+        });
       });
-    });
   };
 
   return (
@@ -131,6 +137,30 @@ const Host: React.FC = () => {
                 </ToggleGroup>
               )}
             />
+
+            <Accordion
+              type="single"
+              value={form.watch("hostingMethode")}
+              collapsible
+            >
+              <AccordionItem value="direct">
+                <AccordionContent>
+                  <StyledFormField
+                    control={form.control}
+                    name="port"
+                    label="Port"
+                    render={({ field }) => (
+                      <Input
+                        className="w-3/5"
+                        placeholder="25071"
+                        autoComplete="off"
+                        {...field}
+                      />
+                    )}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </CardContent>
           <CardFooter className="flex w-full justify-center">
             <Button type="submit" className="w-full max-w-3xl">

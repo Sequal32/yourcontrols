@@ -1,10 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Settings from "@/components/Settings";
 import Join from "@/components/Join";
 import Host from "@/components/Host";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/tabs";
+import { useAtomValue } from "jotai";
+import { appState as appStateAtom } from "@/atoms/appState";
+
+const DefaultPage: React.FC = React.memo(() => (
+  <>
+    <Settings />
+    <Tabs defaultValue="join" className="mt-2 h-full">
+      <TabsList className="grid grid-cols-2">
+        <TabsTrigger value="join">Join</TabsTrigger>
+        <TabsTrigger value="host">Host</TabsTrigger>
+      </TabsList>
+      <TabsContent value="join">
+        <Join />
+      </TabsContent>
+      <TabsContent value="host">
+        <Host />
+      </TabsContent>
+    </Tabs>
+  </>
+));
 
 const App: React.FC = () => {
+  const appState = useAtomValue(appStateAtom);
+
+  // todo: move to theme provider and add theme option
   useEffect(() => {
     const root = window.document.documentElement;
 
@@ -29,25 +52,24 @@ const App: React.FC = () => {
     e.preventDefault();
   };
 
+  const switchAppState = (): React.ReactNode => {
+    switch (appState) {
+      case "hosting":
+        return "Hosting";
+      case "connected":
+        return "Connected";
+      default:
+        return <DefaultPage />;
+    }
+  };
+
   return (
     <div
-      className="flex h-screen w-screen select-none justify-center p-2"
+      className="flex h-screen w-screen select-none justify-center overflow-hidden overflow-y-auto p-2"
       onContextMenu={disableContextMenuInProduction}
     >
       <div className="flex w-full max-w-screen-lg flex-col">
-        <Settings />
-        <Tabs defaultValue="join" className="mt-2 h-full">
-          <TabsList className="grid grid-cols-2">
-            <TabsTrigger value="join">Join</TabsTrigger>
-            <TabsTrigger value="host">Host</TabsTrigger>
-          </TabsList>
-          <TabsContent value="join">
-            <Join />
-          </TabsContent>
-          <TabsContent value="host">
-            <Host />
-          </TabsContent>
-        </Tabs>
+        {switchAppState()}
       </div>
     </div>
   );
