@@ -137,12 +137,12 @@ fn evalute_condition(
     }
 
     if var_data.var_name.starts_with("A:") {
-         avarstransfer
+        avarstransfer
             .get_var(&var_data.var_name)
             .map(|x| evalute_condition_values(condition, x))
             .unwrap_or(true)
     } else {
-       lvarstransfer
+        lvarstransfer
             .get_var(&var_data.var_name)
             .map(|x| evalute_condition_values(condition, &VarReaderTypes::F64(x)))
             .unwrap_or(true)
@@ -1665,6 +1665,10 @@ impl Definitions {
         // Might be running another instance
         #[cfg(not(feature = "skip_sim_connect"))]
         self.jstransfer.start().map_err(|_| ())?;
+
+        // Notify simulator we are connected
+        self.lvarstransfer
+            .set(conn, "L:YourControlsServerRunning", "1");
 
         // Get aircraft data
         conn.request_data_on_sim_object(
