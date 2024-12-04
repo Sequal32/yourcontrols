@@ -2,7 +2,6 @@
 
 include:
   - definitions/modules/controls.yaml
-  - definitions/modules/autopilot.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/general.yaml
@@ -15,6 +14,125 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Autopilot
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AUTOPILOT_ON
+    off_event_name: AUTOPILOT_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:3
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 3
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:3
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 3
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MACH HOLD VAR:1
+    var_units: Mach
+    var_type: f64
+    multiply_by: 100
+    event_name: AP_MACH_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: true
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_ON
+    off_event_name: AP_MANAGED_SPEED_IN_MACH_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT SPEED SLOT INDEX
+    var_units: Number
+    var_type: i32
+    event_name: AP_SPEED_SLOT_INDEX_SET
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT THROTTLE ARM
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_ARM
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 1
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:3
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 3
+    unreliable: true
+  -
+    type: event
+    event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_LOC_HOLD
+
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH
@@ -547,9 +665,11 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COM_2_Volume_VHF_C_2
+    unreliable: true
   -
     type: var
     var_name: L:XMLVAR_COM_3_Volume_VHF_R_2
+    unreliable: true
   -
     type: var
     var_name: L:XMLVAR_RMP_L_NAV_Enabled
@@ -562,9 +682,10 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro_Selector_HPA_1
   -
     type: var
     var_name: L:XMLVAR_Autobrake_Level_Armed
@@ -587,6 +708,7 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COM_1_Volume_VHF_L_2
+    unreliable: true
   -
     type: var
     var_name: L:XMLVAR_ALT_Mode_Requested
@@ -611,6 +733,7 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COM_3_Volume_VHF_R_1
+    unreliable: true
   -
     type: var
     var_name: L:XMLVAR_COM_2_VHF_C_1_Switch_Down
@@ -644,6 +767,7 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COM_1_Volume_VHF_L_1
+    unreliable: true
   -
     type: var
     var_name: L:XMLVAR_NAV_AID_SWITCH_L1_State
@@ -1152,6 +1276,22 @@ server:
     unreliable: true
 
 ignore:
+  - AP_KNOB_Up
+  - AP_KNOB_Down
+  - Generic_Autopilot_1_Manual_Off
+  - Generic_Autopilot_2_Manual_Off
+
+  - A320_Neo_CDU_AP_INC_SPEED
+  - A320_Neo_CDU_AP_DEC_SPEED
+  - A320_Neo_CDU_AP_INC_HEADING
+  - A320_Neo_CDU_AP_DEC_HEADING
+  - A320_Neo_CDU_AP_INC_ALT
+  - A320_Neo_CDU_AP_DEC_ALT
+  - A320_Neo_FCU_VS_INC
+  - A320_Neo_FCU_VS_DEC
+
+  - A320_Neo_EXPEDITE_MODE
+
   - A320_Neo_ATC_BTN_0
   - A320_Neo_ATC_BTN_1
   - A320_Neo_ATC_BTN_2

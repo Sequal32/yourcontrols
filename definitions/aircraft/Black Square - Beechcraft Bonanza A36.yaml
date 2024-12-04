@@ -1,15 +1,15 @@
-# Version 0.1.1
+# Version 0.1.2
 
 include:
   - definitions/modules/Instruments/AS_GNS430.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
-  - definitions/modules/Instruments/AS_GTX330.yaml # 327
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/Instruments/BKSQ_KFC150.yaml
+  - definitions/modules/Instruments/PMS50_GNS.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/Instruments/TDS_GTNXi.yaml
-  - definitions/modules/autopilot.yaml
   - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
-  - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -21,13 +21,36 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Aircon master
+  - # Aircon
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:22
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 22
+  -
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:23
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 23
+
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:48
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 48
+
+  - # Battery
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
 
   - # Fuel
     type: ToggleSwitch
@@ -37,146 +60,67 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 4
 
-  - # Vent blower
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:22
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 22
   - # Stby vacuum (no var)
     type: event
     event_name: TOGGLE_ELECTRIC_VACUUM_PUMP
 
-  - # Interior
-    type: NumSet
-    var_name: A:LIGHT PANEL:1
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-    event_param: 1
+# - # LVAR's (trimmed)
+#   type: var
+#   var_name: L:SAVED_FUEL_QTY_L_pct
+# -
+#   type: var
+#   var_name: L:SAVED_FUEL_QTY_R_pct
+# -
+#   type: var
+#   var_name: L:SAVED_PAYLOAD_NOSE_BAGGAGE_lbs
+# -
+#   type: var
+#   var_name: L:SAVED_PAYLOAD_PILOT_lbs
+# -
+#   type: var
+#   var_name: L:SAVED_PAYLOAD_COPILOT_lbs
+# -
+#   type: var
+#   var_name: L:SAVED_PAYLOAD_FL_PAX_lbs
+# -
+#   type: var
+#   var_name: L:SAVED_PAYLOAD_FR_PAX_lbs
+# -
+#   type: var
+#   var_name: L:SAVED_PAYLOAD_RL_PAX_lbs
+# -
+#   type: var
+#   var_name: L:SAVED_PAYLOAD_RR_PAX_lbs
+# -
+#   type: var
+#   var_name: L:SAVED_PAYLOAD_REAR_BAGGAGE_lbs
+# -
+#   type: var
+#   var_name: L:BKSQ_GyroSound
   -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:1
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 1
-    index_reversed: true
+    type: var
+    var_name: L:BKSQ_NewStrobeEffect
+    cancel_h_events: true
   -
-    type: NumSet
-    var_name: A:LIGHT PANEL:2
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT PANEL:3
-    var_units: Bool
-    var_type: i32
-    event_name: PANEL_LIGHTS_SET
-    event_param: 3
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD:1
-    var_units: Bool
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:2
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 2
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:1
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:2
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:3
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 3
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:4
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 4
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:5
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 5
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:6
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 6
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:7
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 7
-  -
-    type: NumSet
-    var_name: A:LIGHT CABIN:8
-    var_units: Bool
-    var_type: i32
-    event_name: CABIN_LIGHTS_SET
-    event_param: 8
-
-  - # LVAR's
     type: var
     var_name: L:BKSQ_Turbocharged
-  -
-    type: var
-    var_name: L:BKSQ_TurbochargerSound
+# -
+#   type: var
+#   var_name: L:BKSQ_TurbochargerSound
   -
     type: var
     var_name: L:BKSQ_TipTanks
   -
     type: var
     var_name: L:BKSQ_RadarPod
+  -
+    type: var
+    var_name: L:BKSQ_VatsimClientMonitorBoth
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:BKSQ_ShowCopilotInterior
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
@@ -193,9 +137,449 @@ shared:
     type: var
     var_name: L:BKSQ_MixtureLeverPosition_1
     unreliable: true
+  -
+    type: var
+    var_name: L:var_FrictionLock
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:var_PilotCws_IsDown
+# -
+#   type: var
+#   var_name: L:var_PilotCws_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_PilotCws_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:var_CoPilotCws_IsDown
+# -
+#   type: var
+#   var_name: L:var_CoPilotCws_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_CoPilotCws_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:var_yokeChronoMode_L
+  -
+    type: var
+    var_name: L:var_yokeTimerMode_L
+  -
+    type: var
+    var_name: L:var_yokeChronoMode_R
+  -
+    type: var
+    var_name: L:var_yokeTimerMode_R
+  -
+    type: var
+    var_name: L:var_alternatorFailure
+  -
+    type: var
+    var_name: L:BKSQ_loadMeterMode
+  -
+    type: var
+    var_name: L:var_airConditioningBlowerSwitch
+  -
+    type: var
+    var_name: L:var_FUEL_Switch_Pump_1
+  -
+    type: var
+    var_name: L:var_AnnunciatorTestButton_IsDown
+# -
+#   type: var
+#   var_name: L:var_AnnunciatorTestButton_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_AnnunciatorTestButton_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:starterKnobReturnTime
+    unreliable: true
+  -
+    type: var
+    var_name: L:bksq_MasterGlareshieldLights
+  -
+    type: var
+    var_name: L:bksq_MasterPanelLights
+  -
+    type: var
+    var_name: L:var_oxygenOn
+  -
+    type: var
+    var_name: L:var_FlightInstrumentsLightingKnob
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_GlareshieldLightingKnob
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_EngineInstrumentsLightingKnob
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_SubpanelLightingKnob
+    unreliable: true
+  -
+    type: var
+    var_name: L:TipTankTransferSwitch_L
+  -
+    type: var
+    var_name: L:TipTankTransferSwitch_R
+  -
+    type: var
+    var_name: L:var_FuelStopDown
+  -
+    type: var
+    var_name: L:var_CoTest_IsDown
+# -
+#   type: var
+#   var_name: L:var_CoTest_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_CoTest_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:var_FreshAirKnob
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_LIGHTING_Push_Cockpit_1
+  -
+    type: var
+    var_name: L:var_LIGHTING_Push_Cockpit_2
+  -
+    type: var
+    var_name: L:var_LIGHTING_Push_Cockpit_3
+  -
+    type: var
+    var_name: L:var_LIGHTING_Push_Cockpit_4
+  -
+    type: var
+    var_name: L:var_LIGHTING_Push_Cockpit_5
+  -
+    type: var
+    var_name: L:var_LIGHTING_Push_Cockpit_6
+  -
+    type: var
+    var_name: L:var_OatMapCompassLightButton_1
+  -
+    type: var
+    var_name: L:var_OatMapCompassLightButton_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+  -
+    type: var
+    var_name: L:var_TrueAirspeedKnob_L
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_GyroSlaveModeSwitch
+# -
+#   type: var
+#   var_name: L:var_RNAV_OBS
+  -
+    type: var
+    var_name: L:var_dmeMode
+  -
+    type: var
+    var_name: L:var_rnavDrivesHsi
+  -
+    type: var
+    var_name: L:var_TrueAirspeedKnob_R
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_JpiMode
+  -
+    type: var
+    var_name: L:var_JpiTempUnit
+  -
+    type: var
+    var_name: L:var_CabinTempUnitMode
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+  -
+    type: var
+    var_name: L:var_radio1Mode
+# -
+#   type: var
+#   var_name: L:GTN750_INT_HIDDEN
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750_1
+# -
+#   type: var
+#   var_name: L:AS530_HIDDEN
+  -
+    type: var
+    var_name: L:KX155B_1_HIDDEN
+  -
+    type: var
+    var_name: L:var_radio2Mode
+# -
+#   type: var
+#   var_name: L:AS430_HIDDEN
+  -
+    type: var
+    var_name: L:KX155B_2_HIDDEN
+  -
+    type: var
+    var_name: L:var_KmaSourceSelectKnob
+  -
+    type: var
+    var_name: L:var_KmaMarkerTest_IsDown
+# -
+#   type: var
+#   var_name: L:var_KmaMarkerTest_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_KmaMarkerTest_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:var_AS340_1_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_AS340_3_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_AS340_4_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_cabinIntercom
+  -
+    type: var
+    var_name: L:var_crewIsolate
+  -
+    type: var
+    var_name: L:var_AudioTestButton_IsDown
+# -
+#   type: var
+#   var_name: L:var_AudioTestButton_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_AudioTestButton_LeftLeaveToRun
+# -
+#   type: var
+#   var_name: L:GTN750_Vol
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+  -
+    type: var
+    var_name: L:var_adfKnobPulled
+  -
+    type: var
+    var_name: L:var_rnavKnobPulled
+  -
+    type: var
+    var_name: L:var_RNAV_VOLUME
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_RNAV_DMERADIALMODE
+  -
+    type: var
+    var_name: L:var_RNAV_CHECKMODE_IsDown
+# -
+#   type: var
+#   var_name: L:var_RNAV_CHECKMODE_MinReleaseTime
+  -
+    type: var
+    var_name: L:var_RNAV_CHECKMODE_LeftLeaveToRun
+  -
+    type: var
+    var_name: L:var_radarMode
+  -
+    type: var
+    var_name: L:var_RadarBrightness
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_RadarGain
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_RadarTilt
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:var_AutopilotTest
+  - # Test button
+    type: var
+    var_name: L:var_AutopilotStartupCounter
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_VsAdjustMode
+  -
+    type: var
+    var_name: L:var_manualExtensionHandleDeployed
+  -
+    type: var
+    var_name: L:var_manualExtensionHandleTurns
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:var_manualExtensionSound
+  -
+    type: var
+    var_name: L:var_FrontArmrest
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_RearArmrest
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_stormWindow
+  -
+    type: var
+    var_name: L:var_Visor_L
+    unreliable: true
+  -
+    type: var
+    var_name: L:var_Visor_R
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:XMLVAR_Cabin_Heat_1_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Cabin_Heat_2_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Cabin_Heat_3_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Cabin_Heat_4_Position
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Propeller_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:XMLVAR_GPS_Approach
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
 # -
 #   type: var
 #   var_name: L:BKSQ_SOUND_IDENTIFIER
+# -
+#   type: var
+#   var_name: L:XMLVAR_GTN750_SET_DISABLE_MODE
+  -
+    type: var
+    var_name: L:var_WeatherSquare4000_Power
+# -
+#   type: var
+#   var_name: L:var_WeatherSquare4000_SongIndex_ReadOnly
+# -
+#   type: var
+#   var_name: L:var_WeatherSquare4000_PlayMusic_ReadOnly
 # -
 #   type: var
 #   var_name: L:BKSQ_EGT_1
@@ -213,7 +597,7 @@ shared:
     var_name: L:var_radarScreenEmissive
 # -
 #   type: var
-#   var_name: L:var_manualExtensionSound
+#   var_name: L:BKSQ_TurnCoordinatorBall
 # -
 #   type: var
 #   var_name: L:BKSQ_OXYGEN_FLOW_SOUND
@@ -223,33 +607,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:var_cabinVentTemperature
-  -
-    type: var
-    var_name: L:var_manualExtensionHandleDeployed
-  -
-    type: var
-    var_name: L:var_manualExtensionHandleTurns
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:var_AutopilotStartupCounter
-  -
-    type: var
-    var_name: L:var_Visor_L
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_Visor_R
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_alternatorFailure
-  -
-    type: var
-    var_name: L:var_adfKnobPulled
-  -
-    type: var
-    var_name: L:var_VsAdjustMode
   -
     type: var
     var_name: L:var_magnetoFailure_1_L
@@ -267,16 +624,13 @@ shared:
     var_name: L:var_switchGroundingFailure_1
   -
     type: var
-    var_name: L:BKSQ_loadMeterMode
-  -
-    type: var
-    var_name: L:var_airConditioningBlowerSwitch
-  -
-    type: var
     var_name: L:var_startupComplete
   -
     type: var
     var_name: L:var_startupCount
+  -
+    type: var
+    var_name: L:var_PartialVacuumFailure
   -
     type: var
     var_name: L:var_starterInUseSeconds
@@ -301,16 +655,6 @@ shared:
 #   var_name: L:var_condenserPosition
   -
     type: var
-    var_name: L:var_FreshAirKnob
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_oxygenOn
-  -
-    type: var
-    var_name: L:var_rnavDrivesHsi
-  -
-    type: var
     var_name: L:var_rnavCourseLinearFlag
 # -
 #   type: var
@@ -330,21 +674,12 @@ shared:
   -
     type: var
     var_name: L:var_RNAV_DMEHOLD
-  -
-    type: var
-    var_name: L:var_RNAV_DMERADIALMODE
-  -
-    type: var
-    var_name: L:var_RNAV_CHECKMODE
 # -
 #   type: var
-#   var_name: L:var_RNAV_OBS
+#   var_name: L:var_RNAV_CHECKMODE
   -
     type: var
     var_name: L:var_rnavKnobPulled_L
-  -
-    type: var
-    var_name: L:var_rnavKnobPulled
   -
     type: var
     var_name: L:COM_1_KNOB_PULLED
@@ -357,22 +692,6 @@ shared:
   -
     type: var
     var_name: L:NAV_2_KNOB_PULLED
-  -
-    type: var
-    var_name: L:var_RNAV_VOLUME
-    unreliable: true
-  -
-    type: var
-    var_name: L:TipTankTransferSwitch_L
-  -
-    type: var
-    var_name: L:TipTankTransferSwitch_R
-  -
-    type: var
-    var_name: L:var_JpiMode
-  -
-    type: var
-    var_name: L:var_JpiTempUnit
   -
     type: var
     var_name: L:var_JpiAlarm_1
@@ -393,25 +712,16 @@ shared:
 #   var_name: L:TDSGTNXI750U1_ElectricalCircuit
 # -
 #   type: var
-#   var_name: L:GTN750_INT_HIDDEN
+#   var_name: L:TDSGTNXI_VGlide
 # -
 #   type: var
-#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
-# -
-#   type: var
-#   var_name: L:AS530_HIDDEN
-  -
-    type: var
-    var_name: L:KX155B_1_HIDDEN
-# -
-#   type: var
-#   var_name: L:AS430_HIDDEN
-  -
-    type: var
-    var_name: L:KX155B_2_HIDDEN
+#   var_name: L:TDSGTNXI_GlideRatio
 # -
 #   type: var
 #   var_name: L:var_randomNumber
+# -
+#   type: var
+#   var_name: L:var_BatteryDimmingAnnunciatorBrightness
 # -
 #   type: var
 #   var_name: L:LIGHTING_PANEL_1
@@ -420,19 +730,13 @@ shared:
 #   var_name: L:LIGHTING_PANEL_2
 # -
 #   type: var
-#   var_name: L:LIGHTING_PANEL_3
+#   var_name: L:SAVED_FUEL_QTY_L_TIP_pct
 # -
 #   type: var
-#   var_name: L:LIGHTING_GLARESHIELD_1
+#   var_name: L:SAVED_FUEL_QTY_R_TIP_pct
 # -
 #   type: var
 #   var_name: L:var_oxygenPressure
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_INSTALLED
-  -
-    type: var
-    var_name: L:var_radio1Mode
   -
     type: var
     var_name: L:var_engineDamage
@@ -444,46 +748,27 @@ shared:
 # -
 #   type: var
 #   var_name: L:var_engineFouling
-  -
-    type: var
-    var_name: L:var_radarMode
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Heat_3_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Heat_2_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Heat_1_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_stormWindow
-  -
-    type: var
-    var_name: L:XMLVAR_Cabin_Heat_4_Position
-    unreliable: true
 # -
 #   type: var
-#   var_name: L:BKSQ_AUTOPILOT_DISCONNECT_SOUND
-# -
-#   type: var
-#   var_name: L:var_AutopilotTest
+#   var_name: L:var_lastAutopilotMasterState
 # -
 #   type: var
 #   var_name: L:var_FuelEvaporationRate
 # -
 #   type: var
 #   var_name: L:BKSQ_BONANZA_FuelFlow_1
-  -
-    type: var
-    var_name: L:var_FUEL_Switch_Pump_1
+# -
+#   type: var
+#   var_name: L:BKSQ_SUCTION_PRESSURE
 # -
 #   type: var
 #   var_name: L:var_turbochargerRPM
+# -
+#   type: var
+#   var_name: L:BKSQ_TurbochargerExcessFuelBurn
+# -
+#   type: var
+#   var_name: L:var_FuelFlowTurbochargedExcessBurn
 # -
 #   type: var
 #   var_name: L:BKSQ_PersistentIndicatedAirspeed
@@ -492,16 +777,16 @@ shared:
 #   var_name: L:BKSQ_PersistentIndicatedAirspeedSound
 # -
 #   type: var
-#   var_name: L:TDSGTNXI_INACTIVEVAR
-# -
-#   type: var
-#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
-  -
-    type: var
-    var_name: L:var_radio2Mode
+#   var_name: L:KNS_WriteGpsSimvars
 # -
 #   type: var
 #   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INACTIVEVAR
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_WTT
   -
     type: var
     var_name: L:FailureDataBus_ServiceBit
@@ -807,110 +1092,28 @@ shared:
     var_name: L:FailureDataBus_099
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden1
-  -
-    type: var
-    var_name: L:var_FrictionLock
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:HANDLING_ElevatorTrim
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden2
-# -
-#   type: var
 #   var_name: L:var_PilotCws
-  -
-    type: var
-    var_name: L:var_PilotCws_IsDown
-# -
-#   type: var
-#   var_name: L:var_PilotCws_MinReleaseTime
-  -
-    type: var
-    var_name: L:var_PilotCws_LeftLeaveToRun
 # -
 #   type: var
 #   var_name: L:var_CoPilotCws
-  -
-    type: var
-    var_name: L:var_CoPilotCws_IsDown
-# -
-#   type: var
-#   var_name: L:var_CoPilotCws_MinReleaseTime
-  -
-    type: var
-    var_name: L:var_CoPilotCws_LeftLeaveToRun
-  -
-    type: var
-    var_name: L:var_yokeTimerMode_L
 # -
 #   type: var
 #   var_name: L:var_yokeTimerMode_L_SECONDS
-  -
-    type: var
-    var_name: L:var_yokeTimerMode_R
 # -
 #   type: var
 #   var_name: L:var_yokeTimerMode_R_SECONDS
-  -
-    type: var
-    var_name: L:var_yokeChronoMode_L
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_3_power_setting
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_yokeChronoMode_R
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:var_AnnunciatorTestButton
-  -
-    type: var
-    var_name: L:var_AnnunciatorTestButton_IsDown
 # -
 #   type: var
-#   var_name: L:var_AnnunciatorTestButton_MinReleaseTime
-  -
-    type: var
-    var_name: L:var_AnnunciatorTestButton_LeftLeaveToRun
-  -
-    type: var
-    var_name: L:starterKnobReturnTime
-    unreliable: true
-  -
-    type: var
-    var_name: L:LIGHTING_GLARESHIELD_1_POWER_SETTING
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_FuelStopDown
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_3
 # -
 #   type: var
 #   var_name: L:var_CoTest
-  -
-    type: var
-    var_name: L:var_CoTest_IsDown
-# -
-#   type: var
-#   var_name: L:var_CoTest_MinReleaseTime
-  -
-    type: var
-    var_name: L:var_CoTest_LeftLeaveToRun
-  -
-    type: var
-    var_name: L:var_CoDetectFailure
 # -
 #   type: var
 #   var_name: L:LIGHTING_CABIN_1
@@ -931,49 +1134,76 @@ shared:
 #   var_name: L:LIGHTING_CABIN_6
 # -
 #   type: var
-#   var_name: L:PMS50_APGA_RUNNING
+#   var_name: L:LIGHTING_CABIN_7
 # -
 #   type: var
-#   var_name: L:PMS50_APGA_NAV_BUTTON_STATE
+#   var_name: L:LIGHTING_CABIN_8
 # -
 #   type: var
-#   var_name: L:PMS50_APGA_SELECTED_ALTITUDE_PHASE
+#   var_name: L:var_AttitudeGyroSpeed_1
 # -
 #   type: var
-#   var_name: L:PMS50_APGA_ACTIVE_VERTICAL_MODE
+#   var_name: L:var_AttitudeGyroSpeed_1_SoundVolume
 # -
 #   type: var
-#   var_name: L:PMS50_APGA_AP
+#   var_name: L:var_INSTRUMENT_AttitudeIndicator_1_Pitch_Animation_Readonly
 # -
 #   type: var
-#   var_name: L:PMS50_APGA_ACTIVE_LATERAL_MODE
+#   var_name: L:var_INSTRUMENT_AttitudeIndicator_1_Bank_Animation_Readonly
 # -
 #   type: var
-#   var_name: L:PMS50_APGA_APR_BUTTON_STATE
+#   var_name: L:var_AttitudeGyroSpeed_2
 # -
 #   type: var
-#   var_name: L:PMS50_APGA_ARMED_LATERAL_MODE
+#   var_name: L:var_AttitudeGyroSpeed_2_SoundVolume
 # -
 #   type: var
-#   var_name: L:PMS50_APGA_YD_BUTTON_STATE
+#   var_name: L:var_INSTRUMENT_AttitudeIndicator_2_Pitch_Animation_Readonly
+# -
+#   type: var
+#   var_name: L:var_INSTRUMENT_AttitudeIndicator_2_Bank_Animation_Readonly
+# -
+#   type: var
+#   var_name: L:var_KmaMarkerTest
+# -
+#   type: var
+#   var_name: L:var_AudioTestButton
+# -
+#   type: var
+#   var_name: L:BKSQ_VOR_BRG_1_Degraded
+# -
+#   type: var
+#   var_name: L:AS430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:BKSQ_VOR_TO_2_Degraded
+# -
+#   type: var
+#   var_name: L:0
 # -
 #   type: var
 #   var_name: L:AS530_CDI_Source_1
-  -
-    type: var
-    var_name: L:XMLVAR_GPS_Approach
-  -
-    type: var
-    var_name: L:GNS530_HAVE_NEWMESSAGE:1
-  -
-    type: var
-    var_name: L:GNS530_HAVE_NEWMESSAGE:2
 # -
 #   type: var
-#   var_name: L:GTN750_HAVE_MESSAGE:1
+#   var_name: L:BKSQ_VOR_CDI_1_Degraded
 # -
 #   type: var
-#   var_name: L:BKSQ_BONANZA_HSI_LOC_FLAG
+#   var_name: L:BKSQ_RNAV_CDI_Degraded
+# -
+#   type: var
+#   var_name: L:BKSQ_BONANZA_HSI_LOC
+# -
+#   type: var
+#   var_name: L:var_mainBusVolts
+# -
+#   type: var
+#   var_name: L:BKSQ_VOR_CDI_2_Degraded
+# -
+#   type: var
+#   var_name: L:BKSQ_BONANZA_LOC_2
+# -
+#   type: var
+#   var_name: L:BKSQ_ADF_BRG_1_Degraded
 # -
 #   type: var
 #   var_name: L:PMS50_GTN750_RUNNING
@@ -988,54 +1218,16 @@ shared:
 #   var_name: L:BKSQ_BONANZA_HSI_GLIDE
 # -
 #   type: var
-#   var_name: L:AS430_CDI_Source_1
-# -
-#   type: var
-#   var_name: L:BKSQ_VOR_CDI_2_Degraded
-# -
-#   type: var
-#   var_name: L:BKSQ_BONANZA_LOC_2
-# -
-#   type: var
-#   var_name: L:BKSQ_BONANZA_GLIDE_2
-# -
-#   type: var
-#   var_name: L:BKSQ_VOR_TO_2_Degraded
-# -
-#   type: var
-#   var_name: L:BKSQ_VOR_FROM_2_Degraded
-  -
-    type: var
-    var_name: L:var_RadarAltimeterTest
-# -
-#   type: var
-#   var_name: L:BKSQ_ADF_BRG_1_Degraded
-# -
-#   type: var
-#   var_name: L:BKSQ_VOR_BRG_1_Degraded
-  -
-    type: var
-    var_name: L:var_GyroSlaveModeSwitch
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_2_power_setting
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_TrueAirspeedKnob_L
-    unreliable: true
-# -
-#   type: var
 #   var_name: L:var_lastGyroDiff
 # -
 #   type: var
-#   var_name: L:BKSQ_VOR_CDI_1_Degraded
+#   var_name: L:BKSQ_BONANZA_HSI_LOC_FLAG
 # -
 #   type: var
-#   var_name: L:BKSQ_RNAV_CDI_Degraded
+#   var_name: L:var_alternatorLoad
 # -
 #   type: var
-#   var_name: L:BKSQ_BONANZA_HSI_LOC
+#   var_name: L:BKSQ_BONANZA_GLIDE_2
 # -
 #   type: var
 #   var_name: L:TDSGTNXI_InstrumentPanelSelfTest
@@ -1051,6 +1243,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:BKSQ_BONANZA_CDI_1_TO_FLAG
+  -
+    type: var
+    var_name: L:var_RadarAltimeterTest
+# -
+#   type: var
+#   var_name: L:BKSQ_VOR_FROM_2_Degraded
 # -
 #   type: var
 #   var_name: L:BKSQ_VOR_FROM_1_Degraded
@@ -1060,491 +1258,50 @@ shared:
 # -
 #   type: var
 #   var_name: L:BKSQ_BONANZA_CDI_1_FROM_FLAG
+# -
+#   type: var
+#   var_name: L:var_propAmps
+# -
+#   type: var
+#   var_name: L:BKSQ_TBM_VerticalSpeed_1
+# -
+#   type: var
+#   var_name: L:var_WeatherSquare4000_Installed
+# -
+#   type: var
+#   var_name: L:var_LANDING_GEAR_Light_Center_readonly
+# -
+#   type: var
+#   var_name: L:var_LANDING_GEAR_Light_Left_readonly
+# -
+#   type: var
+#   var_name: L:var_LANDING_GEAR_Light_Right_readonly
+# -
+#   type: var
+#   var_name: L:var_LANDING_GEAR_Light_Unsafe_readonly
+# -
+#   type: var
+#   var_name: L:var_HANDLING_Light_Flaps_1_readonly
+# -
+#   type: var
+#   var_name: L:var_HANDLING_Light_Flaps_2_readonly
+# -
+#   type: var
+#   var_name: L:var_HANDLING_Light_Flaps_3_readonly
+# -
+#   type: var
+#   var_name: L:var_TipTankTransferSwitch_L_EM_readonly
+# -
+#   type: var
+#   var_name: L:var_TipTankTransferSwitch_R_EM_readonly
   -
     type: var
-    var_name: L:var_dmeMode
-  -
-    type: var
-    var_name: L:var_TrueAirspeedKnob_R
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_CabinTempUnitMode
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_STATE
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_TEST_TIME
-  -
-    type: var
-    var_name: L:var_KmaSourceSelectKnob
-# -
-#   type: var
-#   var_name: L:var_KmaMarkerTest
-  -
-    type: var
-    var_name: L:var_KmaMarkerTest_IsDown
-# -
-#   type: var
-#   var_name: L:var_KmaMarkerTest_MinReleaseTime
-  -
-    type: var
-    var_name: L:var_KmaMarkerTest_LeftLeaveToRun
-  -
-    type: var
-    var_name: L:var_AS340_1_1
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_AS340_3_1
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_AS340_4_1
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_AudioTestButton
-  -
-    type: var
-    var_name: L:var_AnnunciatorDim
-  -
-    type: var
-    var_name: L:var_cabinIntercom
-  -
-    type: var
-    var_name: L:var_crewIsolate
-  -
-    type: var
-    var_name: L:var_AudioTestButton_IsDown
-# -
-#   type: var
-#   var_name: L:var_AudioTestButton_MinReleaseTime
-  -
-    type: var
-    var_name: L:var_AudioTestButton_LeftLeaveToRun
-# -
-#   type: var
-#   var_name: L:GTN750_Vol
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_LKnobInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_LKnobDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_LKnobCRSR
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobCRSR
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_HomeKey
-# -
-#   type: var
-#   var_name: L:TDSGTNXI750U1_DTOKey
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Enabled_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Enabled_1
-  -
-    type: var
-    var_name: L:var_RNAV_CHECKMODE_IsDown
-# -
-#   type: var
-#   var_name: L:var_RNAV_CHECKMODE_MinReleaseTime
-  -
-    type: var
-    var_name: L:var_RNAV_CHECKMODE_LeftLeaveToRun
-  -
-    type: var
-    var_name: L:var_RadarBrightness
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_RadarGain
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_RadarTilt
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
-  -
-    type: var
-    var_name: L:LIGHTING_PANEL_1_POWER_SETTING
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_FrontArmrest
-    unreliable: true
-  -
-    type: var
-    var_name: L:var_RearArmrest
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
-# -
-#   type: var
-#   var_name: L:HANDLING_AileronsTrim
-# -
-#   type: var
-#   var_name: L:DEICE_Pitot_1
-# -
-#   type: var
-#   var_name: L:DEICE_Propeller_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_STROBE_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_BEACON_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_NAV_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_TAXI_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_LANDING_1
-# -
-#   type: var
-#   var_name: L:LANDING_GEAR_Gear
-# -
-#   type: var
-#   var_name: L:LIGHTING_CABIN_7
-# -
-#   type: var
-#   var_name: L:LIGHTING_CABIN_8
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Altimeter_1
-# -
-#   type: var
-#   var_name: L:INSTRUMENT_Altimeter_2
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS530_SelectedSource
-# -
-#   type: var
-#   var_name: L:AS430_MapZoomRange
-# -
-#   type: var
-#   var_name: L:AS430_SelectedSource
-# -
-#   type: var
-#   var_name: L:PMS50_GTN750_INSTALLED
-# -
-#   type: var
-#   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:var_rnavApproachMode
-# -
-#   type: var
-#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
-# -
-#   type: var
-#   var_name: L:WT_LNavData_DTK_True
-# -
-#   type: var
-#   var_name: L:WT_LNavData_DTK_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_XTK
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_Next_DTK_True
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_CDI_Scale
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Bearing_True
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Distance
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Destination_Distance
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_Egress_Distance
-# -
-#   type: var
-#   var_name: L:XMLVAR_VNAVButtonValue
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Along_Track_Speed
-# -
-#   type: var
-#   var_name: L:WTGNS_ADSB_OPER
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_DTK
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_XTK
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Is_Tracking
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Tracked_Leg_Index
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Transition_Mode
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Tracked_Vector_Index
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Course_To_Steer
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Is_Suspended
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Leg_Distance_Along
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Vector_Distance_Along
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_State
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Path_Mode
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Path_Available
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Constraint_Altitude
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Next_Constraint_Altitude
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Target_Altitude
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_FPA
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Vertical_Deviation
-# -
-#   type: var
-#   var_name: L:WTAP_VNAV_Required_VS
-# -
-#   type: var
-#   var_name: L:WTAP_VNav_Alt_Capture_Type
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Service_Level
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Vertical_Deviation
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Distance
-# -
-#   type: var
-#   var_name: L:WTAP_GP_FPA
-# -
-#   type: var
-#   var_name: L:WT_AP_FPA_Target:1
-# -
-#   type: var
-#   var_name: L:WT1000_AP_G1000_INSTALLED
-# -
-#   type: var
-#   var_name: L:WT_GNS430_INSTALLED_1
-# -
-#   type: var
-#   var_name: L:AS430_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS430_State
-# -
-#   type: var
-#   var_name: L:GTN750_INT_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:GTN750_INT_State
-# -
-#   type: var
-#   var_name: L:KX155B_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KX155B_1_State
-# -
-#   type: var
-#   var_name: L:KX155B_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KX155B_2_State
-# -
-#   type: var
-#   var_name: L:KR87A_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KR87A_State
-# -
-#   type: var
-#   var_name: L:AS330_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS330_State
-# -
-#   type: var
-#   var_name: L:KDI572R_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KDI572R_State
-# -
-#   type: var
-#   var_name: L:KNS81_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KNS81_1_State
-  -
-    type: var
-    var_name: L:bksq_wradar1_HIDDEN
-# -
-#   type: var
-#   var_name: L:bksq_wradar1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:bksq_wradar1_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:MFD_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MFD_MapZoomRange
-  -
-    type: var
-    var_name: L:bksq_wradar1_IsPositionOverride
-# -
-#   type: var
-#   var_name: L:KAS297B_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:KAS297B_1_State
-# -
-#   type: var
-#   var_name: L:EDM800_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:EDM800_1_State
-# -
-#   type: var
-#   var_name: L:WT_GNS530_INSTALLED_1
-# -
-#   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:WTAP_GP_Required_VS
-# -
-#   type: var
-#   var_name: L:BKSQ_VOR_1_DERIVATIVE
-# -
-#   type: var
-#   var_name: L:BKSQ_VOR_1_NEEDLE_OFFSET
-# -
-#   type: var
-#   var_name: L:BKSQ_ADF_1_NEEDLE_OFFSET
-# -
-#   type: var
-#   var_name: L:BKSQ_VOR_1_SIGNAL_STRENGTH
-# -
-#   type: var
-#   var_name: L:BKSQ_ADF_1_SIGNAL_STRENGTH
-# -
-#   type: var
-#   var_name: L:BKSQ_RNAV_BRG_Degraded
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+    var_name: L:var_CoDetectFailure
 
   - # Tip
     type: var
     var_name: L:var_cabinTemperatureKnob
+    unreliable: true
 
 server:
   -

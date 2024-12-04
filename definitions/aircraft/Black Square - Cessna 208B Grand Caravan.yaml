@@ -3,8 +3,9 @@
 include:
   - definitions/modules/Instruments/AS_GNS430.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
-  - definitions/modules/Instruments/AS_GTX330.yaml # 327
+  - definitions/modules/Instruments/AS_GTX330.yaml
   - definitions/modules/Instruments/AS_KAP140.yaml
+  - definitions/modules/Instruments/PMS50_GNS.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/Instruments/TDS_GTNXi.yaml
   - definitions/modules/controls.yaml
@@ -123,25 +124,17 @@ shared:
     get: 14 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
     set: 11 14 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
-  - # EPU
+  - # EPU Starter
     type: ToggleSwitch
     var_name: A:EXTERNAL POWER ON:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 1
-  -
+  - # EPU Bus
     type: CustomCalculator
     get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
     set: 1 12 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
-    set: 11 12 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
-    set: 11 1 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
 
   - # ADF
     type: ToggleSwitch
@@ -1316,12 +1309,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_GPS_Approach
-  -
-    type: var
-    var_name: L:GNS530_HAVE_NEWMESSAGE:1
-  -
-    type: var
-    var_name: L:GNS530_HAVE_NEWMESSAGE:2
+# -
+#   type: var
+#   var_name: L:GNS530_HAVE_NEWMESSAGE:1
+# -
+#   type: var
+#   var_name: L:GNS530_HAVE_NEWMESSAGE:2
 # -
 #   type: var
 #   var_name: L:GTN750_HAVE_MESSAGE:1
@@ -1464,9 +1457,9 @@ shared:
     type: var
     var_name: L:var_AS340_4_1
     unreliable: true
-  -
-    type: var
-    var_name: L:var_AudioTestButton
+# -
+#   type: var
+#   var_name: L:var_AudioTestButton
   -
     type: var
     var_name: L:var_cabinIntercom

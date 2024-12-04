@@ -1,4 +1,4 @@
-# Version 0.2.13
+# Version 0.2.18
 
 include:
   - definitions/modules/Instruments/AS_G1000.yaml
@@ -96,15 +96,18 @@ shared:
     event_name: CABIN_LIGHTS_SET
     event_param: 7
 
-  - # LVAR's
+  - # LVAR's (trimmed)
     type: var
     var_name: L:SunVisor_Right
   -
     type: var
     var_name: L:Handrest
   -
-    type: var
+    type: NumSet
     var_name: L:WT_SR22T_MIXTURE_LEVER_POS
+    var_units: Number
+    var_type: f64
+    event_name: MIXTURE1_SET
     unreliable: true
   -
     type: var
@@ -118,9 +121,66 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
-  -
-    type: var
-    var_name: L:HANDLING_L_R_TRIM_TYPE_UP_DN_TRIM_TYPE_Trim_Position
+# -
+#   type: var
+#   var_name: L:HANDLING_AILERON_ELEVATOR_Trim_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_5
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_6
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_7
   -
     type: var
     var_name: L:WT1000_TKS_CurrentMode

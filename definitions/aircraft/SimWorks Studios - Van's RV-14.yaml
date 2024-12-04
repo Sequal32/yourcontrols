@@ -1,7 +1,7 @@
-# Version 1.3.3 (14 & 14A)
+# Version 1.4.0
 
 include:
-  - definitions/modules/Instruments/AS_G3X_Touch.yaml
+  - definitions/modules/Instruments/WT_G3X_Touch.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/Instruments/TDS_GTNXi.yaml
@@ -237,6 +237,12 @@ shared:
 #   var_name: L:TDSGTNXI_GlidePathValueAngle
   -
     type: var
+    var_name: L:PILOT_Hidden
+  -
+    type: var
+    var_name: L:COPILOT_Hidden
+  -
+    type: var
     var_name: L:ELECTRICAL_Switch_TwoBatteries
   -
     type: var
@@ -299,45 +305,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
-  -
-    type: var
-    var_name: L:GNS530_Visible
 # -
 #   type: var
-#   var_name: L:GTN750_EMB_HIDDEN
-# -
-#   type: var
-#   var_name: L:GTN750_INT_HIDDEN
-# -
-#   type: var
-#   var_name: L:GTN750_EMB_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Enabled_1
+#   var_name: L:HANDLING_AILERON_ELEVATOR_Trim_Position
   -
     type: var
     var_name: L:SWS_ESI500_Altimeter_Pressure
-  -
-    type: var
-    var_name: L:GMA340_ANNUNCIATOR_TEST
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:XMLVAR_Magneto_Starter_IsHeld
-# -
-#   type: var
-#   var_name: L:SWS_GLIDE_RATIO
   -
     type: var
     var_name: L:SWS_ELECTRICAL_Switch_PMAG_Test
@@ -347,21 +323,72 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:SWS_MISC_Push_Smoke_L
+  -
+    type: var
+    var_name: L:SWS_MISC_Push_Smoke_R
+  -
+    type: var
+    var_name: L:SWS_TABLET_Stow
+  -
+    type: var
+    var_name: L:SWS_TABLET_Hide
+  -
+    type: var
+    var_name: L:SWS_TABLET_Push_VolInc
+  -
+    type: var
+    var_name: L:SWS_TABLET_Push_VolDec
+  -
+    type: var
+    var_name: L:SWS_TABLET_Push_Lock
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
+#   var_name: L:AS530_Default_MapZoomRange
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden1
+#   var_name: L:AS530_SelectedSource
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden1
+#   var_name: L:XMLVAR_AirSpeedIsInMach
 # -
 #   type: var
-#   var_name: L:TDSGTNXI_VGlide
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
-#   var_name: L:TDSGTNXI_GlideRatio
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:GNS530_Visible
+# -
+#   type: var
+#   var_name: L:GTN750_EMB_HIDDEN
+# -
+#   type: var
+#   var_name: L:GTN750_INT_HIDDEN
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:SWS_GLIDE_RATIO
+# -
+#   type: var
+#   var_name: L:SWS_TABLET_Screen_Emissive
 # -
 #   type: var
 #   var_name: L:AXIS_ELEVATOR_TRIM
@@ -373,22 +400,76 @@ shared:
 #   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
 # -
 #   type: var
-#   var_name: L:SWS_MISC_Fan_Rotation_1_Angle
-# -
-#   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_1_RPM_Target
 # -
 #   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_1_RPM
 # -
 #   type: var
-#   var_name: L:SWS_MISC_Fan_Rotation_2_Angle
+#   var_name: L:SWS_MISC_Fan_Rotation_1_Angle
 # -
 #   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_2_RPM_Target
 # -
 #   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_2_RPM
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_2_Angle
+# -
+#   type: var
+#   var_name: L:AS530_HIDDEN
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:WTG3X_Screen_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3X_Screen_Backlight:2
+  -
+    type: var
+    var_name: L:GMA340_ANNUNCIATOR_TEST
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+  -
+    type: var
+    var_name: L:AEROBATIC_SMOKE_RED_L
+  -
+    type: var
+    var_name: L:AEROBATIC_SMOKE_GREEN_L
+  -
+    type: var
+    var_name: L:AEROBATIC_SMOKE_BLUE_L
+  -
+    type: var
+    var_name: L:AEROBATIC_SMOKE_OPACITY_L
+  -
+    type: var
+    var_name: L:AEROBATIC_SMOKE_RED_R
+  -
+    type: var
+    var_name: L:AEROBATIC_SMOKE_GREEN_R
+  -
+    type: var
+    var_name: L:AEROBATIC_SMOKE_BLUE_R
+  -
+    type: var
+    var_name: L:AEROBATIC_SMOKE_OPACITY_R
 
 server:
   -

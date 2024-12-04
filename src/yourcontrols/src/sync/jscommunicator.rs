@@ -80,13 +80,13 @@ impl JSCommunicator {
 
     fn write_message_to_instrument(&mut self, message: Message, instrument: &str) {
         if let Some(info) = self.streams.iter_mut().find(|x| x.name == instrument) {
-            info.stream.write_message(message).ok();
+            info.stream.send(message).ok();
         }
     }
 
     fn write_message_to_all(&mut self, message: Message) {
         for info in self.streams.iter_mut() {
-            info.stream.write_message(message.clone()).ok();
+            info.stream.send(message.clone()).ok();
         }
     }
 
@@ -128,12 +128,12 @@ impl JSCommunicator {
         let incoming_payloads = &mut self.incoming_payloads;
 
         self.streams.retain_mut(|info| {
-            match info.stream.read_message() {
+            match info.stream.read() {
                 Ok(Message::Text(text)) => match serde_json::from_str(&text) {
                     Ok(payload) => {
                         if let JSPayloads::Handshake { name } = &payload {
                             info!("[JS] Panel gauge connected: {}", name);
-                            info.name = name.clone();
+                            info.name.clone_from(name);
                         }
 
                         incoming_payloads.push_back(JSMessage {

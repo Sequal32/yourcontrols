@@ -1,7 +1,7 @@
 # Garmin G3X Touch by Asobo.
 
 shared:
-  -
+  - # Autopilot
     type: NumSet
     var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
     var_units: Knots
@@ -188,6 +188,7 @@ shared:
     var_type: bool
     event_name: XPNDR_IDENT_ON
     off_event_name: XPNDR_IDENT_OFF
+    event_param: 1
     cancel_h_events: true
   -
     type: NumSet
@@ -195,6 +196,7 @@ shared:
     var_units: Bco16
     var_type: i32
     event_name: XPNDR_SET
+    event_param: 1
     cancel_h_events: true
 
   - # Events no simvar

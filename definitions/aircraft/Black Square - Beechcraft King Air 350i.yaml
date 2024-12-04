@@ -3,9 +3,10 @@
 include:
   - definitions/modules/Instruments/AS_GNS430.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/PMS50_GNS.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/Instruments/TDS_GTNXi.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/autopilot_BKSQ.yaml
   - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -106,7 +107,7 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:3
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 3
@@ -1933,9 +1934,9 @@ shared:
     type: var
     var_name: L:var_copilotDecisionHeight
     unreliable: true
-  -
-    type: var
-    var_name: L:AS530_CDI_Source_2
+# -
+#   type: var
+#   var_name: L:AS530_CDI_Source_2
 # -
 #   type: var
 #   var_name: L:BKSQ_VOR_CDI_2_Degraded
@@ -1961,12 +1962,12 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_GPS_Approach
-  -
-    type: var
-    var_name: L:GNS530_HAVE_NEWMESSAGE:1
-  -
-    type: var
-    var_name: L:GNS530_HAVE_NEWMESSAGE:2
+# -
+#   type: var
+#   var_name: L:GNS530_HAVE_NEWMESSAGE:1
+# -
+#   type: var
+#   var_name: L:GNS530_HAVE_NEWMESSAGE:2
 # -
 #   type: var
 #   var_name: L:GTN750_HAVE_MESSAGE:1

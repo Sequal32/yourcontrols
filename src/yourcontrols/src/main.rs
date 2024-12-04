@@ -249,7 +249,7 @@ fn main() {
             // Simconnect message
             while let Ok(message) = conn.get_next_message() {
                 match message {
-                    DispatchResult::SimobjectData(data) => {
+                    DispatchResult::SimObjectData(data) => {
                         definitions.process_sim_object_data(data);
                     }
                     // Exception occured
@@ -762,7 +762,7 @@ fn main() {
                         "[DEFINITIONS] {} aircraft config selected.",
                         config_file_name
                     );
-                    config_to_load = config_file_name.clone();
+                    config_to_load.clone_from(&config_file_name);
                 }
                 AppMessage::Startup => {
                     // List aircraft

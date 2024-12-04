@@ -228,14 +228,14 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
@@ -1321,8 +1321,9 @@ shared:
     type: NumSet
     var_name: A:TRANSPONDER CODE:1
     var_units: Bco16
-    var_type: f64
+    var_type: i32
     event_name: XPNDR_SET
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:TRANSPONDER IDENT:1
@@ -1330,6 +1331,7 @@ shared:
     var_type: bool
     event_name: XPNDR_IDENT_ON
     off_event_name: XPNDR_IDENT_OFF
+    event_param: 1
 
   - # Wipers
     type: ToggleSwitch
@@ -1536,9 +1538,11 @@ shared:
   -
     type: var
     var_name: L:HF1_FREQ
+    interpolate: Default
   -
     type: var
     var_name: L:HF2_FREQ
+    interpolate: Default
   -
     type: var
     var_name: L:HF1_VOLUME
@@ -1770,6 +1774,7 @@ shared:
   -
     type: var
     var_name: L:TANK_11_LOAD
+    unreliable: true
   -
     type: var
     var_name: L:TANK_9_LOAD

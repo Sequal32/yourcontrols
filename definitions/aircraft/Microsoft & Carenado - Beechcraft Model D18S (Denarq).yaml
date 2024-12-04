@@ -1,4 +1,4 @@
-# Version 1.9.0
+# Version 1.4
 
 include:
   - definitions/modules/Instruments/AS_GNS530.yaml
@@ -46,22 +46,55 @@ shared:
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 5
 
-  - # Lights
+  - # DME
     type: ToggleSwitch
-    var_name: A:LIGHT NAV
+    var_name: A:CIRCUIT SWITCH ON:39
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_NAV_LIGHTS
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 39
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 1
   -
     type: ToggleSwitch
-    var_name: A:CIRCUIT ON:12
+    var_name: A:FUELSYSTEM PUMP SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:1
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:2
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 2
+    index_reversed: true
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:12
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 12
   -
     type: ToggleSwitch
-    var_name: A:CIRCUIT ON:61
+    var_name: A:CIRCUIT SWITCH ON:61
     var_units: Bool
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
@@ -242,12 +275,78 @@ shared:
     event_param: 64
     index_reversed: true
 
-  - # LVAR's
+# - # LVAR's
+#   type: var
+#   var_name: L:Denarq_Persistente_Engine_Wear_1
+# -
+#   type: var
+#   var_name: L:Denarq_Persistente_Engine_Wear_2
+# -
+#   type: var
+#   var_name: L:Denarq_Persistente_Oil_quantity_1
+# -
+#   type: var
+#   var_name: L:Denarq_Persistente_Oil_quantity_2
+# -
+#   type: var
+#   var_name: L:Denarq_Persistente_Battery_1
+# -
+#   type: var
+#   var_name: L:Denarq_Persistente_Battery_2
+# -
+#   type: var
+#   var_name: L:Denarq_LeftFront_Tank
+# -
+#   type: var
+#   var_name: L:Denarq_RightFront_Tank
+# -
+#   type: var
+#   var_name: L:Denarq_LeftRear_Tank
+# -
+#   type: var
+#   var_name: L:Denarq_RightRear_Tank
+# -
+#   type: var
+#   var_name: L:Denarq_Fuel_Sel_Persistente_1
+# -
+#   type: var
+#   var_name: L:Denarq_Fuel_Sel_Persistente_2
+# -
+#   type: var
+#   var_name: L:Denarq_Fuel_Junction_Persistente_1
+# -
+#   type: var
+#   var_name: L:Denarq_Fuel_Junction_Persistente_2
+# -
+#   type: var
+#   var_name: L:DENARQ_CROSSFEED_Persistente
+# -
+#   type: var
+#   var_name: L:Denarq_Engine_character_1
+# -
+#   type: var
+#   var_name: L:Denarq_Engine_character_2
+# -
+#   type: var
+#   var_name: L:Denarq_Fuel_Indicator_error_1
+# -
+#   type: var
+#   var_name: L:Denarq_Fuel_Indicator_error_2
+# -
+#   type: var
+#   var_name: L:Denarq_Fuel_Indicator_error_3
+# -
+#   type: var
+#   var_name: L:Denarq_Fuel_Indicator_error_4
+  -
     type: var
     var_name: L:TABLET_INIT
   -
     type: var
     var_name: L:AP2SEL
+  -
+    type: var
+    var_name: L:CARVAR_SW_Starter_LR
 # -
 #   type: var
 #   var_name: L:XMLVAR_AP_HEADING_BUG_OLD
@@ -290,9 +389,6 @@ shared:
   -
     type: var
     var_name: L:CARVAR_SW_FIRE_EXTINGER
-  -
-    type: var
-    var_name: L:CARVAR_SW_Starter_LR
   -
     type: var
     var_name: L:XMLVAR_Microphone_selector
@@ -491,12 +587,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:AUX_ENG_COMBUSTION_2
-  -
-    type: var
-    var_name: L:CARAUX_ENG_COWLFLAP_POSITION_1
-  -
-    type: var
-    var_name: L:CARAUX_ENG_COWLFLAP_POSITION_2
+# -
+#   type: var
+#   var_name: L:CARAUX_ENG_COWLFLAP_POSITION_1
+# -
+#   type: var
+#   var_name: L:CARAUX_ENG_COWLFLAP_POSITION_2
 # -
 #   type: var
 #   var_name: L:AUX_AUTOPILOT_VERTICAL_HOLD
@@ -601,6 +697,21 @@ shared:
 #   var_name: L:AUX_AUTOPILOT_ATTITUDE_INDICATOR_PITCH_DEGREES
 # -
 #   type: var
+#   var_name: L:AUX_ATTITUDE_INDICATOR_BANK_DEGREES_1
+# -
+#   type: var
+#   var_name: L:AUX_ATTITUDE_INDICATOR_PITCH_DEGREES_1
+# -
+#   type: var
+#   var_name: L:AUX_ATTITUDE_INDICATOR_PITCH_DEGREES_2
+# -
+#   type: var
+#   var_name: L:AUX_ATTITUDE_INDICATOR_BANK_DEGREES_2_RAW
+# -
+#   type: var
+#   var_name: L:AUX_ATTITUDE_INDICATOR_BANK_DEGREES_2
+# -
+#   type: var
 #   var_name: L:AUX_AUTOPILOT_ELEVATOR_TRIM_PCT
 # -
 #   type: var
@@ -622,10 +733,13 @@ shared:
 #   var_name: L:AUX_AUTOPILOT_MAX_BANK_ID
   -
     type: var
-    var_name: L:CARVAR_cowlflap_L
-  -
-    type: var
-    var_name: L:CARVAR_cowlflap_R
+    var_name: L:CARVAR_GEAR_WARNING_SYSTEM
+# -
+#   type: var
+#   var_name: L:CARVAR_cowlflap_L
+# -
+#   type: var
+#   var_name: L:CARVAR_cowlflap_R
 # -
 #   type: var
 #   var_name: L:XMLVAR_FUEL_CUTOFF1
@@ -787,6 +901,18 @@ shared:
     var_name: L:BUTTON_FF_MODE
 # -
 #   type: var
+#   var_name: L:Denarq_Engine_Damage_2
+# -
+#   type: var
+#   var_name: L:Denarq_Engine_Damage_1
+# -
+#   type: var
+#   var_name: L:Denarq_EGT_1
+# -
+#   type: var
+#   var_name: L:Denarq_EGT_2
+# -
+#   type: var
 #   var_name: L:NAV1_RADIO_WHOLE_INC
 # -
 #   type: var
@@ -821,39 +947,39 @@ shared:
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:CARVAR_SWITCH_FEATHER_L
+  -
+    type: var
+    var_name: L:WINDSHIELD DEICE SWITCH
+  -
+    type: var
+    var_name: L:CARVAR_BTN_TEST_GEAR_UP
+# -
+#   type: var
+#   var_name: L:CARVAR_SWITCH_FEATHER_R
   -
     type: var
     var_name: L:CARVAR_BTN_TEST_GS
   -
     type: var
-    var_name: L:CARVAR_BTN_TEST_GEAR_UP
-  -
-    type: var
     var_name: L:CARVAR_BTN_TEST_FUEL_PRESS_R
-  -
-    type: var
-    var_name: L:CARVAR_BTN_TEST_FUEL_PRESS_L
+# -
+#   type: var
+#   var_name: L:Denarq_Engine_Wear_1
   -
     type: var
     var_name: L:CARVAR_BTN_TEST_GEAR_DOWN
 # -
 #   type: var
-#   var_name: L:AS530_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS530_ManualBrightness_Enabled_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+#   var_name: L:Denarq_Engine_Wear_2
+  -
+    type: var
+    var_name: L:CARVAR_BTN_TEST_FUEL_PRESS_L
 # -
 #   type: var
 #   var_name: L:DME_DUMMY_KNOB_SOUND
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden2
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_Switch_1
@@ -862,31 +988,22 @@ shared:
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverFlapsHidden
-# -
-#   type: var
 #   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:DENARQ_CROSSFEED
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
+#   var_name: L:THROTTLE1_SET
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden2
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
+#   var_name: L:THROTTLE2_SET
+  -
+    type: var
+    var_name: L:Denaq_Fuel_Sel1
+  -
+    type: var
+    var_name: L:Denaq_Fuel_Sel2
   -
     type: var
     var_name: L:TablePassenger1
@@ -895,25 +1012,48 @@ shared:
     var_name: L:TablePassenger2
   -
     type: var
-    var_name: L:CARVAR_pushprimer
+    var_name: L:Denarq_OILSHUTTER_SET_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:Denarq_OILSHUTTER_SET_2
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:CARVAR_SWITCH_FEATHER_L_IsDown
+# -
+#   type: var
+#   var_name: L:CARVAR_SWITCH_FEATHER_L_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:CARVAR_SWITCH_FEATHER_R_IsDown
+# -
+#   type: var
+#   var_name: L:CARVAR_SWITCH_FEATHER_R_MinReleaseTime
+  -
+    type: var
+    var_name: L:Denarq_Primer
+# -
+#   type: var
+#   var_name: L:DEICE_Propeller_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:CARENADO_KDI572
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
 # -
 #   type: var
 #   var_name: L:AS530_Default_MapZoomRange
 # -
 #   type: var
 #   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
 # -
 #   type: var
 #   var_name: L:HANDLING_RudderTrim
@@ -940,16 +1080,34 @@ shared:
 #   var_name: L:DEICE_Pitot_1
 # -
 #   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:LANDING_GEAR_Gear
   -
     type: var
+    var_name: L:Denarq_Leak_Flag_1
+  -
+    type: var
     var_name: L:CARVAR_SW_Cover_Starter
+  -
+    type: var
+    var_name: L:Denarq_OilBypass_1
+  -
+    type: var
+    var_name: L:Denarq_OilBypass_2
+  -
+    type: var
+    var_name: L:Denarq_Oil_Shutoff_1
+  -
+    type: var
+    var_name: L:Denarq_Oil_flag_1
+  -
+    type: var
+    var_name: L:Denarq_Oil_Shutoff_2
+  -
+    type: var
+    var_name: L:Denarq_Oil_flag_2
   -
     type: var
     var_name: L:CARVAR_Seatbealt
@@ -959,18 +1117,36 @@ shared:
   -
     type: var
     var_name: L:CARVAR_BTN_STARTER_PUSH
-  -
-    type: var
-    var_name: L:CARVAR_BTN_FUELPUMP_PUSH
-  -
-    type: var
-    var_name: L:CARVAR_SWITCH_FEATHER_L
-  -
-    type: var
-    var_name: L:CARVAR_SWITCH_FEATHER_R
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_incourse_1
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_State_1
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_DDTimelipse_1
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_DDintermedio_1
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_incourse_2
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_State_2
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_DDTimelipse_2
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_DDintermedio_2
   -
     type: var
     var_name: L:XMLVAR_PRIMER_LEVER
+  -
+    type: var
+    var_name: L:CARVAR_pushprimer
   -
     type: var
     var_name: L:XMLVAR_CRASH_LEVER_BAT
@@ -1024,10 +1200,28 @@ shared:
 #   var_name: L:LIGHTING_LANDING_1
 # -
 #   type: var
-#   var_name: L:DEICE_Propeller_1
+#   var_name: L:Denarq_Combustion_Flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_Overheat_Elapsed_Time_1
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_Time_lapsed_1
+# -
+#   type: var
+#   var_name: L:Denarq_Combustion_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_Overheat_Elapsed_Time_2
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_Time_lapsed_2
 # -
 #   type: var
 #   var_name: L:DEICE_Airframe_1
+  -
+    type: var
+    var_name: L:CARENADO_KDI572
 # -
 #   type: var
 #   var_name: L:XMLVAR_hdg_Knob
@@ -1039,10 +1233,619 @@ shared:
 #   var_name: L:KAS297_ALT_ENG_PUSH
 # -
 #   type: var
+#   var_name: L:Denarq_Feather_condition_1
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_Timelipse_1
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_intermedio_1
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_condition_2
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_Timelipse_2
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_intermedio_2
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_prop_inib_1
+# -
+#   type: var
+#   var_name: L:Denarq_Feather_prop_inib_2
+# -
+#   type: var
+#   var_name: L:Denarq_TimeLimit_tank_3
+# -
+#   type: var
+#   var_name: L:Denarq_TimeLimit_tank_1
+# -
+#   type: var
+#   var_name: L:Denarq_TimeLimit_tank_4
+# -
+#   type: var
+#   var_name: L:Denarq_TimeLimit_tank_2
+# -
+#   type: var
+#   var_name: L:Denarq-debug1
+# -
+#   type: var
+#   var_name: L:Denarq-debug2
+# -
+#   type: var
+#   var_name: L:Denarq_tank_quantity_3
+# -
+#   type: var
+#   var_name: L:Denarq-debug3
+# -
+#   type: var
+#   var_name: L:Denarq_tank_quantity_4
+# -
+#   type: var
+#   var_name: L:Denarq-debug4
+# -
+#   type: var
+#   var_name: L:Denarq_tank_pitch_factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_tank_pitch_factor_2
+# -
+#   type: var
+#   var_name: L:DENARQ_CARBURETOR_TEMPERATURE:1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_Mixture_Factor_1
+# -
+#   type: var
+#   var_name: L:DENARQ_CARBURETOR_TEMPERATURE:2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_Mixture_Factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_Carburator_Factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_Carburator_Factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_Power_RPM_Ratio_1
+# -
+#   type: var
+#   var_name: L:Denarq_Power_RPM_Ratio_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_PowerRatio_Factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_PowerRatio_Factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_TEMPERATURE_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_CHT_Factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_TEMPERATURE_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_CHT_Factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonationfactors_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_MP_Factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonationfactors_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_MP_Factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_cumulative_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_EGT_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_cumulative_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_EGT_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_CHT_multi_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_CHT_multi_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_CHT_cap_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_CHT_cap_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_WEAR_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_WEAR_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_CHT_increase_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_CHT_increase_2
+# -
+#   type: var
+#   var_name: L:Denarq_DetonationBlast_Timelapse_1
+# -
+#   type: var
+#   var_name: L:Denarq_DetonationBlast_Timelapse_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_MP_penalty_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_MP_penalty_2
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_MP_penalty_Flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_detonation_MP_penalty_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_gear_warning
+# -
+#   type: var
+#   var_name: L:Denarq_Light_LHpanel
+# -
+#   type: var
+#   var_name: L:Denarq_Light_EngInst
+# -
+#   type: var
+#   var_name: L:Denarq_Light_Radio
+# -
+#   type: var
+#   var_name: L:Denarq_Light_RHpanel
+# -
+#   type: var
+#   var_name: L:Denarq_Light_Compass
+# -
+#   type: var
+#   var_name: L:Denarq_LowRPM_variation_1
+# -
+#   type: var
+#   var_name: L:Denarq_LowRPM_variation_2
+# -
+#   type: var
+#   var_name: L:Denarq_LowRPM_flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_LowRPM_flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_Generator1_output
+# -
+#   type: var
+#   var_name: L:Denarq_Generator2_output
+# -
+#   type: var
+#   var_name: L:Denarq_Electrical_load
+# -
+#   type: var
+#   var_name: L:Denarq_Circuit_Power_over24
+# -
+#   type: var
+#   var_name: L:Denarq_Circuit_Power_less24
+# -
+#   type: var
+#   var_name: L:Denarq_lowQuant_Factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_lowQuant_Factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_TEMPERATURE_Fahrenheit_1
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_TEMPERATURE_Fahrenheit_2
+# -
+#   type: var
+#   var_name: L:Denarq_OILSHUTTER_factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_OIL_TEMPERATURE_1
+# -
+#   type: var
+#   var_name: L:Denarq_OILSHUTTER_factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_OIL_TEMPERATURE_2
+# -
+#   type: var
+#   var_name: L:Denarq_Oilshutoff_factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_Oilshutoff_factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_Oil_Quant_lowDif_1
+# -
+#   type: var
+#   var_name: L:Denarq_Oil_Quant_highDif_1
+# -
+#   type: var
+#   var_name: L:Denarq_OIL_PRESSURE_1
+# -
+#   type: var
+#   var_name: L:Denarq_Oil_Quant_lowDif_2
+# -
+#   type: var
+#   var_name: L:Denarq_Oil_Quant_highDif_2
+# -
+#   type: var
+#   var_name: L:Denarq_OIL_PRESSURE_2
+# -
+#   type: var
+#   var_name: L:Denarq_Engine1_HP
+# -
+#   type: var
+#   var_name: L:Denarq_Engine2_HP
+# -
+#   type: var
+#   var_name: L:Denarq_Engine1_Oil_Cons_Hour
+# -
+#   type: var
+#   var_name: L:Denarq_Engine2_Oil_Cons_Hour
+# -
+#   type: var
+#   var_name: L:Denarq_Engine1_Oil_Cons_Sec
+# -
+#   type: var
+#   var_name: L:Denarq_Engine2_Oil_Cons_Sec
+# -
+#   type: var
+#   var_name: L:Denarq_Oil1_Wear_Multi
+# -
+#   type: var
+#   var_name: L:Denarq_Oil2_Wear_Multi
+# -
+#   type: var
+#   var_name: L:Denarq_Oil_quantity_1
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_TM_Diferential_1
+# -
+#   type: var
+#   var_name: L:Denarq_OIL_leak_1
+# -
+#   type: var
+#   var_name: L:Denarq_Oil_quantity_2
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_TM_Diferential_2
+# -
+#   type: var
+#   var_name: L:Denarq_OIL_leak_2
+# -
+#   type: var
+#   var_name: L:Denarq_lowQuant_square_1
+# -
+#   type: var
+#   var_name: L:Denarq_lowQuant_square_2
+# -
+#   type: var
+#   var_name: L:Denarq_High_PRESSURE_Flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_OIL_highPRESSURE_Factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_High_PRESSURE_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_OIL_highPRESSURE_Factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_HighPRESSURE_Leakfactor_1
+# -
+#   type: var
+#   var_name: L:Denarq_HighPRESSURE_Leakfactor_2
+# -
+#   type: var
+#   var_name: L:Denarq_Oilleak_Number_1
+  -
+    type: var
+    var_name: L:Denarq_Leak_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_Oilleak_Number_2
+# -
+#   type: var
+#   var_name: L:Denarq_Oilleak_NumberOverboost_1
+# -
+#   type: var
+#   var_name: L:Denarq_Oilleak_NumberOverboost_2
+# -
+#   type: var
+#   var_name: L:Denarq_Oilleak_MaxPower_1
+# -
+#   type: var
+#   var_name: L:Denarq_Oilleak_ColdWeather_1
+# -
+#   type: var
+#   var_name: L:Denarq_Oilleak_MaxPower_2
+# -
+#   type: var
+#   var_name: L:Denarq_Oilleak_ColdWeather_2
+# -
+#   type: var
+#   var_name: L:Denarq_AmbTemp_Factor
+# -
+#   type: var
+#   var_name: L:Denarq_OilTemp_Factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_OilTemp_Factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_Coldweather_Flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_Coldweather_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_OILSHUTTER_Limit_1
+# -
+#   type: var
+#   var_name: L:Denarq_OILSHUTTER_Limit_2
+# -
+#   type: var
+#   var_name: L:Denarq_FuelPump_1
+# -
+#   type: var
+#   var_name: L:Denarq_FuelPump_2
+# -
+#   type: var
+#   var_name: L:Denaq_AmmeterL
+# -
+#   type: var
+#   var_name: L:Denaq_AmmeterR
+# -
+#   type: var
+#   var_name: L:Denaq_Fuel_Quantity
+# -
+#   type: var
+#   var_name: L:Denarq_CombustionON_flag
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM1_CLOSE
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM1_OPEN
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM_DAMAGESOUND_1
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM_DAMAGESOUND_CLOSE1
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM_DAMAGESOUND_OPEN1
+# -
+#   type: var
+#   var_name: L:DENARQ_Detonation_SOUND_CLOSE1
+# -
+#   type: var
+#   var_name: L:DENARQ_Detonation_SOUND_OPEN1
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM2_CLOSE
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM2_OPEN
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM_DAMAGESOUND_2
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM_DAMAGESOUND_CLOSE2
+# -
+#   type: var
+#   var_name: L:DENARQ_RPM_DAMAGESOUND_OPEN2
+# -
+#   type: var
+#   var_name: L:DENARQ_Detonation_SOUND_CLOSE2
+# -
+#   type: var
+#   var_name: L:DENARQ_Detonation_SOUND_OPEN2
+# -
+#   type: var
+#   var_name: L:Denarq_finish
+# -
+#   type: var
+#   var_name: L:Denarq_start
+# -
+#   type: var
+#   var_name: L:Denarq_distance
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_OILtemp_Diferential_1
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_OILtemp_Diferential_2
+# -
+#   type: var
+#   var_name: L:Denarq_RPM_OilTemp_Flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_RPM_OilTemp_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_hot_Oil_Flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_hot_Oil_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_OilTemp_DIFERENTIAL_1
+# -
+#   type: var
+#   var_name: L:Denarq_OilTemp_DIFERENTIAL_2
+# -
+#   type: var
+#   var_name: L:Denarq_RPM_DIFERENTIAL_1
+# -
+#   type: var
+#   var_name: L:Denarq_RPM_DIFERENTIAL_2
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_penalty_1
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_penalty_2
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_penalty_Flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_penalty_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_cht_Multi_1
+# -
+#   type: var
+#   var_name: L:Denarq_cht_Multi_2
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_Diferential_1
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_Diferential_2
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_Factor_1
+# -
+#   type: var
+#   var_name: L:Denarq_CHT_Factor_2
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_TM_DiferentialWEAR_1
+# -
+#   type: var
+#   var_name: L:Denarq_Manifold_TM_DiferentialWEAR_2
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_Diferential_1
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_Diferential_2
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_Alt_Flag
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_5000_1
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_5000_2
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_000_1
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_000_2
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_1MIN_1
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_1MIN_2
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_Time_lapsed_1
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_Time_lapsed_2
+# -
+#   type: var
+#   var_name: L:Denarq_MaxPower_Time_lapsed_1
+# -
+#   type: var
+#   var_name: L:Denarq_MaxPower_Time_lapsed_2
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_Flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_Continuous_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_1Min_Flag_1
+# -
+#   type: var
+#   var_name: L:Denarq_1Min_Flag_2
+# -
+#   type: var
+#   var_name: L:Denarq_flag_Wear_1
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverFlapsHidden
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden2
+# -
+#   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame2
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
 # -
 #   type: var
 #   var_name: L:AS330_ScreenLuminosity
@@ -1063,28 +1866,13 @@ shared:
 #   var_name: L:KR87_State
 # -
 #   type: var
-#   var_name: L:AS530_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS530_State
-# -
-#   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
-#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
-# -
-#   type: var
-#   var_name: L:AS530_Default_MapShowCursor
-# -
-#   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
 #   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
 # -
 #   type: var
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
@@ -1097,6 +1885,32 @@ shared:
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+master:
+  -
+    type: var
+    var_name: L:THROTTLE1_SET
+    interpolate: Default
+  -
+    type: var
+    var_name: L:THROTTLE2_SET
+    interpolate: Default
+  -
+    type: var
+    var_name: L:Denarq_Oil_quantity_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:Denarq_Oil_quantity_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:Denarq_Engine_Wear_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:Denarq_Engine_Wear_2
+    unreliable: true
 
 server:
   -
@@ -1113,13 +1927,13 @@ server:
     unreliable: true
   -
     type: var
-    var_name: A:FUEL TANK EXTERNAL1 LEVEL
+    var_name: A:FUEL TANK LEFT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true
   -
     type: var
-    var_name: A:FUEL TANK EXTERNAL2 LEVEL
+    var_name: A:FUEL TANK RIGHT AUX LEVEL
     var_units: Percent
     var_type: f64
     unreliable: true

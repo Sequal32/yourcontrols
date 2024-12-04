@@ -235,7 +235,7 @@ impl TransferStruct {
             }
 
             Payloads::TransferControl { from: _, to } => {
-                self.in_control = to.clone();
+                self.in_control.clone_from(to);
             }
 
             Payloads::Handshake { session_id, .. } => {
@@ -278,7 +278,7 @@ impl TransferStruct {
             }
             Payloads::HostingReceived { session_id } => {
                 info!("[NETWORK] Obtained session ID: {}", session_id);
-                self.session_id = session_id.clone();
+                self.session_id.clone_from(session_id);
                 should_relay = false;
 
                 self.server_tx
@@ -312,7 +312,7 @@ impl TransferStruct {
     fn handle_app_message(&mut self) {
         while let Ok((payload, target)) = self.client_rx.try_recv() {
             if let Payloads::TransferControl { from: _, to } = &payload {
-                self.in_control = to.clone();
+                self.in_control.clone_from(to);
             }
 
             if let Some(target) = target {
@@ -633,7 +633,7 @@ impl TransferClient for Server {
     fn transfer_control(&self, target: String) {
         // Read for initial contact with other clients
         if let Some(transfer) = self.transfer.as_ref() {
-            transfer.lock().unwrap().in_control = target.clone();
+            transfer.lock().unwrap().in_control.clone_from(&target);
         }
 
         let message = Payloads::TransferControl {

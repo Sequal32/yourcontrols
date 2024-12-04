@@ -1,4 +1,4 @@
-# Version 1.0.6
+# Version 1.1.2
 
 include:
   - definitions/modules/Instruments/AS_G1000.yaml
@@ -211,40 +211,43 @@ shared:
   -
     type: var
     var_name: L:FSS_P2006T_PAPER_CHECKLIST_PLACED
+  -
+    type: var
+    var_name: L:FSS_AP_55X_MASTER_SWITCH
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_OIL_LEVEL_PERCENT_1
+#   var_name: L:FSS_P2006T_SOUND_STARTER_LH
   -
     type: var
     var_name: L:FSS_P2006T_OPSMODE
     cancel_h_events: true
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_PROPELLER_OFFSET_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_RPM_OVD_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_PROP_STOPPED_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_SOUND_STARTER_LH
-# -
-#   type: var
 #   var_name: L:FSS_P2006T_PROP_SIM_BUBBLING_LEFT
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_PROPELLER_OFFSET_1
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_PROPELLER_STATE_1
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_OIL_LEVEL_PERCENT_2
+#   var_name: L:FSS_P2006T_SOUND_STARTER_RH
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_PROP_SIM_BUBBLING_RIGHT
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_PROPELLER_OFFSET_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_PROPELLER_STATE_2
+  -
+    type: var
+    var_name: L:FSS_P2006T_DOOR_EMERGENCY_HANDLE
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_OIL_LEVEL_PERCENT_2
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_ENGINE_SIM_RPM_OVD_2
@@ -256,22 +259,16 @@ shared:
 #   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_2
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_SOUND_STARTER_RH
+#   var_name: L:FSS_P2006T_OIL_LEVEL_PERCENT_1
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_PROP_SIM_BUBBLING_RIGHT
+#   var_name: L:FSS_P2006T_ENGINE_SIM_RPM_OVD_1
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_PROPELLER_STATE_2
-  -
-    type: var
-    var_name: L:FSS_P2006T_DOOR_EMERGENCY_HANDLE
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_PROP_STOPPED_1
 # -
 #   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden2
+#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_1
   -
     type: var
     var_name: L:FSS_P2006T_SWITCH_CWS
@@ -292,39 +289,6 @@ shared:
 #   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
 # -
 #   type: var
-#   var_name: L:AS1000_PFD_Brightness
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_Brightness_IsAuto
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_STARTER_DIM_SCALE
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden2
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden2
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_LANDING_GEAR_TRANSITION_STOPPED
-# -
-#   type: var
-#   var_name: L:AS1000_PFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_Brightness
-# -
-#   type: var
 #   var_name: L:FSS_P2006T_SWITCH_PITOT_HEAT
   -
     type: var
@@ -332,25 +296,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_STATE
-# -
-#   type: var
-#   var_name: L:XMLVAR_ELT_TEST_TIME
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS1000_MFD_Brightness_IsAuto
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_IGNITION_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_IGNITION_2
-  -
-    type: var
-    var_name: L:FSS_EXX_EFB_GV_BRIGHTNESS
-    cancel_h_events: true
   -
     type: var
     var_name: L:FSS_P2006T_TABLET_STORED
@@ -360,106 +305,97 @@ shared:
   -
     type: var
     var_name: L:FSS_P2006T_PERF_CHART_ACTIVE
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_SOUND_TIRE_CHECK_LEFT
   -
     type: var
     var_name: L:WALKAROUND_LEFT_WHEEL
     cancel_h_events: true
 # -
 #   type: var
+#   var_name: L:FSS_P2006T_SOUND_TIRE_CHECK_LEFT
+# -
+#   type: var
 #   var_name: L:WALKAROUND_PANEL_LEFT_WHEEL_VISIBLE
-# -
-#   type: var
-#   var_name: L:WALKAROUND_PANEL_LEFT_WHEEL_MOUSE_HOVER
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_SOUND_TIRE_CHECK_RIGHT
   -
     type: var
     var_name: L:WALKAROUND_RIGHT_WHEEL
     cancel_h_events: true
 # -
 #   type: var
+#   var_name: L:FSS_P2006T_SOUND_TIRE_CHECK_RIGHT
+# -
+#   type: var
 #   var_name: L:WALKAROUND_PANEL_RIGHT_WHEEL_VISIBLE
-# -
-#   type: var
-#   var_name: L:WALKAROUND_PANEL_RIGHT_WHEEL_MOUSE_HOVER
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_SOUND_TIRE_CHECK_FRONT
   -
     type: var
     var_name: L:WALKAROUND_FRONT_WHEEL
     cancel_h_events: true
 # -
 #   type: var
+#   var_name: L:FSS_P2006T_SOUND_TIRE_CHECK_FRONT
+# -
+#   type: var
 #   var_name: L:WALKAROUND_PANEL_FRONT_WHEEL_VISIBLE
-# -
-#   type: var
-#   var_name: L:WALKAROUND_PANEL_FRONT_WHEEL_MOUSE_HOVER
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_SOUND_PROPELLER_MANUAL_LEFT
   -
     type: var
     var_name: L:WALKAROUND_LEFT_PROPELLER
     cancel_h_events: true
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_SOUND_PROPELLER_MANUAL_RIGHT
+#   var_name: L:FSS_P2006T_SOUND_PROPELLER_MANUAL_LEFT
   -
     type: var
     var_name: L:WALKAROUND_RIGHT_PROPELLER
     cancel_h_events: true
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_SOUND_AILERON_MANUAL_LEFT
+#   var_name: L:FSS_P2006T_SOUND_PROPELLER_MANUAL_RIGHT
   -
     type: var
     var_name: L:WALKAROUND_LEFT_AILERON
     cancel_h_events: true
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_SOUND_AILERON_MANUAL_RIGHT
+#   var_name: L:FSS_P2006T_SOUND_AILERON_MANUAL_LEFT
   -
     type: var
     var_name: L:WALKAROUND_RIGHT_AILERON
     cancel_h_events: true
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_SOUND_ELEVATOR_MANUAL
+#   var_name: L:FSS_P2006T_SOUND_AILERON_MANUAL_RIGHT
   -
     type: var
     var_name: L:WALKAROUND_ELEVATOR
     cancel_h_events: true
 # -
 #   type: var
-#   var_name: L:WALKAROUND_PANEL_LEFT_OIL_LEVEL_VISIBLE
+#   var_name: L:FSS_P2006T_SOUND_ELEVATOR_MANUAL
   -
     type: var
     var_name: L:WALKAROUND_LEFT_OIL_LEVEL
     cancel_h_events: true
 # -
 #   type: var
-#   var_name: L:WALKAROUND_PANEL_RIGHT_OIL_LEVEL_VISIBLE
+#   var_name: L:WALKAROUND_PANEL_LEFT_OIL_LEVEL_VISIBLE
   -
     type: var
     var_name: L:WALKAROUND_RIGHT_OIL_LEVEL
     cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_RIGHT_OIL_LEVEL_VISIBLE
   -
     type: var
     var_name: L:FSS_P2006T_EMERGENCY_GEAR_LH_HANDLE
   -
     type: var
-    var_name: L:FSS_P2006T_EMERGENCY_GEAR_RH_HANDLE
+    var_name: L:FSS_P2006T_EMERGENCY_GEAR_PUMP_ON_TIME
   -
     type: var
     var_name: L:FSS_P2006T_EMERGENCY_GEAR_PUMP_MAX_COUNT
   -
     type: var
-    var_name: L:FSS_P2006T_EMERGENCY_GEAR_PUMP_ON_TIME
+    var_name: L:FSS_P2006T_EMERGENCY_GEAR_RH_HANDLE
   -
     type: var
     var_name: L:FSS_P2006T_FAN_NOZZLE_FRONT_L
@@ -477,90 +413,10 @@ shared:
     var_name: L:FSS_P2006T_FAN_NOZZLE_BACK_R
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_BACKUP_DISPLAY_BATTERY_TIME
+#   var_name: L:XMLVAR_YokeHidden1
 # -
 #   type: var
-#   var_name: L:FSS_P2006T_BACKUP_DISPLAY_BATTERY
-  -
-    type: var
-    var_name: L:FSS_P2006T_PREHEATER_ON_1
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:FSS_P2006T_PREHEATER_ON_2
-    cancel_h_events: true
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_FUEL_PRESSURE_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_TEMP_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_THROTTLE_1
-  -
-    type: var
-    var_name: L:FSS_P2006T_ENGINE_SIM_CHOKE_1
-  -
-    type: var
-    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_HOLD_RPM_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_GAUGE_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_OVD_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_TEMP_OVD_1
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_FUEL_PRESSURE_2
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_TEMP_2
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_THROTTLE_2
-  -
-    type: var
-    var_name: L:FSS_P2006T_ENGINE_SIM_CHOKE_2
-  -
-    type: var
-    var_name: L:XMLVAR_ENGINE_Lever_Choke_Pulled_2
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_HOLD_RPM_2
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_GAUGE_2
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_OVD_2
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_2
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_TEMP_OVD_2
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_SOUND_AVIONIC_FAN
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_SOUND_ELECTRIC_FAN
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_SOUND_FUELPUMP_LH
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_SOUND_FUELPUMP_RH
+#   var_name: L:XMLVAR_YokeHidden2
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
@@ -573,6 +429,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_2
+  -
+    type: var
+    var_name: L:XMLVAR_ENGINE_LEVER_Choke_Pulled_1
+  -
+    type: var
+    var_name: L:XMLVAR_ENGINE_LEVER_Choke_Pulled_2
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:LANDING_GEAR_Gear
@@ -594,9 +459,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS1000_MID_Display_Backup_Active
-  -
-    type: var
-    var_name: L:FSS_AP_55X_MASTER_SWITCH
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
 # -
 #   type: var
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
@@ -647,6 +512,18 @@ shared:
 #   var_name: L:LIGHTING_CABIN_3
 # -
 #   type: var
+#   var_name: L:FSS_P2006T_STARTER_DIM_SCALE
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_LEFT_WHEEL_MOUSE_HOVER
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_RIGHT_WHEEL_MOUSE_HOVER
+# -
+#   type: var
+#   var_name: L:WALKAROUND_PANEL_FRONT_WHEEL_MOUSE_HOVER
+# -
+#   type: var
 #   var_name: L:FSS_P2006T_BRAKE_SIM_EVENT_TYPE
 # -
 #   type: var
@@ -656,23 +533,131 @@ shared:
 #   var_name: L:FSS_P2006T_BRAKE_SIM_EVENT_PARAM_RIGHT
 # -
 #   type: var
+#   var_name: L:FSS_P2006T_LANDING_GEAR_TRANSITION_STOPPED
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_IGNITION_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_IGNITION_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BACKUP_DISPLAY_BATTERY_TIME
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_BACKUP_DISPLAY_BATTERY
+  -
+    type: var
+    var_name: L:FSS_P2006T_PREHEATER_ON_1
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FSS_P2006T_PREHEATER_ON_2
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FUEL_PRESSURE_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_TEMP_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_THROTTLE_1
+  -
+    type: var
+    var_name: L:FSS_P2006T_ENGINE_SIM_CHOKE_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_HOLD_RPM_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_GAUGE_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_OVD_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_TEMP_OVD_1
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FUEL_PRESSURE_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_TEMP_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_THROTTLE_2
+  -
+    type: var
+    var_name: L:FSS_P2006T_ENGINE_SIM_CHOKE_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_FEATHERING_HOLD_RPM_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_PROP_RPM_GAUGE_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_OVD_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_PRESSURE_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_ENGINE_SIM_OIL_TEMP_OVD_2
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_AVIONIC_FAN
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_ELECTRIC_FAN
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_FUELPUMP_LH
+# -
+#   type: var
+#   var_name: L:FSS_P2006T_SOUND_FUELPUMP_RH
+  -
+    type: var
+    var_name: L:FSS_EXX_EFB_GV_BRIGHTNESS
+    cancel_h_events: true
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden2
+# -
+#   type: var
 #   var_name: L:YourControlsPanelId
-  -
-    type: var
-    var_name: L:FSS_P2006T_BACKUP_BARO_PRESSURE_MB
-    interpolate: Default
-  -
-    type: var
-    var_name: L:FSS_P2006T_BACKUP_BARO_UNIT_IS_HG
-  -
-    type: var
-    var_name: L:FSS_P2006T_BACKUP_ALT_UNIT_IS_FT
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_AIRCRAFT_PITCH
-# -
-#   type: var
-#   var_name: L:FSS_P2006T_AIRCRAFT_BANK
 # -
 #   type: var
 #   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
@@ -712,6 +697,15 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTGarmin_LNavData_Egress_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_ToFrom
+# -
+#   type: var
+#   var_name: L:WT1000_ControlPad_ModeInput_Inhibited
+# -
+#   type: var
+#   var_name: L:XMLVAR_SpeedIsManuallySet
 # -
 #   type: var
 #   var_name: L:WTAP_LNav_DTK
@@ -831,13 +825,23 @@ shared:
 #   var_name: L:WTAP_GP_FPA
 # -
 #   type: var
-#   var_name: L:XMLVAR_VNAVButtonValue
+#   var_name: L:Garmin_Need_OBS_Convert_DirectTo
+  -
+    type: var
+    var_name: L:FSS_P2006T_BACKUP_BARO_PRESSURE_MB
+    interpolate: Default
+  -
+    type: var
+    var_name: L:FSS_P2006T_BACKUP_BARO_UNIT_IS_HG
+  -
+    type: var
+    var_name: L:FSS_P2006T_BACKUP_ALT_UNIT_IS_FT
 # -
 #   type: var
-#   var_name: L:PFD_BRG1_Source
+#   var_name: L:FSS_P2006T_AIRCRAFT_PITCH
 # -
 #   type: var
-#   var_name: L:PFD_BRG2_Source
+#   var_name: L:FSS_P2006T_AIRCRAFT_BANK
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_OIL_LEVEL_PERCENT_SET_1
@@ -909,16 +913,31 @@ shared:
     var_name: L:FSS_P2006T_BINDING_STARTER_RH_BUTTON
 # -
 #   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
 #   var_name: L:WT1000_Fuel_GalRemaining
 # -
 #   type: var
-#   var_name: L:WT_MINIMUMS_MODE
+#   var_name: L:WTAP_LNav_Obs_Active
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Obs_Course
+# -
+#   type: var
+#   var_name: L:WT1000_ControlPad_Mode
 # -
 #   type: var
 #   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:PFD_BRG1_Source
+# -
+#   type: var
+#   var_name: L:PFD_BRG2_Source
 # -
 #   type: var
 #   var_name: L:AS1000_MFD_State
@@ -948,6 +967,9 @@ shared:
 #   var_name: L:WTAP_GP_Approach_Mode
 # -
 #   type: var
+#   var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
 #   var_name: L:WTG1000_PFD_Mod_ScreenLuminosity
 # -
 #   type: var
@@ -958,6 +980,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:STEC-55X_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:STEC-55X_State
 # -
 #   type: var
 #   var_name: L:fss-efb-map_ScreenLuminosity
@@ -994,6 +1022,11 @@ shared:
 # -
 #   type: var
 #   var_name: L:Sim_State
+  -
+    type: var
+    var_name: L:FSS_P2006T_BRAKE_SIM_CONDITION_SET
+    cancel_h_events: true
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_BRAKE_SIM_USAGE
@@ -1009,17 +1042,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_BRAKE_SIM_CONDITION
-  - # Manually added
-    type: var
-    var_name: L:FSS_P2006T_BRAKE_SIM_CONDITION_SET
-    cancel_h_events: true
-    unreliable: true
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_SOUND_PROPELLER_AUDIO_PITCH_LEFT
 # -
 #   type: var
 #   var_name: L:FSS_P2006T_SOUND_PROPELLER_AUDIO_PITCH_RIGHT
+# -
+#   type: var
+#   var_name: L:SoundLogic_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:SoundLogic_State
 # -
 #   type: var
 #   var_name: L:OilPanel_1_ScreenLuminosity
@@ -1085,16 +1119,16 @@ shared:
 #   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+#   var_name: L:WT1000_AP_G1000_INSTALLED
 # -
 #   type: var
 #   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
 # -
 #   type: var
-#   var_name: L:WT1000_AP_G1000_INSTALLED
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:AP_KAP140_INSTALLED
@@ -1153,13 +1187,10 @@ server:
     unreliable: true
 
 ignore:
-  - fss-efb-template#brightnessSlider
-  - fss-efb-template#efbOptionsContainer
-  - fss-efb-template#fss-nav-input-search
   - FSS_P2006T_BRAKE_SIM_EVENT_AXIS_LEFT
   - FSS_P2006T_BRAKE_SIM_EVENT_AXIS_RIGHT
-  - FSS_P2006T_BRAKE_SIM_CONDITION_SET
 
+  - fss-efb-template#brightnessSlider
   - fss-efb-template#efbPreflightButton1
   - fss-efb-template#efbPreflightButton2
   - fss-efb-template#efbPreflightButton3
@@ -1181,3 +1212,4 @@ ignore:
   - fss-efb-template#efbWeightsBarContainer5
   - fss-efb-template#efbWeightsBarContainer6
   - fss-efb-template#efbWeightsBarContainer7
+  - fss-efb-template#fss-nav-input-search

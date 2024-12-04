@@ -1,13 +1,15 @@
-# Version 1.0.2
+# Version 2.1.0
 
 include:
+  - definitions/modules/Instruments/AS_G3X.yaml
   - definitions/modules/Instruments/AS_GNS430.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
   - definitions/modules/Instruments/AS_GTN650.yaml
   - definitions/modules/Instruments/AS_GTX330.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
   - definitions/modules/controls_rotor.yaml
+  - definitions/modules/electrical.yaml
   - definitions/modules/engines_rotor.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
@@ -19,6 +21,37 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # COM1/NAV1
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:15
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 15
+
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Enum
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+
   - # Gyrocompass
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:29
@@ -27,47 +60,12 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 29
 
-  - # Deice
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
-    var_type: i32
-    event_name: PITOT_HEAT_SET
-    event_param: 1
-
-  - # Electrical
+  - # Horn
     type: ToggleSwitch
-    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_name: A:MASTER WARNING ACTIVE
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_MASTER_BATTERY
-    event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:23
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 23
-  -
-    type: CustomCalculator
-    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
-    set: 1 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_ALTERNATOR1
-
-  - # Fuel
-    type: ToggleSwitch
-    var_name: A:FUELSYSTEM VALVE SWITCH:2
-    var_units: Bool
-    var_type: bool
-    event_name: FUELSYSTEM_VALVE_OPEN
-    off_event_name: FUELSYSTEM_VALVE_CLOSE
-    event_param: 2
+    event_name: MASTER_WARNING_TOGGLE
 
   - # Hydraulics
     type: NumSet
@@ -103,11 +101,11 @@ shared:
     event_param: 1
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:3
+    var_name: A:LIGHT POTENTIOMETER:4
     var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 3
+    event_param: 4
     index_reversed: true
   -
     type: NumSet
@@ -118,11 +116,11 @@ shared:
     event_param: 1
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:4
+    var_name: A:LIGHT POTENTIOMETER:8
     var_units: Percent
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 4
+    event_param: 8
     index_reversed: true
   -
     type: NumSet
@@ -172,61 +170,106 @@ shared:
 
   - # LVAR's (trimmed)
     type: var
-    var_name: L:optionVertRefWindow
-  -
-    type: var
-    var_name: L:optionSling
-  -
-    type: var
-    var_name: L:optionShortSkidSteps
-  -
-    type: var
-    var_name: L:optionCineflexCamera
-  -
-    type: var
-    var_name: L:optionUtility
-  -
-    type: var
-    var_name: L:optionUtilityFloor
-  -
-    type: var
-    var_name: L:optionBasket
-  -
-    type: var
-    var_name: L:optionAroundTheWorld
-  -
-    type: var
-    var_name: L:optionBambi
-  -
-    type: var
-    var_name: L:optionSearchLight
-  -
-    type: var
-    var_name: L:optionMedical
-  -
-    type: var
-    var_name: L:optionBearPaws
-  -
-    type: var
-    var_name: L:optionMirror
-  -
-    type: var
-    var_name: L:optionWireCutters
-  -
-    type: var
-    var_name: L:optionFloats
-  -
-    type: var
-    var_name: L:showAdfDme
+    var_name: L:coverVertRefWindow
   -
     type: var
     var_name: L:showRadarAltimeter
   -
     type: var
-    var_name: L:coverVertRefWindow
+    var_name: L:showAdfDme
+  -
+    type: var
+    var_name: L:hideHeadsetR
+  -
+    type: var
+    var_name: L:hideHeadsetL
+  -
+    type: var
+    var_name: L:hideCopilotHeadset
+  -
+    type: var
+    var_name: L:hideCopilotHelmet
+# -
+#   type: var
+#   var_name: L:hideDownwash
+# -
+#   type: var
+#   var_name: L:hideHeatBlur
 # -
 #   type: var
 #   var_name: L:vemdTotalFlights
+  -
+    type: var
+    var_name: L:CSH125_INSTR_OPTION
+  -
+    type: var
+    var_name: L:CSH125_MAIN_GTN_OPTION
+  -
+    type: var
+    var_name: L:CSH125_SECONDARY_GTN_OPTION
+  -
+    type: var
+    var_name: L:COWANSIM_LIGHT_LANDING_UP_DOWN
+  -
+    type: var
+    var_name: L:COWANSIM_LIGHT_LANDING_LR
+  -
+    type: var
+    var_name: L:COWANSIM_RCA2610
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_1
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_2
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_3
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_4
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_5
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_6
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_7
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_8
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_9
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_10
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_11
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_12
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_13
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_14
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_15
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_16
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_17
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_18
   -
     type: var
     var_name: L:annAirFilter
@@ -253,16 +296,6 @@ shared:
     var_name: L:annXmsnChip
   -
     type: var
-    var_name: L:buttonAnnTest
-  -
-    type: var
-    var_name: L:CollectiveGrip
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:collGripState
-  -
-    type: var
     var_name: L:exitFrontL
   -
     type: var
@@ -281,12 +314,6 @@ shared:
     var_name: L:hideFireExtinguisherR
   -
     type: var
-    var_name: L:hideHeadsetL
-  -
-    type: var
-    var_name: L:hideHeadsetR
-  -
-    type: var
     var_name: L:idleRel
   -
     type: var
@@ -303,6 +330,10 @@ shared:
   -
     type: var
     var_name: L:vemdBrightness
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Lever_Percent
+    interpolate: Default
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
@@ -317,51 +348,25 @@ shared:
     var_name: L:floatsBlown
   -
     type: var
+    var_name: L:ventFrontR
+  -
+    type: var
     var_name: L:exitBaggageR
-  -
-    type: var
-    var_name: L:ventFrontL
-    unreliable: true
-  -
-    type: var
-    var_name: L:exitBaggageLAft
-  -
-    type: var
-    var_name: L:h125SearchLightDown
   -
     type: var
     var_name: L:exitBaggageL
   -
     type: var
-    var_name: L:ventFrontR
-    unreliable: true
+    var_name: L:exitBaggageLAft
   -
     type: var
-    var_name: L:h125SearchLightRight
-  -
-    type: var
-    var_name: L:hideDoorFL
-  -
-    type: var
-    var_name: L:hideDoorFR
+    var_name: L:ventFrontL
 # -
 #   type: var
-#   var_name: L:hideDownwash
-# -
-#   type: var
-#   var_name: L:hideHeatBlur
+#   var_name: L:COWANSIM_Throttle_1_Lever_Position
 # -
 #   type: var
 #   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
-  -
-    type: var
-    var_name: L:twistGrip
-  -
-    type: var
-    var_name: L:starterSwitchLock
-  -
-    type: var
-    var_name: L:starterSwitch
   -
     type: var
     var_name: L:trimRelease
@@ -445,10 +450,8 @@ shared:
     var_name: L:switchNav1Nav2Gps
   -
     type: var
-    var_name: L:switchHornMute
-  -
-    type: var
-    var_name: L:fuelPump
+    var_name: L:CSR66_RCA2610_BRIGHTNESS
+    unreliable: true
   -
     type: var
     var_name: L:buttonServoTest
@@ -467,9 +470,78 @@ shared:
   -
     type: var
     var_name: L:mirroDeice
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InactiveVar
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
   -
     type: var
     var_name: L:switchBlowFloatsCover
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_DTOKey
   -
     type: var
     var_name: L:extPwrCap
@@ -479,15 +551,6 @@ shared:
   -
     type: var
     var_name: L:hidePatient
-  -
-    type: var
-    var_name: L:swapGPS
-  -
-    type: var
-    var_name: L:hideCopilotHeadset
-  -
-    type: var
-    var_name: L:hideCopilotHelmet
   -
     type: var
     var_name: L:hideHeadsetLr
@@ -500,6 +563,19 @@ shared:
   -
     type: var
     var_name: L:h125MirrorDown
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Position
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:COWANSIM_ENGINE_Idle_1_Released
 # -
 #   type: var
 #   var_name: L:LIGHTING_POTENTIOMETER_2
@@ -515,6 +591,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:MFD_Main_MapZoomRange
 # -
 #   type: var
 #   var_name: L:LIGHTING_CABIN_1
@@ -536,12 +615,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:ELECTRICAL_Starter_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_TAXI_1
-# -
-#   type: var
-#   var_name: L:LIGHTING_LANDING_1
 # -
 #   type: var
 #   var_name: L:AS650_NAV_Freq_Modify
@@ -575,15 +648,23 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Cabin_Heat_1_Position
+    unreliable: true
   -
     type: var
     var_name: L:XMLVAR_Cabin_Air_1_Position
+    unreliable: true
 # -
 #   type: var
-#   var_name: L:LIGHTING_LANDING_2
+#   var_name: L:LIGHTING_WING_1
 # -
 #   type: var
 #   var_name: L:exteriorSound
+# -
+#   type: var
+#   var_name: L:CSH125_WeightStation_19
+  -
+    type: var
+    var_name: L:buttonAnnTest
 # -
 #   type: var
 #   var_name: L:vemdInitStartTime
@@ -628,6 +709,18 @@ shared:
 #   var_name: L:hornCaution310
 # -
 #   type: var
+#   var_name: L:PMS50_GTN650_INSTALLED
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
+# -
+#   type: var
 #   var_name: L:AS430_ManualBrightness_Value_1
 # -
 #   type: var
@@ -638,9 +731,27 @@ shared:
 # -
 #   type: var
 #   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_RUNNING
+# -
+#   type: var
+#   var_name: L:PMS50_GTN650_RUNNING
   -
     type: var
     var_name: L:latchL3Aft
+  -
+    type: var
+    var_name: L:starterSwitch
+  -
+    type: var
+    var_name: L:starterSwitchLock
+  -
+    type: var
+    var_name: L:twistGrip
+  -
+    type: var
+    var_name: L:switchHornMute
 
 server:
   -
@@ -748,6 +859,18 @@ server:
   -
     type: var
     var_name: A:PAYLOAD STATION WEIGHT:17
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:18
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:19
     var_units: Pounds
     var_type: f64
     unreliable: true

@@ -1,4 +1,5 @@
-# Version 1.3.3
+# Garmin G1000 NXi by Working Title.
+# Version 1.3.10
 
 shared:
   - # Autopilot
@@ -16,12 +17,6 @@ shared:
       equals:
         Bool: false
     unreliable: true
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT ALTITUDE LOCK
-    var_units: Bool
-    var_type: bool
-    event_name: AP_ALT_HOLD
   -
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
@@ -43,22 +38,14 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: AUTOPILOT_DISENGAGE_SET
-# - # Breaks autopilot
-#   type: ToggleSwitch
-#   var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
-#   var_units: Bool
-#   var_type: bool
-#   event_name: TOGGLE_FLIGHT_DIRECTOR
-#   event_param: 1
-#   use_calculator: true
-# -
-#   type: ToggleSwitch
-#   var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
-#   var_units: Bool
-#   var_type: bool
-#   event_name: TOGGLE_FLIGHT_DIRECTOR
-#   event_param: 2
-#   use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
@@ -124,6 +111,12 @@ shared:
     var_type: bool
     event_name: AP_NAV1_HOLD
   -
+    type: var
+    var_name: A:AUTOPILOT PITCH HOLD REF
+    var_units: Degrees
+    var_type: f64
+    unreliable: true
+  -
     type: ToggleSwitch
     var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
     var_units: Bool
@@ -165,6 +158,22 @@ shared:
     event_name: TOGGLE_GPS_DRIVES_NAV1
     cancel_h_events: true
 
+  - # Events no simvar
+    type: event
+    event_name: AP_ALT_HOLD
+  -
+    type: event
+    event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_ON
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_OFF
+  -
+    type: event
+    event_name: AUTO_THROTTLE_DISCONNECT
+
   - # Transponder
     type: var
     var_name: A:TRANSPONDER STATE:1
@@ -177,22 +186,14 @@ shared:
     var_type: bool
     event_name: XPNDR_IDENT_ON
     off_event_name: XPNDR_IDENT_OFF
+    event_param: 1
   -
     type: NumSet
     var_name: A:TRANSPONDER CODE:1
     var_units: Bco16
     var_type: i32
     event_name: XPNDR_SET
-
-  - # Events no simvar
-    type: event
-    event_name: AP_APR_HOLD
-  -
-    type: event
-    event_name: AP_PITCH_LEVELER_ON
-  -
-    type: event
-    event_name: AP_PITCH_LEVELER_OFF
+    event_param: 1
 
   - # LVAR's
     type: var

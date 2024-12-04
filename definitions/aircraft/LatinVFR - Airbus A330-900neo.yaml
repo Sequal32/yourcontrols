@@ -1,0 +1,353 @@
+# Version 1.0.7 (based on Asobo A320)
+
+include:
+  - definitions/aircraft/Asobo Studio - Airbus A320neo.yaml
+
+shared:
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:6
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 7
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:7
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 8
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:10
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 11
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:11
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 12
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:12
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 13
+    cancel_h_events: true
+
+  - # Interior
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_LIGHTS_ON
+    off_event_name: CABIN_LIGHTS_OFF
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:4
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_LIGHTS_ON
+    off_event_name: CABIN_LIGHTS_OFF
+    event_param: 4
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:5
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_LIGHTS_ON
+    off_event_name: CABIN_LIGHTS_OFF
+    event_param: 5
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:6
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_LIGHTS_ON
+    off_event_name: CABIN_LIGHTS_OFF
+    event_param: 6
+
+# - # LVAR's
+#   type: var
+#   var_name: L:XMLVAR_SpawnOnRunway
+  -
+    type: var
+    var_name: L:ECAM_INIT_PAGE_ID
+  -
+    type: var
+    var_name: L:LVFR_ADIRS_FORCE_ALIGN
+  -
+    type: var
+    var_name: L:XMLVAR_ELEC_BATSWITCH_State
+  -
+    type: var
+    var_name: L:EFB_ON
+  -
+    type: var
+    var_name: L:LVFR_CHRONO_RUN_SWITCH_STATE
+  -
+    type: var
+    var_name: L:KNOB_OVHD_AIRCOND_COCKPIT
+    unreliable: true
+  -
+    type: var
+    var_name: L:KNOB_OVHD_AIRCOND_FWDCABIN
+    unreliable: true
+  -
+    type: var
+    var_name: L:KNOB_OVHD_AIRCOND_CARGO
+    unreliable: true
+  -
+    type: var
+    var_name: L:KNOB_OVHD_AIRCOND_BULK
+    unreliable: true
+  -
+    type: var
+    var_name: L:LVFR_Source_Nav1
+  -
+    type: var
+    var_name: L:LVFR_Source_Nav2
+  -
+    type: var
+    var_name: L:Shade_Cockpit_L_Viz
+  -
+    type: var
+    var_name: L:Shade_Cockpit_R_Viz
+  -
+    type: var
+    var_name: L:blinds_cockpit_back_L_Viz
+  -
+    type: var
+    var_name: L:blinds_cockpit_L_Viz
+  -
+    type: var
+    var_name: L:blinds_cockpit_R_Viz
+  -
+    type: var
+    var_name: L:blinds_cockpit_back_R_Viz
+  -
+    type: var
+    var_name: L:LVFR_L_MAP_LIGHT
+  -
+    type: var
+    var_name: L:LVFR_L_READ_LIGHT
+  -
+    type: var
+    var_name: L:LVFR_R_MAP_LIGHT
+  -
+    type: var
+    var_name: L:LVFR_R_READ_LIGHT
+  -
+    type: var
+    var_name: L:LVFR_IRS_1_SWITCH_STATE
+  -
+    type: var
+    var_name: L:LVFR_IRS_2_SWITCH_STATE
+  -
+    type: var
+    var_name: L:LVFR_IRS_3_SWITCH_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Value
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_ExternalPower_2
+# -
+#   type: var
+#   var_name: L:LVFR_RMI
+  -
+    type: var
+    var_name: L:LVFR_ADIRS1_STATE
+  -
+    type: var
+    var_name: L:LVFR_ADIRS2_STATE
+  -
+    type: var
+    var_name: L:LVFR_ADIRS3_STATE
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_PFD_State
+# -
+#   type: var
+#   var_name: L:LVFR_CUSTOM_VNAV_PATH_DESCENT
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_EICAS_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_EICAS_1_State
+# -
+#   type: var
+#   var_name: L:LVFR_SECTOR_TEMP_CKPT
+# -
+#   type: var
+#   var_name: L:LVFR_SECTOR_TEMP_ONE
+# -
+#   type: var
+#   var_name: L:LVFR_SECTOR_TEMP_TWO
+# -
+#   type: var
+#   var_name: L:LVFR_SECTOR_TEMP_THREE
+# -
+#   type: var
+#   var_name: L:LVFR_SECTOR_TEMP_FOUR
+# -
+#   type: var
+#   var_name: L:LVFR_SECTOR_TEMP_FIVE
+# -
+#   type: var
+#   var_name: L:LVFR_SECTOR_TEMP_SIX
+# -
+#   type: var
+#   var_name: L:LVFR_SECTOR_TEMP_CARGO
+# -
+#   type: var
+#   var_name: L:LVFR_SECTOR_TEMP_BULK
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_FCU_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_FCU_State
+# -
+#   type: var
+#   var_name: L:LVFR_EFB_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_EFB_State
+# -
+#   type: var
+#   var_name: L:SoundSystems_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:SoundSystems_State
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_BAT1
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_BAT2
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_BAT_BOTH_POWERED
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_AC_PWR
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_LDG
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_APU_BUS
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_GEAR_LEVER_POS
+# -
+#   type: var
+#   var_name: L:LVFR_GPWS_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_GPWS_State
+  -
+    type: var
+    var_name: L:LVFR_CDU_MDA
+  -
+    type: var
+    var_name: L:LVFR_CDU_DH
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:MDA
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:DH
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_MFD_State
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_EICAS_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_EICAS_2_State
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_Clock_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_Clock_State
+  -
+    type: var
+    var_name: L:LVFR_SYSTEM_SIMBRIEF_IMPORTER_STATE
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_CDU_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_CDU_1_State
+# -
+#   type: var
+#   var_name: L:LVFR_BAT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_BAT_State
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_CDU_3_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_Airbus_CDU_3_State
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:DHBottomBorder
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:DHUpperBorder
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:GPWS_MinimumsMDA
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER2 LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

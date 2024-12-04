@@ -1,4 +1,4 @@
-# Version 0.1.109
+# Version 0.1.112
 
 include:
   - definitions/modules/controls.yaml
@@ -204,35 +204,6 @@ shared:
     event_param: 4
     index_reversed: true
 
-  - # Deice
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:1
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:2
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 2
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:3
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 3
-  -
-    type: NumSet
-    var_name: A:PITOT HEAT SWITCH:4
-    var_units: Enum
-    var_type: i32
-    event_name: PITOT_HEAT_TOGGLE
-    event_param: 4
-
   - # Engines
     type: NumSet
     var_name: A:GENERAL ENG STARTER:1
@@ -363,20 +334,6 @@ shared:
     var_type: bool
     event_name: FUELSYSTEM_VALVE_TOGGLE
     event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:FUELSYSTEM VALVE SWITCH:2
-    var_units: Bool
-    var_type: bool
-    event_name: FUELSYSTEM_VALVE_TOGGLE
-    event_param: 2
-  -
-    type: ToggleSwitch
-    var_name: A:FUELSYSTEM VALVE SWITCH:3
-    var_units: Bool
-    var_type: bool
-    event_name: FUELSYSTEM_VALVE_TOGGLE
-    event_param: 3
   -
     type: ToggleSwitch
     var_name: A:FUELSYSTEM VALVE SWITCH:4
@@ -518,6 +475,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 11
+    cancel_h_events: true
   - # FWD R Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:11
@@ -525,6 +483,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 12
+    cancel_h_events: true
   - # AFT R Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:1
@@ -532,6 +491,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
+    cancel_h_events: true
   - # FWD R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:12
@@ -539,6 +499,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 13
+    cancel_h_events: true
   - # AFT R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:13
@@ -546,6 +507,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 14
+    cancel_h_events: true
   - # GPU Truck
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:15
@@ -942,16 +904,13 @@ shared:
 
 # - # LVAR's
 #   type: var
-#   var_name: L:WT_TOGA_ACTIVE
-# -
-#   type: var
 #   var_name: L:WT_AVIONICS_CHECKLIST_AUTOCOMPLETE_PHASE
   -
     type: var
     var_name: L:XMLVAR_EMER_LIGHTS_ARMED
-  -
-    type: var
-    var_name: L:XMLVAR_Mins_Selector_Baro
+# -
+#   type: var
+#   var_name: L:XMLVAR_Mins_Selector_Baro
   -
     type: var
     var_name: L:XMLVAR_SeatBelts
@@ -1076,9 +1035,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_AUDIOPANEL_KNOB_VOR_ADF_SELECTOR_1
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro_Selector_HPA_1
   -
     type: var
     var_name: L:XMLVAR_Transponder_Mode
@@ -1317,18 +1276,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Value
+# -
+#   type: var
+#   var_name: L:WT_TOGA_ACTIVE
   -
     type: var
     var_name: L:XMLVAR_COM1_CURRENT_FREQ
-    cancel_h_events: true
   -
     type: var
     var_name: L:XMLVAR_COM2_CURRENT_FREQ
-    cancel_h_events: true
   -
     type: var
     var_name: L:XMLVAR_COM3_CURRENT_FREQ
-    cancel_h_events: true
   -
     type: var
     var_name: L:WT_SEAT_BELTS_MODE
@@ -1497,20 +1456,23 @@ shared:
 #   var_name: L:WTB748_PFD_2_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:XMLVAR_ThrottlePosition_4
-  -
-    type: var
-    var_name: L:WT_SPEEDBRAKE_LEVER_POS
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:XMLVAR_ThrottlePosition_2
+#   var_name: L:XMLVAR_ThrottlePosition_1
 # -
 #   type: var
 #   var_name: L:XMLVAR_ThrottlePosition_3
 # -
 #   type: var
-#   var_name: L:XMLVAR_ThrottlePosition_1
+#   var_name: L:XMLVAR_ThrottlePosition_4
+  -
+    type: NumSet
+    var_name: L:WT_SPEEDBRAKE_LEVER_POS
+    var_units: Number
+    var_type: f64
+    event_name: SPOILERS_SET
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_ThrottlePosition_2
 # -
 #   type: var
 #   var_name: L:FMC_EXEC_ACTIVE
@@ -1845,12 +1807,6 @@ shared:
 #   var_name: L:WT_FADEC_OIL_TEMP_HIGH_AMBER_4
 # -
 #   type: var
-#   var_name: L:B747_8_SAI_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:B747_8_SAI_State
-# -
-#   type: var
 #   var_name: L:WTB748_PFD_1_State
 # -
 #   type: var
@@ -1861,6 +1817,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTB748_MFD_3_State
+  -
+    type: var
+    var_name: L:WT_AUTOBRAKE_DISARM
 # -
 #   type: var
 #   var_name: L:WTB748_MFD_4_ScreenLuminosity
@@ -1944,6 +1903,12 @@ shared:
 #   var_name: L:B747_8_ALT_State
 # -
 #   type: var
+#   var_name: L:B747_8_SAI_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:B747_8_SAI_State
+# -
+#   type: var
 #   var_name: L:B747_8_ATC_ScreenLuminosity
 # -
 #   type: var
@@ -1957,6 +1922,90 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:WT_FADEC_REF_N1_1
+# -
+#   type: var
+#   var_name: L:WT_FADEC_N1_RED_1
+# -
+#   type: var
+#   var_name: L:WT_FADEC_N1_AMBER_1
+# -
+#   type: var
+#   var_name: L:WT_FADEC_TGT_N1_1
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_RED_1
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_AMBER_1
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_START_LIMIT_1
+# -
+#   type: var
+#   var_name: L:WT_FADEC_REF_N1_2
+# -
+#   type: var
+#   var_name: L:WT_FADEC_N1_RED_2
+# -
+#   type: var
+#   var_name: L:WT_FADEC_N1_AMBER_2
+# -
+#   type: var
+#   var_name: L:WT_FADEC_TGT_N1_2
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_RED_2
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_AMBER_2
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_START_LIMIT_2
+# -
+#   type: var
+#   var_name: L:WT_FADEC_REF_N1_3
+# -
+#   type: var
+#   var_name: L:WT_FADEC_N1_RED_3
+# -
+#   type: var
+#   var_name: L:WT_FADEC_N1_AMBER_3
+# -
+#   type: var
+#   var_name: L:WT_FADEC_TGT_N1_3
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_RED_3
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_AMBER_3
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_START_LIMIT_3
+# -
+#   type: var
+#   var_name: L:WT_FADEC_REF_N1_4
+# -
+#   type: var
+#   var_name: L:WT_FADEC_N1_RED_4
+# -
+#   type: var
+#   var_name: L:WT_FADEC_N1_AMBER_4
+# -
+#   type: var
+#   var_name: L:WT_FADEC_TGT_N1_4
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_RED_4
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_AMBER_4
+# -
+#   type: var
+#   var_name: L:WT_FADEC_EGT_START_LIMIT_4
 # -
 #   type: var
 #   var_name: L:WT_FADEC_REF_TPR_1
@@ -1983,90 +2032,6 @@ shared:
 #   var_name: L:WT_FADEC_TGT_TPR_4
 # -
 #   type: var
-#   var_name: L:WT_FADEC_REF_N1_1
-# -
-#   type: var
-#   var_name: L:WT_FADEC_REF_N1_2
-# -
-#   type: var
-#   var_name: L:WT_FADEC_REF_N1_3
-# -
-#   type: var
-#   var_name: L:WT_FADEC_REF_N1_4
-# -
-#   type: var
-#   var_name: L:WT_FADEC_TGT_N1_1
-# -
-#   type: var
-#   var_name: L:WT_FADEC_TGT_N1_2
-# -
-#   type: var
-#   var_name: L:WT_FADEC_TGT_N1_3
-# -
-#   type: var
-#   var_name: L:WT_FADEC_TGT_N1_4
-# -
-#   type: var
-#   var_name: L:WT_FADEC_N1_RED_1
-# -
-#   type: var
-#   var_name: L:WT_FADEC_N1_AMBER_1
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_RED_1
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_AMBER_1
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_START_LIMIT_1
-# -
-#   type: var
-#   var_name: L:WT_FADEC_N1_RED_2
-# -
-#   type: var
-#   var_name: L:WT_FADEC_N1_AMBER_2
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_RED_2
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_AMBER_2
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_START_LIMIT_2
-# -
-#   type: var
-#   var_name: L:WT_FADEC_N1_RED_3
-# -
-#   type: var
-#   var_name: L:WT_FADEC_N1_AMBER_3
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_RED_3
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_AMBER_3
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_START_LIMIT_3
-# -
-#   type: var
-#   var_name: L:WT_FADEC_N1_RED_4
-# -
-#   type: var
-#   var_name: L:WT_FADEC_N1_AMBER_4
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_RED_4
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_AMBER_4
-# -
-#   type: var
-#   var_name: L:WT_FADEC_EGT_START_LIMIT_4
-# -
-#   type: var
 #   var_name: L:WT_FADEC_N2_RED_1
 # -
 #   type: var
@@ -2077,15 +2042,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_FADEC_N2_RED_4
-# -
-#   type: var
-#   var_name: L:AIRLINER_V1_SPEED
+  -
+    type: var
+    var_name: L:WT_AUTO_PERF_INIT_ENABLED
 # -
 #   type: var
 #   var_name: L:B74_AC_BUS_ENERGIZED
 # -
 #   type: var
 #   var_name: L:B748_Irs_On_Bat
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_ForcedToSTD
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -2119,12 +2087,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_FADEC_OIL_TEMP_LOW_RED_4
+# -
+#   type: var
+#   var_name: L:AIRLINER_V1_SPEED
   -
     type: var
     var_name: L:AP_CLBCON_ACTIVE
 # -
 #   type: var
 #   var_name: L:VS_ACTIVE
+  -
+    type: var
+    var_name: L:AP_LOC_ACTIVE
 
 server:
   -
@@ -2297,7 +2271,7 @@ ignore:
 
   - B747_8_PFD_Mins_INC
   - B747_8_PFD_Mins_DEC
-
+# Throttle Scroll
   - WT_B78_Throttle_1_Inc
   - WT_B78_Throttle_1_Dec
   - WT_B78_Throttle_2_Inc

@@ -1,4 +1,4 @@
-# Version 0.1.76
+# Version 0.1.77
 
 include:
   - definitions/modules/Instruments/AS_GNS430.yaml
@@ -123,30 +123,90 @@ shared:
     event_param: 12
     index_reversed: true
 
-  - # LVAR's
-    type: var
-    var_name: L:XMLVAR_SwitchECUBtn
-  -
+  - # LVAR's (trimmed)
     type: var
     var_name: L:XMLVAR_ElecMaster
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+  -
+    type: var
+    var_name: L:XMLVAR_SwitchECUSwap
+  -
+    type: var
+    var_name: L:XMLVAR_SwitchECUBtn
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+  -
+    type: var
+    var_name: L:XMLVAR_SAFETY_Panel_Test_Enabled
   -
     type: var
     var_name: L:XMLVAR_Electrical_Master_Battery_Turned_ON
   -
     type: var
-    var_name: L:XMLVAR_SAFETY_Panel_Test_Enabled
+    var_name: L:ELECTRICAL_EssentialBus_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:XMLVAR_AcknowledgeTime
   -
     type: var
     var_name: L:XMLVAR_CautionEnabled
   -
     type: var
     var_name: L:XMLVAR_WarningEnabled
-  -
-    type: var
-    var_name: L:XMLVAR_SwitchECUSwap
-  -
-    type: var
-    var_name: L:ELECTRICAL_EssentialBus_2
 
 server:
   -

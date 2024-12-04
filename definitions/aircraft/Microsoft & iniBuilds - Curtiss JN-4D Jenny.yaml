@@ -1,4 +1,4 @@
-# Version 1.1.9
+# Version 1.1.10
 
 include:
   - definitions/modules/controls.yaml
@@ -39,18 +39,6 @@ shared:
     var_name: L:cowling
   -
     type: var
-    var_name: L:JN4_ENG_MAGNETO_L
-  -
-    type: var
-    var_name: L:JN4_ENG_MAGNETO_R
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden1
-  -
-    type: var
     var_name: L:JN4_ENG_MAGNETO_L_CB
   -
     type: var
@@ -60,16 +48,7 @@ shared:
     var_name: L:JN4_ENG_MAGNETO_Lever
   -
     type: var
-    var_name: L:Altimeter_Face
-# -
-#   type: var
-#   var_name: L:Altimeter_Face_ANIM
-  -
-    type: var
     var_name: L:Altimeter_Clamp
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
   -
     type: var
     var_name: L:TrayTable
@@ -84,10 +63,26 @@ shared:
 #   var_name: L:XMLVAR_IE_Throttle_VR_Value
   -
     type: var
+    var_name: L:Altimeter_Face
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:Altimeter_Face_ANIM
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+  -
+    type: var
     var_name: L:THROW_PROP1
   -
     type: var
     var_name: L:throwprop
+# -
+#   type: var
+#   var_name: L:JN4_ENG_MAGNETO_L
+# -
+#   type: var
+#   var_name: L:JN4_ENG_MAGNETO_R
 
 server:
   -
@@ -108,3 +103,23 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+  - jn4-ini-efb#9
+  - jn4-ini-efb#10
+
+  - jn4-ini-efb#radioMajInc
+  - jn4-ini-efb#radioMajDec
+  - jn4-ini-efb#radioMinInc
+  - jn4-ini-efb#radioMinDec
+
+  - jn4-ini-efb#1463516903 # 0
+  - jn4-ini-efb#1674867838 # 1
+  - jn4-ini-efb#1886218773 # 2
+  - jn4-ini-efb#2097569708 # 3
+  - jn4-ini-efb#-1986046653 # 4
+  - jn4-ini-efb#-1774695718 # 5
+  - jn4-ini-efb#-1563344783 # 6
+  - jn4-ini-efb#-1351993848 # 7
+  - jn4-ini-efb#gtr335-direct-del
+  - jn4-ini-efb#gtr335-vfr

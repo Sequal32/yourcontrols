@@ -1,9 +1,11 @@
-# Version 1.0.2
+# Version 2.2.0
 
 include:
   - definitions/modules/Instruments/AS_GNS430.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
   - definitions/modules/Instruments/AS_KT76C.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
   - definitions/modules/autopilot.yaml
   - definitions/modules/controls_rotor.yaml
   - definitions/modules/electrical.yaml
@@ -30,14 +32,14 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
@@ -61,6 +63,13 @@ shared:
     var_type: bool
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 25
+  - # Cabin lights
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:26
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 26
   - # Inverter 1
     type: CustomCalculator
     get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:12, Bool)
@@ -69,18 +78,18 @@ shared:
     type: CustomCalculator
     get: 10 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:13, Bool)
     set: 13 10 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # Bat Master
-    type: CustomCalculator
-    get: 4 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
-    set: 11 4 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # Bat 1 Intcon (broken)
-    type: CustomCalculator
-    get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BATTERY CONNECTION ON:1, Bool)
-    set: 1 11 (>K:2:ELECTRICAL_BUS_TO_BATTERY_CONNECTION_TOGGLE)
-  - # Bat 2 Intcon (broken)
-    type: CustomCalculator
-    get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BATTERY CONNECTION ON:2, Bool)
-    set: 2 11 (>K:2:ELECTRICAL_BUS_TO_BATTERY_CONNECTION_TOGGLE)
+# - # Bat Master (removed v2)
+#   type: CustomCalculator
+#   get: 4 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
+#   set: 11 4 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+# - # Bat 1 Intcon (broken and sim errors)
+#   type: CustomCalculator
+#   get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BATTERY CONNECTION ON:1, Bool)
+#   set: 1 11 (>K:2:ELECTRICAL_BUS_TO_BATTERY_CONNECTION_TOGGLE)
+# - # Bat 2 Intcon (broken and sim errors)
+#   type: CustomCalculator
+#   get: 11 (>A:BUS LOOKUP INDEX, Number) (A:BATTERY CONNECTION ON:2, Bool)
+#   set: 2 11 (>K:2:ELECTRICAL_BUS_TO_BATTERY_CONNECTION_TOGGLE)
   - # STBY ATTD
     type: ToggleSwitch
     var_name: A:CIRCUIT SWITCH ON:18
@@ -211,11 +220,19 @@ shared:
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT CABIN:1
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
     var_units: Bool
     var_type: i32
     event_name: CABIN_LIGHTS_SET
-    event_param: 1
+    event_param: 2
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -223,21 +240,6 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:LIGHT GLARESHIELD:1
-    var_units: Bool
-    var_type: i32
-    event_name: GLARESHIELD_LIGHTS_SET
-    event_param: 1
-  -
-    type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:5
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 5
     index_reversed: true
   -
     type: NumSet
@@ -256,14 +258,6 @@ shared:
     index_reversed: true
   -
     type: NumSet
-    var_name: A:LIGHT POTENTIOMETER:12
-    var_units: Percent
-    var_type: f64
-    event_name: LIGHT_POTENTIOMETER_SET
-    event_param: 12
-    index_reversed: true
-  -
-    type: NumSet
     var_name: A:LIGHT POTENTIOMETER:13
     var_units: Percent
     var_type: f64
@@ -277,6 +271,21 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
     index_reversed: true
 
   - # Wipers
@@ -307,88 +316,13 @@ shared:
     var_name: L:222RadioConfig
   -
     type: var
-    var_name: L:tablet_rotation
-  -
-    type: var
-    var_name: L:tablet_size
-  -
-    type: var
-    var_name: L:table_hide
-  -
-    type: var
-    var_name: L:remove_doors
-  -
-    type: var
-    var_name: L:gtn_750
-  -
-    type: var
-    var_name: L:show_pass
-  -
-    type: var
-    var_name: L:hide_copilot
-  -
-    type: var
-    var_name: L:hide_pass
-  -
-    type: var
-    var_name: L:hide_rotor_shadows
-  -
-    type: var
     var_name: L:222BlackPanel
-  -
-    type: var
-    var_name: L:payload_baseline
-  -
-    type: var
-    var_name: L:222FuelValve1CoverOpen
-  -
-    type: var
-    var_name: L:222FuelValve2CoverOpen
-  -
-    type: var
-    var_name: L:fuel_quantity_aux
-  -
-    type: var
-    var_name: L:timer_mode
-  -
-    type: var
-    var_name: L:eng_lights
-  -
-    type: var
-    var_name: L:copilot_lights
-  -
-    type: var
-    var_name: L:pilot_lights
-  -
-    type: var
-    var_name: L:ovhp_lights
   -
     type: var
     var_name: L:222CautLightsBright
   -
     type: var
-    var_name: L:emerg_lts
-  -
-    type: var
-    var_name: L:cabin_lts
-  -
-    type: var
-    var_name: L:AH_line_0
-  -
-    type: var
-    var_name: L:AH_line_1
-  -
-    type: var
-    var_name: L:aux_valve
-  -
-    type: var
-    var_name: L:aux_setting
-  -
-    type: var
-    var_name: L:decision_height
-  -
-    type: var
-    var_name: L:222MedicalInterior
+    var_name: L:COWANSIM_GTN_OPTION
   -
     type: var
     var_name: L:222ThrottleFrictionSetting
@@ -411,10 +345,24 @@ shared:
   -
     type: var
     var_name: L:222SearchLightDown
-  -
-    type: var
-    var_name: L:222GovTarget
-    unreliable: true
+# -
+#   type: var
+#   var_name: L:CS222_WeightStation_1
+# -
+#   type: var
+#   var_name: L:CS222_WeightStation_2
+# -
+#   type: var
+#   var_name: L:CS222_WeightStation_3
+# -
+#   type: var
+#   var_name: L:CS222_WeightStation_4
+# -
+#   type: var
+#   var_name: L:CS222_WeightStation_5
+# -
+#   type: var
+#   var_name: L:CS222_WeightStation_6
 # -
 #   type: var
 #   var_name: L:222GenaltIttCoolingLoss1
@@ -432,48 +380,66 @@ shared:
     var_name: L:222AuxFuelAutoMode
   -
     type: var
-    var_name: L:222AllowIdle1
+    var_name: L:COWANSIM_ENGINE_Idle_1_Released
   -
     type: var
-    var_name: L:222AllowIdle2
+    var_name: L:COWANSIM_ENGINE_Idle_2_Released
   -
     type: var
-    var_name: L:222Throttle1Pos
-    unreliable: true
+    var_name: L:COWANSIM_Throttle_1_Lever_Percent
+    interpolate: Default
   -
     type: var
-    var_name: L:222Throttle2Pos
-    unreliable: true
+    var_name: L:COWANSIM_Throttle_2_Lever_Percent
+    interpolate: Default
+  -
+    type: var
+    var_name: L:222FuelValve1CoverOpen
+  -
+    type: var
+    var_name: L:222FuelValve2CoverOpen
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
-    var_name: L:222DoorFROpen
+    var_name: L:222DoorRLOpen
   -
     type: var
     var_name: L:222DoorRROpen
   -
     type: var
-    var_name: L:222WindowROpen
-  -
-    type: var
-    var_name: L:222DoorRLOpen
+    var_name: L:COWANSIM_LIGHT_LANDING_UP_DOWN
   -
     type: var
     var_name: L:222DoorFLOpen
   -
     type: var
+    var_name: L:COWANSIM_LIGHT_LANDING_LR
+  -
+    type: var
     var_name: L:222WindowLOpen
+  -
+    type: var
+    var_name: L:222WindowROpen
+  -
+    type: var
+    var_name: L:222DoorFROpen
+# -
+#   type: var
+#   var_name: L:COWANSIM_Throttle_2_Lever_Position
+# -
+#   type: var
+#   var_name: L:COWANSIM_Throttle_1_Lever_Position
 # -
 #   type: var
 #   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
   -
     type: var
     var_name: L:gearLightsTest
-  -
-    type: var
-    var_name: L:222WarningsActive
+# -
+#   type: var
+#   var_name: L:222WarningsActive
   -
     type: var
     var_name: L:222AcknowledgedMasterWarning
@@ -510,6 +476,86 @@ shared:
   -
     type: var
     var_name: L:222TestRadioAlt
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InactiveVar
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_DTOKey
+  -
+    type: var
+    var_name: L:222Throttle1Pos
+    unreliable: true
+  -
+    type: var
+    var_name: L:222Throttle2Pos
+    unreliable: true
   -
     type: var
     var_name: L:222HstPwr
@@ -560,7 +606,24 @@ shared:
 #   var_name: L:LIGHTING_LANDING_1
 # -
 #   type: var
-#   var_name: L:LIGHTING_LANDING_2
+#   var_name: L:LIGHTING_TAXI_1
+  -
+    type: var
+    var_name: L:COWANSIM_GOV_TARGET
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Position
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_2_Position
+    interpolate: Default
 # -
 #   type: var
 #   var_name: L:LIGHTING_POTENTIOMETER_12
@@ -578,7 +641,7 @@ shared:
 #   var_name: L:LIGHTING_PANEL_1
 # -
 #   type: var
-#   var_name: L:LIGHTING_CABIN_1
+#   var_name: L:LIGHTING_CABIN_2
 # -
 #   type: var
 #   var_name: L:LIGHTING_GLARESHIELD_1
@@ -608,19 +671,43 @@ shared:
 #   var_name: L:222PlayGearWarningSound
 # -
 #   type: var
+#   var_name: L:PMS50_GTN650_INSTALLED
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
 #   var_name: L:222Gov1ITerm
 # -
 #   type: var
 #   var_name: L:222Gov1LastInput
 # -
 #   type: var
-#   var_name: L:222Gov2ITerm
-# -
-#   type: var
-#   var_name: L:222Gov2LastInput
-# -
-#   type: var
 #   var_name: L:exteriorSound
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_RUNNING
+# -
+#   type: var
+#   var_name: L:PMS50_GTN650_RUNNING
+  -
+    type: var
+    var_name: L:XMLVAR_AudioPanel_2
 
   - # Medical
     type: var

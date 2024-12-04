@@ -1,4 +1,4 @@
-# Version 0.1.119 / 1.0.2 Enhanced
+# Version 0.1.120 / 1.0.2 Enhanced
 
 include:
   - definitions/modules/Instruments/AS_G3000.yaml
@@ -19,14 +19,14 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
   -
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:2
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 2
@@ -167,10 +167,7 @@ shared:
     get: 19 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:17, Bool)
     set: 17 19 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
-# - # LVAR's
-#   type: var
-#   var_name: L:WT_TOGA_ACTIVE
-  -
+  - # LVAR's
     type: var
     var_name: L:XMLVAR_LANDING_TAXI_OFF_Switch_Position
 # -
@@ -185,18 +182,15 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Elec_CrashBar_State
+# -
+#   type: var
+#   var_name: L:WT_TOGA_ACTIVE
   -
     type: var
     var_name: L:XMLVAR_Elec_Source_Switch_State
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden2
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
@@ -208,25 +202,13 @@ shared:
 #   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
 # -
 #   type: var
-#   var_name: L:ParkingBrake_Position
-# -
-#   type: var
-#   var_name: L:XMLVAR_LandingGearLightBlink
-# -
-#   type: var
-#   var_name: L:XMLVAR_LandingGearLightTesting
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
-# -
-#   type: var
 #   var_name: L:XMLVAR_Starter
 # -
 #   type: var
-#   var_name: L:XMLVAR_Starter_IsHeld
+#   var_name: L:XMLVAR_Starter_EndTimeDown
 # -
 #   type: var
-#   var_name: L:XMLVAR_Starter_EndTimeDown
+#   var_name: L:XMLVAR_Starter_IsHeld
   -
     type: var
     var_name: L:XMLVAR_Ignition
@@ -241,9 +223,6 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_BoostFuelPump
-  -
-    type: var
-    var_name: L:XMLVAR_FuelSelectorAuto
 # -
 #   type: var
 #   var_name: L:LIGHTING_LANDING_1
@@ -252,37 +231,13 @@ shared:
 #   var_name: L:XMLVAR_ELT_STATE
 # -
 #   type: var
-#   var_name: L:XMLVAR_ELT_TEST_TIME
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
+#   var_name: L:XMLVAR_YokeHidden1
 # -
 #   type: var
-#   var_name: L:WTG3000_TBM930_Backlight
+#   var_name: L:XMLVAR_YokeHidden2
 # -
 #   type: var
-#   var_name: L:XMLVAR_PushXFR
-# -
-#   type: var
-#   var_name: L:XMLVAR_InertSep1_Deployment
-# -
-#   type: var
-#   var_name: L:XMLVAR_InertSep1_Active
-# -
-#   type: var
-#   var_name: L:WTG3000_Pfd_Backlight:1
-# -
-#   type: var
-#   var_name: L:WTG3000_Mfd_Backlight:1
-# -
-#   type: var
-#   var_name: L:WTG3000_Pfd_Backlight:2
-# -
-#   type: var
-#   var_name: L:WTG3000_Gtc_Backlight:1
-# -
-#   type: var
-#   var_name: L:WTG3000_Gtc_Backlight:2
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:LANDING_GEAR_Gear
@@ -306,6 +261,9 @@ shared:
 #   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
 # -
 #   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
 #   var_name: L:LIGHTING_WING_1
 # -
 #   type: var
@@ -313,6 +271,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTG3000_PFD_Altimeter_Baro_TT:2
+# -
+#   type: var
+#   var_name: L:XMLVAR_PushXFR
 # -
 #   type: var
 #   var_name: L:WTGarmin_Nav_ActiveNavSource:1
@@ -330,52 +291,55 @@ shared:
 #   var_name: L:DEICE_Pitot_2
 # -
 #   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_LandingGearLightBlink
+# -
+#   type: var
+#   var_name: L:XMLVAR_LandingGearLightTesting
+  -
+    type: var
+    var_name: L:XMLVAR_FuelSelectorAuto
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Deployment
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Active
+# -
+#   type: var
+#   var_name: L:WTG3000_Pfd_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Mfd_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Pfd_Backlight:2
+# -
+#   type: var
+#   var_name: L:WTG3000_Gtc_Backlight:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Gtc_Backlight:2
+# -
+#   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
 # -
 #   type: var
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
+#   var_name: L:Garmin_Need_OBS_Convert_DirectTo
+# -
+#   type: var
 #   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:Generic_Master_Warning_Active
-# -
-#   type: var
-#   var_name: L:WT_LNavData_DTK_True
-# -
-#   type: var
-#   var_name: L:WT_LNavData_DTK_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_XTK
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_Next_DTK_True
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_CDI_Scale
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Bearing_True
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Distance
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Destination_Distance
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_Egress_Distance
 # -
 #   type: var
 #   var_name: L:WTAP_LNav_DTK
@@ -418,6 +382,45 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_XTK
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_True
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_CDI_Scale
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Distance
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Destination_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Egress_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_ToFrom
 # -
 #   type: var
 #   var_name: L:WTAP_VNav_TOD_Leg_Index
@@ -510,6 +513,12 @@ shared:
 #   var_name: L:WTAP_GP_Approach_Mode
 # -
 #   type: var
+#   var_name: L:WTAP_LNav_Obs_Active
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Obs_Course
+# -
+#   type: var
 #   var_name: L:WTFltTimer_Value:2
 # -
 #   type: var
@@ -553,12 +562,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_AP_FPA_Target:1
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:AS1000_AttitudeBackup_ScreenLuminosity
@@ -640,6 +643,12 @@ shared:
 #   var_name: L:WTG3000_Auto_Backlight
 # -
 #   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
 #   var_name: L:WT1000_AP_G1000_INSTALLED
 # -
 #   type: var
@@ -658,13 +667,13 @@ shared:
 #   var_name: L:WTG3000_Control_Panel_MapShowCursor:2
 # -
 #   type: var
+#   var_name: L:WTG3000_GTC_1_Avionics_Status
+# -
+#   type: var
 #   var_name: L:WTG3000_PFD_1_Avionics_Status
 # -
 #   type: var
 #   var_name: L:WTG3000_PFD_2_Avionics_Status
-# -
-#   type: var
-#   var_name: L:WTG3000_GTC_1_Avionics_Status
 # -
 #   type: var
 #   var_name: L:WTG3000_GTC_2_Avionics_Status
@@ -736,3 +745,10 @@ server:
     var_units: Pounds
     var_type: f64
     unreliable: true
+
+ignore:
+# XPNDR Box
+  - WTG3000_GTC_1#-1082943814
+  - WTG3000_GTC_1#-1083241709
+  - WTG3000_GTC_2#-1082943814
+  - WTG3000_GTC_2#-1083241709

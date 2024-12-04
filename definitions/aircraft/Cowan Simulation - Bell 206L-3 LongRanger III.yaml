@@ -1,10 +1,12 @@
-# Version 1.0.2
+# Version 2.1.0
 
 include:
+  - definitions/modules/Instruments/AS_G3X.yaml
   - definitions/modules/Instruments/AS_GNS430.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
   - definitions/modules/Instruments/AS_GTX330.yaml
-  - definitions/modules/autopilot.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/Instruments/TDS_GTNXi.yaml
   - definitions/modules/controls_rotor.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines_rotor.yaml
@@ -18,18 +20,10 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  - # Gyrocompass
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:29
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 29
-
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
@@ -39,25 +33,6 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: ANTI_ICE_TOGGLE_ENG1
-
-  - # Electrical
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:20
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 20
-  -
-    type: CustomCalculator
-    get: 2 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
-    set: 1 2 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:31
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 31
 
   - # Fuel
     type: ToggleSwitch
@@ -74,6 +49,21 @@ shared:
     event_name: FUELSYSTEM_VALVE_OPEN
     off_event_name: FUELSYSTEM_VALVE_CLOSE
     event_param: 2
+
+  - # Gyrocompass
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:59
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 59
+
+  - # Gyroscope
+    type: ToggleSwitch
+    var_name: A:TURN INDICATOR SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TURN_INDICATOR_SWITCH
 
   - # Hydraulics
     type: NumSet
@@ -132,7 +122,96 @@ shared:
 
   - # LVAR's (trimmed)
     type: var
-    var_name: L:idleRel
+    var_name: L:CS206L_GOV_TARGET
+  -
+    type: var
+    var_name: L:CS206L_GTN_OPTION
+  -
+    type: var
+    var_name: L:COWANSIM_LIGHT_LANDING_UP_DOWN
+  -
+    type: var
+    var_name: L:COWANSIM_LIGHT_LANDING_LR
+  -
+    type: var
+    var_name: L:CS206L_INSTR_OPTION
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_1
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_2
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_3
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_4
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_5
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_6
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_7
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_8
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_9
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_10
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_11
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_12
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_13
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_14
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_15
+  -
+    type: var
+    var_name: L:CSR66_RCA2610_BRIGHTNESS
+    unreliable: true
+  -
+    type: var
+    var_name: L:pilotWindow
+  -
+    type: var
+    var_name: L:headSetR
+  -
+    type: var
+    var_name: L:headSetL
+  -
+    type: var
+    var_name: L:hideMedic
+  -
+    type: var
+    var_name: L:hidePatient
+# -
+#   type: var
+#   var_name: L:hideDownwash
+# -
+#   type: var
+#   var_name: L:hideHeatBlur
+  -
+    type: var
+    var_name: L:COWANSIM_ENGINE_Idle_1_Released
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Lever_Percent
+    interpolate: Default
 # -
 #   type: var
 #   var_name: L:initSysChk
@@ -265,31 +344,19 @@ shared:
 #   var_name: L:LOCAL_milliBar_to_inHg
   -
     type: var
-    var_name: L:exitRearR
-  -
-    type: var
-    var_name: L:206SearchLightDown
-  -
-    type: var
     var_name: L:exitFrontR
-  -
-    type: var
-    var_name: L:206SearchLightRight
-  -
-    type: var
-    var_name: L:windowVentPilot
   -
     type: var
     var_name: L:exitRearL
   -
     type: var
+    var_name: L:exitRearR
+  -
+    type: var
     var_name: L:exitFrontL
 # -
 #   type: var
-#   var_name: L:hideHeatBlur
-# -
-#   type: var
-#   var_name: L:hideDownwash
+#   var_name: L:COWANSIM_Throttle_1_Lever_Position
 # -
 #   type: var
 #   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
@@ -299,9 +366,6 @@ shared:
   -
     type: var
     var_name: L:trimRelease2
-# -
-#   type: var
-#   var_name: L:rotorBrakeActiveOverwrite
   -
     type: var
     var_name: L:IgniterRelight
@@ -323,27 +387,88 @@ shared:
   -
     type: var
     var_name: L:testRadioAlt
-  -
-    type: var
-    var_name: L:buttonHornMute
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_DTOKey
   -
     type: var
     var_name: L:buttonAnnTest
 # -
 #   type: var
 #   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InactiveVar
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
   -
     type: var
-    var_name: L:headSetR
-  -
-    type: var
-    var_name: L:headSetL
-  -
-    type: var
-    var_name: L:hidePatient
-  -
-    type: var
-    var_name: L:hideMedic
+    var_name: L:COWANSIM_Throttle_1_Position
+    interpolate: Default
 
 server:
   -

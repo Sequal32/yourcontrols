@@ -16,6 +16,29 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Avionics 1
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:26
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 26
+  - # Avionics 2
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:27
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 27
+  - # Avionics Bus Tie
+    type: CustomCalculator
+    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
+    set: 9 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  - # Avionics STBY
+    type: CustomCalculator
+    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
+    set: 11 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
   - # Electrical
     type: ToggleSwitch
     var_name: A:ELECTRICAL MASTER BATTERY:1
@@ -40,26 +63,20 @@ shared:
   -
     type: event
     event_name: ALTERNATOR_OFF
-  -
+
+  - # EPU Starter
     type: ToggleSwitch
     var_name: A:EXTERNAL POWER ON:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 1
-  -
+  - # EPU Bus
     type: CustomCalculator
     get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
     set: 1 12 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 12 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
-    set: 11 12 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:11, Bool)
-    set: 11 1 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
-  -
+
+  - # Starter
     type: ToggleSwitch
     var_name: A:GENERAL ENG STARTER:1
     var_units: Bool
@@ -68,29 +85,6 @@ shared:
   -
     type: event
     event_name: SET_STARTER1_HELD
-
-  - # Avionics 1
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:26
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 26
-  - # Avionics 2
-    type: ToggleSwitch
-    var_name: A:CIRCUIT SWITCH ON:27
-    var_units: Bool
-    var_type: bool
-    event_name: ELECTRICAL_CIRCUIT_TOGGLE
-    event_param: 27
-  - # Avionics Bus Tie
-    type: CustomCalculator
-    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
-    set: 9 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  - # Avionics STBY
-    type: CustomCalculator
-    get: 8 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
-    set: 11 8 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
   - # Lights
     type: NumSet

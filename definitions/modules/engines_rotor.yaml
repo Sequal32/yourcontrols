@@ -1,6 +1,44 @@
 shared:
   -
     type: NumSet
+    var_name: A:RECIP ENG PRIMER:1
+    var_units: Percent
+    var_type: i32
+    event_name: TOGGLE_PRIMER1
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:RECIP ENG PRIMER:2
+    var_units: Percent
+    var_type: i32
+    event_name: TOGGLE_PRIMER2
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: ENGINE_MASTER_1_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: ENGINE_MASTER_2_TOGGLE
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET1
+  -
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:2
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET2
+  -
+    type: NumSet
     var_name: A:GENERAL ENG MIXTURE LEVER POSITION:1
     var_units: Position 16k
     var_type: f64
@@ -18,9 +56,8 @@ master:
   -
     type: NumSet
     var_name: A:COLLECTIVE HANDLE POSITION
-    var_units: Position 16k
+    var_units: Position 32k
     var_type: f64
-    multiply_by: 2
     add_by: -16384
     event_name: AXIS_COLLECTIVE_SET
     unreliable: true

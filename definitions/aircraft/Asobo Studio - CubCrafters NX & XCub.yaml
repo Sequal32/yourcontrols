@@ -1,21 +1,42 @@
-# Version 0.1.100 X / 0.1.40 NX
+# Version 0.1.107 X / 0.1.46 NX
 
 include:
-  - definitions/modules/Instruments/AS_G3X_Touch.yaml
+  - definitions/modules/Instruments/WT_G3X_Touch.yaml
   - definitions/modules/controls.yaml
-  - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
   - definitions/modules/engines.yaml
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/handling.yaml
-  - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/trim.yaml
 
 shared:
+  - # Deice
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+    unreliable: true
+
+  - # Lights (no landing)
+    type: NumSet
+    var_name: A:LIGHT NAV:1
+    var_units: Bool
+    var_type: f64
+    event_name: NAV_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:1
+    var_units: Bool
+    var_type: f64
+    event_name: STROBES_SET
+    event_param: 1
+
   - # Interior
     type: NumSet
     var_name: A:LIGHT PANEL:1
@@ -55,6 +76,9 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 7
     index_reversed: true
+  -
+    type: var
+    var_name: L:LIGHTING_POTENTIOMETER_7
 
 server:
   -

@@ -1,7 +1,7 @@
-# Version 1.0.5
+# Version 1.1.0
 
 include:
-  - definitions/modules/Instruments/AS_G3X_Touch.yaml
+  - definitions/modules/Instruments/WT_G3X_Touch.yaml
   - definitions/modules/Instruments/AS_GNS530.yaml
   - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/Instruments/TDS_GTNXi.yaml
@@ -121,6 +121,12 @@ shared:
 
   - # LVAR's (trimmed)
     type: var
+    var_name: L:PILOT_Hidden
+  -
+    type: var
+    var_name: L:COPILOT_Hidden
+  -
+    type: var
     var_name: L:ELECTRICAL_Switch_TwoBatteries
   -
     type: var
@@ -182,6 +188,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:HANDLING_AILERON_ELEVATOR_Trim_Position
   -
     type: var
     var_name: L:SWS_UNSTOW_TABLET
@@ -190,88 +199,127 @@ shared:
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PANEL_L
   -
     type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_L_Horizontal
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_L_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_L_Rotator
+    unreliable: true
+  -
+    type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PANEL_R
   -
     type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_R_Horizontal
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_R_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_R_Rotator
+    unreliable: true
+  -
+    type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_OVERHEAD_L1
+# - # Temp disable max characters
+#   type: var
+#   var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L1_Horizontal
+#   unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L1_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L1_Rotator
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_OVERHEAD_R1
+# - # Temp disable max characters
+#   type: var
+#   var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R1_Horizontal
+#   unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R1_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R1_Rotator
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_OVERHEAD_L2
+# - # Temp disable max characters
+#   type: var
+#   var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L2_Horizontal
+#   unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L2_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L2_Rotator
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_OVERHEAD_R2
+# - # Temp disable max characters
+#   type: var
+#   var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R2_Horizontal
+#   unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R2_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R2_Rotator
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_Knob_Front_Heat
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_Knob_Rear_Heat
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_Knob_Fresh_Air
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_Knob_AC_Fan
+    unreliable: true
   -
     type: var
     var_name: L:GMA340_ANNUNCIATOR_TEST
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_Brightness
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_INSTALLED
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Value_1
-# -
-#   type: var
-#   var_name: L:AS430_ManualBrightness_Enabled_1
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_LKnobInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_LKnobDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_LKnobCRSR
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_RKnobInnerInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_RKnobInnerDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_RKnobCRSR
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_RKnobOuterInc
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_RKnobOuterDec
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_HomeKey
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_DTOKey
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_NavSrc
   -
     type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
+    var_name: L:GMA340_Knob_Squelch_Pilot_1
+  -
+    type: var
+    var_name: L:GMA340_Knob_Volume_Pilot_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:GMA340_Knob_Squelch_Copilot_1
+  -
+    type: var
+    var_name: L:GMA340_Knob_Volume_Copilot_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:GMA340_Pull_Volume_Copilot_1
   -
     type: var
     var_name: L:SWS_ELECTRICAL_Push_ELT_RESET
@@ -281,63 +329,74 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_Magneto_Starter_IsHeld
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverMixtureHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverPropellerHidden1
-# -
-#   type: var
-#   var_name: L:AXIS_ELEVATOR_TRIM
-# -
-#   type: var
-#   var_name: L:sound_aural_elt_tone
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_VGlide
-# -
-#   type: var
-#   var_name: L:TDSGTNXI_GlideRatio
-# -
-#   type: var
-#   var_name: L:TDSGTNXI650U1_ElectricalCircuit
-# -
-#   type: var
-#   var_name: L:PMS50_GTN650_INSTALLED
-# -
-#   type: var
-#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
-# -
-#   type: var
-#   var_name: L:AS430_HIDDEN
-# -
-#   type: var
-#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
-  -
-    type: var
-    var_name: L:SWS_MISC_Brochure_unstow
-  -
-    type: var
-    var_name: L:SWS_MISC_Brochure_flip
   -
     type: var
     var_name: L:SWS_MISC_SunVisor_Adjust_1
   -
     type: var
     var_name: L:SWS_MISC_SunVisor_Adjust_2
+  -
+    type: var
+    var_name: L:SWS_MISC_SeatAdjust_Pilot
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_MISC_SeatAdjust_Copilot
+    unreliable: true
+  - # Brochure
+    type: var
+    var_name: L:Object_1
 # -
 #   type: var
-#   var_name: L:SWS_MISC_Fan_Rotation_1_Angle
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_12
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:AXIS_ELEVATOR_TRIM
+# -
+#   type: var
+#   var_name: L:sound_aural_elt_tone
+  -
+    type: var
+    var_name: L:SWS_MISC_Brochure_unstow
+  -
+    type: var
+    var_name: L:SWS_MISC_Brochure_flip
 # -
 #   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_1_RPM_Target
@@ -346,22 +405,16 @@ shared:
 #   var_name: L:SWS_MISC_Fan_Rotation_1_RPM
 # -
 #   type: var
-#   var_name: L:SWS_MISC_Fan_Rotation_2_Angle
+#   var_name: L:SWS_MISC_Fan_Rotation_1_Angle
 # -
 #   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_2_RPM_Target
 # -
 #   type: var
 #   var_name: L:SWS_MISC_Fan_Rotation_2_RPM
-  -
-    type: var
-    var_name: L:SWS_MISC_Armrest_1
-  -
-    type: var
-    var_name: L:SWS_MISC_SeatAdjust_Pilot
-  -
-    type: var
-    var_name: L:SWS_MISC_SeatAdjust_Copilot
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_2_Angle
 
 server:
   -

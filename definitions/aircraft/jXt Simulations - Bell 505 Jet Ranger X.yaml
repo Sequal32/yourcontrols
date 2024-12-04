@@ -1,0 +1,395 @@
+# Version 0.3.1
+
+include:
+  - definitions/modules/Instruments/AS_G1000.yaml
+  - definitions/modules/Instruments/AS_GTR225.yaml
+  - definitions/modules/controls_rotor.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/electrical.yaml
+  - definitions/modules/engines_rotor.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/rotorcraft.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT
+    event_param: 2
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT
+    event_param: 3
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT
+    event_param: 4
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:Bell_429_NESS_BUS
+  -
+    type: var
+    var_name: L:Bell_429_CTRDU_EMER_PWR
+  -
+    type: var
+    var_name: L:switchturnCoord
+  -
+    type: var
+    var_name: L:switchLtsCabinPass
+  -
+    type: var
+    var_name: L:switchGenerator
+  -
+    type: var
+    var_name: L:switchPrimaryCompassAdjust
+# -
+#   type: var
+#   var_name: L:comAdjInit
+# -
+#   type: var
+#   var_name: L:XmsnPressCorr
+# -
+#   type: var
+#   var_name: L:XmsnPressInit
+# -
+#   type: var
+#   var_name: L:XmsnTempCorr
+# -
+#   type: var
+#   var_name: L:dsd_bell4xx_id_01
+# -
+#   type: var
+#   var_name: L:dsd_bell4xx_id_02
+# -
+#   type: var
+#   var_name: L:B505_overspeed
+# -
+#   type: var
+#   var_name: L:B505_rtrbrake
+# -
+#   type: var
+#   var_name: L:dh
+# -
+#   type: var
+#   var_name: L:initSysChk
+# -
+#   type: var
+#   var_name: L:chrono init
+# -
+#   type: var
+#   var_name: L:Offset chrono
+# -
+#   type: var
+#   var_name: L:beaconlightRotation
+  -
+    type: var
+    var_name: L:CollectiveGrip
+# -
+#   type: var
+#   var_name: L:collGripState
+# -
+#   type: var
+#   var_name: L:initCollGrip
+# -
+#   type: var
+#   var_name: L:torqueCheck
+# -
+#   type: var
+#   var_name: L:fuelPressCheck
+# -
+#   type: var
+#   var_name: L:ampCheck
+# -
+#   type: var
+#   var_name: L:mgtCheck
+# -
+#   type: var
+#   var_name: L:fuelQtyCheck
+# -
+#   type: var
+#   var_name: L:ngCheck
+# -
+#   type: var
+#   var_name: L:xmsnPressCheck
+# -
+#   type: var
+#   var_name: L:XmsnTempInit
+# -
+#   type: var
+#   var_name: L:xmsnTempCheck
+# -
+#   type: var
+#   var_name: L:engPressCheck
+# -
+#   type: var
+#   var_name: L:engTempCheck
+# -
+#   type: var
+#   var_name: L:initFlag
+# -
+#   type: var
+#   var_name: L:rotorCheck
+# -
+#   type: var
+#   var_name: L:nrCheck
+  -
+    type: var
+    var_name: L:compassAdjustValue
+  -
+    type: var
+    var_name: L:switchAttGyro
+# -
+#   type: var
+#   var_name: L:switchSound
+# -
+#   type: var
+#   var_name: L:initPanelLight
+# -
+#   type: var
+#   var_name: L:initAttGyro
+# -
+#   type: var
+#   var_name: L:initTurnCoord
+# -
+#   type: var
+#   var_name: L:initInstrLight
+# -
+#   type: var
+#   var_name: L:initCabPass
+# -
+#   type: var
+#   var_name: L:initGen
+# -
+#   type: var
+#   var_name: L:hornFadecTest
+  -
+    type: var
+    var_name: L:hornMuted
+# -
+#   type: var
+#   var_name: L:hornCaution
+# -
+#   type: var
+#   var_name: L:initCounter
+  -
+    type: var
+    var_name: L:HYD_ON
+  -
+    type: var
+    var_name: L:B505start
+  -
+    type: var
+    var_name: L:fuelvalve
+  -
+    type: var
+    var_name: L:twistGrip
+# -
+#   type: var
+#   var_name: L:collectiveSound
+  -
+    type: var
+    var_name: L:ENG_VIS
+  -
+    type: var
+    var_name: L:INT_LIGHT
+# -
+#   type: var
+#   var_name: L:windowVentSound
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:PFD_CDI_Source
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:PFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:AS1000_MID_Display_Backup_Active
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedNavIndex
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_SelectedComIndex
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapZoomRange
+# -
+#   type: var
+#   var_name: L:MFD_InnerMap_MapShowCursor
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_PFD_Brightness_IsAuto
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness
+# -
+#   type: var
+#   var_name: L:AS1000_MFD_Brightness_IsAuto
+# -
+#   type: var
+#   var_name: L:505RPMWarning
+# -
+#   type: var
+#   var_name: L:BATT_PREV_STATE
+# -
+#   type: var
+#   var_name: L:BATT_DELAY
+# -
+#   type: var
+#   var_name: L:AS225_Brightness_1
+  -
+    type: var
+    var_name: L:PILOT_VISIBILITY
+  -
+    type: var
+    var_name: L:COPILOT_VISIBILITY
+  -
+    type: var
+    var_name: L:switchCabinLight
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK CENTER LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:8
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:9
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - Transponder0
+  - Transponder1
+  - Transponder2
+  - Transponder3
+  - Transponder4
+  - Transponder5
+  - Transponder6
+  - Transponder7
+  - Transponder8
+  - Transponder9
+  - TransponderVFR

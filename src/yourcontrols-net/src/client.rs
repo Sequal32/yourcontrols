@@ -101,10 +101,10 @@ impl TransferStruct {
                 self.server_tx.try_send(ReceiveMessage::Event(Event::ConnectionEstablished)).ok();
             }
             Payloads::HostingReceived { session_id } => {
-                self.session_id = session_id.clone();
+                self.session_id.clone_from(session_id);
             }
             Payloads::AttemptConnection { peers } => {
-                self.received_address = peers.clone();
+                self.received_address.clone_from(peers) ;
             }
         }
 

@@ -1,4 +1,4 @@
-# Version 2.0.51 (A/B)
+# Version 2.0.51
 
 include:
   - definitions/modules/Instruments/AS_GNS430.yaml
@@ -11,14 +11,7 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
-  -
-    type: ToggleSwitch
-    var_name: A:GPS DRIVES NAV1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_GPS_DRIVES_NAV1
-    cancel_h_events: true
-  -
+  - # Brake
     type: ToggleSwitch
     var_name: A:BRAKE PARKING POSITION
     var_units: Bool
@@ -74,6 +67,14 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 7
+
+  - # GPS
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
 
   - # LVAR's
     type: var
@@ -2645,9 +2646,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_Pitot_2
-# -
-#   type: var
-#   var_name: L:XMLVAR_Autopilot_1_Status
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
 # -
 #   type: var
 #   var_name: L:XMLVAR_AirSpeedIsInMach

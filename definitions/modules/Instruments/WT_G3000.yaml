@@ -1,4 +1,5 @@
-# Version 1.1.14
+# Garmin G3000/G5000 by Working Title.
+# Version 1.1.19
 
 shared:
   - # Autopilot
@@ -16,13 +17,6 @@ shared:
       equals:
         Bool: false
     unreliable: true
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT ALTITUDE LOCK
-    var_units: Bool
-    var_type: bool
-    event_name: AP_ALT_HOLD_ON
-    off_event_name: AP_ALT_HOLD_OFF
   -
     type: NumSet
     var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
@@ -44,22 +38,14 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: AUTOPILOT_DISENGAGE_SET
-# - # Breaks autopilot
-#   type: ToggleSwitch
-#   var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
-#   var_units: Bool
-#   var_type: bool
-#   event_name: TOGGLE_FLIGHT_DIRECTOR
-#   event_param: 1
-#   use_calculator: true
-# -
-#   type: ToggleSwitch
-#   var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
-#   var_units: Bool
-#   var_type: bool
-#   event_name: TOGGLE_FLIGHT_DIRECTOR
-#   event_param: 2
-#   use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
@@ -161,6 +147,9 @@ shared:
 
   - # Events no simvar
     type: event
+    event_name: AP_ALT_HOLD
+  -
+    type: event
     event_name: AP_APR_HOLD
   -
     type: event
@@ -188,6 +177,7 @@ shared:
     var_type: bool
     event_name: XPNDR_IDENT_ON
     off_event_name: XPNDR_IDENT_OFF
+    event_param: 1
     cancel_h_events: true
   -
     type: NumSet
@@ -195,6 +185,7 @@ shared:
     var_units: Bco16
     var_type: i32
     event_name: XPNDR_SET
+    event_param: 1
     cancel_h_events: true
 
   - # LVAR's
@@ -324,37 +315,18 @@ shared:
 #   var_name: L:WT3000_Fuel_Remaining
 
 ignore:
-# STBY Vertical
-  - WTG3000_GTC_1#1188903370
-  - WTG3000_GTC_1#2066884492
-  - WTG3000_GTC_1#-1555674680
-  - WTG3000_GTC_1#-1555674681
+  - AP_UP
+  - AP_DN
+  - AP_BARO_Up
+  - AP_BARO_Down
+  - AP_KNOB_Up
+  - AP_KNOB_Down
+  - Generic_Autopilot_Manual_Off
 
-  - WTG3000_GTC_2#1188903370
-  - WTG3000_GTC_2#2066884492
-  - WTG3000_GTC_2#-1555674680
-  - WTG3000_GTC_2#-1555674681
+  - AS3000_PFD_1_BARO_INC
+  - AS3000_PFD_1_BARO_DEC
+  - AS3000_PFD_2_BARO_INC
+  - AS3000_PFD_2_BARO_DEC
 
-  - WTG3000_GTC_3#1188903370
-  - WTG3000_GTC_3#2066884492
-  - WTG3000_GTC_3#-1555674680
-  - WTG3000_GTC_3#-1555674681
-
-  - WTG3000_GTC_4#1188903370
-  - WTG3000_GTC_4#2066884492
-  - WTG3000_GTC_4#-1555674680
-  - WTG3000_GTC_4#-1555674681
-
-# XPDR Vertical
-  - WTG3000_GTC_2#1091177850
-  - WTG3000_GTC_2#256782690
-
-  - WTG3000_GTC_3#1091177850
-  - WTG3000_GTC_3#256782690
-
-# XPDR Horizontal
-  - WTG3000_GTC_1#-1082943814
-  - WTG3000_GTC_1#-1083241709
-
-  - WTG3000_GTC_2#-1082943814
-  - WTG3000_GTC_2#-1083241709
+  - AS3000_PFD_1_SOFTKEYS_7
+  - AS3000_PFD_2_SOFTKEYS_7

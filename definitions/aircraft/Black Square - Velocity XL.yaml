@@ -26,15 +26,15 @@ shared:
     event_name: ELECTRICAL_CIRCUIT_TOGGLE
     event_param: 36
 
-  - # Inflate Panel
+  - # Door Seal Power
     type: CustomCalculator
     get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
     set: 4 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
-  -
-    type: CustomCalculator
-    get: 5 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:35, Bool)
-    set: 35 5 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
-  -
+# - # Door Seal Inflate/Deflate (broken and sim errors)
+#   type: CustomCalculator
+#   get: 5 (>A:BUS LOOKUP INDEX, Number) (A:CIRCUIT CONNECTION ON:35, Bool)
+#   set: 35 5 (>K:2:ELECTRICAL_BUS_TO_CIRCUIT_CONNECTION_TOGGLE)
+  - # Door Seal Breaker
     type: CustomCalculator
     get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
     set: 4 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
@@ -82,9 +82,9 @@ shared:
   - # LVAR's (trimmed)
     type: var
     var_name: L:BKSQ_Turbocharged
-  -
-    type: var
-    var_name: L:BKSQ_TurbochargerSound
+# -
+#   type: var
+#   var_name: L:BKSQ_TurbochargerSound
 # -
 #   type: var
 #   var_name: L:LOCAL_milliBar_to_inHg

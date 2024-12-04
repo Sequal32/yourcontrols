@@ -1,4 +1,4 @@
-# Version 1.1.2 (same as Asobo A320)
+# Version 1.1.8 (based on Asobo A320)
 
 include:
   - definitions/aircraft/Asobo Studio - Airbus A320neo.yaml
@@ -15,13 +15,7 @@ shared:
     var_name: L:LVFR_ADIRS_FORCE_ALIGN
   -
     type: var
-    var_name: L:LVFR_IRS_1_SWITCH_STATE
-  -
-    type: var
-    var_name: L:LVFR_IRS_2_SWITCH_STATE
-  -
-    type: var
-    var_name: L:LVFR_IRS_3_SWITCH_STATE
+    var_name: L:LVFR_Source_Nav1
   -
     type: var
     var_name: L:EFB_ON
@@ -63,10 +57,16 @@ shared:
     var_name: L:FLIGHT_DECK_DOOR
   -
     type: var
-    var_name: L:LVFR_Source_Nav1
+    var_name: L:LVFR_Source_Nav2
   -
     type: var
-    var_name: L:LVFR_Source_Nav2
+    var_name: L:LVFR_IRS_1_SWITCH_STATE
+  -
+    type: var
+    var_name: L:LVFR_IRS_2_SWITCH_STATE
+  -
+    type: var
+    var_name: L:LVFR_IRS_3_SWITCH_STATE
 # -
 #   type: var
 #   var_name: L:LVFR_RMI
@@ -91,27 +91,78 @@ shared:
 # -
 #   type: var
 #   var_name: L:LVFR_SECTOR_TEMP_AFT
-  -
-    type: var
-    var_name: L:LVFR_SYSTEM_SIMBRIEF_IMPORTER_STATE
 # -
 #   type: var
 #   var_name: L:LVFR_EFB_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:LVFR_EFB_State
+  -
+    type: var
+    var_name: L:LVFR_SYSTEM_SIMBRIEF_IMPORTER_STATE
 # -
 #   type: var
-#   var_name: L:LVFR_DMEL_ScreenLuminosity
+#   var_name: L:SoundSystems_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:LVFR_DMEL_State
+#   var_name: L:SoundSystems_State
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:Eng1Switch
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:Eng2Switch
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_BAT1
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_BAT2
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_BAT_BOTH_POWERED
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_AC_PWR
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_LDG
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_APU_BUS
+# -
+#   type: var
+#   var_name: L:LVFR_AUDIO_GEAR_LEVER_POS
+# -
+#   type: var
+#   var_name: L:LVFR_GPWS_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_GPWS_State
+  -
+    type: var
+    var_name: L:LVFR_CDU_MDA
+  -
+    type: var
+    var_name: L:LVFR_CDU_DH
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:MDA
+# -
+#   type: var
+#   var_name: L:LVFR_Audio:DH
 # -
 #   type: var
 #   var_name: L:LVFR_DMER_ScreenLuminosity
 # -
 #   type: var
 #   var_name: L:LVFR_DMER_State
+# -
+#   type: var
+#   var_name: L:LVFR_DMEL_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LVFR_DMEL_State
 
 server:
   -

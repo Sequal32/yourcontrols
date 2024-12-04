@@ -1,4 +1,4 @@
-# Version 0.1.109 / 1.0.0 Enhanced
+# Version 0.1.110 / 1.0.0 Enhanced
 
 include:
   - definitions/modules/Instruments/AS_G3000.yaml
@@ -8,7 +8,6 @@ include:
   - definitions/modules/general.yaml
   - definitions/modules/lights.yaml
   - definitions/modules/navigation.yaml
-  - definitions/modules/pressurization.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
   - definitions/modules/trim.yaml
@@ -75,6 +74,19 @@ shared:
     get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
     set: 6 5 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
 
+  - # Engines
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER1_SET
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER2_SET
+
   - # Generators (not syncing)
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
@@ -105,19 +117,6 @@ shared:
     event_name: REQUEST_POWER_SUPPLY
     use_calculator: true
 
-  - # Engines
-    type: NumSet
-    var_name: A:GENERAL ENG STARTER:1
-    var_units: Bool
-    var_type: i32
-    event_name: STARTER1_SET
-  -
-    type: NumSet
-    var_name: A:GENERAL ENG STARTER:2
-    var_units: Bool
-    var_type: i32
-    event_name: STARTER2_SET
-
   - # Handling
     type: NumSet
     var_name: A:BRAKE PARKING POSITION
@@ -142,6 +141,13 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: GEAR_SET
+
+  - # Pressurization
+    type: NumSet
+    var_name: A:PRESSURIZATION DUMP SWITCH
+    var_units: Bool
+    var_type: i32
+    event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
 
   - # Lights
     type: NumSet
@@ -281,10 +287,7 @@ shared:
     event_param: 20
     index_reversed: true
 
-# - # LVAR's
-#   type: var
-#   var_name: L:WT_TOGA_ACTIVE
-  -
+  - # LVAR's
     type: var
     var_name: L:WT_LNG_PTCU_MODE
 # -
@@ -324,6 +327,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_SpeedIsManuallySet
+# -
+#   type: var
+#   var_name: L:WT_TOGA_ACTIVE
 # -
 #   type: var
 #   var_name: L:XMLVAR_BatterySTBY_SwitchState
@@ -502,8 +508,11 @@ shared:
 #   type: var
 #   var_name: L:XMLVAR_YokeHidden2
   -
-    type: var
+    type: NumSet
     var_name: L:WT_LNG_SPOILERS_INPUT
+    var_type: f64
+    multiply_by: 16384
+    event_name: SPOILERS_SET
     unreliable: true
   -
     type: NumSet
@@ -576,48 +585,48 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTG3000_Pfd_Backlight:2
-  -
-    type: var
-    var_name: L:WT_LNG_L_MAIN_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_INT1_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_INT2_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_MISSION_EMER_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_EMER_BATT_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_MISSION_GEN_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_MAIN_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_INT1_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_INT2_MISSION_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_MISSION_EMER_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_BUS_TIE_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_EMER_BATT_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_R_MISSION_GEN_CONN
-  -
-    type: var
-    var_name: L:WT_LNG_L_EMER_GEN_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_MAIN_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_INT1_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_INT2_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_MISSION_EMER_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_EMER_BATT_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_MISSION_GEN_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_MAIN_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_INT1_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_INT2_MISSION_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_MISSION_EMER_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_BUS_TIE_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_EMER_BATT_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_R_MISSION_GEN_CONN
+# -
+#   type: var
+#   var_name: L:WT_LNG_L_EMER_GEN_CONN
   -
     type: var
     var_name: L:XMLVAR_Autopilot_1_Status
@@ -668,46 +677,13 @@ shared:
 #   var_name: L:YourControlsPanelId
 # -
 #   type: var
+#   var_name: L:Garmin_Need_OBS_Convert_DirectTo
+# -
+#   type: var
 #   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:Generic_Master_Warning_Active
-# -
-#   type: var
-#   var_name: L:WT_LNavData_DTK_True
-# -
-#   type: var
-#   var_name: L:WT_LNavData_DTK_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_XTK
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_Next_DTK_True
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_CDI_Scale
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Bearing_True
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Waypoint_Distance
-# -
-#   type: var
-#   var_name: L:WT_LNavData_Destination_Distance
-# -
-#   type: var
-#   var_name: L:WTGarmin_LNavData_Egress_Distance
 # -
 #   type: var
 #   var_name: L:WTAP_LNav_DTK
@@ -750,6 +726,45 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_XTK
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_True
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_CDI_Scale
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Distance
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Destination_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Egress_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_ToFrom
 # -
 #   type: var
 #   var_name: L:WTAP_VNav_TOD_Leg_Index
@@ -833,16 +848,13 @@ shared:
 #   var_name: L:WT_MINIMUMS_MODE
 # -
 #   type: var
+#   var_name: L:WTAP_LNav_Obs_Active
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Obs_Course
+# -
+#   type: var
 #   var_name: L:WTAP_GP_Approach_Mode
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro1_ForcedToSTD
-# -
-#   type: var
-#   var_name: L:XMLVAR_Baro1_SavedPressure
-# -
-#   type: var
-#   var_name: L:WTFltTimer_Value:2
 # -
 #   type: var
 #   var_name: L:WTG3000_PFD_1_ScreenLuminosity
@@ -905,16 +917,25 @@ shared:
 #   var_name: L:HourMeter_State
 # -
 #   type: var
-#   var_name: L:XMLVAR_Baro2_ForcedToSTD
+#   var_name: L:XMLVAR_Baro1_ForcedToSTD
 # -
 #   type: var
-#   var_name: L:XMLVAR_Baro2_SavedPressure
+#   var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value:2
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveOrigin
 # -
 #   type: var
 #   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_SavedPressure
 # -
 #   type: var
 #   var_name: L:FADEC_OIL_TEMP_LOW_AMBER_1
@@ -1046,6 +1067,9 @@ shared:
 #   var_name: L:WTG3000_MFD_1_Avionics_Status
 # -
 #   type: var
+#   var_name: L:WTG3000_GTC_3_Avionics_Status
+# -
+#   type: var
 #   var_name: L:WTG3000_PFD_1_Avionics_Status
 # -
 #   type: var
@@ -1056,9 +1080,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:WTG3000_GTC_2_Avionics_Status
-# -
-#   type: var
-#   var_name: L:WTG3000_GTC_3_Avionics_Status
 # -
 #   type: var
 #   var_name: L:WTG3000_GTC_4_Avionics_Status
@@ -1178,3 +1199,47 @@ ignore:
   - WT_Longitude_Throttle_1_Dec
   - WT_Longitude_Throttle_2_Inc
   - WT_Longitude_Throttle_2_Dec
+
+# Audio Box
+  - WTG3000_GTC_1#-1430431224
+  - WTG3000_GTC_2#526748149
+  - WTG3000_GTC_2#-1430431223
+  - WTG3000_GTC_3#526748149
+  - WTG3000_GTC_3#-1430431223
+  - WTG3000_GTC_4#-1430431224
+
+# STBY Box
+  - WTG3000_GTC_1#1188903370
+  - WTG3000_GTC_1#1468959928
+  - WTG3000_GTC_1#2066884492
+  - WTG3000_GTC_1#-1171069062
+  - WTG3000_GTC_1#-1555674680
+  - WTG3000_GTC_1#-1555674681
+  - WTG3000_GTC_2#1188903370
+  - WTG3000_GTC_2#1468959928
+  - WTG3000_GTC_2#2066884492
+  - WTG3000_GTC_2#-1171069062
+  - WTG3000_GTC_2#-1555674680
+  - WTG3000_GTC_2#-1555674681
+  - WTG3000_GTC_3#1188903370
+  - WTG3000_GTC_3#1468959928
+  - WTG3000_GTC_3#2066884492
+  - WTG3000_GTC_3#-1171069062
+  - WTG3000_GTC_3#-1555674680
+  - WTG3000_GTC_3#-1555674681
+  - WTG3000_GTC_4#1188903370
+  - WTG3000_GTC_4#1468959928
+  - WTG3000_GTC_4#2066884492
+  - WTG3000_GTC_4#-1171069062
+  - WTG3000_GTC_4#-1555674680
+  - WTG3000_GTC_4#-1555674681
+
+# XPNDR Box
+  - WTG3000_GTC_2#1091177850
+  - WTG3000_GTC_2#256782690
+  - WTG3000_GTC_3#1091177850
+  - WTG3000_GTC_3#256782690
+
+# XPNDR Mode Box
+  - WTG3000_GTC_2#-1430431224
+  - WTG3000_GTC_3#-1430431224

@@ -1,0 +1,392 @@
+# Version 1.8.2
+
+include:
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_GTX330.yaml
+  - definitions/modules/autopilot.yaml
+  - definitions/modules/controls.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
+  - definitions/modules/lights.yaml
+  - definitions/modules/magnetos.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:21
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 21
+
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT
+    var_units: Bool
+    var_type: bool
+    event_name: PITOT_HEAT_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR2
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ELECT_FUEL_PUMP1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ELECT_FUEL_PUMP2
+  -
+    type: ToggleSwitch
+    var_name: A:FUEL CROSS FEED
+    var_units: Bool
+    var_type: bool
+    event_name: CROSS_FEED_TOGGLE
+
+  - # Starters
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER2
+
+  - # Interior
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:Clock Stopwatch
+# -
+#   type: var
+#   var_name: L:Stopwatch Last Abs Time
+  - # Needed for reset
+    type: var
+    var_name: L:Stopwatch Seconds Elapsed
+    var_type: i32
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:Clock ST-STP Depressed
+  -
+    type: var
+    var_name: L:Clock Mode
+  -
+    type: var
+    var_name: L:Clock DAT Function
+  -
+    type: var
+    var_name: L:EXIT_OPEN_DOOR
+# -
+#   type: var
+#   var_name: L:OPEN1
+  -
+    type: var
+    var_name: L:REALISTIC_GEAR_OPTION
+# -
+#   type: var
+#   var_name: L:HAND_GEAR_ACTIVE
+  -
+    type: var
+    var_name: L:LANDING_GEAR_LEVER
+  -
+    type: var
+    var_name: L:FLAPS_LEVER
+# -
+#   type: var
+#   var_name: L:HYDRAULIC PRESSURE:1
+# -
+#   type: var
+#   var_name: L:HAND_GEAR_CYCLE
+# -
+#   type: var
+#   var_name: L:HAND_FLAPS_CYCLE
+# -
+#   type: var
+#   var_name: L:HAND_FLAPS_ACTIVE
+  -
+    type: var
+    var_name: L:APR_SWITCH
+  -
+    type: var
+    var_name: L:TAILWHEEL_LOCK
+  -
+    type: var
+    var_name: L:lever_fuel_cutoff0
+  -
+    type: var
+    var_name: L:lever_fuel_cutoff1
+  -
+    type: var
+    var_name: L:chocks
+  -
+    type: var
+    var_name: L:Plugs
+  -
+    type: var
+    var_name: L:Tie_Down
+# -
+#   type: var
+#   var_name: L:magneto1
+# -
+#   type: var
+#   var_name: L:magneto2
+# -
+#   type: var
+#   var_name: L:DME2_MINOUT
+# -
+#   type: var
+#   var_name: L:DME3_MINOUT
+  -
+    type: var
+    var_name: L:DME_POWER
+  -
+    type: var
+    var_name: L:DME_RMT
+  -
+    type: var
+    var_name: L:XMLVAR_AudioPanel
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:ATTITUDE_BARS
+# -
+#   type: var
+#   var_name: L:kohlsman_Knob
+# -
+#   type: var
+#   var_name: L:DME3WHOLE_ACTIVE
+# -
+#   type: var
+#   var_name: L:DME3_FREQ_WHOLE
+# -
+#   type: var
+#   var_name: L:DME3_FREQ_FRACT
+# -
+#   type: var
+#   var_name: L:DME3_FREQ
+# -
+#   type: var
+#   var_name: L:DME3FRACT_ACTIVE
+  -
+    type: var
+    var_name: L:GEAR_LOCK
+  -
+    type: var
+    var_name: L:FLAP_LOCK
+  -
+    type: var
+    var_name: L:GROUND_KNOB
+  -
+    type: var
+    var_name: L:Cabin_Air_switch
+  -
+    type: var
+    var_name: L:fan_switch
+  -
+    type: var
+    var_name: L:REGULATOR
+  -
+    type: var
+    var_name: L:CLIPBOARD
+# -
+#   type: var
+#   var_name: L:MOUSEPOS
+  -
+    type: var
+    var_name: L:WINDOW_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:WINDOW_2
+    unreliable: true
+  -
+    type: var
+    var_name: L:EXIT_OPEN4
+  -
+    type: var
+    var_name: L:EMERGENCY_GEAR
+# -
+#   type: var
+#   var_name: L:CLKMODES
+# -
+#   type: var
+#   var_name: L:Clock Mode Depressed
+# -
+#   type: var
+#   var_name: L:Stopwatch Seconds T0
+  -
+    type: var
+    var_name: L:CLKOAT
+# -
+#   type: var
+#   var_name: L:Clock OAT Depressed
+# -
+#   type: var
+#   var_name: L:STSP
+# -
+#   type: var
+#   var_name: L:YOKE
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:LIGHTING_PEDESTRAL_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:ANIMFAN
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+  -
+    type: var
+    var_name: L:Fuel Cross Feed
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:6
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:7
+    var_units: Pounds
+    var_type: f64
+    unreliable: true

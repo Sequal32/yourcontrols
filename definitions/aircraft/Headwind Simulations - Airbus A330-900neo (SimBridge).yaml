@@ -69,6 +69,25 @@ shared:
     event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
     cancel_h_events: true
 
+  - # Brakes
+    type: NumSet
+    var_name: L:A32NX_LEFT_BRAKE_PEDAL_INPUT
+    var_type: f64
+    multiply_by: 327.68
+    add_by: -16384
+    event_name: AXIS_LEFT_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: L:A32NX_RIGHT_BRAKE_PEDAL_INPUT
+    var_type: f64
+    multiply_by: 327.68
+    add_by: -16384
+    event_name: AXIS_RIGHT_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+
   - # Deice
     type: ToggleSwitch
     var_name: A:ENG ANTI ICE:1
@@ -491,8 +510,9 @@ shared:
     type: NumSet
     var_name: A:TRANSPONDER CODE:1
     var_units: Bco16
-    var_type: f64
+    var_type: i32
     event_name: XPNDR_SET
+    event_param: 1
   -
     type: ToggleSwitch
     var_name: A:TRANSPONDER IDENT:1
@@ -500,6 +520,7 @@ shared:
     var_type: bool
     event_name: XPNDR_IDENT_ON
     off_event_name: XPNDR_IDENT_OFF
+    event_param: 1
 
   - # Lights
     type: NumSet
@@ -1116,9 +1137,9 @@ shared:
     type: var
     var_name: L:A32NX_SATCOM_ENABLED
     cancel_h_events: true
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_Altitude_Increment
+# -
+#   type: var
+#   var_name: L:XMLVAR_Autopilot_Altitude_Increment
 # -
 #   type: var
 #   var_name: L:A32NX_MCDU_PUSH_ANIM_1_L1
@@ -1967,9 +1988,9 @@ shared:
   -
     type: var
     var_name: L:A32NX_EFIS_R_NAVAID_2_MODE
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro_Selector_HPA_1
 # -
 #   type: var
 #   var_name: L:A32NX_ELEC_AC_ESS_SHED_BUS_IS_POWERED
@@ -2204,12 +2225,14 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_COCKPIT_COFFEE_R_HIDDEN
-# -
-#   type: var
-#   var_name: L:A32NX_MCDU_L_BRIGHTNESS
-# -
-#   type: var
-#   var_name: L:A32NX_MCDU_R_BRIGHTNESS
+  -
+    type: var
+    var_name: L:A32NX_MCDU_L_BRIGHTNESS
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_MCDU_R_BRIGHTNESS
+    unreliable: true
   -
     type: NumSet
     var_name: L:A32NX_SPOILERS_ARMED
@@ -6358,25 +6381,6 @@ shared:
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_ALTITUDE
 
-  - # Brakes
-    type: NumSet
-    var_name: L:A32NX_LEFT_BRAKE_PEDAL_INPUT
-    var_type: f64
-    multiply_by: 327.68
-    add_by: -16384
-    event_name: AXIS_LEFT_BRAKE_SET
-    use_calculator: true
-    unreliable: true
-  -
-    type: NumSet
-    var_name: L:A32NX_RIGHT_BRAKE_PEDAL_INPUT
-    var_type: f64
-    multiply_by: 327.68
-    add_by: -16384
-    event_name: AXIS_RIGHT_BRAKE_SET
-    use_calculator: true
-    unreliable: true
-
 master:
   - # Controls
     type: NumSet
@@ -6424,16 +6428,12 @@ master:
     interpolate: Default
 
   - # Throttles
-    type: NumSet
+    type: var
     var_name: L:A32NX_AUTOTHRUST_TLA:1
-    var_type: f64
-    event_name: THROTTLE1_SET
     interpolate: Default
   -
-    type: NumSet
+    type: var
     var_name: L:A32NX_AUTOTHRUST_TLA:2
-    var_type: f64
-    event_name: THROTTLE2_SET
     interpolate: Default
 
   - # Brake temp (sends A TON of data, keep slow update)
@@ -6474,6 +6474,33 @@ master:
   -
     type: var
     var_name: L:A32NX_REPORTED_BRAKE_TEMPERATURE_8
+    var_type: i32
+    unreliable: true
+
+server:
+  -
+    type: var
+    var_name: L:A32NX_FUEL_LEFT_PRE
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_RIGHT_PRE
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_AUX_LEFT_PRE
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_AUX_RIGHT_PRE
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_FUEL_CENTER_PRE
     var_type: i32
     unreliable: true
 
@@ -6588,6 +6615,8 @@ ignore:
   - A320_Neo_CDU_1_BTN_UP
   - A320_Neo_CDU_1_BTN_NEXTPAGE
   - A320_Neo_CDU_1_BTN_DOWN
+  - A320_Neo_CDU_1_BTN_BRT
+  - A320_Neo_CDU_1_BTN_DIM
 
   - A320_Neo_CDU_2_BTN_L1
   - A320_Neo_CDU_2_BTN_L2
@@ -6660,6 +6689,8 @@ ignore:
   - A320_Neo_CDU_2_BTN_UP
   - A320_Neo_CDU_2_BTN_NEXTPAGE
   - A320_Neo_CDU_2_BTN_DOWN
+  - A320_Neo_CDU_2_BTN_BRT
+  - A320_Neo_CDU_2_BTN_DIM
 
 # EFB mouse
   - EB_EVENTS
@@ -6748,3 +6779,8 @@ ignore:
   - EFB#561431572
   - EFB#878834964
   - EFB#-1497639004
+
+# EFB Refuel bar
+  - EFB#-1299300527
+  - EFB#-771149527
+  - EFB#670372333

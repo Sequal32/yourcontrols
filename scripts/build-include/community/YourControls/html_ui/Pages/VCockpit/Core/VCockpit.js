@@ -368,6 +368,35 @@ Coherent.on("OnAllInstrumentsLoaded", function () {
         BaseInstrument.allInstrumentsLoaded = true;
     }
 });
+function getDomPath(elt) {
+    var path = [];
+    while (elt != null) {
+        if (elt.id) {
+            path.unshift(elt.id);
+        }
+        else {
+            path.unshift(elt.nodeName);
+        }
+        elt = elt.parentElement;
+    }
+    return path.join('>');
+}
+Coherent.on("Raycast", function (_id, _x, _y) {
+    var elt = document.elementFromPoint(_x, _y);
+    var result = {};
+    if (elt && elt.id) {
+        result.id = elt.id;
+    }
+    else {
+        result.id = 'none';
+    }
+    result.path = getDomPath(elt);
+    var rect = new DOMRect();
+    if (elt) {
+        rect = elt.getBoundingClientRect();
+    }
+    Coherent.trigger('ON_VCOCKPIT_RAYCAST_RESULT', _id, JSON.stringify(result), rect.x, rect.y, rect.width, rect.height);
+});
 checkAutoload();
 if (EDITION_MODE()) {
     g_debugMgr.AddDebugButton("Test VCockpit", () => {

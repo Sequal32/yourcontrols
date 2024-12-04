@@ -1,4 +1,4 @@
-# Version 0.1.109
+# Version 0.1.110
 
 include:
   - definitions/modules/engines.yaml
@@ -145,6 +145,23 @@ shared:
     var_type: i32
     event_name: APU_GENERATOR_SWITCH_SET
     event_param: 2
+
+  - # Brakes
+    type: NumSet
+    var_name: A:BRAKE LEFT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    add_by: -16384
+    event_name: AXIS_LEFT_BRAKE_SET
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:BRAKE RIGHT POSITION EX1
+    var_units: Position 32k
+    var_type: i32
+    add_by: -16384
+    event_name: AXIS_RIGHT_BRAKE_SET
+    unreliable: true
 
   - # Engines
     type: ToggleSwitch
@@ -319,6 +336,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 1
+    cancel_h_events: true
   - # FWD R Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:1
@@ -326,6 +344,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 2
+    cancel_h_events: true
   - # AFT L Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:6
@@ -333,6 +352,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 7
+    cancel_h_events: true
   - # AFT R Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:7
@@ -340,6 +360,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 8
+    cancel_h_events: true
   - # FWD R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:8
@@ -347,6 +368,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 9
+    cancel_h_events: true
   - # AFT R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:9
@@ -354,6 +376,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 10
+    cancel_h_events: true
   - # AFT L Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:10
@@ -361,6 +384,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_AIRCRAFT_EXIT_FAST
     event_param: 11
+    cancel_h_events: true
   - # GPU Truck
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:12
@@ -748,10 +772,7 @@ shared:
     event_param: 75
     index_reversed: true
 
-# - # LVAR's
-#   type: var
-#   var_name: L:WT_TOGA_ACTIVE
-  -
+  - # LVAR's
     type: var
     var_name: L:XMLVAR_SeatBelts
   -
@@ -776,9 +797,9 @@ shared:
     type: var
     var_name: L:XMLVAR_Heat_Cargo
     unreliable: true
-  -
-    type: var
-    var_name: L:XMLVAR_Mins_Selector_Baro
+# -
+#   type: var
+#   var_name: L:XMLVAR_Mins_Selector_Baro
 # -
 #   type: var
 #   var_name: L:WT_Boeing_Autopilot_Disconnected
@@ -828,9 +849,9 @@ shared:
     type: var
     var_name: L:XMLVAR_COM_2_Volume_VHF_C_1
     unreliable: true
-  -
-    type: var
-    var_name: L:XMLVAR_Baro_Selector_HPA_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro_Selector_HPA_1
   -
     type: var
     var_name: L:XMLVAR_Transponder_Mode
@@ -1089,6 +1110,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_Reverser_VR_Value
+# -
+#   type: var
+#   var_name: L:WT_TOGA_ACTIVE
   -
     type: var
     var_name: L:WT_PRESS_MAN_ALT_ON
@@ -1230,22 +1254,25 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_78_RUDDER_INPUT
-  -
-    type: var
-    var_name: L:WT_SPEEDBRAKE_LEVER_POS
-    unreliable: true
 # -
 #   type: var
 #   var_name: L:XMLVAR_ThrottlePosition_2
+# -
+#   type: var
+#   var_name: L:WT_78_AILERON_INPUT
+  -
+    type: NumSet
+    var_name: L:WT_SPEEDBRAKE_LEVER_POS
+    var_units: Number
+    var_type: f64
+    event_name: SPOILERS_SET
+    unreliable: true
 # -
 #   type: var
 #   var_name: L:XMLVAR_ThrottlePosition_1
 # -
 #   type: var
 #   var_name: L:WT_78_ELEVATOR_INPUT
-# -
-#   type: var
-#   var_name: L:WT_78_AILERON_INPUT
 # -
 #   type: var
 #   var_name: L:FMC_EXEC_ACTIVE
@@ -1689,10 +1716,10 @@ shared:
     var_name: L:XMLVAR_ALTN_FLAPS_SELECTOR
 # -
 #   type: var
-#   var_name: L:AIRLINER_V1_SPEED
+#   var_name: L:B787_Irs_On_Bat
 # -
 #   type: var
-#   var_name: L:B787_Irs_On_Bat
+#   var_name: L:XMLVAR_Baro2_ForcedToSTD
 # -
 #   type: var
 #   var_name: L:HUD_AP_SELECTED_SPEED
@@ -1752,24 +1779,10 @@ shared:
 #   var_name: L:WT_FADEC_OIL_TEMP_LOW_RED_2
 # -
 #   type: var
+#   var_name: L:AIRLINER_V1_SPEED
+# -
+#   type: var
 #   var_name: L:VS_ACTIVE
-
-  - # Brakes
-    type: NumSet
-    var_name: A:BRAKE LEFT POSITION EX1
-    var_units: Position 32k
-    var_type: i32
-    add_by: -16384
-    event_name: AXIS_LEFT_BRAKE_SET
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:BRAKE RIGHT POSITION EX1
-    var_units: Position 32k
-    var_type: i32
-    add_by: -16384
-    event_name: AXIS_RIGHT_BRAKE_SET
-    unreliable: true
 
 master:
   -
@@ -1907,8 +1920,16 @@ ignore:
 
   - AS01B_PFD_Mins_INC
   - AS01B_PFD_Mins_DEC
-
+# Throttle Scroll
   - WT_B78_Throttle_1_Inc
   - WT_B78_Throttle_1_Dec
   - WT_B78_Throttle_2_Inc
   - WT_B78_Throttle_2_Dec
+# EFB Performance Page
+  - WTB78x_EFB#781020691
+  - WTB78x_EFB#781020692
+  - WTB78x_EFB#781020693
+  - WTB78x_EFB#781020694
+  - WTB78x_EFB#781020695
+  - WTB78x_EFB#781020696
+  - WTB78x_EFB#781020697

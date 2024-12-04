@@ -1,0 +1,1247 @@
+# Version 1.0.9
+
+include:
+  - definitions/modules/Instruments/AS_GNS430.yaml
+  - definitions/modules/Instruments/AS_GNS530.yaml
+  - definitions/modules/Instruments/AS_KT76C.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml
+  - definitions/modules/controls.yaml
+  - definitions/modules/deice.yaml
+  - definitions/modules/engines.yaml
+  - definitions/modules/fuel.yaml
+  - definitions/modules/general.yaml
+  - definitions/modules/handling.yaml
+  - definitions/modules/magnetos.yaml
+  - definitions/modules/navigation.yaml
+  - definitions/modules/radios.yaml
+  - definitions/modules/safety.yaml
+  - definitions/modules/trim.yaml
+
+shared:
+  - # Autopilot
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AUTOPILOT_ON
+    off_event_name: AUTOPILOT_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_HDG_HOLD_ON
+    off_event_name: AP_HDG_HOLD_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+    interpolate: Default
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_ALT_HOLD_ON
+    off_event_name: AP_ALT_HOLD_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_VS_ON
+    off_event_name: AP_VS_OFF
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 1
+    interpolate: Default
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT APPROACH HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_APR_HOLD_ON
+    off_event_name: AP_APR_HOLD_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_BC_HOLD_ON
+    off_event_name: AP_BC_HOLD_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT WING LEVELER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_WING_LEVELER_ON
+    off_event_name: AP_WING_LEVELER_OFF
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:39
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 39
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:40
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 40
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:46
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 46
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:47
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 47
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER1_SET
+  -
+    type: event
+    event_name: SET_STARTER1_HELD
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: f64
+    event_name: BEACON_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: f64
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    var_type: f64
+    event_name: TAXI_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT NAV:0
+    var_units: Bool
+    var_type: f64
+    event_name: NAV_LIGHTS_SET
+    event_param: 0
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:0
+    var_units: Bool
+    var_type: f64
+    event_name: STROBES_SET
+    event_param: 0
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 10
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 11
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_3_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_5_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_6_SET
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_7_SET
+    index_reversed: true
+
+  - # LVAR's
+    type: var
+    var_name: L:C172X_AVFAN_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_AP_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_BATTERY_CHARGE
+  -
+    type: var
+    var_name: L:C172X_NAVCOM1_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_NAVCOM2_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_ADF_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_XPNDR_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_LTSPWR_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_FLAPS_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_INST_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_TURNCOORD_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_INSTLTS_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C172X_ALT_BREAKER
+  -
+    type: var
+    var_name: L:C172X_WARN_BREAKER_PULLED
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:C172X_HEADING_KNOB
+    interpolate: Default
+  -
+    type: var
+    var_name: L:KI227_CARD_ADJUSTMENT
+    interpolate: Default
+  -
+    type: var
+    var_name: L:KR87_KNOB_INNER_PUSH
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_IDT_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_VFR_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_CLR_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_0_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_1_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_2_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_3_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_4_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_5_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_6_1
+# -
+#   type: var
+#   var_name: L:TRANSPONDER_Push_7_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_0
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_0
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+  -
+    type: var
+    var_name: L:XMLVAR_Cabin_Heat_1_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Cabin_Air_1_Position
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_PUMPED_FUEL
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:KAP140_RightBlockMode
+# -
+#   type: var
+#   var_name: L:C172X_BATT_TERM_VOLTAGE
+# -
+#   type: var
+#   var_name: L:KI227_COMPASS_CARD
+# -
+#   type: var
+#   var_name: L:KR87_RightDisplayMode
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:XMLVAR_FUEL_FLOW_TARGET
+# -
+#   type: var
+#   var_name: L:FuelEvapFactor
+# -
+#   type: var
+#   var_name: L:XMLVAR_Engine_Condition
+# -
+#   type: var
+#   var_name: L:XMLVAR_Fuel_Evaporating
+# -
+#   type: var
+#   var_name: L:C172X_E_Starter_Temperature
+  -
+    type: var
+    var_name: L:C172X_PILOT_PTT
+  -
+    type: var
+    var_name: L:C172X_COPILOT_PTT
+  -
+    type: var
+    var_name: L:SIAI_RADIO_PTT
+  -
+    type: var
+    var_name: L:SIAI_INTERCOM_PTT
+  -
+    type: var
+    var_name: L:C172X_PlaySSONOFF
+# -
+#   type: var
+#   var_name: L:startflight_oil_temp
+# -
+#   type: var
+#   var_name: L:SUMP_OIL_TEMPERATURE
+# -
+#   type: var
+#   var_name: L:GNS530BootComplete
+# -
+#   type: var
+#   var_name: L:GNS430BootComplete
+# -
+#   type: var
+#   var_name: L:AS530_CDI_SOURCE_1
+# -
+#   type: var
+#   var_name: L:PLANE_VERSION
+# -
+#   type: var
+#   var_name: L:BADLANDING_C
+# -
+#   type: var
+#   var_name: L:VERYBADLANDING
+# -
+#   type: var
+#   var_name: L:BADLANDING_R
+# -
+#   type: var
+#   var_name: L:BADLANDING_L
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:C172X_E_Starter_Relay_Control
+# -
+#   type: var
+#   var_name: L:LOCKDOWN
+# -
+#   type: var
+#   var_name: L:C172X_FOULING_TIME
+# -
+#   type: var
+#   var_name: L:C172X_FOULING_TIME2
+# -
+#   type: var
+#   var_name: L:NO_OIL_COUNTDOWN
+# -
+#   type: var
+#   var_name: L:C172X_E_Battery_Relay_Control
+# -
+#   type: var
+#   var_name: L:C172X_E_Battery_Relay_Contact_State
+# -
+#   type: var
+#   var_name: L:C172X_E_Starter_Relay_Contact_State
+# -
+#   type: var
+#   var_name: L:C172X_E_Starter_Connection_Control
+# -
+#   type: var
+#   var_name: L:C172X_E_Starter_Connection_State
+# -
+#   type: var
+#   var_name: L:C172X_E_Alternator_Relay_Control
+# -
+#   type: var
+#   var_name: L:C172X_E_Alternator_Relay_Contact_State
+# -
+#   type: var
+#   var_name: L:C172X_E_External_Relay_Control
+# -
+#   type: var
+#   var_name: L:C172X_E_External_Relay_Contact_State
+# -
+#   type: var
+#   var_name: L:C172X_STARTER_VOLTS
+# -
+#   type: var
+#   var_name: L:prop_voltage
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:ELT_SOUND
+# -
+#   type: var
+#   var_name: L:C172X_ATTITUDE_IND_BANK_DEGREES
+# -
+#   type: var
+#   var_name: L:AS430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:C172X_ALTITUDE
+# -
+#   type: var
+#   var_name: L:C172X_IAS
+# -
+#   type: var
+#   var_name: L:XMLVAR_WHISKEY_COMPASS
+# -
+#   type: var
+#   var_name: L:C172X_ATTITUDE_IND_PITCH_DEGREES
+# -
+#   type: var
+#   var_name: L:KI227_ADF_NEEDLE_POSITION
+# -
+#   type: var
+#   var_name: L:C172X_AMMETER_CURRENT
+# -
+#   type: var
+#   var_name: L:C172X_HEADING_INDICATOR
+# -
+#   type: var
+#   var_name: L:KMA28_MARKER_O_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_MARKER_M_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_MARKER_I_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_COM1_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_COM2_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_NAV1_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_NAV2_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_MKR_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_ICS_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_ADF_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:KMA28_AUX_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_DME_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_SPR_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_COM_SWAP_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KMA28_TRANSMIT_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:C172X_CDI_1_VLOC_EMISSIVE
+# -
+#   type: var
+#   var_name: L:C172X_CDI_1_GPS_EMISSIVE
+# -
+#   type: var
+#   var_name: L:C172X_CDI_2_VLOC_EMISSIVE
+# -
+#   type: var
+#   var_name: L:C172X_CDI_2_GPS_EMISSIVE
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightShowEverything
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightCheckCompleted
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:C172X_LOWFUEL_CENTER_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:C172X_LOWFUEL_LEFT_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:C172X_LOWFUEL_RIGHT_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:MD41_GPS_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:MD41_NAV_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:MD41_ACTV_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:MD41_ARM_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:GNS530_HAVE_MESSAGE:1
+# -
+#   type: var
+#   var_name: L:GNS530_HAVE_NEWMESSAGE:1
+# -
+#   type: var
+#   var_name: L:MD41_MSG_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:C172X_WPT
+# -
+#   type: var
+#   var_name: L:MD41_WPT_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:C172X_OIL_PRESSURE_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:C172X_LOW_VOLT_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:C172X_LOW_VAC_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:C172X_ELT_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_1
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_2
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_3
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_4
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_5
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_6
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_7
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_8
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_9
+# -
+#   type: var
+#   var_name: L:C172X_AOA_BAR_10
+# -
+#   type: var
+#   var_name: L:FLIGHT_STATE
+# -
+#   type: var
+#   var_name: L:START_VOL_UP
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:C172X_TRIM_TAB_PCT
+    cancel_h_events: true
+# - # Unsettable
+#   type: var
+#   var_name: L:KAP140_BARO_MODE
+  -
+    type: var
+    var_name: L:C172X_CHOCKS_STATUS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C172X_TIEDOWNS_STATUS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C172X_PITOT_COVER_STATUS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C172X_COWL_PLUGS_STATUS
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C172X_SCREEN_COLOR_STATUS
+  -
+    type: var
+    var_name: L:C172X_CABIN_TEMP_UNIT
+  -
+    type: var
+    var_name: L:C172X_CABIN_TEMP_VOICE
+  -
+    type: var
+    var_name: L:C172X_CABIN_TEMP_IND
+# -
+#   type: var
+#   var_name: L:C172X_DMESPEED:1
+# -
+#   type: var
+#   var_name: L:C172X_DMETIME:1
+# -
+#   type: var
+#   var_name: L:C172X_DMESPEED:2
+# -
+#   type: var
+#   var_name: L:C172X_DMETIME:2
+# -
+#   type: var
+#   var_name: L:C172X_OIL_LVL
+# -
+#   type: var
+#   var_name: L:C172X_ENG_HLTH
+  -
+    type: var
+    var_name: L:C172X_REALISM
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:C172X_CABIN_TEMP
+# -
+#   type: var
+#   var_name: L:C172X_CABIN_TEMP2
+# - # Unsettable
+#   type: var
+#   var_name: L:C172X_M803_TOP_MODE
+# -
+#   type: var
+#   var_name: L:ASwt430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Transition_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Egress_Distance
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_True
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_True
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Distance
+# -
+#   type: var
+#   var_name: L:WTGNS_ADSB_OPER
+# -
+#   type: var
+#   var_name: L:ASwt530_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:Garmin_Need_OBS_Convert_DirectTo
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_DTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_XTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Tracking
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Vector_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Course_To_Steer
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Suspended
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_XTK
+# -
+#   type: var
+#   var_name: L:WT_LNavData_CDI_Scale
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Destination_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_ToFrom
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Service_Level
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_GP_FPA
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Is_Valid:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Bank_Angle:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Dtk:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Xtk:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Tae:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_State:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Is_Active:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Path_Mode:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Armed_Climb_Mode:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Should_Activate_Climb_Mode:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Alt_Capture_Type:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Should_Capture_Alt:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Alt_To_Capture:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Vertical_Path_Is_Valid:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Vertical_Path_Fpa:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Vertical_Path_Deviation:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Glidepath_Approach_Has_Gp:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Glidepath_Is_Valid:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Glidepath_Can_Capture:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Path_Fpa:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Path_Deviation:0
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:C172X_E_Oil_Temperature_Res
+# -
+#   type: var
+#   var_name: L:C172X_E_Starter_Temperature_Res
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Obs_Active
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Obs_Course
+# -
+#   type: var
+#   var_name: L:beepHelper
+# -
+#   type: var
+#   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Alt_Capture_Type
+# -
+#   type: var
+#   var_name: L:KR87_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KR87_State
+# -
+#   type: var
+#   var_name: L:ADF_ALARM
+# -
+#   type: var
+#   var_name: L:KR87_RIGHT_DISPLAY
+# -
+#   type: var
+#   var_name: L:KT76C_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KT76C_State
+# -
+#   type: var
+#   var_name: L:C172X_XPNDR_IDT_ANNUNCIATOR
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:KAP140_ALT_ALERTER
+# -
+#   type: var
+#   var_name: L:KAP140_NAVARM
+# -
+#   type: var
+#   var_name: L:KAP140_APRARM
+# -
+#   type: var
+#   var_name: L:KAP140_REVARM
+# -
+#   type: var
+#   var_name: L:KAP140_ALTARM
+# -
+#   type: var
+#   var_name: L:KAP140_RIGHTBLOCK
+# -
+#   type: var
+#   var_name: L:HourMeter_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:HourMeter_State
+# -
+#   type: var
+#   var_name: L:WT_GNS430_INSTALLED_1
+# -
+#   type: var
+#   var_name: L:AS430_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS430_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
+# -
+#   type: var
+#   var_name: L:WT_GNS530_INSTALLED_1
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Target_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNAV_Required_VS
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
+#   var_name: L:M803_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:M803_State
+# -
+#   type: var
+#   var_name: L:ET_ALARM
+# -
+#   type: var
+#   var_name: L:FT_ALARM
+# -
+#   type: var
+#   var_name: L:C172X_M803_TOP
+# -
+#   type: var
+#   var_name: L:C172XRELAY_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:C172XRELAY_State
+# -
+#   type: var
+#   var_name: L:C172XIP_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:C172XIP_State
+# -
+#   type: var
+#   var_name: L:KMA28_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KMA28_State
+  -
+    type: var
+    var_name: L:C172X_ANNUN_SWITCH_STATUS
+# -
+#   type: var
+#   var_name: L:KAP140_BARO_BLINKING
+# -
+#   type: var
+#   var_name: L:WT1000_AP_G1000_INSTALLED
+# -
+#   type: var
+#   var_name: L:KAP140_PITCH_MODE
+# -
+#   type: var
+#   var_name: L:KAP140_ALERT
+# -
+#   type: var
+#   var_name: L:KAP140_PTUP
+# -
+#   type: var
+#   var_name: L:KAP140_PTDN
+# -
+#   type: var
+#   var_name: L:KAP140_TRIM
+# -
+#   type: var
+#   var_name: L:KAP140_RIGHTBLOCK_MODE
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:KR87_BFOMODE
+  -
+    type: var
+    var_name: L:KR87_ADFMODE
+  -
+    type: var
+    var_name: L:C172X_SSONOFF
+    cancel_h_events: true
+
+  - # Float
+    type: var
+    var_name: L:SHOW_FLOATER_GEAR_KNOB
+
+master:
+  -
+    type: var
+    var_name: L:C172X_FOULING_TIME
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:C172X_FOULING_TIME2
+    var_type: i32
+    unreliable: true
+
+server:
+  -
+    type: var
+    var_name: A:FUEL TANK LEFT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:FUEL TANK RIGHT MAIN LEVEL
+    var_units: Percent
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:1
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:2
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:3
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:4
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:5
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+ignore:
+  - KAP140_AP_PRESS
+  - KAP140_AP_RELEASE
+  - KAP140_HDG_PRESS
+  - KAP140_HDG_RELEASE
+  - KAP140_NAV_PRESS
+  - KAP140_NAV_RELEASE
+  - KAP140_APR_PRESS
+  - KAP140_APR_RELEASE
+  - KAP140_REV_PRESS
+  - KAP140_REV_RELEASE
+  - KAP140_ALT_PRESS
+  - KAP140_ALT_RELEASE
+  - KAP140_ARM_RELEASE
+  - KAP140_BARO_RELEASE
+  - KAP140_UP_PRESS
+  - KAP140_UP_RELEASE
+  - KAP140_DN_PRESS
+  - KAP140_DN_RELEASE
+
+  - KAP140_KNOB_INNER_INC
+  - KAP140_KNOB_INNER_DEC
+  - KAP140_KNOB_OUTER_INC
+  - KAP140_KNOB_OUTER_DEC
+
+  - KR87#OilDisplay
+  - KR87#OilPercent
+  - KR87#Pushback

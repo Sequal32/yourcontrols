@@ -70,16 +70,6 @@ shared:
     event_name: FUEL_TRANSFER_CUSTOM_INDEX_TOGGLE
     event_param: 2
 
-  - # ASOBO_FUEL_Lever_Pump_Template
-    type: NumSet
-    var_name: A:MANUAL FUEL PUMP HANDLE:1
-    var_units: Bool
-    var_type: f64
-    event_name: MANUAL_FUEL_PRESSURE_PUMP
-    event_param: 1
-    use_calculator: true
-    unreliable: true
-
   - # ASOBO_FUEL_Condition_Lever_Template
     type: var
     var_name: A:TURB ENG CONDITION LEVER POSITION:1
@@ -149,3 +139,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_FUEL_VALVE_ENG4
+
+  - # Fuel/Wobble pump (no var)
+    type: event
+    event_name: MANUAL_FUEL_PRESSURE_PUMP

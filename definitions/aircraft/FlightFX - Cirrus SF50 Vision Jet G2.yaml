@@ -1,4 +1,4 @@
-# Version 2.2.2
+# Version 2.3.5
 
 include:
   - definitions/modules/Instruments/AS_G3000.yaml
@@ -18,7 +18,7 @@ shared:
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
-    var_units: Bool
+    var_units: Enum
     var_type: i32
     event_name: PITOT_HEAT_SET
     event_param: 1
@@ -210,25 +210,25 @@ shared:
 #   var_name: L:SF50_vams_static_gpu_on
 # -
 #   type: var
-#   var_name: L:SF50_vams_static_storage_cover_on
-  -
-    type: var
-    var_name: L:SF50_hide_luggage_part
-# -
-#   type: var
 #   var_name: L:SF50_front_door_active
 # -
 #   type: var
-#   var_name: L:SF50_luggage_door_on
+#   var_name: L:SF50_vams_static_storage_cover_on
 # -
 #   type: var
-#   var_name: L:SF50_deice_airboots_stab
+#   var_name: L:SF50_luggage_door_on
 # -
 #   type: var
 #   var_name: L:SF50_deice_airboots_lowerWing
 # -
 #   type: var
 #   var_name: L:SF50_deice_airboots_upperWing
+# -
+#   type: var
+#   var_name: L:SF50_deice_airboots_stab
+  -
+    type: var
+    var_name: L:SF50_hide_luggage_part
   -
     type: var
     var_name: L:SF50_vams_reg_shadow
@@ -240,6 +240,126 @@ shared:
 # -
 #   type: var
 #   var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:SF50_vams_pad
+  -
+    type: var
+    var_name: L:SF50_cockpit_tv
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:WT_Virtual_Throttle_Lever_Pos_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_SpeedIsManuallySet
+  -
+    type: var
+    var_name: L:SF50_deice_high
+  -
+    type: var
+    var_name: L:SF50_oxygen_switch
+  -
+    type: var
+    var_name: L:SF50_air_flow_switch
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:SF50_deice_max
+# -
+#   type: var
+#   var_name: L:SF50_Courtesy_Mode_Timer
+  -
+    type: var
+    var_name: L:SF50_phone_vis
+# -
+#   type: var
+#   var_name: L:SF50_mct_snap_helper
+  -
+    type: var
+    var_name: L:SF50_defog
+  -
+    type: var
+    var_name: L:SF50_aft
+  -
+    type: var
+    var_name: L:SF50_TempBKP
+  -
+    type: var
+    var_name: L:SF50_TempControl
+# -
+#   type: var
+#   var_name: L:SF50_front_door_timer
+# -
+#   type: var
+#   var_name: L:SF50_front_door_close
+  -
+    type: var
+    var_name: L:SF50_gear_alternate_ext
+  -
+    type: var
+    var_name: L:SF50_gear_alternate_ext_handle
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_7
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_5
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_6
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Airframe_1
   -
     type: var
     var_name: L:SF50_caut_flaps_inhibit
@@ -263,9 +383,6 @@ shared:
 #   var_name: L:SF50_warn_flaps_takeoff
 # -
 #   type: var
-#   var_name: L:SF50_warn_ldg_gear_up
-# -
-#   type: var
 #   var_name: L:SF50_warn_ldg_gear_sel_up
 # -
 #   type: var
@@ -281,15 +398,6 @@ shared:
     type: var
     var_name: L:SF50_vams_status_type
     cancel_h_events: true
-  -
-    type: var
-    var_name: L:SF50_oxygen_switch
-  -
-    type: var
-    var_name: L:SF50_air_flow_switch
-  -
-    type: var
-    var_name: L:SF50_deice_high
 # -
 #   type: var
 #   var_name: L:SF50_deice_flaps_ice_activated
@@ -301,28 +409,7 @@ shared:
 #   var_name: L:SF50_deice_airboots_timer
   -
     type: var
-    var_name: L:SF50_vams_pad
-  -
-    type: var
-    var_name: L:SF50_cockpit_tv
-# -
-#   type: var
-#   var_name: L:WTG3000_VJ_Backlight
-  -
-    type: var
     var_name: L:XMLVAR_Autopilot_1_Status
-# -
-#   type: var
-#   var_name: L:XMLVAR_LTS_Test
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
-# -
-#   type: var
-#   var_name: L:HANDLING_ElevatorTrim
 # -
 #   type: var
 #   var_name: L:SF50_battery_timer
@@ -358,34 +445,16 @@ shared:
 #   var_name: L:SF50_Fuel_Tank_Imbalance_Caution
 # -
 #   type: var
-#   var_name: L:XMLVAR_ThrottlePosition_1
-# -
-#   type: var
-#   var_name: L:WT_Virtual_Throttle_Lever_Pos_1
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:XMLVAR_SpeedIsManuallySet
-# -
-#   type: var
 #   var_name: L:SF50_Thrust_Timer
 # -
 #   type: var
 #   var_name: L:SF50_Thrust_Warning
 # -
 #   type: var
-#   var_name: L:XMLVAR_IsDeiceAirFrame
-  -
-    type: var
-    var_name: L:SF50_deice_max
+#   var_name: L:SF50_Cabin_Temp
 # -
 #   type: var
-#   var_name: L:SF50_Courtesy_Mode_Timer
-  -
-    type: var
-    var_name: L:SF50_phone_vis
+#   var_name: L:SF50_TempFan_RPM
 # -
 #   type: var
 #   var_name: L:SF50_throttle_percentage
@@ -398,57 +467,25 @@ shared:
 # -
 #   type: var
 #   var_name: L:SF50_throttle_percentage_last_lerped
-# -
-#   type: var
-#   var_name: L:SF50_mct_snap_helper
-  -
-    type: var
-    var_name: L:SF50_defog
-  -
-    type: var
-    var_name: L:SF50_aft
-  -
-    type: var
-    var_name: L:SF50_TempBKP
-  -
-    type: var
-    var_name: L:SF50_TempControl
   -
     type: var
     var_name: L:SF50_TempFan_Power
-# -
-#   type: var
-#   var_name: L:SF50_TempFan_RPM
-# -
-#   type: var
-#   var_name: L:SF50_front_door_timer
-# -
-#   type: var
-#   var_name: L:SF50_front_door_close
-  -
-    type: var
-    var_name: L:SF50_gear_alternate_ext
-  -
-    type: var
-    var_name: L:SF50_gear_alternate_ext_handle
-  -
+
+  - # Manually added
     type: var
     var_name: L:SF50_Preflight_Check_Active
     cancel_h_events: true
-# -
-#   type: var
-#   var_name: L:SF50_Preflight_Check_Timer
   -
     type: var
     var_name: L:SF50_Preflight_Check_Fire
     cancel_h_events: true
   -
     type: var
-    var_name: L:SF50_Preflight_Check_Stall
+    var_name: L:SF50_Preflight_Check_Fire_Done
     cancel_h_events: true
   -
     type: var
-    var_name: L:SF50_Preflight_Check_Fire_Done
+    var_name: L:SF50_Preflight_Check_Stall
     cancel_h_events: true
   -
     type: var
@@ -530,3 +567,19 @@ server:
 ignore:
   - VJ_Throttle_1_Inc
   - VJ_Throttle_1_Dec
+
+# XPNDR Box
+  - WTG3000_GTC_1#256782694
+  - WTG3000_GTC_1#538346658
+  - WTG3000_GTC_1#-1574071666
+  - WTG3000_GTC_2#256782694
+  - WTG3000_GTC_2#538346658
+  - WTG3000_GTC_2#-1574071666
+  - WTG3000_GTC_3#256782694
+  - WTG3000_GTC_3#538346658
+  - WTG3000_GTC_3#-1574071666
+
+# XPNDR Mode Box
+  - WTG3000_GTC_1#-1430431220
+  - WTG3000_GTC_2#-1430431220
+  - WTG3000_GTC_3#-1430431220

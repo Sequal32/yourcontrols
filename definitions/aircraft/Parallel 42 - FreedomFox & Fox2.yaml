@@ -1,9 +1,9 @@
-# Version 1.0.0
+# Version 1.23.1
 
 include:
-  - definitions/modules/Instruments/AS_G3X_Touch.yaml
-  - definitions/modules/Instruments/PMS50_GTN.yaml
-  - definitions/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/modules/Instruments/WT_G3X_Touch.yaml
+  - definitions/modules/Instruments/PMS50_GTN.yaml # Mod
+  - definitions/modules/Instruments/TDS_GTNXi.yaml # Mod
   - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -69,7 +69,13 @@ shared:
     event_name: PANEL_LIGHTS_SET
     event_param: 1
 
-  - # LVAR's
+  - # LVAR's (Analog, trimmed)
+    type: var
+    var_name: L:P42_FF_SWITCH_PILOT
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_PILOT_1
+  -
     type: var
     var_name: L:P42_FF_SWITCH_TENT
   -
@@ -92,31 +98,31 @@ shared:
     var_name: L:P42_FF_ENGINE_COVER_HANDLE
 # -
 #   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:P42_FF_TRIM_TABS
+# -
+#   type: var
 #   var_name: L:P42_FF_FLASH_DANCE
 # -
 #   type: var
-#   var_name: L:P42_FF_VIBE_TRIM
+#   var_name: L:P42_FF_SURFACE_VOLATILITY
   -
     type: var
-    var_name: L:P42_FF_SWITCH_PILOT
+    var_name: L:P42_FF_SMOKE
   -
     type: var
-    var_name: L:P42_FF_SWITCH_LIGHTS_PANEL
-  -
-    type: var
-    var_name: L:P42_FF_UPDATE_SHOW
-  -
-    type: var
-    var_name: L:XMLVAR_Autopilot_1_Status
+    var_name: L:P42_FF_FREECASTORING
 # -
 #   type: var
-#   var_name: L:XMLVAR_Autopilot_Altitude_Increment
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:P42_FF_UPDATE_SHOW
   -
     type: var
     var_name: L:P42_FF_PUSH_AP_DISCONNECT
-# -
-#   type: var
-#   var_name: L:P42_FF_YOKE_X
 # -
 #   type: var
 #   var_name: L:XMLVAR_ElevatorTrim_Switch_1
@@ -125,19 +131,19 @@ shared:
 #   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
   -
     type: var
+    var_name: L:P42_HIDE_LEFT_DOOR
+  -
+    type: var
+    var_name: L:P42_FF_DOOR_FLY_LEFT
+  -
+    type: var
+    var_name: L:P42_HIDE_RIGHT_DOOR
+  -
+    type: var
+    var_name: L:P42_FF_DOOR_FLY_RIGHT
+  -
+    type: var
     var_name: L:P42_FF_SWITCH_NOTEPAD
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
-  -
-    type: var
-    var_name: L:P42_FF_SWITCH_LANEA
-  -
-    type: var
-    var_name: L:P42_FF_SWITCH_LANEB
-# -
-#   type: var
-#   var_name: L:XMLVAR_Starter_State
 # -
 #   type: var
 #   var_name: L:XMLVAR_Starter_State_IsDown
@@ -150,57 +156,21 @@ shared:
   -
     type: var
     var_name: L:P42_FF_SWITCH_START
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
-#   var_name: L:P42_FF_VIBE_SMOOTH
-# -
-#   type: var
-#   var_name: L:P42_FF_VIBE_SMOOTH_NORM
-# -
-#   type: var
-#   var_name: L:P42_FF_DOOR_LEFT_ANIM_base
-# -
-#   type: var
-#   var_name: L:P42_FF_DOOR_RIGHT_ANIM_BASE
-# -
-#   type: var
-#   var_name: L:P42_FF_VOLUME_CABIN
-# -
-#   type: var
-#   var_name: L:P42_FF_VOLUME_WIND
-# -
-#   type: var
-#   var_name: L:P42_FF_COOLANT_TEMP
-# -
-#   type: var
-#   var_name: L:P42_FF_EGT
-# -
-#   type: var
-#   var_name: L:P42_FF_OIL_TEMP
-# -
-#   type: var
-#   var_name: L:P42_FF_OIL_PRESSURE
   -
     type: var
-    var_name: L:P42_FF_DOOR_FLY_LEFT
+    var_name: L:P42_FF_HORN_ANIM
 # -
 #   type: var
-#   var_name: L:P42_FF_DOOR_FLY_LEFT_BLOWN_TIME
-  -
-    type: var
-    var_name: L:P42_FF_DOOR_FLY_RIGHT
+#   var_name: L:INSTRUMENT_Altimeter_1
 # -
 #   type: var
-#   var_name: L:P42_FF_DOOR_FLY_RIGHT_BLOWN_TIME
-# -
-#   type: var
-#   var_name: L:XMLVAR_VNAVButtonValue
+#   var_name: L:XMLVAR_Autopilot_Altitude_Increment
 # -
 #   type: var
 #   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:ELECTRICAL_Starter_1
@@ -224,94 +194,82 @@ shared:
 #   var_name: L:LIGHTING_LANDING_1
 # -
 #   type: var
-#   var_name: L:YourControlsPanelId
+#   var_name: L:TDSGTNXI_RUNNING
 # -
 #   type: var
-#   var_name: L:AS1000_Warnings_Master_Set
+#   var_name: L:PMS50_GTN750_RUNNING
 # -
 #   type: var
-#   var_name: L:AS1000_Warnings_WarningIndex
+#   var_name: L:PMS50_GTN750_INSTALLED
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
 # -
 #   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+#   var_name: L:XMLVAR_Starter_State
 # -
 #   type: var
-#   var_name: L:MFD_MapShowCursor
+#   var_name: L:P42_FF_VIBE_SMOOTH
 # -
 #   type: var
-#   var_name: L:MFD_MapZoomRange
+#   var_name: L:P42_FF_VIBE_SMOOTH_NORM
 # -
 #   type: var
-#   var_name: L:Glasscockpit_HSI_Arc
+#   var_name: L:P42_FF_DOOR_LEFT_ANIM_base
 # -
 #   type: var
-#   var_name: L:PFD_BRG1_Source
+#   var_name: L:P42_FF_DOOR_RIGHT_ANIM_BASE
 # -
 #   type: var
-#   var_name: L:PFD_BRG2_Source
+#   var_name: L:P42_FF_YOKE_X
 # -
 #   type: var
-#   var_name: L:PFD_CDI_Source
+#   var_name: L:P42_FF_VOLUME_CABIN
 # -
 #   type: var
-#   var_name: L:GPS_Current_Phase
+#   var_name: L:P42_FF_VOLUME_WIND
 # -
 #   type: var
-#   var_name: L:Glasscockpit_DmeSource
+#   var_name: L:P42_FF_COOLANT_TEMP
 # -
 #   type: var
-#   var_name: L:Glasscockpit_Wind_Mode
+#   var_name: L:P42_FF_EGT
 # -
 #   type: var
-#   var_name: L:MFD_Main_MapShowCursor
+#   var_name: L:P42_FF_OIL_TEMP
 # -
 #   type: var
-#   var_name: L:MFD_Main_MapZoomRange
+#   var_name: L:P42_FF_OIL_PRESSURE
 # -
 #   type: var
-#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+#   var_name: L:P42_FF_DOOR_FLY_LEFT_BLOWN_TIME
 # -
 #   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+#   var_name: L:P42_FF_DOOR_FLY_RIGHT_BLOWN_TIME
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
+#   var_name: L:P42_FF_HORN
+  -
+    type: var
+    var_name: L:P42_FF_GTN750_ON
+  -
+    type: var
+    var_name: L:P42_FF_GTN750_AVAILABLE
 # -
 #   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
+#   var_name: L:WTG3X_Screen_Backlight:2
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_LIGHTS_PANEL
 # -
 #   type: var
-#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_1_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_1_State
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_2_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:AS3X_Touch_2_State
-# -
-#   type: var
-#   var_name: L:p42_updateinstrument_3_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:p42_updateinstrument_3_State
-# -
-#   type: var
-#   var_name: L:WasmInstrument_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:WasmInstrument_State
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_SPEED
-# -
-#   type: var
-#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_LANEA
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_LANEB
 
 server:
   -

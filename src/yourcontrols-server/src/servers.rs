@@ -43,18 +43,12 @@ impl ServerState {
 }
 
 pub struct ServerInfo {
-    pub creation_time: Instant,
     pub hostname: String,
-    pub addr_who_requested: SocketAddr,
 }
 
 impl ServerInfo {
-    pub fn new(hostname: String, addr_who_requested: SocketAddr) -> Self {
-        Self {
-            creation_time: Instant::now(),
-            hostname,
-            addr_who_requested,
-        }
+    pub fn new(hostname: String) -> Self {
+        Self { hostname }
     }
 }
 
@@ -92,7 +86,7 @@ impl Servers {
 
         self.meta_state
             .active_servers
-            .insert(id.clone(), ServerInfo::new(hostname, addr_who_requested));
+            .insert(id.clone(), ServerInfo::new(hostname));
 
         self.meta_state
             .clients_connected

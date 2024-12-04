@@ -9,6 +9,7 @@ include:
   - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/handling.yaml
+  - definitions/modules/magnetos.yaml
   - definitions/modules/navigation.yaml
   - definitions/modules/radios.yaml
   - definitions/modules/safety.yaml
@@ -59,21 +60,6 @@ shared:
   -
     type: event
     event_name: SET_STARTER1_HELD
-  -
-    type: NumSet
-    var_name: A:RECIP ENG LEFT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_LEFT
-  -
-    type: NumSet
-    var_name: A:RECIP ENG RIGHT MAGNETO:1
-    var_units: Bool
-    var_type: f64
-    event_name: MAGNETO1_RIGHT
-  -
-    type: event
-    event_name: MAGNETO1_SET # backup for position
 
   - # Lights
     type: NumSet
