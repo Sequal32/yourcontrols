@@ -4,9 +4,9 @@ class YourControlsNetwork {
         this.socketConnected = false
         this.instrumentName = ""
 
-        this.onMessageCallback = onMessageCallback ? onMessageCallback : () => {}
-        this.connectedCallback = connectedCallback ? connectedCallback : () => {}
-        this.disconnectedCallback = disconnectedCallback ? disconnectedCallback : () => {}
+        this.onMessageCallback = onMessageCallback ? onMessageCallback : () => { }
+        this.connectedCallback = connectedCallback ? connectedCallback : () => { }
+        this.disconnectedCallback = disconnectedCallback ? disconnectedCallback : () => { }
         this.canConnect = canConnect ? canConnect : () => false
     }
 
@@ -34,13 +34,17 @@ class YourControlsNetwork {
         this.socket.close()
     }
 
+    isYourControlsRunning() {
+        return SimVar.GetSimVarValue("L:YourControlsServerRunning", "Boolean") == true
+    }
+
     startAttemptConnection(instrumentName) {
         this.instrumentName = instrumentName
         setInterval(this.attemptConnection.bind(this), 4000)
     }
 
     attemptConnection() {
-        if (this.socketConnected || !this.canConnect()) {
+        if (this.socketConnected || !this.canConnect() || !this.isYourControlsRunning()) {
             return
         }
         this.connectWebsocket()
