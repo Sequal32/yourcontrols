@@ -42,10 +42,10 @@
 - Asobo Studio - Zlin Shock Ultra # v0.1.81
 - Big Radials - Grumman JRF-6B Goose # v1.0.9
 - Big Radials - Noorduyn Norseman # v1.0.3
-- Black Square - Beechcraft Baron B58 # v0.1.1
-- Black Square - Beechcraft Bonanza A36 # v0.1.2
-- Black Square - Beechcraft King Air 350i # v0.1.3
-- Black Square - Cessna 208B Grand Caravan # v0.1.4
+- Black Square - Beechcraft Baron B58 # v0.1.2
+- Black Square - Beechcraft Bonanza A36 # v0.1.3
+- Black Square - Beechcraft King Air 350i # v0.1.4
+- Black Square - Cessna 208B Grand Caravan # v0.1.5
 - Black Square - Velocity XL # v0.1.2
 - BlackBox Simulation - BN-2 Islander # v2.1.2
 - BlackBox Simulation - BN-3 Trislander # v1.1.6
@@ -66,20 +66,21 @@
 - Cowan Simulation - MD Helicopters 500E # v2.1.0
 - Cowan Simulation - Robinson R66 # v2.0.0
 - DC Designs - Boeing PT-17 Stearman # v1.0.6
-- DC Designs - Concorde # v1.0.6
+- DC Designs - Concorde # v1.0.7
 - Deejing - Van's RV-7 # v1.1.2
 - Erasam - Tecnam P92 Echo # v2.0.1
 - FlightFX - Cirrus SF50 Vision Jet G2 # v2.3.5
 - FlightFX - Honda HA-420 HondaJet # v2.1.2
 - FlightSim Studio - SeaRey Elite # v1.0.3
 - FlightSim Studio - Tecnam P2006T MkII # v1.1.2
-- FlyByWire Simulations - Airbus A320neo # v0.11.1
+- FlyByWire Simulations - Airbus A320neo # v0.12.3
 - FlyInside - Bell 47G-2 # v2.73
 - Flysimware - Cessna 414AW Chancellor # v4.5.0
 - Flysimware - Grumman G-44A Widgeon # v1.8.2
 - Got Friends - Discus-2c # v2.0.7
 - Got Friends - Edgley EA-7 Optica # v1.0.7
-- Headwind Simulations - Airbus A330-900neo # v0.5.8
+- Headwind Simulations - Airbus A330-900neo # v0.6.0
+- Headwind Simulations - Sukhoi SuperJet 100-95 # v0.6.0
 - Horizon Simulations - Boeing 787-9 Dreamliner # v1.0.1
 - HypePerformanceGroup - Airbus H135 # Build 447
 - IRIS Simulations - Grob G115E Tutor T.1 # v2.4.0
