@@ -1,4 +1,4 @@
-# Version 1.0.6
+# Version 1.0.7
 
 include:
   - definitions/modules/controls.yaml
@@ -47,77 +47,10 @@ shared:
     event_name: AUTOPILOT_DISENGAGE_SET
   -
     type: ToggleSwitch
-    var_name: A:AUTOPILOT HEADING LOCK
-    var_units: Bool
-    var_type: bool
-    event_name: AP_HDG_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT ALTITUDE LOCK
-    var_units: Bool
-    var_type: bool
-    event_name: AP_ALT_HOLD
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT VERTICAL HOLD
-    var_units: Bool
-    var_type: i32
-    event_name: AP_VS_SET
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT VERTICAL HOLD VAR
-    var_units: Feet per minute
-    var_type: i32
-    event_name: AP_VS_VAR_SET_ENGLISH
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT AIRSPEED HOLD
-    var_units: Bool
-    var_type: i32
-    event_name: AP_AIRSPEED_SET
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT MACH HOLD
-    var_units: Bool
-    var_type: i32
-    event_name: AP_MACH_SET
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
-    var_units: Bool
-    var_type: bool
-    event_name: AP_MANAGED_SPEED_IN_MACH_ON
-    off_event_name: AP_MANAGED_SPEED_IN_MACH_OFF
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
-    var_units: Bool
-    var_type: bool
-    event_name: FLIGHT_LEVEL_CHANGE
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT WING LEVELER
-    var_units: Bool
-    var_type: bool
-    event_name: AP_WING_LEVELER
-  -
-    type: ToggleSwitch
     var_name: A:AUTOPILOT BACKCOURSE HOLD
     var_units: Bool
     var_type: bool
     event_name: AP_BC_HOLD
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT PITCH HOLD
-    var_units: Bool
-    var_type: bool
-    event_name: AP_PITCH_LEVELER
-  -
-    type: var
-    var_name: A:AUTOPILOT PITCH HOLD REF
-    var_units: Degrees
-    var_type: f64
-    unreliable: true
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
@@ -134,22 +67,6 @@ shared:
     event_name: TOGGLE_FLIGHT_DIRECTOR
     event_param: 2
     use_calculator: true
-  -
-    type: var
-    var_name: A:AUTOPILOT APPROACH HOLD
-    var_units: Bool
-    var_type: bool
-  -
-    type: event
-    event_name: AP_APR_HOLD
-  -
-    type: var
-    var_name: A:AUTOPILOT GLIDESLOPE HOLD
-    var_units: Bool
-    var_type: bool
-  -
-    type: event
-    event_name: AP_LOC_HOLD
   -
     type: ToggleSwitch
     var_name: A:AUTOPILOT THROTTLE ARM:1
@@ -168,29 +85,10 @@ shared:
     use_calculator: true
   -
     type: ToggleSwitch
-    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
+    var_name: A:AUTOPILOT YAW DAMPER
     var_units: Bool
     var_type: bool
-    event_name: AUTO_THROTTLE_TO_GA
-  -
-    type: ToggleSwitch
-    var_name: A:AUTOPILOT NAV1 LOCK
-    var_units: Bool
-    var_type: bool
-    event_name: AP_NAV1_HOLD
-  -
-    type: NumSet
-    var_name: A:AUTOPILOT MAX BANK ID
-    var_units: Number
-    var_type: i32
-    event_name: AP_MAX_BANK_SET
-  -
-    type: ToggleSwitch
-    var_name: A:GPS DRIVES NAV1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_GPS_DRIVES_NAV1
-    cancel_h_events: true
+    event_name: YAW_DAMPER_TOGGLE
 
   - # Bleeds
     type: NumSet
@@ -490,271 +388,6 @@ shared:
     event_name: REQUEST_POWER_SUPPLY
     use_calculator: true
 
-  - # Fuel Valves
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:1
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 1
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:2
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 2
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:3
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 3
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:4
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 4
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:5
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 5
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:6
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 6
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:7
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 7
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:8
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 8
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:9
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 9
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:10
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 10
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:11
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 11
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:12
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 12
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:13
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 13
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:14
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 14
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:15
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 15
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:16
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 16
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:17
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 17
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:18
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 18
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:19
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 19
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:20
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 20
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:21
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 21
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:22
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 22
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:23
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 23
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:24
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 24
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:25
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 25
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:26
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 26
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:27
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 27
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:28
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 28
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:29
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 29
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:30
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 30
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:31
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 31
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:32
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 32
-    index_reversed: true
-  -
-    type: NumSet
-    var_name: A:FUELSYSTEM VALVE SWITCH:33
-    var_units: Bool
-    var_type: i32
-    event_name: FUELSYSTEM_VALVE_SET
-    event_param: 33
-    index_reversed: true
-
   - # Fuel Pumps
     type: NumSet
     var_name: A:FUELSYSTEM PUMP SWITCH:1
@@ -947,77 +580,254 @@ shared:
     event_name: FUELSYSTEM_PUMP_SET
     event_param: 24
     index_reversed: true
-  -
+
+  - # Fuel Valves
     type: NumSet
-    var_name: A:FUELSYSTEM PUMP SWITCH:25
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
     var_units: Bool
     var_type: i32
-    event_name: FUELSYSTEM_PUMP_SET
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 2
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:3
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 3
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:4
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 4
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:5
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 5
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:6
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 6
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:7
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 7
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:8
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 8
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:11
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 11
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:12
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 12
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:13
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 13
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:14
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 14
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:19
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 19
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:20
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 20
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:21
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 21
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:22
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 22
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:23
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 23
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:24
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 24
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:25
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
     event_param: 25
     index_reversed: true
   -
     type: NumSet
-    var_name: A:FUELSYSTEM PUMP SWITCH:26
+    var_name: A:FUELSYSTEM VALVE SWITCH:26
     var_units: Bool
     var_type: i32
-    event_name: FUELSYSTEM_PUMP_SET
+    event_name: FUELSYSTEM_VALVE_SET
     event_param: 26
     index_reversed: true
   -
     type: NumSet
-    var_name: A:FUELSYSTEM PUMP SWITCH:27
+    var_name: A:FUELSYSTEM VALVE SWITCH:27
     var_units: Bool
     var_type: i32
-    event_name: FUELSYSTEM_PUMP_SET
+    event_name: FUELSYSTEM_VALVE_SET
     event_param: 27
     index_reversed: true
   -
     type: NumSet
-    var_name: A:FUELSYSTEM PUMP SWITCH:28
+    var_name: A:FUELSYSTEM VALVE SWITCH:28
     var_units: Bool
     var_type: i32
-    event_name: FUELSYSTEM_PUMP_SET
+    event_name: FUELSYSTEM_VALVE_SET
     event_param: 28
     index_reversed: true
   -
     type: NumSet
-    var_name: A:FUELSYSTEM PUMP SWITCH:29
+    var_name: A:FUELSYSTEM VALVE SWITCH:29
     var_units: Bool
     var_type: i32
-    event_name: FUELSYSTEM_PUMP_SET
+    event_name: FUELSYSTEM_VALVE_SET
     event_param: 29
     index_reversed: true
   -
     type: NumSet
-    var_name: A:FUELSYSTEM PUMP SWITCH:30
+    var_name: A:FUELSYSTEM VALVE SWITCH:30
     var_units: Bool
     var_type: i32
-    event_name: FUELSYSTEM_PUMP_SET
+    event_name: FUELSYSTEM_VALVE_SET
     event_param: 30
     index_reversed: true
   -
     type: NumSet
-    var_name: A:FUELSYSTEM PUMP SWITCH:31
+    var_name: A:FUELSYSTEM VALVE SWITCH:31
     var_units: Bool
     var_type: i32
-    event_name: FUELSYSTEM_PUMP_SET
+    event_name: FUELSYSTEM_VALVE_SET
     event_param: 31
     index_reversed: true
   -
     type: NumSet
-    var_name: A:FUELSYSTEM PUMP SWITCH:32
+    var_name: A:FUELSYSTEM VALVE SWITCH:32
     var_units: Bool
     var_type: i32
-    event_name: FUELSYSTEM_PUMP_SET
+    event_name: FUELSYSTEM_VALVE_SET
     event_param: 32
     index_reversed: true
   -
     type: NumSet
-    var_name: A:FUELSYSTEM PUMP SWITCH:33
+    var_name: A:FUELSYSTEM VALVE SWITCH:33
     var_units: Bool
     var_type: i32
-    event_name: FUELSYSTEM_PUMP_SET
+    event_name: FUELSYSTEM_VALVE_SET
     event_param: 33
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:34
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 34
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:35
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 35
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:36
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 36
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM VALVE SWITCH:37
+    var_units: Bool
+    var_type: i32
+    event_name: FUELSYSTEM_VALVE_SET
+    event_param: 37
     index_reversed: true
 
   - # Lights
@@ -1120,6 +930,7 @@ shared:
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 3
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -1143,6 +954,7 @@ shared:
     event_name: PANEL_LIGHTS_POWER_SETTING_SET
     event_param: 5
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:1
@@ -1158,6 +970,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 1
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -1181,6 +994,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 2
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:3
@@ -1196,6 +1010,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 3
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:4
@@ -1211,6 +1026,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 4
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:5
@@ -1226,6 +1042,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 5
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:6
@@ -1241,6 +1058,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 6
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:7
@@ -1256,6 +1074,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 7
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:8
@@ -1271,6 +1090,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 8
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:9
@@ -1286,6 +1106,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 9
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:10
@@ -1301,6 +1122,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 10
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:11
@@ -1316,6 +1138,7 @@ shared:
     event_name: CABIN_LIGHTS_POWER_SETTING_SET
     event_param: 11
     index_reversed: true
+    unreliable: true
 
   - # Transponder
     type: NumSet
@@ -1429,25 +1252,31 @@ shared:
 #   var_name: L:SPILL_POSITION1
 # -
 #   type: var
-#   var_name: L:SPILL_POSITION2
-# -
-#   type: var
 #   var_name: L:SPILL_POSITION3
 # -
 #   type: var
-#   var_name: L:SPILL_POSITION4
+#   var_name: L:RAMPS_POSITION4
+# -
+#   type: var
+#   var_name: L:SPILL_POSITION2
+  -
+    type: var
+    var_name: L:Window_opener_FO
 # -
 #   type: var
 #   var_name: L:RAMPS_POSITION1
 # -
 #   type: var
-#   var_name: L:RAMPS_POSITION2
-# -
-#   type: var
 #   var_name: L:RAMPS_POSITION3
 # -
 #   type: var
-#   var_name: L:RAMPS_POSITION4
+#   var_name: L:RAMPS_POSITION2
+  -
+    type: var
+    var_name: L:Window_opener
+# -
+#   type: var
+#   var_name: L:SPILL_POSITION4
 # -
 #   type: var
 #   var_name: L:XMLVAR_AB_L_Current_Stage
@@ -1468,64 +1297,16 @@ shared:
     var_name: L:Covers Switch
   -
     type: var
-    var_name: L:XMLVAR_ALT_Mode_Requested
+    var_name: L:XMLVAR_Transponder_Mode_Is_Auto
   -
     type: var
-    var_name: L:XMLVAR_Transponder_Mode_Is_Auto
+    var_name: L:XMLVAR_ALT_Mode_Requested
   -
     type: var
     var_name: L:INS_Knob
   -
     type: var
-    var_name: L:TEMP_ROTARY_1_VALUE
-  -
-    type: var
-    var_name: L:TEMP_ROTARY_2_VALUE
-  -
-    type: var
-    var_name: L:TEMP_ROTARY_3_VALUE
-  -
-    type: var
-    var_name: L:TCV1
-  -
-    type: var
-    var_name: L:TCV2
-  -
-    type: var
-    var_name: L:TCV3
-  -
-    type: var
-    var_name: L:TCV4
-# -
-#   type: var
-#   var_name: L:TYRE PRESSURE
-  -
-    type: var
     var_name: L:FUEL_TEMP_SELECTOR
-# -
-#   type: var
-#   var_name: L:FUEL_TEMP_GAUGE
-# -
-#   type: var
-#   var_name: L:ENG_TANK_GAUGE
-# -
-#   type: var
-#   var_name: L:BRAKE TEMP
-# -
-#   type: var
-#   var_name: L:AIR_BLEED_ENG1
-# -
-#   type: var
-#   var_name: L:AIR_BLEED_ENG2
-# -
-#   type: var
-#   var_name: L:AIR_BLEED_ENG3
-# -
-#   type: var
-#   var_name: L:AIR_BLEED_ENG4
-  -
-    type: var
-    var_name: L:FD_Selector
   -
     type: var
     var_name: L:BOOM_MASK_BASE
@@ -1546,9 +1327,11 @@ shared:
   -
     type: var
     var_name: L:HF1_VOLUME
+    unreliable: true
   -
     type: var
     var_name: L:HF2_VOLUME
+    unreliable: true
   -
     type: var
     var_name: L:HF1 TRANSMIT
@@ -1575,82 +1358,13 @@ shared:
 #   var_name: L:XMLVAR_LastAB1ThrottleSet
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden1
-# -
-#   type: var
 #   var_name: L:XMLVAR_LastAB2ThrottleSet
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden2
 # -
 #   type: var
 #   var_name: L:XMLVAR_LastAB3ThrottleSet
 # -
 #   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden3
-# -
-#   type: var
 #   var_name: L:XMLVAR_LastAB4ThrottleSet
-# -
-#   type: var
-#   var_name: L:XMLVAR_LeverThrottleHidden4
-  -
-    type: var
-    var_name: L:ENG_FLIGHT_RATING_MODE_1
-  -
-    type: var
-    var_name: L:ENG_FLIGHT_RATING_MODE_2
-  -
-    type: var
-    var_name: L:ENG_FLIGHT_RATING_MODE_3
-  -
-    type: var
-    var_name: L:ENG_FLIGHT_RATING_MODE_4
-  -
-    type: var
-    var_name: L:ENG4_LIMITER_SWITCH
-  -
-    type: var
-    var_name: L:ENG_CRUISE_RATING_SWITCH_1
-  -
-    type: var
-    var_name: L:ENG_CRUISE_RATING_SWITCH_2
-  -
-    type: var
-    var_name: L:ENG_CRUISE_RATING_SWITCH_3
-  -
-    type: var
-    var_name: L:ENG_CRUISE_RATING_SWITCH_4
-  -
-    type: var
-    var_name: L:Debow_Switch_1
-  -
-    type: var
-    var_name: L:Debow_Switch_2
-  -
-    type: var
-    var_name: L:Debow_Switch_3
-  -
-    type: var
-    var_name: L:Debow_Switch_4
-# -
-#   type: var
-#   var_name: L:HYD_GREEN_ON
-# -
-#   type: var
-#   var_name: L:HYD_YELLOW_ON
-# -
-#   type: var
-#   var_name: L:HYD_BLUE_ON
-  -
-    type: var
-    var_name: L:OVERHEAD_HYD_SELECTOR_2
-# -
-#   type: var
-#   var_name: L:BLUE_SERVO_ON
-# -
-#   type: var
-#   var_name: L:GREEN_SERVO_ON
   -
     type: var
     var_name: L:SHOT_1
@@ -1677,7 +1391,56 @@ shared:
     var_name: L:THROTTLE_MASTER_SWITCH_4
   -
     type: var
+    var_name: L:Debow_Switch_1
+  -
+    type: var
+    var_name: L:Debow_Switch_2
+  -
+    type: var
+    var_name: L:Debow_Switch_3
+  -
+    type: var
+    var_name: L:Debow_Switch_4
+  -
+    type: var
+    var_name: L:ENG_FLIGHT_RATING_MODE_1
+  -
+    type: var
+    var_name: L:ENG_FLIGHT_RATING_MODE_2
+  -
+    type: var
+    var_name: L:ENG_FLIGHT_RATING_MODE_3
+  -
+    type: var
+    var_name: L:ENG_FLIGHT_RATING_MODE_4
+  -
+    type: var
+    var_name: L:ENG_CRUISE_RATING_SWITCH_1
+  -
+    type: var
+    var_name: L:ENG_CRUISE_RATING_SWITCH_2
+  -
+    type: var
+    var_name: L:ENG_CRUISE_RATING_SWITCH_3
+  -
+    type: var
+    var_name: L:ENG_CRUISE_RATING_SWITCH_4
+  -
+    type: var
+    var_name: L:TEMP_ROTARY_1_VALUE
+    unreliable: true
+  -
+    type: var
+    var_name: L:TEMP_ROTARY_2_VALUE
+    unreliable: true
+  -
+    type: var
+    var_name: L:TEMP_ROTARY_3_VALUE
+    unreliable: true
+  -
+    type: var
     var_name: L:TEMP_ROTARY_4_VALUE
+    unreliable: true
   -
     type: var
     var_name: L:SYS1_Switch
@@ -1726,27 +1489,29 @@ shared:
   -
     type: var
     var_name: L:CHRONO_DATE
-# -
-#   type: var
-#   var_name: L:XMLVAR_YokeHidden1
 # - # conflict
 #   type: var
 #   var_name: L:Wiper_Switch
 # -
 #   type: var
 #   var_name: L:HANDLING_ElevatorTrim
-# -
-#   type: var
-#   var_name: L:ParkingBrake_Position
   -
     type: var
-    var_name: L:Tanks1_4_Balance
+    var_name: L:FUEL_AUTO_TRANSFER
   -
     type: var
     var_name: L:FO_TRANSFER_SWITCH
   -
     type: var
-    var_name: L:FUEL_AUTO_TRANSFER
+    var_name: L:Tanks1_4_Balance
+  -
+    type: var
+    var_name: L:TANK_11_LOAD
+    unreliable: true
+  -
+    type: var
+    var_name: L:TANK_9_LOAD
+    unreliable: true
   -
     type: var
     var_name: L:Pump_Switch_Tank9
@@ -1761,47 +1526,7 @@ shared:
     var_name: L:Pump_Switch_Tank10B
   -
     type: var
-    var_name: L:ORIDE_11L
-  -
-    type: var
-    var_name: L:Inlet_Valve_11L
-  -
-    type: var
-    var_name: L:ORIDE_11R
-  -
-    type: var
-    var_name: L:Inlet_Valve_11R
-  -
-    type: var
-    var_name: L:TANK_11_LOAD
-    unreliable: true
-  -
-    type: var
-    var_name: L:TANK_9_LOAD
-  -
-    type: var
-    var_name: L:ORIDE_9L
-  -
-    type: var
-    var_name: L:Inlet_Valve_9L
-  -
-    type: var
-    var_name: L:ORIDE_9R
-  -
-    type: var
-    var_name: L:Inlet_Valve_9R
-  -
-    type: var
-    var_name: L:ORIDE_5
-  -
-    type: var
-    var_name: L:Inlet_Valve_5
-  -
-    type: var
-    var_name: L:ORIDE_7
-  -
-    type: var
-    var_name: L:Inlet_Valve_7
+    var_name: L:FUELSYSTEM PUMP SWITCH
   -
     type: var
     var_name: L:DE_AIR_SWITCH
@@ -1814,9 +1539,6 @@ shared:
   -
     type: var
     var_name: L:TANK11_HYD1
-  -
-    type: var
-    var_name: L:FUELSYSTEM PUMP SWITCH
   -
     type: var
     var_name: L:FO_TRANSFER_GUARD
@@ -1832,6 +1554,42 @@ shared:
   -
     type: var
     var_name: L:LP_VALVE_COVER4
+  -
+    type: var
+    var_name: L:Inlet_Valve_5
+  -
+    type: var
+    var_name: L:ORIDE_5
+  -
+    type: var
+    var_name: L:Inlet_Valve_7
+  -
+    type: var
+    var_name: L:ORIDE_7
+  -
+    type: var
+    var_name: L:Inlet_Valve_9L
+  -
+    type: var
+    var_name: L:ORIDE_9L
+  -
+    type: var
+    var_name: L:Inlet_Valve_9R
+  -
+    type: var
+    var_name: L:ORIDE_9R
+  -
+    type: var
+    var_name: L:Inlet_Valve_11L
+  -
+    type: var
+    var_name: L:ORIDE_11L
+  -
+    type: var
+    var_name: L:Inlet_Valve_11R
+  -
+    type: var
+    var_name: L:ORIDE_11R
   -
     type: var
     var_name: L:DCVOLTS
@@ -1856,18 +1614,6 @@ shared:
   -
     type: var
     var_name: L:Window_R
-  -
-    type: var
-    var_name: L:RMP_AUTO_1
-  -
-    type: var
-    var_name: L:RMP_AUTO_2
-  -
-    type: var
-    var_name: L:RMP_AUTO_3
-  -
-    type: var
-    var_name: L:RMP_AUTO_4
   -
     type: var
     var_name: L:LANE_A
@@ -1906,6 +1652,21 @@ shared:
     var_name: L:HYD_AUTO_COVER_D
   -
     type: var
+    var_name: L:RMP_AUTO_1
+  -
+    type: var
+    var_name: L:RMP_AUTO_2
+  -
+    type: var
+    var_name: L:RMP_AUTO_3
+  -
+    type: var
+    var_name: L:RMP_AUTO_4
+  - # FMC Visibility Toggle
+    type: var
+    var_name: L:Metal_Plate
+  -
+    type: var
     var_name: L:RAMP_RAISE
   -
     type: var
@@ -1939,31 +1700,58 @@ shared:
     var_name: L:A320_Neo_MFD_Range
   -
     type: var
-    var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
+    var_name: L:CIVA_INS_HOLD
   -
     type: var
-    var_name: L:HDG_AP_VALUE
-    interpolate: Default
+    var_name: L:CIVA_INS_REMOTE
   -
     type: var
-    var_name: L:IAS_AP_VALUE
-    interpolate: Default
+    var_name: L:CIVA_INS_INSERT
   -
     type: var
-    var_name: L:ALT_AP_VALUE
-    interpolate: Default
+    var_name: L:CIVA_INS_ALERT
   -
     type: var
-    var_name: L:Toilet_Door_Handle
+    var_name: L:CIVA_INS_BAT
   -
     type: var
-    var_name: L:Toilet_Flush
+    var_name: L:CIVA_INS_WARN
   -
     type: var
-    var_name: L:Toilet_Lid
+    var_name: L:CIVA_INS_WPT
   -
     type: var
-    var_name: L:Cabin_Door_Switch
+    var_name: L:CIVA_INS_1
+  -
+    type: var
+    var_name: L:CIVA_INS_2
+  -
+    type: var
+    var_name: L:CIVA_INS_3
+  -
+    type: var
+    var_name: L:CIVA_INS_4
+  -
+    type: var
+    var_name: L:CIVA_INS_5
+  -
+    type: var
+    var_name: L:CIVA_INS_6
+  -
+    type: var
+    var_name: L:CIVA_INS_7
+  -
+    type: var
+    var_name: L:CIVA_INS_8
+  -
+    type: var
+    var_name: L:CIVA_INS_9
+  -
+    type: var
+    var_name: L:CIVA_INS_0
+  -
+    type: var
+    var_name: L:CIVA_INS_CLEAR
   -
     type: var
     var_name: L:GEN_1_2
@@ -2026,6 +1814,15 @@ shared:
     var_name: L:INS_AUTO_MAN
   -
     type: var
+    var_name: L:Toilet_Door_Handle
+  -
+    type: var
+    var_name: L:Toilet_Lid
+  -
+    type: var
+    var_name: L:Toilet_Flush
+  -
+    type: var
     var_name: L:ADC_1_SELECT
   -
     type: var
@@ -2071,7 +1868,16 @@ shared:
     var_name: L:Fire_Sensor_SwitchD
   -
     type: var
+    var_name: L:CIVA_INS_Knob
+  -
+    type: var
+    var_name: L:CIVA_INS_AUTO_MAN
+  -
+    type: var
     var_name: L:Service_Switch
+  -
+    type: var
+    var_name: L:Cabin_Door_Switch
   -
     type: var
     var_name: L:SYS1_COVER
@@ -2137,13 +1943,25 @@ shared:
     var_name: L:FUEL_VALVE_AUTO_SWITCH1
   -
     type: var
+    var_name: L:TCV1
+  -
+    type: var
     var_name: L:FUEL_VALVE_AUTO_SWITCH2
+  -
+    type: var
+    var_name: L:TCV2
   -
     type: var
     var_name: L:FUEL_VALVE_AUTO_SWITCH3
   -
     type: var
+    var_name: L:TCV3
+  -
+    type: var
     var_name: L:FUEL_VALVE_AUTO_SWITCH4
+  -
+    type: var
+    var_name: L:TCV4
   -
     type: var
     var_name: L:Fan1
@@ -2204,6 +2022,9 @@ shared:
   -
     type: var
     var_name: L:ENG3_4_FF_Limiter
+  -
+    type: var
+    var_name: L:ENG4_LIMITER_SWITCH
   -
     type: var
     var_name: L:Pressure_Release_Switch
@@ -2311,67 +2132,41 @@ shared:
     var_name: L:DE_AIR
   -
     type: var
-    var_name: L:MACH_PIT_HOLD_TARGET_AIRMACH
-  -
-    type: var
-    var_name: L:IAS_PIT_HOLD_TARGET_AIRSP
-  -
-    type: var
-    var_name: L:PITCH_DATUM_ACTIVE
-  -
-    type: var
-    var_name: L:IAS_MODE_PITCH_HOLD
-  -
-    type: var
-    var_name: L:IAS_DATUM_ACTIVE
-  -
-    type: var
-    var_name: L:MACH_MODE_PITCH_HOLD
-  -
-    type: var
-    var_name: L:MACH_DATUM_ACTIVE
-  -
-    type: var
-    var_name: L:MAX CLIMB
-  -
-    type: var
-    var_name: L:MAX CRUISE
-  -
-    type: var
-    var_name: L:AP_PANEL_HEADING_HOLD
-  -
-    type: var
-    var_name: L:IAS_ACQ
-# -
-#   type: var
-#   var_name: L:DELTA_SPEED
-  -
-    type: var
-    var_name: L:AUTOLAND
-# -
-#   type: var
-#   var_name: L:DELTA_ALTITUDE
-  -
-    type: var
-    var_name: L:ALT_ACQ
-# -
-#   type: var
-#   var_name: L:XMLVAR_AirSpeedIsInMach
-  -
-    type: var
-    var_name: L:AUTOPILOT ALTITUDE LOCK VAR
-  -
-    type: var
     var_name: L:PILOT_PITCH_CTRL
   -
     type: var
     var_name: L:PITCH_NEEDLE_CTRL
+    unreliable: true
   -
     type: var
     var_name: L:AP_IAS_CONTROL
   -
     type: var
+    var_name: L:AP_LONG_MODE
+  -
+    type: var
+    var_name: L:AP_MACH_VALUE
+    interpolate: Default
+  -
+    type: var
+    var_name: L:AP_IAS_VAL
+    interpolate: Default
+  -
+    type: var
     var_name: L:AP_TRIM_CONTROL
+  -
+    type: var
+    var_name: L:AP_VERT_MODE
+  -
+    type: var
+    var_name: L:AP_PIT_MACH_HOLD_SEL_VAL
+  -
+    type: var
+    var_name: L:AP_PIT_IAS_HOLD_SEL_VAL
+  -
+    type: var
+    var_name: L:AP_VS_SEL_VALUE
+    interpolate: Default
   -
     type: var
     var_name: L:AP_BANK_HOLD_REF
@@ -2380,16 +2175,25 @@ shared:
     var_name: L:GPS_DRIVES_NAV
   -
     type: var
-    var_name: L:Dev_HSI
+    var_name: L:FD_Selector
   -
     type: var
     var_name: L:NAV_HSI
   -
     type: var
-    var_name: L:COMP_HSI
+    var_name: L:HDG_AP_VALUE
+    interpolate: Default
+  -
+    type: var
+    var_name: L:ALT_AP_VALUE
+    interpolate: Default
   -
     type: var
     var_name: L:ALT_TENS
+  -
+    type: var
+    var_name: L:IAS_AP_VALUE
+    interpolate: Default
   -
     type: var
     var_name: L:IAS_TENS
@@ -2399,6 +2203,9 @@ shared:
   -
     type: var
     var_name: L:XMLVAR_Autopilot_2_Status
+  -
+    type: var
+    var_name: L:XMLVAR_TRK_FPA_MODE_ACTIVE
   -
     type: var
     var_name: L:ELEVON_GREEN_BLUE
@@ -2413,16 +2220,7 @@ shared:
     var_name: L:OVERHEAD_HYD_SELECTOR
   -
     type: var
-    var_name: L:PILOT_VISIBLE
-  -
-    type: var
-    var_name: L:COPILOT_VISIBLE
-  -
-    type: var
-    var_name: L:PILOT_TCAS_NEEDLE_PARENT:1
-  -
-    type: var
-    var_name: L:FO_TCAS_NEEDLE_PARENT:1
+    var_name: L:OVERHEAD_HYD_SELECTOR_2
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Throttle_VR_Handled
@@ -2443,6 +2241,9 @@ shared:
 #   var_name: L:XMLVAR_IE_Afterburner_4_Quit
 # -
 #   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
 #   var_name: L:HANDLING_AileronsTrim
 # -
 #   type: var
@@ -2453,6 +2254,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
 # -
 #   type: var
 #   var_name: L:DEICE_Pitot_1
@@ -2533,19 +2337,136 @@ shared:
 #   var_name: L:LIGHTING_STROBE_0
 # -
 #   type: var
-#   var_name: L:XMLVAR_IE_Afterburner_1_LastThrottleInc
-# -
-#   type: var
-#   var_name: L:XMLVAR_IE_Afterburner_2_LastThrottleInc
-# -
-#   type: var
 #   var_name: L:XMLVAR_IE_Afterburner_3_LastThrottleInc
 # -
 #   type: var
 #   var_name: L:XMLVAR_IE_Afterburner_4_LastThrottleInc
 # -
 #   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_1_LastThrottleInc
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_2_LastThrottleInc
+# -
+#   type: var
+#   var_name: L:Door_Volume
+# -
+#   type: var
+#   var_name: L:TYRE PRESSURE
+# -
+#   type: var
+#   var_name: L:FUEL_TEMP_GAUGE
+# -
+#   type: var
+#   var_name: L:ENG_TANK_GAUGE
+# -
+#   type: var
+#   var_name: L:BRAKE TEMP
+# -
+#   type: var
+#   var_name: L:AIR_BLEED_ENG1
+# -
+#   type: var
+#   var_name: L:AIR_BLEED_ENG2
+# -
+#   type: var
+#   var_name: L:AIR_BLEED_ENG3
+# -
+#   type: var
+#   var_name: L:AIR_BLEED_ENG4
+# -
+#   type: var
+#   var_name: L:HYD_GREEN_ON
+# -
+#   type: var
+#   var_name: L:HYD_YELLOW_ON
+# -
+#   type: var
+#   var_name: L:HYD_BLUE_ON
+# -
+#   type: var
+#   var_name: L:BLUE_SERVO_ON
+# -
+#   type: var
+#   var_name: L:GREEN_SERVO_ON
+  -
+    type: var
+    var_name: L:AP_LAT_MODE
+# -
+#   type: var
+#   var_name: L:CONCORDE_ENVELOPE_LIMITS
+# -
+#   type: var
+#   var_name: L:CONCORDE_ENVELOPE_LIMITS_M
+# -
+#   type: var
+#   var_name: L:ALT_ACQ
+# -
+#   type: var
+#   var_name: L:DELTA_ALTITUDE
+# -
+#   type: var
+#   var_name: L:IAS_ACQ
+# -
+#   type: var
+#   var_name: L:DELTA_SPEED
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden3
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden4
+  -
+    type: var
+    var_name: L:PILOT_VISIBLE
+  -
+    type: var
+    var_name: L:COPILOT_VISIBLE
+  -
+    type: var
+    var_name: L:PILOT_TCAS_NEEDLE_PARENT:1
+  -
+    type: var
+    var_name: L:FO_TCAS_NEEDLE_PARENT:1
+# -
+#   type: var
 #   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:AIRLINER_TO_FLEX_TEMP
+# -
+#   type: var
+#   var_name: L:AIRLINER_CRUISE_ALTITUDE
+  -
+    type: var
+    var_name: L:A320_NEO_CDU_START_PAGE
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:Fuel_Pump_Switch_A
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:A320_Neo_Clock_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:A320_Neo_Clock_State
 # -
 #   type: var
 #   var_name: L:DME1_ScreenLuminosity
@@ -2558,12 +2479,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:SCREEN_State
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveOrigin
-# -
-#   type: var
-#   var_name: L:Glasscockpits_FPLHaveDestination
 # -
 #   type: var
 #   var_name: L:A320_Neo_ATC_ScreenLuminosity
@@ -2626,9 +2541,6 @@ shared:
 #   var_name: L:A320_Neo_MFD_State
 # -
 #   type: var
-#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
-# -
-#   type: var
 #   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
   -
     type: var
@@ -2665,25 +2577,16 @@ shared:
     var_name: L:AIRLINER_FMS_SHOW_TOP_CLIMB
 # -
 #   type: var
-#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+#   var_name: L:INS_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:AIRLINER_TO_FLEX_TEMP
+#   var_name: L:INS_State
 # -
 #   type: var
-#   var_name: L:AIRLINER_CRUISE_ALTITUDE
-  -
-    type: var
-    var_name: L:A320_NEO_CDU_START_PAGE
-  -
-    type: var
-    var_name: L:Fuel_Pump_Switch_A
+#   var_name: L:CONCORDE_FCU_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:A320_Neo_CDU_ScreenLuminosity
-# -
-#   type: var
-#   var_name: L:A320_Neo_CDU_State
+#   var_name: L:CONCORDE_FCU_State
 # -
 #   type: var
 #   var_name: L:AIRLINER_FLIGHT_PHASE
@@ -2692,19 +2595,22 @@ shared:
 #   var_name: L:FMC_UPDATE_CURRENT_PAGE
   -
     type: var
-    var_name: L:MODE_HEADING
+    var_name: L:AP_STEERING_SOURCE
   -
     type: var
-    var_name: L:MODE_ALTITUDE
+    var_name: L:MACH_AP_VALUE
 # -
 #   type: var
-#   var_name: L:AIRLINER_FMC_FORCE_NEXT_UPDATE
+#   var_name: L:AP_MAXCLB_FPM
 # -
 #   type: var
-#   var_name: L:A320_Neo_Clock_ScreenLuminosity
+#   var_name: L:AP_PIT_HOLD_FPM
 # -
 #   type: var
-#   var_name: L:A320_Neo_Clock_State
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:CONCORDE_OVERSPEED_WARNING
 # -
 #   type: var
 #   var_name: L:RADIONAV_SOURCE
@@ -2877,6 +2783,27 @@ server:
     unreliable: true
 
 ignore:
+  - CONCORDE_FCU_ALT_ACQ
+  - CONCORDE_FCU_ALT_HOLD
+  - CONCORDE_FCU_BC_HOLD
+  - CONCORDE_FCU_GLIDE_HOLD
+  - CONCORDE_FCU_HDG_HOLD
+  - CONCORDE_FCU_HDGTRK_HOLD
+  - CONCORDE_FCU_IAS_ACQ
+  - CONCORDE_FCU_IAS_HOLD
+  - CONCORDE_FCU_INS_HOLD
+  - CONCORDE_FCU_LAND_HOLD
+  - CONCORDE_FCU_MACH_HOLD
+  - CONCORDE_FCU_MAX_CLIMB
+  - CONCORDE_FCU_MAX_CRUISE
+  - CONCORDE_FCU_PIT_HOLD
+  - CONCORDE_FCU_PIT_IAS_HOLD
+  - CONCORDE_FCU_PIT_MACH_HOLD
+  - CONCORDE_FCU_TOGA_HOLD
+  - CONCORDE_FCU_TURB_HOLD
+  - CONCORDE_FCU_VORLOC_HOLD
+  - CONCORDE_FCU_VS_HOLD
+
   - A320_Neo_ATC_BTN_0
   - A320_Neo_ATC_BTN_1
   - A320_Neo_ATC_BTN_2

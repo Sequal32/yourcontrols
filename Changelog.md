@@ -1,8 +1,24 @@
 # YourControls Changelog
 
+## Version 2.8.6
+
+### Profiles
+
+- Added: Sukhoi SuperJet 100-95 by Headwind Simulations (v0.6.1).
+- Updated: Airbus A320neo by FlyByWire Simulations (v0.12.3).
+- Updated: Airbus A330neo by Headwind Simulations (v0.6.1).
+- Updated: Beechcraft King Air 350i by Black Square (v0.1.4).
+- Updated: Cessna 208B Grand Caravan by Black Square (v0.1.5).
+- Updated: Concorde by DC Designs (v1.0.7).
+
+### Aircraft Fixes
+
+- FlyByWire/Headwind: Managed AP modes.
+- FlyByWire/Headwind: Mach higher than 0.61.
+
 ## Version 2.8.5
 
-### Changes
+### Profiles
 
 - Added: Airbus A320neo by Microsoft & iniBuilds (v1.0.21).
 - Added: Bell 429 GlobalRanger by jXt Simulations (v0.9.7).
