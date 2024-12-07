@@ -1,10 +1,10 @@
 use crossbeam_channel::{Receiver, Sender};
 use dns_lookup::lookup_host;
-use dotenv_codegen::dotenv;
+use dotenvy_macro::dotenv;
 use laminar::Metrics;
 use socket2::{Domain, Socket, Type};
-use std::net::UdpSocket;
-use std::time::SystemTime;
+use std::{io, net::UdpSocket};
+use std::{net::Ipv6Addr, time::SystemTime};
 use std::{
     net::SocketAddr,
     net::SocketAddrV4,
@@ -78,18 +78,14 @@ pub fn get_socket_config(timeout: u64) -> laminar::Config {
     }
 }
 
-pub fn get_socket_duplex(port: u16) -> UdpSocket {
+pub fn get_socket_duplex(port: u16) -> Result<UdpSocket, io::Error> {
     let socket = Socket::new(Domain::IPV6, Type::DGRAM, None).unwrap();
     socket.set_only_v6(false).ok();
-    socket
-        .bind(
-            &format!("[::]:{}", port)
-                .parse::<SocketAddr>()
-                .unwrap()
-                .into(),
-        )
-        .unwrap();
-    socket.into()
+
+    let socket_addr = SocketAddr::new(IpAddr::V6(Ipv6Addr::UNSPECIFIED), port);
+    socket.bind(&socket_addr.into())?;
+
+    Ok(socket.into())
 }
 
 pub fn get_seconds() -> f64 {

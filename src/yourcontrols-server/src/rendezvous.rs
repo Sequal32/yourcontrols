@@ -200,7 +200,7 @@ fn process_message(
 }
 
 pub fn run_rendezvous(servers: Arc<Mutex<Servers>>, port: u16) {
-    let socket = Socket::from_udp_socket(get_socket_duplex(port), get_socket_config(3))
+    let socket = Socket::from_udp_socket(get_socket_duplex(port).unwrap(), get_socket_config(3))
         .expect("Failed to bind!");
     info!("Server started on {}!", socket.local_addr().unwrap());
 

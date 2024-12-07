@@ -232,7 +232,7 @@ fn cleanup(servers: &mut Servers) {
 }
 
 pub fn run_hoster(servers: Arc<Mutex<Servers>>, port: u16) {
-    let socket = Socket::from_udp_socket(get_socket_duplex(port), get_socket_config(5))
+    let socket = Socket::from_udp_socket(get_socket_duplex(port).unwrap(), get_socket_config(5))
         .expect("Failed to bind!");
 
     info!(

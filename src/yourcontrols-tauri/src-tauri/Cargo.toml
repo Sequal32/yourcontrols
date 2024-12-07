@@ -1,0 +1,57 @@
+[package]
+name = "yourcontrols-tauri"
+version = "3.0.0"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "yourcontrols_tauri_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["specta"] }
+tauri-plugin-shell = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+specta = "=2.0.0-rc.20"
+tauri-specta = { version = "=2.0.0-rc.20", features = ["derive", "typescript"] }
+specta-typescript = "0.0.7"
+tauri-plugin-log = { version = "2", features = ["colored"] }
+log = "0.4.22"
+# simconnect = "0.3.2"
+indexmap = { version = "2.2", features = ["serde"] }
+serde_yaml = "0.8"
+num = "0.4.3"
+bimap = { version = "0.6", features = ["serde"] }
+byteorder = "1.3"
+spin_sleep = "1.1"
+tungstenite = "0.23"
+dns-lookup = "2.0"
+rmp-serde = "1.3"
+thiserror = "2.0"
+anyhow = "1.0"
+semver = "1.0"
+zip = "2.2"
+derive_more = { version = "1.0", features = ["display", "from"] }
+attohttpc = { version = "0.28", features = ["json"] }
+igd-next = { version = "0.15", features = ["aio_tokio"] }
+local-ip-address = "0.6"
+tokio = { version = "1.41", features = ["time"] }
+tauri-plugin-clipboard-manager = "2.0"
+
+yourcontrols-net = { path = "../../yourcontrols-net" }
+yourcontrols-types = { path = "../../yourcontrols-types" }
+simconnect = { git = " https://github.com/joriskleiber/simconnect-rust.git", "branch" = "msfs-sdk" }
+laminar = { git = "https://github.com/Sequal32/laminar.git" }
+
+[features]
+skip_sim_connect = []
