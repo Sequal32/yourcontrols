@@ -1,21 +1,26 @@
 use std::collections::HashMap;
 
+use tauri_specta::Event as _;
+
+use crate::events::client_manager::SetObservingEvent;
+
 #[derive(Default)]
 pub struct Client {
     pub observer_mode: bool,
     pub is_server: bool,
 }
 
-#[derive(Default)]
 pub struct ClientManager {
+    app_handle: tauri::AppHandle,
     clients: HashMap<String, Client>,
     current_control: Option<String>,
     next_control: Option<String>,
 }
 
 impl ClientManager {
-    pub fn new() -> Self {
+    pub fn new(app_handle: tauri::AppHandle) -> Self {
         Self {
+            app_handle,
             clients: HashMap::new(),
             current_control: None,
             // Client joined "first", cycling to next "first" person after client leaves
@@ -81,6 +86,11 @@ impl ClientManager {
     pub fn set_observer(&mut self, name: &str, is_observer: bool) {
         if let Some(client) = self.clients.get_mut(name) {
             client.observer_mode = is_observer;
+
+            if let Err(e) = SetObservingEvent(name.to_string(), is_observer).emit(&self.app_handle)
+            {
+                log::error!("Could not emit SetObservingEvent: {:?}", e);
+            }
         }
     }
 

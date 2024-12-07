@@ -7,8 +7,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@ui/form";
-import { Skeleton } from "@ui/skeleton";
+} from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface SimplifiedFormFieldProps
   extends React.ComponentProps<typeof FormField> {

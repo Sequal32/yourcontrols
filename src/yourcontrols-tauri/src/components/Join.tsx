@@ -1,16 +1,26 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/card";
-import { Button } from "@ui/button";
-import { ToggleGroup, ToggleGroupItem } from "@ui/toggle-group";
-import { Form } from "@ui/form";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import StyledFormField from "@/components/StyledFormField";
 import { MetricsEvent } from "@/types/bindings";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Accordion, AccordionContent, AccordionItem } from "@ui/accordion";
-import { Input } from "@ui/input";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+} from "@/components/ui/accordion";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
   ipVersion: z

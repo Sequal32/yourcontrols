@@ -11,8 +11,8 @@ async getAircraftConfigs() : Promise<{ [key in string]: AircraftConfig[] }> {
 async saveSettings(username: string, aircraft: string, instructorMode: boolean, streamerMode: boolean) : Promise<null> {
     return await TAURI_INVOKE("save_settings", { username, aircraft, instructorMode, streamerMode });
 },
-async startServer(method: ConnectionMethod) : Promise<null> {
-    return await TAURI_INVOKE("start_server", { method });
+async startServer(method: ConnectionMethod, isIpv6: boolean, port: number | null) : Promise<null> {
+    return await TAURI_INVOKE("start_server", { method, isIpv6, port });
 },
 async disconnect() : Promise<void> {
     await TAURI_INVOKE("disconnect");
@@ -20,11 +20,17 @@ async disconnect() : Promise<void> {
 async transferControl(target: string) : Promise<void> {
     await TAURI_INVOKE("transfer_control", { target });
 },
+async setObserver(target: string, isObserver: boolean) : Promise<void> {
+    await TAURI_INVOKE("set_observer", { target, isObserver });
+},
 async goObserver() : Promise<void> {
     await TAURI_INVOKE("go_observer");
 },
-async getPublicIp(isIpv6: boolean) : Promise<string | null> {
-    return await TAURI_INVOKE("get_public_ip", { isIpv6 });
+async forceTakeControl() : Promise<void> {
+    await TAURI_INVOKE("force_take_control");
+},
+async getPublicIp() : Promise<string> {
+    return await TAURI_INVOKE("get_public_ip");
 }
 }
 
@@ -36,15 +42,21 @@ clientFailEvent: ClientFailEvent,
 gainControlEvent: GainControlEvent,
 loseControlEvent: LoseControlEvent,
 metricsEvent: MetricsEvent,
+serverAttemptEvent: ServerAttemptEvent,
 serverFailEvent: ServerFailEvent,
-setInControlEvent: SetInControlEvent
+serverStartedEvent: ServerStartedEvent,
+setInControlEvent: SetInControlEvent,
+setObservingEvent: SetObservingEvent
 }>({
 clientFailEvent: "client-fail-event",
 gainControlEvent: "gain-control-event",
 loseControlEvent: "lose-control-event",
 metricsEvent: "metrics-event",
+serverAttemptEvent: "server-attempt-event",
 serverFailEvent: "server-fail-event",
-setInControlEvent: "set-in-control-event"
+serverStartedEvent: "server-started-event",
+setInControlEvent: "set-in-control-event",
+setObservingEvent: "set-observing-event"
 })
 
 /** user-defined constants **/
@@ -58,9 +70,12 @@ export type ClientFailEvent = string
 export type ConnectionMethod = "direct" | "relay" | "cloudServer"
 export type GainControlEvent = null
 export type LoseControlEvent = null
-export type MetricsEvent = { sent_packets: number; received_packets: number; sent_bandwidth: number; received_bandwidth: number; packet_loss: number; ping: number }
+export type MetricsEvent = { sentPackets: number; receivedPackets: number; sentBandwidth: number; receivedBandwidth: number; packetLoss: number; ping: number }
+export type ServerAttemptEvent = null
 export type ServerFailEvent = string
+export type ServerStartedEvent = string
 export type SetInControlEvent = string
+export type SetObservingEvent = [string, boolean]
 
 /** tauri-specta globals **/
 

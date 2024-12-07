@@ -1,80 +1,69 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/card";
-import { Button } from "@ui/button";
-import { ToggleGroup, ToggleGroupItem } from "@ui/toggle-group";
-import { Form } from "@ui/form";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import StyledFormField from "@/components/StyledFormField";
-import { commands, events, MetricsEvent } from "@/types/bindings";
+import { commands } from "@/types/bindings";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Accordion, AccordionContent, AccordionItem } from "@ui/accordion";
-import { Input } from "@ui/input";
-import { appState as appStateAtom } from "@/atoms/appState";
-import { useSetAtom } from "jotai";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+} from "@/components/ui/accordion";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
-  ipVersion: z
-    .string({ required_error: "IP Version is required!" })
-    .trim()
-    .min(1, { message: "IP Version is required" }),
-  hostingMethode: z
-    .string({ required_error: "Hosting Mode is required!" })
-    .min(1, { message: "Hosting Mode is required" }),
+  // ToggleGroup needs string values
+  isIpv6: z.enum(["false", "true"]),
+  hostingMethode: z.enum(["relay", "cloudServer", "direct"]),
+  port: z.coerce.number().int("Port needs to be an integer").nullable(),
 });
 
-// TODO: FormSchema
+type FormValues = z.infer<typeof formSchema>;
+
 const Host: React.FC = () => {
   const { toast } = useToast();
-  const form = useForm({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     reValidateMode: "onSubmit",
     defaultValues: {
-      ipVersion: "ipv4",
+      isIpv6: "false",
       hostingMethode: "relay",
+      port: null,
     },
   });
 
-  const setAppState = useSetAtom(appStateAtom);
-
   const [publicIp, setPublicIp] = useState<string | null>(null);
-  const [metrics, setMetrics] = useState<MetricsEvent>();
-
-  useEffect(() => {
-    const metricsEventPromise = events.metricsEvent.listen((data) => {
-      setMetrics(data.payload);
-    });
-
-    return () => {
-      metricsEventPromise.then((unlisten) => unlisten());
-    };
-  }, []);
 
   // TODO: store in atom?
   useEffect(() => {
-    setPublicIp(null);
-    const is_ipv6 = form.getValues("ipVersion") === "ipv6";
-
     commands
-      .getPublicIp(is_ipv6)
+      .getPublicIp()
       .then((ip) => {
         setPublicIp(ip);
       })
       .catch(() => {
-        setPublicIp("Could not fetch public IP");
+        setPublicIp("Could not get public IP");
       });
-  }, [form.getValues("ipVersion")]);
+  }, []);
 
-  // TODO
-  const onSubmit = ({
-    ipVersion,
-    hostingMethode,
-  }: z.infer<typeof formSchema>) => {
+  const onSubmit = ({ hostingMethode, isIpv6, port }: FormValues) => {
+    const isIpv6Bool = isIpv6 === "true";
+
     commands
-      .startServer(hostingMethode as any)
+      .startServer(hostingMethode, isIpv6Bool, port)
       .then(() => {
-        setAppState("hosting");
+        // todo: set button to loading, while waiting for server event
       })
       .catch((err) => {
         toast({
@@ -96,21 +85,21 @@ const Host: React.FC = () => {
           <CardContent className="space-y-2">
             <StyledFormField
               control={form.control}
-              name="ipVersion"
+              name="isIpv6"
               label="IP Version"
               description={publicIp}
               render={({ field }) => (
                 <ToggleGroup
                   type="single"
                   variant="outline"
-                  value={field.value}
                   onValueChange={(v) => {
                     if (!v) return;
                     field.onChange(v);
                   }}
+                  {...field}
                 >
-                  <ToggleGroupItem value="ipv4">IPv4</ToggleGroupItem>
-                  <ToggleGroupItem value="ipv6">IPv6</ToggleGroupItem>
+                  <ToggleGroupItem value="false">IPv4</ToggleGroupItem>
+                  <ToggleGroupItem value="true">IPv6</ToggleGroupItem>
                 </ToggleGroup>
               )}
             />
@@ -123,11 +112,11 @@ const Host: React.FC = () => {
                 <ToggleGroup
                   type="single"
                   variant="outline"
-                  value={field.value}
                   onValueChange={(v) => {
                     if (!v) return;
                     field.onChange(v);
                   }}
+                  {...field}
                 >
                   <ToggleGroupItem value="relay">Cloud P2P</ToggleGroupItem>
                   <ToggleGroupItem value="cloudServer">
@@ -151,7 +140,8 @@ const Host: React.FC = () => {
                     label="Port"
                     render={({ field }) => (
                       <Input
-                        className="w-3/5"
+                        type="number"
+                        className="no-spinner w-3/5"
                         placeholder="25071"
                         autoComplete="off"
                         {...field}
@@ -167,7 +157,6 @@ const Host: React.FC = () => {
               Start Server
             </Button>
           </CardFooter>
-          {JSON.stringify(metrics)}
         </Card>
       </form>
     </Form>

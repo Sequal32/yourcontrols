@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/card";
-import { Button } from "@ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -9,14 +15,18 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@ui/select";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@ui/tooltip";
-import { Switch } from "@ui/switch";
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Switch } from "@/components/ui/switch";
 import { useForm } from "react-hook-form";
-import { Form } from "@ui/form";
-import { Input } from "@ui/input";
+import { Form } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import clsx from "clsx";
-import { Separator } from "@ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { commands } from "@/types/bindings";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,7 +47,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 const Settings: React.FC = () => {
-  const form = useForm<FormSchema>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     reValidateMode: "onSubmit",
     defaultValues: {
@@ -66,7 +76,7 @@ const Settings: React.FC = () => {
     aircraft,
     instructorMode,
     streamerMode,
-  }: z.infer<typeof formSchema>) => {
+  }: FormSchema) => {
     console.log("onSubmit", username, aircraft);
 
     commands

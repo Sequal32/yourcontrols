@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Settings from "@/components/Settings";
 import Join from "@/components/Join";
 import Host from "@/components/Host";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAtomValue } from "jotai";
-import { appState as appStateAtom } from "@/atoms/appState";
+import { appState as appStateAtom } from "@/atoms/app";
+import Server from "@/components/Server";
 
 const DefaultPage: React.FC = React.memo(() => (
   <>
@@ -52,10 +53,11 @@ const App: React.FC = () => {
     e.preventDefault();
   };
 
+  // todo: maybe use routes to persist even after reload?
   const switchAppState = (): React.ReactNode => {
     switch (appState) {
       case "hosting":
-        return "Hosting";
+        return <Server />;
       case "connected":
         return "Connected";
       default:

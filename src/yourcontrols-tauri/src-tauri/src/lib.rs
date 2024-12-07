@@ -1,3 +1,5 @@
+use client_manager::ClientManager;
+use tauri::Manager;
 use tauri_plugin_log::fern;
 
 mod commands;
@@ -23,13 +25,14 @@ mod events {
     pub mod client_fail;
     pub use client_fail::*;
 
+    pub mod client_manager;
+
     pub mod control;
 
     pub mod metrics;
     pub use metrics::*;
 
-    pub mod server_fail;
-    pub use server_fail::*;
+    pub mod server;
 }
 mod client_manager;
 mod simconfig;
@@ -41,8 +44,6 @@ mod varreader;
 
 // TODO: move to a config file
 pub const AIRCRAFT_DEFINITIONS_PATH: &str = "F:/yourcontrols/definitions/aircraft/";
-pub const IP_V4_LOOKUP_ENDPOINT: &str = "https://api.ipify.org";
-pub const IP_V6_LOOKUP_ENDPOINT: &str = "https://api64.ipify.org";
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -57,7 +58,11 @@ pub enum Error {
     #[error(transparent)]
     Anyhow(#[from] anyhow::Error),
     #[error(transparent)]
-    Reqwest(#[from] reqwest::Error),
+    LocalIpAddress(#[from] local_ip_address::Error),
+    #[error(transparent)]
+    IgdNextSearch(#[from] igd_next::SearchError),
+    #[error(transparent)]
+    IgdNextExternalIp(#[from] igd_next::GetExternalIpError),
 }
 
 impl serde::Serialize for Error {
@@ -71,7 +76,9 @@ impl serde::Serialize for Error {
             Error::Io(x) => x.to_string(),
             Error::Yourcontrols(x) => x.to_string(),
             Error::Anyhow(x) => x.to_string(),
-            Error::Reqwest(x) => x.to_string(),
+            Error::LocalIpAddress(x) => x.to_string(),
+            Error::IgdNextSearch(x) => x.to_string(),
+            Error::IgdNextExternalIp(x) => x.to_string(),
         };
         log::error!(target: "tauri_backend", "{log_error}");
 
@@ -95,16 +102,21 @@ pub fn run() {
             commands::start_server,
             commands::disconnect,
             commands::transfer_control,
+            commands::set_observer,
             commands::go_observer,
+            commands::force_take_control,
             commands::get_public_ip,
         ])
         .events(tauri_specta::collect_events![
             events::ClientFailEvent,
-            events::ServerFailEvent,
+            events::server::ServerFailEvent,
+            events::server::ServerAttemptEvent,
+            events::server::ServerStartedEvent,
             events::control::GainControlEvent,
             events::control::LoseControlEvent,
             events::control::SetInControlEvent,
             events::MetricsEvent,
+            events::client_manager::SetObservingEvent,
         ]);
 
     #[cfg(debug_assertions)]
@@ -122,6 +134,7 @@ pub fn run() {
     }
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(
             tauri_plugin_log::Builder::new()
                 .with_colors(fern::colors::ColoredLevelConfig {
@@ -139,8 +152,11 @@ pub fn run() {
         .manage(states::DefinitionsState::default())
         .manage(states::SettingsState::default())
         .manage(states::TransferClientState::default())
-        .manage(states::ClientManagerState::default())
         .setup(move |app| {
+            let client_manager = ClientManager::new(app.handle().clone());
+            let state = states::ClientManagerState::new(std::sync::Mutex::new(client_manager));
+            app.manage(state);
+
             tauri_specta_builder.mount_events(app);
             Ok(())
         })
