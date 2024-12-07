@@ -79,8 +79,8 @@
 - Flysimware - Grumman G-44A Widgeon # v1.8.2
 - Got Friends - Discus-2c # v2.0.7
 - Got Friends - Edgley EA-7 Optica # v1.0.7
-- Headwind Simulations - Airbus A330-900neo # v0.6.0
-- Headwind Simulations - Sukhoi SuperJet 100-95 # v0.6.0
+- Headwind Simulations - Airbus A330-900neo # v0.6.1
+- Headwind Simulations - Sukhoi SuperJet 100-95 # v0.6.1
 - Horizon Simulations - Boeing 787-9 Dreamliner # v1.0.1
 - HypePerformanceGroup - Airbus H135 # Build 447
 - IRIS Simulations - Grob G115E Tutor T.1 # v2.4.0
