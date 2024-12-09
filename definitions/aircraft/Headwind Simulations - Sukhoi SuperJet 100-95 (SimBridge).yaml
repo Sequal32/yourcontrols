@@ -44,6 +44,25 @@ shared:
     var_type: bool
     event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
 
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:2
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG2
+  -
+    type: ToggleSwitch
+    var_name: A:STRUCTURAL DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STRUCTURAL_DEICE
+
   - # Engine Ignition
     type: NumSet
     var_name: A:TURB ENG IGNITION SWITCH EX1:1
@@ -346,7 +365,7 @@ shared:
     index_reversed: true
     unreliable: true
 
-  - # MID L Cabin Door
+  - # FWD L Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:0
     var_units: Bool
@@ -370,7 +389,7 @@ shared:
     event_name: TOGGLE_AIRCRAFT_EXIT
     event_param: 3
     cancel_h_events: true
-  - # MID R Cabin Door
+  - # AFT R Cabin Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:3
     var_units: Bool
@@ -378,7 +397,7 @@ shared:
     event_name: TOGGLE_AIRCRAFT_EXIT
     event_param: 4
     cancel_h_events: true
-  - # FWD/AFT Cargo Doors
+  - # AFT R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:4
     var_units: Bool
@@ -386,9 +405,17 @@ shared:
     event_name: TOGGLE_AIRCRAFT_EXIT
     event_param: 5
     cancel_h_events: true
-  - # GPU Truck
+  - # FWD R Cargo Door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:5
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT
+    event_param: 6
+    cancel_h_events: true
+  - # GPU Truck
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:8
     var_units: Bool
     var_type: bool
     event_name: REQUEST_POWER_SUPPLY
@@ -553,7 +580,7 @@ shared:
 
 # - # LVAR's
 #   type: var
-#   var_name: L:A339X_DEVELOPER_STATE
+#   var_name: L:A32NX_DEVELOPER_STATE
 # -
 #   type: var
 #   var_name: L:A32NX_IS_READY
@@ -982,6 +1009,83 @@ shared:
   -
     type: var
     var_name: L:A32NX_DISCARD_PAGE
+# -
+#   type: var
+#   var_name: L:A32NX_IS_STATIONARY
+# -
+#   type: var
+#   var_name: L:A32NX_ENGINE_N1:1
+# -
+#   type: var
+#   var_name: L:A32NX_ENGINE_N1:2
+# -
+#   type: var
+#   var_name: L:FSDT_GSX_DEPARTURE_STATE
+# -
+#   type: var
+#   var_name: L:A32NX_GND_EQP_IS_VISIBLE
+# -
+#   type: var
+#   var_name: L:A32NX_ENGINE_N2:1
+# -
+#   type: var
+#   var_name: L:A32NX_ENGINE_N2:2
+# -
+#   type: var
+#   var_name: L:A32NX_FWD_DOOR_CARGO_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_APU_N_RAW
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_SPOILERS_LEFT_DEFLECTION
+# -
+#   type: var
+#   var_name: L:A32NX_GEAR_DOOR_CENTER_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_GEAR_DOOR_RIGHT_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_REVERSER_1_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_GEAR_DOOR_LEFT_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_GEAR_CENTER_SMALL_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_RUDDER_DEFLECTION
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_AILERON_LEFT_DEFLECTION
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_ELEVATOR_LEFT_DEFLECTION
+# -
+#   type: var
+#   var_name: L:A32NX_NOSE_WHEEL_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_REVERSER_2_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_ELEVATOR_RIGHT_DEFLECTION
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_SPOILERS_RIGHT_DEFLECTION
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_AILERON_RIGHT_DEFLECTION
+  -
+    type: var
+    var_name: L:A32NX_MODEL_WHEELCHOCKS_ENABLED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:A32NX_MODEL_CONES_ENABLED
+    cancel_h_events: true
 # -
 #   type: var
 #   var_name: L:XMLVAR_Autopilot_Altitude_Increment
@@ -1601,6 +1705,16 @@ shared:
     var_name: L:XMLVAR_Momentary_PUSH_OVHD_EVAC_COMMAND_Pressed
   -
     type: var
+    var_name: L:A32NX_GRAVITYGEAR_TURNED
+  -
+    type: var
+    var_name: L:A32NX_GRAVITYGEAR_ROTATE_PCT
+    unreliable: true
+  -
+    type: var
+    var_name: L:A32NX_GRAVITYGEAR_ROTATIONS
+  -
+    type: var
     var_name: L:A32NX_EMERELECPWR_GEN_TEST
   -
     type: var
@@ -1658,19 +1772,10 @@ shared:
     var_name: L:A32NX_ENGMANSTART2_TOGGLE_LOCK
   -
     type: var
-    var_name: L:A32NX_BUTTON_OVHD_ANTI_ICE_ENG_1_POSITION
-  -
-    type: var
     var_name: L:XMLVAR_Momentary_PUSH_OVHD_ANTIICE_ENG1_Pressed
   -
     type: var
-    var_name: L:A32NX_BUTTON_OVHD_ANTI_ICE_ENG_2_POSITION
-  -
-    type: var
     var_name: L:XMLVAR_Momentary_PUSH_OVHD_ANTIICE_ENG2_Pressed
-  -
-    type: var
-    var_name: L:A32NX_BUTTON_OVHD_ANTI_ICE_WING_POSITION
   -
     type: var
     var_name: L:XMLVAR_Momentary_PUSH_OVHD_ANTIICE_WING_Pressed
@@ -2065,12 +2170,6 @@ shared:
     var_name: L:PUSH_AUTOPILOT_MASTERCAUT_L
   -
     type: var
-    var_name: L:PUSH_AUTOPILOT_MASTERAWARN_R
-  -
-    type: var
-    var_name: L:PUSH_AUTOPILOT_MASTERCAUT_R
-  -
-    type: var
     var_name: L:A32NX_COCKPIT_DOOR_LOCKED
   -
     type: var
@@ -2120,6 +2219,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_LGCIU_2_NOSE_GEAR_DOWNLOCKED
+# -
+#   type: var
+#   var_name: L:A32NX_GRAVITYGEAR_TURN_PCT
+  -
+    type: var
+    var_name: L:A32NX_GRAVITYGEAR_STOWING
   -
     type: NumSet
     var_name: L:A32NX_AUTOPILOT_1_ACTIVE
@@ -2202,17 +2307,13 @@ shared:
     interpolate: Default
 # -
 #   type: var
-#   var_name: L:A32NX_HYD_BRAKE_ALTN_LEFT_PRESS
-  -
-    type: NumSet
-    var_name: L:A32NX_LEFT_BRAKE_PEDAL_INPUT
-    var_units: Number
-    var_type: f64
-    multiply_by: 327.68
-    add_by: -16384
-    event_name: AXIS_LEFT_BRAKE_SET
-    use_calculator: true
-    unreliable: true
+#   var_name: L:A32NX_SIDESTICK_POSITION_Y
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_BRAKE_ALTN_ACC_PRESS
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_BRAKE_ALTN_RIGHT_PRESS
   -
     type: NumSet
     var_name: L:A32NX_RIGHT_BRAKE_PEDAL_INPUT
@@ -2225,25 +2326,29 @@ shared:
     unreliable: true
 # -
 #   type: var
-#   var_name: L:A32NX_TILLER_HANDLE_POSITION
-# -
-#   type: var
-#   var_name: L:A32NX_HYD_BRAKE_ALTN_ACC_PRESS
-# -
-#   type: var
-#   var_name: L:A32NX_FLAPS_HANDLE_PERCENT
-# -
-#   type: var
-#   var_name: L:A32NX_SIDESTICK_POSITION_Y
-# -
-#   type: var
-#   var_name: L:A32NX_HYD_BRAKE_ALTN_RIGHT_PRESS
+#   var_name: L:A32NX_SIDESTICK_POSITION_X
 # -
 #   type: var
 #   var_name: L:A32NX_RUDDER_PEDAL_ANIMATION_POSITION
 # -
 #   type: var
-#   var_name: L:A32NX_SIDESTICK_POSITION_X
+#   var_name: L:A32NX_FLAPS_HANDLE_PERCENT
+# -
+#   type: var
+#   var_name: L:A32NX_TILLER_HANDLE_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_HYD_BRAKE_ALTN_LEFT_PRESS
+  -
+    type: NumSet
+    var_name: L:A32NX_LEFT_BRAKE_PEDAL_INPUT
+    var_units: Number
+    var_type: f64
+    multiply_by: 327.68
+    add_by: -16384
+    event_name: AXIS_LEFT_BRAKE_SET
+    use_calculator: true
+    unreliable: true
   -
     type: var
     var_name: L:A32NX_EFB_BRIGHTNESS
@@ -2441,10 +2546,10 @@ shared:
 #   var_name: L:A32NX_OVHD_HYD_EPUMPY_PB_HAS_FAULT
   -
     type: var
-    var_name: L:A32NX_AIRCOND_PACK1_FAULT
+    var_name: L:A32NX_OVHD_COND_PACK_1_PB_HAS_FAULT
   -
     type: var
-    var_name: L:A32NX_AIRCOND_PACK2_FAULT
+    var_name: L:A32NX_OVHD_COND_PACK_2_PB_HAS_FAULT
   -
     type: var
     var_name: L:A32NX_OVHD_COND_HOT_AIR_PB_HAS_FAULT
@@ -2557,10 +2662,10 @@ shared:
 #   var_name: L:A32NX_DCDU_ATC_MSG_WAITING
 # -
 #   type: var
-#   var_name: L:A32NX_MASTER_WARNING
+#   var_name: L:Generic_Master_Warning_Active
 # -
 #   type: var
-#   var_name: L:A32NX_MASTER_CAUTION
+#   var_name: L:Generic_Master_Caution_Active
 # -
 #   type: var
 #   var_name: L:XMLVAR_LeverFlapsHidden
@@ -2576,54 +2681,6 @@ shared:
   -
     type: var
     var_name: L:A32NX_PILOT_AVATAR_HIDDEN_1
-# -
-#   type: var
-#   var_name: L:A32NX_IS_STATIONARY
-# -
-#   type: var
-#   var_name: L:A32NX_ENGINE_N1:1
-# -
-#   type: var
-#   var_name: L:A32NX_ENGINE_N1:2
-# -
-#   type: var
-#   var_name: L:FSDT_GSX_DEPARTURE_STATE
-# -
-#   type: var
-#   var_name: L:A32NX_GND_EQP_IS_VISIBLE
-# -
-#   type: var
-#   var_name: L:A32NX_ENGINE_N2:1
-# -
-#   type: var
-#   var_name: L:A32NX_ENGINE_N2:2
-# -
-#   type: var
-#   var_name: L:A32NX_HYD_AILERON_RIGHT_DEFLECTION
-# -
-#   type: var
-#   var_name: L:A32NX_REVERSER_1_POSITION
-# -
-#   type: var
-#   var_name: L:A32NX_HYD_AILERON_LEFT_DEFLECTION
-# -
-#   type: var
-#   var_name: L:A32NX_REVERSER_2_POSITION
-  -
-    type: var
-    var_name: L:A32NX_MODEL_WHEELCHOCKS_ENABLED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_MODEL_CONES_ENABLED
-    cancel_h_events: true
-  -
-    type: var
-    var_name: L:A32NX_SATCOM_ENABLED
-    cancel_h_events: true
-# -
-#   type: var
-#   var_name: L:A32NX_APU_N
   -
     type: var
     var_name: L:A32NX_OVHD_HYD_EPUMPY_OVRD_PB_IS_ON
@@ -3033,6 +3090,12 @@ shared:
 #   var_name: L:A32NX_STATUS_LEFT_LINE_8
 # -
 #   type: var
+#   var_name: L:A32NX_MASTER_CAUTION
+# -
+#   type: var
+#   var_name: L:A32NX_MASTER_WARNING
+# -
+#   type: var
 #   var_name: L:A32NX_FWC_1_LG_RED_ARROW
 # -
 #   type: var
@@ -3159,6 +3222,12 @@ shared:
 #   var_name: L:A32NX_Ewd_LOWER_RIGHT_LINE_7
 # -
 #   type: var
+#   var_name: L:A32NX_APU_N
+# -
+#   type: var
+#   var_name: L:A32NX_FWD_DOOR_CARGO_LOCKED
+# -
+#   type: var
 #   var_name: L:A32NX_SLIDES_ARMED
 # -
 #   type: var
@@ -3195,12 +3264,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_ELEC_BAT_2_POTENTIAL
-  -
-    type: var
-    var_name: L:A32NX_HOPPIE_ACTIVE
-  -
-    type: var
-    var_name: L:FBW_PILOT_SEAT
 # -
 #   type: var
 #   var_name: L:A32NX_EGPWC_DEST_LAT
@@ -3252,6 +3315,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_EGPWC_ND_L_TERRAIN_MAX_ELEVATION_MODE
+  -
+    type: var
+    var_name: L:A32NX_HOPPIE_ACTIVE
+  -
+    type: var
+    var_name: L:FBW_PILOT_SEAT
 # -
 #   type: var
 #   var_name: L:A32NX_EGPWC_ND_R_TERRAIN_MIN_ELEVATION
@@ -3454,9 +3523,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_REALISTIC_TILLER_ENABLED
-# -
-#   type: var
-#   var_name: L:A32NX_NOSE_WHEEL_POSITION
   -
     type: var
     var_name: L:A32NX_FO_SYNC_EFIS_ENABLED
@@ -4161,12 +4227,6 @@ shared:
     var_name: L:A32NX_RIGHT_SPLR_5_SERVO_FAILED
 # -
 #   type: var
-#   var_name: L:A32NX_HYD_ELEVATOR_LEFT_DEFLECTION
-# -
-#   type: var
-#   var_name: L:A32NX_HYD_ELEVATOR_RIGHT_DEFLECTION
-# -
-#   type: var
 #   var_name: L:A32NX_HYD_RUDDER_TRIM_FEEDBACK_ANGLE
 # -
 #   type: var
@@ -4332,12 +4392,6 @@ shared:
 #   var_name: L:A32NX_ENGINE_IMBALANCE
 # -
 #   type: var
-#   var_name: L:A32NX_ENGINE_N3:1
-# -
-#   type: var
-#   var_name: L:A32NX_ENGINE_N3:2
-# -
-#   type: var
 #   var_name: L:A32NX_ENGINE_OIL_QTY:1
 # -
 #   type: var
@@ -4396,9 +4450,6 @@ shared:
     cancel_h_events: true
 # -
 #   type: var
-#   var_name: L:A32NX_APU_N_RAW
-# -
-#   type: var
 #   var_name: L:A32NX_LIGHTING_PRESET_LOAD
 # -
 #   type: var
@@ -4443,9 +4494,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_AIRCRAFT_PRESET_LOAD_EXPEDITE_DELAY
-# -
-#   type: var
-#   var_name: L:A32NX_DEVELOPER_STATE
   -
     type: var
     var_name: L:A32NX_PUSHBACK_SYSTEM_ENABLED
@@ -4474,6 +4522,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_APU_BLEED_AIR_VALVE_OPEN
+  -
+    type: var
+    var_name: L:A32NX_BUTTON_OVHD_ANTI_ICE_ENG_1_POSITION
+  -
+    type: var
+    var_name: L:A32NX_BUTTON_OVHD_ANTI_ICE_ENG_2_POSITION
 # -
 #   type: var
 #   var_name: L:FSDT_GSX_BOARDING_STATE
@@ -4512,16 +4566,16 @@ shared:
 #   var_name: L:A32NX_RIGHT_SLATS_POSITION_PERCENT
 # -
 #   type: var
-#   var_name: L:A32NX_HYD_SPOILERS_LEFT_DEFLECTION
-# -
-#   type: var
-#   var_name: L:A32NX_HYD_SPOILERS_RIGHT_DEFLECTION
-# -
-#   type: var
 #   var_name: L:A32NX_REVERSER_ANGULAR_ACCELERATION
 # -
 #   type: var
-#   var_name: L:A32NX_HYD_RUDDER_DEFLECTION
+#   var_name: L:A32NX_LANDING_2_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_LANDING_3_POSITION
+# -
+#   type: var
+#   var_name: L:A32NX_RAT_STOW_POSITION
 # -
 #   type: var
 #   var_name: L:A32NX_TOTAL WEIGHT PITCH MOI
@@ -4714,12 +4768,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_COND_AFT_TRIM_AIR_VALVE_POSITION
-  -
-    type: var
-    var_name: L:A32NX_OVHD_COND_PACK_1_PB_HAS_FAULT
-  -
-    type: var
-    var_name: L:A32NX_OVHD_COND_PACK_2_PB_HAS_FAULT
 # -
 #   type: var
 #   var_name: L:A32NX_PRESS_EXCESS_RESIDUAL_PR
@@ -4842,6 +4890,9 @@ shared:
 #   var_name: L:A32NX_APU_BLEED_AIR_PRESSURE
   -
     type: var
+    var_name: L:A32NX_BUTTON_OVHD_ANTI_ICE_WING_POSITION
+  -
+    type: var
     var_name: L:A32NX_OVHD_ELEC_IDG_1_PB_IS_DISC
   -
     type: var
@@ -4897,36 +4948,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_PAX_E_DESIRED
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_F
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_F_DESIRED
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_G
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_G_DESIRED
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_H
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_H_DESIRED
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_I
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_I_DESIRED
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_J
-# -
-#   type: var
-#   var_name: L:A32NX_PAX_J_DESIRED
   -
     type: var
     var_name: L:A32NX_CARGO_FWD_BAGGAGE_CONTAINER
@@ -5543,9 +5564,6 @@ shared:
 #   var_name: L:A32NX_HYD_NW_STRG_DISC_ECAM_MEMO
 # -
 #   type: var
-#   var_name: L:A32NX_RAT_STOW_POSITION
-# -
-#   type: var
 #   var_name: L:A32NX_RAT_RPM
 # -
 #   type: var
@@ -5612,12 +5630,6 @@ shared:
 #   var_name: L:A32NX_DEV_FORCE_GAIN
 # -
 #   type: var
-#   var_name: L:A32NX_FWD_DOOR_CARGO_POSITION
-# -
-#   type: var
-#   var_name: L:A32NX_FWD_DOOR_CARGO_LOCKED
-# -
-#   type: var
 #   var_name: L:A32NX_AFT_DOOR_CARGO_POSITION
 # -
 #   type: var
@@ -5625,40 +5637,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_AFT_DOOR_CARGO_OPEN_REQ
-  -
-    type: var
-    var_name: L:A32NX_GRAVITYGEAR_ROTATE_PCT
-    unreliable: true
-# -
-#   type: var
-#   var_name: L:A32NX_GEAR_DOOR_CENTER_POSITION
-# -
-#   type: var
-#   var_name: L:A32NX_GEAR_CENTER_SMALL_POSITION
-# -
-#   type: var
-#   var_name: L:A32NX_GEAR_DOOR_LEFT_POSITION
-# -
-#   type: var
-#   var_name: L:A32NX_GEAR_DOOR_RIGHT_POSITION
-# -
-#   type: var
-#   var_name: L:A32NX_GEAR_3_TILT_POSITION
-# -
-#   type: var
-#   var_name: L:A32NX_GEAR ANIMATION POSITION:3
-# -
-#   type: var
-#   var_name: L:A32NX_WHEEL_RPM_3
-# -
-#   type: var
-#   var_name: L:A32NX_GEAR_4_TILT_POSITION
-# -
-#   type: var
-#   var_name: L:A32NX_GEAR ANIMATION POSITION:4
-# -
-#   type: var
-#   var_name: L:A32NX_WHEEL_RPM_4
   -
     type: var
     var_name: L:A32NX_OVHD_HYD_LEAK_MEASUREMENT_G_PB_HAS_FAULT
@@ -5970,6 +5948,10 @@ shared:
 #   var_name: L:A32NX_SOUND_BOARDING_MUSIC_ENABLED
   -
     type: var
+    var_name: L:A32NX_SATCOM_ENABLED
+    cancel_h_events: true
+  -
+    type: var
     var_name: L:A32NX_EFB_USING_METRIC_UNIT
     cancel_h_events: true
   -
@@ -5980,10 +5962,10 @@ shared:
 #   var_name: L:A32NX_INITIAL_FLIGHT_PHASE
 # -
 #   type: var
-#   var_name: L:A339X_PFD_1_ScreenLuminosity
+#   var_name: L:SU95X_PFD_1_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:A339X_PFD_1_State
+#   var_name: L:SU95X_PFD_1_State
   -
     type: var
     var_name: L:A32NX_PUSH_TRUE_REF
@@ -5998,16 +5980,16 @@ shared:
 #   var_name: L:WasmInstrument_State
 # -
 #   type: var
-#   var_name: L:A339X_ND_1_ScreenLuminosity
+#   var_name: L:SU95X_ND_1_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:A339X_ND_1_State
+#   var_name: L:SU95X_ND_1_State
 # -
 #   type: var
-#   var_name: L:A339X_EWD_1_ScreenLuminosity
+#   var_name: L:SU95X_EWD_1_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:A339X_EWD_1_State
+#   var_name: L:SU95X_EWD_1_State
   -
     type: var
     var_name: L:A32NX_FBW_FAC_FAILED:1
@@ -6020,9 +6002,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_HYD_BLUE_EDPUMP_LOW_PRESS
-  -
-    type: var
-    var_name: L:LANDING_3_Retracted
 # -
 #   type: var
 #   var_name: L:A32NX_FM1_DISCRETE_WORD_3
@@ -6050,6 +6029,12 @@ shared:
 # -
 #   type: var
 #   var_name: L:A32NX_FM2_TO_PITCH_TRIM
+  -
+    type: var
+    var_name: L:PUSH_AUTOPILOT_MASTERCAUT_R
+  -
+    type: var
+    var_name: L:PUSH_AUTOPILOT_MASTERAWARN_R
 # -
 #   type: var
 #   var_name: L:A32NX_FWC_CRC
@@ -6079,10 +6064,10 @@ shared:
 #   var_name: L:ISIS_State
 # -
 #   type: var
-#   var_name: L:A339X_Clock_ScreenLuminosity
+#   var_name: L:SU95X_Clock_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:A339X_Clock_State
+#   var_name: L:SU95X_Clock_State
 # -
 #   type: var
 #   var_name: L:DCDU_ScreenLuminosity
@@ -6363,9 +6348,6 @@ shared:
 #   var_name: L:A32NX_FCU_VS_MANAGED
 # -
 #   type: var
-#   var_name: L:A32NX_AMBIENT_BRIGHTNESS
-# -
-#   type: var
 #   var_name: L:RMP_ScreenLuminosity
 # -
 #   type: var
@@ -6390,16 +6372,16 @@ shared:
 #   var_name: L:BAT_State
 # -
 #   type: var
-#   var_name: L:A339X_PFD_2_ScreenLuminosity
+#   var_name: L:SU95X_PFD_2_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:A339X_PFD_2_State
+#   var_name: L:SU95X_PFD_2_State
 # -
 #   type: var
-#   var_name: L:A339X_ND_2_ScreenLuminosity
+#   var_name: L:SU95X_ND_2_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:A339X_ND_2_State
+#   var_name: L:SU95X_ND_2_State
 # -
 #   type: var
 #   var_name: L:EFB_ScreenLuminosity
@@ -6408,16 +6390,16 @@ shared:
 #   var_name: L:EFB_State
 # -
 #   type: var
-#   var_name: L:A339X_SYSTEMSHOST_ScreenLuminosity
+#   var_name: L:SU95X_SYSTEMSHOST_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:A339X_SYSTEMSHOST_State
+#   var_name: L:SU95X_SYSTEMSHOST_State
 # -
 #   type: var
-#   var_name: L:A339X_EXTRASHOST_ScreenLuminosity
+#   var_name: L:SU95X_EXTRASHOST_ScreenLuminosity
 # -
 #   type: var
-#   var_name: L:A339X_EXTRASHOST_State
+#   var_name: L:SU95X_EXTRASHOST_State
 # -
 #   type: var
 #   var_name: L:A32NX_TCAS_RA_TYPE
@@ -6598,10 +6580,293 @@ ignore:
   - A320_Neo_ATC_BTN_7
   - A320_Neo_ATC_BTN_CLR
 
+  - A320_Neo_CDU_1_BTN_L1
+  - A320_Neo_CDU_1_BTN_L2
+  - A320_Neo_CDU_1_BTN_L3
+  - A320_Neo_CDU_1_BTN_L4
+  - A320_Neo_CDU_1_BTN_L5
+  - A320_Neo_CDU_1_BTN_L6
+  - A320_Neo_CDU_1_BTN_R1
+  - A320_Neo_CDU_1_BTN_R2
+  - A320_Neo_CDU_1_BTN_R3
+  - A320_Neo_CDU_1_BTN_R4
+  - A320_Neo_CDU_1_BTN_R5
+  - A320_Neo_CDU_1_BTN_R6
+  - A320_Neo_CDU_1_BTN_0
+  - A320_Neo_CDU_1_BTN_1
+  - A320_Neo_CDU_1_BTN_2
+  - A320_Neo_CDU_1_BTN_3
+  - A320_Neo_CDU_1_BTN_4
+  - A320_Neo_CDU_1_BTN_5
+  - A320_Neo_CDU_1_BTN_6
+  - A320_Neo_CDU_1_BTN_7
+  - A320_Neo_CDU_1_BTN_8
+  - A320_Neo_CDU_1_BTN_9
+  - A320_Neo_CDU_1_BTN_DOT
+  - A320_Neo_CDU_1_BTN_PLUSMINUS
+  - A320_Neo_CDU_1_BTN_A
+  - A320_Neo_CDU_1_BTN_B
+  - A320_Neo_CDU_1_BTN_C
+  - A320_Neo_CDU_1_BTN_D
+  - A320_Neo_CDU_1_BTN_E
+  - A320_Neo_CDU_1_BTN_F
+  - A320_Neo_CDU_1_BTN_G
+  - A320_Neo_CDU_1_BTN_H
+  - A320_Neo_CDU_1_BTN_I
+  - A320_Neo_CDU_1_BTN_J
+  - A320_Neo_CDU_1_BTN_K
+  - A320_Neo_CDU_1_BTN_L
+  - A320_Neo_CDU_1_BTN_M
+  - A320_Neo_CDU_1_BTN_N
+  - A320_Neo_CDU_1_BTN_O
+  - A320_Neo_CDU_1_BTN_P
+  - A320_Neo_CDU_1_BTN_Q
+  - A320_Neo_CDU_1_BTN_R
+  - A320_Neo_CDU_1_BTN_S
+  - A320_Neo_CDU_1_BTN_T
+  - A320_Neo_CDU_1_BTN_U
+  - A320_Neo_CDU_1_BTN_V
+  - A320_Neo_CDU_1_BTN_W
+  - A320_Neo_CDU_1_BTN_X
+  - A320_Neo_CDU_1_BTN_Y
+  - A320_Neo_CDU_1_BTN_Z
+  - A320_Neo_CDU_1_BTN_DIV
+  - A320_Neo_CDU_1_BTN_SP
+  - A320_Neo_CDU_1_BTN_OVFY
+  - A320_Neo_CDU_1_BTN_CLR
+  - A320_Neo_CDU_1_BTN_DIR
+  - A320_Neo_CDU_1_BTN_PROG
+  - A320_Neo_CDU_1_BTN_PERF
+  - A320_Neo_CDU_1_BTN_INIT
+  - A320_Neo_CDU_1_BTN_DATA
+  - A320_Neo_CDU_1_BTN_FPLN
+  - A320_Neo_CDU_1_BTN_RAD
+  - A320_Neo_CDU_1_BTN_FUEL
+  - A320_Neo_CDU_1_BTN_SEC
+  - A320_Neo_CDU_1_BTN_ATC
+  - A320_Neo_CDU_1_BTN_MENU
+  - A320_Neo_CDU_1_BTN_AIRPORT
+  - A320_Neo_CDU_1_BTN_PREVPAGE
+  - A320_Neo_CDU_1_BTN_UP
+  - A320_Neo_CDU_1_BTN_NEXTPAGE
+  - A320_Neo_CDU_1_BTN_DOWN
   - A320_Neo_CDU_1_BTN_BRT
   - A320_Neo_CDU_1_BTN_DIM
+
+  - A320_Neo_CDU_1_BTN_L1_Held
+  - A320_Neo_CDU_1_BTN_L2_Held
+  - A320_Neo_CDU_1_BTN_L3_Held
+  - A320_Neo_CDU_1_BTN_L4_Held
+  - A320_Neo_CDU_1_BTN_L5_Held
+  - A320_Neo_CDU_1_BTN_L6_Held
+  - A320_Neo_CDU_1_BTN_R1_Held
+  - A320_Neo_CDU_1_BTN_R2_Held
+  - A320_Neo_CDU_1_BTN_R3_Held
+  - A320_Neo_CDU_1_BTN_R4_Held
+  - A320_Neo_CDU_1_BTN_R5_Held
+  - A320_Neo_CDU_1_BTN_R6_Held
+  - A320_Neo_CDU_1_BTN_0_Held
+  - A320_Neo_CDU_1_BTN_1_Held
+  - A320_Neo_CDU_1_BTN_2_Held
+  - A320_Neo_CDU_1_BTN_3_Held
+  - A320_Neo_CDU_1_BTN_4_Held
+  - A320_Neo_CDU_1_BTN_5_Held
+  - A320_Neo_CDU_1_BTN_6_Held
+  - A320_Neo_CDU_1_BTN_7_Held
+  - A320_Neo_CDU_1_BTN_8_Held
+  - A320_Neo_CDU_1_BTN_9_Held
+  - A320_Neo_CDU_1_BTN_DOT_Held
+  - A320_Neo_CDU_1_BTN_PLUSMINUS_Held
+  - A320_Neo_CDU_1_BTN_A_Held
+  - A320_Neo_CDU_1_BTN_B_Held
+  - A320_Neo_CDU_1_BTN_C_Held
+  - A320_Neo_CDU_1_BTN_D_Held
+  - A320_Neo_CDU_1_BTN_E_Held
+  - A320_Neo_CDU_1_BTN_F_Held
+  - A320_Neo_CDU_1_BTN_G_Held
+  - A320_Neo_CDU_1_BTN_H_Held
+  - A320_Neo_CDU_1_BTN_I_Held
+  - A320_Neo_CDU_1_BTN_J_Held
+  - A320_Neo_CDU_1_BTN_K_Held
+  - A320_Neo_CDU_1_BTN_L_Held
+  - A320_Neo_CDU_1_BTN_M_Held
+  - A320_Neo_CDU_1_BTN_N_Held
+  - A320_Neo_CDU_1_BTN_O_Held
+  - A320_Neo_CDU_1_BTN_P_Held
+  - A320_Neo_CDU_1_BTN_Q_Held
+  - A320_Neo_CDU_1_BTN_R_Held
+  - A320_Neo_CDU_1_BTN_S_Held
+  - A320_Neo_CDU_1_BTN_T_Held
+  - A320_Neo_CDU_1_BTN_U_Held
+  - A320_Neo_CDU_1_BTN_V_Held
+  - A320_Neo_CDU_1_BTN_W_Held
+  - A320_Neo_CDU_1_BTN_X_Held
+  - A320_Neo_CDU_1_BTN_Y_Held
+  - A320_Neo_CDU_1_BTN_Z_Held
+  - A320_Neo_CDU_1_BTN_DIV_Held
+  - A320_Neo_CDU_1_BTN_SP_Held
+  - A320_Neo_CDU_1_BTN_OVFY_Held
+  - A320_Neo_CDU_1_BTN_CLR_Held
+  - A320_Neo_CDU_1_BTN_DIR_Held
+  - A320_Neo_CDU_1_BTN_PROG_Held
+  - A320_Neo_CDU_1_BTN_PERF_Held
+  - A320_Neo_CDU_1_BTN_INIT_Held
+  - A320_Neo_CDU_1_BTN_DATA_Held
+  - A320_Neo_CDU_1_BTN_FPLN_Held
+  - A320_Neo_CDU_1_BTN_RAD_Held
+  - A320_Neo_CDU_1_BTN_FUEL_Held
+  - A320_Neo_CDU_1_BTN_SEC_Held
+  - A320_Neo_CDU_1_BTN_ATC_Held
+  - A320_Neo_CDU_1_BTN_MENU_Held
+  - A320_Neo_CDU_1_BTN_AIRPORT_Held
+  - A320_Neo_CDU_1_BTN_PREVPAGE_Held
+  - A320_Neo_CDU_1_BTN_UP_Held
+  - A320_Neo_CDU_1_BTN_NEXTPAGE_Held
+  - A320_Neo_CDU_1_BTN_DOWN_Held
+
+  - A320_Neo_CDU_2_BTN_L1
+  - A320_Neo_CDU_2_BTN_L2
+  - A320_Neo_CDU_2_BTN_L3
+  - A320_Neo_CDU_2_BTN_L4
+  - A320_Neo_CDU_2_BTN_L5
+  - A320_Neo_CDU_2_BTN_L6
+  - A320_Neo_CDU_2_BTN_R1
+  - A320_Neo_CDU_2_BTN_R2
+  - A320_Neo_CDU_2_BTN_R3
+  - A320_Neo_CDU_2_BTN_R4
+  - A320_Neo_CDU_2_BTN_R5
+  - A320_Neo_CDU_2_BTN_R6
+  - A320_Neo_CDU_2_BTN_0
+  - A320_Neo_CDU_2_BTN_1
+  - A320_Neo_CDU_2_BTN_2
+  - A320_Neo_CDU_2_BTN_3
+  - A320_Neo_CDU_2_BTN_4
+  - A320_Neo_CDU_2_BTN_5
+  - A320_Neo_CDU_2_BTN_6
+  - A320_Neo_CDU_2_BTN_7
+  - A320_Neo_CDU_2_BTN_8
+  - A320_Neo_CDU_2_BTN_9
+  - A320_Neo_CDU_2_BTN_DOT
+  - A320_Neo_CDU_2_BTN_PLUSMINUS
+  - A320_Neo_CDU_2_BTN_A
+  - A320_Neo_CDU_2_BTN_B
+  - A320_Neo_CDU_2_BTN_C
+  - A320_Neo_CDU_2_BTN_D
+  - A320_Neo_CDU_2_BTN_E
+  - A320_Neo_CDU_2_BTN_F
+  - A320_Neo_CDU_2_BTN_G
+  - A320_Neo_CDU_2_BTN_H
+  - A320_Neo_CDU_2_BTN_I
+  - A320_Neo_CDU_2_BTN_J
+  - A320_Neo_CDU_2_BTN_K
+  - A320_Neo_CDU_2_BTN_L
+  - A320_Neo_CDU_2_BTN_M
+  - A320_Neo_CDU_2_BTN_N
+  - A320_Neo_CDU_2_BTN_O
+  - A320_Neo_CDU_2_BTN_P
+  - A320_Neo_CDU_2_BTN_Q
+  - A320_Neo_CDU_2_BTN_R
+  - A320_Neo_CDU_2_BTN_S
+  - A320_Neo_CDU_2_BTN_T
+  - A320_Neo_CDU_2_BTN_U
+  - A320_Neo_CDU_2_BTN_V
+  - A320_Neo_CDU_2_BTN_W
+  - A320_Neo_CDU_2_BTN_X
+  - A320_Neo_CDU_2_BTN_Y
+  - A320_Neo_CDU_2_BTN_Z
+  - A320_Neo_CDU_2_BTN_DIV
+  - A320_Neo_CDU_2_BTN_SP
+  - A320_Neo_CDU_2_BTN_OVFY
+  - A320_Neo_CDU_2_BTN_CLR
+  - A320_Neo_CDU_2_BTN_DIR
+  - A320_Neo_CDU_2_BTN_PROG
+  - A320_Neo_CDU_2_BTN_PERF
+  - A320_Neo_CDU_2_BTN_INIT
+  - A320_Neo_CDU_2_BTN_DATA
+  - A320_Neo_CDU_2_BTN_FPLN
+  - A320_Neo_CDU_2_BTN_RAD
+  - A320_Neo_CDU_2_BTN_FUEL
+  - A320_Neo_CDU_2_BTN_SEC
+  - A320_Neo_CDU_2_BTN_ATC
+  - A320_Neo_CDU_2_BTN_MENU
+  - A320_Neo_CDU_2_BTN_AIRPORT
+  - A320_Neo_CDU_2_BTN_PREVPAGE
+  - A320_Neo_CDU_2_BTN_UP
+  - A320_Neo_CDU_2_BTN_NEXTPAGE
+  - A320_Neo_CDU_2_BTN_DOWN
   - A320_Neo_CDU_2_BTN_BRT
   - A320_Neo_CDU_2_BTN_DIM
+
+  - A320_Neo_CDU_2_BTN_L1_Held
+  - A320_Neo_CDU_2_BTN_L2_Held
+  - A320_Neo_CDU_2_BTN_L3_Held
+  - A320_Neo_CDU_2_BTN_L4_Held
+  - A320_Neo_CDU_2_BTN_L5_Held
+  - A320_Neo_CDU_2_BTN_L6_Held
+  - A320_Neo_CDU_2_BTN_R1_Held
+  - A320_Neo_CDU_2_BTN_R2_Held
+  - A320_Neo_CDU_2_BTN_R3_Held
+  - A320_Neo_CDU_2_BTN_R4_Held
+  - A320_Neo_CDU_2_BTN_R5_Held
+  - A320_Neo_CDU_2_BTN_R6_Held
+  - A320_Neo_CDU_2_BTN_0_Held
+  - A320_Neo_CDU_2_BTN_1_Held
+  - A320_Neo_CDU_2_BTN_2_Held
+  - A320_Neo_CDU_2_BTN_3_Held
+  - A320_Neo_CDU_2_BTN_4_Held
+  - A320_Neo_CDU_2_BTN_5_Held
+  - A320_Neo_CDU_2_BTN_6_Held
+  - A320_Neo_CDU_2_BTN_7_Held
+  - A320_Neo_CDU_2_BTN_8_Held
+  - A320_Neo_CDU_2_BTN_9_Held
+  - A320_Neo_CDU_2_BTN_DOT_Held
+  - A320_Neo_CDU_2_BTN_PLUSMINUS_Held
+  - A320_Neo_CDU_2_BTN_A_Held
+  - A320_Neo_CDU_2_BTN_B_Held
+  - A320_Neo_CDU_2_BTN_C_Held
+  - A320_Neo_CDU_2_BTN_D_Held
+  - A320_Neo_CDU_2_BTN_E_Held
+  - A320_Neo_CDU_2_BTN_F_Held
+  - A320_Neo_CDU_2_BTN_G_Held
+  - A320_Neo_CDU_2_BTN_H_Held
+  - A320_Neo_CDU_2_BTN_I_Held
+  - A320_Neo_CDU_2_BTN_J_Held
+  - A320_Neo_CDU_2_BTN_K_Held
+  - A320_Neo_CDU_2_BTN_L_Held
+  - A320_Neo_CDU_2_BTN_M_Held
+  - A320_Neo_CDU_2_BTN_N_Held
+  - A320_Neo_CDU_2_BTN_O_Held
+  - A320_Neo_CDU_2_BTN_P_Held
+  - A320_Neo_CDU_2_BTN_Q_Held
+  - A320_Neo_CDU_2_BTN_R_Held
+  - A320_Neo_CDU_2_BTN_S_Held
+  - A320_Neo_CDU_2_BTN_T_Held
+  - A320_Neo_CDU_2_BTN_U_Held
+  - A320_Neo_CDU_2_BTN_V_Held
+  - A320_Neo_CDU_2_BTN_W_Held
+  - A320_Neo_CDU_2_BTN_X_Held
+  - A320_Neo_CDU_2_BTN_Y_Held
+  - A320_Neo_CDU_2_BTN_Z_Held
+  - A320_Neo_CDU_2_BTN_DIV_Held
+  - A320_Neo_CDU_2_BTN_SP_Held
+  - A320_Neo_CDU_2_BTN_OVFY_Held
+  - A320_Neo_CDU_2_BTN_CLR_Held
+  - A320_Neo_CDU_2_BTN_DIR_Held
+  - A320_Neo_CDU_2_BTN_PROG_Held
+  - A320_Neo_CDU_2_BTN_PERF_Held
+  - A320_Neo_CDU_2_BTN_INIT_Held
+  - A320_Neo_CDU_2_BTN_DATA_Held
+  - A320_Neo_CDU_2_BTN_FPLN_Held
+  - A320_Neo_CDU_2_BTN_RAD_Held
+  - A320_Neo_CDU_2_BTN_FUEL_Held
+  - A320_Neo_CDU_2_BTN_SEC_Held
+  - A320_Neo_CDU_2_BTN_ATC_Held
+  - A320_Neo_CDU_2_BTN_MENU_Held
+  - A320_Neo_CDU_2_BTN_AIRPORT_Held
+  - A320_Neo_CDU_2_BTN_PREVPAGE_Held
+  - A320_Neo_CDU_2_BTN_UP_Held
+  - A320_Neo_CDU_2_BTN_NEXTPAGE_Held
+  - A320_Neo_CDU_2_BTN_DOWN_Held
 
 # EFB Audio
   - EFB#-730306748
