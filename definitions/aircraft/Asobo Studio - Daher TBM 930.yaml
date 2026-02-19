@@ -64,6 +64,7 @@ shared:
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 1
     index_reversed: true
+    use_calculator: true
   - # ST-BY
     type: CustomCalculator
     get: 5 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:12, Bool)
@@ -199,6 +200,7 @@ shared:
     var_type: i32
     event_name: TAXI_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -206,6 +208,7 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_2_SET
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT LANDING:1
@@ -213,6 +216,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT LANDING:2
@@ -220,6 +224,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
@@ -227,6 +232,7 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_10_SET
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT LOGO:1
@@ -234,6 +240,7 @@ shared:
     var_type: i32
     event_name: LOGO_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT NAV:1
@@ -241,6 +248,7 @@ shared:
     var_type: i32
     event_name: NAV_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT STROBE:1
@@ -248,6 +256,7 @@ shared:
     var_type: i32
     event_name: STROBES_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT WING:1
@@ -255,6 +264,7 @@ shared:
     var_type: i32
     event_name: WING_LIGHTS_SET
     event_param: 1
+    use_calculator: true
 
   - # Interior
     type: NumSet
@@ -262,12 +272,14 @@ shared:
     var_units: Bool
     var_type: i32
     event_name: PANEL_LIGHTS_SET
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL
     var_units: Bool
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:14
@@ -276,13 +288,14 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN
     var_units: Bool
     var_type: i32
     event_name: CABIN_LIGHTS_SET
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:2
@@ -291,6 +304,7 @@ shared:
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 2
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:3
@@ -299,6 +313,7 @@ shared:
     event_name: TOGGLE_CABIN_LIGHTS
     event_param: 3
     index_reversed: true
+    use_calculator: true
   -
     type: CustomCalculator
     get: 16 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:15, Bool)

@@ -61,12 +61,14 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_ALTERNATOR1
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:2
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_ALTERNATOR2
+    use_calculator: true
 
   - # Fuel
     type: ToggleSwitch
@@ -88,6 +90,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: CROSS_FEED_TOGGLE
+    use_calculator: true
 
   - # Starters
     type: ToggleSwitch
@@ -110,6 +113,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_CABIN_LIGHTS
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL:1
@@ -117,6 +121,7 @@ shared:
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL POWER SETTING:1
@@ -125,6 +130,7 @@ shared:
     event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
     event_param: 1
     index_reversed: true
+    use_calculator: true
 
   - # LVAR's (trimmed)
     type: var

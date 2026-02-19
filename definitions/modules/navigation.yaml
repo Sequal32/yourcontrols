@@ -47,7 +47,7 @@ shared:
     down_event_name: ATTITUDE_BARS_POSITION_DOWN
     increment_by: 10
     use_calculator: true
-  -
+  - # Separate later
     type: NumIncrement
     var_name: A:DECISION HEIGHT
     var_units: Feet
@@ -56,12 +56,13 @@ shared:
     down_event_name: DECREASE_DECISION_HEIGHT
     increment_by: 10
     use_calculator: true
-  -
+  - # Separate later
     type: NumSet
     var_name: A:DECISION ALTITUDE MSL
     var_units: Feet
     var_type: f64
     event_name: SET_DECISION_ALTITUDE_MSL
+    cancel_h_events: true
     use_calculator: true
   -
     type: NumSet

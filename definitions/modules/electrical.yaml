@@ -19,6 +19,7 @@ shared:
     var_type: i32
     event_name: APU_GENERATOR_SWITCH_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:APU GENERATOR SWITCH:2
@@ -26,6 +27,7 @@ shared:
     var_type: i32
     event_name: APU_GENERATOR_SWITCH_SET
     event_param: 2
+    use_calculator: true
 
   - # ASOBO_ELECTRICAL_Switch_Battery_Master_Template
     type: ToggleSwitch
@@ -59,13 +61,7 @@ shared:
     var_type: i32
     event_name: AVIONICS_MASTER_SET
     event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:AVIONICS MASTER SWITCH:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_AVIONICS_MASTER
-    event_param: 1
+    use_calculator: true
 
   - # ASOBO_ELECTRICAL_Switch_Alternator_Template
     type: NumSet
@@ -74,12 +70,7 @@ shared:
     var_type: i32
     event_name: ALTERNATOR_SET
     event_param: 1
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_ALTERNATOR1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:2
@@ -87,12 +78,7 @@ shared:
     var_type: i32
     event_name: ALTERNATOR_SET
     event_param: 2
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_ALTERNATOR2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:3
@@ -100,12 +86,7 @@ shared:
     var_type: i32
     event_name: ALTERNATOR_SET
     event_param: 3
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:3
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_ALTERNATOR3
+    use_calculator: true
   -
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:4
@@ -113,12 +94,7 @@ shared:
     var_type: i32
     event_name: ALTERNATOR_SET
     event_param: 4
-  -
-    type: ToggleSwitch
-    var_name: A:GENERAL ENG MASTER ALTERNATOR:4
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_ALTERNATOR4
+    use_calculator: true
 
   - # ASOBO_ELECTRICAL_Switch_ExternalPower_Template
     type: NumSet
@@ -129,15 +105,7 @@ shared:
     event_param: 1
     cancel_h_events: true
     index_reversed: true
-  -
-    type: ToggleSwitch
-    var_name: A:EXTERNAL POWER ON:1
-    var_units: Bool
-    var_type: bool
-    event_name: TOGGLE_EXTERNAL_POWER
-    event_param: 1
-    cancel_h_events: true
-    index_reversed: true
+    use_calculator: true
 
   - # ASOBO_ELECTRICAL_Push_Starter_Template
     type: NumSet

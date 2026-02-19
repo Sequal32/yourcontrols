@@ -37,6 +37,7 @@ shared:
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
     event_param: 1
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:BLEED AIR ENGINE:2
@@ -45,6 +46,7 @@ shared:
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
     event_param: 2
     index_reversed: true
+    use_calculator: true
 
   - # Bleed valves
     type: ToggleSwitch
@@ -252,12 +254,14 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_ALTERNATOR1
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:2
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_ALTERNATOR2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:GENERAL ENG STARTER:1
@@ -280,6 +284,7 @@ shared:
     event_name: SET_EXTERNAL_POWER
     event_param: 1
     index_reversed: true
+    use_calculator: true
 
   - # Engines
     type: NumSet
@@ -484,6 +489,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT LANDING:2
@@ -491,6 +497,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT TAXI:1
@@ -498,6 +505,7 @@ shared:
     var_type: i32
     event_name: TAXI_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT WING:1
@@ -505,6 +513,7 @@ shared:
     var_type: i32
     event_name: WING_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT NAV:1
@@ -512,6 +521,7 @@ shared:
     var_type: i32
     event_name: NAV_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT RECOGNITION:1
@@ -519,6 +529,7 @@ shared:
     var_type: i32
     event_name: RECOGNITION_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT BEACON:1
@@ -526,6 +537,7 @@ shared:
     var_type: i32
     event_name: BEACON_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT STROBE:1
@@ -533,6 +545,7 @@ shared:
     var_type: i32
     event_name: STROBES_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT LOGO:1
@@ -540,6 +553,7 @@ shared:
     var_type: i32
     event_name: LOGO_LIGHTS_SET
     event_param: 1
+    use_calculator: true
 
   - # Interior
     type: NumSet
@@ -548,6 +562,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:12
@@ -555,6 +570,7 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_12_SET
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -563,7 +579,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -572,7 +588,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -581,7 +597,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
@@ -590,7 +606,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
@@ -599,7 +615,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 6
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:11
@@ -608,7 +624,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
@@ -617,7 +633,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 7
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:8
@@ -626,7 +642,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 8
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:9
@@ -635,7 +651,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 9
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
@@ -644,7 +660,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 10
     index_reversed: true
-    unreliable: true
+    use_calculator: true
 
   - # Oxygen
     type: ToggleSwitch

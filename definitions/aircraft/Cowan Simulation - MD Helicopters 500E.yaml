@@ -45,12 +45,14 @@ shared:
     var_type: bool
     event_name: TOGGLE_AVIONICS_MASTER
     event_param: 1
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:GENERAL ENG MASTER ALTERNATOR:1
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_ALTERNATOR1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:GENERAL ENG STARTER:1
@@ -66,6 +68,7 @@ shared:
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 1
     index_reversed: true
+    use_calculator: true
 
   - # Fuel
     type: ToggleSwitch
@@ -115,6 +118,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 2
+    use_calculator: true
 
   - # Interior
     type: NumSet
@@ -123,6 +127,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT GLARESHIELD:1
@@ -130,6 +135,7 @@ shared:
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PANEL:1
@@ -137,6 +143,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -145,6 +152,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
     index_reversed: true
+    use_calculator: true
 
   - # Rotor
     type: NumSet

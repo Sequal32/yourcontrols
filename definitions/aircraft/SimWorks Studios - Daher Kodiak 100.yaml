@@ -1,12 +1,8 @@
-# Version 1.5.4
+# Version 1.6.0
 
 include:
   - definitions/modules/Instruments/AS_G1000.yaml
-  - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/controls.yaml
-  - definitions/modules/electrical.yaml
-  - definitions/modules/engines.yaml
-  - definitions/modules/fuel.yaml
   - definitions/modules/general.yaml
   - definitions/modules/handling.yaml
   - definitions/modules/navigation.yaml
@@ -16,6 +12,15 @@ include:
   - definitions/modules/trim.yaml
 
 shared:
+  - # Avionics bus
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:30
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 30
+    use_calculator: true
+
   - # Deice
     type: NumSet
     var_name: A:PITOT HEAT SWITCH:1
@@ -61,6 +66,63 @@ shared:
     event_param: 1
     use_calculator: true
 
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 2
+    use_calculator: true
+
+  - # Engine
+    type: NumSet
+    var_name: A:GENERAL ENG PROPELLER LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: PROP_PITCH1_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE1_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL PUMP ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ELECT_FUEL_PUMP1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG1
+    use_calculator: true
+
   - # Lights
     type: NumSet
     var_name: A:LIGHT BEACON:1
@@ -68,6 +130,7 @@ shared:
     var_type: i32
     event_name: BEACON_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT STROBE:1
@@ -75,6 +138,7 @@ shared:
     var_type: i32
     event_name: STROBES_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT NAV:1
@@ -82,6 +146,7 @@ shared:
     var_type: i32
     event_name: NAV_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT TAXI:1
@@ -89,6 +154,7 @@ shared:
     var_type: i32
     event_name: TAXI_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT WING:1
@@ -96,18 +162,21 @@ shared:
     var_type: i32
     event_name: WING_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT RECOGNITION
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_RECOGNITION_LIGHTS
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT LOGO
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_LOGO_LIGHTS
+    use_calculator: true
 
   - # Interior
     type: NumSet
@@ -116,6 +185,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -124,6 +194,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
+    use_calculator: true
   - # Reading light (doesn't move cause O var)
     type: NumSet
     var_name: A:LIGHT CABIN:3
@@ -131,6 +202,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 3
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:11
@@ -139,6 +211,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT GLARESHIELD:1
@@ -146,6 +219,7 @@ shared:
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -154,6 +228,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL:1
@@ -161,6 +236,7 @@ shared:
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:21
@@ -169,14 +245,22 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 21
     index_reversed: true
+    use_calculator: true
 
   - # Pilot door handle
-    type: ToggleSwitch
-    var_name: A:SMOKE ENABLE:1
-    var_units: Bool
-    var_type: bool
-    event_name: SMOKE_TOGGLE
-    event_param: 1
+    type: CustomCalculator
+    get: (Z:SWS_EXIT_Knob_Door_1) 0 ==
+    set: 0 (>Z:SWS_EXIT_Knob_Door_1)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:SWS_EXIT_Knob_Door_1) 1 ==
+    set: 1 (>Z:SWS_EXIT_Knob_Door_1)
+    condition:
+      equals:
+        F64: 1.0
   - # Pilot door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:0
@@ -186,12 +270,19 @@ shared:
     event_param: 1
     use_calculator: true
   - # Copilot door handle
-    type: ToggleSwitch
-    var_name: A:SMOKE ENABLE:2
-    var_units: Bool
-    var_type: bool
-    event_name: SMOKE_TOGGLE
-    event_param: 2
+    type: CustomCalculator
+    get: (Z:SWS_EXIT_Knob_Door_2) 0 ==
+    set: 0 (>Z:SWS_EXIT_Knob_Door_2)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:SWS_EXIT_Knob_Door_2) 1 ==
+    set: 1 (>Z:SWS_EXIT_Knob_Door_2)
+    condition:
+      equals:
+        F64: 1.0
   - # Copilot door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:1
@@ -215,6 +306,7 @@ shared:
     var_type: bool
     event_name: SMOKE_TOGGLE
     event_param: 3
+    use_calculator: true
   - # Rear top door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:3
@@ -230,6 +322,7 @@ shared:
     var_type: bool
     event_name: SMOKE_TOGGLE
     event_param: 4
+    use_calculator: true
   - # Rear bottom door
     type: ToggleSwitch
     var_name: A:INTERACTIVE POINT GOAL:4
@@ -293,12 +386,12 @@ shared:
   -
     type: var
     var_name: L:KodiakAC_SwitchPage
-  -
-    type: var
-    var_name: L:PILOT_Hidden
-  -
-    type: var
-    var_name: L:COPILOT_Hidden
+# -
+#   type: var
+#   var_name: L:PILOT_Hidden
+# -
+#   type: var
+#   var_name: L:COPILOT_Hidden
   -
     type: var
     var_name: L:SWS_MISC_Payloads_Hidden
@@ -1086,37 +1179,133 @@ shared:
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_Pilot1
   -
     type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_Pilot1_Horizontal
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_Pilot1_Vertical
+    unreliable: true
+  -
+    type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_Pilot2
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_Pilot2_Horizontal
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_Pilot2_Vertical
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_Copilot1
   -
     type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_Copilot1_Horizontal
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_Copilot1_Vertical
+    unreliable: true
+  -
+    type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_Copilot2
   -
     type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_Copilot2_Horizontal
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_Copilot2_Vertical
+    unreliable: true
+  -
+    type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PassengerL1
+#  -
+#    type: var
+#    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerL1_Horizontal
+#    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerL1_Vertical
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PassengerL2
+#  -
+#    type: var
+#    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerL2_Horizontal
+#    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerL2_Vertical
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PassengerL3
+#  -
+#    type: var
+#    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerL3_Horizontal
+#    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerL3_Vertical
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PassengerL4
+#  -
+#    type: var
+#    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerL4_Horizontal
+#    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerL4_Vertical
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PassengerR1
+#  -
+#    type: var
+#    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerR1_Horizontal
+#    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerR1_Vertical
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PassengerR2
+#  -
+#    type: var
+#    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerR2_Horizontal
+#    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerR2_Vertical
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PassengerR3
+#  -
+#    type: var
+#    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerR3_Horizontal
+#    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerR3_Vertical
+    unreliable: true
   -
     type: var
     var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PassengerR4
+#  -
+#    type: var
+#    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerR4_Horizontal
+#    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PassengerR4_Vertical
+    unreliable: true
   -
     type: var
     var_name: L:Cupholder_1
@@ -1189,6 +1378,18 @@ shared:
 # -
 #   type: var
 #   var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:YD_PROPORTIONAL_GAIN
+# -
+#   type: var
+#   var_name: L:YD_DERIVATIVE_GAIN
+# -
+#   type: var
+#   var_name: L:YD_OUTPUT_GAIN
+# -
+#   type: var
+#   var_name: L:YD_PEDAL_OUTPUT
   -
     type: var
     var_name: L:HEATER_SPEED_CURRENTSETTING
@@ -1449,10 +1650,25 @@ shared:
 #   var_name: L:WTAP_GP_FPA
 # -
 #   type: var
+#   var_name: L:WTAP_Garmin_Nav_Mode_On
+# -
+#   type: var
+#   var_name: L:WTAP_Garmin_Approach_Mode_On
+# -
+#   type: var
 #   var_name: L:Garmin_Need_OBS_Convert_DirectTo
   -
     type: var
     var_name: L:SWS_FAILURE_Turbine_1_Failed
+# -
+#   type: var
+#   var_name: L:WT1000_Fuel_GalRemaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Obs_Active
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Obs_Course
 # -
 #   type: var
 #   var_name: L:WTAP_GP_Approach_Mode
@@ -1479,18 +1695,6 @@ shared:
 #   var_name: L:SWS_Kodiak100AC_State
 # -
 #   type: var
-#   var_name: L:WTAP_LNav_Obs_Active
-# -
-#   type: var
-#   var_name: L:WTAP_LNav_Obs_Course
-# -
-#   type: var
-#   var_name: L:WT1000_AP_G1000_INSTALLED
-# -
-#   type: var
-#   var_name: L:WT1000_Fuel_GalRemaining
-# -
-#   type: var
 #   var_name: L:WT1000_Fuel_Endurance
 # -
 #   type: var
@@ -1501,6 +1705,9 @@ shared:
 # -
 #   type: var
 #   var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
+#   var_name: L:WT1000_AP_G1000_INSTALLED
 # -
 #   type: var
 #   var_name: L:AP_KAP140_INSTALLED
@@ -1557,3 +1764,13 @@ shared:
   - # Skydive
     type: var
     var_name: L:SWS_SKYDIVE_Switch_Light_Jump
+
+master:
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE1_SET
+    use_calculator: true
+    unreliable: true

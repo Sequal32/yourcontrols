@@ -65,7 +65,238 @@ shared:
     var_type: bool
     event_name: TOGGLE_TURN_INDICATOR_SWITCH
 
-  - # Heat/Vent Breaker
+  - # CB Hoist power
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:40
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 40
+  - # CB Cable cut
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:39
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 39
+  - # CB Turn slip (no change)
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:16
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 16
+  - # Float power
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:41
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 41
+  - # CB Floats
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:38
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 38
+  - # CB Hand mike
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:56
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 56
+  - # CB XPNDR (no change)
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:21
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 21
+  - # CB GPS (no change)
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:18
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 18
+  - # CB Spare
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:42
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 42
+  - # CB ADF (no change)
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:29
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 29
+  - # CB ICS
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:43
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 43
+  - # CB VHF1
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:44
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 44
+  - # CB Cargo
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:45
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 45
+  - # CB Heater cont
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:46
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 46
+  - # CB Heater power
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:47
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 47
+  - # CB SAS
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:48
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 48
+  - # CB Landing light
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:11
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 11
+  - # CB Instrument light
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:14
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 14
+  - # CB Glareshield light
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:15
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 15
+  - # CB Caution light
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:34
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 34
+  - # CB TOT
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:49
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 49
+  - # CB Fuel pump AFT
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:4
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 4
+  - # CB Fuel pump FWD
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:3
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 3
+  - # CB Fuel quantity press
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:37
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 37
+  - # CB Fuel valve
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:7
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 7
+  - # CB Transmission temp
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:50
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 50
+  - # CB Hydraulic pump
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:35
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 35
+  - # CB Governor
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:51
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 51
+  - # CB Ignition
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:52
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 52
+  - # CB Starter
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:2
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 2
+  - # CB Hand mike
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:53
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 53
+  - # CB Generator field
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:54
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 54
+  - # CB Generator reset
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:55
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 55
+  - # CB Heat vent
     type: NumSet
     var_name: A:CIRCUIT BREAKER PULLED:57
     var_units: Bool
@@ -89,6 +320,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT LANDING:3
@@ -96,6 +328,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 3
+    use_calculator: true
 
   - # Interior
     type: NumSet
@@ -104,6 +337,7 @@ shared:
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -112,6 +346,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PANEL:1
@@ -119,6 +354,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -127,6 +363,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
+    use_calculator: true
 
   - # Rotor
     type: NumSet

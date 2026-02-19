@@ -1,4 +1,4 @@
-# Version 3.2.0
+# Version 3.3.0
 
 include:
   - definitions/modules/Instruments/WT_G3X_Touch.yaml
@@ -95,6 +95,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT PANEL:1
@@ -110,6 +111,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:1
@@ -125,6 +127,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 8
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:2
@@ -140,6 +143,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
+    unreliable: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:3
@@ -349,6 +353,9 @@ shared:
 #   var_name: L:CSH125_WeightStation_17
   -
     type: var
+    var_name: L:ShowHideCP_CTRLS
+  -
+    type: var
     var_name: L:annAirFilter
   -
     type: var
@@ -435,31 +442,31 @@ shared:
     var_name: L:floatsBlown
   -
     type: var
-    var_name: L:CS_H125_exitBaggageR
-  -
-    type: var
-    var_name: L:CS_H125_exitBaggageLAft
-  -
-    type: var
-    var_name: L:CS_H125_exitRearL
-  -
-    type: var
-    var_name: L:ventFrontL
-  -
-    type: var
-    var_name: L:CS_H125_exitFrontL
-  -
-    type: var
-    var_name: L:CS_H125_exitBaggageL
-  -
-    type: var
-    var_name: L:CS_H125_exitFrontR
+    var_name: L:CS_H125_exitRearR
   -
     type: var
     var_name: L:ventFrontR
   -
     type: var
-    var_name: L:CS_H125_exitRearR
+    var_name: L:ventFrontL
+  -
+    type: var
+    var_name: L:CS_H125_exitFrontR
+  -
+    type: var
+    var_name: L:CS_H125_exitBaggageR
+  -
+    type: var
+    var_name: L:CS_H125_exitBaggageL
+  -
+    type: var
+    var_name: L:CS_H125_exitRearL
+  -
+    type: var
+    var_name: L:CS_H125_exitFrontL
+  -
+    type: var
+    var_name: L:CS_H125_exitBaggageLAft
   -
     type: var
     var_name: L:CSH125_DoorFLhide
@@ -581,6 +588,9 @@ shared:
   -
     type: var
     var_name: L:mirroDeice
+# -
+#   type: var
+#   var_name: L:CS_HeliSAS_Driven_By_G3X
 # -
 #   type: var
 #   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
@@ -734,6 +744,12 @@ shared:
 #   var_name: L:ELECTRICAL_Starter_1
 # -
 #   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
 #   var_name: L:AS650_NAV_Freq_Modify
 # -
 #   type: var
@@ -779,9 +795,6 @@ shared:
 # -
 #   type: var
 #   var_name: L:CS_Force_Trim_Release_Timer
-# -
-#   type: var
-#   var_name: L:CS_S76C_AP_Att_Hold_Holds_Heading
 # -
 #   type: var
 #   var_name: L:exteriorSound
@@ -835,10 +848,16 @@ shared:
 #   var_name: L:hornCaution310
 # -
 #   type: var
+#   var_name: L:WTG3X_Nav_Active_Nav_Source
+# -
+#   type: var
 #   var_name: L:XMLVAR_GPS_DISABLED_AS430_2
 # -
 #   type: var
 #   var_name: L:XMLVAR_GPS_DISABLED_GTN650
+# -
+#   type: var
+#   var_name: L:TX_LAST
 # -
 #   type: var
 #   var_name: L:AS430_ManualBrightness_Value_1

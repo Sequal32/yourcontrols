@@ -74,6 +74,7 @@ shared:
     var_type: i32
     event_name: ALTERNATOR_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:GENERAL ENG STARTER:1
@@ -111,6 +112,7 @@ shared:
     var_type: i32
     event_name: BEACON_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT LANDING:1
@@ -118,6 +120,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT TAXI:1
@@ -125,6 +128,7 @@ shared:
     var_type: i32
     event_name: TAXI_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT NAV:0
@@ -132,6 +136,7 @@ shared:
     var_type: i32
     event_name: NAV_LIGHTS_SET
     event_param: 0
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT STROBE:0
@@ -139,6 +144,7 @@ shared:
     var_type: i32
     event_name: STROBES_SET
     event_param: 0
+    use_calculator: true
 
   - # Interior
     type: NumSet
@@ -147,6 +153,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:10
@@ -155,7 +162,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 10
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:2
@@ -163,6 +170,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:11
@@ -171,7 +179,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 11
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:3
@@ -179,6 +187,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 3
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:12
@@ -187,7 +196,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 12
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -195,7 +204,7 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_3_SET
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
@@ -203,7 +212,7 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_5_SET
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
@@ -211,7 +220,7 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_6_SET
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
@@ -219,7 +228,86 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_7_SET
     index_reversed: true
-    unreliable: true
+    use_calculator: true
+
+  - # Transmission mode
+    type: CustomCalculator
+    get: (Z:AUDIO_Knob_Selector_1) 0 ==
+    set: 1 (>H:KMA28_TRANSMISSION_KNOB_COM3)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:AUDIO_Knob_Selector_1) 20 ==
+    set: 1 (>H:KMA28_TRANSMISSION_KNOB_COM2)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:AUDIO_Knob_Selector_1) 40 ==
+    set: 1 (>H:KMA28_TRANSMISSION_KNOB_COM1)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:AUDIO_Knob_Selector_1) 60 ==
+    set: 1 (>H:KMA28_TRANSMISSION_KNOB_COM1_2)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:AUDIO_Knob_Selector_1) 80 ==
+    set: 1 (>H:KMA28_TRANSMISSION_KNOB_COM2_1)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:AUDIO_Knob_Selector_1) 100 ==
+    set: 1 (>H:KMA28_TRANSMISSION_KNOB_TEL)
+    condition:
+      equals:
+        F64: 1.0
+
+  - # Transponder mode
+    type: CustomCalculator
+    get: (Z:C172X_XPNDR_KNOB) 0 ==
+    set: 1 (>H:C172X_XPNDR_OFF)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:C172X_XPNDR_KNOB) 25 ==
+    set: 1 (>H:C172X_XPNDR_SBY)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:C172X_XPNDR_KNOB) 50 ==
+    set: 1 (>H:C172X_XPNDR_TST)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:C172X_XPNDR_KNOB) 75 ==
+    set: 1 (>H:C172X_XPNDR_ON)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:C172X_XPNDR_KNOB) 100 ==
+    set: 1 (>H:C172X_XPNDR_ALT)
+    condition:
+      equals:
+        F64: 1.0
 
   - # LVAR's
     type: var
@@ -1148,6 +1236,9 @@ ignore:
 # - KAP140_KNOB_OUTER_INC
 # - KAP140_KNOB_OUTER_DEC
 
+  - KMA28_TRANSMISSION_KNOB_INC
+  - KMA28_TRANSMISSION_KNOB_DEC
+
   - KR87_ADF_PRESS
   - KR87_ADF_RELEASE
   - KR87_BFO_PRESS
@@ -1159,6 +1250,14 @@ ignore:
   - KR87_SETRST_PRESS
   - KR87_SETRST_RELEASE
   - KR87#Pushback
+
+  - C172X_XPNDR_KNOB_INC
+  - C172X_XPNDR_KNOB_DEC
+  - C172X_XPNDR_OFF
+  - C172X_XPNDR_SBY
+  - C172X_XPNDR_TST
+  - C172X_XPNDR_ON
+  - C172X_XPNDR_ALT
 
   - C172X_430_CDI_PRESS
   - C172X_430_CDI_RELEASE

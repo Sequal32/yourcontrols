@@ -21,6 +21,7 @@ shared:
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
     event_param: 1
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:BLEED AIR ENGINE:2
@@ -29,14 +30,14 @@ shared:
     event_name: ENGINE_BLEED_AIR_SOURCE_SET
     event_param: 2
     index_reversed: true
+    use_calculator: true
 
   - # Deice
     type: ToggleSwitch
     var_name: A:PITOT HEAT SWITCH:1
     var_units: Bool
     var_type: bool
-    event_name: PITOT_HEAT_ON
-    off_event_name: PITOT_HEAT_OFF
+    event_name: PITOT_HEAT_TOGGLE
     event_param: 1
   -
     type: NumSet
@@ -83,6 +84,7 @@ shared:
     var_type: i32
     event_name: ALTERNATOR_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:GENERAL ENG MASTER ALTERNATOR:2
@@ -90,6 +92,7 @@ shared:
     var_type: i32
     event_name: ALTERNATOR_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:GENERAL ENG STARTER:1
@@ -216,9 +219,9 @@ shared:
     var_name: A:LIGHT PEDESTRAL:1
     var_units: Bool
     var_type: bool
-    event_name: PEDESTRAL_LIGHTS_ON
-    off_event_name: PEDESTRAL_LIGHTS_OFF
+    event_name: PEDESTRAL_LIGHTS_TOGGLE
     event_param: 1
+    use_calculator: true
 
   - # Radios
     type: ToggleSwitch
@@ -274,17 +277,17 @@ shared:
     var_name: A:LIGHT BEACON:1
     var_units: Bool
     var_type: bool
-    event_name: BEACON_LIGHTS_ON
-    off_event_name: BEACON_LIGHTS_OFF
+    event_name: TOGGLE_BEACON_LIGHTS
     event_param: 1
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT NAV:1
     var_units: Bool
     var_type: bool
-    event_name: NAV_LIGHTS_ON
-    off_event_name: NAV_LIGHTS_OFF
+    event_name: TOGGLE_NAV_LIGHTS
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:1
@@ -292,47 +295,48 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_1_SET
     index_reversed: true
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT NAV:2
     var_units: Bool
     var_type: bool
-    event_name: NAV_LIGHTS_ON
-    off_event_name: NAV_LIGHTS_OFF
+    event_name: TOGGLE_NAV_LIGHTS
     event_param: 2
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT STROBE:1
     var_units: Bool
     var_type: bool
-    event_name: STROBES_ON
-    off_event_name: STROBES_OFF
+    event_name: STROBES_TOGGLE
     event_param: 1
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT TAXI:1
     var_units: Bool
     var_type: bool
-    event_name: TAXI_LIGHTS_ON
-    off_event_name: TAXI_LIGHTS_OFF
+    event_name: TOGGLE_TAXI_LIGHTS
     event_param: 1
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT LANDING:1
     var_units: Bool
     var_type: bool
-    event_name: LANDING_LIGHTS_ON
-    off_event_name: LANDING_LIGHTS_OFF
+    event_name: LANDING_LIGHTS_TOGGLE
     event_param: 1
+    use_calculator: true
 
   - # Interior
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:1
     var_units: Bool
     var_type: bool
-    event_name: PANEL_LIGHTS_ON
-    off_event_name: PANEL_LIGHTS_OFF
+    event_name: PANEL_LIGHTS_TOGGLE
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -341,6 +345,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -348,14 +353,15 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_4_SET
     index_reversed: true
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:2
     var_units: Bool
     var_type: bool
-    event_name: PANEL_LIGHTS_ON
-    off_event_name: PANEL_LIGHTS_OFF
+    event_name: PANEL_LIGHTS_TOGGLE
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -364,14 +370,15 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT PANEL:3
     var_units: Bool
     var_type: bool
-    event_name: PANEL_LIGHTS_ON
-    off_event_name: PANEL_LIGHTS_OFF
+    event_name: PANEL_LIGHTS_TOGGLE
     event_param: 3
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
@@ -380,14 +387,15 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 7
     index_reversed: true
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD:1
     var_units: Bool
     var_type: bool
-    event_name: GLARESHIELD_LIGHTS_ON
-    off_event_name: GLARESHIELD_LIGHTS_OFF
+    event_name: GLARESHIELD_LIGHTS_TOGGLE
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
@@ -396,14 +404,15 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
+    use_calculator: true
   -
     type: ToggleSwitch
     var_name: A:LIGHT GLARESHIELD:2
     var_units: Bool
     var_type: bool
-    event_name: GLARESHIELD_LIGHTS_ON
-    off_event_name: GLARESHIELD_LIGHTS_OFF
+    event_name: GLARESHIELD_LIGHTS_TOGGLE
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
@@ -412,6 +421,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 6
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT LOGO:0
@@ -419,6 +429,7 @@ shared:
     var_type: i32
     event_name: LOGO_LIGHTS_SET
     event_param: 0
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:8
@@ -427,6 +438,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 8
     index_reversed: true
+    use_calculator: true
 
   - # Bomb arm/Smoke hue
     type: NumSet
@@ -435,6 +447,7 @@ shared:
     var_type: f64
     event_name: LIGHT_POTENTIOMETER_10_SET
     index_reversed: true
+    use_calculator: true
 
   - # LVAR's
     type: var

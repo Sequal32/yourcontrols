@@ -59,7 +59,7 @@
 - Carenado - Piper PA-28R-201 Arrow III # v2.0.4
 - Carenado - Piper PA-34-220T Seneca V # v2.0.4
 - Carenado - Piper PA-44-180 Seminole # v2.0.2
-- Cowan Simulation - Airbus H125 (AS350B3e) # v3.2.0
+- Cowan Simulation - Airbus H125 (AS350B3e) # v3.3.0
 - Cowan Simulation - Bell 206B-3 JetRanger III # v3.2.0
 - Cowan Simulation - Bell 206L-3 LongRanger III # v3.2.0
 - Cowan Simulation - Bell 222B # v3.1.0
@@ -138,10 +138,11 @@
 - Salty Simulations - Boeing 747-8 Intercontinental # v0.6.0
 - Shrike Simulations - MD Helicopters 530F # v1.2.1
 - Sim Skunk Works - Lockheed TF-104G Starfighter # v3.3.11
-- SimWorks Studios - Daher Kodiak 100 # v1.5.4
+- SimWorks Studios - Daher Kodiak 100 # v1.6.0
 - SimWorks Studios - Van's RV-10 # v1.1.0
 - SimWorks Studios - Van's RV-14 # v1.4.0
 - VrilleAPlat - Cessna A-37B Dragonfly # v1.1.2
 - VrilleAPlat - Cessna T-37B Tweet # v1.5
-- WBSim - Cessna 152 # v2.1.2
-- WBSim - Cessna 172SP Classic # v1.0.9
+- WB Sim - Cessna 152 # v2.1.2
+- WB Sim - Cessna 172SP Classic # v1.0.9
+- Wing42 - Boeing Model 247D # v1.0.3

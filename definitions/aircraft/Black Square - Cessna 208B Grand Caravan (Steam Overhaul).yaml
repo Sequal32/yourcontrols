@@ -180,6 +180,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_ALTERNATOR1
+    use_calculator: true
   - # Stby alternator
     type: CustomCalculator
     get: 14 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
@@ -199,6 +200,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 1
+    use_calculator: true
   - # EPU Bus
     type: CustomCalculator
     get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
@@ -231,6 +233,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT LANDING:2
@@ -238,6 +241,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT TAXI:1
@@ -245,6 +249,7 @@ shared:
     var_type: i32
     event_name: TAXI_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT STROBE:1
@@ -252,6 +257,7 @@ shared:
     var_type: i32
     event_name: STROBES_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT NAV:1
@@ -259,6 +265,7 @@ shared:
     var_type: i32
     event_name: NAV_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT BEACON:1
@@ -266,6 +273,7 @@ shared:
     var_type: i32
     event_name: BEACON_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT WING:1
@@ -273,6 +281,7 @@ shared:
     var_type: i32
     event_name: WING_LIGHTS_SET
     event_param: 1
+    use_calculator: true
 
   - # Interior
     type: NumSet
@@ -281,6 +290,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 0
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PANEL:1
@@ -288,6 +298,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -296,7 +307,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PANEL:2
@@ -304,6 +315,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -312,7 +324,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PANEL:3
@@ -320,6 +332,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 3
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -328,7 +341,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PANEL:4
@@ -336,6 +349,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 4
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:9
@@ -344,7 +358,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 9
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT GLARESHIELD:1
@@ -352,6 +366,7 @@ shared:
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
@@ -360,7 +375,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT GLARESHIELD:2
@@ -368,6 +383,7 @@ shared:
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
@@ -376,7 +392,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 6
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT GLARESHIELD:3
@@ -384,6 +400,7 @@ shared:
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 3
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:7
@@ -392,7 +409,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 7
     index_reversed: true
-    unreliable: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT GLARESHIELD:4
@@ -400,6 +417,7 @@ shared:
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 4
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:8
@@ -408,7 +426,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 8
     index_reversed: true
-    unreliable: true
+    use_calculator: true
 
   - # Payload
     type: var

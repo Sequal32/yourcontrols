@@ -2,7 +2,6 @@
 
 include:
   - definitions/modules/Instruments/AS_G1000.yaml
-  - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/electrical.yaml
@@ -25,6 +24,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -33,6 +33,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -41,6 +42,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:1
@@ -48,6 +50,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:2
@@ -55,6 +58,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:3
@@ -62,6 +66,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 3
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:4
@@ -70,6 +75,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 4
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT GLARESHIELD:1
@@ -77,6 +83,7 @@ shared:
     var_type: i32
     event_name: GLARESHIELD_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:5
@@ -85,6 +92,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 5
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:14
@@ -93,3 +101,4 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
     index_reversed: true
+    use_calculator: true

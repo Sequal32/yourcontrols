@@ -2,7 +2,6 @@
 
 include:
   - definitions/modules/Instruments/AS_G1000.yaml
-  - definitions/modules/Instruments/PMS50_GTN.yaml
   - definitions/modules/controls.yaml
   - definitions/modules/deice.yaml
   - definitions/modules/engines.yaml
@@ -56,6 +55,7 @@ shared:
     var_units: Bool
     var_type: bool
     event_name: TOGGLE_ALTERNATOR1
+    use_calculator: true
   -
     type: var
     var_name: A:GENERAL ENG MASTER ALTERNATOR:2
@@ -82,6 +82,7 @@ shared:
     var_type: bool
     event_name: TOGGLE_EXTERNAL_POWER
     event_param: 1
+    use_calculator: true
   - # EPU Bus
     type: CustomCalculator
     get: 12 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
@@ -94,6 +95,7 @@ shared:
     var_type: i32
     event_name: LANDING_LIGHTS_SET
     event_param: 2
+    use_calculator: true
 
   - # Interior
     type: NumSet
@@ -102,6 +104,7 @@ shared:
     var_type: i32
     event_name: PANEL_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:2
@@ -110,6 +113,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 2
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:3
@@ -118,6 +122,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 3
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT PEDESTRAL:1
@@ -125,6 +130,7 @@ shared:
     var_type: i32
     event_name: PEDESTRAL_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:6
@@ -133,6 +139,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 6
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:1
@@ -140,6 +147,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 1
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:12
@@ -148,6 +156,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 12
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:2
@@ -155,6 +164,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 2
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:13
@@ -163,6 +173,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 13
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:3
@@ -170,6 +181,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 3
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT CABIN:4
@@ -177,6 +189,7 @@ shared:
     var_type: i32
     event_name: CABIN_LIGHTS_SET
     event_param: 4
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:14
@@ -185,6 +198,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 14
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:15
@@ -193,6 +207,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 15
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:16
@@ -201,6 +216,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 16
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:18
@@ -209,6 +225,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 18
     index_reversed: true
+    use_calculator: true
   -
     type: NumSet
     var_name: A:LIGHT POTENTIOMETER:30
@@ -217,6 +234,7 @@ shared:
     event_name: LIGHT_POTENTIOMETER_SET
     event_param: 30
     index_reversed: true
+    use_calculator: true
 
   - # Payload
     type: var
