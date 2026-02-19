@@ -65,6 +65,8 @@
 - Cowan Simulation - Bell 222B # v3.1.0
 - Cowan Simulation - MD Helicopters 500E # v3.3.0
 - Cowan Simulation - Robinson R66 # v3.4.0
+- COWS - Diamond DA40 Diamond Star # v1.1.3
+- COWS - Diamond DA42 Twin Star # v1.2.5
 - DC Designs - Boeing PT-17 Stearman # v1.0.6
 - DC Designs - Concorde # v1.1.2
 - Deejing - Van's RV-7 # v1.1.2
