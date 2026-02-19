@@ -1,5 +1,31 @@
 # YourControls Changelog
 
+## Version 2.8.10
+
+- More 2020 plane fixes on 2024 (electrical/lights/trim).
+- More module and touchscreen improvements.
+  - Bug fixes, key entry looping, ID hashing.
+
+### Profiles (2020)
+
+- Added: Diamond DA40 Diamond Star by COWS (v1.1.3).
+- Added: Diamond DA42 Twin Star by COWS (v1.2.5).
+- Readded: Boeing Model 247D by Wing42. (v1.0.3).
+- Updated: Kodiak 100 by SimWorks Studios (v1.6.0).
+
+### Aircraft Fixes (2020)
+
+- Asobo CJ4: FMC scratchpad toggle now completely ignored.
+- Fenix A320: Restored sync of transponder buttons (from feedback).
+- Fenix A320: Reverted brakes due to (side) input conflicts.
+- MS/iniBuilds A320: Reverse On Axis setting.
+- WB Sim C172: Transponder mode and transmission mode knobs.
+
+### Aircraft Fixes (2024)
+
+- FFX Vision Jet: Added new variables into 2020 profile (except batteries).
+
+
 ## Version 2.8.9
 
 - Most Asobo aircraft updated to Sim Update 16.
@@ -20,7 +46,7 @@
 - Updated: Bell 206L-3 by Cowan Simulation (v3.2.0)
 - Updated: Bell 222B by Cowan Simulation (v3.1.0)
 - Updated: Bell 429 by jXt Simulations (v1.0.0)
-- Updated: Cessna 152 by WBSim (v2.1.2)
+- Updated: Cessna 152 by WB Sim (v2.1.2)
 - Updated: Cessna 170B by Carenado (v2.0.2)
 - Updated: Cessna 182 Skylane RG by Carenado (v1.0.5)
 - Updated: Cessna 182T Skylane by Carenado (v2.0.4)
@@ -150,7 +176,7 @@
 - Added: Saab B 17A by Microsoft & iniBuilds (v1.0.12).
 - Updated: Beechcraft Baron B58 by Black Square (v0.1.1).
 - Updated: Beechcraft Bonanza A36 by Black Square (v0.1.2).
-- Updated: Cessna 172SP Classic by WB-Sim (v1.0.9).
+- Updated: Cessna 172SP Classic by WB Sim (v1.0.9).
 - Updated: FreedomFox & Fox2 by Parallel 42 (v1.23.1).
 - Updated: Van's RV-10 by SimWorks Studios (v1.1.0).
 - Updated: Van's RV-14 by SimWorks Studios (v1.4.0).
