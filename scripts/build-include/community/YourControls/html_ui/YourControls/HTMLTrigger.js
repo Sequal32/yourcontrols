@@ -1,14 +1,7 @@
 const clickEvents = ["mousedown", "mouseup", "click"].map(eventType => {
-	let evt = new MouseEvent(eventType, {
-		cancelable: true,
-		bubbles: true
-	});
+	let evt = new MouseEvent(eventType, { cancelable: true, bubbles: true });
 	evt.YC = true;
 	return evt;
-});
-
-const inputEvent = new Event('input', {
-	bubbles: true
 });
 
 const nativeInputSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
@@ -16,6 +9,10 @@ const nativeInputSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElemen
 class YourControlsHTMLTrigger {
 	static setInput(element, value) {
 		nativeInputSetter.call(element, value);
+
+		const inputEvent = new Event('input', { bubbles: true });
+		inputEvent.YC = true;
+
 		element.dispatchEvent(inputEvent);
 	}
 

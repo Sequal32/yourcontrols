@@ -149,17 +149,21 @@ class YourControlsHTMLEvents {
 		if (!(element instanceof HTMLInputElement) || this.bindedInputs[element.id]) {
 			return;
 		}
-
 		this.bindedInputs[element.id] = true;
 
 		let cacheValue = null;
-		element.oninput = () => {
+
+		const inputHandler = (e) => {
+			if (e && e.YC) {
+				return;
+			}
 			if (cacheValue === element.value) {
 				return;
 			}
 			cacheValue = element.value;
 			this.inputCallback(element.id, element.value); // Send value
 		};
+		element.addEventListener("input", inputHandler);
 	}
 
 	clear() {
