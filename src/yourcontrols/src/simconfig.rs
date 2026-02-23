@@ -12,7 +12,6 @@ pub enum ConfigLoadError {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Config {
     pub conn_timeout: u64,
-    pub check_for_betas: bool,
     pub port: u16,
     pub ip: String,
     pub name: String,
@@ -26,7 +25,6 @@ impl Default for Config {
         Self {
             port: 25071,
             conn_timeout: 5,
-            check_for_betas: false,
             ip: String::new(),
             name: String::new(),
             ui_dark_theme: true,
