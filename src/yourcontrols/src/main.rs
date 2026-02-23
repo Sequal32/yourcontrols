@@ -791,8 +791,10 @@ fn main() {
                         }
                     };
                 }
-                AppMessage::UpdateConfig { new_config: config } => {
+                AppMessage::UpdateConfig { new_config } => {
+                    config = new_config;
                     write_configuration(&config);
+                    info!("[CONFIG] Settings saved.");
                 }
                 AppMessage::ForceTakeControl => {
                     if let Some(client) = transfer_client.as_ref() {
