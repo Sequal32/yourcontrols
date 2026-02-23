@@ -3,7 +3,6 @@
 
 mod app;
 mod clientmanager;
-mod corrector;
 mod definitions;
 mod simconfig;
 mod sync;
@@ -191,7 +190,7 @@ fn main() {
         path.push(config_name);
         path
     };
-    // Load defintions
+    // Load definitions
     let load_definitions = |definitions: &mut Definitions, config_to_load: &mut String| -> bool {
         // Load aircraft configuration
         let path = get_config_path(config_to_load);
@@ -205,7 +204,7 @@ fn main() {
                     "[DEFINITIONS] Could not load configuration file {}: {}",
                     config_to_load, e
                 );
-                // Prevent server/client from starting as config could not be laoded.
+                // Prevent server/client from starting as config could not be loaded.
                 *config_to_load = String::new();
                 return false;
             }
@@ -244,7 +243,7 @@ fn main() {
                     DispatchResult::SimObjectData(data) => {
                         definitions.process_sim_object_data(data);
                     }
-                    // Exception occured
+                    // Exception occurred
                     DispatchResult::Exception(data) => {
                         warn!("[SIM] SimConnect exception occurred: {}", unsafe {
                             std::ptr::addr_of!(data.dwException).read_unaligned()

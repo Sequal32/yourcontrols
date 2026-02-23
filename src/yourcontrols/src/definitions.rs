@@ -18,7 +18,7 @@ use crate::syncdefs::{
     CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch,
 };
 use crate::util::{Category, InDataTypes};
-use crate::{corrector::Corrector, syncdefs::LocalVarProxy};
+use crate::syncdefs::LocalVarProxy;
 
 use yourcontrols_types::{AllNeedSync, Error, Event, EventData, VarMap, VarReaderTypes};
 
@@ -473,8 +473,6 @@ pub struct Definitions {
     current_sync: AllNeedSync,
     // Keep track of which definitions just got written so we don't sync them again
     last_written: HashMap<String, Instant>,
-    // Helper struct to calculate velocity and correct plane/ground altitude
-    physics_corrector: Corrector,
     // Delay events by 100ms in order for them to get synced correctly
     event_queue: VecDeque<Event>,
     event_timer: Instant,
@@ -518,8 +516,6 @@ impl Definitions {
             avarstransfer: AircraftVars::new(1),
 
             last_written: HashMap::new(),
-
-            physics_corrector: Corrector::new(2),
 
             current_sync: AllNeedSync::new(),
             event_queue: VecDeque::new(),
@@ -1349,14 +1345,11 @@ impl Definitions {
     // Process changed aircraft variables and update SyncActions related to it
     #[allow(unused_variables)]
     pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
-        // self.physics_corrector.process_sim_object_data(data);
         if self.avarstransfer.define_id != data.dwDefineID {
             return;
         }
         // Data might be bad/config files don't line up
         if let Ok(data) = self.avarstransfer.read_vars(data) {
-            // Remove some computed components
-            // self.physics_corrector.remove_components(&mut data);
             // Update all syncactions with the changed values
             for (var_name, value) in &data {
                 // Determine if this variable should be updated
@@ -1533,9 +1526,6 @@ impl Definitions {
 
         let mut interpolation_data = Vec::new();
 
-        // Add some local computed components
-        // self.physics_corrector.add_components(&mut data);
-
         // Only sync vars that are defined as so
         for (var_name, data) in data {
             set_did_write_recently(&mut self.last_written, &var_name);
@@ -1660,7 +1650,6 @@ impl Definitions {
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
-        self.physics_corrector.on_connected(conn);
 
         // Might be running another instance
         #[cfg(not(feature = "skip_sim_connect"))]
@@ -1694,8 +1683,6 @@ impl Definitions {
             .into_iter()
             .filter(|(x, _)| !self.do_not_sync.contains(x))
             .collect();
-
-        // self.physics_corrector.remove_components(&mut avars);
 
         AllNeedSync {
             avars,
