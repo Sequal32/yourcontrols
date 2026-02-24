@@ -1,4 +1,4 @@
-# Actively supported modules (as of 2.8.10)
+# Actively supported modules (as of 2.8.11)
 
 ## Developer name & Verified version
 
