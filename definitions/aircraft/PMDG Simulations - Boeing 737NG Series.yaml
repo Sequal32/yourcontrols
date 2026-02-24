@@ -1,7 +1,7 @@
 # Version 3.0.65
 
 include:
-  - definitions/modules/physics_rad.yaml
+  - definitions/modules/general.yaml
   - definitions/modules/radios.yaml
 
 shared:
@@ -24,26 +24,6 @@ shared:
     use_calculator: true
     unreliable: true
 
-  - # General
-    type: NumSet
-    var_name: A:IS SLEW ACTIVE
-    var_units: Bool
-    var_type: i32
-    event_name: SLEW_TOGGLE
-    use_calculator: true
-  -
-    type: NumSet
-    var_name: A:PUSHBACK ATTACHED
-    var_units: Bool
-    var_type: i32
-    event_name: TOGGLE_PUSHBACK
-    cancel_h_events: true
-    use_calculator: true
-  -
-    type: ProgramActionEvent
-    event_name: TOGGLE_LAUNCH_BAR_SWITCH
-    action: TransferControls
-
   - # Transponder
     type: NumSet
     var_name: A:TRANSPONDER IDENT:1
@@ -59,27 +39,11 @@ shared:
     event_name: XPNDR_SET
     event_param: 1
 
-  - # Trim
-    type: NumSet
-    var_name: A:AILERON TRIM PCT
-    var_units: Position 16k
-    var_type: f64
-    event_name: AILERON_TRIM_SET_EX1
-    use_calculator: true
-    unreliable: true
-  -
+  - # Trim (AIL/RUD have no effect)
     type: var
     var_name: A:ELEVATOR TRIM POSITION
     var_units: Radians
     var_type: f64
-    unreliable: true
-  -
-    type: NumSet
-    var_name: A:RUDDER TRIM PCT
-    var_units: Position 16k
-    var_type: f64
-    event_name: RUDDER_TRIM_SET_EX1
-    use_calculator: true
     unreliable: true
 
 # - # LVAR's
@@ -1122,27 +1086,19 @@ shared:
     on_condition_value: 100
     use_calculator: true
   - # CIRCUIT BREAKER Light Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_94_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 9402
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 9401
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69726"
+    is_user_event: true
   - # PANEL Light Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_95_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 9502
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 9501
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69727"
+    is_user_event: true
   - # EQUIPMENT COOLING SUPPLY Switch
     type: ToggleSwitch
     var_name: L:switch_96_73X
@@ -2620,38 +2576,26 @@ shared:
     event_name: ROTOR_BRAKE
     use_calculator: true
   - # CONT CAB TEMP SELECTOR Knob
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_305_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 30502
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 30501
-    increment_by: 3
-    use_calculator: true
+    event_name: "#69937"
+    is_user_event: true
   - # FWD CAB TEMP SELECTOR Knob
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_306_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 30602
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 30601
-    increment_by: 3
-    use_calculator: true
+    event_name: "#69938"
+    is_user_event: true
   - # AFT CAB TEMP SELECTOR Knob
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_307_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 30702
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 30701
-    increment_by: 3
-    use_calculator: true
+    event_name: "#69939"
+    is_user_event: true
 # - # CONT CAB ZONE TEMP
 #   type: var
 #   var_name: L:switch_308_73X
@@ -2757,16 +2701,12 @@ shared:
     event_name: ROTOR_BRAKE
     use_calculator: true
   - # FO Chart Brightness
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_322_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 32202
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 32201
-    increment_by: 4
-    use_calculator: true
+    event_name: "#69954"
+    is_user_event: true
   - # NOSE WHEEL STEERING Switch
     type: ToggleSwitch
     var_name: L:switch_325_73X
@@ -2790,85 +2730,57 @@ shared:
 #   type: var
 #   var_name: L:switch_4461_73X
   - # MAIN PANEL LIGHT Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_328_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 32802
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 32801
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69960"
+    is_user_event: true
 # - # Backlight Main CPT
 #   type: var
 #   var_name: L:BL_MainCA
   - # OUTBOARD DISPLAY UNIT BRIGHTNESS (OUTBD DU BRT) Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_329_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 32902
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 32901
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69961"
+    is_user_event: true
   - # INBOARD DISPLAY UNIT BRIGHTNESS (INBD DU BRT) Control (Outer Knob)
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_330_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 33002
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 33001
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69962"
+    is_user_event: true
   - # INBOARD DISPLAY UNIT BRIGHTNESS (INBD DU RDR BRT) Control (Inner Knob)
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_331_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 33102
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 33101
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69963"
+    is_user_event: true
   - # LOWER DISPLAY UNIT BRIGHTNESS (LOWER DU BRT) Control (outer)
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_332_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 33202
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 33201
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69964"
+    is_user_event: true
   - # LOWER DISPLAY UNIT BRIGHTNESS (LOWER DU BRT) Control (inner)
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_333_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 33302
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 33301
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69965"
+    is_user_event: true
   - # UPPER DISPLAY UNIT BRIGHTNESS (UPPER DU BRT) Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_334_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 33402
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 33401
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69966"
+    is_user_event: true
   - # MAIN PANEL DISPLAY UNITS (MAIN PANEL DUs) Selector
     type: NumIncrement
     var_name: L:switch_335_73X
@@ -2892,27 +2804,19 @@ shared:
     increment_by: 50
     use_calculator: true
   - # BACKGROUND PNL LIGHT Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_337_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 33702
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 33701
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69969"
+    is_user_event: true
   - # AFDS FLOOD LIGHT Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_338_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 33802
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 33801
-    increment_by: 9
-    use_calculator: true
+    event_name: "#69970"
+    is_user_event: true
 # - # DSP AP L AMBER
 #   type: var
 #   var_name: L:switch_3391_73X
@@ -4197,49 +4101,33 @@ shared:
     type: var
     var_name: L:switch_506_73X
   - # INBOARD DISPLAY UNIT BRIGHTNESS (INBD DU BRT) Control (Outer Knob)
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_507_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 50702
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 50701
-    increment_by: 9
-    use_calculator: true
+    event_name: "#70139"
+    is_user_event: true
   - # INBOARD DISPLAY UNIT BRIGHTNESS (INBD DU RDR BRT) Control (Inner Knob)
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_508_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 50802
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 50801
-    increment_by: 9
-    use_calculator: true
+    event_name: "#70140"
+    is_user_event: true
   - # OUTBOARD DISPLAY UNIT BRIGHTNESS (OUTBD DU BRT) Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_509_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 50902
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 50901
-    increment_by: 9
-    use_calculator: true
+    event_name: "#70141"
+    is_user_event: true
   - # MAIN PANEL LIGHT Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_510_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 51002
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 51001
-    increment_by: 9
-    use_calculator: true
+    event_name: "#70142"
+    is_user_event: true
   - # HGS FAIL switch
     type: NumSet
     var_name: L:switch_522_73X
@@ -5637,8 +5525,8 @@ shared:
     var_name: L:switch_679_73X
     var_units: Number
     var_type: f64
-    multiply_by: 78.6
-    add_by: -16384
+    multiply_by: 94.8
+    add_by: -21000
     event_name: AXIS_SPOILER_SET
     use_calculator: true
 # -
@@ -7030,27 +6918,19 @@ shared:
     on_condition_value: 100
     use_calculator: true
   - # FLOOD Light Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_756_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 75602
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 75601
-    increment_by: 9
-    use_calculator: true
+    event_name: "#70388"
+    is_user_event: true
   - # PANEL Light Control
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_757_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 75702
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 75701
-    increment_by: 9
-    use_calculator: true
+    event_name: "#70389"
+    is_user_event: true
 # - # EXT FWD Light ANNUN
 #   type: var
 #   var_name: L:switch_758_73X
@@ -7376,27 +7256,19 @@ shared:
     event_name: ROTOR_BRAKE
     use_calculator: true
   - # Weather Radar Panel TILT Control Left Switch
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_794_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 79402
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 79401
-    increment_by: 1
-    use_calculator: true
+    event_name: "#70426"
+    is_user_event: true
   - # Weather Radar Panel GAIN Control Switch
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_923_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 92302
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 92301
-    increment_by: 1
-    use_calculator: true
+    event_name: "#70555"
+    is_user_event: true
   - # Weather Radar Panel AUTO Switch
     type: NumSet
     var_name: L:switch_917_73X
@@ -7461,27 +7333,19 @@ shared:
     event_name: ROTOR_BRAKE
     use_calculator: true
   - # Weather Radar Panel TILT Control Right Switch
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_795_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 79502
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 79501
-    increment_by: 1
-    use_calculator: true
+    event_name: "#70427"
+    is_user_event: true
   - # Weather Radar Panel GAIN Control Switch
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_922_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 92202
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 92201
-    increment_by: 1
-    use_calculator: true
+    event_name: "#70554"
+    is_user_event: true
   - # Transponder XPNDR Selector
     type: ToggleSwitch
     var_name: L:switch_798_73X
@@ -8960,16 +8824,12 @@ shared:
     event_name: ROTOR_BRAKE
     use_calculator: true
   - # CPT Chart Brightness
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_319_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 31902
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 31901
-    increment_by: 4
-    use_calculator: true
+    event_name: "#69951"
+    is_user_event: true
 # -
 #   type: var
 #   var_name: L:chartlight_hideshow_L
@@ -8984,16 +8844,12 @@ shared:
     on_condition_value: 100
     use_calculator: true
   - # CPT Map Brightness
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_323_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 32302
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 32301
-    increment_by: 4
-    use_calculator: true
+    event_name: "#69955"
+    is_user_event: true
   -
     type: var
     var_name: L:maplight_L_drag_h
@@ -9051,16 +8907,12 @@ shared:
     on_condition_value: 100
     use_calculator: true
   - # FO Map Brightness
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_324_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 32402
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 32401
-    increment_by: 4
-    use_calculator: true
+    event_name: "#69956"
+    is_user_event: true
   -
     type: var
     var_name: L:ngx_windshield_air_left
@@ -9207,38 +9059,26 @@ shared:
     on_condition_value: 100
     use_calculator: true
   - # CA Spotlight knob
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_2015_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 201502
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 201501
-    increment_by: 4
-    use_calculator: true
+    event_name: "#71647"
+    is_user_event: true
   - # FO Spotlight knob
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_2016_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 201602
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 201601
-    increment_by: 4
-    use_calculator: true
+    event_name: "#71648"
+    is_user_event: true
   - # Engineer Spotlight knob
-    type: NumIncrement
+    type: NumSet
     var_name: L:switch_2017_73X
     var_units: Number
     var_type: f64
-    up_event_name: ROTOR_BRAKE
-    up_event_param: 201702
-    down_event_name: ROTOR_BRAKE
-    down_event_param: 201701
-    increment_by: 4
-    use_calculator: true
+    event_name: "#71649"
+    is_user_event: true
 # -
 #   type: var
 #   var_name: L:vc_h_shake
@@ -10335,33 +10175,3 @@ master:
 
 ignore:
   - PMDGTablet#efb_preferences_brightness
-  - PMDGTablet#efb_preferences_simbrief_id
-  - PMDGTablet#efb_dashboard_weather_icao
-  - PMDGTablet#efb_navigraph_searchfield
-
-  - PMDGTablet#opt_takeoff_airport_icao
-  - PMDGTablet#opt_takeoff_airport_name
-  - PMDGTablet#opt_takeoff_airport_altitude
-  - PMDGTablet#opt_takeoff_runway_length
-  - PMDGTablet#opt_takeoff_weight
-  - PMDGTablet#opt_takeoff_cg
-  - PMDGTablet#opt_takeoff_windspeed
-  - PMDGTablet#opt_takeoff_oat
-  - PMDGTablet#opt_takeoff_barometer
-
-  - PMDGTablet#opt_landingdispatch_airport_icao
-  - PMDGTablet#opt_landingdispatch_airport_name
-  - PMDGTablet#opt_landingdispatch_airport_altitude
-  - PMDGTablet#opt_landingdispatch_runway_length
-  - PMDGTablet#opt_landingdispatch_windspeed
-  - PMDGTablet#opt_landingdispatch_oat
-  - PMDGTablet#opt_landingdispatch_barometer
-
-  - PMDGTablet#opt_landingenroute_airport_icao
-  - PMDGTablet#opt_landingenroute_airport_name
-  - PMDGTablet#opt_landingenroute_airport_altitude
-  - PMDGTablet#opt_landingenroute_runway_length
-  - PMDGTablet#opt_landingenroute_weight
-  - PMDGTablet#opt_landingenroute_windspeed
-  - PMDGTablet#opt_landingenroute_oat
-  - PMDGTablet#opt_landingenroute_barometer
