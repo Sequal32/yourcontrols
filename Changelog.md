@@ -1,5 +1,14 @@
 # YourControls Changelog
 
+## Version 2.8.11
+
+- Fixed position freeze on FS2024.
+- Removed broken physics corrector still active.
+- Fixed settings not applying until app restart.
+- Keyboard data entry fields on tablets restored.
+  - FlyByWire, iniBuilds, PMDG
+
+
 ## Version 2.8.10
 
 - More 2020 plane fixes on 2024 (electrical/lights/trim).

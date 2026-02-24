@@ -1,4 +1,4 @@
-# Version 2.73
+# Version 2.92
 
 include:
   - definitions/modules/Instruments/AS_GNS430.yaml
@@ -61,8 +61,15 @@ shared:
         F64: 1.0
   -
     type: CustomCalculator
-    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 25 ==
-    set: 25 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 20 ==
+    set: 20 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 40 ==
+    set: 40 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
     condition:
       equals:
         F64: 1.0
@@ -75,8 +82,22 @@ shared:
         F64: 1.0
   -
     type: CustomCalculator
-    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 75 ==
-    set: 75 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 60 ==
+    set: 60 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 70 ==
+    set: 70 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.CarbHeatPosition) 80 ==
+    set: 80 (>Z:Aircraft.Engine.1.Input.CarbHeatPosition)
     condition:
       equals:
         F64: 1.0
@@ -152,8 +173,15 @@ shared:
         F64: 1.0
   -
     type: CustomCalculator
-    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 25 ==
-    set: 25 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 20 ==
+    set: 20 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 40 ==
+    set: 40 (>Z:Aircraft.Engine.1.Input.MixturePosition)
     condition:
       equals:
         F64: 1.0
@@ -166,8 +194,22 @@ shared:
         F64: 1.0
   -
     type: CustomCalculator
-    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 75 ==
-    set: 75 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 60 ==
+    set: 60 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 70 ==
+    set: 70 (>Z:Aircraft.Engine.1.Input.MixturePosition)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Aircraft.Engine.1.Input.MixturePosition) 80 ==
+    set: 80 (>Z:Aircraft.Engine.1.Input.MixturePosition)
     condition:
       equals:
         F64: 1.0
