@@ -21,6 +21,12 @@ impl Control {
         self.has_control = true;
         self.do_transfer(conn);
         gauge_communicator.stop_interpolation(conn);
+
+        // 2024 bandaid fix
+        gauge_communicator.send_raw(conn, "0 (>K:FREEZE_LATITUDE_LONGITUDE_SET)");
+        gauge_communicator.send_raw(conn, "0 (>K:FREEZE_ALTITUDE_SET)");
+        gauge_communicator.send_raw(conn, "0 (>K:FREEZE_ATTITUDE_SET)");
+
         gauge_communicator.set(conn, "L:A32NX_EXTERNAL_OVERRIDE", None, "0"); // A32NX enable FBW
     }
 
@@ -28,6 +34,12 @@ impl Control {
         self.has_control = false;
         self.do_transfer(conn);
         gauge_communicator.stop_interpolation(conn);
+
+        // 2024 bandaid fix
+        gauge_communicator.send_raw(conn, "1 (>K:FREEZE_LATITUDE_LONGITUDE_SET)");
+        gauge_communicator.send_raw(conn, "1 (>K:FREEZE_ALTITUDE_SET)");
+        gauge_communicator.send_raw(conn, "1 (>K:FREEZE_ATTITUDE_SET)");
+
         gauge_communicator.set(conn, "L:A32NX_EXTERNAL_OVERRIDE", None, "1"); // A32NX disable FBW
     }
 
