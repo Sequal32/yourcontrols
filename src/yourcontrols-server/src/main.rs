@@ -3,8 +3,10 @@ use log::info;
 use rendezvous::run_rendezvous;
 use servers::Servers;
 use simplelog::{LevelFilter, TermLogger, TerminalMode};
-use std::sync::{Arc, Mutex};
-use std::thread;
+use std::{
+    sync::{Arc, Mutex},
+    thread,
+};
 
 mod hoster;
 mod rendezvous;

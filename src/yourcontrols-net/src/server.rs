@@ -1,35 +1,28 @@
 use crossbeam_channel::unbounded;
-use igd::{search_gateway, PortMappingProtocol, SearchOptions};
+use igd::{PortMappingProtocol, SearchOptions, search_gateway};
 use laminar::{Metrics, Socket};
-
 use log::info;
-use mem::drop;
 use spin_sleep::sleep;
-use std::sync::{
-    atomic::{AtomicBool, AtomicU16, Ordering::SeqCst},
-    Arc, Mutex,
-};
 use std::{
     collections::HashMap,
-    mem,
+    mem::drop,
     net::{IpAddr, Ipv4Addr, SocketAddr, SocketAddrV4},
+    sync::{
+        atomic::{AtomicBool, AtomicU16, Ordering::SeqCst},
+        Arc, Mutex,
+    },
     thread,
-    time::Duration,
-    time::Instant,
+    time::{Duration, Instant},
 };
 
-use crate::util::{
-    ClientReceiver, ClientSender, Event, ReceiveMessage, ServerReceiver, ServerSender,
-    TransferClient,
-};
-use crate::util::{HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES};
 use crate::{
     get_socket_duplex,
-    util::{get_bind_address, get_local_ip_address, get_rendezvous_server, get_socket_config},
-};
-use crate::{
     messages::{Message, Payloads, SenderReceiver},
-    util::get_local_endpoints_with_port,
+    util::{
+        ClientReceiver, ClientSender, Event, ReceiveMessage, ServerReceiver, ServerSender, TransferClient,
+        get_bind_address, get_local_endpoints_with_port, get_local_ip_address, get_rendezvous_server, get_socket_config,
+        HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES,
+    },
 };
 
 use yourcontrols_types::Error;

@@ -1,5 +1,8 @@
 use serde::{Deserialize, Serialize};
-use std::{net::IpAddr, ops::Add, ops::Sub};
+use std::{
+    net::IpAddr,
+    ops::{Add, Sub},
+};
 use yourcontrols_types::Error;
 
 pub fn get_hostname_ip(hostname: &str, isipv6: bool) -> Result<IpAddr, Error> {

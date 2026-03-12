@@ -1,5 +1,8 @@
-use std::{collections::HashMap, net::SocketAddr, time::Instant};
-
+use std::{
+    collections::HashMap,
+    net::SocketAddr,
+    time::Instant,
+};
 use yourcontrols_net::{Payloads, SenderReceiver};
 
 pub const SERVER_NAME: &str = "SERVER";

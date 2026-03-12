@@ -4,13 +4,20 @@ use crate::util::Counters;
 use dotenv::var;
 use laminar::Socket;
 use log::info;
-use std::net::{SocketAddr, SocketAddrV4};
-use std::sync::{Arc, Mutex};
-use std::thread::sleep;
-use std::time::{Duration, Instant};
+use std::{
+    net::{SocketAddr, SocketAddrV4},
+    sync::{Arc, Mutex},
+    thread::sleep,
+    time::{Duration, Instant},
+};
 use yourcontrols_net::{
-    get_addr_from_hostname_and_port, get_socket_config, get_socket_duplex, is_actually_ipv4,
-    Message, Payloads, SenderReceiver,
+    get_addr_from_hostname_and_port,
+    get_socket_config,
+    get_socket_duplex,
+    is_actually_ipv4,
+    Message,
+    Payloads,
+    SenderReceiver,
 };
 use yourcontrols_types::Error;
 

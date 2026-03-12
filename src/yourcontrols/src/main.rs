@@ -3,6 +3,7 @@
 
 mod app;
 mod clientmanager;
+mod corrector;
 mod definitions;
 mod simconfig;
 mod sync;
@@ -17,7 +18,6 @@ use definitions::{Definitions, ProgramAction, SyncPermission};
 use log::{error, info, warn};
 use simconfig::Config;
 use simconnect::{DispatchResult, SimConnector};
-
 use spin_sleep::sleep;
 use std::{
     env,
@@ -25,8 +25,7 @@ use std::{
     io,
     net::IpAddr,
     path::PathBuf,
-    time::Duration,
-    time::Instant,
+    time::{Duration, Instant},
 };
 use update::Updater;
 use yourcontrols_net::{Client, Event, Payloads, ReceiveMessage, Server, TransferClient};
@@ -64,10 +63,7 @@ fn get_aircraft_configs() -> io::Result<Vec<String>> {
 fn write_configuration(config: &Config) {
     match config.write_to_file(CONFIG_FILENAME) {
         Ok(_) => {}
-        Err(e) => error!(
-            "[PROGRAM] Could not write configuration file! Reason: {}",
-            e
-        ),
+        Err(e) => error!("[PROGRAM] Could not write configuration file! Reason: {}", e),
     };
 }
 
@@ -148,10 +144,7 @@ fn main() {
     let mut config = match Config::read_from_file(CONFIG_FILENAME) {
         Ok(config) => config,
         Err(e) => {
-            warn!(
-                "[PROGRAM] Could not open config. Using default values. Reason: {}",
-                e
-            );
+            warn!("[PROGRAM] Could not open config. Using default values. Reason: {}", e);
 
             let config = Config::default();
             write_configuration(&config);
@@ -197,13 +190,11 @@ fn main() {
 
         match definitions.load_config(path.to_string_lossy().to_string()) {
             Ok(_) => {
-                info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
+                info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events.",
+                definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
             }
             Err(e) => {
-                error!(
-                    "[DEFINITIONS] Could not load configuration file {}: {}",
-                    config_to_load, e
-                );
+                error!("[DEFINITIONS] Could not load configuration file {}: {}", config_to_load, e);
                 // Prevent server/client from starting as config could not be loaded.
                 *config_to_load = String::new();
                 return false;
@@ -291,8 +282,7 @@ fn main() {
                         } => {
                             // Not non high updating packets for debugging
                             if !is_unreliable {
-                                info!(
-                                    "[PACKET] {:?} {} {:?} {:?} {:?}",
+                                info!("[PACKET] {:?} {} {:?} {:?} {:?}",
                                     data,
                                     from,
                                     clients.is_observer(&from),
@@ -345,10 +335,7 @@ fn main() {
                             mut is_observer,
                             is_server,
                         } => {
-                            info!(
-                                "[NETWORK] {} connected. In control: {}, observing: {}, server: {}",
-                                name, in_control, is_observer, is_server
-                            );
+                            info!("[NETWORK] {} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
 
                             // This should be before the if statement as server_started counts the number of clients connected
                             clients.add_client(name.clone());
@@ -433,12 +420,13 @@ fn main() {
                             );
                         }
                         Payloads::ConnectionDenied { reason } => {
-                            client.stop(format!("Connection Denied: {}", reason));
+                            client.stop(format!("Connection denied: {}", reason));
                         }
                         Payloads::AircraftDefinition { bytes } => {
                             match definitions.load_config_from_bytes(bytes) {
                                 Ok(_) => {
-                                    info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events from the server", definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
+                                    info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events from the server.",
+                                    definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
                                     control.on_connected(&conn);
 
                                     let def_connect_result = definitions.on_connected(&conn);
@@ -469,17 +457,12 @@ fn main() {
                                 ConnectionMethod::Direct,
                             ) {
                                 Ok(new_client) => {
-                                    info!(
-                                        "[NETWORK] New client started to connect to hosted server."
-                                    );
+                                    info!("[NETWORK] New client started to connect to hosted server.");
                                     *client = Box::new(new_client);
                                 }
                                 Err(e) => {
                                     app_interface.client_fail(e.to_string().as_str());
-                                    error!(
-                                        "[NETWORK] Could not start new hoster client! Reason: {}",
-                                        e
-                                    );
+                                    error!("[NETWORK] Could not start new hoster client! Reason: {}", e);
                                 }
                             };
                         }
@@ -521,9 +504,7 @@ fn main() {
 
                             app_interface.client_fail(&reason);
                         }
-                        Event::UnablePunchthrough => app_interface.client_fail(
-                            "Could not connect to host! Please port forward or use 'Cloud Host'!",
-                        ),
+                        Event::UnablePunchthrough => app_interface.client_fail("Could not connect to host! Please port forward or use Cloud Host."),
 
                         Event::SessionIdFetchFailed => app_interface
                             .server_fail("Could not connect to Cloud Server to fetch session ID."),
@@ -603,9 +584,7 @@ fn main() {
                     if config_to_load.is_empty() {
                         app_interface.server_fail("Select an aircraft config first!");
                     } else if !load_definitions(&mut definitions, &mut config_to_load) {
-                        app_interface.error(
-                            "Error loading definition files. Check the log for more information.",
-                        );
+                        app_interface.error("Error loading definition files. Check the log for more information.");
                     } else if connected {
                         definitions.on_connected(&conn).ok();
                         control.on_connected(&conn);
@@ -634,7 +613,7 @@ fn main() {
                                     Ok(_) => {
                                         // Assign server as transfer client
                                         transfer_client = Some(server);
-                                        info!("[NETWORK] Server started");
+                                        info!("[NETWORK] Server started.");
                                     }
                                     Err(e) => {
                                         app_interface.server_fail(&e.to_string());
@@ -652,7 +631,7 @@ fn main() {
                                 match client.start_with_relay(is_ipv6) {
                                     Ok(_) => {
                                         transfer_client = Some(client);
-                                        info!("[NETWORK] Hosting started");
+                                        info!("[NETWORK] Hosting started.");
                                     }
                                     Err(e) => {
                                         info!("[NETWORK] Hosting could not start! Reason: {}", e);
@@ -745,19 +724,13 @@ fn main() {
                 }
                 AppMessage::LoadAircraft { config_file_name } => {
                     // Load config
-                    info!(
-                        "[DEFINITIONS] {} aircraft config selected.",
-                        config_file_name
-                    );
+                    info!("[DEFINITIONS] {} aircraft config selected.", config_file_name);
                     config_to_load.clone_from(&config_file_name);
                 }
                 AppMessage::Startup => {
                     // List aircraft
                     if let Ok(configs) = get_aircraft_configs() {
-                        info!(
-                            "[DEFINITIONS] Found {} configuration file(s).",
-                            configs.len()
-                        );
+                        info!("[DEFINITIONS] Found {} configuration file(s).", configs.len());
 
                         for aircraft_config in configs {
                             app_interface.add_aircraft(&aircraft_config);
@@ -771,10 +744,7 @@ fn main() {
                         if *newest_version > app_version && newest_version.pre.is_empty() {
                             app_interface.version(&newest_version.to_string());
                         }
-                        info!(
-                            "[UPDATER] Version {} in use, {} is newest.",
-                            app_version, newest_version
-                        )
+                        info!("[UPDATER] Version {} in use, {} is newest.", app_version, newest_version)
                     } else {
                         info!("[UPDATER] Version {} in use.", app_version)
                     }

@@ -1,7 +1,8 @@
-use std::io::Write;
-use std::io::{BufRead, BufReader};
-use std::net::{SocketAddr, TcpStream};
-use std::time::Duration;
+use std::{
+    io::{BufRead, BufReader, Write},
+    net::{SocketAddr, TcpStream},
+    time::Duration,
+};
 
 use serde::{Deserialize, Serialize};
 

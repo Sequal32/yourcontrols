@@ -1,6 +1,9 @@
 use crate::util::{get_random_id, SESSION_ID_LENGTH};
 use bimap::BiHashMap;
-use std::{collections::HashMap, net::SocketAddr};
+use std::{
+    collections::HashMap,
+    net::SocketAddr,
+};
 
 pub struct SessionInfo {
     pub hoster_addr: SocketAddr,

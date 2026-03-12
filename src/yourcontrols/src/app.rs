@@ -5,9 +5,10 @@ use crossbeam_channel::{unbounded, Receiver, TryRecvError};
 use laminar::Metrics;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::fs::File;
-use std::{io::Read, net::IpAddr};
 use std::{
+    fs::File,
+    io::Read,
+    net::IpAddr,
     sync::{
         atomic::{AtomicBool, Ordering::SeqCst},
         Arc, Mutex,
@@ -17,16 +18,11 @@ use std::{
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub enum ConnectionMethod {
-    Direct,
-    Relay,
-    CloudServer,
-}
+pub enum ConnectionMethod { Direct, Relay, CloudServer }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum AppMessage {
-    // Name, IsIPV6, port
     StartServer {
         username: String,
         is_ipv6: bool,
@@ -43,23 +39,14 @@ pub enum AppMessage {
         port: Option<u16>,
         method: ConnectionMethod,
     },
-    TransferControl {
-        target: String,
-    },
-    SetObserver {
-        target: String,
-        is_observer: bool,
-    },
-    LoadAircraft {
-        config_file_name: String,
-    },
+    TransferControl { target: String },
+    SetObserver { target: String, is_observer: bool },
+    LoadAircraft { config_file_name: String },
     Disconnect,
     Startup,
     RunUpdater,
     ForceTakeControl,
-    UpdateConfig {
-        new_config: simconfig::Config,
-    },
+    UpdateConfig { new_config: simconfig::Config },
     GoObserver
 }
 
@@ -131,7 +118,7 @@ impl App {
                 })
                 .user_data(0)
                 .resizable(true)
-                .size(1000, 800)
+                .size(1040, 860)
                 .build()
                 .unwrap();
 
@@ -260,9 +247,7 @@ impl App {
     }
 
     pub fn send_network(&self, metrics: &Metrics) {
-        self.invoke(
-            "metrics",
-            Some(
+        self.invoke("metrics", Some(
                 json!({
                     "sentPackets": metrics.sent_packets,
                     "receivePackets": metrics.received_packets,

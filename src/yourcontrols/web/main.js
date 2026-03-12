@@ -17,14 +17,12 @@ var port_input_host = document.getElementById("port-input-host");
 
 var username = document.getElementById("username-input");
 var sessionInput = document.getElementById("session-input");
-var name_input_join = document.getElementById("name-input-join");
+var timeout_input = document.getElementById("timeout-input");
 var theme_selector = document.getElementById("theme-select");
 var streamer_mode = document.getElementById("streamer-mode");
 var instructor_mode = document.getElementById("instructor-mode");
 
-var timeout_input = document.getElementById("timeout-input");
-
-var name_div = document.getElementById("name-div");
+var username_div = document.getElementById("username-div");
 var port_div = document.getElementById("port-div");
 var server_div = document.getElementById("server-div");
 
@@ -480,6 +478,15 @@ observerButton.addEventListener("click", function () {
         type: "goObserver",
     });
     observerButton.hidden = true;
+});
+
+timeout_input.addEventListener('input', function () {
+    if (parseInt(this.value) > 10) {
+        this.value = 10;
+    }
+    if (parseInt(this.value) < 1) {
+        this.value = 1;
+    }
 });
 
 $("input[type=radio][name=connectionRadios]").change(function () {

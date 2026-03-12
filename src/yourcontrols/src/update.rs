@@ -1,7 +1,7 @@
 use semver::Version;
 use serde_json::Value;
-use std::env;
 use std::{
+    env,
     fs,
     io::{copy, Cursor},
 };
