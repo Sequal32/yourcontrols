@@ -38,14 +38,33 @@ use sync::*;
 
 const LOG_FILENAME: &str = "log.txt";
 const CONFIG_FILENAME: &str = "config.json";
-const AIRCRAFT_DEFINITIONS_PATH: &str = "definitions/aircraft/";
+const FS2020_DEFINITIONS_PATH: &str = "definitions/FS2020/aircraft/";
+const FS2024_DEFINITIONS_PATH: &str = "definitions/FS2024/aircraft/";
 
 const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
 
-fn get_aircraft_configs() -> io::Result<Vec<String>> {
+fn get_fs2020_configs() -> io::Result<Vec<String>> {
     let mut filenames = Vec::new();
 
-    for file in read_dir(AIRCRAFT_DEFINITIONS_PATH)? {
+    for file in read_dir(FS2020_DEFINITIONS_PATH)? {
+        let file = file?;
+        filenames.push(
+            file.path()
+                .file_name()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string(),
+        )
+    }
+
+    Ok(filenames)
+}
+
+fn get_fs2024_configs() -> io::Result<Vec<String>> {
+    let mut filenames = Vec::new();
+
+    for file in read_dir(FS2024_DEFINITIONS_PATH)? {
         let file = file?;
         filenames.push(
             file.path()
@@ -177,16 +196,18 @@ fn main() {
     let mut connection_time = None;
 
     let mut config_to_load = String::new();
+    let mut sim_to_load = String::new();
+
     // Helper closures
-    let get_config_path = |config_name: &str| -> PathBuf {
-        let mut path = PathBuf::from(AIRCRAFT_DEFINITIONS_PATH);
+    let get_config_path = |sim: &str, config_name: &str| -> PathBuf {
+        let mut path = PathBuf::from(format!("definitions/{}/aircraft/", sim));
         path.push(config_name);
         path
     };
     // Load definitions
-    let load_definitions = |definitions: &mut Definitions, config_to_load: &mut String| -> bool {
+    let load_definitions = |definitions: &mut Definitions, sim: &mut String, config_to_load: &mut String| -> bool {
         // Load aircraft configuration
-        let path = get_config_path(config_to_load);
+        let path = get_config_path(sim, config_to_load);
 
         match definitions.load_config(path.to_string_lossy().to_string()) {
             Ok(_) => {
@@ -201,7 +222,7 @@ fn main() {
             }
         };
 
-        info!("[DEFINITIONS] {} loaded successfully.", config_to_load);
+        info!("[DEFINITIONS] {} loaded successfully for {}.", config_to_load, sim);
 
         true
     };
@@ -583,7 +604,7 @@ fn main() {
 
                     if config_to_load.is_empty() {
                         app_interface.server_fail("Select an aircraft config first!");
-                    } else if !load_definitions(&mut definitions, &mut config_to_load) {
+                    } else if !load_definitions(&mut definitions, &mut sim_to_load, &mut config_to_load) {
                         app_interface.error("Error loading definition files. Check the log for more information.");
                     } else if connected {
                         definitions.on_connected(&conn).ok();
@@ -722,18 +743,26 @@ fn main() {
                         client.set_self_observer();
                     }
                 }
-                AppMessage::LoadAircraft { config_file_name } => {
+                AppMessage::LoadAircraft { config_file_name, sim } => {
                     // Load config
-                    info!("[DEFINITIONS] {} aircraft config selected.", config_file_name);
+                    info!("[DEFINITIONS] {} aircraft config selected for {}.", config_file_name, sim);
                     config_to_load.clone_from(&config_file_name);
+                    sim_to_load.clone_from(&sim);
                 }
                 AppMessage::Startup => {
                     // List aircraft
-                    if let Ok(configs) = get_aircraft_configs() {
-                        info!("[DEFINITIONS] Found {} configuration file(s).", configs.len());
+                    if let Ok(configs) = get_fs2020_configs() {
+                        info!("[DEFINITIONS] Found {} FS2020 configuration file(s).", configs.len());
 
                         for aircraft_config in configs {
-                            app_interface.add_aircraft(&aircraft_config);
+                            app_interface.add_fs2020_aircraft(&aircraft_config);
+                        }
+                    }
+                    if let Ok(configs) = get_fs2024_configs() {
+                        info!("[DEFINITIONS] Found {} FS2024 configuration file(s).", configs.len());
+
+                        for aircraft_config in configs {
+                            app_interface.add_fs2024_aircraft(&aircraft_config);
                         }
                     }
 

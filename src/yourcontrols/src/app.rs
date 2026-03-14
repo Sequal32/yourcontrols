@@ -41,7 +41,7 @@ pub enum AppMessage {
     },
     TransferControl { target: String },
     SetObserver { target: String, is_observer: bool },
-    LoadAircraft { config_file_name: String },
+    LoadAircraft { config_file_name: String, sim: String },
     Disconnect,
     Startup,
     RunUpdater,
@@ -230,8 +230,12 @@ impl App {
         self.invoke("set_incontrol", Some(name));
     }
 
-    pub fn add_aircraft(&self, name: &str) {
-        self.invoke("add_aircraft", Some(name));
+    pub fn add_fs2020_aircraft(&self, name: &str) {
+        self.invoke("add_fs2020_aircraft", Some(name));
+    }
+
+    pub fn add_fs2024_aircraft(&self, name: &str) {
+        self.invoke("add_fs2024_aircraft", Some(name));
     }
 
     pub fn version(&self, version: &str) {

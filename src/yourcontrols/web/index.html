@@ -144,20 +144,26 @@
           <div class="card-body">
             <h5 class="card-title">Settings</h5>
             <form class="needs-validation form-div" id="settings-form" novalidate>
-              <div class="form-group col-sm-auto bottom-margin" id="aircraft-div">
-                <label for="aircraft-list" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Select aircraft or module.">Aircraft</label>
-                <select class="form-control themed" id="aircraft-list">
-                  <option selected value="" id="default-aircraft-option"></option>
+              <div class="form-group col-sm-auto bottom-margin" id="fs2020-div">
+                <label for="fs2020-list" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Aircraft specifically for Flight Simulator 2020. If you want to use a 2020 developed aircraft compatible with 2024, select it from this list."><strong>Aircraft</strong> (2020)</label>
+                <select class="form-control themed" id="fs2020-list">
+                  <option selected value="" id="default-fs2020-option"></option>
+                </select>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin" id="fs2024-div">
+                <label for="fs2024-list" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Aircraft specifically for Flight Simulator 2024. If you want to use a 2020 developed aircraft compatible with 2024, select it from the 2020 list above."><strong>Aircraft</strong> (2024)</label>
+                <select class="form-control themed" id="fs2024-list">
+                  <option selected value="" id="default-fs2024-option"></option>
                 </select>
               </div>
               <div class="form-group col-sm-auto bottom-margin" id="username-div">
-                <label for="username-input" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Pilot name or callsign.">Name</label>
+                <label for="username-input" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Pilot name or callsign."><strong>Name</strong></label>
                 <input class="form-control themed" type="text" id="username-input" aria-describedby="username-feedback" required />
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback" id="username-feedback">Provide a pilot username.</div>
               </div>
               <div class="form-group col-sm-auto bottom-margin" id="timeout-div">
-                <label for="timeout-input" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Seconds until server removes client from inactivity. Constant dropping indicates a problem.">Connection Timeout</label>
+                <label for="timeout-input" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Seconds until server removes client from inactivity. Constant dropping indicates a problem."><strong>Connection Timeout</strong></label>
                 <input class="form-control themed" type="number" id="timeout-input" aria-describedby="timeout-feedback" required />
               </div>
               <div class="form-group col-sm-auto bottom-margin">

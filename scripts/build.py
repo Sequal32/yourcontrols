@@ -22,8 +22,10 @@ if not os.path.exists("scripts/out"):
 
 zipObj = ZipFile("scripts/out/YourControls.zip", "w", ZIP_DEFLATED)
 
-insert_all_into_zip(zipObj, "definitions/aircraft", "definitions/aircraft")
-insert_all_into_zip(zipObj, "definitions/modules", "definitions/modules")
+insert_all_into_zip(zipObj, "definitions/FS2020/aircraft", "definitions/FS2020/aircraft")
+insert_all_into_zip(zipObj, "definitions/FS2024/aircraft", "definitions/FS2024/aircraft")
+insert_all_into_zip(zipObj, "definitions/FS2020/modules", "definitions/FS2020/modules")
+insert_all_into_zip(zipObj, "definitions/FS2024/modules", "definitions/FS2024/modules")
 insert_all_into_zip(zipObj, "scripts/build-include", "")
 zipObj.write("assets/logo.png", "assets/logo.png")
 zipObj.write("target/release/YourControls.exe", "YourControls.exe")
