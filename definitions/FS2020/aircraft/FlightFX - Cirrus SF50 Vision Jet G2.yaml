@@ -1,15 +1,15 @@
 # Version 2.3.5
 
 include:
-  - definitions/modules/Instruments/AS_G3000.yaml
-  - definitions/modules/controls.yaml
-  - definitions/modules/general.yaml
-  - definitions/modules/handling.yaml
-  - definitions/modules/navigation.yaml
-  - definitions/modules/payload.yaml
-  - definitions/modules/radios.yaml
-  - definitions/modules/safety.yaml
-  - definitions/modules/trim.yaml
+  - definitions/FS2020/modules/Instruments/AS_G3000.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
 
 shared:
   - # Deice
@@ -608,108 +608,10 @@ shared:
     var_name: L:SF50_Preflight_Check_Done
     cancel_h_events: true
 
-### FS2024
-
-  - # LVAR's
-    type: var
-    var_name: L:1:SF50_Engine_Starter_Button_Position
-  -
-    type: var
-    var_name: L:1:SF50_Engine_Run_Knob_Position
-  -
-    type: CustomCalculator
-    get: (L:1:SF50_Autothrottle_Status) 0 ==
-    set: 0 (>K:AUTO_THROTTLE_DISCONNECT)
-    condition:
-      equals:
-        F64: 1.0
-  -
-    type: CustomCalculator
-    get: (L:1:SF50_Autothrottle_Status) 3 ==
-    set: 0 (>K:AUTO_THROTTLE_ARM)
-    condition:
-      equals:
-        F64: 1.0
-  -
-    type: var
-    var_name: L:1:SF50_Flap_Selector_Position
-  -
-    type: var
-    var_name: L:1:SF50_Fuel_Control_Switch_Position
-  -
-    type: var
-    var_name: L:1:SF50_Landing_Light_Switch_Position
-  -
-    type: var
-    var_name: L:1:SF50_Ecs_Defog_Active
-  -
-    type: var
-    var_name: L:1:SF50_Ecs_Control_Active
-  -
-    type: var
-    var_name: L:1:SF50_Ecs_Temp_Backup_Switch_State
-  -
-    type: var
-    var_name: L:1:SF50_Ecs_Disable_Switch_State
-  -
-    type: var
-    var_name: L:1:SF50_Ecs_Temp_Knob_Forward_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:1:SF50_Ecs_Fan_Knob_Forward_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:1:SF50_ELT_Remote_Switch_Position
-  -
-    type: var
-    var_name: L:1:SF50_CAPS_Handle_Position
-  -
-    type: var
-    var_name: L:1:SF50_CAPS_Safety_Pin_Position
-  -
-    type: var
-    var_name: L:1:SF50_Safe_Return_Autopilot_Intercepts_Active
-  -
-    type: var
-    var_name: L:1:SF50_Safe_Return_Operation_State
-  -
-    type: var
-    var_name: L:1:SF50_Ecs_Temp_Knob_Aft_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:1:SF50_Ecs_Fan_Knob_Aft_Position
-    unreliable: true
-  -
-    type: var
-    var_name: L:1:SF50_Emergency_Exit_Safety_Pin_Position
-  -
-    type: var
-    var_name: L:1:SF50_Oxygen_Master_Switch_Position
-  -
-    type: var
-    var_name: L:1:SF50_Bleed_Air_Switch_State
-  -
-    type: var
-    var_name: L:1:SF50_Windshield_IP_Switch_Position
-  -
-    type: var
-    var_name: L:1:SF50_Windshield_IP_High_Switch_Position
-
 master:
-  - # 2020
+  -
     type: NumSet
     var_name: L:WT_Virtual_Throttle_Lever_Pos_1
-    var_units: Position 16k
-    var_type: f64
-    event_name: THROTTLE1_SET
-    use_calculator: true
-    unreliable: true
-  - # 2024
-    type: NumSet
-    var_name: L:1:SF50_Virtual_Throttle_Lever_Pos
     var_units: Position 16k
     var_type: f64
     event_name: THROTTLE1_SET
