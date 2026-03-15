@@ -1,4 +1,4 @@
-# Version 0.1.93
+# Version 6.12.0
 
 include:
   - definitions/FS2024/modules/Instruments/AS_KT76C.yaml
@@ -9,7 +9,7 @@ include:
   - definitions/FS2024/modules/handling.yaml
   - definitions/FS2024/modules/magnetos.yaml
   - definitions/FS2024/modules/navigation.yaml
-  - definitions/FS2024/modules/payload.yaml
+  - definitions/FS2024/modules/payload_new.yaml
   - definitions/FS2024/modules/radios.yaml
   - definitions/FS2024/modules/safety.yaml
   - definitions/FS2024/modules/trim.yaml
@@ -30,6 +30,15 @@ shared:
     event_name: ANTI_ICE_GRADUAL_SET_ENG1
     use_calculator: true
     unreliable: true
+
+  - # Left Door
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+    use_calculator: true
 
   - # Electrical
     type: ToggleSwitch
@@ -57,10 +66,11 @@ shared:
 
   - # Fuel
     type: ToggleSwitch
-    var_name: A:GENERAL ENG FUEL VALVE:1
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
     var_units: Bool
     var_type: bool
-    event_name: TOGGLE_FUEL_VALVE_ENG1
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
     use_calculator: true
 
   - # Interior
@@ -139,3 +149,7 @@ shared:
     event_param: 4
     index_reversed: true
     use_calculator: true
+
+  - # Scoped
+    type: var
+    var_name: L:1:GPU_Cover_Open_Amount
