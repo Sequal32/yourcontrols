@@ -1,5 +1,17 @@
 # YourControls Changelog
 
+## Version 2.8.12
+
+- Added separate dropdown box for FS2024 specific aircraft.
+- UI tooltips rewritten and now use mouse hover instead.
+
+NOTICE: Definitions directory has changed. All external profiles need updating.
+
+### Profiles (2020)
+
+- Added: Daher TBM 850 by Black Square (v0.1.4).
+
+
 ## Version 2.8.11
 
 - Fixed position freeze on FS2024.
