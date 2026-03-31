@@ -1,0 +1,194 @@
+# Garmin G3X by Asobo.
+
+shared:
+  - # Autopilot
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MACH HOLD VAR:1
+    var_units: Mach
+    var_type: f64
+    multiply_by: 100
+    event_name: AP_MACH_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: true
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_ALT_HOLD
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT DISENGAGED
+    var_units: Bool
+    var_type: i32
+    event_name: AUTOPILOT_DISENGAGE_SET
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
+    var_units: Bool
+    var_type: bool
+    event_name: FLIGHT_LEVEL_CHANGE
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_HDG_HOLD
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+    is_user_event: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    var_type: i32
+    event_name: AP_VS_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT YAW DAMPER
+    var_units: Bool
+    var_type: i32
+    event_name: YAW_DAMPER_SET
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+    use_calculator: true
+
+  - # Events no simvar
+    type: event
+    event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_ON
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_OFF
+
+  - # LVAR's
+    type: var
+    var_name: L:AS3000_MinimalsMode
+  -
+    type: var
+    var_name: L:AS3000_MinimalsValue
+  -
+    type: var
+    var_name: L:Glasscockpit_DmeSource
+  -
+    type: var
+    var_name: L:Glasscockpit_HSI_Arc
+  -
+    type: var
+    var_name: L:Glasscockpit_SVTTerrain
+  -
+    type: var
+    var_name: L:PFD_BRG1_Source
+  -
+    type: var
+    var_name: L:PFD_BRG2_Source
+  -
+    type: var
+    var_name: L:PFD_CDI_Source
+  -
+    type: var
+    var_name: L:MFD_Main_MapShowCursor
+  -
+    type: var
+    var_name: L:MFD_Main_MapZoomRange
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+
+ignore:
+  - AS3X_1_TURN_INC
+  - AS3X_1_TURN_DEC

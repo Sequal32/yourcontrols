@@ -1,0 +1,44 @@
+# Version 0.1.78
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_G3X.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS430.yaml
+  - definitions/FS2020/modules/Instruments/AS_GTX330.yaml
+  - definitions/FS2020/modules/Instruments/AS_Vigilus.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT NAV:0
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    event_param: 0
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:0
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 0
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:0
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 0
+    use_calculator: true

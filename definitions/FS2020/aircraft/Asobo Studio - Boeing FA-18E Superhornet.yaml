@@ -1,0 +1,639 @@
+# Version 0.1.29
+
+include:
+  - definitions/FS2020/modules/autopilot.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload_new.yaml
+  - definitions/FS2020/modules/pressurization.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/transponder.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # COM1
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:28
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 28
+    use_calculator: true
+  - # COM2
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:30
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 30
+    use_calculator: true
+  - # DDI1
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:39
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 39
+    use_calculator: true
+  - # DDI2
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:40
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 40
+    use_calculator: true
+  - # DDI3
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:41
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 41
+    use_calculator: true
+  - # HUD
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:42
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 42
+    use_calculator: true
+  - # UFCD
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:45
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 45
+    use_calculator: true
+  - # EFD
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:46
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 46
+    use_calculator: true
+
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: PITOT_HEAT_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
+    use_calculator: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:7
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 7
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:8
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 8
+    use_calculator: true
+
+  - # Formation
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:15
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 15
+    index_reversed: true
+    use_calculator: true
+  - # Position
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 16
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:1
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:17
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_17_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
+    use_calculator: true
+
+  - # Naval
+    type: NumSet
+    var_name: A:FOLDING WING HANDLE POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: SET_WING_FOLD
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:G LIMITER SETTING
+    var_units: Enum
+    var_type: i32
+    event_name: G_LIMITER_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LAUNCHBAR SWITCH
+    var_units: Bool
+    var_type: i32
+    event_name: SET_LAUNCH_BAR_SWITCH
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:NOSEWHEEL MAX STEERING ANGLE
+    var_units: Radians
+    var_type: f64
+    multiply_by: 5215.177 # 180 degrees
+    event_name: NOSE_WHEEL_STEERING_LIMIT_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:TAILHOOK HANDLE
+    var_units: Bool
+    var_type: i32
+    event_name: SET_TAIL_HOOK_HANDLE
+    use_calculator: true
+
+  - # LVAR's
+    type: var
+    var_name: L:XMLVAR_AS04F_UFCD_1_Brightness
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_EFD_1_Brightness
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_Black_Level
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_AOA_Indexer
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_Balance
+  -
+    type: var
+    var_name: L:FA18_DDI_HSI_BING_MAP_SHOWN
+  - # Unsettable - use H events
+    type: var
+    var_name: L:AS04F_HELMET_MOUNTED_DISPLAY_BRIGHTNESS
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Lights_Mode
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HSI_HDG_TK_Selector
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HSI_CRS_Selector
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_Fire_Test_Pos
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_Hook_Bypass
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_1_Brightness
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:XMLVAR_AB_L_Current_Stage
+# -
+#   type: var
+#   var_name: L:XMLVAR_AB_R_Current_Stage
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_Hook_Position_Factor
+  -
+    type: var
+    var_name: L:EFD_Knob_Bingo_Pulled
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter1
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_DDI_2_Brightness
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Update_Bleed
+# -
+#   type: var
+#   var_name: L:HANDLING_AILERON_ELEVATOR_Trim_Position
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_DDI_3_Brightness
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_DDI_1_Brightness
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LastAB1ThrottleSet
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LastAB2ThrottleSet
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+  -
+    type: var
+    var_name: L:XMLVAR_EXT_Lights_Mode
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+  -
+    type: var
+    var_name: L:XMLVAR_EXT_LTS_IDENT
+  -
+    type: var
+    var_name: L:XMLVAR_Light_Mode_Factor
+# -
+#   type: var
+#   var_name: L:XMLVAR_Lights_Test
+  -
+    type: var
+    var_name: L:XMLVAR_Lights_Test_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Lights_Test_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:XMLVAR_DeiceWindshield_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_Fire_Test_Enabled
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+  -
+    type: var
+    var_name: L:XMLVAR_Parking_Brake
+  -
+    type: var
+    var_name: L:XMLVAR_Emergency_Brake
+  -
+    type: var
+    var_name: L:HANDLING_Autobrakes_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_1_Quit
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_2_Quit
+  -
+    type: var
+    var_name: L:XMLVAR_HUD_Push_VelocityVector_Cage
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_APU_Starter
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+  - # Unsettable - use H events
+    type: var
+    var_name: L:FA18_Fuel_Bingo
+    unreliable: true
+  -
+    type: var
+    var_name: L:FA18_EFD_Page
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HSI_HDG_TK
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HSI_CRS
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_Symbology_Reject
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_DayNight
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_Video_Control
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_Alt_Selector
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HUD_ATT_Selector
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_6
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_1_LastThrottleInc
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Afterburner_2_LastThrottleInc
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HMD_Symbology_Reject
+  -
+    type: var
+    var_name: L:XMLVAR_AS04F_HMD_BrightnessMode
+  -
+    type: var
+    var_name: L:FA18_DDI_BLIM_MODE
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+  -
+    type: var
+    var_name: L:DDI_MapShowCursor
+  -
+    type: var
+    var_name: L:DDI_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_4_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_4_State
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:FA18_DDI_LAT_LON_DISPLAY_MODE
+  -
+    type: var
+    var_name: L:Glasscockpit_TACAN_Mode
+  -
+    type: var
+    var_name: L:FA18_DDI_STEERING_SOURCE
+  -
+    type: var
+    var_name: L:FA18_IS_STEERING_COUPLED
+  -
+    type: var
+    var_name: L:FA18_Alert_Triggered
+  -
+    type: var
+    var_name: L:FA18_Warning_Landing_Gear
+# -
+#   type: var
+#   var_name: L:FA_18_TIME_SINCE_TAKE_OFF
+  -
+    type: var
+    var_name: L:FA18_BINGO_TRIGGERED
+# -
+#   type: var
+#   var_name: L:AS04F_AltitudeRollers_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_AltitudeRollers_State
+# -
+#   type: var
+#   var_name: L:AS04F_HMD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_HMD_State
+  -
+    type: var
+    var_name: L:FA18_Alert_RAlt
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FA18_Alert_Baro
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FA18_Alert_Radar
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:FA18_Alert_Active
+  -
+    type: var
+    var_name: L:FA18_HEADING_SELECT_MODE
+# -
+#   type: var
+#   var_name: L:AS04F_ACC_UFCD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_ACC_UFCD_State
+# -
+#   type: var
+#   var_name: L:AS04F_ACC_EFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_ACC_EFD_State
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_3_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_3_State
+  -
+    type: var
+    var_name: L:FA18_DDI_HSI_NORTH_UP
+  -
+    type: var
+    var_name: L:FA18_ADF_ACTIVE
+  -
+    type: var
+    var_name: L:FA18_DDI_START_PAGE_1
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_1_State
+  -
+    type: var
+    var_name: L:FA18_DDI_CURRENT_SEQUENCE_INDEX
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:VFR_MAP_SHOWN_FLIGHTPLAN_INDEX
+  -
+    type: var
+    var_name: L:FA18_DDI_START_PAGE_2
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS04F_DDI_2_State
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+  -
+    type: var
+    var_name: L:FA18_DDI_CURRENT_WAYPOINT_NUMBER
+  -
+    type: var
+    var_name: L:FA18_DDI_AUTO_SEQ_STEERING
+  -
+    type: var
+    var_name: L:HUD_AP_SELECTED_SPEED
+  -
+    type: var
+    var_name: L:HUD_AP_SELECTED_ALTITUDE

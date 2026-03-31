@@ -1,0 +1,564 @@
+# Version 0.3.6
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/autopilot.yaml
+  - definitions/FS2020/modules/controls_rotor.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines_rotor.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/rotorcraft.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/transponder.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
+    use_calculator: true
+
+  - # Engine
+    type: ToggleSwitch
+    var_name: A:MASTER IGNITION SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_IGNITION_SWITCH
+    event_param: 1
+    use_calculator: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 2
+    use_calculator: true
+
+  - # Hydraulics
+    type: NumSet
+    var_name: A:HYDRAULIC SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: HYDRAULIC_SWITCH_TOGGLE
+    event_param: 1
+    index_reversed: true
+
+  - # Lights
+    type: ToggleSwitch
+    var_name: A:LIGHT NAV
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_NAV_LIGHTS
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT BEACON
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_BEACON_LIGHTS
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT STROBE
+    var_units: Bool
+    var_type: bool
+    event_name: STROBES_TOGGLE
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT RECOGNITION
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_RECOGNITION_LIGHTS
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LANDING
+    var_units: Bool
+    var_type: bool
+    event_name: LANDING_LIGHTS_TOGGLE
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT LOGO
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_LOGO_LIGHTS
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_4_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_5_SET
+    index_reversed: true
+    use_calculator: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:switchAuxSys
+  -
+    type: var
+    var_name: L:switchAttGyro
+  -
+    type: var
+    var_name: L:switchturnCoord
+  -
+    type: var
+    var_name: L:switchLtsCabinPass
+  -
+    type: var
+    var_name: L:switchGenerator
+  -
+    type: var
+    var_name: L:switchPrimaryCompassAdjust
+# -
+#   type: var
+#   var_name: L:comAdjInit
+# -
+#   type: var
+#   var_name: L:XmsnPressCorr
+# -
+#   type: var
+#   var_name: L:XmsnPressInit
+# -
+#   type: var
+#   var_name: L:XmsnTempCorr
+  -
+    type: var
+    var_name: L:buttonLcdTest
+# -
+#   type: var
+#   var_name: L:initSysChk
+  -
+    type: var
+    var_name: L:fuelQtyMode
+# -
+#   type: var
+#   var_name: L:chrono init
+# -
+#   type: var
+#   var_name: L:Offset chrono
+  -
+    type: var
+    var_name: L:Running chrono
+# -
+#   type: var
+#   var_name: L:TotalRunning chrono
+  -
+    type: var
+    var_name: L:buttonChronoReset
+  -
+    type: var
+    var_name: L:ChronoMode
+  -
+    type: var
+    var_name: L:ChronoOatVolt
+# -
+#   type: var
+#   var_name: L:beaconlightRotation
+  -
+    type: var
+    var_name: L:CollectiveGrip
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:collGripState
+# -
+#   type: var
+#   var_name: L:initCollGrip
+# -
+#   type: var
+#   var_name: L:torqueCheck
+# -
+#   type: var
+#   var_name: L:fuelPressCheck
+# -
+#   type: var
+#   var_name: L:ampCheck
+# -
+#   type: var
+#   var_name: L:mgtCheck
+# -
+#   type: var
+#   var_name: L:fuelQtyCheck
+# -
+#   type: var
+#   var_name: L:ngCheck
+# -
+#   type: var
+#   var_name: L:xmsnPressCheck
+# -
+#   type: var
+#   var_name: L:XmsnTempInit
+# -
+#   type: var
+#   var_name: L:xmsnTempCheck
+# -
+#   type: var
+#   var_name: L:engPressCheck
+# -
+#   type: var
+#   var_name: L:engTempCheck
+# -
+#   type: var
+#   var_name: L:initFlag
+# -
+#   type: var
+#   var_name: L:rotorCheck
+# -
+#   type: var
+#   var_name: L:nrCheck
+  -
+    type: var
+    var_name: L:compassAdjustValue
+# -
+#   type: var
+#   var_name: L:switchSound
+# -
+#   type: var
+#   var_name: L:initPanelLight
+# -
+#   type: var
+#   var_name: L:initAttGyro
+# -
+#   type: var
+#   var_name: L:initTurnCoord
+# -
+#   type: var
+#   var_name: L:initInstrLight
+# -
+#   type: var
+#   var_name: L:initCabPass
+# -
+#   type: var
+#   var_name: L:initGen
+# -
+#   type: var
+#   var_name: L:hornFadecTest
+  -
+    type: var
+    var_name: L:hornMuted
+# -
+#   type: var
+#   var_name: L:hornCaution
+# -
+#   type: var
+#   var_name: L:initCounter
+  -
+    type: var
+    var_name: L:windowVentPilot
+    unreliable: true
+  -
+    type: var
+    var_name: L:windowVentCopilot
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
+# -
+#   type: var
+#   var_name: L:collectiveSound
+  -
+    type: var
+    var_name: L:needleHsiMarker
+# -
+#   type: var
+#   var_name: L:kohlsmanKnob
+  -
+    type: var
+    var_name: L:knobAttCage
+# -
+#   type: var
+#   var_name: L:knobAttCageSound
+  -
+    type: var
+    var_name: L:adfObs
+  -
+    type: var
+    var_name: L:buttonXpndrVfr
+  -
+    type: var
+    var_name: L:buttonXpndrVfrPressed
+  -
+    type: var
+    var_name: L:xpndrVfr
+# -
+#   type: var
+#   var_name: L:buttonSound
+# -
+#   type: var
+#   var_name: L:windowVentSound
+  -
+    type: var
+    var_name: L:knobDefrost
+    unreliable: true
+  -
+    type: var
+    var_name: L:knobFriction
+    unreliable: true
+  -
+    type: var
+    var_name: L:switchLandingLight
+  -
+    type: var
+    var_name: L:buttonFloatTest
+  -
+    type: var
+    var_name: L:buttonFireTest
+  -
+    type: var
+    var_name: L:switchStarter
+  -
+    type: var
+    var_name: L:switchCargoRelease
+  -
+    type: var
+    var_name: L:panelLightTilt
+    unreliable: true
+  -
+    type: var
+    var_name: L:switchRadAlt
+  -
+    type: var
+    var_name: L:switchBroadcastMaster
+  -
+    type: var
+    var_name: L:switchForceTrim
+  -
+    type: var
+    var_name: L:switchAircondMode
+  -
+    type: var
+    var_name: L:switchAircondFwd
+  -
+    type: var
+    var_name: L:switchAircondAft
+  -
+    type: var
+    var_name: L:switchCautLtsMode
+  -
+    type: var
+    var_name: L:switchDefog
+  -
+    type: var
+    var_name: L:switchParicleSep
+  -
+    type: var
+    var_name: L:HydSwitchTest
+  -
+    type: var
+    var_name: L:switchAutotrim
+  -
+    type: var
+    var_name: L:buttonFadecMode
+  -
+    type: var
+    var_name: L:fadecMode
+  -
+    type: var
+    var_name: L:buttonFuelQty
+  -
+    type: var
+    var_name: L:buttonAnnTest
+  -
+    type: var
+    var_name: L:buttonOvrspdTest
+  -
+    type: var
+    var_name: L:testOvrspd
+  -
+    type: var
+    var_name: L:buttonHornTest
+  -
+    type: var
+    var_name: L:buttonInstrTest
+  -
+    type: var
+    var_name: L:buttonHornMute
+  -
+    type: var
+    var_name: L:buttonChronoControl
+  -
+    type: var
+    var_name: L:buttonChronoMode
+  -
+    type: var
+    var_name: L:buttonChronoOatVolt
+  -
+    type: var
+    var_name: L:switchPrimaryCompassMode
+  -
+    type: var
+    var_name: L:switchFuelValveCover
+# -
+#   type: var
+#   var_name: L:switchCoverSound
+  -
+    type: var
+    var_name: L:ventKnobPilot
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:pullKnobSound
+  -
+    type: var
+    var_name: L:ventKnobCopilot
+    unreliable: true
+  -
+    type: var
+    var_name: L:knobAcTemp
+    unreliable: true
+  -
+    type: var
+    var_name: L:buttonAudioIcs
+  -
+    type: var
+    var_name: L:buttonAudioTel
+  -
+    type: var
+    var_name: L:audioTelephoneMode
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
+# -
+#   type: var
+#   var_name: L:gtx330 preset
+# -
+#   type: var
+#   var_name: L:xpndr setting number 0000
+# -
+#   type: var
+#   var_name: L:xpndr setting number 000
+# -
+#   type: var
+#   var_name: L:xpndr setting number 00
+# -
+#   type: var
+#   var_name: L:xpndr setting number 0
+# -
+#   type: var
+#   var_name: L:TaxiLtsInit
+  -
+    type: var
+    var_name: L:switchHeater
+# -
+#   type: var
+#   var_name: L:posLtsInit
+  -
+    type: var
+    var_name: L:auxInit
+  -
+    type: var
+    var_name: L:pedalStopTest
+  -
+    type: var
+    var_name: L:NAV OBS:2
+  -
+    type: var
+    var_name: L:audioAud
+  -
+    type: var
+    var_name: L:annFloatTest
+  -
+    type: var
+    var_name: L:annFloatArm
+  -
+    type: var
+    var_name: L:annBaggaeDoor
+  -
+    type: var
+    var_name: L:annEngineChip
+  -
+    type: var
+    var_name: L:annBatRelay
+  -
+    type: var
+    var_name: L:annBatteryHot
+  -
+    type: var
+    var_name: L:annLitterDoor
+  -
+    type: var
+    var_name: L:annXmsnChip
+  -
+    type: var
+    var_name: L:annHeaterOvertemp
+  -
+    type: var
+    var_name: L:annLeftFuelFilter
+  -
+    type: var
+    var_name: L:annTrChip

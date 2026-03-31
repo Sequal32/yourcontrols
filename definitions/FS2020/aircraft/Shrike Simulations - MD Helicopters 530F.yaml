@@ -1,0 +1,611 @@
+# Version 1.2.1
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GNS430.yaml
+  - definitions/FS2020/modules/Instruments/AS_GTN650.yaml
+  - definitions/FS2020/modules/Instruments/AS_GTX330.yaml
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/FS2020/modules/autopilot.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+
+shared:
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: i32
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    use_calculator: true
+
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 0
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+    use_calculator: true
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+    use_calculator: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+    use_calculator: true
+
+  - # Key
+    type: ToggleSwitch
+    var_name: A:TURB ENG IGNITION SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: TURBINE_IGNITION_SWITCH_TOGGLE
+    event_param: 1
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT NAV:1
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:1
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 1
+    use_calculator: true
+
+  - # Interior
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_TOGGLE
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    use_calculator: true
+
+  - # Rotor
+    type: ToggleSwitch
+    var_name: A:ROTOR BRAKE ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: ROTOR_BRAKE_TOGGLE
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:ROTOR LATERAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LATERAL_TRIM_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ROTOR LONGITUDINAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LONGITUDINAL_TRIM_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: event
+    event_name: ROTOR_TRIM_RESET
+
+  - # Guns
+    type: event
+    event_name: TOGGLE_WATER_RUDDER
+  -
+    type: event
+    event_name: TOGGLE_VARIOMETER_SWITCH
+
+# - # LVAR's (trimmed)
+#   type: var
+#   var_name: L:BB_CFG_ITT_BASE_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG1_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG1_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG2_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG2_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG3_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG3_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG4_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG4_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG5_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG5_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG6_MIN_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_STG6_MAX_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_SCALAR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_AMBTEMP_SCALAR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_AMBDENS_SCALAR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_AIRCOOLING_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_TORQUEBASE_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_TORQUE_STG1_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_TORQUE_STG2_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_TORQUE_STG3_FACTOR
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_RISE_ON_START_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_FALL_POST_START_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_FALL_ON_SHUTDOWN_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_NORMAL_START_PEAK_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_LOW_NG_PER_PCT_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_RISE_STARTER_ONLY_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_RISE_NORMAL_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_FALL_NORMAL_DEG_SEC
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_START_TARGET_NG_PCT
+# -
+#   type: var
+#   var_name: L:BB_CFG_START_MIXTURE_THRESHOLD_PCT
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_HOTSTART_TEMP
+# -
+#   type: var
+#   var_name: L:BB_CFG_ITT_HOTSTART_ENGINE_DAMAGE_TIMER_SEC
+  -
+    type: var
+    var_name: L:BB_CFG_ITT_HOTSTART_ENGINE_FAILURE_ENABLED
+  -
+    type: var
+    var_name: L:530F_TwistThrottle
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:1:ENTER_AIRCRAFT
+# -
+#   type: var
+#   var_name: L:530F_GunsActive
+# -
+#   type: var
+#   var_name: L:530F_LH_MG_Rotation
+# -
+#   type: var
+#   var_name: L:RandomSeed1
+# -
+#   type: var
+#   var_name: L:RandomSeed2
+# -
+#   type: var
+#   var_name: L:530F_LHFlashrotate
+# -
+#   type: var
+#   var_name: L:530F_RH_MG_Rotation
+# -
+#   type: var
+#   var_name: L:530F_RHFlashrotate
+# -
+#   type: var
+#   var_name: L:530F_GunsActiveSlow
+# -
+#   type: var
+#   var_name: L:530F_LHFNFlashrotate
+# -
+#   type: var
+#   var_name: L:530F_RHFNFlashrotate
+  -
+    type: var
+    var_name: L:530F_SpSwitch_4
+  -
+    type: var
+    var_name: L:530F_SpSwitch_5
+  -
+    type: var
+    var_name: L:530F_SpSwitch_7
+  -
+    type: var
+    var_name: L:530F_SpSwitch_3
+  -
+    type: var
+    var_name: L:530F_SpSwitch_2
+  -
+    type: var
+    var_name: L:530F_SpSwitch_9
+# -
+#   type: var
+#   var_name: L:530F_MuzzleFlash
+# -
+#   type: var
+#   var_name: L:530F_MuzzleFlash_Slow
+  -
+    type: var
+    var_name: L:530F_NavSwitch_1
+  -
+    type: var
+    var_name: L:530F_Cabin_Heat_ON
+  -
+    type: var
+    var_name: L:530F_Cubby_IsOpen
+  -
+    type: var
+    var_name: L:530F_WarnLightDim_ON
+# -
+#   type: var
+#   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
+  -
+    type: var
+    var_name: L:530F_VNE_Placards_ON
+  -
+    type: var
+    var_name: L:530F_OVSP_Test_ON
+  -
+    type: var
+    var_name: L:530F_Utility_Power_ON
+  -
+    type: var
+    var_name: L:530F_SpSwitch_1
+  -
+    type: var
+    var_name: L:530F_REIGN_Test_ON
+  -
+    type: var
+    var_name: L:530F_SpSwitch_6
+  -
+    type: var
+    var_name: L:530F_Fault_Test_ON
+  -
+    type: var
+    var_name: L:530F_IdleRelease
+  -
+    type: var
+    var_name: L:530F_Pedal_Adjustment
+  -
+    type: var
+    var_name: L:530F_RotorBrakeForceOn
+  -
+    type: var
+    var_name: L:530F_LightTest
+  -
+    type: var
+    var_name: L:Marker_Button_Position
+  -
+    type: var
+    var_name: L:TEL_Button_Toggle
+  -
+    type: var
+    var_name: L:MUTE_Button_Toggle
+  -
+    type: var
+    var_name: L:XMLVAR_Pass_Volume
+# -
+#   type: var
+#   var_name: L:530F_Autostart_Active
+# -
+#   type: var
+#   var_name: L:530F_Autostart_Stage
+# -
+#   type: var
+#   var_name: L:530F_Autostop_Active
+# -
+#   type: var
+#   var_name: L:530F_Autostop_Stage
+# -
+#   type: var
+#   var_name: L:530F_TwistThrottle_Prev
+# -
+#   type: var
+#   var_name: L:TEST_Throttle_Pos
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS650_NAV_Freq_Modify
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
+  -
+    type: var
+    var_name: L:MUSIC_Button_Toggle
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:530F_SwitchFlag
+# -
+#   type: var
+#   var_name: L:530F_SIM_IS2024
+# -
+#   type: var
+#   var_name: L:530F_RotorVibration
+# -
+#   type: var
+#   var_name: L:530F_Throttle_Init
+# -
+#   type: var
+#   var_name: L:530F_ThrottleState
+# -
+#   type: var
+#   var_name: L:530F_Autostart_Abort
+# -
+#   type: var
+#   var_name: L:530F_Autostart_ElapsedTime
+# -
+#   type: var
+#   var_name: L:530F_Autostart_Timer_1
+  -
+    type: var
+    var_name: L:530F_Temp_Realism_Setting
+# -
+#   type: var
+#   var_name: L:530F_Autostart_Timer_2
+# -
+#   type: var
+#   var_name: L:530F_Autostart_Timer_3
+# -
+#   type: var
+#   var_name: L:530F_Autostart_Timer_4
+# -
+#   type: var
+#   var_name: L:530F_Autostart_Timer_5
+# -
+#   type: var
+#   var_name: L:530F_Autostart_Timer_6
+# -
+#   type: var
+#   var_name: L:S64F_Autostart_Active
+# -
+#   type: var
+#   var_name: L:S64F_Autostart_Stage
+# -
+#   type: var
+#   var_name: L:530F_Autostop_ElapsedTime
+# -
+#   type: var
+#   var_name: L:530F_Autostop_Timer_1
+# -
+#   type: var
+#   var_name: L:530F_Autostop_Timer_2
+# -
+#   type: var
+#   var_name: L:530F_Autostop_Timer_3
+# -
+#   type: var
+#   var_name: L:530F_Autostop_Timer_4
+# -
+#   type: var
+#   var_name: L:530F_Autostop_Timer_5
+# -
+#   type: var
+#   var_name: L:530F_EngOutWarn_ON
+# -
+#   type: var
+#   var_name: L:530F_Accel_UpDown
+# -
+#   type: var
+#   var_name: L:530F_Accel_FwdAft
+# -
+#   type: var
+#   var_name: L:AS430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:BB_OUT_ITT_TEMP
+# -
+#   type: var
+#   var_name: L:530F_Accel_RightLeft
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:EVENTS_ID
+# -
+#   type: var
+#   var_name: L:BB_OUT_HOTSTART_FLAG
+# -
+#   type: var
+#   var_name: L:530F_IsMarketplace
+
+master:
+  -
+    type: NumSet
+    var_name: A:YOKE X POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_CYCLIC_LATERAL_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:YOKE Y POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_CYCLIC_LONGITUDINAL_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:COLLECTIVE HANDLE POSITION
+    var_units: Position 32k
+    var_type: f64
+    add_by: -16384
+    event_name: AXIS_COLLECTIVE_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:TAIL ROTOR PEDAL POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_RUDDER_SET
+    use_calculator: true
+    unreliable: true

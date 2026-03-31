@@ -1,0 +1,125 @@
+# Version 1.6.0
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/AS_GTX330.yaml
+  - definitions/FS2020/modules/Instruments/AS_KAP140.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:extfuncinit
+# -
+#   type: var
+#   var_name: L:beaconhider
+  -
+    type: var
+    var_name: L:Wheelselector
+  -
+    type: var
+    var_name: L:SWITCH_chocks
+  -
+    type: var
+    var_name: L:LOCAL_VAR_TO_WATCH
+  -
+    type: var
+    var_name: L:SWITCH_Garmin
+# -
+#   type: var
+#   var_name: L:SWITCH_left_yoke_hider
+# -
+#   type: var
+#   var_name: L:SWITCH_right_yoke_hider
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Mode
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+  -
+    type: var
+    var_name: L:funcinit
+  -
+    type: var
+    var_name: L:altimatic_pitchadjust
+# -
+#   type: var
+#   var_name: L:lefttankpercent
+# -
+#   type: var
+#   var_name: L:righttankpercent

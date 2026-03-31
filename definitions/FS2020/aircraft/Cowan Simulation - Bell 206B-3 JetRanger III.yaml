@@ -1,0 +1,836 @@
+# Version 3.2.0
+
+include:
+  - definitions/FS2020/modules/Instruments/WT_G3X_Touch.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS430.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/PMS50_GTN.yaml
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Enum
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: i32
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    use_calculator: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+    use_calculator: true
+
+  - # Gyrocompass
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:59
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 59
+    use_calculator: true
+
+  - # Gyroscope
+    type: ToggleSwitch
+    var_name: A:TURN INDICATOR SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TURN_INDICATOR_SWITCH
+
+  - # CB Hoist power
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:40
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 40
+  - # CB Cable cut
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:39
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 39
+  - # CB Turn slip (no change)
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:16
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 16
+  - # Float power
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:41
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 41
+  - # CB Floats
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:38
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 38
+  - # CB Hand mike
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:56
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 56
+  - # CB XPNDR (no change)
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:21
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 21
+  - # CB GPS (no change)
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:18
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 18
+  - # CB Spare
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:42
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 42
+  - # CB ADF (no change)
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:29
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 29
+  - # CB ICS
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:43
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 43
+  - # CB VHF1
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:44
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 44
+  - # CB Cargo
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:45
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 45
+  - # CB Heater cont
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:46
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 46
+  - # CB Heater power
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:47
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 47
+  - # CB SAS
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:48
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 48
+  - # CB Landing light
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:11
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 11
+  - # CB Instrument light
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:14
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 14
+  - # CB Glareshield light
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:15
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 15
+  - # CB Caution light
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:34
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 34
+  - # CB TOT
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:49
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 49
+  - # CB Fuel pump AFT
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:4
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 4
+  - # CB Fuel pump FWD
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:3
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 3
+  - # CB Fuel quantity press
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:37
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 37
+  - # CB Fuel valve
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:7
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 7
+  - # CB Transmission temp
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:50
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 50
+  - # CB Hydraulic pump
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:35
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 35
+  - # CB Governor
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:51
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 51
+  - # CB Ignition
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:52
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 52
+  - # CB Starter
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:2
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 2
+  - # CB Hand mike
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:53
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 53
+  - # CB Generator field
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:54
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 54
+  - # CB Generator reset
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:55
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 55
+  - # CB Heat vent
+    type: NumSet
+    var_name: A:CIRCUIT BREAKER PULLED:57
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_CIRCUIT_BREAKER_TOGGLE
+    event_param: 57
+
+  - # Hydraulics
+    type: NumSet
+    var_name: A:HYDRAULIC SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: HYDRAULIC_SWITCH_TOGGLE
+    event_param: 1
+    index_reversed: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:3
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 3
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:2
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 2
+    index_reversed: true
+    use_calculator: true
+
+  - # Rotor
+    type: NumSet
+    var_name: A:ROTOR GOV SWITCH POS
+    var_units: Bool
+    var_type: i32
+    event_name: ROTOR_GOV_SWITCH_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:ROTOR BRAKE HANDLE POS
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_ROTOR_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ROTOR LATERAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LATERAL_TRIM_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ROTOR LONGITUDINAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LONGITUDINAL_TRIM_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Twist
+    type: NumSet
+    var_name: A:HELICOPTER MASTER THROTTLE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: HELICOPTER_THROTTLE1_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Payload
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:CS206_GOV_TARGET
+# -
+#   type: var
+#   var_name: L:PLACEHOLDER
+  -
+    type: var
+    var_name: L:COWANSIM_LIGHT_LANDING_UP_DOWN
+  -
+    type: var
+    var_name: L:COWANSIM_LIGHT_LANDING_LR
+  -
+    type: var
+    var_name: L:CS206_INSTR_OPTION
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_1
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_2
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_3
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_4
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_5
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_6
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_7
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_8
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_9
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_10
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_11
+# -
+#   type: var
+#   var_name: L:CS206_WeightStation_12
+  -
+    type: var
+    var_name: L:CSR66_RCA2610_BRIGHTNESS
+    unreliable: true
+  -
+    type: var
+    var_name: L:pilotWindow
+  -
+    type: var
+    var_name: L:headSetR
+  -
+    type: var
+    var_name: L:headSetL
+# -
+#   type: var
+#   var_name: L:hideDownwash
+# -
+#   type: var
+#   var_name: L:hideHeatBlur
+  -
+    type: var
+    var_name: L:COWANSIM_ENGINE_Idle_1_Released
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Lever_Percent
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:initSysChk
+# -
+#   type: var
+#   var_name: L:chrono init
+# -
+#   type: var
+#   var_name: L:Offset chrono
+# -
+#   type: var
+#   var_name: L:beaconlightRotation
+# - # Deprecated
+#   type: var
+#   var_name: L:CollectiveGrip
+# -
+#   type: var
+#   var_name: L:collGripState
+# -
+#   type: var
+#   var_name: L:initCollGrip
+# -
+#   type: var
+#   var_name: L:torqueCheck
+# -
+#   type: var
+#   var_name: L:fuelPressCheck
+# -
+#   type: var
+#   var_name: L:ampCheck
+# -
+#   type: var
+#   var_name: L:mgtCheck
+# -
+#   type: var
+#   var_name: L:fuelQtyCheck
+# -
+#   type: var
+#   var_name: L:ngCheck
+# -
+#   type: var
+#   var_name: L:XmsnPressInit
+# -
+#   type: var
+#   var_name: L:XmsnPressCorr
+# -
+#   type: var
+#   var_name: L:xmsnPressCheck
+# -
+#   type: var
+#   var_name: L:XmsnTempInit
+# -
+#   type: var
+#   var_name: L:XmsnTempCorr
+# -
+#   type: var
+#   var_name: L:xmsnTempCheck
+# -
+#   type: var
+#   var_name: L:engPressCheck
+# -
+#   type: var
+#   var_name: L:engTempCheck
+  -
+    type: var
+    var_name: L:switchturnCoord
+# -
+#   type: var
+#   var_name: L:initFlag
+# -
+#   type: var
+#   var_name: L:rotorCheck
+# -
+#   type: var
+#   var_name: L:nrCheck
+  -
+    type: var
+    var_name: L:compassAdjustValue
+  -
+    type: var
+    var_name: L:switchAttGyro
+# -
+#   type: var
+#   var_name: L:switchSound
+# -
+#   type: var
+#   var_name: L:initPanelLight
+# -
+#   type: var
+#   var_name: L:initAttGyro
+# -
+#   type: var
+#   var_name: L:initTurnCoord
+# -
+#   type: var
+#   var_name: L:initInstrLight
+  -
+    type: var
+    var_name: L:switchLtsCabinPass
+# -
+#   type: var
+#   var_name: L:initCabPass
+  -
+    type: var
+    var_name: L:switchGenerator
+# -
+#   type: var
+#   var_name: L:initGen
+# -
+#   type: var
+#   var_name: L:hornFadecTest
+  -
+    type: var
+    var_name: L:hornMuted
+# -
+#   type: var
+#   var_name: L:hornCaution
+  -
+    type: var
+    var_name: L:switchPrimaryCompassAdjust
+# -
+#   type: var
+#   var_name: L:comAdjInit
+# -
+#   type: var
+#   var_name: L:initCounter
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:ROTOR:1
+# -
+#   type: var
+#   var_name: L:ROTOR:2
+  -
+    type: var
+    var_name: L:floatsBlown
+  -
+    type: var
+    var_name: L:CS_206B_exitRearL
+  -
+    type: var
+    var_name: L:CS_206B_exitFrontR
+  -
+    type: var
+    var_name: L:CS_206B_exitFrontL
+  -
+    type: var
+    var_name: L:CS_206B_exitRearR
+  -
+    type: var
+    var_name: L:CS206_DoorFronthide
+  -
+    type: var
+    var_name: L:CS206_DoorRearhide
+# -
+#   type: var
+#   var_name: L:AP_Longitudinal_Command
+# -
+#   type: var
+#   var_name: L:COWANSIM_Throttle_1_Lever_Position
+# -
+#   type: var
+#   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
+# -
+#   type: var
+#   var_name: L:COWANSIM_Cyclic_X_Position
+# -
+#   type: var
+#   var_name: L:AP_Lateral_Command
+# -
+#   type: var
+#   var_name: L:COWANSIM_Cyclic_Y_Position
+  -
+    type: var
+    var_name: L:trimRelease
+  -
+    type: var
+    var_name: L:trimRelease2
+  -
+    type: var
+    var_name: L:IgniterRelight
+  -
+    type: var
+    var_name: L:BlowerSwitch
+  -
+    type: var
+    var_name: L:FwdBlowerSwitch
+  -
+    type: var
+    var_name: L:AftBlowerSwitch
+  -
+    type: var
+    var_name: L:switchCautLtsMode
+  -
+    type: var
+    var_name: L:buttonTOTTest
+  -
+    type: var
+    var_name: L:testRadioAlt
+  -
+    type: var
+    var_name: L:CS_206B_Decision_Height
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_DTOKey
+  -
+    type: var
+    var_name: L:buttonAnnTest
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_2
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InactiveVar
+  -
+    type: var
+    var_name: L:CS206_GTN_Option
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+  -
+    type: var
+    var_name: L:CS_Force_Trim_Release
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Position
+    interpolate: Default
+
+master:
+  -
+    type: var
+    var_name: L:COWANSIM_Cyclic_X_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:COWANSIM_Cyclic_Y_Position
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:TAIL ROTOR PEDAL POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_RUDDER_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:COLLECTIVE HANDLE POSITION
+    var_units: Position 32k
+    var_type: f64
+    add_by: -16384
+    event_name: AXIS_COLLECTIVE_SET
+    use_calculator: true
+    unreliable: true
+
+ignore:
+  - Transponder0
+  - Transponder1
+  - Transponder2
+  - Transponder3
+  - Transponder4
+  - Transponder5
+  - Transponder6
+  - Transponder7
+  - TransponderVFR

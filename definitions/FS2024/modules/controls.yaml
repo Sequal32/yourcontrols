@@ -1,0 +1,69 @@
+shared:
+  -
+    type: NumSet
+    var_name: A:BRAKE LEFT POSITION EX1
+    var_units: Position 32k
+    var_type: f64
+    add_by: -16384
+    event_name: AXIS_LEFT_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:BRAKE RIGHT POSITION EX1
+    var_units: Position 32k
+    var_type: f64
+    add_by: -16384
+    event_name: AXIS_RIGHT_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+
+master:
+  -
+    type: NumSet
+    var_name: A:AILERON POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_AILERONS_SET
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ELEVATOR POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_ELEVATOR_SET
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:RUDDER POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_RUDDER_SET
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    use_calculator: true
+    unreliable: true

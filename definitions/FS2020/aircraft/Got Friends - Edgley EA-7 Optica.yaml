@@ -1,0 +1,134 @@
+# Version 1.0.7
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/AS_GTX330.yaml
+  - definitions/FS2020/modules/Instruments/AS_KAP140.yaml
+  - definitions/FS2020/modules/Instruments/PMS50_GTN.yaml
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:DOOR_OPEN_L
+  -
+    type: var
+    var_name: L:DOOR_OPEN_R
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:WINTER_KIT_ON
+  -
+    type: var
+    var_name: L:WINDOW_LARGE
+  -
+    type: var
+    var_name: L:WINDOW_SMALL
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:FUEL_TankSelector
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+  -
+    type: var
+    var_name: L:ELT_ON
+  -
+    type: var
+    var_name: L:COMPANION_KNOB
+# -
+#   type: var
+#   var_name: L:WINDOW_SMALL_VOLUME
+# -
+#   type: var
+#   var_name: L:WINDOW_LARGE_VOLUME
+  -
+    type: var
+    var_name: L:LEFT_VENT_MOVE
+  -
+    type: var
+    var_name: L:RIGHT_VENT_MOVE

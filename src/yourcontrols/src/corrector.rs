@@ -49,8 +49,7 @@ impl Corrector {
             self.avars.define_id,
             0,
             simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME,
-            simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED
-                | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED,
+            simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED,
             0,
             0,
             0,

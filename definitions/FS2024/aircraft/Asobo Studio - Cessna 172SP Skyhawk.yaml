@@ -1,0 +1,429 @@
+# Version 6.12.0
+
+include:
+  - definitions/FS2024/modules/Instruments/AS_GNS430.yaml
+  - definitions/FS2024/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2024/modules/Instruments/AS_KAP140.yaml
+  - definitions/FS2024/modules/Instruments/AS_KT76C.yaml
+  - definitions/FS2024/modules/controls.yaml
+  - definitions/FS2024/modules/engines.yaml
+  - definitions/FS2024/modules/general.yaml
+  - definitions/FS2024/modules/handling.yaml
+  - definitions/FS2024/modules/magnetos.yaml
+  - definitions/FS2024/modules/navigation.yaml
+  - definitions/FS2024/modules/payload_new.yaml
+  - definitions/FS2024/modules/radios.yaml
+  - definitions/FS2024/modules/safety.yaml
+  - definitions/FS2024/modules/trim.yaml
+
+shared:
+  - # Avionics masters
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:8
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 8
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:12
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 12
+    index_reversed: true
+
+  - # Breakers top
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:13
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 13
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:24
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 24
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:19
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 19
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:18
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 18
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:23
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 23
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:20
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 20
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:22
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 22
+    use_calculator: true
+
+  - # Breakers bottom
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:6
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 6
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:7
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 7
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:14
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 14
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:8
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 8
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:12
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 12
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:25
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 25
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:11
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 11
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:65
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 65
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LINE BREAKER PULLED:2
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_LINE_BREAKER_TOGGLE
+    event_param: 2
+    use_calculator: true
+
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER1_SET
+    use_calculator: true
+
+  - # EGT Bug
+    type: NumSet
+    var_name: A:ENG EXHAUST GAS TEMPERATURE GES:1
+    var_units: Percent scaler 32k
+    var_type: f64
+    event_name: EGT1_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:1
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 1
+    index_reversed: true
+
+  - # Left door
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+    use_calculator: true
+  - # Left Window
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 5
+    use_calculator: true
+  - # Right Window
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:5
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 6
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:2
+    var_units: Percent
+    var_type: f64
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 2
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: GLARESHIELD_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:2
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 7
+    index_reversed: true
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT NAV:0
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    event_param: 0
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: i32
+    event_name: BEACON_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    var_type: i32
+    event_name: TAXI_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:0
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 0
+    use_calculator: true
+
+  - # Scoped
+    type: var
+    var_name: L:1:Anim_CARGO_LEFT_Position
+
+  - # Global
+    type: var
+    var_name: L:XMLVAR_DayNightSwitch
+  -
+    type: var
+    var_name: L:XMLVAR_WarningsAttenuated
+  -
+    type: var
+    var_name: L:XMLVAR_GPS_Approach
+  -
+    type: var
+    var_name: L:XMLVAR_HUD_1_Down
+  -
+    type: var
+    var_name: L:XMLVAR_HUD_2_Down

@@ -1,0 +1,63 @@
+# Version 0.1.81
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_G3X.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS430.yaml
+  - definitions/FS2020/modules/Instruments/AS_GTX330.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:2
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL POWER SETTING:2
+    var_units: Percent
+    var_type: f64
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
+    event_param: 2
+    index_reversed: true
+    use_calculator: true

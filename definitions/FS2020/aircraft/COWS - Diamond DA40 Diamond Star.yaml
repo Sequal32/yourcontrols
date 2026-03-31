@@ -1,0 +1,5489 @@
+# Version 1.1.3
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_G1000.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+
+shared:
+  - # AV Master
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:32
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 32
+    use_calculator: true
+
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:6
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 7
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:7
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 8
+    use_calculator: true
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+    use_calculator: true
+  -
+    type: CustomCalculator
+    get: (L:STARTER_HOLD) 0 ==
+    set: 0 (>L:STARTER_SPAD:1)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (L:STARTER_HOLD) 3 ==
+    set: 1 (>L:STARTER_SPAD:1)
+    condition:
+      equals:
+        F64: 1.0
+
+  - # Engine
+    type: ToggleSwitch
+    var_name: A:RECIP ENG ENGINE MASTER SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: ENGINE_MASTER_1_TOGGLE
+    use_calculator: true
+
+  - # Fuel
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP1_SET
+    use_calculator: true
+
+  - # Handling
+    type: NumSet
+    var_name: A:FLAPS HANDLE PERCENT
+    var_units: Position 16k
+    var_type: f64
+    event_name: FLAPS_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT STROBE:1
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT NAV:1
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    var_type: i32
+    event_name: TAXI_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+#  - # LVAR's
+#    type: var
+#    var_name: L:ATT_GYRO_HEADING_FALL
+#  -
+#    type: var
+#    var_name: L:PROP:1
+#  -
+#    type: var
+#    var_name: L:STATE_ECU_A_RUNTIME:1
+#  -
+#    type: var
+#    var_name: L:STATE_ECU_B_RUNTIME:1
+#  -
+#    type: var
+#    var_name: L:TURBO_WASTEGATE:1
+#  -
+#    type: var
+#    var_name: L:OP_BYPASS:1
+#  -
+#    type: var
+#    var_name: L:WC_THERMOSTAT:1
+#  -
+#    type: var
+#    var_name: L:FADEC_TARGET_RPM:1
+#  -
+#    type: var
+#    var_name: L:ENG_COOLANT_LEAK:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_720:1
+#  -
+#    type: var
+#    var_name: L:SPREAD_THERMO:1
+#  -
+#    type: var
+#    var_name: L:OP_SPREAD_BYPASS:1
+#  -
+#    type: var
+#    var_name: L:OP_SPREAD:1
+#  -
+#    type: var
+#    var_name: L:OP_SPREAD_COOLING:1
+#  -
+#    type: var
+#    var_name: L:SPREAD_MAX_RPM:1
+#  -
+#    type: var
+#    var_name: L:STATE_ECU_FAIL_TIME_A:1
+#  -
+#    type: var
+#    var_name: L:STATE_ECU_FAIL_TIME_B:1
+#  -
+#    type: var
+#    var_name: L:SPREAD_AIR
+#  -
+#    type: var
+#    var_name: L:SPREAD_ALT
+#  -
+#    type: var
+#    var_name: L:SPREAD_ALT_OFF
+  -
+    type: var
+    var_name: L:INPUT_WHEEL_ASSIST
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:INPUT_TRIM_SPEED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:REALISTIC_PARKING_BRAKE
+    cancel_h_events: true
+#  -
+#    type: var
+#    var_name: L:FUEL_TOTALISER_REM
+#  -
+#    type: var
+#    var_name: L:FUEL_TOTALISER_USE
+#  -
+#    type: var
+#    var_name: L:TOTAL_TIME
+#  -
+#    type: var
+#    var_name: L:HOBBS
+  -
+    type: var
+    var_name: L:PANEL_SHAKE_OFF
+    cancel_h_events: true
+#  -
+#    type: var
+#    var_name: L:FORCE_PILOT
+#  -
+#    type: var
+#    var_name: L:FORCE_COPILOT
+#  -
+#    type: var
+#    var_name: L:STATE_AVAILABLE
+#  - # NO
+#    type: var
+#    var_name: L:STATE_SAVING_ENABLED
+#  -
+#    type: var
+#    var_name: L:STATE_FUEL_QUANTITY_L
+#  -
+#    type: var
+#    var_name: L:STATE_FUEL_QUANTITY_R
+#  -
+#    type: var
+#    var_name: L:STATE_FUEL_SYSTEM
+#  -
+#    type: var
+#    var_name: L:STATE_FUEL_SELECTOR
+#  -
+#    type: var
+#    var_name: L:STATE_WIRE
+#  -
+#    type: var
+#    var_name: L:STATE_FUEL_PMP
+#  -
+#    type: var
+#    var_name: L:STATE_THRT_LVR
+#  -
+#    type: var
+#    var_name: L:STATE_PAYLOAD:1
+#  -
+#    type: var
+#    var_name: L:STATE_PAYLOAD:2
+#  -
+#    type: var
+#    var_name: L:STATE_PAYLOAD:3
+#  -
+#    type: var
+#    var_name: L:STATE_PAYLOAD:4
+#  -
+#    type: var
+#    var_name: L:STATE_PAYLOAD:5
+#  -
+#    type: var
+#    var_name: L:STATE_BARO1
+#  -
+#    type: var
+#    var_name: L:STATE_BARO2
+#  -
+#    type: var
+#    var_name: L:STATE_COM1A
+#  -
+#    type: var
+#    var_name: L:STATE_COM1S
+#  -
+#    type: var
+#    var_name: L:STATE_COM2A
+#  -
+#    type: var
+#    var_name: L:STATE_COM2S
+#  -
+#    type: var
+#    var_name: L:STATE_NAV1A
+#  -
+#    type: var
+#    var_name: L:STATE_NAV1S
+#  -
+#    type: var
+#    var_name: L:STATE_NAV2A
+#  -
+#    type: var
+#    var_name: L:STATE_NAV2S
+#  -
+#    type: var
+#    var_name: L:STATE_ADF1A
+#  -
+#    type: var
+#    var_name: L:STATE_ADF1S
+#  -
+#    type: var
+#    var_name: L:STATE_HDG_BUG
+#  -
+#    type: var
+#    var_name: L:STATE_OBS:1
+#  -
+#    type: var
+#    var_name: L:STATE_OBS:2
+#  -
+#    type: var
+#    var_name: L:STATE_BATT
+#  -
+#    type: var
+#    var_name: L:STATE_BATT_ECU
+#  -
+#    type: var
+#    var_name: L:STATE_BATT_EMER
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_STB
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_POS
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_TXI
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_LGN
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_CBN1
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_CBN2
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_CBN3
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_FLD
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_INS
+#  -
+#    type: var
+#    var_name: L:STATE_FLAPS_L
+#  -
+#    type: var
+#    var_name: L:STATE_FLAPS_P
+#  -
+#    type: var
+#    var_name: L:STATE_E_TRIM
+#  -
+#    type: var
+#    var_name: L:STATE_ALTERNATOR
+#  -
+#    type: var
+#    var_name: L:STATE_MASTER_AVI
+#  -
+#    type: var
+#    var_name: L:STATE_XPNDR
+#  -
+#    type: var
+#    var_name: L:STATE_XPNDR_STATE
+#  -
+#    type: var
+#    var_name: L:STATE_PITOT
+#  -
+#    type: var
+#    var_name: L:STATE_PARK
+#  -
+#    type: var
+#    var_name: L:STATE_ALTERNATE_AIR
+#  -
+#    type: var
+#    var_name: L:STATE_VOTER
+#  -
+#    type: var
+#    var_name: L:STATE_MASTER_COVER
+#  -
+#    type: var
+#    var_name: L:STATE_XFER
+#  -
+#    type: var
+#    var_name: L:STATE_CB_AVAILABLE
+#  -
+#    type: var
+#    var_name: L:STATE_CB_HOR
+#  -
+#    type: var
+#    var_name: L:STATE_CB_ADC
+#  -
+#    type: var
+#    var_name: L:STATE_CB_AHR
+#  -
+#    type: var
+#    var_name: L:STATE_CB_PFD
+#  -
+#    type: var
+#    var_name: L:STATE_CB_PIT
+#  -
+#    type: var
+#    var_name: L:STATE_CB_FLP
+#  -
+#    type: var
+#    var_name: L:STATE_CB_CM1
+#  -
+#    type: var
+#    var_name: L:STATE_CB_GP1
+#  -
+#    type: var
+#    var_name: L:STATE_CB_XPR
+#  -
+#    type: var
+#    var_name: L:STATE_CB_LDL
+#  -
+#    type: var
+#    var_name: L:STATE_CB_FLD
+#  -
+#    type: var
+#    var_name: L:STATE_CB_ESS
+#  -
+#    type: var
+#    var_name: L:STATE_CB_MTC
+#  -
+#    type: var
+#    var_name: L:STATE_CB_ENG
+#  -
+#    type: var
+#    var_name: L:STATE_CB_STR
+#  -
+#    type: var
+#    var_name: L:STATE_CB_PWR
+#  -
+#    type: var
+#    var_name: L:STATE_CB_MAN
+#  -
+#    type: var
+#    var_name: L:STATE_CB_MFD
+#  -
+#    type: var
+#    var_name: L:STATE_CB_INT
+#  -
+#    type: var
+#    var_name: L:STATE_CB_STB
+#  -
+#    type: var
+#    var_name: L:STATE_CB_POS
+#  -
+#    type: var
+#    var_name: L:STATE_CB_TXM
+#  -
+#    type: var
+#    var_name: L:STATE_CB_AVF
+#  -
+#    type: var
+#    var_name: L:STATE_CB_AVN
+#  -
+#    type: var
+#    var_name: L:STATE_CB_XFR
+#  -
+#    type: var
+#    var_name: L:STATE_CB_CM2
+#  -
+#    type: var
+#    var_name: L:STATE_CB_GP2
+#  -
+#    type: var
+#    var_name: L:STATE_CB_AFC
+#  -
+#    type: var
+#    var_name: L:STATE_CB_AUD
+#  -
+#    type: var
+#    var_name: L:STATE_CB_ECA
+#  -
+#    type: var
+#    var_name: L:STATE_CB_ECB
+#  -
+#    type: var
+#    var_name: L:STATE_CB_FPA
+#  -
+#    type: var
+#    var_name: L:STATE_CB_FPB
+  -
+    type: var
+    var_name: L:DAMAGE_ENABLED
+    cancel_h_events: true
+#  -
+#    type: var
+#    var_name: L:DAMAGE_BLOCK:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_TURBO:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_OIL:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_FUEL:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_FUEL:11
+#  -
+#    type: var
+#    var_name: L:DAMAGE_FUEL:12
+  -
+    type: var
+    var_name: L:FAILURES_MODE
+    cancel_h_events: true
+#  -
+#    type: var
+#    var_name: L:FAILURES_TIMER
+  -
+    type: var
+    var_name: L:FAILURES_BYPASS:1
+  -
+    type: var
+    var_name: L:FAILURES_WATER_PUMP:1
+  -
+    type: var
+    var_name: L:FAILURES_COOLANT_LEAK:1
+  -
+    type: var
+    var_name: L:FAILURES_THERMOSTAT:1
+  -
+    type: var
+    var_name: L:FAILURES_WASTEGATE:1
+  -
+    type: var
+    var_name: L:FAILURES_WASTEGATE_A:1
+  -
+    type: var
+    var_name: L:FAILURES_WASTEGATE_B:1
+  -
+    type: var
+    var_name: L:FAILURES_PROP:1
+  -
+    type: var
+    var_name: L:FAILURES_PROP_A:1
+  -
+    type: var
+    var_name: L:FAILURES_PROP_B:1
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_L
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_R
+  -
+    type: var
+    var_name: L:FAILURES_POWER_LEVER_A:1
+  -
+    type: var
+    var_name: L:FAILURES_POWER_LEVER_B:1
+  -
+    type: var
+    var_name: L:FAILURES_BOOST_LEAK:1
+  -
+    type: var
+    var_name: L:FAILURES_BOOST_SENSOR_A:1
+  -
+    type: var
+    var_name: L:FAILURES_BOOST_SENSOR_B:1
+  -
+    type: var
+    var_name: L:FAILURES_CAM_SENSOR_A:1
+  -
+    type: var
+    var_name: L:FAILURES_CAM_SENSOR_B:1
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_P_SENSOR:1
+  -
+    type: var
+    var_name: L:FAILURES_ALT:1
+  -
+    type: var
+    var_name: L:FAILURES_DISP_OP
+  -
+    type: var
+    var_name: L:FAILURES_DISP_OT
+  -
+    type: var
+    var_name: L:FAILURES_DISP_WT
+  -
+    type: var
+    var_name: L:FAILURES_DISP_GT
+  -
+    type: var
+    var_name: L:FAILURES_DISP_FUEL:1
+  -
+    type: var
+    var_name: L:FAILURES_DISP_FUEL:2
+  -
+    type: var
+    var_name: L:FAILURES_DISP_FUEL_T:1
+  -
+    type: var
+    var_name: L:FAILURES_DISP_FUEL_T:2
+  -
+    type: var
+    var_name: L:FAILURES_DISP_AMPS
+  -
+    type: var
+    var_name: L:FAILURES_DISP_VOLT
+  -
+    type: var
+    var_name: L:FAILURES_STBY_AIRSPEED
+  -
+    type: var
+    var_name: L:FAILURES_STBY_STATIC
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_FLAP:1
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_FLAP:2
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_FLAP:3
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_DIMMER
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_FLOOD
+  -
+    type: var
+    var_name: L:FAILURES_BRAKE:1
+  -
+    type: var
+    var_name: L:FAILURES_BRAKE:2
+  -
+    type: var
+    var_name: L:FAILURES_AFCS_TRIM_RUN
+  -
+    type: var
+    var_name: L:FAILURES_AFCS_ELE
+  -
+    type: var
+    var_name: L:FAILURES_AFCS_AIL
+  -
+    type: var
+    var_name: L:FAILURES_AFCS_TRIM
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_LDG
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_TAX
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_POS
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_ACL
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_CAB:1
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_CAB:2
+  -
+    type: var
+    var_name: L:FAILURES_LIGHT_CAB:3
+  -
+    type: var
+    var_name: L:FAILURES_CB_HORIZON
+  -
+    type: var
+    var_name: L:FAILURES_CB_ADC
+  -
+    type: var
+    var_name: L:FAILURES_CB_AHRS
+  -
+    type: var
+    var_name: L:FAILURES_CB_PFD
+  -
+    type: var
+    var_name: L:FAILURES_CB_PITOT
+  -
+    type: var
+    var_name: L:FAILURES_CB_FLAPS
+  -
+    type: var
+    var_name: L:FAILURES_CB_AUD
+  -
+    type: var
+    var_name: L:FAILURES_CB_COM1
+  -
+    type: var
+    var_name: L:FAILURES_CB_NAV1
+  -
+    type: var
+    var_name: L:FAILURES_CB_XPDR
+  -
+    type: var
+    var_name: L:FAILURES_CB_ESS_TIE
+  -
+    type: var
+    var_name: L:FAILURES_CB_MAST
+  -
+    type: var
+    var_name: L:FAILURES_CB_ENGINST
+  -
+    type: var
+    var_name: L:FAILURES_CB_START
+  -
+    type: var
+    var_name: L:FAILURES_CB_MAIN_TIE
+  -
+    type: var
+    var_name: L:FAILURES_CB_MFD
+  -
+    type: var
+    var_name: L:FAILURES_CB_XFR
+  -
+    type: var
+    var_name: L:FAILURES_CB_AV_FAN
+  -
+    type: var
+    var_name: L:FAILURES_CB_COM2
+  -
+    type: var
+    var_name: L:FAILURES_CB_NAV2
+  -
+    type: var
+    var_name: L:FAILURES_CB_AFCS
+  -
+    type: var
+    var_name: L:FAILURES_STALL_HORN
+  -
+    type: var
+    var_name: L:FAILURES_GLOW
+  -
+    type: var
+    var_name: L:FAILURES_CB_ECA
+  -
+    type: var
+    var_name: L:FAILURES_CB_ECB
+  -
+    type: var
+    var_name: L:FAILURES_CB_FPA
+  -
+    type: var
+    var_name: L:FAILURES_CB_FPB
+#  -
+#    type: var
+#    var_name: L:BATT_CHARGE_LAST
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_CBN1_DRAIN
+#  -
+#    type: var
+#    var_name: L:FIX_FS24
+#  -
+#    type: var
+#    var_name: L:SUPER_SECRET_ENGINE_DEBUG
+  -
+    type: var
+    var_name: L:TEST_WB
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_SET
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_INJ:1
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_INJ:2
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_INJ:3
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_INJ:4
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_EGT:1
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_EGT:2
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_EGT:3
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_EGT:4
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_COOL:1
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_COOL:2
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_COOL:3
+#  -
+#    type: var
+#    var_name: L:CYL_SPREAD_COOL:4
+#  -
+#    type: var
+#    var_name: L:THROTTLE_SPREAD
+#  -
+#    type: var
+#    var_name: L:OP_SPREAD_BYPASS
+#  -
+#    type: var
+#    var_name: L:MAG_SPREAD_TIMING
+#  -
+#    type: var
+#    var_name: L:PROP_SPREAD_HI
+#  -
+#    type: var
+#    var_name: L:PROP_SPREAD_LO
+#  -
+#    type: var
+#    var_name: L:FUEL_SPREAD_PRESSURE
+#  -
+#    type: var
+#    var_name: L:SPREAD_ROUGH
+#  -
+#    type: var
+#    var_name: L:SPREAD_OC
+#  -
+#    type: var
+#    var_name: L:SPREAD_OP
+  -
+    type: var
+    var_name: L:START_MIXTURE
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:MIXTURE_AUTO
+#  -
+#    type: var
+#    var_name: L:STATE_PROP_LVR
+#  -
+#    type: var
+#    var_name: L:STATE_MIXT_LVR
+#  -
+#    type: var
+#    var_name: L:STATE_FLAPS_R
+#  -
+#    type: var
+#    var_name: L:STATE_CB_BAT
+#  -
+#    type: var
+#    var_name: L:STATE_CB_FAN
+#  -
+#    type: var
+#    var_name: L:STATE_CB_FUP
+#  -
+#    type: var
+#    var_name: L:STATE_CB_ALT
+#  -
+#    type: var
+#    var_name: L:STATE_CB_ACN
+#  -
+#    type: var
+#    var_name: L:STATE_CB_APT
+#  -
+#    type: var
+#    var_name: L:STATE_CB_TAS
+#  -
+#    type: var
+#    var_name: L:STATE_CB_ADF
+#  -
+#    type: var
+#    var_name: L:DAMAGE_OIL
+#  -
+#    type: var
+#    var_name: L:DAMAGE_BLOCK
+#  -
+#    type: var
+#    var_name: L:DAMAGE_CYL:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_CYL:2
+#  -
+#    type: var
+#    var_name: L:DAMAGE_CYL:3
+#  -
+#    type: var
+#    var_name: L:DAMAGE_CYL:4
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL:1R
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL:1L
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL:2R
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL:2L
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL:3R
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL:3L
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL:4R
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL:4L
+  -
+    type: var
+    var_name: L:FAILURES_BYPASS
+  -
+    type: var
+    var_name: L:FAILURES_THERMOSTAT_OIL
+  -
+    type: var
+    var_name: L:FAILURES_PROP_PUMP
+  -
+    type: var
+    var_name: L:FAILURES_PROP_LEVER
+  -
+    type: var
+    var_name: L:FAILURES_MIX_LEVER
+  -
+    type: var
+    var_name: L:FAILURES_THROT_LEVER
+  -
+    type: var
+    var_name: L:FAILURES_VACC_LEAK
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_PUMP
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_LEAK
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_INJ:1
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_INJ:2
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_INJ:3
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_INJ:4
+  -
+    type: var
+    var_name: L:FAILURES_MAG_R
+  -
+    type: var
+    var_name: L:FAILURES_MAG_L
+  -
+    type: var
+    var_name: L:FAILURES_MAG_GND_R
+  -
+    type: var
+    var_name: L:FAILURES_MAG_GND_L
+  -
+    type: var
+    var_name: L:FAILURES_MAG:1R
+  -
+    type: var
+    var_name: L:FAILURES_MAG:2R
+  -
+    type: var
+    var_name: L:FAILURES_MAG:3R
+  -
+    type: var
+    var_name: L:FAILURES_MAG:4R
+  -
+    type: var
+    var_name: L:FAILURES_MAG:1L
+  -
+    type: var
+    var_name: L:FAILURES_MAG:2L
+  -
+    type: var
+    var_name: L:FAILURES_MAG:3L
+  -
+    type: var
+    var_name: L:FAILURES_MAG:4L
+  -
+    type: var
+    var_name: L:FAILURES_CHT_BAFFLE
+  -
+    type: var
+    var_name: L:FAILURES_CHT_OIL:1
+  -
+    type: var
+    var_name: L:FAILURES_CHT_OIL:2
+  -
+    type: var
+    var_name: L:FAILURES_CHT_OIL:3
+  -
+    type: var
+    var_name: L:FAILURES_CHT_OIL:4
+  -
+    type: var
+    var_name: L:FAILURES_ALT
+  -
+    type: var
+    var_name: L:FAILURES_ALT_OVERVOLT
+  -
+    type: var
+    var_name: L:FAILURES_CYL:1
+  -
+    type: var
+    var_name: L:FAILURES_CYL:2
+  -
+    type: var
+    var_name: L:FAILURES_CYL:3
+  -
+    type: var
+    var_name: L:FAILURES_CYL:4
+  -
+    type: var
+    var_name: L:FAILURES_OIL
+  -
+    type: var
+    var_name: L:FAILURES_BLOCK
+  -
+    type: var
+    var_name: L:FAILURES_DISP_RPM
+  -
+    type: var
+    var_name: L:FAILURES_DISP_MAP
+  -
+    type: var
+    var_name: L:FAILURES_DISP_FF
+  -
+    type: var
+    var_name: L:FAILURES_DISP_FP
+  -
+    type: var
+    var_name: L:FAILURES_DISP_CHT:1
+  -
+    type: var
+    var_name: L:FAILURES_DISP_CHT:2
+  -
+    type: var
+    var_name: L:FAILURES_DISP_CHT:3
+  -
+    type: var
+    var_name: L:FAILURES_DISP_CHT:4
+  -
+    type: var
+    var_name: L:FAILURES_DISP_EGT:1
+  -
+    type: var
+    var_name: L:FAILURES_DISP_EGT:2
+  -
+    type: var
+    var_name: L:FAILURES_DISP_EGT:3
+  -
+    type: var
+    var_name: L:FAILURES_DISP_EGT:4
+  -
+    type: var
+    var_name: L:FAILURES_CB_BATT
+  -
+    type: var
+    var_name: L:FAILURES_CB_CDU_FAN
+  -
+    type: var
+    var_name: L:FAILURES_CB_FUEL_PUMP
+  -
+    type: var
+    var_name: L:FAILURES_CB_ALT
+  -
+    type: var
+    var_name: L:FAILURES_CB_ALT_CONT
+  -
+    type: var
+    var_name: L:FAILURES_CB_ALT_PROT
+  -
+    type: var
+    var_name: L:FAILURES_CB_AV_BUS
+  -
+    type: var
+    var_name: L:FAILURES_CB_TAS
+  -
+    type: var
+    var_name: L:FAILURES_CB_ADF
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_LEAK_L
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_LEAK_R
+  -
+    type: var
+    var_name: L:FAILURES_FUEL_SPRING
+  -
+    type: var
+    var_name: L:ASSIST_PRIME
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:STATE_LOAD
+  -
+    type: var
+    var_name: L:STATE_HANGER
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_ANIM
+  -
+    type: var
+    var_name: L:FUEL_SELECTOR
+  -
+    type: var
+    var_name: L:INPUT_TRIM_AXIS
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    unreliable: true
+  -
+    type: var
+    var_name: L:INPUT_PARK
+  -
+    type: var
+    var_name: L:INPUT_START
+  -
+    type: var
+    var_name: L:INPUT_TRIM_DN
+#  -
+#    type: var
+#    var_name: L:COWS_KILL_FMA
+  -
+    type: var
+    var_name: L:INPUT_AP_DISC_isdown
+  -
+    type: var
+    var_name: L:INPUT_TRIM_BUTTON
+#  -
+#    type: var
+#    var_name: L:WT_TOGA_ACTIVE
+#  -
+#    type: var
+#    var_name: L:INPUT_ELEVATOR
+#  -
+#    type: var
+#    var_name: L:OP_OIL_PRESS:1
+  -
+    type: var
+    var_name: L:INPUT_LATCH
+#  -
+#    type: var
+#    var_name: L:INPUT_AP_DISC
+  -
+    type: var
+    var_name: L:INPUT_TRIM_UP
+#  -
+#    type: var
+#    var_name: L:GSX_PARK
+#  -
+#    type: var
+#    var_name: L:FADEC_SET_MAP:1
+#  -
+#    type: var
+#    var_name: L:FADEC_RUNNING_A:1
+#  -
+#    type: var
+#    var_name: L:RAND_PROP:1
+#  -
+#    type: var
+#    var_name: L:FADEC_RUNNING_B:1
+#  -
+#    type: var
+#    var_name: L:FADEC_SET_MAP_FIX:1
+  -
+    type: var
+    var_name: L:FADEC_HI_START:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ENGINE_GO:1
+#  -
+#    type: var
+#    var_name: L:START_CYL:1
+  -
+    type: var
+    var_name: L:GENERAL ENG FAILED:1
+  -
+    type: var
+    var_name: L:START_STARTER:1
+#  -
+#    type: var
+#    var_name: L:STARTER_SPAD:1
+  -
+    type: var
+    var_name: L:STARTER_SWITCH
+  -
+    type: var
+    var_name: L:FUEL_SELECTOR_WIRE_CUT
+  -
+    type: var
+    var_name: L:MASTER_COVER:1
+#  -
+#    type: var
+#    var_name: L:TIME_PASSED
+  -
+    type: var
+    var_name: L:MASTER_COVER_MASTER_POS:1
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_MATH_NEUTRAL
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_MATH_UP
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_MATH_DN
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_MATH_TRIM
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_MATH_NEUTRAL+TRIM
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_SCALAR_UP
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_SCALAR_DN
+#  -
+#    type: var
+#    var_name: L:INPUT_ELAST_YOKE
+#  -
+#    type: var
+#    var_name: L:INPUT_ELEVATOR_OUT
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_POSITION
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_ANGLE_TOTAL
+#  -
+#    type: var
+#    var_name: L:AFCS_PFT
+#  -
+#    type: var
+#    var_name: L:AUTOPILOT_TOGA_TOGGLE
+#  -
+#    type: var
+#    var_name: L:COWS_GPS_LOI
+#  -
+#    type: var
+#    var_name: L:INPUT_AILERON
+#  -
+#    type: var
+#    var_name: L:AFCS_AILERON_OUTPUT_D
+#  -
+#    type: var
+#    var_name: L:AFCS_AIL_FLT_DIR_BANK
+#  -
+#    type: var
+#    var_name: L:AFCS_AILERON_OUTPUT_T
+#  -
+#    type: var
+#    var_name: L:AFCS_AILERON_OUTPUT_P
+#  -
+#    type: var
+#    var_name: L:AFCS_AILERON_OUTPUT_I
+#  -
+#    type: var
+#    var_name: L:AFCS_AILERON_OUTPUT
+#  -
+#    type: var
+#    var_name: L:AILERON_POSITION
+#  -
+#    type: var
+#    var_name: L:AILERON_ANIM
+#  -
+#    type: var
+#    var_name: L:FIX_FS24_EVENT
+  -
+    type: var
+    var_name: L:INPUT_BRAKE_AXIS_LEFT
+    unreliable: true
+  -
+    type: var
+    var_name: L:INPUT_BRAKE_AXIS_RIGHT
+    unreliable: true
+#  -
+#    type: var
+#    var_name: L:INPUT_BRAKE_BUTTON_BOTH
+#  -
+#    type: var
+#    var_name: L:INPUT_BRAKE_BUTTON_LEFT
+  -
+    type: var
+    var_name: L:INPUT_BRAKE_MULTI:1
+#  -
+#    type: var
+#    var_name: L:INPUT_BRAKE:1
+#  -
+#    type: var
+#    var_name: L:INPUT_BRAKE_BUTTON_RIGHT
+  -
+    type: var
+    var_name: L:INPUT_BRAKE_MULTI:2
+#  -
+#    type: var
+#    var_name: L:INPUT_BRAKE:2
+#  -
+#    type: var
+#    var_name: L:INPUT_RUDDER
+#  -
+#    type: var
+#    var_name: L:INPUT_RUDDER_X
+#  -
+#    type: var
+#    var_name: L:INPUT_BRAKE_XBOX
+#  -
+#    type: var
+#    var_name: L:INPUT_BRAKE_AUTO:1
+#  -
+#    type: var
+#    var_name: L:INPUT_BRAKE_AUTO:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_PARK:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_PEDAL:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_PARK:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_PEDAL:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_LEFT_PEDAL
+#  -
+#    type: var
+#    var_name: L:BRAKE_RIGHT_PEDAL
+#  -
+#    type: var
+#    var_name: L:BRAKE_PRESS:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_PRESS:2
+#  -
+#    type: var
+#    var_name: L:DYNAMIC_PRESSURE
+#  -
+#    type: var
+#    var_name: L:STALL_PLANE_AOA
+#  -
+#    type: var
+#    var_name: L:STALL_HORN_AOA
+#  -
+#    type: var
+#    var_name: L:STALL_HORN_PITCH
+#  -
+#    type: var
+#    var_name: L:STALL_PLANE_AOA_GAME
+#  -
+#    type: var
+#    var_name: L:WC_DENSITY_CORRECTION
+#  -
+#    type: var
+#    var_name: L:AIRSPEED INDICATED
+#  -
+#    type: var
+#    var_name: L:AIRSPEED SOUND FAC
+#  -
+#    type: var
+#    var_name: L:AIRSPEED SOUND
+#  -
+#    type: var
+#    var_name: L:AIRSPEED SOUND AOA
+#  -
+#    type: var
+#    var_name: L:STBY_OSCI
+#  -
+#    type: var
+#    var_name: L:OPEN_DOOR:3
+#  -
+#    type: var
+#    var_name: L:OPEN_DOOR:4
+#  -
+#    type: var
+#    var_name: L:STBY_AMBIENT_PRESSURE_DIFF
+#  -
+#    type: var
+#    var_name: L:STBY_PRESSURE_ALTITUDE_DIFF
+#  -
+#    type: var
+#    var_name: L:STBY_AMBIENT_PRESSURE_T
+#  -
+#    type: var
+#    var_name: L:PRESSURE_ALT_T
+#  -
+#    type: var
+#    var_name: L:STBY_AMBIENT_PRESSURE
+#  -
+#    type: var
+#    var_name: L:FS24_SPEED
+#  -
+#    type: var
+#    var_name: L:STBY_PRESSURE_ALT
+  -
+    type: var
+    var_name: L:KOHLSMAN SETTING HG:2
+    unreliable: true
+#  -
+#    type: var
+#    var_name: L:PRESSURE_ALT
+#  -
+#    type: var
+#    var_name: L:STBY_TOTAL_PRESSURE
+#  -
+#    type: var
+#    var_name: L:STBY_DIFFERENTIAL_PRESSURE
+#  -
+#    type: var
+#    var_name: L:CALC_IAS
+#  -
+#    type: var
+#    var_name: L:IAS_NEEDLE_T
+  -
+    type: var
+    var_name: L:FREEZE_MODE
+  -
+    type: var
+    var_name: L:FREEZE_ROLL
+  -
+    type: var
+    var_name: L:FREEZE_PITCH
+  -
+    type: var
+    var_name: L:FREEZE_MODE_Gs
+#  -
+#    type: var
+#    var_name: L:OPEN_DOOR:1
+#  -
+#    type: var
+#    var_name: L:OPEN_DOOR:2
+#  -
+#    type: var
+#    var_name: L:OPEN_DOOR_SOUND_RATIO_WINDOW
+#  -
+#    type: var
+#    var_name: L:OPEN_DOOR_SOUND_RATIO
+  -
+    type: var
+    var_name: L:AUTOSTART_STEP
+  -
+    type: var
+    var_name: L:AUTOSTART_START:1
+#  -
+#    type: var
+#    var_name: L:STARTER_HOLD
+#  -
+#    type: var
+#    var_name: L:ECU_TEST:1
+  -
+    type: var
+    var_name: L:XFER_SWITCH
+  -
+    type: var
+    var_name: L:ESS_BUS_SWITCH
+  -
+    type: var
+    var_name: L:ECU_VOTER:1
+  -
+    type: var
+    var_name: L:ENGINE_ALTERNATE_AIR
+#  -
+#    type: var
+#    var_name: L:PFD_CDI_Source
+#  -
+#    type: var
+#    var_name: L:ATT_CAGE
+#  -
+#    type: var
+#    var_name: L:INPUT_WHEEL_ASSIST_TIME
+#  -
+#    type: var
+#    var_name: L:FADEC_MASTER:1
+#  -
+#    type: var
+#    var_name: L:FADEC_POWER_LEVER_A:1
+#  -
+#    type: var
+#    var_name: L:FADEC_POWER_LEVER_B:1
+#  -
+#    type: var
+#    var_name: L:FADEC_POWER_LEVER:1
+#  -
+#    type: var
+#    var_name: L:RAND_POWER:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_ACTIVE:1
+#  -
+#    type: var
+#    var_name: L:FADEC_HI_ALT
+#  -
+#    type: var
+#    var_name: L:FADEC_POWER_TARGET:1
+#  -
+#    type: var
+#    var_name: L:FADEC_BOOST_PROTEC:1
+#  -
+#    type: var
+#    var_name: L:FADEC_FUEL_FLOW_TARGET:1
+#  -
+#    type: var
+#    var_name: L:FADEC_CALC_TARGET_AIRFLOW:1
+#  -
+#    type: var
+#    var_name: L:FADEC_TARGET_AIRFLOW:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_TROTTLE:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_P:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_PRE:1
+#  -
+#    type: var
+#    var_name: L:ACTUAL_POWER_OUTPUT
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_D:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_MAP:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_MAP_MAX:1
+#  -
+#    type: var
+#    var_name: L:FADEC_IDLE_P:1
+#  -
+#    type: var
+#    var_name: L:FADEC_IDLE:1
+#  -
+#    type: var
+#    var_name: L:TURBO_MAX_MAP
+#  -
+#    type: var
+#    var_name: L:FADEC_TARGET_MAP:1
+#  -
+#    type: var
+#    var_name: L:ENG_RPM_SENS:1
+#  -
+#    type: var
+#    var_name: L:FUEL_PRESS:1
+#  -
+#    type: var
+#    var_name: L:HEALTH_FUEL:1
+#  -
+#    type: var
+#    var_name: L:FAILURES_CRANK_SENS:1
+#  -
+#    type: var
+#    var_name: L:FAILURES_CAM_SENS:1
+#  -
+#    type: var
+#    var_name: L:TURBO_MAP:1
+#  -
+#    type: var
+#    var_name: L:TURBO_SPEED_FAC:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_FLOW:1
+#  -
+#    type: var
+#    var_name: L:TURBO_SPEED_UP:1
+#  -
+#    type: var
+#    var_name: L:TURBO_SPEED:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_TURBO_FRIC:1
+#  -
+#    type: var
+#    var_name: L:TURBO_SPEED_FRICTION:1
+#  -
+#    type: var
+#    var_name: L:TURBO_AMBIENT_PRESSURE:1
+#  -
+#    type: var
+#    var_name: L:TURBO_BOOST:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TARGET_MAP:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TARGET_BOOST:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TRIM_ERROR:1
+#  -
+#    type: var
+#    var_name: L:TURBO_WASTEGATE_SET:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TRIM_LONG_A:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TRIM_LONG:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TRIM_LONG_B:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TARGET_SPEED:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TARGET_FRICTION:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TARGET_WASTEGATE:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TRIM:1
+#  -
+#    type: var
+#    var_name: L:FILTER_RESRTICTION
+#  -
+#    type: var
+#    var_name: L:TURBO_INTAKE_FLOW
+#  -
+#    type: var
+#    var_name: L:TURBO_PRESSURE_REDUCTION:1
+#  -
+#    type: var
+#    var_name: L:TURBO_TARGET_AMBIENT_PRESSURE:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_FUEL_OSCI:1
+  -
+    type: var
+    var_name: L:FAILURES_BOOST_SENS:1
+#  -
+#    type: var
+#    var_name: L:FADEC_INEF_INTCO:1
+#  -
+#    type: var
+#    var_name: L:ENG_ALT_AIR_FACTOR
+#  -
+#    type: var
+#    var_name: L:FADEC_CALC_MAP:1
+#  -
+#    type: var
+#    var_name: L:FADEC_INEF_TEMP:1
+#  -
+#    type: var
+#    var_name: L:HEALTH_BLOCK:1
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_DRAG_MAP:1
+  -
+    type: var
+    var_name: L:GLOW_TOGGLE:1
+#  -
+#    type: var
+#    var_name: L:START_GLOW_TIMER:1
+  -
+    type: var
+    var_name: L:GLOW_ON:1
+#  -
+#    type: var
+#    var_name: L:WC_TEMP_WATER_SENS:1
+#  -
+#    type: var
+#    var_name: L:START_GLOW_TEMP:1
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_MAIN_VOLT
+#  -
+#    type: var
+#    var_name: L:WC_TEMP_BLOCK:1
+#  -
+#    type: var
+#    var_name: L:START_CYL1:1
+#  -
+#    type: var
+#    var_name: L:START_CYL2:1
+#  -
+#    type: var
+#    var_name: L:START_CYL3:1
+#  -
+#    type: var
+#    var_name: L:START_CYL4:1
+#  -
+#    type: var
+#    var_name: L:FUEL_FEED_QUANTITY:1
+#  -
+#    type: var
+#    var_name: L:FUEL_PRIME:1
+#  -
+#    type: var
+#    var_name: L:FUEL_PRIME_PRIMED:1
+#  -
+#    type: var
+#    var_name: L:HEALTH_FUEL:11
+#  -
+#    type: var
+#    var_name: L:HEALTH_FUEL:12
+#  -
+#    type: var
+#    var_name: L:OIL_PRIME:1
+#  -
+#    type: var
+#    var_name: L:OP_OIL_PRESS_T:1
+#  -
+#    type: var
+#    var_name: L:WC_TEMP_OIL:1
+#  -
+#    type: var
+#    var_name: L:OP_TEMP_FACTOR:1
+#  -
+#    type: var
+#    var_name: L:OC_OIL_LEAK:1
+#  -
+#    type: var
+#    var_name: L:HEALTH_OIL:1
+#  -
+#    type: var
+#    var_name: L:OP_OIL_PRESS_IN:1
+#  -
+#    type: var
+#    var_name: L:RAND_OP:1
+#  -
+#    type: var
+#    var_name: L:OP_SENS
+#  -
+#    type: var
+#    var_name: L:PROP_OIL_TARGET_RPM
+#  -
+#    type: var
+#    var_name: L:PROP_OIL_OIL_PRIME
+#  -
+#    type: var
+#    var_name: L:PROP_OIL_BETA
+#  -
+#    type: var
+#    var_name: L:PROP_TIP_AOA:1
+#  -
+#    type: var
+#    var_name: L:FADEC_MASTER_TIMER:1
+#  -
+#    type: var
+#    var_name: L:FADEC_START_ECU_B:1
+#  -
+#    type: var
+#    var_name: L:FADEC_START_ECU_A:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_FAIL_B:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_FAIL_A:1
+#  -
+#    type: var
+#    var_name: L:FADEC_REQUEST_A:1
+#  -
+#    type: var
+#    var_name: L:FADEC_REQUEST_B:1
+#  -
+#    type: var
+#    var_name: L:WC_TEMP_GC_SENS:1
+#  -
+#    type: var
+#    var_name: L:PROP_RPM_SENS:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_FAIL_A:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_FAIL_B:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_STEP:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECUTEST_TIMER:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_FAIL_LATCH_A:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_FAIL_LATCH_B:1
+  -
+    type: var
+    var_name: L:FAILURES_CRANK_SENSOR_A:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_INTEG_A:1
+  -
+    type: var
+    var_name: L:FAILURES_CRANK_SENSOR_B:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_INTEG_B:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_SWAP:1
+#  -
+#    type: var
+#    var_name: L:TURBO_OVERBOOST:1
+#  -
+#    type: var
+#    var_name: L:TIME_PASSED_ECU
+#  -
+#    type: var
+#    var_name: L:TURBO_BOOST_SPEED_EVAL_T:1
+#  -
+#    type: var
+#    var_name: L:TURBO_BOOST_SPEED_EVAL_LO:1
+#  -
+#    type: var
+#    var_name: L:TURBO_BOOST_SPEED_EVAL_HI:1
+#  -
+#    type: var
+#    var_name: L:TURBO_BOOST_EVAL_LO:1
+#  -
+#    type: var
+#    var_name: L:TURBO_BOOST_EVAL_HI:1
+#  -
+#    type: var
+#    var_name: L:TURBO_UNDERBOOST:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_FUEL_CUTS_A:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_FUEL_CUTS_B:1
+#  -
+#    type: var
+#    var_name: L:FUEL_PRESS_SENS:1
+#  -
+#    type: var
+#    var_name: L:FADEC_RPM_MISMATCH:1
+#  -
+#    type: var
+#    var_name: L:FADEC_LOAD_OUTPUT:1
+#  -
+#    type: var
+#    var_name: L:FADEC_RPM_MISMATCH_A:1
+#  -
+#    type: var
+#    var_name: L:FADEC_RPM_MISMATCH_B:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_FAIL_TIME_A:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_FAIL_TIME_B:1
+#  -
+#    type: var
+#    var_name: L:FADEC_ECU_FAIL_CRITERIA:1
+  -
+    type: var
+    var_name: L:FAILURES_OIL_P_SENSOR:1
+  -
+    type: var
+    var_name: L:FAILURES_OIL_TEMP_SENSOR:1
+#  -
+#    type: var
+#    var_name: L:WC_COOLANT_LVL:1
+#  -
+#    type: var
+#    var_name: L:WC_OIL_LVL:1
+#  -
+#    type: var
+#    var_name: L:WC_RADIATOR_EFF
+#  -
+#    type: var
+#    var_name: L:WC_PROP_BETA:1
+#  -
+#    type: var
+#    var_name: L:WC_PROP_RAD_KNOTS:1
+#  -
+#    type: var
+#    var_name: L:WC_PROP_AX_KNOTS:1
+#  -
+#    type: var
+#    var_name: L:WC_PROP_AX_KNOTS_DIFF:1
+#  -
+#    type: var
+#    var_name: L:WC_AIRFLOW_INDUCED:1
+#  -
+#    type: var
+#    var_name: L:WC_AIRFLOW_WIND
+#  -
+#    type: var
+#    var_name: L:WC_AIRFLOW:1
+#  -
+#    type: var
+#    var_name: L:WC_WATER_PUMP_SPEED:1
+#  -
+#    type: var
+#    var_name: L:WC_OIL_PUMP_SPEED:1
+#  -
+#    type: var
+#    var_name: L:WC_FRICTION:1
+#  -
+#    type: var
+#    var_name: L:WC_HEAT_FRICTION_BLOCK:1
+#  -
+#    type: var
+#    var_name: L:WC_HEAT_FRICTION_OIL:1
+#  -
+#    type: var
+#    var_name: L:WC_HEAT_FUEL_BLOCK:1
+#  -
+#    type: var
+#    var_name: L:WC_HEAT_FUEL_OIL:1
+#  -
+#    type: var
+#    var_name: L:WC_TEMP_WATER:1
+#  -
+#    type: var
+#    var_name: L:WC_HEAT_BLOCK-WATER:1
+#  -
+#    type: var
+#    var_name: L:WC_HEAT_BLOCK-OIL:1
+#  -
+#    type: var
+#    var_name: L:WC_HEAT_WATER-OIL:1
+#  -
+#    type: var
+#    var_name: L:WC_THERMOSTAT_T:1
+#  -
+#    type: var
+#    var_name: L:WC_HEAT_PASS:1
+#  -
+#    type: var
+#    var_name: L:WC_ENERGY_BLOCK:1
+#  -
+#    type: var
+#    var_name: L:GC_BLOCK_HEATING:1
+#  -
+#    type: var
+#    var_name: L:WC_WATER_FLOW:1
+#  -
+#    type: var
+#    var_name: L:WC_WATER_FLOW_ENERGY_OUT:1
+#  -
+#    type: var
+#    var_name: L:WC_TEMP_RAD:1
+#  -
+#    type: var
+#    var_name: L:WC_WATER_FLOW_ENERGY_IN:1
+#  -
+#    type: var
+#    var_name: L:WC_ENERGY_WATER:1
+#  -
+#    type: var
+#    var_name: L:WC_RAD_TEMP_DIFF:1
+#  -
+#    type: var
+#    var_name: L:WC_RAD_COOLING:1
+#  -
+#    type: var
+#    var_name: L:WC_ENERGY_RAD:1
+#  -
+#    type: var
+#    var_name: L:WC_ENERGY_OIL:1
+#  -
+#    type: var
+#    var_name: L:WC_HEAT_FRICTION:1
+#  -
+#    type: var
+#    var_name: L:GC_POWER_OUTPUT:1
+#  -
+#    type: var
+#    var_name: L:GC_FRICTION:1
+#  -
+#    type: var
+#    var_name: L:GC_GEARBOX_TEMPERATURE:1
+#  -
+#    type: var
+#    var_name: L:GC_BLOCK_TEMP_DIFF:1
+#  -
+#    type: var
+#    var_name: L:GC_HEATING:1
+#  -
+#    type: var
+#    var_name: L:GC_TEMP_DIFF:1
+#  -
+#    type: var
+#    var_name: L:GC_COOLING:1
+#  -
+#    type: var
+#    var_name: L:GC_TEMP_INC:1
+#  -
+#    type: var
+#    var_name: L:FADEC_HI_START_TIMER:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_RPM:1
+#  -
+#    type: var
+#    var_name: L:PROP_RPM_SENS_SMOOTH:1
+#  -
+#    type: var
+#    var_name: L:DISP_PROP_RPM
+#  -
+#    type: var
+#    var_name: L:TC_FRICTION:1
+#  -
+#    type: var
+#    var_name: L:TC_CYL_TORQUE:1
+#  -
+#    type: var
+#    var_name: L:TC_POWER_OUTPUT:1
+#  -
+#    type: var
+#    var_name: L:DISP_LD
+#  -
+#    type: var
+#    var_name: L:DISP_FF
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_K:2
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_K:1
+#  -
+#    type: var
+#    var_name: L:XFER_RATE
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_XFER
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_C:1
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_C:2
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_ENG_K:1
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_TANK_ENERGY:1
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_TANK_ENERGY:2
+#  -
+#    type: var
+#    var_name: L:ABS_AMBIENT_TEMPERATURE
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_TANK_COOL_FAC
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_COOLER_COOL_FAC:1
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_ENG_FLOW:1
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_ENG_EXIT_K:1
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_COOLER_EXIT_K:1
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_COOLER_TANK_ENERGY
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_TANK_COOLING:1
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_TANK_COOLING:2
+#  -
+#    type: var
+#    var_name: L:FUEL_QUANT:1
+#  -
+#    type: var
+#    var_name: L:FUEL_QUANT:2
+#  -
+#    type: var
+#    var_name: L:FUEL_QUANT_PROBE:1
+#  -
+#    type: var
+#    var_name: L:FUEL_QUANT_PROBE:2
+#  -
+#    type: var
+#    var_name: L:FUEL_TOTALISER_test
+#  -
+#    type: var
+#    var_name: L:R
+#  -
+#    type: var
+#    var_name: L:FF_FIX_LEFT
+#  -
+#    type: var
+#    var_name: L:FF_FIX_RIGHT
+#  -
+#    type: var
+#    var_name: L:FUEL_TOTALISER_HR
+#  -
+#    type: var
+#    var_name: L:FUEL_TOTALISER_MIN
+#  -
+#    type: var
+#    var_name: L:FUEL_TOTALISER_RANGE
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_CAPACITY
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_PERCENT
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_VOLT_CHRG
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_TEMP_RES
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_RES
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_AMPS
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_VOLT
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_VOLT_OUT
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_POWER
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_HOT_POWER
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_VOLT_OUT
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_TEMP_HEAT
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_VOLT_DROP
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_TEMP
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_TEMP_COOL
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_VOLT_REC
+  -
+    type: var
+    var_name: L:CB_BAT
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_SURF
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_CHARGE_FAC
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_CAPACITY
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_PERCENT
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_VOLT_CHRG
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_RES
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_AMPS
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_VOLT
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_VOLT_OUT
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_POWER
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_CHARGE_FAC
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_EMER_CAPACITY
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_EMER_VOLT
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_EMER_POWER
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STARTER:1
+#  -
+#    type: var
+#    var_name: L:STARTER_POWER:1
+#  -
+#    type: var
+#    var_name: L:STARTER_AMPS:1
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ESS_POWER
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_VOLT_DROP_T
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_VOLT_DROP_INST
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_VOLT_DROP_T
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_VOLT_DROP
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_VOLT_COIL
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_AMPS_MAX
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_AMPS
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_VOLT_DROP
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_AMPS_REF
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_VOLT_TARGET_T
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_VOLT_TARGET
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_VOLT_REG
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_VOLT_OUT_T
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_VOLT_OUT_INST
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT1_VOLT_COIL
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT1_VOLT_OUT
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT1_POWER
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT1_VOLT_TARGET
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_BATT_VOLT
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ECU1_VOLT
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ECU2_VOLT
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ECU1_POWER
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ECU1_AMPS
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ECU2_POWER
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ECU2_AMPS
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ECU1-ECU2_AMPS
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_ECU_VOLT_DROP_PRE
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_BATT-ECU1_AMPS
+  -
+    type: var
+    var_name: L:CB_PWR
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_MAIN_POWER
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_MAIN_AMPS
+  -
+    type: var
+    var_name: L:CB_ESS
+  -
+    type: var
+    var_name: L:CB_MAN
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ESS_VOLT
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ESS_AMPS
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_BATT_AMPS
+#  -
+#    type: var
+#    var_name: L:ELEC_BATT_VOLT_DROP_PRE
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_HOT_VOLT
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_POWER
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_DRAG_HP:1
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_DRAG_TORQUE:1
+#  -
+#    type: var
+#    var_name: L:SOUND_FUEL_PUMP_PITCH:1
+#  -
+#    type: var
+#    var_name: L:SOUND_FUEL_PUMP_PITCH:2
+#  -
+#    type: var
+#    var_name: L:SOUND_FUEL_PUMP_PITCH:3
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT:20
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT:30
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT_T:21
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT:21
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT_T:22
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT:22
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT_T:23
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT:23
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT_T:24
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT:24
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT_T:25
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT:25
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_EMER_VOLT
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT:26
+#  -
+#    type: var
+#    var_name: L:LIGHT_POT:27
+#  -
+#    type: var
+#    var_name: L:FIX_FS24_LIGHTS
+#  -
+#    type: var
+#    var_name: L:LIGHT_DIMMER
+#  -
+#    type: var
+#    var_name: L:SOUND_ELEC_RELAY
+  -
+    type: var
+    var_name: L:EMERGENCY_BATT
+  -
+    type: var
+    var_name: L:CB_PIT
+#  -
+#    type: var
+#    var_name: L:PITOT_OVERHEATED
+#  -
+#    type: var
+#    var_name: L:PITOT_ON
+#  -
+#    type: var
+#    var_name: L:FLAP_MOVE
+#  -
+#    type: var
+#    var_name: L:FLAP_SPEED
+#  -
+#    type: var
+#    var_name: L:FLAP_POWER
+  -
+    type: var
+    var_name: L:CB_HOR
+  -
+    type: var
+    var_name: L:CB_FLD
+  -
+    type: var
+    var_name: L:CB_ADC
+  -
+    type: var
+    var_name: L:CB_AHR
+  -
+    type: var
+    var_name: L:CB_PFD
+#  -
+#    type: var
+#    var_name: L:PITOT_TEMP
+  -
+    type: var
+    var_name: L:CB_FLP
+  -
+    type: var
+    var_name: L:CB_CM1
+  -
+    type: var
+    var_name: L:CB_GP1
+  -
+    type: var
+    var_name: L:CB_XPR
+  -
+    type: var
+    var_name: L:CB_LDL
+  -
+    type: var
+    var_name: L:CB_MTC
+  -
+    type: var
+    var_name: L:CB_ENG
+  -
+    type: var
+    var_name: L:CB_STR
+  -
+    type: var
+    var_name: L:CB_MFD
+  -
+    type: var
+    var_name: L:CB_AVF
+  -
+    type: var
+    var_name: L:CB_XFR
+  -
+    type: var
+    var_name: L:CB_INT
+  -
+    type: var
+    var_name: L:CB_STB
+  -
+    type: var
+    var_name: L:CB_POS
+  -
+    type: var
+    var_name: L:CB_TXM
+  -
+    type: var
+    var_name: L:CB_AUD
+  -
+    type: var
+    var_name: L:CB_AVN
+  -
+    type: var
+    var_name: L:CB_CM2
+  -
+    type: var
+    var_name: L:CB_GP2
+  -
+    type: var
+    var_name: L:CB_TAS
+  -
+    type: var
+    var_name: L:CB_AFC
+  -
+    type: var
+    var_name: L:CB_ECA
+  -
+    type: var
+    var_name: L:CB_ECB
+  -
+    type: var
+    var_name: L:CB_FPA
+  -
+    type: var
+    var_name: L:CB_FPB
+#  -
+#    type: var
+#    var_name: L:WC_TEMP_OIL_SENS:1
+#  -
+#    type: var
+#    var_name: L:DISP_OP
+#  -
+#    type: var
+#    var_name: L:DISP_OT
+#  -
+#    type: var
+#    var_name: L:DISP_WT
+#  -
+#    type: var
+#    var_name: L:DISP_GT
+#  -
+#    type: var
+#    var_name: L:DISP_AMPS
+#  -
+#    type: var
+#    var_name: L:DISP_VOLTS
+#  -
+#    type: var
+#    var_name: L:DISP_FUEL:1
+#  -
+#    type: var
+#    var_name: L:DISP_FUEL:2
+#  -
+#    type: var
+#    var_name: L:DISP_FT:1
+#  -
+#    type: var
+#    var_name: L:DISP_FT:2
+#  -
+#    type: var
+#    var_name: L:TAWS_TEST
+#  -
+#    type: var
+#    var_name: L:TAWS_AVAILABLE
+#  -
+#    type: var
+#    var_name: L:TAWS_TEST_TIMER
+#  -
+#    type: var
+#    var_name: L:AFCS_AIL_ROL_TRANS_FIX
+#  -
+#    type: var
+#    var_name: L:AFCS_AIL_FLT_DIR_BANK_VAR
+#  -
+#    type: var
+#    var_name: L:AFCS_MAX_BANK
+#  -
+#    type: var
+#    var_name: L:AFCS_TEST
+#  -
+#    type: var
+#    var_name: L:AFCS_FAILED
+#  -
+#    type: var
+#    var_name: L:AFCS_TEST_TIMER
+#  -
+#    type: var
+#    var_name: L:AFCS_PFT_TIMER
+#  -
+#    type: var
+#    var_name: L:CAS_TIMER
+#  -
+#    type: var
+#    var_name: L:CAS_AVAIL
+#  -
+#    type: var
+#    var_name: L:COWS_TIMER_EXP
+#  -
+#    type: var
+#    var_name: L:SOUND_TIMER_EXP
+#  -
+#    type: var
+#    var_name: L:TAWS_EDR_ALT_MAX
+#  -
+#    type: var
+#    var_name: L:TAWS_EDR_ALT_MIN
+#  -
+#    type: var
+#    var_name: L:TAWS_EDR_SINK_ALERT
+#  -
+#    type: var
+#    var_name: L:TAWS_EDR_PULLUP_ALERT
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_LAT
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_LONG
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_HEAD_LOWER
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_HEAD_UPPER
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_ARMED
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_HEAD_IN_RNG
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_LAT_DIST
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_LONG_DIST
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_DIST
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_ALT_MAX_REACHED
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_ALT_LOST
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_ALT_MAX
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_DONTSINK_ALERT_LOSS
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_DONTSINK_ALERT_SINK
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_ALT_MAX_LOSS
+#  -
+#    type: var
+#    var_name: L:TAWS_NCR_ALT_MAX_SINK
+#  -
+#    type: var
+#    var_name: L:AFCS_FORCE_AIL
+#  -
+#    type: var
+#    var_name: L:AFCS_FORCE_ELE
+#  -
+#    type: var
+#    var_name: L:AUTOPILOT_TRIM_UP
+#  -
+#    type: var
+#    var_name: L:AUTOPILOT_TRIM_DN
+#  -
+#    type: var
+#    var_name: L:LOC_BC_HDG_LOWER
+#  -
+#    type: var
+#    var_name: L:LOC_BC_HDG_UPPER
+#  -
+#    type: var
+#    var_name: L:LOC_BC_HEADING
+#  -
+#    type: var
+#    var_name: L:WT_MINIMUMS_MODE
+#  -
+#    type: var
+#    var_name: L:COWS_MINIMUMS_ALTITUDE
+#  -
+#    type: var
+#    var_name: L:SOUND_MINIS_ARMED
+#  -
+#    type: var
+#    var_name: L:SOUND_MINIS
+#  -
+#    type: var
+#    var_name: L:FIX_G1000V2
+#  -
+#    type: var
+#    var_name: L:DISP_MODE_SOLAR_DEC
+#  -
+#    type: var
+#    var_name: L:DISP_MODE_SOLAR_TIME
+#  -
+#    type: var
+#    var_name: L:DISP_MODE_SOLAR_AZI
+#  -
+#    type: var
+#    var_name: L:DISP_MODE_SOLAR_ELE
+#  -
+#    type: var
+#    var_name: L:DISP_MODE_FIX_BRIGHTNESS
+#  -
+#    type: var
+#    var_name: L:COWS_PFD_DISP_MODE
+#  -
+#    type: var
+#    var_name: L:AS1000_PFD_Brightness
+#  -
+#    type: var
+#    var_name: L:COWS_MFD_DISP_MODE
+#  -
+#    type: var
+#    var_name: L:AS1000_MFD_Brightness
+#  -
+#    type: var
+#    var_name: L:AS1000_PFD_SCREENLUMINOSITY
+#  -
+#    type: var
+#    var_name: L:AS1000_MFD_SCREENLUMINOSITY
+#  -
+#    type: var
+#    var_name: L:BRAKE_FADE_GRIP
+#  -
+#    type: var
+#    var_name: L:BRAKE_WEIGHT:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_WEIGHT:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_DRAG
+#  -
+#    type: var
+#    var_name: L:BRAKE_ENERGY:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_ENERGY:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_TEMP:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_TEMP_DIFF:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_TEMP:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_TEMP_DIFF:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_COOLING:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_COOLING:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_FADE:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_FADE_STICK:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_FADE:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_FADE_STICK:2
+#  -
+#    type: var
+#    var_name: L:FILTER_ICE_RATE
+#  -
+#    type: var
+#    var_name: L:FILTER_ICE_PREV
+#  -
+#    type: var
+#    var_name: L:PITOT_HEATING
+#  -
+#    type: var
+#    var_name: L:PITOT_COOLING_FAC
+#  -
+#    type: var
+#    var_name: L:PITOT_COOLING
+#  -
+#    type: var
+#    var_name: L:FIRE_TIMER:1
+#  -
+#    type: var
+#    var_name: L:FUCK
+#  -
+#    type: var
+#    var_name: L:FUCK_SHIT
+#  -
+#    type: var
+#    var_name: L:DOORS_NUMBER_SET
+#  -
+#    type: var
+#    var_name: L:GLIDE
+#  -
+#    type: var
+#    var_name: L:AS1000_PFD_STATE
+#  -
+#    type: var
+#    var_name: L:WIGGLE_POWER
+#  -
+#    type: var
+#    var_name: L:WIGGLE_ANGLE_Z
+#  -
+#    type: var
+#    var_name: L:WIGGLE_ANGLE_X
+#  -
+#    type: var
+#    var_name: L:WIGGLE_Z
+#  -
+#    type: var
+#    var_name: L:WIGGLE_X
+#  -
+#    type: var
+#    var_name: L:BREAKAWAY_SPEED
+#  -
+#    type: var
+#    var_name: L:BREAKAWAY_ANGLE_BOOST
+#  -
+#    type: var
+#    var_name: L:BREAKAWAY_BRAKE
+#  -
+#    type: var
+#    var_name: L:WHEEL_SPEED_DIFF:1
+#  -
+#    type: var
+#    var_name: L:PANEL_SPEED_VERT
+#  -
+#    type: var
+#    var_name: L:WHEEL_RPM:1
+#  -
+#    type: var
+#    var_name: L:WHEEL_SPEED:1
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_SPEED
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_TILT
+  - # Spins until cage
+    type: var
+    var_name: L:ATT_GYRO_TOPPLE
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_HEADING
+#  -
+#    type: var
+#    var_name: L:STALL_WIGGLE_POWER
+#  -
+#    type: var
+#    var_name: L:STALL_WIGGLE_DIRECTION
+#  -
+#    type: var
+#    var_name: L:STALL_WIGGLE_DEG
+#  -
+#    type: var
+#    var_name: L:PANEL_ADD_STALL_VERT
+#  -
+#    type: var
+#    var_name: L:START_WIGGLE:1
+#  -
+#    type: var
+#    var_name: L:SHUTDOWN_WIGGLE:1
+#  -
+#    type: var
+#    var_name: L:DO_THE_WIGGLE
+#  -
+#    type: var
+#    var_name: L:WIGGLE_WIGGLE
+#  -
+#    type: var
+#    var_name: L:ROUGH_WIGGLE_MAP:1
+#  -
+#    type: var
+#    var_name: L:ROUGH_WIGGLE_FUEL:1
+#  -
+#    type: var
+#    var_name: L:ROUGH_WIGGLE_BLOCK:1
+#  -
+#    type: var
+#    var_name: L:ROUGH_WIGGLE_DIRECTION
+#  -
+#    type: var
+#    var_name: L:ROUGH_WIGGLE_WIGGLE:1
+#  -
+#    type: var
+#    var_name: L:ROUGH_WIGGLE_WIGGLE:2
+#  -
+#    type: var
+#    var_name: L:ROUGH_WIGGLE_WIGGLE
+#  -
+#    type: var
+#    var_name: L:SOUND_LAND_PRE
+#  -
+#    type: var
+#    var_name: L:SOUND_LAND_RATE
+#  -
+#    type: var
+#    var_name: L:SOUND_LAND_FILT
+#  -
+#    type: var
+#    var_name: L:SOUND_LAND_LAST
+#  -
+#    type: var
+#    var_name: L:PROP_60FPS:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_720_60FPS:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_OVERSTRESS:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_BLOCK_TIMER:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_TURBO_TIMER:1
+#  -
+#    type: var
+#    var_name: L:PISTON_WARMUP:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_DUST:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_TURBO_HEAT:1
+  -
+    type: var
+    var_name: L:DAMAGE_DISABLED
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:START_HOT
+#  -
+#    type: var
+#    var_name: L:PRESSURE_ALT_INDI
+#  -
+#    type: var
+#    var_name: L:FLAP_PCT
+#  -
+#    type: var
+#    var_name: L:STATE_BATT_ECU1
+#  -
+#    type: var
+#    var_name: L:STATE_BATT_CHARGE_DIS
+#  -
+#    type: var
+#    var_name: L:STATE_EMER_BATT_COVER
+  -
+    type: var
+    var_name: L:EMERGENCY_BATT_COVER
+#  -
+#    type: var
+#    var_name: L:STATE_EMER_BATT
+  -
+    type: var
+    var_name: L:STATE_LOADED
+  -
+    type: var
+    var_name: L:STATE_LOADED_NOT
+  -
+    type: var
+    var_name: L:RESET_DAMAGE
+#  -
+#    type: var
+#    var_name: L:STATE_LIGHT_ICE
+  -
+    type: var
+    var_name: L:FAILURES_RNG
+#  -
+#    type: var
+#    var_name: L:FAILURES_RESET_TIMER
+  -
+    type: var
+    var_name: L:RESET_BATT
+  -
+    type: var
+    var_name: L:RESET_FAILURES
+  -
+    type: var
+    var_name: L:RESET_ALL
+  -
+    type: var
+    var_name: L:RESET_ECU
+  -
+    type: var
+    var_name: L:RESET_WIRE
+  -
+    type: var
+    var_name: L:FAILURES_BLOCK:1
+  -
+    type: var
+    var_name: L:FAILURES_TURBO:1
+  -
+    type: var
+    var_name: L:FAILURES_OIL:1
+  -
+    type: var
+    var_name: L:FAILURES_FUEL:1
+  -
+    type: var
+    var_name: L:FAILURES_FUEL:11
+  -
+    type: var
+    var_name: L:FAILURES_FUEL:12
+#  -
+#    type: var
+#    var_name: L:BRAKE_STICK:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_STICK:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_SLOW_FIX
+#  -
+#    type: var
+#    var_name: L:WHEEL_RPM:2
+#  -
+#    type: var
+#    var_name: L:WHEEL_SPEED:2
+#  -
+#    type: var
+#    var_name: L:WHEEL_RPM:3
+#  -
+#    type: var
+#    var_name: L:WHEEL_SPEED:3
+#  -
+#    type: var
+#    var_name: L:WHEEL_SPEED_DIFF:2
+#  -
+#    type: var
+#    var_name: L:WHEEL_SPEED_DIFF:3
+#  -
+#    type: var
+#    var_name: L:BRAKE_CONTACT_FRIC:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_CONTACT_FRIC:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_TOTAL:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_TOTAL:2
+#  -
+#    type: var
+#    var_name: L:BRAKE_SET:1
+#  -
+#    type: var
+#    var_name: L:BRAKE_SET:2
+#  -
+#    type: var
+#    var_name: L:XBOX_INPUT
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INJ_CYL1:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INJ_CYL2:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INJ_CYL3:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INJ_CYL4:2
+#  -
+#    type: var
+#    var_name: L:WHEEL_POS:1
+#  -
+#    type: var
+#    var_name: L:WHEEL_POS:10
+#  -
+#    type: var
+#    var_name: L:WHEEL_POS:2
+#  -
+#    type: var
+#    var_name: L:FLAP_PCT_T
+#  -
+#    type: var
+#    var_name: L:FLAP_RES
+#  -
+#    type: var
+#    var_name: L:WFLEX_TOTAL_ANI:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_MASS:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_MASS:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_WEIGHT:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_WEIGHT:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_LIFT
+#  -
+#    type: var
+#    var_name: L:WFLEX_TWIST:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_TWIST:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_AILERON
+#  -
+#    type: var
+#    var_name: L:WFLEX_SPRING_FORCE:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_WIGGLE:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_TOTAL_FORCE:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_SPRING_FORCE:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_WIGGLE:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_TOTAL_FORCE:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_ACCEL:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_ACCEL:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_SPEED:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_SPEED:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_DISPLACEMENT:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_DISPLACEMENT:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_TOTAL:1
+#  -
+#    type: var
+#    var_name: L:WFLEX_TOTAL:2
+#  -
+#    type: var
+#    var_name: L:WFLEX_TOTAL_ANI:1
+#  -
+#    type: var
+#    var_name: L:WHEEL_POS:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRVOL_CYL1:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRVOL_CYL2:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRVOL_CYL3:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRVOL_CYL4:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INJ_CYL1:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INJ_CYL2:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INJ_CYL3:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INJ_CYL4:1
+#  -
+#    type: var
+#    var_name: L:GENERAL ENG PCT MAX RPM:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_WIND:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_CYL1:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_CYL3:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_CYL4:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_CYL2:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STROKE_CYL1:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_CRANK_CYL1:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_COMPRESSION_CYL1:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STROKE_CYL2:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_CRANK_CYL2:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_COMPRESSION_CYL2:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STROKE_CYL3:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_COMPRESSION_CYL3:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_CRANK_CYL3:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STROKE_CYL4:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_COMPRESSION_CYL4:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_CRANK_CYL4:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_START_PWR:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PRESS_CYL1:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PRESS_CYL2:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PRESS_CYL3:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PRESS_CYL4:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_CYL1:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_CYL2:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_CYL3:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_CYL4:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_TOTAL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INPUT_T:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INPUT:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FRICTION:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FRICTION_FAC:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_REACTION:1
+#  -
+#    type: var
+#    var_name: L:XMLVAR_VNAVButtonValue
+  -
+    type: var
+    var_name: L:ECU_TEST:1_IsDown
+#  -
+#    type: var
+#    var_name: L:ECU_TEST:1_MinReleaseTime
+  -
+    type: var
+    var_name: L:ATT_CAGE_IsDown
+#  -
+#    type: var
+#    var_name: L:ATT_CAGE_MinReleaseTime
+#  -
+#    type: var
+#    var_name: L:INPUT_AP_DISC_MinReleaseTime
+#  -
+#    type: var
+#    var_name: L:XMLVAR_ElevatorTrim_Switch_1
+#  -
+#    type: var
+#    var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:G1000_REV_FORCE
+  -
+    type: var
+    var_name: L:FUEL_WIRE_IsDown
+#  -
+#    type: var
+#    var_name: L:FUEL_WIRE_MinReleaseTime
+  -
+    type: var
+    var_name: L:FLOOD_TOGGLE
+#  -
+#    type: var
+#    var_name: L:HEADSET
+#  -
+#    type: var
+#    var_name: L:XMLVAR_IE_Throttle_VR_Handled
+#  -
+#    type: var
+#    var_name: L:XMLVAR_IE_Throttle_VR_Value
+#  -
+#    type: var
+#    var_name: L:DEICE_Pitot_1
+#  -
+#    type: var
+#    var_name: L:AS1000_PFD_SelectedNavIndex
+#  -
+#    type: var
+#    var_name: L:AS1000_PFD_SelectedComIndex
+#  -
+#    type: var
+#    var_name: L:PFD_InnerMap_MapZoomRange
+#  -
+#    type: var
+#    var_name: L:PFD_InnerMap_MapShowCursor
+#  -
+#    type: var
+#    var_name: L:AS1000_MID_Display_Backup_Active
+#  -
+#    type: var
+#    var_name: L:AS1000_MFD_SelectedNavIndex
+#  -
+#    type: var
+#    var_name: L:AS1000_MFD_SelectedComIndex
+#  -
+#    type: var
+#    var_name: L:MFD_InnerMap_MapZoomRange
+#  -
+#    type: var
+#    var_name: L:MFD_InnerMap_MapShowCursor
+#  -
+#    type: var
+#    var_name: L:LIGHTING_PANEL_1
+#  -
+#    type: var
+#    var_name: L:LIGHTING_GLARESHIELD_1
+#  -
+#    type: var
+#    var_name: L:LIGHTING_STROBE_1
+#  -
+#    type: var
+#    var_name: L:LIGHTING_NAV_1
+#  -
+#    type: var
+#    var_name: L:LIGHTING_TAXI_1
+#  -
+#    type: var
+#    var_name: L:LIGHTING_LANDING_1
+#  -
+#    type: var
+#    var_name: L:LIGHTING_CABIN_1
+#  -
+#    type: var
+#    var_name: L:LIGHTING_CABIN_2
+#  -
+#    type: var
+#    var_name: L:LIGHTING_CABIN_3
+#  -
+#    type: var
+#    var_name: L:XMLVAR_ELT_TEST_TIME
+#  -
+#    type: var
+#    var_name: L:XMLVAR_ELT_STATE
+#  -
+#    type: var
+#    var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+#  -
+#    type: var
+#    var_name: L:G1000_REV_TIMER
+#  -
+#    type: var
+#    var_name: L:AS1000_PFD_Brightness_IsAuto
+#  -
+#    type: var
+#    var_name: L:AS1000_MFD_Brightness_IsAuto
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_2_Status
+#  -
+#    type: var
+#    var_name: L:FUEL_WIRE
+#  -
+#    type: var
+#    var_name: L:PRESSURE_ALT_INDI_ERR
+#  -
+#    type: var
+#    var_name: L:PRESSURE_ALT_INDI_SPD
+#  -
+#    type: var
+#    var_name: L:PANEL_ANI_HORI
+#  -
+#    type: var
+#    var_name: L:PANEL_FORCE_VERT
+#  -
+#    type: var
+#    var_name: L:PANEL_FORCE_HORI
+#  -
+#    type: var
+#    var_name: L:PANEL_ADD_VERT:1
+#  -
+#    type: var
+#    var_name: L:PANEL_ADD_VERT:2
+#  -
+#    type: var
+#    var_name: L:PANEL_ADD_VERT:3
+#  -
+#    type: var
+#    var_name: L:PANEL_ADD_VERT:4
+#  -
+#    type: var
+#    var_name: L:PANEL_ADD_HORI:1
+#  -
+#    type: var
+#    var_name: L:PANEL_ADD_HORI:2
+#  -
+#    type: var
+#    var_name: L:PANEL_ADD_HORI:3
+#  -
+#    type: var
+#    var_name: L:PANEL_ADD_HORI:4
+#  -
+#    type: var
+#    var_name: L:PANEL_SPRING_VERT
+#  -
+#    type: var
+#    var_name: L:PANEL_POS_VERT
+#  -
+#    type: var
+#    var_name: L:PANEL_SPEED_HORI
+#  -
+#    type: var
+#    var_name: L:PANEL_SPRING_HORI
+#  -
+#    type: var
+#    var_name: L:PANEL_POS_HORI
+#  -
+#    type: var
+#    var_name: L:PANEL_ANI_VERT
+#  -
+#    type: var
+#    var_name: L:IAS_NEEDLE
+#  -
+#    type: var
+#    var_name: L:IAS_NEEDLE_INDI_ERR
+#  -
+#    type: var
+#    var_name: L:IAS_NEEDLE_INDI_SPD
+#  -
+#    type: var
+#    var_name: L:ELEVATOR_STICK
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_START_HEADING
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_START_TILT_MAX
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_START_TILT
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_PITCH_START_OFFSET
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_BANK_START_OFFSET
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_RIGID
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_BANK_FALL
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_PITCH_FALL
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_BANK_ADD_T
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_PITCH_ADD_T
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_BANK_DIFF
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_BANK_ADD_OFF
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_PITCH_DIFF
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_PITCH_ADD_OFF
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_PITCH
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_BANK
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_HEADING_PLANE
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_Y
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_X
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_HEADING_OFFSET
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_HEADING_TRUE
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_XY
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_TILT
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_HEADING_OFFSET
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_CAGE_SET
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_TOPPLE_SPEED
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_HEADING
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_TILT
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_PITCH_ADD
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_BANK_ADD
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_PITCH
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_BANK
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_Y
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_X
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_REL_XY
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_BANK_OFFSET
+#  -
+#    type: var
+#    var_name: L:ATT_GYRO_PITCH_OFFSET
+#  -
+#    type: var
+#    var_name: L:PITCH_INDICATOR
+#  -
+#    type: var
+#    var_name: L:ROLL_INDICATOR
+#  -
+#    type: var
+#    var_name: L:FLAP_LIGHT:1
+#  -
+#    type: var
+#    var_name: L:FLAP_LIGHT:2
+#  -
+#    type: var
+#    var_name: L:FLAP_LIGHT:3
+
+#  - # XLS
+#    type: var
+#    var_name: L:DISP_MAP
+#  -
+#    type: var
+#    var_name: L:DISP_FP
+#  -
+#    type: var
+#    var_name: L:DISP_CHT_HOT
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_HIGHLIGHT:1
+#  -
+#    type: var
+#    var_name: L:DISP_EGT:1
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_HIGHLIGHT:2
+#  -
+#    type: var
+#    var_name: L:DISP_EGT:2
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_HIGHLIGHT:3
+#  -
+#    type: var
+#    var_name: L:DISP_EGT:3
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_HIGHLIGHT:4
+#  -
+#    type: var
+#    var_name: L:DISP_EGT:4
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_ASSIST
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_HOTEST
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_DELTA_BIGGEST
+#  -
+#    type: var
+#    var_name: L:DISP_CHT:1
+#  -
+#    type: var
+#    var_name: L:DISP_CHT:2
+#  -
+#    type: var
+#    var_name: L:DISP_CHT:3
+#  -
+#    type: var
+#    var_name: L:DISP_CHT:4
+#  -
+#    type: var
+#    var_name: L:TB_FF_MIXTURE:1
+#  -
+#    type: var
+#    var_name: L:TB_FF_MIXTURE:2
+#  -
+#    type: var
+#    var_name: L:TB_FF_MIXTURE:3
+#  -
+#    type: var
+#    var_name: L:TB_FF_MIXTURE:4
+#  -
+#    type: var
+#    var_name: L:BRO_CMON_PLEASE_STOP
+  -
+    type: var
+    var_name: L:INPUT_MIXTURE
+    unreliable: true
+  -
+    type: var
+    var_name: L:INPUT_PROPELLER
+    unreliable: true
+#  -
+#    type: var
+#    var_name: L:TB_SET_MAP
+#  -
+#    type: var
+#    var_name: L:TB_SET_FIX
+#  -
+#    type: var
+#    var_name: L:OP_OIL_PRESS
+  -
+    type: var
+    var_name: L:START_MIXTURE_START
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_RPM
+  -
+    type: var
+    var_name: L:AUTOMIXTURE
+  -
+    type: var
+    var_name: L:MIXTURE_SET_BEST
+  -
+    type: var
+    var_name: L:MIXTURE_SET_AVG
+#  -
+#    type: var
+#    var_name: L:OP_PROP_TARGET_RPM
+#  -
+#    type: var
+#    var_name: L:DENSITY_CORRECTION
+#  -
+#    type: var
+#    var_name: L:TB_MASS_FLOW_KG/HR
+#  -
+#    type: var
+#    var_name: L:FILTER_PRSS_RED
+#  -
+#    type: var
+#    var_name: L:FILTER_TARGET_MAP
+#  -
+#    type: var
+#    var_name: L:TB_INT_PRSS
+#  -
+#    type: var
+#    var_name: L:THROTTLE_LEVER
+#  -
+#    type: var
+#    var_name: L:THROTTLE_LEVER_LINK
+#  -
+#    type: var
+#    var_name: L:TB_POS
+#  -
+#    type: var
+#    var_name: L:TB_RSRTIC
+#  -
+#    type: var
+#    var_name: L:TB_CALC_MAP
+#  -
+#    type: var
+#    var_name: L:TB_VOL_EFF
+#  -
+#    type: var
+#    var_name: L:WORKING_CYL
+#  -
+#    type: var
+#    var_name: L:TB_VOL_FLOW_M/HR
+#  -
+#    type: var
+#    var_name: L:INT_AIR_DENSITY
+#  -
+#    type: var
+#    var_name: L:TB_PUMP_LOSS
+#  -
+#    type: var
+#    var_name: L:INT_AIR_DENSITY_TEMP_FAC
+#  -
+#    type: var
+#    var_name: L:TB_PRSS_RED
+#  -
+#    type: var
+#    var_name: L:TB_TARGET_MAP
+#  -
+#    type: var
+#    var_name: L:TB_INT_AIR_DENSITY_TEMP_FAC
+#  -
+#    type: var
+#    var_name: L:TB_PUMP_LOSS_PWR
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_PWR_FAC
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_DRAG_MAP
+#  -
+#    type: var
+#    var_name: L:COMBUSTION:1
+#  -
+#    type: var
+#    var_name: L:COMBUSTION:2
+#  -
+#    type: var
+#    var_name: L:COMBUSTION:3
+#  -
+#    type: var
+#    var_name: L:COMBUSTION:4
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_PWR_FAC:1
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_PWR_FAC:2
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_PWR_FAC:3
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_PWR_FAC:4
+#  -
+#    type: var
+#    var_name: L:SOUND_TORQUE
+#  -
+#    type: var
+#    var_name: L:RAND_FP
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_SYSTEM_FLOW_ENG_G/S
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_SYSTEM_FLOW_G/S
+#  -
+#    type: var
+#    var_name: L:FUEL_FEED_QUANTITY
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_SYSTEM_GRAM
+#  -
+#    type: var
+#    var_name: L:TB_FUEL_FLOW_G/S
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_SYSTEM_PRIMED
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_SYSTEM_FLOW_EXCES
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_SYSTEM_FLOW_EXCES_PRESSURE
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_SYSTEM_FLOW_TO_SERVO_G/S
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_SYSTEM_SERVO_GRAM
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_BOIL_FAC
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_PRESS
+#  -
+#    type: var
+#    var_name: L:MIXTURE_VALVE
+#  -
+#    type: var
+#    var_name: L:TB_FF_FUEL_FLOW_KG/HR
+#  -
+#    type: var
+#    var_name: L:MIXTURE_VALVE_RST
+#  -
+#    type: var
+#    var_name: L:TB_FF_VENTURI_SPEED_M/S
+#  -
+#    type: var
+#    var_name: L:TB_FF_VENTURI_P_LOSS_PASC
+#  -
+#    type: var
+#    var_name: L:TB_FF_VENTURI_P_LOSS_FAC
+#  -
+#    type: var
+#    var_name: L:SPREAD_INJ_TRIM
+#  -
+#    type: var
+#    var_name: L:TB_FF_JET_THROTTLE_KG/HR
+#  -
+#    type: var
+#    var_name: L:TB_FF_JET_VENTURI_KG/HR
+#  -
+#    type: var
+#    var_name: L:TB_FF_SERVO
+#  -
+#    type: var
+#    var_name: L:TB_FF_JET_PRESS_KG/HR_T
+#  -
+#    type: var
+#    var_name: L:TB_FF_JET_PRESS_KG/HR
+#  -
+#    type: var
+#    var_name: L:AUTOMIXTURE_TARGET
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_FILLED:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_FILLED:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_FILLED:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_FILLED:4
+#  -
+#    type: var
+#    var_name: L:AUTOMIXTURE_TARGET_FF
+#  -
+#    type: var
+#    var_name: L:TB_FF_JET_PRESS_G/S
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_GRAM:S
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_FILLED:S
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_GRAM:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_GRAM:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_GRAM:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_GRAM:4
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_SPREAD
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_IN_G/S:S
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_OUT_G/S:S
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_IN_G/S:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_OUT_G/S:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_OUTSIDE_CYL_GRAM:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_IN_G/S:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_OUT_G/S:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_OUTSIDE_CYL_GRAM:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_IN_G/S:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_OUT_G/S:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_OUTSIDE_CYL_GRAM:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_IN_G/S:4
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_OUT_G/S:4
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_OUTSIDE_CYL_GRAM:4
+#  -
+#    type: var
+#    var_name: L:TB_MASS_FLOW_KG/HR:1
+#  -
+#    type: var
+#    var_name: L:TB_MASS_FLOW_KG/HR:2
+#  -
+#    type: var
+#    var_name: L:TB_MASS_FLOW_KG/HR:3
+#  -
+#    type: var
+#    var_name: L:TB_MASS_FLOW_KG/HR:4
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_EVAP:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_FLOW_KG/HR:1
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_EVAP:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_FLOW_KG/HR:2
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_EVAP:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_FLOW_KG/HR:3
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_EVAP:4
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_FLOW_KG/HR:4
+#  -
+#    type: var
+#    var_name: L:ENG_ATOMISE_CYL:1
+#  -
+#    type: var
+#    var_name: L:TB_FF_MIXTURE_RATIO:1
+#  -
+#    type: var
+#    var_name: L:ENG_ATOMISE_CYL:2
+#  -
+#    type: var
+#    var_name: L:TB_FF_MIXTURE_RATIO:2
+#  -
+#    type: var
+#    var_name: L:ENG_ATOMISE_CYL:3
+#  -
+#    type: var
+#    var_name: L:TB_FF_MIXTURE_RATIO:3
+#  -
+#    type: var
+#    var_name: L:ENG_ATOMISE_CYL:4
+#  -
+#    type: var
+#    var_name: L:TB_FF_MIXTURE_RATIO:4
+#  -
+#    type: var
+#    var_name: L:EGT_MIXTURE
+#  -
+#    type: var
+#    var_name: L:ENG_EGT
+#  -
+#    type: var
+#    var_name: L:ENG_EGT_MIX_LO
+#  -
+#    type: var
+#    var_name: L:ENG_EGT_MIX_HI
+#  -
+#    type: var
+#    var_name: L:ENG_EGT_FAC_LO
+#  -
+#    type: var
+#    var_name: L:ENG_EGT_FAC_HI
+#  -
+#    type: var
+#    var_name: L:ENG_EGT_FAC
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR:1
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR:2
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR:3
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR:4
+#  -
+#    type: var
+#    var_name: L:HEALTH_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_OIL_PWR_FAC
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_POWER_HEALTH_FAC:1
+#  -
+#    type: var
+#    var_name: L:HEALTH_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_POWER_HEALTH_FAC:2
+#  -
+#    type: var
+#    var_name: L:HEALTH_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_POWER_HEALTH_FAC:3
+#  -
+#    type: var
+#    var_name: L:HEALTH_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_POWER_HEALTH_FAC:4
+#  -
+#    type: var
+#    var_name: L:TB_FUEL_FLOW_GPH
+#  -
+#    type: var
+#    var_name: L:ENG FUEL FLOW GPH:1
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR_REQ_DENS
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR_REQ:1
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR_REQ:2
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR_REQ:3
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR_REQ:4
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR:R
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_FOUL_PWR:1R
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:1R
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_FOUL_PWR:2R
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:2R
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_FOUL_PWR:3R
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:3R
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_FOUL_PWR:4R
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:4R
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_PWR:L
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_FOUL_PWR:1L
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:1L
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_FOUL_PWR:2L
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:2L
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_FOUL_PWR:3L
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:3L
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_FOUL_PWR:4L
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:4L
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:1B
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:2B
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:3B
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_CYL:4B
+#  -
+#    type: var
+#    var_name: L:KAPUTT_CYL:1
+#  -
+#    type: var
+#    var_name: L:RUN_COMB_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_EGT:1
+#  -
+#    type: var
+#    var_name: L:KAPUTT_CYL:2
+#  -
+#    type: var
+#    var_name: L:RUN_COMB_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_EGT:2
+#  -
+#    type: var
+#    var_name: L:KAPUTT_CYL:3
+#  -
+#    type: var
+#    var_name: L:RUN_COMB_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_EGT:3
+#  -
+#    type: var
+#    var_name: L:KAPUTT_CYL:4
+#  -
+#    type: var
+#    var_name: L:RUN_COMB_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_MAG_EGT:4
+#  -
+#    type: var
+#    var_name: L:EGT_MAP_FACTOR
+#  -
+#    type: var
+#    var_name: L:EGT_RPM_FACTOR
+#  -
+#    type: var
+#    var_name: L:EGT_MAX
+#  -
+#    type: var
+#    var_name: L:EGT_DELTA
+#  -
+#    type: var
+#    var_name: L:EGT_TABLE_MIX_LO
+#  -
+#    type: var
+#    var_name: L:EGT_TABLE_MIX_HI
+#  -
+#    type: var
+#    var_name: L:EGT_TABLE_TEMP_LO
+#  -
+#    type: var
+#    var_name: L:EGT_TABLE_TEMP_HI
+#  -
+#    type: var
+#    var_name: L:EGT_TABLE_MIX_RNG
+#  -
+#    type: var
+#    var_name: L:EGT_TABLE_TEMP_RNG
+#  -
+#    type: var
+#    var_name: L:EGT_TABLE_TEMP_FAC
+#  -
+#    type: var
+#    var_name: L:CHT_TEMP_DIFF:1
+#  -
+#    type: var
+#    var_name: L:EGT_DELTA:1
+#  -
+#    type: var
+#    var_name: L:CHT_TEMP_DIFF:2
+#  -
+#    type: var
+#    var_name: L:EGT_DELTA:2
+#  -
+#    type: var
+#    var_name: L:CHT_TEMP_DIFF:3
+#  -
+#    type: var
+#    var_name: L:EGT_DELTA:3
+#  -
+#    type: var
+#    var_name: L:CHT_TEMP_DIFF:4
+#  -
+#    type: var
+#    var_name: L:EGT_DELTA:4
+#  -
+#    type: var
+#    var_name: L:TB_INT_TEMP_F
+#  -
+#    type: var
+#    var_name: L:EGT_MANI:1
+#  -
+#    type: var
+#    var_name: L:EGT_TARGET:1
+#  -
+#    type: var
+#    var_name: L:EGT_MANI:2
+#  -
+#    type: var
+#    var_name: L:EGT_TARGET:2
+#  -
+#    type: var
+#    var_name: L:EGT_MANI:3
+#  -
+#    type: var
+#    var_name: L:EGT_TARGET:3
+#  -
+#    type: var
+#    var_name: L:EGT_MANI:4
+#  -
+#    type: var
+#    var_name: L:EGT_TARGET:4
+#  -
+#    type: var
+#    var_name: L:EGT_PROBE:1
+#  -
+#    type: var
+#    var_name: L:EGT_PROBE:2
+#  -
+#    type: var
+#    var_name: L:EGT_PROBE:3
+#  -
+#    type: var
+#    var_name: L:EGT_PROBE:4
+#  -
+#    type: var
+#    var_name: L:CHT_AIRFLOW
+#  -
+#    type: var
+#    var_name: L:EGT_MANI_COOLING:1
+#  -
+#    type: var
+#    var_name: L:EGT_MANI_COOLING:2
+#  -
+#    type: var
+#    var_name: L:EGT_MANI_COOLING:3
+#  -
+#    type: var
+#    var_name: L:EGT_MANI_COOLING:4
+#  -
+#    type: var
+#    var_name: L:EGT_MANI_HEATING:1
+#  -
+#    type: var
+#    var_name: L:EGT_MANI_HEATING:2
+#  -
+#    type: var
+#    var_name: L:EGT_MANI_HEATING:3
+#  -
+#    type: var
+#    var_name: L:EGT_MANI_HEATING:4
+#  -
+#    type: var
+#    var_name: L:CHT_F:1
+#  -
+#    type: var
+#    var_name: L:CHT_F:2
+#  -
+#    type: var
+#    var_name: L:CHT_F:3
+#  -
+#    type: var
+#    var_name: L:CHT_F:4
+#  -
+#    type: var
+#    var_name: L:CHT_C:1
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI:1
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_HEATING:1
+#  -
+#    type: var
+#    var_name: L:CHT_C:2
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI:2
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_HEATING:2
+#  -
+#    type: var
+#    var_name: L:CHT_C:3
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI:3
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_HEATING:3
+#  -
+#    type: var
+#    var_name: L:CHT_C:4
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI:4
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_HEATING:4
+#  -
+#    type: var
+#    var_name: L:TB_INT_TEMP_C
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_COOLING:1
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_COOLING:2
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_COOLING:3
+#  -
+#    type: var
+#    var_name: L:ENG_INT_MANI_COOLING:4
+#  -
+#    type: var
+#    var_name: L:OC_TEMPERATURE
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_FIREWALL_TEMP_C
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_FIREWALL_TEMP_HEATING
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_FIREWALL_TEMP_COOLING
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_COOLING_AIR:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_COOLING_AIR:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_COOLING_AIR:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP:4
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_COOLING_AIR:4
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_COOLING_FUEL:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_COOLING_FUEL:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_COOLING_FUEL:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_COOLING_FUEL:4
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_HEATING:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_HEATING:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_HEATING:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_TEMP_HEATING:4
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_BOIL
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_BOIL_FAC_FF
+#  -
+#    type: var
+#    var_name: L:CHT_AIRF_BETA
+#  -
+#    type: var
+#    var_name: L:CHT_AIRF_RAD_KNOTS
+#  -
+#    type: var
+#    var_name: L:CHT_AIRF_AX_KNOTS
+#  -
+#    type: var
+#    var_name: L:CHT_AIRF_AX_KNOTS_DIFF
+#  -
+#    type: var
+#    var_name: L:CHT_AIRFLOW_INDUCED
+#  -
+#    type: var
+#    var_name: L:CHT_AIRFLOW_WIND
+#  -
+#    type: var
+#    var_name: L:CHT_AIRFLOW_IND+WIND
+#  -
+#    type: var
+#    var_name: L:CHT_AIRFLOW_ANG
+#  -
+#    type: var
+#    var_name: L:CHT_AIRFLOW_ANG_FAC
+#  -
+#    type: var
+#    var_name: L:CHT_AIRFLOW_TOTAL
+#  -
+#    type: var
+#    var_name: L:CHT_EFF_F
+#  -
+#    type: var
+#    var_name: L:CHT_EFF_R
+#  -
+#    type: var
+#    var_name: L:CHT_COOLING:1
+#  -
+#    type: var
+#    var_name: L:CHT_COOLING:2
+#  -
+#    type: var
+#    var_name: L:CHT_COOLING:3
+#  -
+#    type: var
+#    var_name: L:CHT_COOLING:4
+#  -
+#    type: var
+#    var_name: L:OC_HEATING_CHT:1
+#  -
+#    type: var
+#    var_name: L:CHT_COOLING_OIL:1
+#  -
+#    type: var
+#    var_name: L:OC_HEATING_CHT:2
+#  -
+#    type: var
+#    var_name: L:CHT_COOLING_OIL:2
+#  -
+#    type: var
+#    var_name: L:OC_HEATING_CHT:3
+#  -
+#    type: var
+#    var_name: L:CHT_COOLING_OIL:3
+#  -
+#    type: var
+#    var_name: L:OC_HEATING_CHT:4
+#  -
+#    type: var
+#    var_name: L:CHT_COOLING_OIL:4
+#  -
+#    type: var
+#    var_name: L:ENG_FRIC
+#  -
+#    type: var
+#    var_name: L:DAMAGE_CYL_FAC:1
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_FRICTION_KW:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_CYL_FAC:2
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_FRICTION_KW:2
+#  -
+#    type: var
+#    var_name: L:DAMAGE_CYL_FAC:3
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_FRICTION_KW:3
+#  -
+#    type: var
+#    var_name: L:DAMAGE_CYL_FAC:4
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_FRICTION_KW:4
+#  -
+#    type: var
+#    var_name: L:ENG_MECH_EFF
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_OUTPUT_KW:1
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_OUTPUT_KW:2
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_OUTPUT_KW:3
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_OUTPUT_KW:4
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_FUEL_FLOW_KW:1
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_FUEL_FLOW_KW:2
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_FUEL_FLOW_KW:3
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_FUEL_FLOW_KW:4
+#  -
+#    type: var
+#    var_name: L:CHT_EGT_DELTA_K:1
+#  -
+#    type: var
+#    var_name: L:CHT_EGT_DELTA_K:2
+#  -
+#    type: var
+#    var_name: L:CHT_EGT_DELTA_K:3
+#  -
+#    type: var
+#    var_name: L:CHT_EGT_DELTA_K:4
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_AIR_KW:1
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_AIR_KW:2
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_AIR_KW:3
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_AIR_KW:4
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_FUEL_KW:1
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_FUEL_KW:2
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_FUEL_KW:3
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_FUEL_KW:4
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_KW:1
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_KW:2
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_KW:3
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_EXHT_KW:4
+#  -
+#    type: var
+#    var_name: L:CHT_HEATING_KW:1
+#  -
+#    type: var
+#    var_name: L:CHT_HEATING_KW:2
+#  -
+#    type: var
+#    var_name: L:CHT_HEATING_KW:3
+#  -
+#    type: var
+#    var_name: L:CHT_HEATING_KW:4
+#  -
+#    type: var
+#    var_name: L:CHT_TEMP_INC:1
+#  -
+#    type: var
+#    var_name: L:CHT_TEMP_INC:2
+#  -
+#    type: var
+#    var_name: L:CHT_TEMP_INC:3
+#  -
+#    type: var
+#    var_name: L:CHT_TEMP_INC:4
+#  -
+#    type: var
+#    var_name: L:CHT_PROBE:1
+#  -
+#    type: var
+#    var_name: L:CHT_PROBE:2
+#  -
+#    type: var
+#    var_name: L:CHT_PROBE:3
+#  -
+#    type: var
+#    var_name: L:CHT_PROBE:4
+#  -
+#    type: var
+#    var_name: L:OC_TEMP_DIFF
+#  -
+#    type: var
+#    var_name: L:OC_EFF
+#  -
+#    type: var
+#    var_name: L:OC_COOLING_PAS
+#  -
+#    type: var
+#    var_name: L:OC_OIL_LEAK
+#  -
+#    type: var
+#    var_name: L:OC_PUMP_SPEED
+#  -
+#    type: var
+#    var_name: L:OC_THERMOSTAT_T
+#  -
+#    type: var
+#    var_name: L:OC_THERMOSTAT
+#  -
+#    type: var
+#    var_name: L:OC_COOLING_ACT
+#  -
+#    type: var
+#    var_name: L:OC_COOLING
+#  -
+#    type: var
+#    var_name: L:DAMAGE_BLOCK_FAC
+#  -
+#    type: var
+#    var_name: L:OC_HEATING_FRIC
+#  -
+#    type: var
+#    var_name: L:CHT_HEAT_OUTPUT_KW
+#  -
+#    type: var
+#    var_name: L:OC_HEATING_FUEL
+#  -
+#    type: var
+#    var_name: L:OP_BYPASS
+#  -
+#    type: var
+#    var_name: L:OC_OIL_FLOW_CHT
+#  -
+#    type: var
+#    var_name: L:OC_TEMP_DIFF_CHT:1
+#  -
+#    type: var
+#    var_name: L:OC_TEMP_DIFF_CHT:2
+#  -
+#    type: var
+#    var_name: L:OC_TEMP_DIFF_CHT:3
+#  -
+#    type: var
+#    var_name: L:OC_TEMP_DIFF_CHT:4
+#  -
+#    type: var
+#    var_name: L:OC_HEATING_CHT
+#  -
+#    type: var
+#    var_name: L:OC_HEATING
+#  -
+#    type: var
+#    var_name: L:OC_TEMP_INC
+#  -
+#    type: var
+#    var_name: L:OC_TEMPERATURE_F
+#  -
+#    type: var
+#    var_name: L:OT_PROBE
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FRIC_OIL
+#  -
+#    type: var
+#    var_name: L:OP_PROP_OIL_PRIME
+#  -
+#    type: var
+#    var_name: L:OP_PROP_OIL_LOSS
+#  -
+#    type: var
+#    var_name: L:OP_PROP_BETA
+#  -
+#    type: var
+#    var_name: L:OP_OIL_PRIME
+#  -
+#    type: var
+#    var_name: L:OP_OIL_PRESS_T
+#  -
+#    type: var
+#    var_name: L:OP_TEMP_FACTOR
+#  -
+#    type: var
+#    var_name: L:HEALTH_OIL
+#  -
+#    type: var
+#    var_name: L:OP_OIL_PRESS_IN
+#  -
+#    type: var
+#    var_name: L:RAND_OP
+#  -
+#    type: var
+#    var_name: L:TB_VOL_EFF_RPM_LO
+#  -
+#    type: var
+#    var_name: L:TB_VOL_EFF_RPM_HI
+#  -
+#    type: var
+#    var_name: L:TB_VOL_EFF_LO
+#  -
+#    type: var
+#    var_name: L:TB_VOL_EFF_HI
+#  -
+#    type: var
+#    var_name: L:ENG_MECH_EFF_RPM_LO
+#  -
+#    type: var
+#    var_name: L:ENG_MECH_EFF_RPM_HI
+#  -
+#    type: var
+#    var_name: L:ENG_MECH_EFF_LO
+#  -
+#    type: var
+#    var_name: L:ENG_MECH_EFF_HI
+#  -
+#    type: var
+#    var_name: L:ENG_FRIC_RPM_LO
+#  -
+#    type: var
+#    var_name: L:ENG_FRIC_RPM_HI
+#  -
+#    type: var
+#    var_name: L:ENG_FRIC_LO
+#  -
+#    type: var
+#    var_name: L:ENG_FRIC_HI
+#  -
+#    type: var
+#    var_name: L:TB_VOL_EFF_FAC
+#  -
+#    type: var
+#    var_name: L:ENG_MECH_EFF_FAC
+#  -
+#    type: var
+#    var_name: L:ENG_FRIC_FAC
+#  -
+#    type: var
+#    var_name: L:TB_INT_TEMP_K
+#  -
+#    type: var
+#    var_name: L:FILTER_CHT_TEMP_INC
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_BOIL:1
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_BOIL:2
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_BOIL:3
+#  -
+#    type: var
+#    var_name: L:ENG_FUEL_LINE_BOIL:4
+  -
+    type: var
+    var_name: L:AUTOMIXTURE_FORCE
+#  -
+#    type: var
+#    var_name: L:FUEL_QUANT_SLOSH:1
+#  -
+#    type: var
+#    var_name: L:FUEL_QUANT_SLOSH:2
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_BOIL_PRESS
+#  -
+#    type: var
+#    var_name: L:FUEL_TEMP_PUMP_PRESS_DROP
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STARTER
+#  -
+#    type: var
+#    var_name: L:STARTER_AMPS
+  -
+    type: var
+    var_name: L:CB_ACN
+  -
+    type: var
+    var_name: L:ELEC_ESS
+  -
+    type: var
+    var_name: L:CB_ALT
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_DRAG_HP
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_DRAG_TORQUE
+#  -
+#    type: var
+#    var_name: L:SOUND_FUEL_PUMP_PITCH
+  -
+    type: var
+    var_name: L:CB_FAN
+  -
+    type: var
+    var_name: L:CB_FUP
+  -
+    type: var
+    var_name: L:CB_APT
+#  -
+#    type: var
+#    var_name: L:ELEC_BUS_ESS+BATT_AMPS
+#  -
+#    type: var
+#    var_name: L:CB_MAIN-ESS_OVER
+#  -
+#    type: var
+#    var_name: L:CB_BATT_OVER
+#  -
+#    type: var
+#    var_name: L:CB_ALT_OVER
+#  -
+#    type: var
+#    var_name: L:DISP_PROP_RPM_PROBE
+#  -
+#    type: var
+#    var_name: L:RPM_SENS_RPM
+#  -
+#    type: var
+#    var_name: L:DISP_MAP_PROBE
+#  -
+#    type: var
+#    var_name: L:DISP_FF_PROBE
+#  -
+#    type: var
+#    var_name: L:DISP_FP_PROBE
+#  -
+#    type: var
+#    var_name: L:DISP_OP_PROBE
+#  -
+#    type: var
+#    var_name: L:DISP_CHT_HOT_CYL
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_PEAK:1
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_PEAK:2
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_PEAK:3
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_PEAK:4
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_DELTA:1
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_DELTA:2
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_DELTA:3
+#  -
+#    type: var
+#    var_name: L:DISP_LEAN_DELTA:4
+#  -
+#    type: var
+#    var_name: L:COOKING:1
+#  -
+#    type: var
+#    var_name: L:COOKING:2
+#  -
+#    type: var
+#    var_name: L:COOKING:3
+#  -
+#    type: var
+#    var_name: L:COOKING:4
+  -
+    type: var
+    var_name: L:AUTOSTART_MIX
+#  -
+#    type: var
+#    var_name: L:AUTOSTART_STARTER_TIMER
+  -
+    type: var
+    var_name: L:AUTOSTART_THROT
+#  -
+#    type: var
+#    var_name: L:ASSIST_PRIME_ACTIVE
+#  -
+#    type: var
+#    var_name: L:ASSIST_PRIME_SYS_GRAM
+#  -
+#    type: var
+#    var_name: L:ASSIST_PRIME_CYL_GRAM
+#  -
+#    type: var
+#    var_name: L:ASSIST_PRIME_CYL_REQ
+#  -
+#    type: var
+#    var_name: L:ASSIST_PRIME_PERCENT
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_720
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_720_60FPS
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL_RATE:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL_RATE:2
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL_RATE:3
+#  -
+#    type: var
+#    var_name: L:DAMAGE_MAG_FOUL_RATE:4
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_FAC:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_ROP:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_LOP:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_ITS:1
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_FAC:2
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_ROP:2
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_LOP:2
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_ITS:2
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_FAC:3
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_ROP:3
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_LOP:3
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_ITS:3
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_FAC:4
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_ROP:4
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_LOP:4
+#  -
+#    type: var
+#    var_name: L:DAMAGE_REDBOX_ITS:4
+#  -
+#    type: var
+#    var_name: L:DAMAGE_DUST
+  -
+    type: var
+    var_name: L:GENERAL ENG FAILED:FUBAR
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRMASS_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRMASS_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRMASS_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRMASS_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRTEMP_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRTEMP_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRTEMP_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_AIRTEMP_CYL:4
+  -
+    type: var
+    var_name: L:RESET_FLOOD
+  -
+    type: var
+    var_name: L:RESET_PLUGS
+#  -
+#    type: var
+#    var_name: L:ELEC_ALT_ACTUAL_AMPS
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_IGN_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_IGN_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_IGN_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_IGN_CYL:4
+#  -
+#    type: var
+#    var_name: L:PROP_ANI
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_720_2
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_SHAKE_FAC:1
+#  -
+#    type: var
+#    var_name: L:SOUND_CUT_CYL:1
+#  -
+#    type: var
+#    var_name: L:CYL_SHAKE:1
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_SHAKE_FAC:2
+#  -
+#    type: var
+#    var_name: L:SOUND_CUT_CYL:2
+#  -
+#    type: var
+#    var_name: L:CYL_SHAKE:2
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_SHAKE_FAC:3
+#  -
+#    type: var
+#    var_name: L:SOUND_CUT_CYL:3
+#  -
+#    type: var
+#    var_name: L:CYL_SHAKE:3
+#  -
+#    type: var
+#    var_name: L:ENG_CYL_SHAKE_FAC:4
+#  -
+#    type: var
+#    var_name: L:SOUND_CUT_CYL:4
+#  -
+#    type: var
+#    var_name: L:CYL_SHAKE:4
+#  -
+#    type: var
+#    var_name: L:SOUND_CUT_CYL
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_360
+#  -
+#    type: var
+#    var_name: L:RPM_SENS_RESET
+#  -
+#    type: var
+#    var_name: L:RPM_SENS_POS
+#  -
+#    type: var
+#    var_name: L:RPM_SENS_TIME_FIX
+#  -
+#    type: var
+#    var_name: L:RPM_SENS_TIME
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PROP_WIND_FAC
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PROP_WIND
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PROP_DRAG
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_POS_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STROKE_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_COMPRESSION_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_CRANK_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STROKE_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_COMPRESSION_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_CRANK_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STROKE_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_COMPRESSION_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_CRANK_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_STROKE_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_COMPRESSION_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_CRANK_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_SHAKE
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PWR
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PRESS_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_MAG_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_START_AIRVOL_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_IGN_CYL_SOUND:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PRESS_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_MAG_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_START_AIRVOL_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_IGN_CYL_SOUND:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PRESS_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_MAG_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_START_AIRVOL_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_IGN_CYL_SOUND:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_PRESS_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_MAG_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_START_AIRVOL_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_IGN_CYL_SOUND:4
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_CYL:1
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_CYL:2
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_CYL:3
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_CYL:4
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FORCE_TOTAL
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INPUT_T
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_INPUT
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_FRICTION
+#  -
+#    type: var
+#    var_name: L:ENG_COMP_REACTION
+
+master:
+  - # Controls
+    type: var
+    var_name: L:INPUT_AILERON
+    unreliable: true
+  -
+    type: var
+    var_name: L:INPUT_ELEVATOR
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:RUDDER POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_RUDDER_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE1_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Stuff (slow)
+    type: var
+    var_name: L:DAMAGE_TURBO_HEAT:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_OVERSTRESS:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_BLOCK:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_TURBO:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_OIL:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_OIL
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_BLOCK
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_CYL:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_CYL:2
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_CYL:3
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:DAMAGE_CYL:4
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:SPREAD_THERMO:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:OP_SPREAD_BYPASS:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:OP_SPREAD_BYPASS
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:OP_SPREAD:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:OP_SPREAD_COOLING:1
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:SPREAD_MAX_RPM:1
+    var_type: i32
+    unreliable: true

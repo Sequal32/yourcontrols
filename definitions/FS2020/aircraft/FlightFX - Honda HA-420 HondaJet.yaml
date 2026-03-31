@@ -1,0 +1,1547 @@
+# Version 2.1.2
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_G3000.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/pressurization.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Engines
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER2
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_5_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_11_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:14
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_14_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:15
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_15_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_16_SET
+    index_reversed: true
+    use_calculator: true
+
+  - # LVAR's
+    type: var
+    var_name: L:GPOW Pushed
+# -
+#   type: var
+#   var_name: L:btnsound
+  -
+    type: var
+    var_name: L:BTCOVER Pushed
+  -
+    type: var
+    var_name: L:BTIE Pushed
+  -
+    type: var
+    var_name: L:CPCOVER Pushed
+  -
+    type: var
+    var_name: L:CPOW Pushed
+  -
+    type: var
+    var_name: L:PDISC Pushed
+  -
+    type: var
+    var_name: L:ST0 Pushed
+  -
+    type: var
+    var_name: L:ST1 Pushed
+  -
+    type: var
+    var_name: L:HJET_door_RearCargo_open
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:HJET_EXIT_OPEN
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:HJET_door_front_cargo_open
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:GroundPowerAvailable
+  -
+    type: var
+    var_name: L:SIMOPTION CABIN SHADES
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SIMOPTION STATIC ELEMENTS
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_SpeedIsManuallySet
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:HANDLING_AILERON_ELEVATOR_Trim_Position
+# -
+#   type: var
+#   var_name: L:MOUSEPOSY_R
+# -
+#   type: var
+#   var_name: L:HA420_ThrottlePos_R
+  -
+    type: var
+    var_name: L:HA420_Throttle_DecisionPoint_R
+  -
+    type: var
+    var_name: L:HA420_Throttle_UpperRange_R
+  -
+    type: var
+    var_name: L:HA420_Throttle_LowerRange_R
+  -
+    type: var
+    var_name: L:HA420_Throttle_Clicking_R
+# -
+#   type: var
+#   var_name: L:HA420ProblemUpR
+# -
+#   type: var
+#   var_name: L:HA420ProblemDnR
+# -
+#   type: var
+#   var_name: L:THROTTLE2_SET
+# -
+#   type: var
+#   var_name: L:MOUSEPOSY_L
+# -
+#   type: var
+#   var_name: L:HA420_ThrottlePos_L
+  -
+    type: var
+    var_name: L:HA420_Throttle_DecisionPoint_L
+  -
+    type: var
+    var_name: L:HA420_Throttle_UpperRange_L
+  -
+    type: var
+    var_name: L:HA420_Throttle_LowerRange_L
+  -
+    type: var
+    var_name: L:HA420_Throttle_Clicking_L
+# -
+#   type: var
+#   var_name: L:HA420ProblemUpL
+# -
+#   type: var
+#   var_name: L:HA420ProblemDnL
+# -
+#   type: var
+#   var_name: L:THROTTLE1_SET
+  -
+    type: var
+    var_name: L:HJET_TOILET_DOOR_ANIM
+# -
+#   type: var
+#   var_name: L:MOUSE_shadeR
+  -
+    type: var
+    var_name: L:shadeR
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:MOUSEPOSX_ShadeL
+  -
+    type: var
+    var_name: L:ShadeLAnim
+    unreliable: true
+  -
+    type: var
+    var_name: L:BirdVisible
+  -
+    type: var
+    var_name: L:Block_Throttle_Valve_control_L
+  -
+    type: var
+    var_name: L:Block_Throttle_Valve_control_R
+  -
+    type: var
+    var_name: L:BM Pushed
+  -
+    type: var
+    var_name: L:GENL Pushed
+  -
+    type: var
+    var_name: L:GENR Pushed
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_YOKE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_YOKE_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_Switch_Yoke
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_Yoke_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:TRIM_THUMB_dragging_up
+  -
+    type: var
+    var_name: L:TRIM_THUMB
+  -
+    type: var
+    var_name: L:trimTimer
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:TRIM_THUMB_dragging_dn
+  -
+    type: var
+    var_name: L:draggingIsHappening
+  -
+    type: var
+    var_name: L:LastPos1
+    unreliable: true
+  -
+    type: var
+    var_name: L:PITCHTRIM Pushed
+  -
+    type: var
+    var_name: L:ROLLTRIM Pushed
+  -
+    type: var
+    var_name: L:YAWTRIM Pushed
+  -
+    type: var
+    var_name: L:REVERSION Pushed
+  -
+    type: var
+    var_name: L:HJET_THROTTLE_MAN
+  -
+    type: var
+    var_name: L:CSC Pushed
+  -
+    type: var
+    var_name: L:CPL Pushed
+  -
+    type: var
+    var_name: L:HPIN Pushed
+  -
+    type: var
+    var_name: L:useHpaUnits
+  -
+    type: var
+    var_name: L:EADINAV Pushed
+  -
+    type: var
+    var_name: L:AFCPITCH Pushed
+  -
+    type: var
+    var_name: L:AFCROLL Pushed
+  -
+    type: var
+    var_name: L:AFCYAW Pushed
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+  -
+    type: var
+    var_name: L:NWS Pushed
+  -
+    type: var
+    var_name: L:FuelXF_Knob
+  -
+    type: var
+    var_name: L:FuelPL_Knob
+  -
+    type: var
+    var_name: L:FuelPR_Knob
+  -
+    type: var
+    var_name: L:HJET_Pressurisaiton_hold_active
+  -
+    type: var
+    var_name: L:Pressure_Dump_Pushed
+  -
+    type: var
+    var_name: L:HJET_OxyMaskAudio
+  -
+    type: var
+    var_name: L:HJET_OxySupply
+  -
+    type: var
+    var_name: L:HJET_PRESSURIZATION_CABIN_OXYMASK
+  -
+    type: var
+    var_name: L:HJET_CFLOWL
+  -
+    type: var
+    var_name: L:HJET_CFLOWR
+  -
+    type: var
+    var_name: L:WingAI_Knob
+  -
+    type: var
+    var_name: L:WingFlow_Knob
+  -
+    type: var
+    var_name: L:HJET_EngineAI_L
+  -
+    type: var
+    var_name: L:HJET_EngineAI_R
+  -
+    type: var
+    var_name: L:TailDeIce_Knob
+  -
+    type: var
+    var_name: L:HJET_WindSheildHeat_L
+  -
+    type: var
+    var_name: L:HJET_WindSheildHeat_R
+# - # Does not exist
+#   type: var
+#   var_name: L:XMLVAR_BoostFuelPump
+# - # Does not exist
+#   type: var
+#   var_name: L:_FuelTankShiftPressed
+# - # Does not exist
+#   type: var
+#   var_name: L:XMLVAR_FuelSelectorAuto
+# -
+#   type: var
+#   var_name: L:WTGarmin_Nav_ActiveNavSource:1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:LIGHTING_WING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_PushXFR
+# -
+#   type: var
+#   var_name: L:DEICE_Airframe_1
+# -
+#   type: var
+#   var_name: L:DEICE_Propeller_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:HA420_THROTTLES_INITITALIZE
+# -
+#   type: var
+#   var_name: L:loveOfMyLife
+# -
+#   type: var
+#   var_name: L:FrameCounter
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICITY_ESTABLISHED
+# -
+#   type: var
+#   var_name: L:!!BARBERPOLE!!!
+# -
+#   type: var
+#   var_name: L:H_ELECTRICAL MASTER BATTERY
+# -
+#   type: var
+#   var_name: L:H_APU GENERATOR ACTIVE:1
+# -
+#   type: var
+#   var_name: L:H_GENERAL ENG GENERATOR ACTIVE:1
+# -
+#   type: var
+#   var_name: L:H_GENERAL ENG GENERATOR ACTIVE:2
+# -
+#   type: var
+#   var_name: L:GLIDE_RATIO
+# -
+#   type: var
+#   var_name: L:Whatislimit!!!
+# -
+#   type: var
+#   var_name: L:HA420_INITITALIZE
+# -
+#   type: var
+#   var_name: L:!!FAAACK!!
+# -
+#   type: var
+#   var_name: L:NAV_Pushed
+# -
+#   type: var
+#   var_name: L:NAV_PushedLF
+# -
+#   type: var
+#   var_name: L:Alt_Pushed
+# -
+#   type: var
+#   var_name: L:Alt_PushedLF
+# -
+#   type: var
+#   var_name: L:FLC_Pushed
+# -
+#   type: var
+#   var_name: L:FLC_PushedLF
+# -
+#   type: var
+#   var_name: L:VS_Pushed
+# -
+#   type: var
+#   var_name: L:VS_PushedLF
+# -
+#   type: var
+#   var_name: L:BM Pushed LF
+# -
+#   type: var
+#   var_name: L:GENL Pushed LF
+# -
+#   type: var
+#   var_name: L:GENR Pushed LF
+# -
+#   type: var
+#   var_name: L:GPOW Pushed LF
+# -
+#   type: var
+#   var_name: L:GroundPower
+# -
+#   type: var
+#   var_name: L:BTIE Pushed LF
+# -
+#   type: var
+#   var_name: L:HJET_BusTie
+# -
+#   type: var
+#   var_name: L:CPOW Pushed LF
+# -
+#   type: var
+#   var_name: L:HJET_CabinRelay
+# -
+#   type: var
+#   var_name: L:PDISC Pushed LF
+# -
+#   type: var
+#   var_name: L:Hjet_Pressurization_Alt_target
+  -
+    type: var
+    var_name: L:HJET_MASKS_DROPPED
+# -
+#   type: var
+#   var_name: L:HJET_Pressurization_KP
+# -
+#   type: var
+#   var_name: L:HJET_Pressurization_error
+# -
+#   type: var
+#   var_name: L:HJET_PRessurisaztion_PID_limit
+# -
+#   type: var
+#   var_name: L:HJET_PRESSURIZATION_Fuck1
+# -
+#   type: var
+#   var_name: L:HJET_Pressurization_Rate
+# -
+#   type: var
+#   var_name: L:HJET_PRESSURIZATION CABIN ALTITUDE
+# -
+#   type: var
+#   var_name: L:HJET_PRESSURIZATION CABIN ALTITUDE GOAL
+# -
+#   type: var
+#   var_name: L:HJET_PRESSURIZATION CABIN ALTITUDE RATE
+# -
+#   type: var
+#   var_name: L:HJET_PRESSURIZATION PRESSURE DIFFERENTIAL
+# -
+#   type: var
+#   var_name: L:Pressure_Dump_Pushed LF
+# -
+#   type: var
+#   var_name: L:HJET_PRESSURIZATION DUMP SWITCH
+# -
+#   type: var
+#   var_name: L:SPOILERS HANDLE POSITION
+# -
+#   type: var
+#   var_name: L:REVERSION Pushed LF
+# -
+#   type: var
+#   var_name: L:Monitoring_InitAlt
+# -
+#   type: var
+#   var_name: L:MONITOR gpu available
+# -
+#   type: var
+#   var_name: L:RunApuOnce
+# -
+#   type: var
+#   var_name: L:HJET_GEN1_Active
+# -
+#   type: var
+#   var_name: L:HJET_GEN2_Active
+  -
+    type: var
+    var_name: L:ENABLE GPU
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:!!!!!!!!BAAAAAAAAAAZZZZZZZZZ
+# -
+#   type: var
+#   var_name: L:ElectricalInit
+# -
+#   type: var
+#   var_name: L:HJET_BatteryRelay1
+# -
+#   type: var
+#   var_name: L:HJET_BatteryRelay2
+# -
+#   type: var
+#   var_name: L:HJET_GenRelayL
+# -
+#   type: var
+#   var_name: L:HJET_GenRelayR
+# -
+#   type: var
+#   var_name: L:HJET_MainBusBar1
+# -
+#   type: var
+#   var_name: L:AM I at 7 
+# -
+#   type: var
+#   var_name: L:AM I at 1 
+# -
+#   type: var
+#   var_name: L:HJET_MainBusBar2
+# -
+#   type: var
+#   var_name: L:AM I at 2 
+# -
+#   type: var
+#   var_name: L:HJET_AutoBuscond1
+# -
+#   type: var
+#   var_name: L:HJET_AutoBuscond2
+# -
+#   type: var
+#   var_name: L:HJET_AutoBuscond3
+# -
+#   type: var
+#   var_name: L:HJET_AutoBuscond4
+# -
+#   type: var
+#   var_name: L:HJET_AutoBusTie
+# -
+#   type: var
+#   var_name: L:HJET_BusIsTied
+# -
+#   type: var
+#   var_name: L:AM I at 3 
+# -
+#   type: var
+#   var_name: L:AM I at 4 
+# -
+#   type: var
+#   var_name: L:HJET_MainBus1
+# -
+#   type: var
+#   var_name: L:HJET_MainBus2
+# -
+#   type: var
+#   var_name: L:HJET_Bat1C
+# -
+#   type: var
+#   var_name: L:HJET_Bat2C
+# -
+#   type: var
+#   var_name: L:HJET_ShedBus
+# -
+#   type: var
+#   var_name: L:AirCondState
+# -
+#   type: var
+#   var_name: L:HJET_Bat1A
+# -
+#   type: var
+#   var_name: L:HJET_Bat1B
+# -
+#   type: var
+#   var_name: L:HJET_Bat2A
+# -
+#   type: var
+#   var_name: L:HJET_Bat2B
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL BATTERY VOLTAGE
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL MAIN BUS VOLTAGE1
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL MAIN BUS VOLTAGE2
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL MAIN BUS VOLTAGE
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL GENALT BUS VOLTAGE:1
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL GENALT BUS VOLTAGE:2
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL AVIONICS BUS AMPS
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL GENALT BUS AMPS 1
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL GENALT BUS AMPS 2
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL MAIN BUS AMPS
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL BATTERY LOAD
+# -
+#   type: var
+#   var_name: L:HJET_ELECTRICAL BATTERY BUS AMPS
+# -
+#   type: var
+#   var_name: L:HJET_GENERAL ENG GENERATOR ACTIVE 1
+# -
+#   type: var
+#   var_name: L:HJET_GENERAL ENG GENERATOR ACTIVE 2
+# -
+#   type: var
+#   var_name: L:runOnceFuel
+# -
+#   type: var
+#   var_name: L:HJFuel_RefillVariable
+# -
+#   type: var
+#   var_name: L:!!!!!!!!!FuelTankSelector1
+# -
+#   type: var
+#   var_name: L:!!!!!!!!!FuelTankSelector2
+# -
+#   type: var
+#   var_name: L:HJFuel_XfeedActiveL
+# -
+#   type: var
+#   var_name: L:HJFuel_XfeedActiveR
+# -
+#   type: var
+#   var_name: L:HJFuel_AutoXfeedActiveL
+# -
+#   type: var
+#   var_name: L:HJFuel_AutoXfeedActiveR
+# -
+#   type: var
+#   var_name: L:HJFuel_FUEL TANK CENTER LEVEL
+# -
+#   type: var
+#   var_name: L:HJFuel_FUEL TANK CENTER2 LEVEL
+  -
+    type: var
+    var_name: L:HJFuel_CTRXfer
+# -
+#   type: var
+#   var_name: L:heyIamHere!
+# -
+#   type: var
+#   var_name: L:HJFuel_Fuel tank center quantity
+# -
+#   type: var
+#   var_name: L:HJFuel_FUEL TANK CENTER2 QUANTITY
+# -
+#   type: var
+#   var_name: L:HJFuel_FUEL TANK TOTAL CENTER QUANTITY
+# -
+#   type: var
+#   var_name: L:HJFuel_Fuel tank left quantity
+# -
+#   type: var
+#   var_name: L:HJFuel_Fuel tank right quantity
+# -
+#   type: var
+#   var_name: L:HJFuel_FUEL TOTAL QUANTITY
+# -
+#   type: var
+#   var_name: L:HJFuel_FUEL TANK LEFT MAIN LEVEL
+# -
+#   type: var
+#   var_name: L:HJFuel_FUEL TANK RIGHT MAIN LEVEL
+# -
+#   type: var
+#   var_name: L:HJFuel_FUEL TANK SELECTOR1
+# -
+#   type: var
+#   var_name: L:HJFuel_FUEL CROSS FEED
+# -
+#   type: var
+#   var_name: L:HJFuel_GENERAL ENG FUEL PUMP SWITCH1
+# -
+#   type: var
+#   var_name: L:HJFuel_GENERAL ENG FUEL PUMP SWITCH2
+# -
+#   type: var
+#   var_name: L:heyIamHere2!
+# -
+#   type: var
+#   var_name: L:HJET_Throttle A
+# -
+#   type: var
+#   var_name: L:HJET_Throttle B
+# -
+#   type: var
+#   var_name: L:HJFuel_Fuel pressure R
+# -
+#   type: var
+#   var_name: L:heyIamHere3!
+# -
+#   type: var
+#   var_name: L:HJET_HYD_TOTAL_QUANTIY_PCT
+# -
+#   type: var
+#   var_name: L:HJET_HYD_TOTAL_PRESSURE_PCT
+# -
+#   type: var
+#   var_name: L:HJET_HYD_PRESSURE_ACCUM_R
+# -
+#   type: var
+#   var_name: L:HJET_HYD_PRESSURE_ACCUM_C
+# -
+#   type: var
+#   var_name: L:HJET_HYD_PRESSURE_ACCUM_D
+# -
+#   type: var
+#   var_name: L:HJET_HYD_PRESSURE_PBRAKE
+  -
+    type: var
+    var_name: L:HJET_HYD_PUMP_ON
+# -
+#   type: var
+#   var_name: L:INSRandFact31
+# -
+#   type: var
+#   var_name: L:Final_random
+# -
+#   type: var
+#   var_name: L:Final_random_Sign
+# -
+#   type: var
+#   var_name: L:HJET_DELAY_TIMER
+# -
+#   type: var
+#   var_name: L:HJET_INIT_HYD
+# -
+#   type: var
+#   var_name: L:HJET_HYD_INTERIM_TOTAL_PRESSURE_PCT
+  -
+    type: var
+    var_name: L:HJET_Checklist_scoll_up
+# -
+#   type: var
+#   var_name: L:HJET_Checklist_scoll_up_LF
+  -
+    type: var
+    var_name: L:HJET_Checklist_scoll_dn
+# -
+#   type: var
+#   var_name: L:HJET_Checklist_scoll_dn_LF
+  -
+    type: var
+    var_name: L:HJET_Checklist_enter
+# -
+#   type: var
+#   var_name: L:HJET_Checklist_enter_LF
+  -
+    type: var
+    var_name: L:HJET_Checklist_Longenter
+# -
+#   type: var
+#   var_name: L:HJET_Checklist_Longenter_LF
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Deployment
+# -
+#   type: var
+#   var_name: L:XMLVAR_InertSep1_Active
+# -
+#   type: var
+#   var_name: L:HJET_stickShaker
+  -
+    type: var
+    var_name: L:StalltestInProgress_2
+  -
+    type: var
+    var_name: L:StalltestInProgress_0
+  -
+    type: var
+    var_name: L:fireTestInProgress_0
+  -
+    type: var
+    var_name: L:lightTestInProgress_6
+  -
+    type: var
+    var_name: L:lightTestInProgress_0
+  -
+    type: var
+    var_name: L:fireTestInProgress_2
+  -
+    type: var
+    var_name: L:XMLVAR_AS3000_DisplayLighting
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:PaxCabinLight
+    cancel_h_events: true
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:showCover1
+  -
+    type: var
+    var_name: L:eliteII
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:showCover2
+  -
+    type: var
+    var_name: L:showPax
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:synVisible
+# -
+#   type: var
+#   var_name: L:InitializationCompleted
+  -
+    type: var
+    var_name: L:show_VSD
+  -
+    type: var
+    var_name: L:WT_INSET_MAP_IS_VISIBLE
+  -
+    type: var
+    var_name: L:WT_MAP_VIEW
+  -
+    type: var
+    var_name: L:fireTestInProgress_1
+  -
+    type: var
+    var_name: L:fireTestInProgress_3
+# -
+#   type: var
+#   var_name: L:VNAV_ARMED
+# -
+#   type: var
+#   var_name: L:VNAV_ACTIVE
+# -
+#   type: var
+#   var_name: L:WT_CONNECTED
+  -
+    type: var
+    var_name: L:HJET_MUTE_VISIBLE
+# -
+#   type: var
+#   var_name: L:HJET_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:HJET_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:Generic_Master_Caution_Active
+# -
+#   type: var
+#   var_name: L:Generic_Master_Warning_Active
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_XTK
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_True
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_CDI_Scale
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Distance
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Destination_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Egress_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_DTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_XTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Tracking
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Transition_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Vector_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Course_To_Steer
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Suspended
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_BOD_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOD_Distance_In_Leg
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_TOD
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_BOD
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOC_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_BOC_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_TOC_Distance_In_Leg
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_TOC
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Distance_To_BOC
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_State
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Path_Available
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Next_Constraint_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Target_Altitude
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_FPA
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_VNAV_Required_VS
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Alt_Capture_Type
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Service_Level
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_GP_FPA
+# -
+#   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+# -
+#   type: var
+#   var_name: L:WT_MINIMUMS_MODE
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro1_SavedPressure
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Approach_Mode
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value:2
+  -
+    type: var
+    var_name: L:HJET_AP_ALT_VAR
+    interpolate: Default
+  -
+    type: var
+    var_name: L:HJET_LFE
+# -
+#   type: var
+#   var_name: L:PAYLOAD STATION WEIGHT:1
+  -
+    type: var
+    var_name: L:hjet_allTestPushed
+  -
+    type: var
+    var_name: L:hjet_fireProtTestPushed
+  -
+    type: var
+    var_name: L:hjet_stallProtTestPushed
+  -
+    type: var
+    var_name: L:hjet_switchIllumTestPushed
+  -
+    type: var
+    var_name: L:hjet_reset_init
+  -
+    type: var
+    var_name: L:HJET_INTLTS_SEATBELT
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:HJET_INTLTS_NOSMOKING
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Mode:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Running:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Time:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Value:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Initial_Value:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Mode:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Running:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Time:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Value:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Initial_Value:2
+# -
+#   type: var
+#   var_name: L:WT3000_Fuel_Remaining
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Fob_Weight
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Aircraft_Weight
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Landing_Fuel
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Landing_Weight
+# -
+#   type: var
+#   var_name: L:WTG3000_Weight_Fuel_Holding_Fuel
+# -
+#   type: var
+#   var_name: L:PAYLOAD STATION WEIGHT:2
+# -
+#   type: var
+#   var_name: L:PAYLOAD STATION WEIGHT:3
+# -
+#   type: var
+#   var_name: L:WT1000_AP_G1000_INSTALLED
+# -
+#   type: var
+#   var_name: L:PAYLOAD STATION WEIGHT:4
+# -
+#   type: var
+#   var_name: L:PAYLOAD STATION WEIGHT:5
+# -
+#   type: var
+#   var_name: L:PAYLOAD STATION WEIGHT:6
+# -
+#   type: var
+#   var_name: L:PAYLOAD STATION WEIGHT:7
+# -
+#   type: var
+#   var_name: L:PAYLOAD STATION WEIGHT:8
+# -
+#   type: var
+#   var_name: L:PAYLOAD STATION WEIGHT:9
+# -
+#   type: var
+#   var_name: L:FUEL TOTAL QUANTITY
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_1_State
+# -
+#   type: var
+#   var_name: L:HJET_AIRCRAFT_FPA
+# -
+#   type: var
+#   var_name: L:HJET_VNAV_PHASE
+# -
+#   type: var
+#   var_name: L:HJET_VNAV_STATE
+# -
+#   type: var
+#   var_name: L:HJET_IS_AT_TOD
+# -
+#   type: var
+#   var_name: L:HJET_IS_APPORACHING_TOD
+# -
+#   type: var
+#   var_name: L:WTG3000_MFD_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_MFD_State
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Required_VS
+# -
+#   type: var
+#   var_name: L:HJET_HYD_PRESSURE
+  -
+    type: var
+    var_name: L:HJET_WingAI_ON 
+# -
+#   type: var
+#   var_name: L:Taxi_Should_on
+# -
+#   type: var
+#   var_name: L:Landing_Should_on
+# -
+#   type: var
+#   var_name: L:Nav_Should_on
+# -
+#   type: var
+#   var_name: L:Recog_Should_on
+# -
+#   type: var
+#   var_name: L:Strobe_Should_on
+# -
+#   type: var
+#   var_name: L:Beacon_Should_on
+# -
+#   type: var
+#   var_name: L:Logo_Should_on
+# -
+#   type: var
+#   var_name: L:IceInsp_Should_on
+# -
+#   type: var
+#   var_name: L:TailDeiceBool
+# -
+#   type: var
+#   var_name: L:AI_LeftRightFlow
+# -
+#   type: var
+#   var_name: L:AI_RightLeftFlow
+# -
+#   type: var
+#   var_name: L:HJET_TaxiNORMBool
+# -
+#   type: var
+#   var_name: L:HJET_LandingNORMBool
+# -
+#   type: var
+#   var_name: L:HJET_RecogNORMBool
+# -
+#   type: var
+#   var_name: L:HJET_IceinspNORMBool
+# -
+#   type: var
+#   var_name: L:HJET_StrobeNORMBool
+# -
+#   type: var
+#   var_name: L:HJET_NavNORMBool
+# -
+#   type: var
+#   var_name: L:HJET_BeaconNORMBool
+# -
+#   type: var
+#   var_name: L:HJET_LogoNORMBool
+# -
+#   type: var
+#   var_name: L:PID_P
+# -
+#   type: var
+#   var_name: L:PID_D
+# -
+#   type: var
+#   var_name: L:PID_I
+# -
+#   type: var
+#   var_name: L:PID_PhnatomThrottle
+# -
+#   type: var
+#   var_name: L:PID_FadecThrottle
+# -
+#   type: var
+#   var_name: L:PID_CalibratedThrottle
+# -
+#   type: var
+#   var_name: L:PID_maxMCT
+# -
+#   type: var
+#   var_name: L:PID_maxPhnatomThrust1
+# -
+#   type: var
+#   var_name: L:PID_throttleState
+# -
+#   type: var
+#   var_name: L:PID_throttleState_LF
+# -
+#   type: var
+#   var_name: L:PID2_P
+# -
+#   type: var
+#   var_name: L:PID2_D
+# -
+#   type: var
+#   var_name: L:PID2_I
+# -
+#   type: var
+#   var_name: L:HJET_VERTIVAL_AP_INDEX
+# -
+#   type: var
+#   var_name: L:CSC_Mode_Valid
+  -
+    type: var
+    var_name: L:CSC_targetSpeed
+# -
+#   type: var
+#   var_name: L:CSC_MODE_BOOL
+  -
+    type: var
+    var_name: L:HJET_cockpitTargetValue
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:HJET_cabinTargetValue
+    cancel_h_events: true
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:HJET_cockpitActualValue
+# -
+#   type: var
+#   var_name: L:HJET_cabinActualValue
+  -
+    type: var
+    var_name: L:HJET_cockpitFanValue
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:HJET_cabinFanValue
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:HJET_cockpitFanControlAuto
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:HJET_cabinFanControlAuto
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:HJET_VERTIVAL_TRACK_APPR
+# -
+#   type: var
+#   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
+#   var_name: L:WTG3000_MFD_1_Avionics_Status
+# -
+#   type: var
+#   var_name: L:HJET_CORRECT_TRIM_TO
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeSpeedBackup_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS1000_AttitudeSpeedBackup_State
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_2_State
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_1_State
+# -
+#   type: var
+#   var_name: L:screenCover_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:screenCover_State
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_2_State
+# -
+#   type: var
+#   var_name: L:WT3000_Fuel_Burned
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_Altimeter_Baro_TT:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Control_Panel_MapShowCursor:1
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_Altimeter_Baro_TT:2
+# -
+#   type: var
+#   var_name: L:WTG3000_Control_Panel_MapShowCursor:2
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_1_Avionics_Status
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_1_Avionics_Status
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_2_Avionics_Status
+# -
+#   type: var
+#   var_name: L:WTG3000_GTC_2_Avionics_Status
+# -
+#   type: var
+#   var_name: L:AS3000_Brightness_Auto
+  -
+    type: var
+    var_name: L:HJET_PANE_INDEX2
+  -
+    type: var
+    var_name: L:HJET_CHECKLIST_VISIBLE22
+  -
+    type: var
+    var_name: L:HJET_PANE_INDEX1
+  -
+    type: var
+    var_name: L:HJET_CHECKLIST_VISIBLE31
+# -
+#   type: var
+#   var_name: L:XMLVAR_Baro2_ForcedToSTD
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+  - # Manually added
+    type: var
+    var_name: L:CHIME Pushed
+  -
+    type: var
+    var_name: L:HJET_Reset_Checklist
+  -
+    type: var
+    var_name: L:checklistIndex
+  -
+    type: var
+    var_name: L:checklistIndex1
+  -
+    type: var
+    var_name: L:checklistIndex2
+  -
+    type: var
+    var_name: L:checklistIndex3
+  -
+    type: var
+    var_name: L:checklistIndex4
+  -
+    type: var
+    var_name: L:CDU PAGE
+
+master:
+  - # Lower L
+    type: var
+    var_name: L:HA420_ThrottlePos_L
+    interpolate: Default
+  - # Lower R
+    type: var
+    var_name: L:HA420_ThrottlePos_R
+    interpolate: Default
+  - # Upper L
+    type: var
+    var_name: L:THROTTLE1_SET
+    interpolate: Default
+  - # Upper R
+    type: var
+    var_name: L:THROTTLE2_SET
+    interpolate: Default

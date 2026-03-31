@@ -1,0 +1,644 @@
+# Version 3.3.0
+
+include:
+  - definitions/FS2020/modules/Instruments/WT_G3X_Touch.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS430.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/PMS50_GTN.yaml
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Enum
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: i32
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    use_calculator: true
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AVIONICS MASTER SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AVIONICS_MASTER
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_ALTERNATOR1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER1_SET
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_EXTERNAL_POWER
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+    use_calculator: true
+  - # Does not work (B event)
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP1_SET
+    use_calculator: true
+
+  - # Gyrocompass
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:29
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 29
+    use_calculator: true
+
+  - # Key
+    type: ToggleSwitch
+    var_name: A:TURB ENG IGNITION SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: TURBINE_IGNITION_SWITCH_TOGGLE
+    event_param: 1
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+    use_calculator: true
+
+  - # Rotor
+    type: NumSet
+    var_name: A:ROTOR GOV SWITCH POS
+    var_units: Bool
+    var_type: i32
+    event_name: ROTOR_GOV_SWITCH_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:ROTOR BRAKE HANDLE POS
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_ROTOR_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ROTOR LATERAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LATERAL_TRIM_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ROTOR LONGITUDINAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LONGITUDINAL_TRIM_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Twist
+    type: NumSet
+    var_name: A:HELICOPTER MASTER THROTTLE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: HELICOPTER_THROTTLE1_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Payload
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:13
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:14
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:15
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:CS500E_INSTRUMENTATION_OPTION
+  -
+    type: var
+    var_name: L:COWANSIM_GOV_TARGET
+# -
+#   type: var
+#   var_name: L:PLACEHOLDER
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_ElectricalCircuit
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_ElectricalCircuit
+  -
+    type: var
+    var_name: L:COWANSIM_LIGHT_LANDING_UP_DOWN
+  -
+    type: var
+    var_name: L:COWANSIM_LIGHT_LANDING_LR
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_1
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_2
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_3
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_4
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_5
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_6
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_7
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_8
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_9
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_10
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_11
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_12
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_13
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_14
+# -
+#   type: var
+#   var_name: L:CS500E_WeightStation_15
+  -
+    type: var
+    var_name: L:hideFireExtinguisherR
+  -
+    type: var
+    var_name: L:hideFireExtinguisherL
+# -
+#   type: var
+#   var_name: L:hideDownwash
+# -
+#   type: var
+#   var_name: L:hideHeatBlur
+  -
+    type: var
+    var_name: L:visorPilot
+    unreliable: true
+  -
+    type: var
+    var_name: L:visorCoPilot
+    unreliable: true
+  -
+    type: var
+    var_name: L:hideHeadsetR
+  -
+    type: var
+    var_name: L:hideHeadsetL
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Lever_Percent
+    interpolate: Default
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Position
+    interpolate: Default
+  -
+    type: var
+    var_name: L:CS_500E_Decision_Height
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_RECOGNITION_1
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:ROTOR:1
+# -
+#   type: var
+#   var_name: L:ROTOR:2
+  -
+    type: var
+    var_name: L:CS_500E_exitRearL
+  -
+    type: var
+    var_name: L:CS_500E_exitRearR
+  -
+    type: var
+    var_name: L:CS_500E_exitFrontR
+  -
+    type: var
+    var_name: L:CS_500E_exitFrontL
+  -
+    type: var
+    var_name: L:CS500E_DoorFLhide
+  -
+    type: var
+    var_name: L:CS500E_DoorFRhide
+  -
+    type: var
+    var_name: L:CS500E_DoorRLhide
+  -
+    type: var
+    var_name: L:CS500E_DoorRRhide
+# -
+#   type: var
+#   var_name: L:AP_Longitudinal_Command
+# -
+#   type: var
+#   var_name: L:COWANSIM_Throttle_1_Lever_Position
+# -
+#   type: var
+#   var_name: L:HANDLING_LATERAL_LONGITUDINAL_Trim_Position
+# -
+#   type: var
+#   var_name: L:COWANSIM_Cyclic_X_Position
+# -
+#   type: var
+#   var_name: L:AP_Lateral_Command
+# -
+#   type: var
+#   var_name: L:COWANSIM_Cyclic_Y_Position
+# -
+#   type: var
+#   var_name: L:windowVentSound
+  -
+    type: var
+    var_name: L:testRadioAlt
+  -
+    type: var
+    var_name: L:reIgnTest
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_2
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InactiveVar
+  -
+    type: var
+    var_name: L:CS500E_GTN_Option
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_DTOKey
+  -
+    type: var
+    var_name: L:buttonAnnTest
+# -
+#   type: var
+#   var_name: L:buttonSound
+  -
+    type: var
+    var_name: L:CS_Force_Trim_Release
+  -
+    type: var
+    var_name: L:COWANSIM_ENGINE_Idle_1_Released
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_ADF
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel
+# -
+#   type: var
+#   var_name: L:CS_Force_Trim_Release_Max_Time
+# -
+#   type: var
+#   var_name: L:CS_Force_Trim_Release_Timer
+# -
+#   type: var
+#   var_name: L:CS_S76C_AP_Att_Hold_Holds_Heading
+# -
+#   type: var
+#   var_name: L:CS500eGovITerm
+# -
+#   type: var
+#   var_name: L:CS500eGovLastInput
+# -
+#   type: var
+#   var_name: L:exteriorSound
+# -
+#   type: var
+#   var_name: L:annunciatorLightTimer
+# -
+#   type: var
+#   var_name: L:WTG3X_Screen_Backlight:1
+# -
+#   type: var
+#   var_name: L:PMS50_GTN650_RUNNING
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_RUNNING
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:CS_HeliSAS_Lights_Green
+# -
+#   type: var
+#   var_name: L:CS_HeliSAS_Lights_White
+# -
+#   type: var
+#   var_name: L:PMS50_GTN650_INSTALLED
+  -
+    type: var
+    var_name: L:annFuelFilter
+  -
+    type: var
+    var_name: L:annEngineChip
+  -
+    type: var
+    var_name: L:annAirFilter
+
+master:
+  -
+    type: var
+    var_name: L:COWANSIM_Cyclic_X_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:COWANSIM_Cyclic_Y_Position
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:TAIL ROTOR PEDAL POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_RUDDER_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:COLLECTIVE HANDLE POSITION
+    var_units: Position 32k
+    var_type: f64
+    add_by: -16384
+    event_name: AXIS_COLLECTIVE_SET
+    use_calculator: true
+    unreliable: true
+
+ignore:
+  - Transponder0
+  - Transponder1
+  - Transponder2
+  - Transponder3
+  - Transponder4
+  - Transponder5
+  - Transponder6
+  - Transponder7
+  - TransponderVFR

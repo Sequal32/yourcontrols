@@ -1,0 +1,280 @@
+# Version 1.23.2
+
+include:
+  - definitions/FS2020/modules/Instruments/WT_G3X_Touch.yaml
+  - definitions/FS2020/modules/Instruments/PMS50_GTN.yaml # Mod
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml # Mod
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT
+    event_param: 2
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT NAV:1
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:1
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT WING:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_WING_LIGHTS
+    event_param: 1
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+  - # LVAR's (Analog, trimmed)
+    type: var
+    var_name: L:P42_FF_SWITCH_PILOT
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_PILOT_1
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_TENT
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_ONEWHEEL
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_LIGHTS_WIGWAGS
+# -
+#   type: var
+#   var_name: L:P42_FF_DOOR_LEFT_ANIM
+# -
+#   type: var
+#   var_name: L:P42_FF_DOOR_RIGHT_ANIM
+  -
+    type: var
+    var_name: L:P42_FF_ENGINE_COVER
+  -
+    type: var
+    var_name: L:P42_FF_ENGINE_COVER_HANDLE
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:P42_FF_TRIM_TABS
+# -
+#   type: var
+#   var_name: L:P42_FF_FLASH_DANCE
+# -
+#   type: var
+#   var_name: L:P42_FF_SURFACE_VOLATILITY
+  -
+    type: var
+    var_name: L:P42_FF_SMOKE
+  -
+    type: var
+    var_name: L:P42_FF_FREECASTORING
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:P42_FF_UPDATE_SHOW
+  -
+    type: var
+    var_name: L:P42_FF_PUSH_AP_DISCONNECT
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:P42_HIDE_LEFT_DOOR
+  -
+    type: var
+    var_name: L:P42_FF_DOOR_FLY_LEFT
+  -
+    type: var
+    var_name: L:P42_HIDE_RIGHT_DOOR
+  -
+    type: var
+    var_name: L:P42_FF_DOOR_FLY_RIGHT
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_NOTEPAD
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+  -
+    type: var
+    var_name: L:P42_FF_ENG_CAN_START
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_START
+  -
+    type: var
+    var_name: L:P42_FF_HORN_ANIM
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Autopilot_Altitude_Increment
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_RUNNING
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_RUNNING
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:P42_FF_VIBE_SMOOTH
+# -
+#   type: var
+#   var_name: L:P42_FF_VIBE_SMOOTH_NORM
+# -
+#   type: var
+#   var_name: L:P42_FF_DOOR_LEFT_ANIM_base
+# -
+#   type: var
+#   var_name: L:P42_FF_DOOR_RIGHT_ANIM_BASE
+# -
+#   type: var
+#   var_name: L:P42_FF_YOKE_X
+# -
+#   type: var
+#   var_name: L:P42_FF_VOLUME_CABIN
+# -
+#   type: var
+#   var_name: L:P42_FF_VOLUME_WIND
+# -
+#   type: var
+#   var_name: L:P42_FF_COOLANT_TEMP
+# -
+#   type: var
+#   var_name: L:P42_FF_EGT
+# -
+#   type: var
+#   var_name: L:P42_FF_OIL_TEMP
+# -
+#   type: var
+#   var_name: L:P42_FF_OIL_PRESSURE
+# -
+#   type: var
+#   var_name: L:P42_FF_DOOR_FLY_LEFT_BLOWN_TIME
+# -
+#   type: var
+#   var_name: L:P42_FF_DOOR_FLY_RIGHT_BLOWN_TIME
+# -
+#   type: var
+#   var_name: L:P42_FF_HORN
+  -
+    type: var
+    var_name: L:P42_FF_GTN750_ON
+  -
+    type: var
+    var_name: L:P42_FF_GTN750_AVAILABLE
+# -
+#   type: var
+#   var_name: L:WTG3X_Screen_Backlight:2
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_LIGHTS_PANEL
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_LANEA
+  -
+    type: var
+    var_name: L:P42_FF_SWITCH_LANEB

@@ -3,6 +3,7 @@ use serde::Deserialize;
 use simconnect::SimConnector;
 use std::collections::HashMap;
 
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct LVar {
     pub floating: f64,

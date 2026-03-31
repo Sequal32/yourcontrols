@@ -1,0 +1,109 @@
+# Version 1.1.10
+
+include:
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/transponder.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:cowling
+  -
+    type: var
+    var_name: L:JN4_ENG_MAGNETO_L_CB
+  -
+    type: var
+    var_name: L:JN4_ENG_MAGNETO_R_CB
+  -
+    type: var
+    var_name: L:JN4_ENG_MAGNETO_Lever
+  -
+    type: var
+    var_name: L:Altimeter_Clamp
+  -
+    type: var
+    var_name: L:TrayTable
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:Altimeter_Face
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:Altimeter_Face_ANIM
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+  -
+    type: var
+    var_name: L:THROW_PROP1
+  -
+    type: var
+    var_name: L:throwprop
+# -
+#   type: var
+#   var_name: L:JN4_ENG_MAGNETO_L
+# -
+#   type: var
+#   var_name: L:JN4_ENG_MAGNETO_R
+
+ignore:
+  - jn4-ini-efb#9
+  - jn4-ini-efb#10
+
+  - jn4-ini-efb#radioMajInc
+  - jn4-ini-efb#radioMajDec
+  - jn4-ini-efb#radioMinInc
+  - jn4-ini-efb#radioMinDec
+
+  - jn4-ini-efb#1463516903 # 0
+  - jn4-ini-efb#1674867838 # 1
+  - jn4-ini-efb#1886218773 # 2
+  - jn4-ini-efb#2097569708 # 3
+  - jn4-ini-efb#-1986046653 # 4
+  - jn4-ini-efb#-1774695718 # 5
+  - jn4-ini-efb#-1563344783 # 6
+  - jn4-ini-efb#-1351993848 # 7
+  - jn4-ini-efb#gtr335-direct-del
+  - jn4-ini-efb#gtr335-vfr

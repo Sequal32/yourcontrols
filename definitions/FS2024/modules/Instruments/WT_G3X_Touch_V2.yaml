@@ -1,0 +1,230 @@
+# Garmin G3X Touch by Working Title.
+# Version 2.2.8
+
+shared:
+  - # Autopilot
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MACH HOLD VAR:1
+    var_units: Mach
+    var_type: f64
+    multiply_by: 100
+    event_name: AP_MACH_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_BC_HOLD
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT DISENGAGED
+    var_units: Bool
+    var_type: i32
+    event_name: AUTOPILOT_DISENGAGE_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE
+    var_units: Bool
+    var_type: i32
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
+    var_units: Bool
+    var_type: bool
+    event_name: FLIGHT_LEVEL_CHANGE
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_HDG_HOLD
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MAX BANK ID
+    var_units: Number
+    var_type: i32
+    event_name: AP_MAX_BANK_SET
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+    is_user_event: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    var_type: i32
+    event_name: AP_VS_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT YAW DAMPER
+    var_units: Bool
+    var_type: i32
+    event_name: YAW_DAMPER_SET
+    use_calculator: true
+
+  - # Events no simvar
+    type: event
+    event_name: AP_ALT_HOLD
+  -
+    type: event
+    event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_ON
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_OFF
+  -
+    type: event
+    event_name: AUTO_THROTTLE_TO_GA
+  -
+    type: event
+    event_name: AUTO_THROTTLE_DISCONNECT
+
+  - # Transponder
+    type: var
+    var_name: A:TRANSPONDER STATE:1
+    var_units: Enum
+    var_type: i32
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:TRANSPONDER IDENT:1
+    var_units: Bool
+    var_type: i32
+    event_name: XPNDR_IDENT_SET
+    event_param: 1
+    cancel_h_events: true
+  -
+    type: NumSet
+    var_name: A:TRANSPONDER CODE:1
+    var_units: Bco16
+    var_type: i32
+    event_name: XPNDR_SET
+    event_param: 1
+    cancel_h_events: true
+
+  - # LVAR's
+    type: var
+    var_name: L:WTG3X_Nav_Active_Navigator_Index
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WTG3X_Nav_Active_Nav_Source
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WTFltTimer_Mode_g3x:1
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WTFltTimer_Running_g3x:1
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Time_g3x:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Value_g3x:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Initial_Value_g3x:1
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value_g3x:1
+  -
+    type: var
+    var_name: L:WTFltTimer_Mode_g3x:2
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:WTFltTimer_Running_g3x:2
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Time_g3x:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Reference_Value_g3x:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Initial_Value_g3x:2
+# -
+#   type: var
+#   var_name: L:WTFltTimer_Value_g3x:2
+
+ignore:
+  - AP_KNOB
+  - AP_KNOB_Up
+  - AP_KNOB_Down

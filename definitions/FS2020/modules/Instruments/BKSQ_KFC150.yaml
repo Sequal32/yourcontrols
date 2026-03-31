@@ -1,0 +1,113 @@
+# BendixKing KFC 150 autopilot specifically for Black Square aircraft.
+
+shared:
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_ALT_HOLD
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_BC_HOLD
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_HDG_HOLD
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+    is_user_event: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    var_type: i32
+    event_name: AP_VS_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT NAV SELECTED
+    var_units: Number
+    var_type: i32
+    event_name: AP_NAV_SELECT_SET
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: event
+    event_name: AP_APR_HOLD
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_ON
+  -
+    type: event
+    event_name: AP_PITCH_LEVELER_OFF
+  -
+    type: event
+    event_name: AUTO_THROTTLE_TO_GA
+  -
+    type: event
+    event_name: AUTO_THROTTLE_DISCONNECT
+
+ignore:
+  - kas297b_100_INC
+  - kas297b_100_DEC
+  - kas297b_1000_INC
+  - kas297b_1000_DEC
+  - kas297b_VsButton

@@ -1,0 +1,72 @@
+# Garmin G3000 by Asobo. Deprecated but local variables are still used. Replaced by Working Title G3000/G5000.
+
+include:
+  - definitions/FS2020/modules/Instruments/WT_G3000.yaml
+
+shared:
+  -
+    type: var
+    var_name: L:AS3000_Brightness
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:AS3000_MinimalsMode
+  -
+    type: var
+    var_name: L:AS3000_MinimalsValue
+  -
+    type: var
+    var_name: L:AS3000_MFD_Current_Map
+  -
+    type: var
+    var_name: L:AS3000_MFD_Current_WeatherMap
+  -
+    type: var
+    var_name: L:AS3000_MFD_MapRotationMode
+  -
+    type: var
+    var_name: L:AS3000_MFD_OverrideLatitude
+  -
+    type: var
+    var_name: L:AS3000_MFD_OverrideLongitude
+  -
+    type: var
+    var_name: L:AS3000_MFD_IsPositionOverride
+  -
+    type: var
+    var_name: L:AS3000_IsLocalVarDefined
+  -
+    type: var
+    var_name: L:PFD_BRG1_Source
+  -
+    type: var
+    var_name: L:PFD_BRG2_Source
+  -
+    type: var
+    var_name: L:Glasscockpit_AOA_Mode
+  -
+    type: var
+    var_name: L:Glasscockpit_Wind_Mode
+  -
+    type: var
+    var_name: L:Glasscockpit_SVTTerrain
+  -
+    type: var
+    var_name: L:XMLVAR_SyntheticVision_On
+  -
+    type: var
+    var_name: L:XMLVAR_SyntheticVision_Off
+
+ignore:
+  - AP_UP
+  - AP_DN
+  - AP_BARO_Up
+  - AP_BARO_Down
+  - AP_KNOB_Up
+  - AP_KNOB_Down
+
+  - AS3000_PFD_1_BARO_INC
+  - AS3000_PFD_1_BARO_DEC
+  - AS3000_PFD_2_BARO_INC
+  - AS3000_PFD_2_BARO_DEC

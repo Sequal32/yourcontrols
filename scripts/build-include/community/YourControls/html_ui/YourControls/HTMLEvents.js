@@ -1,166 +1,174 @@
 class YourControlsHTMLEvents {
-    constructor(buttonCallback, inputCallback) {
-        this.bindedInputs = {}
+	constructor(buttonCallback, inputCallback) {
+		this.bindedInputs = {};
+		this.buttonCallback = buttonCallback;
+		this.inputCallback = inputCallback;
+		this.documentListenerLoop = null;
+		this.documentMouseListener = null;
+	}
 
-        this.buttonCallback = buttonCallback
-        this.inputCallback = inputCallback
-        this.documentListenerLoop = null
-        this.documentMouseListener = null
-    }
+	bindEvents() {
+		this.stopMouseUpListener();
 
-    bindEvents() {
-        this.stopMouseUpListener()
+		const mouseUpListener = (e) => {
+			if (e.YC) {
+				return;
+			}
 
-        this.documentMouseListener = document.addEventListener("mouseup", (e) => {
-            if (e.YC) {
-                return
-            }
+			if (e.button !== 0) { // Left-click only
+				return;
+			}
 
-            let currentWorking = e.target
+			let currentWorking = e.target;
 
-            while (currentWorking.id == "" && currentWorking != null) {
-                currentWorking = currentWorking.parentNode
-            }
+			while (currentWorking.id == "" && currentWorking != null) {
+				currentWorking = currentWorking.parentNode;
+			}
 
-            if (!currentWorking) {
-                return
-            }
+			if (!currentWorking) {
+				return;
+			}
 
-            this.buttonCallback(currentWorking.id)
-        })
-    }
+			this.buttonCallback(currentWorking.id);
+		};
+		document.addEventListener("mouseup", mouseUpListener);
+		this.documentMouseListener = mouseUpListener;
+	}
 
-    stopMouseUpListener() {
-        if (this.documentMouseListener === null) {
-            return
-        }
-        document.removeEventListener(this.documentMouseListener)
-        this.documentMouseListener = null
-    }
+	stopMouseUpListener() {
+		if (this.documentMouseListener === null) {
+			return;
+		}
+		document.removeEventListener("mouseup", this.documentMouseListener);
+		this.documentMouseListener = null;
+	}
 
-    startDocumentListener() {
-        this.stopDocumentListener()
+	startDocumentListener() {
+		this.stopDocumentListener();
 
-        const addElement = this.addElement.bind(this)
+		const addElement = this.addElement.bind(this);
 
-        this.documentListenerLoop = setInterval(() => {
-            document.querySelectorAll("*").forEach((element) => {
-                addElement(element)
-            })
-        }, 500)
-    }
+		this.documentListenerLoop = setInterval(() => {
+			document.querySelectorAll("*").forEach((element) => {
+				addElement(element);
+			});
+		}, 400);
+	}
 
-    stopDocumentListener() {
-        if (this.documentListenerLoop === null) {
-            return
-        }
-        clearInterval(documentListenerLoop)
-        this.documentListenerLoop = null
-    }
+	stopDocumentListener() {
+		if (this.documentListenerLoop === null) {
+			return;
+		}
+		clearInterval(this.documentListenerLoop);
+		this.documentListenerLoop = null;
+	}
 
-    addElement(element) {
-        this.addButton(element)
-        this.addInput(element)
-    }
+	addElement(element) {
+		this.addButton(element);
+		this.addInput(element);
+	}
 
-    getHash(string) {
-        let hash = 0,
-            i, chr;
-        for (i = 0; i < string.length; i++) {
-            chr = string.charCodeAt(i);
-            hash = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
-        }
-        return hash;
-    }
+	getHash(string) {
+		let hash = 0;
+		for (let i = 0; i < string.length; i++) {
+			const chr = string.charCodeAt(i);
+			hash = ((hash << 5) - hash + chr) | 0;
+		}
+		return hash >>> 0;
+	}
 
-    getPositionOfElementInParent(element) {
-        if (element.parentNode == null) {
-            return 0
-        }
+	getPositionOfElementInParent(element) {
+		const parent = element.parentElement;
+		if (!parent) return 0;
 
-        let nodes = element.parentNode.childNodes
+		let position = 1;
+		let sibling = element.previousElementSibling;
+		while (sibling) {
+			position++;
+			sibling = sibling.previousElementSibling;
+		}
+		return position;
+	}
 
-        for (let index = 0; index < nodes.length; index++) {
-            const otherElement = nodes[index];
+	countParents(element) {
+		let count = 0;
+		let workingElement = element.parentElement;
 
-            if (otherElement.isEqualNode(element)) {
-                return index
-            }
-        }
+		while (workingElement) {
+			count++;
+			workingElement = workingElement.parentElement;
+		}
+		return count;
+	}
 
-        return 0
-    }
+	getAttributesAsOneString(element) {
+		let longString = "";
 
-    countParents(element) {
-        let count = 0
-        let workingElement = element;
+		if (element.hasAttributes()) {
+			let attrs = Array.from(element.attributes);
+			attrs.sort((a, b) => a.name.localeCompare(b.name));
 
-        while (workingElement != null) {
-            count++
-            workingElement = workingElement.parentNode
-        }
+			for (let attr of attrs) {
+				longString += attr.name + "#" + attr.value;
+			}
+		}
+		return longString;
+	}
 
-        return count
-    }
+	generateHTMLHash(element) {
+		const baseString = element.tagName.toLowerCase() + "|" + this.getAttributesAsOneString(element);
+		let hash = this.getHash(baseString);
 
-    getAttributesAsOneString(element) {
-        let longString = ""
+		const depth = this.countParents(element);
+		const pos = this.getPositionOfElementInParent(element);
 
-        if (element.hasAttributes()) {
-            let attrs = element.attributes;
-            for (let i = attrs.length - 1; i >= 0; i--) {
-                longString += attrs[i].name + "#" + attrs[i].value
-            }
-        }
+		hash = (hash * 1000000 + depth * 1000 + pos) >>> 0;
 
-        return longString
-    }
+		return hash >>> 0;
+	}
 
-    generateHTMLHash(element) {
-        let hash = this.getHash(this.getAttributesAsOneString(element))
-        hash += this.countParents(element) * this.getPositionOfElementInParent(element)
-        return hash
-    }
+	getIdCorrected(id) {
+		while (document.getElementById(id) != null) {
+			id += 1;
+		}
 
-    getIdCorrected(id) {
-        while (document.getElementById(id) != null) {
-            id += 1
-        }
+		return id;
+	}
 
-        return id
-    }
+	addButton(element) {
+		if (element.id !== "") {
+			return;
+		}
 
-    addButton(element) {
-        if (element.id != "") {
-            return
-        }
+		const generated = this.generateHTMLHash(element);
+		const id = this.getIdCorrected(generated);
+		element.id = id;
+	}
 
-        let id = element.id || this.getIdCorrected(this.generateHTMLHash(element))
-        element.id = id
-    }
+	addInput(element) {
+		if (!(element instanceof HTMLInputElement) || this.bindedInputs[element.id]) {
+			return;
+		}
+		this.bindedInputs[element.id] = true;
 
-    addInput(element) {
-        if (!(element instanceof HTMLInputElement) || this.bindedInputs[element.id] == true) {
-            return
-        }
+		let cacheValue = null;
 
-        this.bindedInputs[element.id] = true
+		const inputHandler = (e) => {
+			if (e && e.YC) {
+				return;
+			}
+			if (cacheValue === element.value) {
+				return;
+			}
+			cacheValue = element.value;
+			this.inputCallback(element.id, element.value); // Send value
+		};
+		element.addEventListener("input", inputHandler);
+	}
 
-        let cacheValue = null
-        element.oninput = () => {
-            if (cacheValue == element.value) {
-                return
-            }
-            cacheValue = element.value
-            // SEND VALUE
-            this.inputCallback(element.id, element.value)
-        }
-    }
-
-    clear() {
-        this.bindedInputs = {}
-        this.stopDocumentListener()
-        this.stopMouseUpListener()
-    }
+	clear() {
+		this.bindedInputs = {};
+		this.stopDocumentListener();
+		this.stopMouseUpListener();
+	}
 }

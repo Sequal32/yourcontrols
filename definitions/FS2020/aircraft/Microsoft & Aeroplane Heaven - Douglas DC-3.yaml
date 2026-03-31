@@ -1,0 +1,586 @@
+# Version 1.2.5 / 1.2.5 Enhanced
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GNS430.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/AS_KAP140.yaml
+  - definitions/FS2020/modules/Instruments/AS_KT76C.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Gyropilot
+    type: var
+    var_name: A:AUTOPILOT PITCH HOLD REF
+    var_units: Degrees
+    var_type: f64
+    unreliable: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:4
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 4
+    use_calculator: true
+
+# - # LVAR's
+#   type: var
+#   var_name: L:startereffect1_on
+# -
+#   type: var
+#   var_name: L:exhaust_l_count
+# -
+#   type: var
+#   var_name: L:startereffect2_on
+# -
+#   type: var
+#   var_name: L:exhaust_r_count
+# -
+#   type: var
+#   var_name: L:combustionachieved
+# -
+#   type: var
+#   var_name: L:Leftflapnoncombust
+# -
+#   type: var
+#   var_name: L:rightflapnoncombust
+  -
+    type: var
+    var_name: L:Hydsystem
+  -
+    type: var
+    var_name: L:SWITCH_security
+  -
+    type: var
+    var_name: L:SWITCH_Doormain
+  -
+    type: var
+    var_name: L:SWITCH_DoorLuggage
+# -
+#   type: var
+#   var_name: L:LOCAL_VAR_TO_WATCH
+  -
+    type: var
+    var_name: L:sperry_knob_setter
+  -
+    type: var
+    var_name: L:Sperry_Rudder_Heading_Knob
+    unreliable: true
+  -
+    type: var
+    var_name: L:Sperry_Rudder_Heading
+    unreliable: true
+  -
+    type: var
+    var_name: L:sperry_AP_Heading
+    unreliable: true
+  -
+    type: var
+    var_name: L:Decision_Height
+  -
+    type: var
+    var_name: L:Sperry_Aileron_Bank_Knob
+    unreliable: true
+  -
+    type: var
+    var_name: L:Sperry_Aileron
+    unreliable: true
+  -
+    type: var
+    var_name: L:Sperry_attitude_wing
+    unreliable: true
+  -
+    type: var
+    var_name: L:Sperry_Lighting_Knob
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_IsDeiceAirFrame
+  -
+    type: var
+    var_name: L:DC3_nonAP_heading
+    unreliable: true
+  -
+    type: var
+    var_name: L:AH_DC3_knob_decision_height
+  -
+    type: var
+    var_name: L:frictionknob
+    unreliable: true
+  -
+    type: var
+    var_name: L:sperry_inuse
+  -
+    type: var
+    var_name: L:sperry_cage
+  -
+    type: var
+    var_name: L:DC3_lever_cowl_flaps0
+  -
+    type: var
+    var_name: L:DC3_lever_cowl_flaps1
+  -
+    type: var
+    var_name: L:DC3_fuelquantgauge
+  -
+    type: var
+    var_name: L:DC3_manifold_gauge_select
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_ADF
+  -
+    type: var
+    var_name: L:SWITCH_vorswap
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+  -
+    type: var
+    var_name: L:LeftFuelSelector
+  -
+    type: var
+    var_name: L:RightFuelSelector
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Mode
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:Switch_SPERRYshow
+  -
+    type: var
+    var_name: L:C47_supercharger_eng2
+  -
+    type: var
+    var_name: L:C47_supercharger_eng1
+  -
+    type: var
+    var_name: L:DC3_Gear_latch
+  -
+    type: var
+    var_name: L:SWITCH_gearlever_hider
+  -
+    type: var
+    var_name: L:DC3_propfeather2
+  -
+    type: var
+    var_name: L:DC3_propfeather1
+  -
+    type: var
+    var_name: L:DC3_Pilot_window
+  -
+    type: var
+    var_name: L:DC3_CoPilot_window
+  -
+    type: var
+    var_name: L:DC3_Pilot_sliding_window
+  -
+    type: var
+    var_name: L:DC3_CoPilot_sliding_window
+  -
+    type: var
+    var_name: L:CarbHeatLock
+  -
+    type: var
+    var_name: L:LeftCarbHeat
+  -
+    type: var
+    var_name: L:RightCarbHeat
+  -
+    type: var
+    var_name: L:SWITCH_Inverter
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_ExternalPower_1
+  -
+    type: var
+    var_name: L:SWITCH_Battery
+  -
+    type: var
+    var_name: L:SEAT_arm
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:DEICE_Airframe_1
+# -
+#   type: var
+#   var_name: L:DEICE_Propeller_1
+  -
+    type: var
+    var_name: L:DEICE_Switch_Engine
+  -
+    type: var
+    var_name: L:LIGHTING_UVgauge
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+  -
+    type: var
+    var_name: L:SWITCH_Compass
+  -
+    type: var
+    var_name: L:SWITCH_PilotWiper
+  -
+    type: var
+    var_name: L:SWITCH_CoPilotWiper
+  -
+    type: var
+    var_name: L:APhydroValve
+  -
+    type: var
+    var_name: L:FlapSelector
+  -
+    type: var
+    var_name: L:FlapHandle
+  -
+    type: var
+    var_name: L:pumpselectorhub
+  -
+    type: var
+    var_name: L:HydPumpSelectorHandle
+  -
+    type: var
+    var_name: L:HydraulicHandPump
+  -
+    type: var
+    var_name: L:HydShutOffValve
+  -
+    type: var
+    var_name: L:hydpumpcount
+  -
+    type: var
+    var_name: L:Fire_door
+  -
+    type: var
+    var_name: L:ExtinguisherPULL
+  -
+    type: var
+    var_name: L:fuel_oil_cutoffs
+  -
+    type: var
+    var_name: L:ExtinguisherSelector
+  -
+    type: var
+    var_name: L:FuelCut_emerg
+  -
+    type: var
+    var_name: L:OilCut_emerg
+  -
+    type: var
+    var_name: L:SWITCH_custom_qstart
+  -
+    type: var
+    var_name: L:qstartcount
+  -
+    type: var
+    var_name: L:collins_com2_power
+  -
+    type: var
+    var_name: L:collins_xpdr_power
+  -
+    type: var
+    var_name: L:collins_nav2_power
+  -
+    type: var
+    var_name: L:collins_adf_power
+  -
+    type: var
+    var_name: L:collins_nav_power
+  -
+    type: var
+    var_name: L:collins_com_power
+  -
+    type: var
+    var_name: L:engine2selector
+  -
+    type: var
+    var_name: L:engine1selector
+  -
+    type: var
+    var_name: L:SWITCHES_eng1_propfeather
+  -
+    type: var
+    var_name: L:SWITCHES_eng2_propfeather
+  -
+    type: var
+    var_name: L:SWITCH_custom_qcold
+  -
+    type: var
+    var_name: L:qcoldcount
+  -
+    type: var
+    var_name: L:SWITCH_Starter
+# -
+#   type: var
+#   var_name: L:sperry_bank
+# -
+#   type: var
+#   var_name: L:sperry_degreediff
+  -
+    type: var
+    var_name: L:sperrybankinuse
+  -
+    type: var
+    var_name: L:funcinit
+  -
+    type: var
+    var_name: L:oxyamount
+  -
+    type: var
+    var_name: L:SWITCH_LandLight
+# -
+#   type: var
+#   var_name: L:throttlewarn
+# -
+#   type: var
+#   var_name: L:cowlflapcount
+# -
+#   type: var
+#   var_name: L:cowltest
+  -
+    type: var
+    var_name: L:Left_engine_extinguish
+  -
+    type: var
+    var_name: L:Right_engine_extinguish
+  -
+    type: var
+    var_name: L:Left_engine_oilcut
+  -
+    type: var
+    var_name: L:Right_engine_oilcut
+# -
+#   type: var
+#   var_name: L:suctionenabled
+  -
+    type: var
+    var_name: L:SWITCH_PrimerLock
+  -
+    type: var
+    var_name: L:primerlock
+# -
+#   type: var
+#   var_name: L:powercheck
+# -
+#   type: var
+#   var_name: L:magpos
+# -
+#   type: var
+#   var_name: L:magpos2
+# -
+#   type: var
+#   var_name: L:totalhydraulicpress
+# -
+#   type: var
+#   var_name: L:radio_adf1000_knob
+# -
+#   type: var
+#   var_name: L:radio_adf100_knob
+# -
+#   type: var
+#   var_name: L:radio_adf10_knob
+# -
+#   type: var
+#   var_name: L:radio_adf1_knob
+# -
+#   type: var
+#   var_name: L:radio_adfdec_knob
+# -
+#   type: var
+#   var_name: L:wipersound
+# -
+#   type: var
+#   var_name: L:eng1failcount
+# -
+#   type: var
+#   var_name: L:eng2failcount
+# -
+#   type: var
+#   var_name: L:flapfuncinit
+# -
+#   type: var
+#   var_name: L:flap_noncombustioncheck
+# -
+#   type: var
+#   var_name: L:flap_check
+# -
+#   type: var
+#   var_name: L:init_flap
+  -
+    type: var
+    var_name: L:SWITCH_GroundPower
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+  -
+    type: var
+    var_name: L:LANDING_GEAR_Lever_Gear
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden2
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:KX155A_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_2_State
+# -
+#   type: var
+#   var_name: L:C300ADF_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:C300ADF_State
+# -
+#   type: var
+#   var_name: L:KX155A_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_1_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE

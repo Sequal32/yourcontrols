@@ -1,0 +1,418 @@
+# Version 6.22.0
+
+include:
+  - definitions/FS2024/modules/Instruments/AS_G3000.yaml
+  - definitions/FS2024/modules/controls.yaml
+  - definitions/FS2024/modules/general.yaml
+  - definitions/FS2024/modules/navigation.yaml
+  - definitions/FS2024/modules/payload.yaml
+  - definitions/FS2024/modules/radios.yaml
+  - definitions/FS2024/modules/trim.yaml
+
+shared:
+  - # Batteries
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:8
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 8
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:9
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 9
+    index_reversed: true
+
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: bool
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:STRUCTURAL DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STRUCTURAL_DEICE
+    use_calculator: true
+
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+    cancel_h_events: true
+    use_calculator: true
+
+  - # Handling
+    type: NumSet
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: GEAR_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:BRAKE PARKING POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: PARKING_BRAKE_SET
+    use_calculator: true
+
+  - # Generators
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:10
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 10
+    index_reversed: true
+  -
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:11
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 11
+    index_reversed: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT STROBE:1
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT WING:1
+    var_units: Bool
+    var_type: i32
+    event_name: WING_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+  - # Instrument light
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:13
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 13
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:13
+    var_units: Percent
+    var_type: f64
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 13
+    index_reversed: true
+
+  - # Interior
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:17
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 17
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:17
+    var_units: Percent
+    var_type: f64
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 17
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:18
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 18
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:18
+    var_units: Percent
+    var_type: f64
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 18
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:71
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 71
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:71
+    var_units: Percent
+    var_type: f64
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 71
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:72
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 72
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:72
+    var_units: Percent
+    var_type: f64
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 72
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:73
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 73
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:73
+    var_units: Percent
+    var_type: f64
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 73
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:74
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 74
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:74
+    var_units: Percent
+    var_type: f64
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 74
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:75
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 75
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:CIRCUIT POWER SETTING:75
+    var_units: Percent
+    var_type: f64
+    event_name: ELECTRICAL_CIRCUIT_POWER_SETTING_SET
+    event_param: 75
+    index_reversed: true
+
+  - # Scoped
+    type: var
+    var_name: L:1:SF50_Fuel_Cap_Left_Open
+  -
+    type: var
+    var_name: L:1:SF50_Fuel_Cap_Right_Open
+  -
+    type: var
+    var_name: L:1:SF50_Oil_Check_Panel_Door_Open
+  -
+    type: var
+    var_name: L:1:SF50_Engine_Starter_Button_Position
+  -
+    type: var
+    var_name: L:1:SF50_Engine_Run_Knob_Position
+  -
+    type: CustomCalculator
+    get: (L:1:SF50_Autothrottle_Status) 0 ==
+    set: 0 (>K:AUTO_THROTTLE_DISCONNECT)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (L:1:SF50_Autothrottle_Status) 3 ==
+    set: 0 (>K:AUTO_THROTTLE_ARM)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: var
+    var_name: L:1:SF50_Flap_Selector_Position
+  -
+    type: var
+    var_name: L:1:SF50_Fuel_Control_Switch_Position
+  -
+    type: var
+    var_name: L:1:SF50_Landing_Light_Switch_Position
+  -
+    type: var
+    var_name: L:1:SF50_Ecs_Defog_Active
+  -
+    type: var
+    var_name: L:1:SF50_Ecs_Control_Active
+  -
+    type: var
+    var_name: L:1:SF50_Ecs_Temp_Backup_Switch_State
+  -
+    type: var
+    var_name: L:1:SF50_Ecs_Disable_Switch_State
+  -
+    type: var
+    var_name: L:1:SF50_Ecs_Temp_Knob_Forward_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:1:SF50_Ecs_Fan_Knob_Forward_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:1:SF50_ELT_Remote_Switch_Position
+  -
+    type: var
+    var_name: L:1:SF50_CAPS_Handle_Position
+  -
+    type: var
+    var_name: L:1:SF50_CAPS_Safety_Pin_Position
+  -
+    type: var
+    var_name: L:1:SF50_Safe_Return_Autopilot_Intercepts_Active
+  -
+    type: var
+    var_name: L:1:SF50_Safe_Return_Operation_State
+  -
+    type: var
+    var_name: L:1:SF50_Ecs_Temp_Knob_Aft_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:1:SF50_Ecs_Fan_Knob_Aft_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:1:SF50_Emergency_Exit_Safety_Pin_Position
+  -
+    type: var
+    var_name: L:1:SF50_Oxygen_Master_Switch_Position
+  -
+    type: var
+    var_name: L:1:SF50_Bleed_Air_Switch_State
+  -
+    type: var
+    var_name: L:1:SF50_Windshield_IP_Switch_Position
+  -
+    type: var
+    var_name: L:1:SF50_Windshield_IP_High_Switch_Position
+
+# - # Global
+#   type: var
+#   var_name: L:SF50_deice_airboots_stab
+# -
+#   type: var
+#   var_name: L:SF50_deice_airboots_lowerWing
+# -
+#   type: var
+#   var_name: L:SF50_deice_airboots_upperWing
+  -
+    type: var
+    var_name: L:SF50_gear_alternate_ext
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Fire
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:SF50_warn_flaps_takeoff
+# -
+#   type: var
+#   var_name: L:SF50_warn_ldg_gear_sel_up
+# -
+#   type: var
+#   var_name: L:SF50_deice_airboots_timer
+# -
+#   type: var
+#   var_name: L:SF50_battery_timer
+# -
+#   type: var
+#   var_name: L:SF50_battery_5sec_timer
+  -
+    type: var
+    var_name: L:SF50_gear_alternate_ext_handle
+  -
+    type: var
+    var_name: L:SF50_vams_static_gpu
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_Management_Config_Type
+
+  - # Manually added (recheck)
+    type: var
+    var_name: L:SF50_Preflight_Check_Active
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Fire_Done
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Stall
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Stall_Done
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:SF50_Preflight_Check_Done
+    cancel_h_events: true
+
+master:
+  -
+    type: NumSet
+    var_name: L:1:SF50_Virtual_Throttle_Lever_Pos
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE1_SET
+    use_calculator: true
+    unreliable: true

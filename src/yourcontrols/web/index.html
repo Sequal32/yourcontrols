@@ -1,6 +1,6 @@
 <div class="row" onload="OnLoad">
   <div class="col-12">
-    <div class="alert w-100 alert-danger blert-margin" id="alert" role="alert">
+    <div class="alert w-100 alert-danger alert-margin" id="alert" role="alert">
       Not Connected
       <div class="rectangle" id="rectangle-status"></div>
     </div>
@@ -27,75 +27,47 @@
             <form class="needs-validation form-div" id="main-form-join" novalidate>
               <div class="form-group col-sm-auto bottom-margin" id="session-div">
                 <label for="session-input">Session Code</label>
-                <input type="text" class="form-control themed" id="session-input" aria-describedby="session-feedback"
-                  style="text-transform: uppercase" required />
-                <div class="valid-feedback">
-                  Looks good!
-                </div>
-                <div class="invalid-feedback" id="session-feedback">
-                  Please provide a valid session code.
-                </div>
+                <input class="form-control themed" type="text" id="session-input" aria-describedby="session-feedback" style="text-transform: uppercase" required />
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback" id="session-feedback">Provide a valid session code.</div>
               </div>
               <div class="col-sm-auto bottom-margin" id="join-ip-div" hidden>
-                <label for="join-ip-input">Server Hostname or IP</label>
-                <input type="text" class="form-control themed  border-none" id="join-ip-input"
-                  aria-describedby="ip-feedback" required />
-                <div class="valid-feedback">
-                  Looks good!
-                </div>
-                <div class="invalid-feedback">
-                  Please provide a valid ip or hostname.
-                </div>
+                <label for="join-ip-input">Server IP or Hostname</label>
+                <input class="form-control themed" type="text" id="join-ip-input" aria-describedby="ip-feedback" required />
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback" id="ip-feedback">Provide a valid IP or hostname.</div>
               </div>
               <div class="col-sm-auto bottom-margin" id="join-port-div" hidden>
                 <label for="join-port-input">Port</label>
-                <input type="text" class="form-control themed " id="join-port-input" aria-describedby="port-feedback"
-                  required />
-                <div class="valid-feedback">
-                  Looks good!
-                </div>
-                <div class="invalid-feedback" id="port-feedback">
-                  Please provide a valid port number.
-                </div>
+                <input class="form-control themed" type="text" id="join-port-input" aria-describedby="join-port-feedback" required />
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback" id="join-port-feedback">Provide a valid port number.</div>
               </div>
-
-              <div id="session-ip-radios" class="form-row form-check">
-                <div class="form-check form-check-inline">
+              <div class="form-row form-check" id="session-ip-radios">
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Select this if host chose IPv4.">
                   <input class="form-check-input" type="radio" name="ipRadios" id="session-ip4" checked />
                   <label class="form-check-label" for="session-ip4">IPv4</label>
                 </div>
-                <div class="form-check form-check-inline">
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Select this if host chose IPv6.">
                   <input class="form-check-input" type="radio" name="ipRadios" id="session-ip6" />
                   <label class="form-check-label" for="session-ip6">IPv6</label>
                 </div>
               </div>
-              <div id="radios" class="form-row form-check">
-                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
-                  data-trigger="hover" title="Select this if the Host selected Cloud Server.">
-                  <input class="form-check-input" type="radio" value="cloudServer" name="joinRadios"
-                    id="join-connect-cloud" checked />
-                  <label class="form-check-label" for="join-connect-cloud">
-                    Cloud Server
-                  </label>
+              <div class="form-row form-check" id="radios">
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Select this if host chose a cloud method.">
+                  <input class="form-check-input" type="radio" value="cloudServer" name="joinRadios" id="join-connect-cloud" checked />
+                  <label class="form-check-label" for="join-connect-cloud">Cloud Server</label>
                 </div>
-                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
-                  data-trigger="hover" title="Select this if the Host selected Direct.">
-                  <input class="form-check-input" type="radio" value="direct" name="joinRadios"
-                    id="join-connect-direct" />
-                  <label class="form-check-label" for="join-connect-direct">
-                    Direct
-                  </label>
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Select this if host chose Direct.">
+                  <input class="form-check-input" type="radio" value="direct" name="joinRadios" id="join-connect-direct" />
+                  <label class="form-check-label" for="join-connect-direct">Direct</label>
                 </div>
               </div>
               <div class="form-row justify-content-center small-margin">
-                <button id="connect-button" type="submit" class="btn btn-success">
-                  Connect
-                </button>
+                <button class="btn btn-success" type="submit" id="connect-button">Connect</button>
               </div>
             </form>
-            <button id="observer-button" class="btn btn-secondary mx-auto mt-2" style="display: block" hidden>
-              Go Observer
-            </button>
+            <button class="btn btn-secondary mx-auto mt-2" id="observer-button" style="display: block" hidden>Go Observer</button>
           </div>
         </div>
       </div>
@@ -106,73 +78,51 @@
             <small class="text-muted m-1" id="external-ipv4"></small>
             <small class="text-muted m-1" id="external-ipv6"></small>
             <small class="text-muted m-1" id="session-id"></small>
-
             <form class="needs-validation form-div" id="main-form-host" novalidate>
               <div class="form-group col-sm-auto bottom-margin" id="port-div" hidden>
                 <label for="port-input">Port</label>
-                <input type="text" class="form-control themed " id="port-input-host" aria-describedby="port-feedback"
-                  required />
-                <div class="valid-feedback">
-                  Looks good!
-                </div>
-                <div class="invalid-feedback" id="port-feedback">
-                  Please provide a valid port number.
-                </div>
+                <input class="form-control themed" type="text" id="port-input-host" aria-describedby="port-feedback" required />
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback" id="port-feedback">Provide a valid port number.</div>
               </div>
               <div class="form-check" id="host-ip-radios">
-                <div class="form-check form-check-inline">
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Standard. Older internet protocol.">
                   <input class="form-check-input" type="radio" name="hostIpRadios" id="server-ip4" checked />
                   <label class="form-check-label" for="ip4">IPv4</label>
                 </div>
-                <div class="form-check form-check-inline">
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Modern. Try this if IPv4 does not work.">
                   <input class="form-check-input" type="radio" name="hostIpRadios" id="server-ip6" />
                   <label class="form-check-label" for="ip6">IPv6</label>
                 </div>
               </div>
               <div class="form-check" id="connection-radios">
-                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
-                  data-trigger="hover"
-                  title="Host by connecting directly to other clients via the Cloud. Depending on router this may not work.">
-                  <input class="form-check-input" type="radio" name="connectionRadios" value="cloudServer"
-                    id="punchthrough-radio" checked />
-                  <label class="form-check-label" for="punchthrough-radio">
-                    Cloud P2P
-                  </label>
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-delay='{"show": 600, "hide": 100}'
+                title="Peer2Peer. Connect directly to others through our server. Success may depend on your local network. Recommended if sharing with friends.">
+                  <input class="form-check-input" type="radio" name="connectionRadios" value="cloudServer" id="punchthrough-radio" checked />
+                  <label class="form-check-label" for="punchthrough-radio">Cloud P2P</label>
                 </div>
-                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
-                  data-trigger="hover" title="Request a server to be hosted in the Cloud.">
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-delay='{"show": 600, "hide": 100}'
+                title="Host a session on our server. Possibly slower than P2P but recommended if sharing with random individuals. (Best protection)">
                   <input class="form-check-input" type="radio" name="connectionRadios" value="relay" id="relay-radio" />
-                  <label class="form-check-label" for="relay-radio">
-                    Cloud Host
-                  </label>
+                  <label class="form-check-label" for="relay-radio">Cloud Host</label>
                 </div>
-                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="bottom"
-                  data-trigger="hover"
-                  title="Host a server without connecting to the Cloud. Requires port fowarding, will attempt to use UPnP to automatically port forward.">
-                  <input class="form-check-input" type="radio" name="connectionRadios" value="direct"
-                    id="direct-radio" />
-                  <label class="form-check-label" for="direct-radio">
-                    Direct
-                  </label>
+                <div class="form-check form-check-inline" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-delay='{"show": 600, "hide": 100}'
+                title="Host your own server locally. Requires port forwarding for external connections but will attempt to use UPnP. Recommended for best experience.">
+                  <input class="form-check-input" type="radio" name="connectionRadios" value="direct" id="direct-radio" />
+                  <label class="form-check-label" for="direct-radio">Direct</label>
                 </div>
               </div>
               <div class="form-group form-row justify-content-center small-margin align-bottom">
-                <button type="submit" id="server-button" class="btn btn-primary">
-                  Start Server
-                </button>
+                <button class="btn btn-primary" type="submit" id="server-button">Start Server</button>
               </div>
             </form>
-            <button id="force-button" class="btn btn-primary mx-auto mt-2" style="display: block" hidden>
-              Take Control
-            </button>
+            <button class="btn btn-primary mx-auto mt-2" id="force-button" style="display: block" hidden>Take Control</button>
           </div>
         </div>
-        <div class="card w-100 themed" hidden id="is_user_client">
+        <div class="card w-100 themed" id="is_user_client" hidden>
           <div class="card-body">
             <h5 class="card-title">Host</h5>
-            <div>
-              You can only host when you're not connected to a server.
-            </div>
+            <div>You can only host when not connected to a server.</div>
           </div>
         </div>
       </div>
@@ -182,10 +132,10 @@
   <div class="col-12">
     <div class="row">
       <div class="col-6">
-        <div class="card themed ">
+        <div class="card themed">
           <div class="card-body">
             <h5 class="card-title">Client List</h5>
-            <ul class="list-group " , id="connection-list"></ul>
+            <ul class="list-group" id="connection-list"></ul>
           </div>
         </div>
       </div>
@@ -194,66 +144,48 @@
           <div class="card-body">
             <h5 class="card-title">Settings</h5>
             <form class="needs-validation form-div" id="settings-form" novalidate>
-              <div class="form-group col-sm-auto bottom-margin align-bottom">
-                <label for="aircraft-list">Select Aircraft</label>
-                <select id="aircraft-list" class="form-control themed themed">
-                  <option selected value="" id="default-aircraft-option"></option>
+              <div class="form-group col-sm-auto bottom-margin" id="fs2020-div">
+                <label for="fs2020-list" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Aircraft specifically for Flight Simulator 2020. If you want to use a 2020 developed aircraft compatible with 2024, select it from this list."><strong>Aircraft</strong> (2020)</label>
+                <select class="form-control themed" id="fs2020-list">
+                  <option selected value="" id="default-fs2020-option"></option>
                 </select>
               </div>
-              <div class="form-group col-sm-auto bottom-margin" id="name-div">
-                <label for="name-input">Username</label>
-                <input type="text" class="form-control themed " id="username-input" placeholder="Username"
-                  aria-describedby="ip-feedback" required />
-                <div class="valid-feedback">
-                  Looks good!
-                </div>
-                <div class="invalid-feedback" id="ip-feedback">
-                  Please provide a username.
-                </div>
+              <div class="form-group col-sm-auto bottom-margin" id="fs2024-div">
+                <label for="fs2024-list" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Aircraft specifically for Flight Simulator 2024. If you want to use a 2020 developed aircraft compatible with 2024, select it from the 2020 list above."><strong>Aircraft</strong> (2024)</label>
+                <select class="form-control themed" id="fs2024-list">
+                  <option selected value="" id="default-fs2024-option"></option>
+                </select>
+              </div>
+              <div class="form-group col-sm-auto bottom-margin" id="username-div">
+                <label for="username-input" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Pilot name or callsign."><strong>Name</strong></label>
+                <input class="form-control themed" type="text" id="username-input" aria-describedby="username-feedback" required />
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback" id="username-feedback">Provide a pilot username.</div>
               </div>
               <div class="form-group col-sm-auto bottom-margin" id="timeout-div">
-                <label for="timeout-input">Connection Timeout</label>
-                <input type="number" class="form-control themed " id="timeout-input" aria-describedby="ip-feedback"
-                  required />
-                <small class="form-text text-muted">
-                  Seconds before the connection is dropped from inactivity. If you are experiencing random disconnects,
-                  try setting this number higher.
-                </small>
+                <label for="timeout-input" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Seconds until server removes client from inactivity. Constant dropping indicates a problem."><strong>Connection Timeout</strong></label>
+                <input class="form-control themed" type="number" id="timeout-input" aria-describedby="timeout-feedback" required />
               </div>
               <div class="form-group col-sm-auto bottom-margin">
-                <div class="form-check" id="buffer-div">
+                <div class="form-check form-check-inline" id="instructor-div" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Joiners are automatically placed in observer mode.">
                   <input class="form-check-input" type="checkbox" id="instructor-mode" />
                   <label for="instructor-mode">Instructor Mode</label>
                 </div>
-                <small class="form-text text-muted checkbox-text">
-                  New connections are placed in observer mode automatically.
-                </small>
               </div>
               <div class="form-group col-sm-auto bottom-margin">
-                <div class="form-check" id="buffer-div">
+                <div class="form-check form-check-inline" id="streamer-div" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Hide IP and session code upon connection.">
                   <input class="form-check-input" type="checkbox" id="streamer-mode" />
                   <label for="streamer-mode">Streamer Mode</label>
                 </div>
-                <small class="form-text text-muted checkbox-text">
-                  Hides your IP and the session code after connecting.
-                </small>
               </div>
               <div class="form-group col-sm-auto bottom-margin">
-                <div class="form-check" id="buffer-div">
-                  <input class="form-check-input" type="checkbox" id="sound-muted" />
-                  <label for="sound-muted">Mute Sound</label>
-                </div>
-              </div>
-              <div class="form-group col-sm-auto bottom-margin">
-                <div class="form-check" id="buffer-div">
+                <div class="form-check form-check-inline" id="theme-div" data-toggle="tooltip" data-placement="left" data-trigger="hover" data-delay='{"show": 600, "hide": 100}' title="Dark or Light.">
                   <input class="form-check-input" type="checkbox" id="theme-select" />
                   <label for="theme-select">Dark Theme</label>
                 </div>
               </div>
               <div class="form-group form-row justify-content-center small-margin align-bottom">
-                <button type="submit" id="settings-button" class="btn btn-success">
-                  Save Settings
-                </button>
+                <button class="btn btn-success" type="submit" id="settings-button">Apply &amp; Save</button>
               </div>
             </form>
           </div>
@@ -261,10 +193,7 @@
         <div class="card themed" id="settings-connected-message" hidden>
           <div class="card-body">
             <h5 class="card-title">Settings</h5>
-            <div>
-              You can not change the settings when you're connected to a server
-              or running a server.
-            </div>
+            <div>Cannot change settings while connected to or hosting a server.</div>
           </div>
         </div>
       </div>
@@ -272,8 +201,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="restartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-  aria-hidden="true">
+<div class="modal fade" id="restartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content themed">
       <div class="modal-header">
@@ -282,38 +210,27 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        The settings that you changed need the application to be restarted.
-      </div>
+      <div class="modal-body">The settings you changed require the application to be restarted.</div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          Restart Later
-        </button>
-        <button type="button" class="btn btn-success" onclick="restart">
-          Restart It Now
-        </button>
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Restart Later</button>
+        <button class="btn btn-success" type="button" onclick="restart">Restart Now</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-  aria-hidden="true">
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content themed">
       <div class="modal-header">
         <h5 class="modal-title" id="version-alert-text"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          Update It Later
-        </button>
-        <button type="button" class="btn btn-success" id="version_alert_button">
-          Update It Now
-        </button>
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Update Later</button>
+        <button class="btn btn-success" type="button" id="version_alert_button">Update Now</button>
       </div>
     </div>
   </div>

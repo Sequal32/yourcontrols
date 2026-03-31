@@ -4,7 +4,8 @@ var settings_button = document.getElementById("settings-button");
 var alert = document.getElementById("alert");
 var version_alert_text = document.getElementById("version-alert-text");
 var overloaded_alert = document.getElementById("overloaded-alert");
-var aircraftList = document.getElementById("aircraft-list");
+var fs2020List = document.getElementById("fs2020-list");
+var fs2024List = document.getElementById("fs2024-list");
 
 var nav_bar = document.getElementById("nav");
 var server_client_page = document.getElementById("server-client-page");
@@ -17,15 +18,12 @@ var port_input_host = document.getElementById("port-input-host");
 
 var username = document.getElementById("username-input");
 var sessionInput = document.getElementById("session-input");
-var name_input_join = document.getElementById("name-input-join");
+var timeout_input = document.getElementById("timeout-input");
 var theme_selector = document.getElementById("theme-select");
 var streamer_mode = document.getElementById("streamer-mode");
 var instructor_mode = document.getElementById("instructor-mode");
-var sound_muted = document.getElementById("sound-muted");
 
-var timeout_input = document.getElementById("timeout-input");
-
-var name_div = document.getElementById("name-div");
+var username_div = document.getElementById("username-div");
 var port_div = document.getElementById("port-div");
 var server_div = document.getElementById("server-div");
 
@@ -354,12 +352,15 @@ function MessageReceived(data) {
             connectionList.setInControl(data["data"]);
             break;
         // Add possible aircraft
-        case "add_aircraft":
-            aircraftList.addAircraft(data["data"]);
+        case "add_fs2020_aircraft":
+            fs2020List.addAircraft(data["data"]);
+            break;
+        case "add_fs2024_aircraft":
+            fs2024List.addAircraft(data["data"]);
             break;
         case "version":
             $("#updateModal").modal();
-            version_alert_text.innerHTML = "New Version is available " + data["data"];
+            version_alert_text.innerHTML = "New version is available" + data["data"];
             break;
         case "update_failed":
             updateFailed();
@@ -403,10 +404,11 @@ function setTheme(isDarkTheme) {
     }
 }
 
-function UpdateAircraft(filename) {
+function UpdateAircraft(filename, sim) {
     invoke({
         type: "loadAircraft",
         config_file_name: filename,
+        sim: sim,
     });
 }
 
@@ -483,6 +485,25 @@ observerButton.addEventListener("click", function () {
     observerButton.hidden = true;
 });
 
+fs2020List.addEventListener("change", function () {
+    UpdateAircraft(this.value, "FS2020");
+    fs2024List.value = "";
+});
+
+fs2024List.addEventListener("change", function () {
+    UpdateAircraft(this.value, "FS2024");
+    fs2020List.value = "";
+});
+
+timeout_input.addEventListener('input', function () {
+    if (parseInt(this.value) > 10) {
+        this.value = 10;
+    }
+    if (parseInt(this.value) < 1) {
+        this.value = 1;
+    }
+});
+
 $("input[type=radio][name=connectionRadios]").change(function () {
     $("#host-ip-radios").attr("hidden", $("#direct-radio").prop("checked"))
 })
@@ -499,7 +520,6 @@ $("#settings-form").submit(function (e) {
     newSettings.ui_dark_theme = theme_selector.checked;
     newSettings.streamer_mode = streamer_mode.checked;
     newSettings.instructor_mode = instructor_mode.checked;
-    newSettings.sound_muted = sound_muted.checked;
 
     for (key in newSettings) {
         if (newSettings[key] === null) {
@@ -540,7 +560,11 @@ $("#server-button").click(function (e) {
 
     FormButtonsDisabled(true);
 
-    UpdateAircraft(aircraftList.value);
+    if (fs2020List.value !== "") {
+        UpdateAircraft(fs2020List.value, "FS2020");
+    } else if (fs2024List.value !== "") {
+        UpdateAircraft(fs2024List.value, "FS2024");
+    }
     invoke({
         type: "startServer",
         port: parseInt(port_input_host.value) || 0,
@@ -584,8 +608,6 @@ $("#connect-button").click(function (e) {
         isipv6: session_ip6radio.checked,
     };
 
-
-
     if (joinConnectDirect.checked) {
         if (ValidateIp(joinIpInput)) {
             data["ip"] = cacheIpInput;
@@ -626,14 +648,21 @@ function updateFailed() {
 
 version_alert_button.onclick = update;
 
-aircraftList.addAircraft = function (aircraftName) {
+fs2020List.addAircraft = function (aircraftName) {
     const newButton = document.createElement("option");
-    newButton.className =
-        "list-group-item list-group-item-action aircraft-list-entry themed";
+    newButton.className = "list-group-item list-group-item-action aircraft-list-entry themed";
     newButton.innerHTML = aircraftName.replace(".yaml", "");
     newButton.value = aircraftName;
 
-    aircraftList.appendChild(newButton);
+    fs2020List.appendChild(newButton);
+};
+fs2024List.addAircraft = function (aircraftName) {
+    const newButton = document.createElement("option");
+    newButton.className = "list-group-item list-group-item-action aircraft-list-entry themed";
+    newButton.innerHTML = aircraftName.replace(".yaml", "");
+    newButton.value = aircraftName;
+
+    fs2024List.appendChild(newButton);
 };
 
 $(function () {

@@ -1,0 +1,166 @@
+# Version 1.1.2 (7 & 7A)
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_G3X_Touch.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS430.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/AS_Vigilus.yaml
+  - definitions/FS2020/modules/Instruments/PMS50_GTN.yaml
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # G5 power
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:1
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 1
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT NAV:0
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    event_param: 0
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: i32
+    event_name: BEACON_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:0
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 0
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    var_type: i32
+    event_name: TAXI_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTRAL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTRAL POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: PEDESTRAL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:2
+    var_units: Percent
+    var_type: f64
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 2
+    index_reversed: true
+    use_calculator: true
+
+  - # LVAR's
+    type: var
+    var_name: L:DOORS_OPEN_ALL
+  -
+    type: var
+    var_name: L:DOORS_MAIN_HANDLE

@@ -1,0 +1,855 @@
+# Version 2.1.5
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_FES_FCU.yaml
+  - definitions/FS2020/modules/Instruments/AS_TT21.yaml
+  - definitions/FS2020/modules/Instruments/AS_TY92.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Ballast
+    type: NumSet
+    var_name: A:LIGHT STROBE
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    use_calculator: true
+
+  - # Breakers
+    type: CustomCalculator
+    get: (Z:BATTERY_BREAKER) 0 ==
+    set: 0 (>Z:BATTERY_BREAKER)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:BATTERY_BREAKER) 1 ==
+    set: 1 (>Z:BATTERY_BREAKER)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:FCU_BREAKER) 0 ==
+    set: 0 (>Z:FCU_BREAKER)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:FCU_BREAKER) 1 ==
+    set: 1 (>Z:FCU_BREAKER)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:8
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 8
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:11
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 11
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:22
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 22
+    use_calculator: true
+
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT
+    var_units: Bool
+    var_type: bool
+    event_name: PITOT_HEAT_TOGGLE
+  -
+    type: ToggleSwitch
+    var_name: A:WINDSHIELD DEICE SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: WINDSHIELD_DEICE_TOGGLE
+    use_calculator: true
+
+  - # FES
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_TOGGLE
+    use_calculator: true
+
+  - # FLARM
+    type: ToggleSwitch
+    var_name: A:LIGHT TAXI
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TAXI_LIGHTS
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT NAV
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    use_calculator: true
+
+  - # Release
+    type: event
+    event_name: TOW_PLANE_RELEASE
+
+  - # Ventilation
+    type: NumSet
+    var_name: A:LIGHT CABIN
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    use_calculator: true
+
+  - # Windows
+    type: CustomCalculator
+    get: (Z:Window_Open_Large) 0 ==
+    set: 0 (>Z:Window_Open_Large)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Window_Open_Large) 1 ==
+    set: 1 (>Z:Window_Open_Large)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Window_Open_Small) 0 ==
+    set: 0 (>Z:Window_Open_Small)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (Z:Window_Open_Small) 1 ==
+    set: 1 (>Z:Window_Open_Small)
+    condition:
+      equals:
+        F64: 1.0
+
+  - # LVAR's
+    type: var
+    var_name: L:GF_CLIMB_UNITS
+  -
+    type: var
+    var_name: L:GF_SPEED_UNITS
+  -
+    type: var
+    var_name: L:GF_ALTITUDE_UNITS
+  -
+    type: var
+    var_name: L:GF_DISTANCE_UNITS
+  -
+    type: var
+    var_name: L:GF_TEMP_UNITS
+  -
+    type: var
+    var_name: L:GF_VARIO_TONE_MODE
+# -
+#   type: var
+#   var_name: L:GF_VARIO_SCALE
+  -
+    type: var
+    var_name: L:VARIO_VOLUME
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:GF_TOGGLE_STICK
+  -
+    type: var
+    var_name: L:GF_TOGGLE_TINT
+  -
+    type: var
+    var_name: L:GF_TOGGLE_TIP_LIGHTS
+  -
+    type: var
+    var_name: L:GF_TOGGLE_OXYGEN_SYSTEM
+  -
+    type: var
+    var_name: L:GF_TOGGLE_YAWSTRING
+  -
+    type: var
+    var_name: L:GF_TOGGLE_FLARM_DISPLAY
+  -
+    type: var
+    var_name: L:GF_TOGGLE_GOPRO_CAMERA
+  -
+    type: var
+    var_name: L:GF_TOGGLE_FORWARD_COMPASS
+  -
+    type: var
+    var_name: L:GF_ADVERSE_YAW
+    unreliable: true
+  -
+    type: var
+    var_name: L:GF_AVIONICS_BRIGHTNESS
+    unreliable: true
+  -
+    type: var
+    var_name: L:GF_HAND_VENT
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:Aircraft_Outside
+  -
+    type: var
+    var_name: L:BATTERY_SWITCH
+  -
+    type: var
+    var_name: L:Canopy_Open
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:OXYGEN_KNOB
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_1_UP
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_1_DOWN
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_1_PUSH
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_2_DOWN
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_2_UP
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_2_PUSH
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_3_UP
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_3_DOWN
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_3_PUSH
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_4_UP
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_4_DOWN
+  -
+    type: var
+    var_name: L:LX_NAV_KNOB_4_PUSH
+  -
+    type: var
+    var_name: L:LX_NAV_BUTTON_1
+  -
+    type: var
+    var_name: L:LX_NAV_BUTTON_2
+  -
+    type: var
+    var_name: L:LX_NAV_BUTTON_3
+  -
+    type: var
+    var_name: L:LX_NAV_BUTTON_4
+  -
+    type: var
+    var_name: L:LX_NAV_BUTTON_4_HOLD
+  -
+    type: var
+    var_name: L:LX_NAV_BUTTON_5
+  -
+    type: var
+    var_name: L:LX_NAV_BUTTON_6
+  -
+    type: var
+    var_name: L:LX_NAV_BUTTON_7
+  -
+    type: var
+    var_name: L:LX_NAV_BUTTON_8
+  -
+    type: var
+    var_name: L:LX_VARIO_KNOB_1_PUSH
+  -
+    type: var
+    var_name: L:LX_VARIO_KNOB_2_UP
+  -
+    type: var
+    var_name: L:LX_VARIO_KNOB_2_DOWN
+  -
+    type: var
+    var_name: L:LX_VARIO_KNOB_2_PUSH
+  -
+    type: var
+    var_name: L:LX_VARIO_UP_BUTTON
+  -
+    type: var
+    var_name: L:LX_VARIO_CENTER_BUTTON
+  -
+    type: var
+    var_name: L:LX_VARIO_DOWN_BUTTON
+  -
+    type: var
+    var_name: L:DISPLAY_SWAP
+  -
+    type: var
+    var_name: L:DISPLAY_SWAP_ANIM
+  -
+    type: var
+    var_name: L:BEZEL_CAL_ANALOG
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:GF_TRIM_TRIGGER
+# -
+#   type: var
+#   var_name: L:SIM_ACTIVE
+# -
+#   type: var
+#   var_name: L:BALLAST_DUMP_LEFT
+# -
+#   type: var
+#   var_name: L:BALLAST_SPLASH_LEFT
+# -
+#   type: var
+#   var_name: L:BALLAST_DUMP_RIGHT
+# -
+#   type: var
+#   var_name: L:BALLAST_SPLASH_RIGHT
+# -
+#   type: var
+#   var_name: L:BALLAST_DUMP_TOTAL
+# -
+#   type: var
+#   var_name: L:IsFES
+# -
+#   type: var
+#   var_name: L:TOW_WARNING_MESSAGE
+  -
+    type: var
+    var_name: L:FES_MOTOR_CHARGING
+  -
+    type: var
+    var_name: L:FES_MOTOR_CHARGE_BAD
+  -
+    type: var
+    var_name: L:FES_CAUTION_MESSAGE
+  -
+    type: var
+    var_name: L:FES_SWITCH
+  -
+    type: var
+    var_name: L:FCU_SWITCH
+  -
+    type: var
+    var_name: L:FES_VENTILATION_MESSAGE
+  -
+    type: var
+    var_name: L:LEVER_TOW_RELEASE
+# -
+#   type: var
+#   var_name: L:TOW_RELEASE_MESSAGE
+# -
+#   type: var
+#   var_name: L:VibrationR
+# -
+#   type: var
+#   var_name: L:Canopy_Volume
+# -
+#   type: var
+#   var_name: L:Window_Volume_Large
+# -
+#   type: var
+#   var_name: L:Window_Volume_Small
+  -
+    type: var
+    var_name: L:OXYGEN_QTY
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:OXYGEN_SOUND
+# -
+#   type: var
+#   var_name: L:LX_NAV_POWER_TIMER
+# -
+#   type: var
+#   var_name: L:GF_GLIDE_RATIO_SMOOTHED
+  -
+    type: var
+    var_name: L:GF_BALLAST_IS_ADJUSTING
+  -
+    type: var
+    var_name: L:GF_BALLAST_TOTAL
+    unreliable: true
+  -
+    type: var
+    var_name: L:GF_BALLAST_IS_UPDATING
+# -
+#   type: var
+#   var_name: L:YAWSTRING_X_DEG
+# -
+#   type: var
+#   var_name: L:YAWSTRING_X_ANIM
+# -
+#   type: var
+#   var_name: L:YAWSTRING_TIP_ANIM
+  -
+    type: var
+    var_name: L:Headphone_Simulation
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:tablet_script_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:tablet_script_State
+  -
+    type: var
+    var_name: L:UNITS_IMPERIAL
+# -
+#   type: var
+#   var_name: L:CABLE_CONNECTED
+# -
+#   type: var
+#   var_name: L:SLACK_UP
+# -
+#   type: var
+#   var_name: L:ALL_OUT
+# -
+#   type: var
+#   var_name: L:ROPE_RELEASE
+# -
+#   type: var
+#   var_name: L:LX-NAV_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LX-NAV_State
+# -
+#   type: var
+#   var_name: L:LX-VARIO_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:LX-VARIO_State
+# -
+#   type: var
+#   var_name: L:FLARM_ALERT_VOLUME
+# -
+#   type: var
+#   var_name: L:RADAR_PING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_ID
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_ID
+# -
+#   type: var
+#   var_name: L:WasmInstrument_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:AS92_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS92_State
+# -
+#   type: var
+#   var_name: L:AS21_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS21_State
+# -
+#   type: var
+#   var_name: L:GOTFRIENDS_GLIDER_BLOCKER_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GOTFRIENDS_GLIDER_BLOCKER_State
+# -
+#   type: var
+#   var_name: L:VARIO_TONE
+# -
+#   type: var
+#   var_name: L:VARIO_TONE_SLOW
+  -
+    type: var
+    var_name: L:RADAR_SWAP_INTERVAL
+  -
+    type: var
+    var_name: L:RADAR_SWAP_WIDTH
+  -
+    type: var
+    var_name: L:RADAR_SWAP_HEIGHT
+  -
+    type: var
+    var_name: L:RADAR_SCAN_RADIUS
+  -
+    type: var
+    var_name: L:RADAR_SKIP_GROUND
+  -
+    type: var
+    var_name: L:RADAR_SKIP_AIR
+  -
+    type: var
+    var_name: L:RADAR_TARGET_LOCKED
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_BALLISTIC_TIME
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_BALLISTIC_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_BALLISTIC_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_0_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_1_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_2_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_3_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_4_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_5_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_6_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_7_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_8_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_9_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_10_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_11_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_12_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_13_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_14_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_15_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_16_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_17_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_18_VEL
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_HEADING
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_PITCH
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_RANGE
+# -
+#   type: var
+#   var_name: L:RADAR_TARGET_19_VEL
+# -
+#   type: var
+#   var_name: L:FLARM_ALERT
+# -
+#   type: var
+#   var_name: L:B21_PLN_REF_ID
+# -
+#   type: var
+#   var_name: L:YourControlsServerRunning
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+
+ignore:
+  - LX-NAV#1117019319
+  - LX-NAV#1567207994
+  - LX-NAV#632826595

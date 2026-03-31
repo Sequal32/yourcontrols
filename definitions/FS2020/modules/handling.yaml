@@ -1,0 +1,78 @@
+shared:
+  -
+    type: ToggleSwitch
+    var_name: A:ANTISKID BRAKES ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: ANTISKID_BRAKES_TOGGLE
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTO BRAKE SWITCH CB
+    var_units: Number
+    var_type: i32
+    event_name: SET_AUTOBRAKE_CONTROL
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:BRAKE PARKING POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: PARKING_BRAKE_SET
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:FLAPS HANDLE PERCENT
+    var_units: Position 16k
+    var_type: f64
+    event_name: FLAPS_CONTINUOUS_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: var
+    var_name: A:FLAPS HANDLE INDEX
+    var_units: Number
+    var_type: f64
+  -
+    type: NumSet
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: GEAR_SET
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GEAR EMERGENCY HANDLE POSITION
+    var_units: Bool
+    var_type: bool
+    event_name: GEAR_EMERGENCY_HANDLE_TOGGLE
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:SPOILERS HANDLE POSITION
+    var_units: Position 16k
+    var_type: f64
+    event_name: SPOILERS_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:SPOILERS ARMED
+    var_units: Bool
+    var_type: bool
+    event_name: SPOILERS_ARM_TOGGLE
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:TAILWHEEL LOCK ON
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TAILWHEEL_LOCK
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:WATER RUDDER HANDLE POSITION
+    var_units: Percent
+    var_type: i32
+    event_name: TOGGLE_WATER_RUDDER
+    use_calculator: true

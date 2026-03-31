@@ -1,0 +1,207 @@
+# Version 1.5.4
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/autopilot.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/transponder.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+# - # LVAR's
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:XMLVAR_Lotus_Trim_Adjust
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden2
+# -
+#   type: var
+#   var_name: L:ApuInit
+  -
+    type: var
+    var_name: L:XMLVAR_COM_DEC_RESET
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_APU_Starter
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_1
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+
+  - # X variant
+    type: var
+    var_name: L:XMLVAR_Canopy_Right
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Window_Left
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Window_Right
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Canopy_Left
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled
+  -
+    type: var
+    var_name: L:Gyro_2_drift
+  -
+    type: var
+    var_name: L:Gyro_2_comb
+  -
+    type: var
+    var_name: L:Gyro_reset
+# -
+#   type: var
+#   var_name: L:Askania_deviation
+  -
+    type: var
+    var_name: L:XMLVAR_Windows_Total_Open
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Canopy_Left_Norm
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Canopy_Right_Norm
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Window_Left_Norm
+    unreliable: true
+  -
+    type: var
+    var_name: L:XMLVAR_Window_Right_Norm
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+# -
+#   type: var
+#   var_name: L:AS530_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS530_State
+# -
+#   type: var
+#   var_name: L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_FP1_NOT_SPECIFIC_COLORS
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapShowCursor
+# -
+#   type: var
+#   var_name: L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN
+# -
+#   type: var
+#   var_name: L:FLIGHTPLAN_USE_DECEL_WAYPOINT
+# -
+#   type: var
+#   var_name: L:MAP_SHOWN_FLIGHTPLAN_INDEX
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveOrigin
+# -
+#   type: var
+#   var_name: L:Glasscockpits_FPLHaveDestination
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE

@@ -1,0 +1,24 @@
+# Version 0.1.41
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_ACD57.yaml
+  - definitions/FS2020/modules/Instruments/AS_LX8030.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Battery Swap
+    type: CustomCalculator
+    get: 3 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 3 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 4 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:1, Bool)
+    set: 1 4 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)

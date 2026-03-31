@@ -1,0 +1,47 @@
+# Version 1.0.6
+
+include:
+  - definitions/FS2020/modules/autopilot.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/transponder.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:19
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 19
+    use_calculator: true
+
+  - # LVAR's
+    type: var
+    var_name: L:RAD_Selector:1
+  -
+    type: var
+    var_name: L:Control Lock
+  -
+    type: var
+    var_name: L:Crew Visibility
+  -
+    type: var
+    var_name: L:Smoke Visibility
+  -
+    type: var
+    var_name: L:PILOT_VISIBLE
+  -
+    type: var
+    var_name: L:STUDENT_VISIBLE

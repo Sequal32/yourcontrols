@@ -1,26 +1,24 @@
 use crossbeam_channel::unbounded;
 use laminar::Socket;
 use log::info;
-use mem::drop;
 use spin_sleep::sleep;
-use std::sync::{
-    atomic::{AtomicBool, Ordering::SeqCst},
-    Arc,
+use std::{
+    mem::drop,
+    net::{IpAddr, SocketAddr},
+    sync::{
+        atomic::{AtomicBool, Ordering::SeqCst},
+        Arc, Mutex,
+    },
+    thread,
+    time::{Duration, Instant},
 };
-use std::thread;
-use std::{mem, net::IpAddr, net::SocketAddr, sync::Mutex, time::Duration, time::Instant};
-
-use crate::util::{
-    get_bind_address, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr,
-};
-use crate::util::{
-    ClientReceiver, ClientSender, Event, ReceiveMessage, ServerReceiver, ServerSender,
-    TransferClient,
-};
-use crate::util::{HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES};
 use crate::{
     messages::{Message, Payloads, SenderReceiver},
-    util::get_local_endpoints_with_port,
+    util::{
+        ClientReceiver, ClientSender, Event, ReceiveMessage, ServerReceiver, ServerSender, TransferClient,
+        get_bind_address, get_local_endpoints_with_port, get_rendezvous_server, get_socket_config, match_ip_address_to_socket_addr,
+        HEARTBEAT_INTERVAL_MANUAL_SECS, LOOP_SLEEP_TIME_MS, MAX_PUNCH_RETRIES,
+    },
 };
 
 use yourcontrols_types::Error;

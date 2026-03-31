@@ -1,0 +1,25 @@
+include:
+  - definitions/FS2024/modules/avatar.yaml
+  - definitions/FS2024/modules/commonlvars.yaml
+  - definitions/FS2024/modules/physics.yaml
+
+shared:
+  -
+    type: NumSet
+    var_name: A:IS SLEW ACTIVE
+    var_units: Bool
+    var_type: i32
+    event_name: SLEW_TOGGLE
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:PUSHBACK ATTACHED
+    var_units: Bool
+    var_type: i32
+    event_name: TOGGLE_PUSHBACK
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ProgramActionEvent
+    event_name: TOGGLE_LAUNCH_BAR_SWITCH
+    action: TransferControls

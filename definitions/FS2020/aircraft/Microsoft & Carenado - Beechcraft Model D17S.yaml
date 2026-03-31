@@ -1,0 +1,696 @@
+# Version 1.8.0
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_Aera.yaml
+  - definitions/FS2020/modules/Instruments/AS_KT76C.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/magnetos.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Autopilot
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:20
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 20
+    use_calculator: true
+
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+    use_calculator: true
+    unreliable: true
+
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+    use_calculator: true
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: STARTER1_SET
+    use_calculator: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG FUEL PUMP SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: ELECT_FUEL_PUMP1_SET
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: i32
+    event_name: BEACON_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    var_type: i32
+    event_name: TAXI_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT NAV:1
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT STROBE:1
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 1
+    use_calculator: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:GAUGE_FUELFLOW_INIT
+# -
+#   type: var
+#   var_name: L:FuelTotalRem
+# -
+#   type: var
+#   var_name: L:FuelTotalRemFLAG
+  -
+    type: var
+    var_name: L:BUTTON_FF_MODE
+  -
+    type: var
+    var_name: L:TABLET_INIT
+# -
+#   type: var
+#   var_name: L:TABLET
+  -
+    type: var
+    var_name: L:COLD_AND_DARK_AUX_ST
+  -
+    type: var
+    var_name: L:TABLET_BTN_PILOT_VIS
+  -
+    type: var
+    var_name: L:TABLET_BTN_COPILOT_VIS
+  -
+    type: var
+    var_name: L:PILOT_VIS
+  -
+    type: var
+    var_name: L:COPILOT_VIS
+# -
+#   type: var
+#   var_name: L:VAR_HEAD_COPILOTO
+  -
+    type: var
+    var_name: L:SW_DME_ON
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE_OLD
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_STATE
+# -
+#   type: var
+#   var_name: L:VAR_STARTER_SMOKE_TIMER
+# -
+#   type: var
+#   var_name: L:TEST_VAR_PILOTO
+# -
+#   type: var
+#   var_name: L:VAR_HEAD_PILOTO
+  -
+    type: var
+    var_name: L:CUSTOM_XMLVAR_LANDING_LIGHT_ON
+# -
+#   type: var
+#   var_name: L:XMLVAR_ANIM_Needle_Volt
+# -
+#   type: var
+#   var_name: L:CUSTOM_PANEL_LIGHT_D17S
+# -
+#   type: var
+#   var_name: L:AUX_BETA_MIN_REV
+# -
+#   type: var
+#   var_name: L:AUX_BETA_MIN
+# -
+#   type: var
+#   var_name: L:AUX_BETA_MAX
+# -
+#   type: var
+#   var_name: L:AUX_BETA_INCIDENCE
+# -
+#   type: var
+#   var_name: L:AUX_ALPHA_INCIDENCE
+# -
+#   type: var
+#   var_name: L:AUX_BETA
+# -
+#   type: var
+#   var_name: L:AUX_VS
+# -
+#   type: var
+#   var_name: L:AUX_BETA_ANIM
+# -
+#   type: var
+#   var_name: L:AUX_FUELPRESS1
+# -
+#   type: var
+#   var_name: L:AUX_FUELPRESS2
+# -
+#   type: var
+#   var_name: L:AUX_FUELPUMPON1
+# -
+#   type: var
+#   var_name: L:AUX_FUELPUMPON2
+# -
+#   type: var
+#   var_name: L:AUX_OILTEMP1_F
+# -
+#   type: var
+#   var_name: L:AUX_OILTEMP1_C
+# -
+#   type: var
+#   var_name: L:AUX_OILTEMP1_ENG_C
+# -
+#   type: var
+#   var_name: L:AUX_OILPRESS1
+# -
+#   type: var
+#   var_name: L:AUX_ENG_1_CHT_F
+# -
+#   type: var
+#   var_name: L:AUX_ENG_1_CHT_C
+# -
+#   type: var
+#   var_name: L:AUX_ENG_ENG_1_CHT_F
+# -
+#   type: var
+#   var_name: L:AUX_ENG_ENG_1_CHT_C
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_ALTERNATOR1
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_ALTERNATOR2
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_ALTERNATOR1_AMP
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_ALTERNATOR2_AMP
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_BAT_LOAD1_AMP
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_BAT_LOAD2_AMP
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_MASTER_BATTERY
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_CIRCUIT_GENERAL_PANEL
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_AVIONICS
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_MAIN_BUS_AMPS
+# -
+#   type: var
+#   var_name: L:AUX_RECIP_CARBURETOR_TEMPERATURE1_C
+# -
+#   type: var
+#   var_name: L:AUX_RECIP_CARBURETOR_TEMPERATURE1_F
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_BAT_VOLT
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_GENALT_BUS_VOLT1
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_GENALT_BUS_VOLT2
+# -
+#   type: var
+#   var_name: L:AUX_VERTICAL_HOLD_VAR
+# -
+#   type: var
+#   var_name: L:AUX_VERTICAL_SPEED
+# -
+#   type: var
+#   var_name: L:AUX_ENGINE_P1
+# -
+#   type: var
+#   var_name: L:AUX_ENGINE_P2
+# -
+#   type: var
+#   var_name: L:AUX_ENGINE_RECIP_P1
+# -
+#   type: var
+#   var_name: L:AUX_ENGINE_RECIP_P2
+# -
+#   type: var
+#   var_name: L:AUX_GW_MANIFOLD_PRESSURE
+# -
+#   type: var
+#   var_name: L:AUX_RPM
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C1
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C2
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C3
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C4
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C5
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C6
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C7
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C8
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C9
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C10
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C11
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C12
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C13
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C14
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C15
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C16
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C17
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C18
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C19
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C20
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C21
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C22
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C23
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C24
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C25
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C26
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C27
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C28
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C29
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C30
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C31
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C32
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C33
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C34
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C35
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C36
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C37
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C38
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C39
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C40
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C41
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C42
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C43
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C44
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C45
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C46
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C47
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C48
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C49
+# -
+#   type: var
+#   var_name: L:AUX_ELECTRICAL_C50
+# -
+#   type: var
+#   var_name: L:AUX_WIND_VEL_ABS
+# -
+#   type: var
+#   var_name: L:AUX_WIND_VEL
+# -
+#   type: var
+#   var_name: L:AUX_WIND_DIR
+# -
+#   type: var
+#   var_name: L:AUX_WIND_DIR1
+# -
+#   type: var
+#   var_name: L:AUX_WIND_COMPASS
+# -
+#   type: var
+#   var_name: L:AUX_WIND_HEADING
+# -
+#   type: var
+#   var_name: L:AUX_TEMP_TAT_C
+# -
+#   type: var
+#   var_name: L:AUX_TEMP_TAT_F
+# -
+#   type: var
+#   var_name: L:AUX_TEMP_ATM_C
+# -
+#   type: var
+#   var_name: L:AUX_TEMP_AT_C
+  -
+    type: var
+    var_name: L:AUX_HAS_NAV_A
+  -
+    type: var
+    var_name: L:AUX_HAS_NAV_B
+  -
+    type: var
+    var_name: L:AUX_HAS_NAV_C
+# -
+#   type: var
+#   var_name: L:AUX_hoobs_00001
+# -
+#   type: var
+#   var_name: L:AUX_hoobs_eng_elapsed
+# -
+#   type: var
+#   var_name: L:AUX_hoobs_eng_elapsed_minutos
+# -
+#   type: var
+#   var_name: L:AUX_hoobs_eng_elapsed_hexa
+# -
+#   type: var
+#   var_name: L:AUX_hoobs_eng_elapsed_hexa_prueba
+# -
+#   type: var
+#   var_name: L:AUX_LANDING_LIGHT_ON
+# -
+#   type: var
+#   var_name: L:AUX_LANDING_LIGHT
+# -
+#   type: var
+#   var_name: L:AUX_AIRSPEED_PROP
+# -
+#   type: var
+#   var_name: L:AUX_FUEL_SELECTOR_1
+# -
+#   type: var
+#   var_name: L:AUX_FUELFLOW
+# -
+#   type: var
+#   var_name: L:AUX_SUCTION_PRESS_inHG
+  -
+    type: var
+    var_name: L:CUSTOM_KNOB_MANILLA_R_PRUEBA
+  -
+    type: var
+    var_name: L:AUX_CUSTOM_KNOB_MANILLA_R_PRUEBA
+# -
+#   type: var
+#   var_name: L:AUX_FUEL_TOTAL_QUANTITY
+# -
+#   type: var
+#   var_name: L:AUX_ENG1_FUEL_FLOW _GPH
+  -
+    type: var
+    var_name: L:ASD_FUEL_SELECTOR_MAIN_D17S
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:TABLET_BTN_EXT_PWR
+  -
+    type: var
+    var_name: L:TABLET_BTN_STATIC_ELEMENT
+  -
+    type: var
+    var_name: L:TABLET_BTN_TOW_CAR
+  -
+    type: var
+    var_name: L:HANDLE_WINDOWS_ROLLER_L
+  -
+    type: var
+    var_name: L:HANDLE_WINDOWS_ROLLER_R
+  -
+    type: var
+    var_name: L:ASD_FUEL_SELECTOR_WING_D17S
+  -
+    type: var
+    var_name: L:TABLET_PAG
+  -
+    type: var
+    var_name: L:TABLET_BTN_COPILOT_DOOR
+  -
+    type: var
+    var_name: L:TABLET_BTN_COLD_AND_DARK
+  -
+    type: var
+    var_name: L:TABLET_BTN_READY_FOR_TAKE_OFF
+  -
+    type: var
+    var_name: L:TABLET_BTN_READY_FOR_TAXY
+  -
+    type: var
+    var_name: L:TABLET_BTN_DONE
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+  -
+    type: var
+    var_name: L:XMLVAR_UNNAMED_MOM_LO_COUNT
+  -
+    type: var
+    var_name: L:XMLVAR_UNNAMED_MOM_HI_COUNT
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverFlapsHidden
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:SWITCH_SMOKE
+  -
+    type: var
+    var_name: L:SWITCH_DAY_NIGHT
+  -
+    type: var
+    var_name: L:CARVAR_Push_StructuralBar

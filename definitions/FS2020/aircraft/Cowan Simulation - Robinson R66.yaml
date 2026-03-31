@@ -1,0 +1,475 @@
+# Version 3.4.0
+
+include:
+  - definitions/FS2020/modules/Instruments/WT_G3X_Touch.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/AS_GTN650.yaml
+  - definitions/FS2020/modules/Instruments/AS_GTR225.yaml
+  - definitions/FS2020/modules/Instruments/PMS50_GTN.yaml
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Deice
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Enum
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:ENG ANTI ICE:1
+    var_units: Bool
+    var_type: i32
+    event_name: ANTI_ICE_TOGGLE_ENG1
+    use_calculator: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+    use_calculator: true
+
+  - # Ignition
+    type: NumSet
+    var_name: A:TURB ENG IGNITION SWITCH EX1:1
+    var_units: Enum
+    var_type: i32
+    event_name: TURBINE_IGNITION_SWITCH_SET1
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_7_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PEDESTAL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PEDESTAL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_6_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+    use_calculator: true
+
+  - # Rotor
+    type: NumSet
+    var_name: A:ROTOR BRAKE HANDLE POS
+    var_units: Position 16k
+    var_type: f64
+    event_name: AXIS_ROTOR_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ROTOR LATERAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LATERAL_TRIM_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ROTOR LONGITUDINAL TRIM PCT
+    var_units: Position 16k
+    var_type: f64
+    event_name: ROTOR_LONGITUDINAL_TRIM_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Twist
+    type: NumSet
+    var_name: A:HELICOPTER MASTER THROTTLE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: HELICOPTER_THROTTLE1_SET
+    use_calculator: true
+    unreliable: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:CSR66_FOAT_COAT_VOLT
+  -
+    type: var
+    var_name: L:CSR66_HIDE_PANEL_SIDEPOD
+  -
+    type: var
+    var_name: L:CSR66_AMBIENT_OTHERWISE_VOLTS
+  -
+    type: var
+    var_name: L:CSR66_MAPLIGHT_RIGHT
+  -
+    type: var
+    var_name: L:CSR66_MAPLIGHT_UP
+  -
+    type: var
+    var_name: L:CSR66_GOV_TARGET
+  -
+    type: var
+    var_name: L:CSR66_CYCLIC_TABLES_ROTATION
+    unreliable: true
+  -
+    type: var
+    var_name: L:CSR66_COLLECTIVE_FRICTION
+    unreliable: true
+  -
+    type: var
+    var_name: L:CSR66_CYCLIC_FRICTION
+    unreliable: true
+  -
+    type: var
+    var_name: L:CSR66_INSTRUMENTATION_OPTION
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_ElectricalCircuit
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_ElectricalCircuit
+# -
+#   type: var
+#   var_name: L:CSR66_WeightStation_1
+# -
+#   type: var
+#   var_name: L:CSR66_WeightStation_2
+# -
+#   type: var
+#   var_name: L:CSR66_WeightStation_3
+# -
+#   type: var
+#   var_name: L:CSR66_WeightStation_4
+# -
+#   type: var
+#   var_name: L:CSR66_WeightStation_5
+# -
+#   type: var
+#   var_name: L:CSR66_WeightStation_6
+# -
+#   type: var
+#   var_name: L:CSR66_WeightStation_7
+  -
+    type: var
+    var_name: L:CSR66_RCA2610_BRIGHTNESS
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+  -
+    type: var
+    var_name: L:CSR66_SOLO_PIN
+  -
+    type: var
+    var_name: L:UpperWindow
+  -
+    type: var
+    var_name: L:VisorWindow
+# -
+#   type: var
+#   var_name: L:CSR66_FuelAnnTimer
+  -
+    type: var
+    var_name: L:CSR66_Hyd_Switch
+  -
+    type: var
+    var_name: L:CSR66_GTN_Option
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+# -
+#   type: var
+#   var_name: L:ROTOR:1
+# -
+#   type: var
+#   var_name: L:ROTOR:2
+  -
+    type: var
+    var_name: L:floatsArmed
+  -
+    type: var
+    var_name: L:floatsBlown
+  -
+    type: var
+    var_name: L:CSR66_DoorRROpen
+  -
+    type: var
+    var_name: L:CSR66_DoorRLOpen
+  -
+    type: var
+    var_name: L:CSR66_DoorFROpen
+  -
+    type: var
+    var_name: L:CSR66_DoorFLOpen
+  -
+    type: var
+    var_name: L:CSR66_DoorFRhide
+  -
+    type: var
+    var_name: L:CSR66_DoorFLhide
+  -
+    type: var
+    var_name: L:CSR66_DoorRRhide
+  -
+    type: var
+    var_name: L:CSR66_DoorRLhide
+# -
+#   type: var
+#   var_name: L:AP_Longitudinal_Command
+# -
+#   type: var
+#   var_name: L:COWANSIM_Throttle_1_Lever_Position
+# -
+#   type: var
+#   var_name: L:COWANSIM_Cyclic_X_Position
+# -
+#   type: var
+#   var_name: L:AP_Lateral_Command
+# -
+#   type: var
+#   var_name: L:COWANSIM_Cyclic_Y_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Lever_Percent
+    interpolate: Default
+  -
+    type: var
+    var_name: L:FuelValveGard
+  -
+    type: var
+    var_name: L:FuelValveGard_2
+  -
+    type: var
+    var_name: L:CSR66_AC_CIRCUIT
+  - # Needed for animation
+    type: var
+    var_name: L:LIGHTING_CABIN_1
+  - # Needed for animation
+    type: var
+    var_name: L:LIGHTING_PEDESTAL_1
+  -
+    type: var
+    var_name: L:CSR66_CHECKLIST
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS530_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_AS430_1
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_INSTALLED
+# -
+#   type: var
+#   var_name: L:XMLVAR_GPS_DISABLED_GTN750
+# -
+#   type: var
+#   var_name: L:TDSGTNXI_InactiveVar
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI750U1_DTOKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_LKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobInnerDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobCRSR
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterInc
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_RKnobOuterDec
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_HomeKey
+# -
+#   type: var
+#   var_name: L:TDSGTNXI650U2_DTOKey
+  -
+    type: var
+    var_name: L:CSR66_TEST_ANN
+  -
+    type: var
+    var_name: L:CSR66_Hyd_Breaker_Pulled
+  -
+    type: var
+    var_name: L:CS_Force_Trim_Release
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_4
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:COWANSIM_Throttle_1_Position
+    interpolate: Default
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:COWANSIM_ENGINE_Idle_1_Released
+
+master:
+  -
+    type: var
+    var_name: L:COWANSIM_Cyclic_X_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:COWANSIM_Cyclic_Y_Position
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:TAIL ROTOR PEDAL POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_RUDDER_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:COLLECTIVE HANDLE POSITION
+    var_units: Position 32k
+    var_type: f64
+    add_by: -16384
+    event_name: AXIS_COLLECTIVE_SET
+    use_calculator: true
+    unreliable: true
+
+ignore:
+  - Transponder0
+  - Transponder1
+  - Transponder2
+  - Transponder3
+  - Transponder4
+  - Transponder5
+  - Transponder6
+  - Transponder7
+  - TransponderVFR

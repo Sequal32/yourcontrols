@@ -1,0 +1,31 @@
+# Version 0.1.78
+
+include:
+  - definitions/FS2020/modules/Instruments/WT_G3X_Touch.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # LVAR's
+    type: var
+    var_name: L:ASPropeller_Pitch_Min
+  -
+    type: var
+    var_name: L:ASPropeller_Pitch_Max
+  -
+    type: var
+    var_name: L:ASPropeller_Commanded_RPM
+
+ignore:
+  - ASPropeller_Knob_Inc
+  - ASPropeller_Knob_Dec

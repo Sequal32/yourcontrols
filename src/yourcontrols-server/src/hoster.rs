@@ -2,13 +2,21 @@ use crate::servers::{Client, ServerState, Servers};
 use laminar::Socket;
 use log::info;
 use semver::Version;
-use std::collections::HashMap;
-use std::net::SocketAddr;
-use std::str::FromStr;
-use std::sync::{Arc, Mutex};
-use std::thread::sleep;
-use std::time::{Duration, Instant};
-use yourcontrols_net::{get_socket_config, get_socket_duplex, Message, Payloads, SenderReceiver};
+use std::{
+    collections::HashMap,
+    net::SocketAddr,
+    str::FromStr,
+    sync::{Arc, Mutex},
+    thread::sleep,
+    time::{Duration, Instant},
+};
+use yourcontrols_net::{
+    get_socket_config,
+    get_socket_duplex,
+    Message,
+    Payloads,
+    SenderReceiver,
+};
 use yourcontrols_types::Error;
 
 pub const SERVER_NAME: &str = "SERVER";

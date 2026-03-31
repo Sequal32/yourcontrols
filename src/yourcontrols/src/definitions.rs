@@ -2,23 +2,28 @@ use indexmap::IndexMap;
 use serde::Deserialize;
 use serde_yaml::{self, Value};
 use simconnect::SimConnector;
-use std::collections::{hash_map, HashMap, HashSet, VecDeque};
-use std::fmt::{Debug, Display};
-use std::fs::File;
-use std::mem::swap;
-use std::path::Path;
-use std::time::Instant;
-
-use crate::sync::gaugecommunicator::{GetResult, InterpolateData, InterpolationType};
-use crate::sync::jscommunicator::{JSCommunicator, JSPayloads};
-use crate::sync::transfer::{AircraftVars, Events, LVarSyncer};
-use crate::syncdefs::MultiplyDifferenceLocalVarSet;
-use crate::syncdefs::ResetWhenEquals;
-use crate::syncdefs::{
-    CustomCalculator, NumDigitSet, NumIncrement, NumSet, Syncable, ToggleSwitch,
+use std::{
+    collections::{hash_map, HashMap, HashSet, VecDeque},
+    fmt::{Debug, Display},
+    fs::File,
+    mem::swap,
+    path::Path,
+    time::Instant,
 };
-use crate::util::{Category, InDataTypes};
-use crate::{corrector::Corrector, syncdefs::LocalVarProxy};
+
+use crate::{
+    corrector::Corrector,
+    sync::{
+        gaugecommunicator::{GetResult, InterpolateData, InterpolationType},
+        jscommunicator::{JSCommunicator, JSPayloads},
+        transfer::{AircraftVars, Events, LVarSyncer},
+    },
+    syncdefs::{
+        CustomCalculator, LocalVarProxy, MultiplyDifferenceLocalVarSet, NumDigitSet,
+        NumIncrement, NumSet, ResetWhenEquals, Syncable, ToggleSwitch,
+    },
+    util::{Category, InDataTypes},
+};
 
 use yourcontrols_types::{AllNeedSync, Error, Event, EventData, VarMap, VarReaderTypes};
 
@@ -136,15 +141,15 @@ fn evalute_condition(
         }
     }
 
-    if var_data.var_name.starts_with("A:") {
-        avarstransfer
-            .get_var(&var_data.var_name)
-            .map(|x| evalute_condition_values(condition, x))
-            .unwrap_or(true)
-    } else {
+    if var_data.var_name.starts_with("L:") {
         lvarstransfer
             .get_var(&var_data.var_name)
             .map(|x| evalute_condition_values(condition, &VarReaderTypes::F64(x)))
+            .unwrap_or(true)
+    } else {
+        avarstransfer
+            .get_var(&var_data.var_name)
+            .map(|x| evalute_condition_values(condition, x))
             .unwrap_or(true)
     }
 }
@@ -637,7 +642,12 @@ impl Definitions {
         var_units: Option<&str>,
         var_type: InDataTypes,
     ) -> Result<(String, VarType), Error> {
-        if var_name.starts_with("A:") {
+        if var_name.starts_with("L:") {
+            // Keep var_name with L: in it to pass to execute_calculator code
+            self.add_local_variable(category, var_name, var_units)?;
+
+            Ok((var_name.to_string(), VarType::LocalVar))
+        } else {
             let actual_var_name = get_real_var_name(var_name);
 
             if let Some(var_units) = var_units {
@@ -647,11 +657,6 @@ impl Definitions {
             }
 
             Ok((actual_var_name, VarType::AircraftVar))
-        } else {
-            // Keep var_name with L: in it to pass to execute_calculator code
-            self.add_local_variable(category, var_name, var_units)?;
-
-            Ok((var_name.to_string(), VarType::LocalVar))
         }
     }
 
@@ -1676,8 +1681,7 @@ impl Definitions {
             self.avarstransfer.define_id,
             0,
             simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME,
-            simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED
-                | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED,
+            simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED,
             0,
             0,
             0,

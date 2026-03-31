@@ -1,0 +1,926 @@
+# Version 6.12.0
+
+include:
+  - definitions/FS2024/modules/Instruments/AS_G3000.yaml
+  - definitions/FS2024/modules/general.yaml
+  - definitions/FS2024/modules/navigation.yaml
+  - definitions/FS2024/modules/payload_new.yaml
+  - definitions/FS2024/modules/radios.yaml
+  - definitions/FS2024/modules/safety.yaml
+  - definitions/FS2024/modules/trim.yaml
+
+shared:
+  - # APU
+    type: ToggleSwitch
+    var_name: A:APU SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: APU_STARTER
+    off_event_name: APU_OFF_SWITCH
+    is_user_event: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:APU GENERATOR SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: APU_GENERATOR_SWITCH_SET
+    event_param: 1
+    use_calculator: true
+
+  - # Door (baggage)
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 5
+    cancel_h_events: true
+    use_calculator: true
+
+  - # Electrical
+    type: NumSet
+    var_name: A:EXTERNAL POWER ON:1
+    var_units: Bool
+    var_type: i32
+    event_name: SET_EXTERNAL_POWER
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  - # L MAIN
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:25
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 25
+    index_reversed: true
+  - # L ELEC
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:23
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 23
+    index_reversed: true
+  - # R ELEC
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:24
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 24
+    index_reversed: true
+  - # R MAIN
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:26
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 26
+    index_reversed: true
+  - # L BATT
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:3
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 3
+    index_reversed: true
+  - # R BATT
+    type: NumSet
+    var_name: A:LINE CONNECTION ON:4
+    var_units: Bool
+    var_type: i32
+    event_name: ELECTRICAL_LINE_CONNECTION_SET
+    event_param: 4
+    index_reversed: true
+  - # STBY BATT
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 3
+    use_calculator: true
+
+  - # Handling
+    type: NumSet
+    var_name: A:FLAPS HANDLE PERCENT
+    var_units: Position 16k
+    var_type: f64
+    event_name: FLAPS_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GEAR HANDLE POSITION
+    var_units: Bool
+    var_type: i32
+    event_name: GEAR_SET
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: PANEL_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:2
+    var_units: Percent
+    var_type: f64
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 2
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:3
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 3
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN POWER SETTING:3
+    var_units: Percent
+    var_type: f64
+    event_name: CABIN_LIGHTS_POWER_SETTING_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD:1
+    var_units: Bool
+    var_type: i32
+    event_name: GLARESHIELD_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT GLARESHIELD POWER SETTING:1
+    var_units: Percent
+    var_type: f64
+    event_name: GLARESHIELD_LIGHTS_POWER_SETTING_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+
+  - # Passenger
+    type: ToggleSwitch
+    var_name: A:CABIN SEATBELTS ALERT SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_SEATBELTS_ALERT_SWITCH_TOGGLE
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:CABIN NO SMOKING ALERT SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: CABIN_NO_SMOKING_ALERT_SWITCH_TOGGLE
+    use_calculator: true
+
+  - # Payload
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+  -
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:12
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+  - # Pressurization
+    type: ToggleSwitch
+    var_name: A:PRESSURIZATION DUMP SWITCH
+    var_units: Bool
+    var_type: bool
+    event_name: PRESSURIZATION_PRESSURE_DUMP_SWITCH
+    use_calculator: true
+
+  - # Screens
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:15
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 15
+    index_reversed: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 16
+    index_reversed: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:17
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 17
+    index_reversed: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:18
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 18
+    index_reversed: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:19
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 19
+    index_reversed: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:20
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 20
+    index_reversed: true
+    unreliable: true
+
+  - # Scoped
+    type: var
+    var_name: L:1:LNG_Nose_Door_Left_Open
+  -
+    type: var
+    var_name: L:1:LNG_Nose_Door_Right_Open
+  -
+    type: var
+    var_name: L:1:LNG_External_Door_Lift_Panel_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Door_Lift_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Refuel_Defuel_Panel_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_SPR_Cap_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Fuel_Cap_Left_Open
+  -
+    type: var
+    var_name: L:1:LNG_Fuel_Cap_Right_Open
+  -
+    type: var
+    var_name: L:1:LNG_Battery_Access_Door_Left_Open
+  -
+    type: var
+    var_name: L:1:LNG_Battery_Access_Door_Right_Open
+  -
+    type: var
+    var_name: L:1:LNG_Hydraulic_Service_Panel_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_External_Power_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Toilet_Service_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Potable_Water_Panel_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Engine_Left_Oil_Service_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Engine_Right_Oil_Service_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Engine_Left_Oil_Cap_Open
+  -
+    type: var
+    var_name: L:1:LNG_Engine_Right_Oil_Cap_Open
+  -
+    type: var
+    var_name: L:1:LNG_APU_Oil_Service_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Standby_Rudder_Service_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Tailcone_Door_Open
+  -
+    type: var
+    var_name: L:1:LNG_Stby_Power_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Interior_Bus_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Left_Main_Generator_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Right_Main_Generator_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_APU_Generator_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Left_Landing_Light_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Right_Landing_Light_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Taxi_Light_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Recognition_Light_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Pulse_Light_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Emergency_Light_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Anti_Collision_Light_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Wing_Inspection_Light_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Sun_Visor_Left_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:1:LNG_Sun_Visor_Right_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:1:LNG_Speedbrake_Lever_Position
+    unreliable: true
+  -
+    type: var
+    var_name: L:1:LNG_Parking_Brake_Handle_Position
+  -
+    type: var
+    var_name: L:1:LNG_Left_Engine_Anti_Ice_Switch_On
+  -
+    type: var
+    var_name: L:1:LNG_Right_Engine_Anti_Ice_Switch_On
+  -
+    type: var
+    var_name: L:1:LNG_Wing_Anti_Ice_Switch_On
+  -
+    type: var
+    var_name: L:1:LNG_Stabilizer_Anti_Ice_Switch_On
+  -
+    type: var
+    var_name: L:1:LNG_Pitot_Heat_Switch_On
+  -
+    type: var
+    var_name: L:1:LNG_Engine_Run_Switch_Position_1
+  -
+    type: var
+    var_name: L:1:LNG_Engine_Run_Switch_Position_2
+  -
+    type: var
+    var_name: L:1:LNG_Engine_Starter_Button_Position_1
+  -
+    type: var
+    var_name: L:1:LNG_Engine_Starter_Button_Position_2
+  -
+    type: var
+    var_name: L:1:LNG_Ecs_Mode_Knob_Position
+  -
+    type: var
+    var_name: L:1:LNG_Pressurization_Mode_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Bleed_Flow_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Left_Pressure_Source_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Right_Pressure_Source_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Bleed_Isolate_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Left_Engine_Bleed_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Right_Engine_Bleed_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_APU_Bleed_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Auto_Power_Reserve_Switch_Off
+  -
+    type: var
+    var_name: L:1:LNG_Manual_Power_Reserve_Switch_On
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Door_Commanded_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Door_Unlocked
+# -
+#   type: var
+#   var_name: L:1:LNG_Cabin_Door_Auto_Close
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Door_Lift_Button_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Door_Lift_Cancel_Button_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L1_Reading_Light_1_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L1_Reading_Light_2_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L1_Reading_Light_3_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L2_Reading_Light_1_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L2_Reading_Light_2_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L2_Reading_Light_3_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L3_Reading_Light_1_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L3_Reading_Light_2_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L3_Reading_Light_3_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L4_Reading_Light_1_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L4_Reading_Light_2_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_L4_Reading_Light_3_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R1_Reading_Light_1_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R1_Reading_Light_2_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R1_Reading_Light_3_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R2_Reading_Light_1_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R2_Reading_Light_2_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R2_Reading_Light_3_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R3_Reading_Light_1_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R3_Reading_Light_2_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R3_Reading_Light_3_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R4_Reading_Light_1_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R4_Reading_Light_2_Switch_Position
+  -
+    type: var
+    var_name: L:1:LNG_Cabin_Seat_R4_Reading_Light_3_Switch_Position
+
+# - # Global
+#   type: var
+#   var_name: L:WT_TOGA_ACTIVE
+  -
+    type: CustomCalculator
+    get: (L:WT_LONGITUDE_AUTOTHROTTLE_STATUS) 0 ==
+    set: 0 (>K:AUTO_THROTTLE_DISCONNECT)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: CustomCalculator
+    get: (L:WT_LONGITUDE_AUTOTHROTTLE_STATUS) 3 ==
+    set: 0 (>K:AUTO_THROTTLE_ARM)
+    condition:
+      equals:
+        F64: 1.0
+  -
+    type: var
+    var_name: L:WT_LNG_FUEL_PUMP_1_ON
+  -
+    type: var
+    var_name: L:WT_LNG_FUEL_PUMP_2_ON
+  -
+    type: var
+    var_name: L:WT_LNG_GRAVITY_XFLOW_OPEN
+  -
+    type: var
+    var_name: L:WT_LNG_FUEL_RECIRC
+  -
+    type: var
+    var_name: L:WT_LNG_ECS_CABIN_KNOB_POSITION
+    unreliable: true
+  -
+    type: var
+    var_name: L:WT_LNG_ECS_COCKPIT_KNOB_POSITION
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+  -
+    type: var
+    var_name: L:WT_LNG_RUDDER_STANDBY_OFF
+  -
+    type: var
+    var_name: L:WT_LNG_APU_FIRE_LIGHT
+# -
+#   type: var
+#   var_name: L:XMLVAR_LTS_Test
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_APU_StarterKnob_Pos
+  -
+    type: var
+    var_name: L:WT_LNG_CABIN_ALT_SWITCH
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_Switch_1_Secondary
+# -
+#   type: var
+#   var_name: L:XMLVAR_ElevatorTrim_1_Secondary_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AileronTrim_1_SwitchStateTimer
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_Altimeter_Baro_TT:1
+# -
+#   type: var
+#   var_name: L:WTG3000_Control_Panel_MapShowCursor:1
+# -
+#   type: var
+#   var_name: L:WTG3000_PFD_Altimeter_Baro_TT:2
+# -
+#   type: var
+#   var_name: L:WTG3000_Control_Panel_MapShowCursor:2
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_ExternalPower_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_15
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_18
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_16
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_19
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_17
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_20
+  -
+    type: var
+    var_name: L:WT_LNG_ECS_SELECTION
+# -
+#   type: var
+#   var_name: L:WTGarmin_Nav_ActiveNavSource:1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+  - # Uses O var
+    type: var
+    var_name: L:WT_LNG_FUEL_TRANSFER_DIRECTION
+# -
+#   type: var
+#   var_name: L:LANDING_GEAR_Gear
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+  -
+    type: var
+    var_name: L:WT_LNG_HYDRAULICS_PUMP_1
+  -
+    type: var
+    var_name: L:WT_LNG_HYDRAULICS_PUMP_2
+  - # Uses O var
+    type: var
+    var_name: L:WT_LNG_PTCU_MODE
+  -
+    type: var
+    var_name: L:WT_LNG_Cabin_TEMP_MANUAL
+  -
+    type: var
+    var_name: L:WT_LNG_Cabin_MANUAL_PCT
+    unreliable: true
+  -
+    type: var
+    var_name: L:WT_LNG_Cockpit_TEMP_MANUAL
+  -
+    type: var
+    var_name: L:WT_LNG_Cockpit_MANUAL_PCT
+    unreliable: true
+  -
+    type: var
+    var_name: L:WT_LNG_PREFLIGHT_TESTS_SKIP
+  -
+    type: var
+    var_name: L:LNG_Bleed_Flow_Switch_Position
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_RED_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_RED_END
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_YELLOW_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_YELLOW_END
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_WHITE_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_WHITE_END
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_GREEN_START
+# -
+#   type: var
+#   var_name: L:HUD_AIRSPEED_GREEN_END
+# -
+#   type: var
+#   var_name: L:WT_LNG_ECS_ACTIVE
+# -
+#   type: var
+#   var_name: L:FADEC_MAX_N1_1
+# -
+#   type: var
+#   var_name: L:FADEC_MAX_N1_2
+# -
+#   type: var
+#   var_name: L:FADEC_TGT_N1_1
+# -
+#   type: var
+#   var_name: L:FADEC_TGT_N1_2
+# -
+#   type: var
+#   var_name: L:FADEC_CLB_N1_1
+# -
+#   type: var
+#   var_name: L:FADEC_CLB_N1_2
+# -
+#   type: var
+#   var_name: L:FADEC_CRU_N1_1
+# -
+#   type: var
+#   var_name: L:FADEC_CRU_N1_2
+# -
+#   type: var
+#   var_name: L:FADEC_N1_RED_1
+# -
+#   type: var
+#   var_name: L:FADEC_N1_RED_2
+# -
+#   type: var
+#   var_name: L:FADEC_N2_RED_1
+# -
+#   type: var
+#   var_name: L:FADEC_N2_RED_2
+# -
+#   type: var
+#   var_name: L:FADEC_N2_AMBER_1
+# -
+#   type: var
+#   var_name: L:FADEC_N2_AMBER_2
+# -
+#   type: var
+#   var_name: L:FADEC_ITT_RED_1
+# -
+#   type: var
+#   var_name: L:FADEC_ITT_RED_2
+# -
+#   type: var
+#   var_name: L:FADEC_OIL_TEMP_LOW_RED_1
+# -
+#   type: var
+#   var_name: L:FADEC_OIL_TEMP_LOW_RED_2
+# -
+#   type: var
+#   var_name: L:FADEC_OIL_TEMP_LOW_AMBER_1
+# -
+#   type: var
+#   var_name: L:FADEC_OIL_TEMP_LOW_AMBER_2
+# -
+#   type: var
+#   var_name: L:FADEC_OIL_TEMP_HIGH_AMBER_1
+# -
+#   type: var
+#   var_name: L:FADEC_OIL_TEMP_HIGH_AMBER_2
+# -
+#   type: var
+#   var_name: L:WT_LNG_AVIONICS_POWER_ACTIVE
+  -
+    type: NumSet
+    var_name: L:WT_LNG_LEFT_BRAKE_INPUT
+    var_units: Position 32k
+    var_type: f64
+    multiply_by: 100
+    add_by: -16384
+    event_name: AXIS_LEFT_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: L:WT_LNG_RIGHT_BRAKE_INPUT
+    var_units: Position 32k
+    var_type: f64
+    multiply_by: 100
+    add_by: -16384
+    event_name: AXIS_RIGHT_BRAKE_SET
+    use_calculator: true
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:WT_LNG_RUDDER_INPUT
+
+master:
+  -
+    type: NumSet
+    var_name: L:1:LNG_Virtual_Throttle_Lever_Pos_1
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE1_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: L:1:LNG_Virtual_Throttle_Lever_Pos_2
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE2_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AILERON POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_AILERONS_SET
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:ELEVATOR POSITION
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: -1
+    event_name: AXIS_ELEVATOR_SET
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: L:WT_LNG_RUDDER_INPUT
+    var_units: Position 16k
+    var_type: f64
+    multiply_by: 100
+    event_name: AXIS_RUDDER_SET
+    condition:
+      var:
+        var_name: A:AUTOPILOT MASTER
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    use_calculator: true
+    unreliable: true

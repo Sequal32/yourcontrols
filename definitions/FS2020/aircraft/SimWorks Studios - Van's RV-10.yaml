@@ -1,0 +1,429 @@
+# Version 1.1.0
+
+include:
+  - definitions/FS2020/modules/Instruments/WT_G3X_Touch.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/PMS50_GTN.yaml
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # G5 Power
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:37
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 37
+    use_calculator: true
+
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:SMOKE ENABLE:6
+    var_units: Bool
+    var_type: bool
+    event_name: SMOKE_TOGGLE
+    event_param: 6
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:SMOKE ENABLE:7
+    var_units: Bool
+    var_type: bool
+    event_name: SMOKE_TOGGLE
+    event_param: 7
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:2
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT PANEL:3
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 3
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 7
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+    index_reversed: true
+    use_calculator: true
+
+  - # LVAR's (trimmed)
+    type: var
+    var_name: L:PILOT_Hidden
+  -
+    type: var
+    var_name: L:COPILOT_Hidden
+  -
+    type: var
+    var_name: L:ELECTRICAL_Switch_TwoBatteries
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_L
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_R
+  -
+    type: var
+    var_name: L:ELECTRICAL_Switch_Avionics_Battery
+  -
+    type: var
+    var_name: L:ELECTRICAL_Switch_Avionics_Master
+  -
+    type: var
+    var_name: L:LIGHTING_Switch_Light_WigWag
+  -
+    type: var
+    var_name: L:SWS_HANDLING_Switch_Flaps_UpCenterDown
+  -
+    type: var
+    var_name: L:SWS_MISC_Sunshade_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_STROBE_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_TAXI_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PEDESTRAL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_GLARESHIELD_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+  -
+    type: var
+    var_name: L:Switch_ELT_RESET
+  -
+    type: var
+    var_name: L:Switch_ELT_ON
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:HANDLING_AILERON_ELEVATOR_Trim_Position
+  -
+    type: var
+    var_name: L:SWS_UNSTOW_TABLET
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PANEL_L
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_L_Horizontal
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_L_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_L_Rotator
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_PANEL_R
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_R_Horizontal
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_R_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_PANEL_R_Rotator
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_OVERHEAD_L1
+# - # Temp disable max characters
+#   type: var
+#   var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L1_Horizontal
+#   unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L1_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L1_Rotator
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_OVERHEAD_R1
+# - # Temp disable max characters
+#   type: var
+#   var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R1_Horizontal
+#   unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R1_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R1_Rotator
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_OVERHEAD_L2
+# - # Temp disable max characters
+#   type: var
+#   var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L2_Horizontal
+#   unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L2_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_L2_Rotator
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Cap_OVERHEAD_R2
+# - # Temp disable max characters
+#   type: var
+#   var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R2_Horizontal
+#   unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R2_Vertical
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_ACVent_Drag_Nozzle_OVERHEAD_R2_Rotator
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_Knob_Front_Heat
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_Knob_Rear_Heat
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_Knob_Fresh_Air
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_AIRCONDITIONING_Knob_AC_Fan
+    unreliable: true
+  -
+    type: var
+    var_name: L:GMA340_ANNUNCIATOR_TEST
+  -
+    type: var
+    var_name: L:GMA340_Knob_Squelch_Pilot_1
+  -
+    type: var
+    var_name: L:GMA340_Knob_Volume_Pilot_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:GMA340_Knob_Squelch_Copilot_1
+  -
+    type: var
+    var_name: L:GMA340_Knob_Volume_Copilot_1
+    unreliable: true
+  -
+    type: var
+    var_name: L:GMA340_Pull_Volume_Copilot_1
+  -
+    type: var
+    var_name: L:SWS_ELECTRICAL_Push_ELT_RESET
+  -
+    type: var
+    var_name: L:SWS_ELECTRICAL_Push_ELT_ON
+# -
+#   type: var
+#   var_name: L:XMLVAR_Magneto_Starter_IsHeld
+  -
+    type: var
+    var_name: L:SWS_MISC_SunVisor_Adjust_1
+  -
+    type: var
+    var_name: L:SWS_MISC_SunVisor_Adjust_2
+  -
+    type: var
+    var_name: L:SWS_MISC_SeatAdjust_Pilot
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWS_MISC_SeatAdjust_Copilot
+    unreliable: true
+  - # Brochure
+    type: var
+    var_name: L:Object_1
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:XMLVAR_AirSpeedIsInMach
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:DEICE_Pitot_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_2
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_3
+# -
+#   type: var
+#   var_name: L:LIGHTING_POTENTIOMETER_12
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:HANDLING_AileronsTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+  -
+    type: var
+    var_name: L:XMLVAR_Autopilot_1_Status
+# -
+#   type: var
+#   var_name: L:AXIS_ELEVATOR_TRIM
+# -
+#   type: var
+#   var_name: L:sound_aural_elt_tone
+  -
+    type: var
+    var_name: L:SWS_MISC_Brochure_unstow
+  -
+    type: var
+    var_name: L:SWS_MISC_Brochure_flip
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_1_RPM_Target
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_1_RPM
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_1_Angle
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_2_RPM_Target
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_2_RPM
+# -
+#   type: var
+#   var_name: L:SWS_MISC_Fan_Rotation_2_Angle

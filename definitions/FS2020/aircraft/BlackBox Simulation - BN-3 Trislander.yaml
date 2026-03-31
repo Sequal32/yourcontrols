@@ -1,0 +1,473 @@
+# Version 1.2.0
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/AS_KAP140.yaml
+  - definitions/FS2020/modules/Instruments/AS_KT76C.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/electrical.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Avionics
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
+    set: 5 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
+    set: 6 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Deice
+    type: ToggleSwitch
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: PITOT_HEAT_TOGGLE
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:PROP DEICE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_PROPELLER_DEICE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:PROP DEICE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_PROPELLER_DEICE
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:PROP DEICE SWITCH:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_PROPELLER_DEICE
+    event_param: 3
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:2
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG2
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG3
+    use_calculator: true
+    unreliable: true
+
+  - # Engines
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG3
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER3
+    use_calculator: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 4
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:5
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 5
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:8
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 8
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:9
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 9
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM PUMP SWITCH:10
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_PUMP_TOGGLE
+    event_param: 10
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:3
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:4
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 4
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:FUELSYSTEM JUNCTION SETTING:5
+    var_units: Number
+    var_type: i32
+    event_name: FUELSYSTEM_JUNCTION_SET
+    event_param: 5
+    index_reversed: true
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT LANDING:2
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 2
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:1
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 1
+    index_reversed: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 1
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT CABIN:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_CABIN_LIGHTS
+    event_param: 2
+
+# - # LVAR's (trimmed)
+#   type: var
+#   var_name: L:Vis1_Switch
+# -
+#   type: var
+#   var_name: L:Vis2_Switch
+  -
+    type: var
+    var_name: L:EFIS_Vis_Switch
+  -
+    type: var
+    var_name: L:Main_Door_Window
+  -
+    type: var
+    var_name: L:Door_L1
+  -
+    type: var
+    var_name: L:Door_L2
+  -
+    type: var
+    var_name: L:Door_R1
+  -
+    type: var
+    var_name: L:Door_R2
+  -
+    type: var
+    var_name: L:Door_R3
+  -
+    type: var
+    var_name: L:Door_Cargo
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_3
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_1
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_2
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_4
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_6
+  -
+    type: var
+    var_name: L:BBS_ClipBoard_Option_5
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_IsDown
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State_MinReleaseTime
+  -
+    type: var
+    var_name: L:Elec_SELECTOR
+  -
+    type: var
+    var_name: L:Switch_BBS_KN62DME_MODE
+  -
+    type: var
+    var_name: L:BBS_KN62DME_MODE
+  -
+    type: var
+    var_name: L:BBS_Port_Tank_Test
+  -
+    type: var
+    var_name: L:BBS_Stbd_Tank_Test
+  -
+    type: var
+    var_name: L:BBS_Stall_Test
+  -
+    type: var
+    var_name: L:BBS_Gen1_Test
+  -
+    type: var
+    var_name: L:BBS_Gen2_Test
+  -
+    type: var
+    var_name: L:BBS_Gyro_Fail_Test
+  -
+    type: var
+    var_name: L:BBS_Rear_Eng_Fail_Test
+  -
+    type: var
+    var_name: L:BBS_Cabin_Heat_Test
+  -
+    type: var
+    var_name: L:BBS_Door_L1_Test
+  -
+    type: var
+    var_name: L:BBS_Door_L2_Test
+  -
+    type: var
+    var_name: L:BBS_Door_R1_Test
+  -
+    type: var
+    var_name: L:BBS_Door_R2_Test
+  -
+    type: var
+    var_name: L:BBS_Door_R3_Test
+  -
+    type: var
+    var_name: L:BBS_O_Marker_Test
+  -
+    type: var
+    var_name: L:BBS_M_Marker_Test
+  -
+    type: var
+    var_name: L:BBS_I_Marker_Test
+  -
+    type: var
+    var_name: L:BBS_BusBar_Isol_Test
+  -
+    type: var
+    var_name: L:BBS_FLAPS_SWITCH
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:BBS_Visor_Left
+    unreliable: true
+  -
+    type: var
+    var_name: L:BBS_Visor_Right
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_1
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_2
+# -
+#   type: var
+#   var_name: L:ELECTRICAL_Starter_3
+  -
+    type: var
+    var_name: L:CarbTemp_SELECTOR
+  -
+    type: var
+    var_name: L:TipTank_Test
+  -
+    type: var
+    var_name: L:SW_REAR_ENGINE_POWER_FAIL
+  -
+    type: var
+    var_name: L:STRUCTURAL_DEICE_SWITCH
+  -
+    type: var
+    var_name: L:WINDSHIELD_DEICE_SWITCH
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Mode
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+  -
+    type: var
+    var_name: L:BBS_KN62DME_PWR
+  -
+    type: var
+    var_name: L:AUDIO_HF1_INOP
+  -
+    type: var
+    var_name: L:AUDIO_HF2_INOP
+  -
+    type: var
+    var_name: L:AUDIO_SPARE_INOP
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_2
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:HANDLING_RudderTrim
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+  -
+    type: var
+    var_name: L:LIGHTS_STROBE_INOP
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_2
+# -
+#   type: var
+#   var_name: L:SOMETHING_OPEN
+# -
+#   type: var
+#   var_name: L:SOMETHINGL_OPEN
+# -
+#   type: var
+#   var_name: L:SOMETHINGR_OPEN
+  -
+    type: var
+    var_name: L:StartersState
+# -
+#   type: var
+#   var_name: L:BBS_XFERPUMP_DRYTIME_L
+# -
+#   type: var
+#   var_name: L:BBS_XFERPUMP_DRYTIME_R
+# -
+#   type: var
+#   var_name: L:DeIce_Amps
+# -
+#   type: var
+#   var_name: L:XMLVAR_Starter_State
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1_LASTSTATE
+
+  - # Aspen
+    type: var
+    var_name: L:BBS_ASPEN_CdiSource
+  -
+    type: var
+    var_name: L:AIRSPEED_HOLD_VAR
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:BBS_ASPEN_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:BBS_ASPEN_1_State
+  -
+    type: var
+    var_name: L:BBS_ASPEN_RightFunction
+  -
+    type: var
+    var_name: L:BBS_ASPEN_isInteractingRight
+  -
+    type: var
+    var_name: L:BBS_ASPEN_LeftFunction
+  -
+    type: var
+    var_name: L:BBS_ASPEN_isInteractingLeft
+
+ignore:
+  - BBS_ASPEN_Push_B2

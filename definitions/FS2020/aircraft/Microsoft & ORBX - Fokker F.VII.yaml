@@ -1,0 +1,627 @@
+# Version 1.2.1
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GTX330.yaml
+  - definitions/FS2020/modules/autopilot.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/magnetos.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Avionics
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:11
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 11
+    use_calculator: true
+
+  - # Deice
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:2
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG2
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:3
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG3
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:2
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER3
+    use_calculator: true
+
+  - # Fuel valves
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:1
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:2
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:3
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 3
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:4
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 4
+    use_calculator: true
+
+  - # Fuel dump
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:5
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 5
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:6
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 6
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:7
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 7
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:FUELSYSTEM VALVE SWITCH:8
+    var_units: Bool
+    var_type: bool
+    event_name: FUELSYSTEM_VALVE_TOGGLE
+    event_param: 8
+    use_calculator: true
+  -
+    type: event
+    event_name: MANUAL_FUEL_PRESSURE_PUMP
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: i32
+    event_name: BEACON_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT NAV:1
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: bool
+    event_name: PANEL_LIGHTS_TOGGLE
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:22
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 22
+    index_reversed: true
+    use_calculator: true
+
+  - # Payload
+    type: var
+    var_name: A:PAYLOAD STATION WEIGHT:11
+    var_units: Pounds
+    var_type: f64
+    unreliable: true
+
+  - # Warning dimmers
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:1
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 1
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 4
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 5
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 6
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:7
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 7
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:8
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 8
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:9
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 9
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:10
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 10
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:11
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 11
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:12
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 12
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:13
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 13
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:14
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 14
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:15
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 15
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:16
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 16
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:18
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 18
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:19
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 19
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:20
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 20
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:21
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 21
+    index_reversed: true
+    use_calculator: true
+
+  - # LVAR's (1m VIIa)
+    type: var
+    var_name: L:SWITCH_Main_Exit
+# -
+#   type: var
+#   var_name: L:ENGINE_Switch_Magneto_1
+  -
+    type: var
+    var_name: L:CABIN_DOOR
+    unreliable: true
+  -
+    type: var
+    var_name: L:CABIN_TOILET_DOOR
+    unreliable: true
+  -
+    type: var
+    var_name: L:SWITCH_Master_Fuel_Pump
+  -
+    type: var
+    var_name: L:Cabin_Toilet_Lid
+
+# - # 3m VIIa
+#   type: var
+#   var_name: L:ENGINE_Switch_Magneto_3
+  -
+    type: var
+    var_name: L:SWITCH_Ignition_Engine_1
+  -
+    type: var
+    var_name: L:SWITCH_Ignition_Engine_3
+# -
+#   type: var
+#   var_name: L:ENGINE_Switch_Magneto_2
+
+  - # 3m VIIb
+    type: var
+    var_name: L:ENGINE_Switch_Ignition_3
+  -
+    type: var
+    var_name: L:ENGINE_Switch_Ignition_1
+  -
+    type: var
+    var_name: L:ENGINE_Switch_Ignition_2
+
+  - # 3m Replica
+    type: var
+    var_name: L:SWITCH_Chocks_noBrake
+  -
+    type: var
+    var_name: L:Circuit_EngInst_2
+  -
+    type: var
+    var_name: L:Circuit_FuelBoost_1
+  -
+    type: var
+    var_name: L:SW_Alternate_Ignition_2_Cover
+  -
+    type: var
+    var_name: L:Circuit_Norm_Ign_2
+  -
+    type: var
+    var_name: L:Circuit_Alt_Ign_2
+  -
+    type: var
+    var_name: L:FUEL_Cutoff_Lever_3
+  -
+    type: var
+    var_name: L:Circuit_Beacon_Light
+  -
+    type: var
+    var_name: L:Circuit_Pitot_L
+  -
+    type: var
+    var_name: L:PUSH_Gyro_1
+  -
+    type: var
+    var_name: L:Circuit_Xponder
+  -
+    type: var
+    var_name: L:Circuit_Norm_Ign_1
+  -
+    type: var
+    var_name: L:SWITCH_Fuel_Pump_3
+  -
+    type: var
+    var_name: L:Circuit_Eng2_Start_Engage
+  -
+    type: var
+    var_name: L:FUEL_Cutoff_Lever_2
+  -
+    type: var
+    var_name: L:FUEL_Cutoff_Lever_1
+  -
+    type: var
+    var_name: L:SW_Alternate_Ignition_1_Cover
+  -
+    type: var
+    var_name: L:DEICE_Switch_PitotHeat_2
+  -
+    type: var
+    var_name: L:SWITCH_Alternate_Ignition_2
+  -
+    type: var
+    var_name: L:Circuit_Gen_Excit_3
+  -
+    type: var
+    var_name: L:DEICE_Switch_PitotHeat_1
+  -
+    type: var
+    var_name: L:SWITCH_Fuel_Pump_2
+  -
+    type: var
+    var_name: L:Circuit_Norm_Ign_3
+  -
+    type: var
+    var_name: L:Circuit_Eng3_Start_Engage
+  -
+    type: var
+    var_name: L:SWITCH_Fuel_Pump_1
+  -
+    type: var
+    var_name: L:Circuit_NAV_Light
+  -
+    type: var
+    var_name: L:SWITCH_Alternate_Ignition_1
+  -
+    type: var
+    var_name: L:Circuit_VHFCom
+  -
+    type: var
+    var_name: L:Circuit_Gen_Excit_1
+  -
+    type: var
+    var_name: L:Circuit_Alt_Ign_1
+  -
+    type: var
+    var_name: L:Circuit_FuelBoost_3
+  -
+    type: var
+    var_name: L:SWITCH_Alternate_Ignition_3
+  -
+    type: var
+    var_name: L:Circuit_Pitot_R
+  -
+    type: var
+    var_name: L:Circuit_EngInst_1
+  -
+    type: var
+    var_name: L:Circuit_FuelBoost_2
+  -
+    type: var
+    var_name: L:Circuit_Alt_Ign_3
+  -
+    type: var
+    var_name: L:Circuit_EngInst_3
+  -
+    type: var
+    var_name: L:SW_Alternate_Ignition_3_Cover
+  -
+    type: var
+    var_name: L:Circuit_Eng1_Start_Engage
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_Switch_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim_1_SwitchStateTimer
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_StabTrim_Lock
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_RudderTrim_L
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_RudderTrim_R
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_PBrake
+  -
+    type: var
+    var_name: L:INSTRUMENT_Knob_AttitudeIndicator_1
+  -
+    type: var
+    var_name: L:PUSH_Clock_Seconds
+  -
+    type: var
+    var_name: L:INSTRUMENT_Knob_AttitudeIndicator_2
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Bat_Power
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Pitot_L
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Pitot_R
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Ign_1
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Ign_2
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Ign_3
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Engstart_1
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Engstart_2
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Engstart_3
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Fuel_Boost_1
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Fuel_Boost_2
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_Fuel_Boost_3
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_IGN_Isol_1
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_IGN_Isol_2
+  -
+    type: var
+    var_name: L:XMLVAR_PUSH_Test_IGN_Isol_3

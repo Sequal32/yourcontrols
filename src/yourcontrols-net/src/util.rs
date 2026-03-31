@@ -3,13 +3,9 @@ use dns_lookup::lookup_host;
 use dotenv_codegen::dotenv;
 use laminar::Metrics;
 use socket2::{Domain, Socket, Type};
-use std::net::UdpSocket;
-use std::time::SystemTime;
 use std::{
-    net::SocketAddr,
-    net::SocketAddrV4,
-    net::{IpAddr, SocketAddrV6},
-    time::Duration,
+    net::{IpAddr, SocketAddr, SocketAddrV4, SocketAddrV6, UdpSocket},
+    time::{Duration, SystemTime},
 };
 use yourcontrols_types::{AllNeedSync, Error};
 

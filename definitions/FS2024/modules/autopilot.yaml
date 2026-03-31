@@ -1,0 +1,237 @@
+# This file provides the essentials for a functioning autopilot but may not work well.
+# Every aircraft is coded differently and may only respond to specific vars and events.
+# Use of this file is not recommended. Best to fine-tune AP in a corresponding profile.
+
+shared:
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MASTER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MASTER
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT DISENGAGED
+    var_units: Bool
+    var_type: i32
+    event_name: AUTOPILOT_DISENGAGE_SET
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT HEADING LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_HEADING_HOLD
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT HEADING LOCK DIR:1
+    var_units: Degrees
+    var_type: f64
+    event_name: HEADING_BUG_SET
+    event_param: 1
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT ALTITUDE LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_ALTITUDE_HOLD
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT ALTITUDE LOCK VAR:1
+    var_units: Feet
+    var_type: i32
+    event_name: AP_ALT_VAR_SET_ENGLISH
+    event_param: 1
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT VERTICAL HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_VS_HOLD
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT VERTICAL HOLD VAR:1
+    var_units: Feet per minute
+    var_type: i32
+    event_name: AP_VS_VAR_SET_ENGLISH
+    event_param: 1
+    cancel_h_events: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT AIRSPEED HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_PANEL_SPEED_HOLD
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT AIRSPEED HOLD VAR:1
+    var_units: Knots
+    var_type: f64
+    event_name: AP_SPD_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: false
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MACH HOLD VAR:1
+    var_units: Mach
+    var_type: f64
+    multiply_by: 100
+    event_name: AP_MACH_VAR_SET
+    event_param: 1
+    condition:
+      var:
+        var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+        var_units: Bool
+        var_type: bool
+      equals:
+        Bool: true
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT MANAGED SPEED IN MACH
+    var_units: Bool
+    var_type: bool
+    event_name: AP_MANAGED_SPEED_IN_MACH_TOGGLE
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT LEVEL CHANGE
+    var_units: Bool
+    var_type: bool
+    event_name: FLIGHT_LEVEL_CHANGE
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT WING LEVELER
+    var_units: Bool
+    var_type: bool
+    event_name: AP_WING_LEVELER
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT BACKCOURSE HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_BC_HOLD
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 1
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT FLIGHT DIRECTOR ACTIVE:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FLIGHT_DIRECTOR
+    event_param: 2
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT APPROACH HOLD
+    var_units: Bool
+    var_type: bool
+    event_name: AP_APR_HOLD
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: var
+    var_name: A:AUTOPILOT GLIDESLOPE HOLD
+    var_units: Bool
+    var_type: f64
+    use_calculator: true
+  -
+    type: event
+    event_name: AP_LOC_HOLD
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT THROTTLE ARM
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_ARM
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT TAKEOFF POWER ACTIVE
+    var_units: Bool
+    var_type: bool
+    event_name: AUTO_THROTTLE_TO_GA
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT NAV1 LOCK
+    var_units: Bool
+    var_type: bool
+    event_name: AP_NAV1_HOLD
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT MAX BANK ID
+    var_units: Number
+    var_type: i32
+    event_name: AP_MAX_BANK_SET
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:AUTOPILOT YAW DAMPER
+    var_units: Bool
+    var_type: bool
+    event_name: YAW_DAMPER_TOGGLE
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GPS DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_GPS_DRIVES_NAV1
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:AUTOPILOT NAV SELECTED
+    var_units: Number
+    var_type: i32
+    event_name: AP_NAV_SELECT_SET
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:TACAN DRIVES NAV1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_TACAN_DRIVES_NAV1
+    cancel_h_events: true
+    use_calculator: true

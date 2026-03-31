@@ -1,0 +1,975 @@
+# Version 1.2.0 (do not add G1000 module)
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GNS430.yaml
+  - definitions/FS2020/modules/Instruments/AS_GNS530.yaml
+  - definitions/FS2020/modules/Instruments/AS_GTX330.yaml
+  - definitions/FS2020/modules/Instruments/AS_KAP140.yaml
+  - definitions/FS2020/modules/Instruments/PMS50_GTN.yaml
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/deice.yaml
+  - definitions/FS2020/modules/engines.yaml
+  - definitions/FS2020/modules/fuel.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/lights.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:9
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 9
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:10
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 10
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_STARTER1
+    use_calculator: true
+  -
+    type: CustomCalculator
+    get: 3 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:2, Bool)
+    set: 2 3 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 4 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
+    set: 5 4 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:3
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_SET
+    event_param: 3
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+  - # Doors
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:0
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 0
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 2
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:2
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 3
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:3
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 4
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:4
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 5
+    use_calculator: true
+  -
+    type: ToggleSwitch
+    var_name: A:INTERACTIVE POINT GOAL:5
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_AIRCRAFT_EXIT_FAST
+    event_param: 6
+    use_calculator: true
+
+  - # LVAR's (Analog, trimmed)
+    type: var
+    var_name: L:PC6_PanelState
+  -
+    type: var
+    var_name: L:PC6_GPSState
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_CabinState
+  -
+    type: var
+    var_name: L:PC6_Option_RadarPod
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_Option_Skis
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_Option_ExternalTanks
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_State_Tablet
+  -
+    type: var
+    var_name: L:PC6_State_LeftBlind
+  -
+    type: var
+    var_name: L:PC6_State_RightBlind
+  -
+    type: var
+    var_name: L:PC6_State_PitotCover
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_State_IntakeCovers
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_State_ExhaustCovers
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_State_PropTieDown
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_State_Chocks
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_State_Blocks
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:PC6_Option_CopilotHidden
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:LOCAL_milliBar_to_inHg
+  -
+    type: var
+    var_name: L:LandingLight_SwitchPosition
+  -
+    type: var
+    var_name: L:LandingLight_Position
+# -
+#   type: var
+#   var_name: L:PC6_DOORS_1_OpenPercent
+# -
+#   type: var
+#   var_name: L:PC6_DOORS_2_OpenPercent
+# -
+#   type: var
+#   var_name: L:PC6_DOORS_0_OpenPercent
+  -
+    type: var
+    var_name: L:PC6_DOORS_LeftFront_Jettisoned
+  -
+    type: var
+    var_name: L:PC6_DOORS_RightFront_Jettisoned
+  -
+    type: var
+    var_name: L:XMLVAR_Controls_Locked
+# -
+#   type: var
+#   var_name: L:EVENTS_ID
+# -
+#   type: var
+#   var_name: L:XMLVAR_RudderTrim
+# -
+#   type: var
+#   var_name: L:XMLVAR_StabTrim
+# -
+#   type: var
+#   var_name: L:MV_XMLVAR_StabTrimInt
+  -
+    type: var
+    var_name: L:XMLVAR_FlapsSwitchPos
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:PC6_StarterSwitchGuard
+  -
+    type: var
+    var_name: L:PC6_IgnitionSwitchGuard
+  -
+    type: var
+    var_name: L:XMLVAR_OilCoolerDoor_Position
+  -
+    type: var
+    var_name: L:PC6_MixtureStop
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:PC6_MixtureStopTimer
+  -
+    type: var
+    var_name: L:XMLVAR_BatGenSwitchCover
+  -
+    type: var
+    var_name: L:XMLVAR_GenResetPressed_IsDown
+  -
+    type: var
+    var_name: L:XMLVAR_GenResetPressed_MinReleaseTime
+  -
+    type: var
+    var_name: L:MV_XMLVAR_AirSwitchState
+  -
+    type: var
+    var_name: L:XMLVAR_HeatSelect_Position
+  -
+    type: var
+    var_name: L:XMLVAR_Defrost_Position
+  -
+    type: var
+    var_name: L:MV_XMLVAR_DefrostSwitchState
+  -
+    type: var
+    var_name: L:XMLVAR_CabinAirSwitch1Status
+  -
+    type: var
+    var_name: L:XMLVAR_CabinAirSwitch2Status
+  -
+    type: var
+    var_name: L:XMLVAR_EmergAirShutoff
+  -
+    type: var
+    var_name: L:MV_XMLVAR_SEAT_LF_01
+  -
+    type: var
+    var_name: L:MV_XMLVAR_SEAT_LM_01
+  -
+    type: var
+    var_name: L:MV_XMLVAR_SEAT_LR_01
+  -
+    type: var
+    var_name: L:MV_XMLVAR_SEAT_RF_01
+  -
+    type: var
+    var_name: L:MV_XMLVAR_SEAT_RM_01
+  -
+    type: var
+    var_name: L:MV_XMLVAR_SEAT_RR_01
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_STATE
+  -
+    type: var
+    var_name: L:XMLVAR_StallLightTest
+  -
+    type: var
+    var_name: L:StabWarnButtonPressed
+  -
+    type: var
+    var_name: L:PropBetaFlagAlert
+  -
+    type: var
+    var_name: L:PropBetaFlagAck
+  -
+    type: var
+    var_name: L:TrimFlagAlert
+  -
+    type: var
+    var_name: L:TrimFlagAck
+  -
+    type: var
+    var_name: L:GenBusFlagAlert
+  -
+    type: var
+    var_name: L:GenBusFlagAck
+  -
+    type: var
+    var_name: L:BattBusFlagAlert
+  -
+    type: var
+    var_name: L:BattBusFlagAck
+  -
+    type: var
+    var_name: L:WarnLightTest
+  -
+    type: var
+    var_name: L:GenFailFlagAlert
+  -
+    type: var
+    var_name: L:GenFailFlagAck
+  -
+    type: var
+    var_name: L:FuelPressFlagAlert
+  -
+    type: var
+    var_name: L:FuelPressFlagAck
+  -
+    type: var
+    var_name: L:RFuelTankFlagAlert
+  -
+    type: var
+    var_name: L:RFuelTankFlagAck
+  -
+    type: var
+    var_name: L:LFuelTankFlagAlert
+  -
+    type: var
+    var_name: L:LFuelTankFlagAck
+  -
+    type: var
+    var_name: L:RFuelFlowFlagAlert
+  -
+    type: var
+    var_name: L:RFuelFlowFlagAck
+  -
+    type: var
+    var_name: L:LFuelFlowFlagAlert
+  -
+    type: var
+    var_name: L:LFuelFlowFlagAck
+  -
+    type: var
+    var_name: L:BattHotFlagAlert
+  -
+    type: var
+    var_name: L:BattHotFlagAck
+  -
+    type: var
+    var_name: L:ChipDetectFlagAlert
+  -
+    type: var
+    var_name: L:ChipDetectFlagAck
+  -
+    type: var
+    var_name: L:CautionLightTest
+  -
+    type: var
+    var_name: L:PC6_DOORS_LeftFront_DoorPushed
+  -
+    type: var
+    var_name: L:PC6_DOORS_LeftFront_Handle
+  -
+    type: var
+    var_name: L:PC6_DOORS_LeftFront_EmergHandle
+  -
+    type: var
+    var_name: L:PC6_DOORS_RightFront_DoorPushed
+  -
+    type: var
+    var_name: L:PC6_DOORS_RightFront_DoorHandle
+  -
+    type: var
+    var_name: L:PC6_DOORS_RightFront_EmergHandle
+  -
+    type: var
+    var_name: L:PC6_DOORS_LeftMiddle_DoorHandle
+  -
+    type: var
+    var_name: L:PC6_DOORS_RightRear_DoorHandle
+  -
+    type: var
+    var_name: L:PC6_DOORS_StormWindow
+  -
+    type: var
+    var_name: L:MV_CARGO_DROPPED
+  -
+    type: var
+    var_name: L:MV_VIZ_EXHAUSTCOVER
+  -
+    type: var
+    var_name: L:MV_VIZ_INTAKECOVER
+  -
+    type: var
+    var_name: L:MV_VIZ_PROPTIEDOWN
+  -
+    type: var
+    var_name: L:MV_VIZ_CHOCKS
+# -
+#   type: var
+#   var_name: L:MV_XMLVAR_Tablet_Timer
+  -
+    type: var
+    var_name: L:Marker_Button_Position
+  -
+    type: var
+    var_name: L:TEL_Button_Toggle
+  -
+    type: var
+    var_name: L:MUTE_Button_Toggle
+  -
+    type: var
+    var_name: L:XMLVAR_Pass_Volume
+  -
+    type: var
+    var_name: L:PC6_RMI_Pointer_Source_1
+  -
+    type: var
+    var_name: L:PC6_RMI_Pointer_Source_2
+# -
+#   type: var
+#   var_name: L:ParkingBrake_Position
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_ACTIVATION_TIME
+# -
+#   type: var
+#   var_name: L:XMLVAR_ELT_TEST_TIME
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1_Power_Setting
+# -
+#   type: var
+#   var_name: L:LIGHTING_PANEL_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_CABIN_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_BEACON_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_NAV_1
+# -
+#   type: var
+#   var_name: L:LIGHTING_LANDING_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AudioPanel_1
+  -
+    type: var
+    var_name: L:MUSIC_Button_Toggle
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_Frequency_10_Khz
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Altimeter_1
+# -
+#   type: var
+#   var_name: L:INSTRUMENT_Course_2
+# -
+#   type: var
+#   var_name: L:AS530_Default_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS530_SelectedSource
+# -
+#   type: var
+#   var_name: L:AS430_MapZoomRange
+# -
+#   type: var
+#   var_name: L:AS430_SelectedSource
+# -
+#   type: var
+#   var_name: L:Old_R_Trim_Pos
+# -
+#   type: var
+#   var_name: L:Old_E_Trim_Pos
+# -
+#   type: var
+#   var_name: L:Old_A_Trim_Pos
+# -
+#   type: var
+#   var_name: L:XMLVAR_BatteryTimer_1
+  -
+    type: var
+    var_name: L:XMLVAR_BatteryHotFlag
+# -
+#   type: var
+#   var_name: L:ENG FUEL VALVE:1
+# -
+#   type: var
+#   var_name: L:XMLVAR_FuelExtPumpTimer_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_FuelExtPumpTimer_2
+  -
+    type: var
+    var_name: L:PC6_HOT_START_FLAG
+  -
+    type: var
+    var_name: L:XMLVAR_GenResetPressed
+# -
+#   type: var
+#   var_name: L:MV_XMLVAR_WOWTimer
+# -
+#   type: var
+#   var_name: L:MV_XMLVAR_ChipDetectTimer
+# -
+#   type: var
+#   var_name: L:MV_XMLVAR_OilPressureTimer
+# -
+#   type: var
+#   var_name: L:RandomSeed1
+# -
+#   type: var
+#   var_name: L:RandomSeed2
+# -
+#   type: var
+#   var_name: L:MV_RANDOM_OILPRESSNUMBER
+# -
+#   type: var
+#   var_name: L:MV_TEMP_OILPRESSURE
+# -
+#   type: var
+#   var_name: L:MV_NEW_OILPRESSURE
+# -
+#   type: var
+#   var_name: L:IsTrimSet
+  - # Prop deice amps
+    type: var
+    var_name: L:XMLVAR_PropellerGaugeRandom
+# -
+#   type: var
+#   var_name: L:PC6_StateGyroHeading
+# -
+#   type: var
+#   var_name: L:PC6_DOORS_AirflowPercent
+# -
+#   type: var
+#   var_name: L:AS430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:AS530_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_AltimasterNeedle
+# -
+#   type: var
+#   var_name: L:OIL_TEMP
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS530_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Value_1
+# -
+#   type: var
+#   var_name: L:AS430_ManualBrightness_Enabled_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverPropellerHidden1
+  -
+    type: var
+    var_name: L:MV_VIZ_PASSENGERCONFIG
+  -
+    type: var
+    var_name: L:PC6_Trapdoor_Cover_Removed
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+# -
+#   type: var
+#   var_name: L:AP_KAP140_INSTALLED
+# -
+#   type: var
+#   var_name: L:ASwt530_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:XMLVAR_NEXTGEN_FLIGHTPLAN_ENABLED
+# -
+#   type: var
+#   var_name: L:Garmin_Need_OBS_Convert_DirectTo
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_DTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_XTK
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Tracking
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Leg_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Transition_Mode
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Tracked_Vector_Index
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Course_To_Steer
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Is_Suspended
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Leg_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Along
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Distance_Remaining
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Vector_Anticipation_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Along_Track_Speed
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_XTK
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_True
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Next_DTK_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_CDI_Scale
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_CDI_Scale_Label
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_True
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Bearing_Mag
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Waypoint_Distance
+# -
+#   type: var
+#   var_name: L:WT_LNavData_Destination_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_Egress_Distance
+# -
+#   type: var
+#   var_name: L:WTGarmin_LNavData_ToFrom
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Service_Level
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Vertical_Deviation
+# -
+#   type: var
+#   var_name: L:WTAP_GP_Distance
+# -
+#   type: var
+#   var_name: L:WTAP_GP_FPA
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Is_Valid:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Bank_Angle:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Dtk:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Xtk:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_GPS_Steer_Command_Tae:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_State:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Is_Active:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Path_Mode:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Armed_Climb_Mode:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Should_Activate_Climb_Mode:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Alt_Capture_Type:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Should_Capture_Alt:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Alt_To_Capture:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Vertical_Path_Is_Valid:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Vertical_Path_Fpa:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Vertical_Path_Deviation:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Glidepath_Approach_Has_Gp:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Glidepath_Is_Valid:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_Glidepath_Can_Capture:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Path_Fpa:0
+# -
+#   type: var
+#   var_name: L:WT_Garmin_External_VNav_Path_Deviation:0
+# -
+#   type: var
+#   var_name: L:XMLVAR_VNAVButtonValue
+# -
+#   type: var
+#   var_name: L:WTGNS_ADSB_OPER
+# -
+#   type: var
+#   var_name: L:ASwt430_CDI_Source_1
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Obs_Active
+# -
+#   type: var
+#   var_name: L:WTAP_LNav_Obs_Course
+# -
+#   type: var
+#   var_name: L:WT_AP_FPA_Target:1
+# -
+#   type: var
+#   var_name: L:WTAP_VNav_Alt_Capture_Type
+# -
+#   type: var
+#   var_name: L:KR87_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KR87_State
+# -
+#   type: var
+#   var_name: L:WasmInstrument_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WasmInstrument_State
+# -
+#   type: var
+#   var_name: L:KAP140_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KAP140_State
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightCheckCompleted
+# -
+#   type: var
+#   var_name: L:MV_EFB_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:MV_EFB_State
+  -
+    type: var
+    var_name: L:PC6_ExternalTanks
+    cancel_h_events: true
+
+  - # Float
+    type: var
+    var_name: L:PC6_WaterRudderPower_On
+  -
+    type: var
+    var_name: L:PC6_WaterRudderFailPos
+
+  - # Import of G1000 module
+    type: var
+    var_name: L:AS1000_PFD_Brightness
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:AS1000_PFD_Brightness_IsAuto
+  -
+    type: var
+    var_name: L:AS1000_PFD_SelectedNavIndex
+  -
+    type: var
+    var_name: L:AS1000_PFD_SelectedComIndex
+  -
+    type: var
+    var_name: L:AS1000_MFD_Brightness
+    cancel_h_events: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:AS1000_MFD_Brightness_IsAuto
+  -
+    type: var
+    var_name: L:AS1000_MFD_SelectedNavIndex
+  -
+    type: var
+    var_name: L:AS1000_MFD_SelectedComIndex
+  -
+    type: var
+    var_name: L:AS1000_MID_Display_Backup_Active
+  -
+    type: var
+    var_name: L:AS1000_Warnings_Master_Set
+  -
+    type: var
+    var_name: L:AS1000_Warnings_WarningIndex
+  -
+    type: var
+    var_name: L:AS3000_MinimalsMode
+  -
+    type: var
+    var_name: L:AS3000_MinimalsValue
+  -
+    type: var
+    var_name: L:Glasscockpit_HSI_Arc
+  -
+    type: var
+    var_name: L:Glasscockpit_DmeSource
+  -
+    type: var
+    var_name: L:Glasscockpit_MFD_Started
+  -
+    type: var
+    var_name: L:Glasscockpit_Wind_Mode
+  -
+    type: var
+    var_name: L:PFD_BRG1_Source
+  -
+    type: var
+    var_name: L:PFD_BRG2_Source
+  -
+    type: NumSet
+    var_name: L:PFD_CDI_Source
+    var_units: Number
+    var_type: f64
+    event_name: AP_NAV_SELECT_SET
+    cancel_h_events: true
+    use_calculator: true
+  -
+    type: var
+    var_name: L:PFD_InnerMap_MapZoomRange
+  -
+    type: var
+    var_name: L:PFD_InnerMap_MapShowCursor
+  -
+    type: var
+    var_name: L:MFD_InnerMap_MapZoomRange
+  -
+    type: var
+    var_name: L:MFD_InnerMap_MapShowCursor
+  -
+    type: var
+    var_name: L:XMLVAR_SyntheticVision_On
+  -
+    type: var
+    var_name: L:XMLVAR_SyntheticVision_Off
+  -
+    type: var
+    var_name: L:_SelectedSource
+
+ignore:
+  - MV_EFB#input_pilot_weight
+  - MV_EFB#input_copilot_weight
+  - MV_EFB#input_cargo
+  - MV_EFB#input_passenger_1
+  - MV_EFB#input_passenger_2
+  - MV_EFB#input_passenger_3
+  - MV_EFB#input_passenger_4
+  - MV_EFB#input_passenger_5
+  - MV_EFB#input_passenger_6
+  - MV_EFB#input_left_main
+  - MV_EFB#input_right_main
+  - MV_EFB#input_external_tank_left
+  - MV_EFB#input_external_tank_right
+  - MV_EFB#input_skydiving_load
+  - MV_EFB#button_left_front_door
+  - MV_EFB#button_left_rear_door
+  - MV_EFB#button_right_front_door
+  - MV_EFB#button_right_rear_door
+  - MV_EFB#button_doors_return
+  - MV_EFB#passenger_one
+  - MV_EFB#passenger_two
+  - MV_EFB#passenger_three
+  - MV_EFB#passenger_four
+  - MV_EFB#passenger_five
+  - MV_EFB#passenger_six

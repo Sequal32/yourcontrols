@@ -1,0 +1,935 @@
+# Version 2.1.2
+
+include:
+  - definitions/FS2020/modules/Instruments/AS_GTX330.yaml
+  - definitions/FS2020/modules/Instruments/AS_KAP140.yaml
+  - definitions/FS2020/modules/Instruments/PMS50_GTN.yaml
+  - definitions/FS2020/modules/Instruments/TDS_GTNXi.yaml # Mod
+  - definitions/FS2020/modules/controls.yaml
+  - definitions/FS2020/modules/general.yaml
+  - definitions/FS2020/modules/handling.yaml
+  - definitions/FS2020/modules/navigation.yaml
+  - definitions/FS2020/modules/payload.yaml
+  - definitions/FS2020/modules/radios.yaml
+  - definitions/FS2020/modules/safety.yaml
+  - definitions/FS2020/modules/trim.yaml
+
+shared:
+  - # Breakers
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:3, Bool)
+    set: 3 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+# - # conflict
+#   type: CustomCalculator
+#   get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:4, Bool)
+#   set: 4 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:5, Bool)
+    set: 5 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:6, Bool)
+    set: 6 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:7, Bool)
+    set: 7 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:8, Bool)
+    set: 8 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:9, Bool)
+    set: 9 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:10, Bool)
+    set: 10 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:11, Bool)
+    set: 11 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:12, Bool)
+    set: 12 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:13, Bool)
+    set: 13 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:16, Bool)
+    set: 16 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+  -
+    type: CustomCalculator
+    get: 1 (>A:BUS LOOKUP INDEX, Number) (A:BUS CONNECTION ON:17, Bool)
+    set: 17 1 (>K:2:ELECTRICAL_BUS_TO_BUS_CONNECTION_TOGGLE)
+
+  - # Deice
+    type: NumSet
+    var_name: A:GENERAL ENG ANTI ICE POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: ANTI_ICE_GRADUAL_SET_ENG1
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:PITOT HEAT SWITCH:1
+    var_units: Bool
+    var_type: i32
+    event_name: PITOT_HEAT_SET
+    event_param: 1
+
+  - # DME
+    type: ToggleSwitch
+    var_name: A:CIRCUIT SWITCH ON:36
+    var_units: Bool
+    var_type: bool
+    event_name: ELECTRICAL_CIRCUIT_TOGGLE
+    event_param: 36
+    use_calculator: true
+
+  - # EGT Bug
+    type: NumSet
+    var_name: A:ENG EXHAUST GAS TEMPERATURE GES:1
+    var_units: Percent scaler 32k
+    var_type: f64
+    event_name: EGT1_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Electrical
+    type: ToggleSwitch
+    var_name: A:ELECTRICAL MASTER BATTERY:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_MASTER_BATTERY
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MASTER ALTERNATOR:1
+    var_units: Bool
+    var_type: i32
+    event_name: ALTERNATOR_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG STARTER:1
+    var_units: Bool
+    var_type: i32
+    event_name: SET_STARTER1_HELD
+    use_calculator: true
+
+  - # Engine
+    type: NumSet
+    var_name: A:RECIP ENG PRIMER:1
+    var_units: Percent
+    var_type: i32
+    event_name: TOGGLE_PRIMER1
+    use_calculator: true
+    unreliable: true
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG MIXTURE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: MIXTURE1_SET
+    use_calculator: true
+    unreliable: true
+
+  - # Fuel
+    type: ToggleSwitch
+    var_name: A:GENERAL ENG FUEL VALVE:1
+    var_units: Bool
+    var_type: bool
+    event_name: TOGGLE_FUEL_VALVE_ENG1
+    use_calculator: true
+
+  - # Interior
+    type: NumSet
+    var_name: A:LIGHT PANEL:1
+    var_units: Bool
+    var_type: i32
+    event_name: PANEL_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT CABIN:1
+    var_units: Bool
+    var_type: i32
+    event_name: CABIN_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:4
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_4_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:5
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_5_SET
+    index_reversed: true
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT POTENTIOMETER:6
+    var_units: Percent
+    var_type: f64
+    event_name: LIGHT_POTENTIOMETER_6_SET
+    index_reversed: true
+    use_calculator: true
+
+  - # Lights
+    type: NumSet
+    var_name: A:LIGHT STROBE:0
+    var_units: Bool
+    var_type: i32
+    event_name: STROBES_SET
+    event_param: 0
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT NAV:0
+    var_units: Bool
+    var_type: i32
+    event_name: NAV_LIGHTS_SET
+    event_param: 0
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT TAXI:1
+    var_units: Bool
+    var_type: i32
+    event_name: TAXI_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT LANDING:1
+    var_units: Bool
+    var_type: i32
+    event_name: LANDING_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+  -
+    type: NumSet
+    var_name: A:LIGHT BEACON:1
+    var_units: Bool
+    var_type: i32
+    event_name: BEACON_LIGHTS_SET
+    event_param: 1
+    use_calculator: true
+
+  - # LVAR's
+    type: var
+    var_name: L:C152X_PILOT_VISOR
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_COPILOT_VISOR
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_DOOR_PILOT
+  -
+    type: var
+    var_name: L:C152X_DOOR_COPILOT
+  -
+    type: var
+    var_name: L:C152X_WINDOW_HANDLE_PILOT
+  -
+    type: var
+    var_name: L:C152X_WINDOW_HANDLE_COPILOT
+  -
+    type: var
+    var_name: L:C152X_PILOT_WINDOW
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_COPILOT_WINDOW
+    unreliable: true
+# -
+#   type: var
+#   var_name: L:HANDLING_ElevatorTrim
+  -
+    type: var
+    var_name: L:C152X_XPNDR_KNOB
+  -
+    type: var
+    var_name: L:C152X_CABIN_AIR
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_CABIN_HEAT
+    unreliable: true
+  -
+    type: var
+    var_name: L:KX155_COM1_MODE_SPACING_PULL
+  -
+    type: var
+    var_name: L:KX155_COM2_MODE_SPACING_PULL
+  -
+    type: var
+    var_name: L:C152X_SPKR_PHONE
+  -
+    type: var
+    var_name: L:C152X_PILOTsState
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C152X_PILOT_SEAT
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_COPILOTsState
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C152X_COPILOT_SEAT
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_ALT_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_FUEL_IND_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_BCN_PITOT_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_STROBE_LTS_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_LDG_LTS_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_FLAP_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_INST_LTS_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_NAV_DOME_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_COM1_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_COM2_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_TRANSPONDER_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_ADF_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_DME_BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_AUTOPILOT_BREAKER_PULLED
+# -
+#   type: var
+#   var_name: L:XMLVAR_PUMPED_FUEL
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Handled
+# -
+#   type: var
+#   var_name: L:XMLVAR_IE_Throttle_VR_Value
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_YokeHidden2
+# -
+#   type: var
+#   var_name: L:XMLVAR_ADF_MODE
+# -
+#   type: var
+#   var_name: L:XMLVAR_Hours_Delta
+# -
+#   type: var
+#   var_name: L:XMLVAR_Minutes_Delta
+  -
+    type: var
+    var_name: L:C152X_DME_POWER
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:KAP140_RIGHTBLOCK_MODE
+# -
+#   type: var
+#   var_name: L:KR87_RightDisplayMode
+# -
+#   type: var
+#   var_name: L:KI227_COMPASS_CARD
+  -
+    type: var
+    var_name: L:KX155_NAV1_RAD_PULL
+  -
+    type: var
+    var_name: L:KX155_NAV2_RAD_PULL
+  -
+    type: var
+    var_name: L:C152X_TABLET
+# -
+#   type: var
+#   var_name: L:XMLVAR_FUEL_FLOW_TARGET
+# -
+#   type: var
+#   var_name: L:XMLVAR_Engine_Condition
+# -
+#   type: var
+#   var_name: L:XMLVAR_Fuel_Evaporating
+# -
+#   type: var
+#   var_name: L:XMLVAR_C152X_CANOPY_OPEN
+# -
+#   type: var
+#   var_name: L:navsound3
+  -
+    type: var
+    var_name: L:XMLVAR_C152X_PLAYSSONOFF
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:XMLVAR_C152X_INIT_XPNDR_STATE
+# -
+#   type: var
+#   var_name: L:startflight_oil_temp
+# -
+#   type: var
+#   var_name: L:C152X_SUMP_OIL_TEMPERATURE
+# -
+#   type: var
+#   var_name: L:GTN750_INT_HIDDEN
+  -
+    type: var
+    var_name: L:C152X_XPNDR
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C152X_CHOCKSL
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C152X_CHOCKSR
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:C152X_STATIC_PORT_BLOCKAGE
+  -
+    type: var
+    var_name: L:ENG_FIRE_SMOKE
+# -
+#   type: var
+#   var_name: L:STARTER1_RES
+# -
+#   type: var
+#   var_name: L:C152X_E_Battery_Relay_Control
+# -
+#   type: var
+#   var_name: L:C152X_E_Battery_Relay_Contact_State
+# -
+#   type: var
+#   var_name: L:C152X_E_Alternator_Relay_Control
+# -
+#   type: var
+#   var_name: L:C152X_E_Alternator_Relay_Contact_State
+# -
+#   type: var
+#   var_name: L:C152X_E_Starter_Relay_Control
+# -
+#   type: var
+#   var_name: L:C152X_E_Starter_Relay_Contact_State
+  -
+    type: var
+    var_name: L:C152X_MAINTENANCE_ON
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:C152X_FOULING_TIME
+# -
+#   type: var
+#   var_name: L:C152X_Fouling
+# -
+#   type: var
+#   var_name: L:RANDMAG
+# -
+#   type: var
+#   var_name: L:C152X_FOULING_TIME2
+# -
+#   type: var
+#   var_name: L:C152X_OILREM
+# -
+#   type: var
+#   var_name: L:C152X_MAINTENANCE_TIME
+  -
+    type: var
+    var_name: L:C152X__BREAKER_PULLED
+  -
+    type: var
+    var_name: L:C152X_ENG_COVER
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C152X_PITOT_COVER
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:STARTER_SMOKE
+  -
+    type: NumSet
+    var_name: L:C152X_STARTER_SWITCH_STATE
+    var_units: Number
+    var_type: f64
+    event_name: MAGNETO1_SET
+    use_calculator: true
+  -
+    type: var
+    var_name: L:C152X_GTN750
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C152X_ADF
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:KI227_ADF_NEEDLE_POSITION
+# -
+#   type: var
+#   var_name: L:C152X_CDI1_FROM_FLAG
+# -
+#   type: var
+#   var_name: L:C152X_CDI1_NEEDLE_GLIDE
+# -
+#   type: var
+#   var_name: L:C152X_CDI2_NEEDLE_GLIDE
+# -
+#   type: var
+#   var_name: L:C152X_ATTITUDE_IND_PITCH_DEGREES
+# -
+#   type: var
+#   var_name: L:KX155_NAV1_Inner_Knob
+# -
+#   type: var
+#   var_name: L:C152X_CDI2_FLAG_GLIDE
+# -
+#   type: var
+#   var_name: L:C152X_CDI1_TO_FLAG
+# -
+#   type: var
+#   var_name: L:C152X_ALTITUDE
+# -
+#   type: var
+#   var_name: L:C152X_CDI2_FROM_FLAG
+# -
+#   type: var
+#   var_name: L:C152X_HEADING_DEGREES
+# -
+#   type: var
+#   var_name: L:C152X_CDI2_FLAG_LOCALIZER
+# -
+#   type: var
+#   var_name: L:C152X_CDI1_FLAG_LOCALIZER
+# -
+#   type: var
+#   var_name: L:KX155_COM1_Outer_Knob
+# -
+#   type: var
+#   var_name: L:C152X_CDI1_FLAG_GLIDE
+# -
+#   type: var
+#   var_name: L:C152X_CDI2_NEEDLE_LOCALIZER
+# -
+#   type: var
+#   var_name: L:KX155_COM1_Inner_Knob
+# -
+#   type: var
+#   var_name: L:C152X_CDI2_TO_FLAG
+# -
+#   type: var
+#   var_name: L:C152X_IAS
+# -
+#   type: var
+#   var_name: L:KX155_NAV2_Inner_Knob
+# -
+#   type: var
+#   var_name: L:KX155_NAV1_Outer_Knob
+# -
+#   type: var
+#   var_name: L:C152X_AMMETER_CURRENT
+# -
+#   type: var
+#   var_name: L:KX155_NAV2_Outer_Knob
+# -
+#   type: var
+#   var_name: L:KX155_COM2_Outer_Knob
+# -
+#   type: var
+#   var_name: L:C152X_ATTITUDE_IND_BANK_DEGREES
+# -
+#   type: var
+#   var_name: L:C152X_CDI1_NEEDLE_LOCALIZER
+# -
+#   type: var
+#   var_name: L:KX155_COM2_Inner_Knob
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightShowEverything
+# -
+#   type: var
+#   var_name: L:AutopilotPreflightCheckCompleted
+# -
+#   type: var
+#   var_name: L:XMLVAR_RADAR_PING
+# -
+#   type: var
+#   var_name: L:KT76_IDENT_EMIS
+# -
+#   type: var
+#   var_name: L:C152X_CDI1_NAV_EMIS
+# -
+#   type: var
+#   var_name: L:C152X_LOWVOLT_LIGHT
+# -
+#   type: var
+#   var_name: L:simsAmbient
+# -
+#   type: var
+#   var_name: L:C152X_MARKER_O
+# -
+#   type: var
+#   var_name: L:C152X_MARKER_M
+# -
+#   type: var
+#   var_name: L:C152X_MARKER_I
+  -
+    type: var
+    var_name: L:C152X_APVIZ
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C152X_DMEVIZ
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:C152X_EGT
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverThrottleHidden1
+# -
+#   type: var
+#   var_name: L:XMLVAR_LeverMixtureHidden1
+# -
+#   type: var
+#   var_name: L:START_VOL_UP
+# -
+#   type: var
+#   var_name: L:YourControlsPanelId
+  -
+    type: var
+    var_name: L:KR87_KNOB_INNER_PUSH
+  -
+    type: var
+    var_name: L:KN64_KNOB_INNER_PUSH
+  -
+    type: var
+    var_name: L:KN64_MODE_SWITCH
+  -
+    type: var
+    var_name: L:KAP140_BARO_MODE
+# -
+#   type: var
+#   var_name: L:C152X_Batt_Term_Voltage
+# -
+#   type: var
+#   var_name: L:NO_OIL_COUNTDOWN
+# -
+#   type: var
+#   var_name: L:hppercent
+# -
+#   type: var
+#   var_name: L:PMS50_GTN750_INSTALLED
+# -
+#   type: var
+#   var_name: L:HourMeter_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:HourMeter_State
+# -
+#   type: var
+#   var_name: L:KX155A_1_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_1_State
+# -
+#   type: var
+#   var_name: L:KX155A_2_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_2_State
+# -
+#   type: var
+#   var_name: L:KX155A_3_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KX155A_3_State
+# -
+#   type: var
+#   var_name: L:KR87_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:KR87_State
+# -
+#   type: var
+#   var_name: L:ADF_ALARM
+# -
+#   type: var
+#   var_name: L:KR87_RIGHT_DISPLAY
+# -
+#   type: var
+#   var_name: L:KAP140_ALT_ALERTER
+# -
+#   type: var
+#   var_name: L:KAP140_NAVARM
+# -
+#   type: var
+#   var_name: L:KAP140_APRARM
+# -
+#   type: var
+#   var_name: L:KAP140_REVARM
+# -
+#   type: var
+#   var_name: L:KAP140_ALTARM
+# -
+#   type: var
+#   var_name: L:KAP140_RIGHTBLOCK
+# -
+#   type: var
+#   var_name: L:EFB_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:EFB_State
+  -
+    type: var
+    var_name: L:C152X_BATTERY_CHARGE
+    cancel_h_events: true
+# -
+#   type: var
+#   var_name: L:C152XIP_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:C152XIP_State
+# -
+#   type: var
+#   var_name: L:GTN750_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:GTN750_INT_State
+# -
+#   type: var
+#   var_name: L:C300ADF_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:C300ADF_State
+# -
+#   type: var
+#   var_name: L:C152XAUX_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:C152XAUX_State
+# -
+#   type: var
+#   var_name: L:WTT1_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTT1_INT_State
+# -
+#   type: var
+#   var_name: L:WTT2_INT_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:WTT2_INT_State
+# -
+#   type: var
+#   var_name: L:SIM_VERSION
+# -
+#   type: var
+#   var_name: L:C152X_DME_SPEED_RMT
+# -
+#   type: var
+#   var_name: L:C152X_DME_SPEED_MHZ
+# -
+#   type: var
+#   var_name: L:AS330_ScreenLuminosity
+# -
+#   type: var
+#   var_name: L:AS330_State
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_SPEED
+# -
+#   type: var
+#   var_name: L:HUD_AP_SELECTED_ALTITUDE
+  -
+    type: var
+    var_name: L:KR87_BFOMODE
+  -
+    type: var
+    var_name: L:KR87_ADFMODE
+  -
+    type: var
+    var_name: L:C152X_SSONOFF
+    cancel_h_events: true
+
+  - # Manually added
+    type: var
+    var_name: L:XMLVAR_OIL_TOPUP
+    cancel_h_events: true
+  -
+    type: var
+    var_name: L:XMLVAR_ENGHEALTH
+    cancel_h_events: true
+
+master:
+  -
+    type: NumSet
+    var_name: A:GENERAL ENG THROTTLE LEVER POSITION:1
+    var_units: Position 16k
+    var_type: f64
+    event_name: THROTTLE1_SET
+    use_calculator: true
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_FOULING_TIME
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_FOULING_TIME2
+    var_type: i32
+    unreliable: true
+  -
+    type: var
+    var_name: L:C152X_OILREM
+    var_type: i32
+    unreliable: true
+
+ignore:
+  - EFB#Img
+  - EFB#pwup
+  - EFB#pwdn
+  - EFB#cpwup
+  - EFB#cpwdn
+  - EFB#fcup
+  - EFB#fcdn
+  - EFB#rcup
+  - EFB#rcdn
+  - EFB#lfup
+  - EFB#lfdn
+  - EFB#rfup
+  - EFB#rfdn
+  - EFB#ttleft
+  - EFB#ttright
+
+  - KA134_EXT_PRESS
+  - KA134_EXT_RELEASE
+  - KA134_MIC1_PRESS
+  - KA134_MIC1_RELEASE
+  - KA134_MIC2_PRESS
+  - KA134_MIC2_RELEASE
+  - KA134_BOTH_PRESS
+  - KA134_BOTH_RELEASE
+  - KA134_NAV1_PRESS
+  - KA134_NAV1_RELEASE
+  - KA134_NAV2_PRESS
+  - KA134_NAV2_RELEASE
+  - KA134_ADF_PRESS
+  - KA134_ADF_RELEASE
+  - KA134_DME_PRESS
+  - KA134_DME_RELEASE
+  - KA134_MKR_PRESS
+  - KA134_MKR_RELEASE
+  - KA134_SPKR_PRESS
+  - KA134_SPKR_RELEASE
+
+# - KAP140_ARM_PRESS
+# - KAP140_ARM_RELEASE
+# - KAP140_BARO_PRESS
+# - KAP140_BARO_RELEASE
+# - KAP140_UP_PRESS
+# - KAP140_UP_RELEASE
+# - KAP140_DN_PRESS
+# - KAP140_DN_RELEASE
+  - KAP140_AP_PRESS
+  - KAP140_AP_RELEASE
+  - KAP140_HDG_PRESS
+  - KAP140_HDG_RELEASE
+# - KAP140_NAV_PRESS
+# - KAP140_NAV_RELEASE
+# - KAP140_APR_PRESS
+# - KAP140_APR_RELEASE
+# - KAP140_REV_PRESS
+# - KAP140_REV_RELEASE
+  - KAP140_ALT_PRESS
+  - KAP140_ALT_RELEASE
+# - KAP140_KNOB_INNER_INC
+# - KAP140_KNOB_INNER_DEC
+# - KAP140_KNOB_OUTER_INC
+# - KAP140_KNOB_OUTER_DEC
+
+  - KI227_CARD_ADJUSTMENT
+
+  - KX155_COM1_SWAP_PUSH
+  - KX155_COM1_SWAP_RELEASE
+  - KX155_COM2_SWAP_PUSH
+  - KX155_COM2_SWAP_RELEASE
+  - KX155_NAV1_SWAP_PUSH
+  - KX155_NAV1_SWAP_RELEASE
+  - KX155_NAV1_RAD_PULL
+  - KX155_NAV2_SWAP_PUSH
+  - KX155_NAV2_SWAP_RELEASE
+  - KX155_NAV2_RAD_PULL
+
+  - KR87_ADF_PRESS
+  - KR87_ADF_RELEASE
+  - KR87_BFO_PRESS
+  - KR87_BFO_RELEASE
+  - KR87_FREQ_PRESS
+  - KR87_FREQ_RELEASE
+  - KR87_FLTET_PRESS
+  - KR87_FLTET_RELEASE
+  - KR87_SETRST_PRESS
+  - KR87_SETRST_RELEASE
+
+  - _SEAT
+  - PILOT_VISOR
+  - COPILOT_VISOR
+  - C152X_TOGGLE_TABLET
+  - C152X_PILOT_DOOR
+  - C152X_COPILOT_DOOR
+  - C152X_PILOT_WINDOW_HANDLE
+  - C152X_PILOT_WINDOW_HELPER
+  - C152X_COPILOT_WINDOW_HANDLE
+  - C152X_COPILOT_WINDOW_HELPER
+  - C152X_COMAPSS_KNOB_INC
+  - C152X_COMAPSS_KNOB_DEC

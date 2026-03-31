@@ -1,4 +1,7 @@
-use crate::{util::InDataTypes, varreader::SimValue, varreader::VarReader};
+use crate::{
+    util::InDataTypes,
+    varreader::{SimValue, VarReader},
+};
 use bimap::BiHashMap;
 use simconnect::SimConnector;
 use std::{
