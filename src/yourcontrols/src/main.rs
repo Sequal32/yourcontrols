@@ -2,6 +2,7 @@
 #![allow(non_snake_case)]
 
 mod app;
+mod cli;
 mod clientmanager;
 mod corrector;
 mod definitions;
@@ -13,6 +14,7 @@ mod util;
 mod varreader;
 
 use app::{App, AppMessage, ConnectionMethod};
+use cli::CliWrapper;
 use clientmanager::ClientManager;
 use definitions::{Definitions, ProgramAction, SyncPermission};
 use log::{error, info, warn};
@@ -82,7 +84,10 @@ fn get_fs2024_configs() -> io::Result<Vec<String>> {
 fn write_configuration(config: &Config) {
     match config.write_to_file(CONFIG_FILENAME) {
         Ok(_) => {}
-        Err(e) => error!("[PROGRAM] Could not write configuration file! Reason: {}", e),
+        Err(e) => error!(
+            "[PROGRAM] Could not write configuration file! Reason: {}",
+            e
+        ),
     };
 }
 
@@ -145,6 +150,9 @@ fn write_update_data(
 }
 
 fn main() {
+    let cli = CliWrapper::new();
+    let skip_sim_connect = cli.skip_sim_connect();
+
     let is_dev_build = cfg!(debug_assertions);
 
     if !is_dev_build {
@@ -163,7 +171,10 @@ fn main() {
     let mut config = match Config::read_from_file(CONFIG_FILENAME) {
         Ok(config) => config,
         Err(e) => {
-            warn!("[PROGRAM] Could not open config. Using default values. Reason: {}", e);
+            warn!(
+                "[PROGRAM] Could not open config. Using default values. Reason: {}",
+                e
+            );
 
             let config = Config::default();
             write_configuration(&config);
@@ -205,7 +216,10 @@ fn main() {
         path
     };
     // Load definitions
-    let load_definitions = |definitions: &mut Definitions, sim: &mut String, config_to_load: &mut String| -> bool {
+    let load_definitions = |definitions: &mut Definitions,
+                            sim: &mut String,
+                            config_to_load: &mut String|
+     -> bool {
         // Load aircraft configuration
         let path = get_config_path(sim, config_to_load);
 
@@ -215,14 +229,20 @@ fn main() {
                 definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
             }
             Err(e) => {
-                error!("[DEFINITIONS] Could not load configuration file {}: {}", config_to_load, e);
+                error!(
+                    "[DEFINITIONS] Could not load configuration file {}: {}",
+                    config_to_load, e
+                );
                 // Prevent server/client from starting as config could not be loaded.
                 *config_to_load = String::new();
                 return false;
             }
         };
 
-        info!("[DEFINITIONS] {} loaded successfully for {}.", config_to_load, sim);
+        info!(
+            "[DEFINITIONS] {} loaded successfully for {}.",
+            config_to_load, sim
+        );
 
         true
     };
@@ -230,13 +250,17 @@ fn main() {
     let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions| {
         // Connect to simconnect
         *definitions = Definitions::new();
-        #[cfg(not(feature = "skip_sim_connect"))]
-        let connected = conn.connect("YourControls");
-        #[cfg(feature = "skip_sim_connect")]
-        let connected = true;
+        let connected = if skip_sim_connect {
+            info!("[SIM] SimConnect connection skipped (cli).");
+            true
+        } else {
+            conn.connect("YourControls")
+        };
         if connected {
-            // Display not connected to server message
-            info!("[SIM] Connected to SimConnect.");
+            if !skip_sim_connect {
+                // Display not connected to server message
+                info!("[SIM] Connected to SimConnect.");
+            }
         } else {
             // Display trying to connect message
             app_interface.error("Could not connect to SimConnect! Is the sim running?");
@@ -303,7 +327,8 @@ fn main() {
                         } => {
                             // Not non high updating packets for debugging
                             if !is_unreliable {
-                                info!("[PACKET] {:?} {} {:?} {:?} {:?}",
+                                info!(
+                                    "[PACKET] {:?} {} {:?} {:?} {:?}",
                                     data,
                                     from,
                                     clients.is_observer(&from),
@@ -356,7 +381,10 @@ fn main() {
                             mut is_observer,
                             is_server,
                         } => {
-                            info!("[NETWORK] {} connected. In control: {}, observing: {}, server: {}", name, in_control, is_observer, is_server);
+                            info!(
+                                "[NETWORK] {} connected. In control: {}, observing: {}, server: {}",
+                                name, in_control, is_observer, is_server
+                            );
 
                             // This should be before the if statement as server_started counts the number of clients connected
                             clients.add_client(name.clone());
@@ -450,7 +478,8 @@ fn main() {
                                     definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
                                     control.on_connected(&conn);
 
-                                    let def_connect_result = definitions.on_connected(&conn);
+                                    let def_connect_result =
+                                        definitions.on_connected(&conn, skip_sim_connect);
                                     if let Err(()) = def_connect_result {
                                         client.stop("Error starting WS server. Do you have another YourControls open?".to_string())
                                     }
@@ -478,12 +507,17 @@ fn main() {
                                 ConnectionMethod::Direct,
                             ) {
                                 Ok(new_client) => {
-                                    info!("[NETWORK] New client started to connect to hosted server.");
+                                    info!(
+                                        "[NETWORK] New client started to connect to hosted server."
+                                    );
                                     *client = Box::new(new_client);
                                 }
                                 Err(e) => {
                                     app_interface.client_fail(e.to_string().as_str());
-                                    error!("[NETWORK] Could not start new hoster client! Reason: {}", e);
+                                    error!(
+                                        "[NETWORK] Could not start new hoster client! Reason: {}",
+                                        e
+                                    );
                                 }
                             };
                         }
@@ -525,7 +559,9 @@ fn main() {
 
                             app_interface.client_fail(&reason);
                         }
-                        Event::UnablePunchthrough => app_interface.client_fail("Could not connect to host! Please port forward or use Cloud Host."),
+                        Event::UnablePunchthrough => app_interface.client_fail(
+                            "Could not connect to host! Please port forward or use Cloud Host.",
+                        ),
 
                         Event::SessionIdFetchFailed => app_interface
                             .server_fail("Could not connect to Cloud Server to fetch session ID."),
@@ -604,10 +640,16 @@ fn main() {
 
                     if config_to_load.is_empty() {
                         app_interface.server_fail("Select an aircraft config first!");
-                    } else if !load_definitions(&mut definitions, &mut sim_to_load, &mut config_to_load) {
-                        app_interface.error("Error loading definition files. Check the log for more information.");
+                    } else if !load_definitions(
+                        &mut definitions,
+                        &mut sim_to_load,
+                        &mut config_to_load,
+                    ) {
+                        app_interface.error(
+                            "Error loading definition files. Check the log for more information.",
+                        );
                     } else if connected {
-                        definitions.on_connected(&conn).ok();
+                        definitions.on_connected(&conn, skip_sim_connect).ok();
                         control.on_connected(&conn);
                         // Display attempting to start server
                         app_interface.attempt();
@@ -743,23 +785,35 @@ fn main() {
                         client.set_self_observer();
                     }
                 }
-                AppMessage::LoadAircraft { config_file_name, sim } => {
+                AppMessage::LoadAircraft {
+                    config_file_name,
+                    sim,
+                } => {
                     // Load config
-                    info!("[DEFINITIONS] {} aircraft config selected for {}.", config_file_name, sim);
+                    info!(
+                        "[DEFINITIONS] {} aircraft config selected for {}.",
+                        config_file_name, sim
+                    );
                     config_to_load.clone_from(&config_file_name);
                     sim_to_load.clone_from(&sim);
                 }
                 AppMessage::Startup => {
                     // List aircraft
                     if let Ok(configs) = get_fs2020_configs() {
-                        info!("[DEFINITIONS] Found {} FS2020 configuration file(s).", configs.len());
+                        info!(
+                            "[DEFINITIONS] Found {} FS2020 configuration file(s).",
+                            configs.len()
+                        );
 
                         for aircraft_config in configs {
                             app_interface.add_fs2020_aircraft(&aircraft_config);
                         }
                     }
                     if let Ok(configs) = get_fs2024_configs() {
-                        info!("[DEFINITIONS] Found {} FS2024 configuration file(s).", configs.len());
+                        info!(
+                            "[DEFINITIONS] Found {} FS2024 configuration file(s).",
+                            configs.len()
+                        );
 
                         for aircraft_config in configs {
                             app_interface.add_fs2024_aircraft(&aircraft_config);
@@ -773,7 +827,10 @@ fn main() {
                         if *newest_version > app_version && newest_version.pre.is_empty() {
                             app_interface.version(&newest_version.to_string());
                         }
-                        info!("[UPDATER] Version {} in use, {} is newest.", app_version, newest_version)
+                        info!(
+                            "[UPDATER] Version {} in use, {} is newest.",
+                            app_version, newest_version
+                        )
                     } else {
                         info!("[UPDATER] Version {} in use.", app_version)
                     }

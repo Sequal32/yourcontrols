@@ -19,8 +19,8 @@ use crate::{
         transfer::{AircraftVars, Events, LVarSyncer},
     },
     syncdefs::{
-        CustomCalculator, LocalVarProxy, MultiplyDifferenceLocalVarSet, NumDigitSet,
-        NumIncrement, NumSet, ResetWhenEquals, Syncable, ToggleSwitch,
+        CustomCalculator, LocalVarProxy, MultiplyDifferenceLocalVarSet, NumDigitSet, NumIncrement,
+        NumSet, ResetWhenEquals, Syncable, ToggleSwitch,
     },
     util::{Category, InDataTypes},
 };
@@ -1661,15 +1661,16 @@ impl Definitions {
     }
 
     // To be called when SimConnect connects
-    pub fn on_connected(&mut self, conn: &SimConnector) -> Result<(), ()> {
+    pub fn on_connected(&mut self, conn: &SimConnector, skip_sim_connect: bool) -> Result<(), ()> {
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
         self.physics_corrector.on_connected(conn);
 
         // Might be running another instance
-        #[cfg(not(feature = "skip_sim_connect"))]
-        self.jstransfer.start().map_err(|_| ())?;
+        if !skip_sim_connect {
+            self.jstransfer.start().map_err(|_| ())?;
+        }
 
         // Notify simulator we are connected
         self.lvarstransfer
@@ -1681,7 +1682,8 @@ impl Definitions {
             self.avarstransfer.define_id,
             0,
             simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SIM_FRAME,
-            simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED,
+            simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED
+                | simconnect::SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_TAGGED,
             0,
             0,
             0,
