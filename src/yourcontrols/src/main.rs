@@ -6,6 +6,8 @@ mod cli;
 mod clientmanager;
 mod corrector;
 mod definitions;
+mod paths;
+mod program;
 mod simconfig;
 mod sync;
 mod syncdefs;
@@ -18,78 +20,32 @@ use cli::CliWrapper;
 use clientmanager::ClientManager;
 use definitions::{Definitions, ProgramAction, SyncPermission};
 use log::{error, info, warn};
+use program::Program;
 use simconfig::Config;
-use simconnect::{DispatchResult, SimConnector};
+use simconnect::DispatchResult;
 use spin_sleep::sleep;
 use std::{
     env,
-    fs::{read_dir, File},
-    io,
+    fs::File,
     net::IpAddr,
-    path::PathBuf,
     time::{Duration, Instant},
 };
 use update::Updater;
-use yourcontrols_net::{Client, Event, Payloads, ReceiveMessage, Server, TransferClient};
+use yourcontrols_net::{Client, Event, Payloads, ReceiveMessage, TransferClient};
 use yourcontrols_types::AllNeedSync;
 
-use crate::util::get_hostname_ip;
+use crate::{
+    paths::DefinitionPathResolver,
+    program::{ProgramState, StartServerParameters},
+    util::get_hostname_ip,
+};
 
 use control::*;
 use sync::*;
 
 const LOG_FILENAME: &str = "log.txt";
-const CONFIG_FILENAME: &str = "config.json";
-const FS2020_DEFINITIONS_PATH: &str = "definitions/FS2020/aircraft/";
-const FS2024_DEFINITIONS_PATH: &str = "definitions/FS2024/aircraft/";
 
 const LOOP_SLEEP_TIME: Duration = Duration::from_millis(10);
-
-fn get_fs2020_configs() -> io::Result<Vec<String>> {
-    let mut filenames = Vec::new();
-
-    for file in read_dir(FS2020_DEFINITIONS_PATH)? {
-        let file = file?;
-        filenames.push(
-            file.path()
-                .file_name()
-                .unwrap()
-                .to_str()
-                .unwrap()
-                .to_string(),
-        )
-    }
-
-    Ok(filenames)
-}
-
-fn get_fs2024_configs() -> io::Result<Vec<String>> {
-    let mut filenames = Vec::new();
-
-    for file in read_dir(FS2024_DEFINITIONS_PATH)? {
-        let file = file?;
-        filenames.push(
-            file.path()
-                .file_name()
-                .unwrap()
-                .to_str()
-                .unwrap()
-                .to_string(),
-        )
-    }
-
-    Ok(filenames)
-}
-
-fn write_configuration(config: &Config) {
-    match config.write_to_file(CONFIG_FILENAME) {
-        Ok(_) => {}
-        Err(e) => error!(
-            "[PROGRAM] Could not write configuration file! Reason: {}",
-            e
-        ),
-    };
-}
 
 #[allow(clippy::too_many_arguments)]
 fn start_client(
@@ -150,7 +106,7 @@ fn write_update_data(
 }
 
 fn main() {
-    let cli = CliWrapper::new();
+    let cli: CliWrapper = CliWrapper::new();
     let skip_sim_connect = cli.skip_sim_connect();
 
     let is_dev_build = cfg!(debug_assertions);
@@ -168,19 +124,8 @@ fn main() {
     )
     .ok();
     // Load configuration file
-    let mut config = match Config::read_from_file(CONFIG_FILENAME) {
-        Ok(config) => config,
-        Err(e) => {
-            warn!(
-                "[PROGRAM] Could not open config. Using default values. Reason: {}",
-                e
-            );
-
-            let config = Config::default();
-            write_configuration(&config);
-            config
-        }
-    };
+    let mut config = Config::read_or_default();
+    cli.apply_config_overrides(&mut config);
 
     let mut conn = simconnect::SimConnector::new();
     let mut control = Control::new();
@@ -201,73 +146,29 @@ fn main() {
 
     // Update rate counter
     let mut definitions = Definitions::new();
+    let mut state = ProgramState::default();
 
     let mut ready_to_process_data = false;
 
     let mut connection_time = None;
 
-    let mut config_to_load = String::new();
-    let mut sim_to_load = String::new();
-
-    // Helper closures
-    let get_config_path = |sim: &str, config_name: &str| -> PathBuf {
-        let mut path = PathBuf::from(format!("definitions/{}/aircraft/", sim));
-        path.push(config_name);
-        path
-    };
-    // Load definitions
-    let load_definitions = |definitions: &mut Definitions,
-                            sim: &mut String,
-                            config_to_load: &mut String|
-     -> bool {
-        // Load aircraft configuration
-        let path = get_config_path(sim, config_to_load);
-
-        match definitions.load_config(path.to_string_lossy().to_string()) {
-            Ok(_) => {
-                info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events.",
-                definitions.get_number_avars(), definitions.get_number_lvars(), definitions.get_number_events());
-            }
-            Err(e) => {
-                error!(
-                    "[DEFINITIONS] Could not load configuration file {}: {}",
-                    config_to_load, e
-                );
-                // Prevent server/client from starting as config could not be loaded.
-                *config_to_load = String::new();
-                return false;
+    /// Temp macro to hold the global context for the sim event handlers, will refactor eventually to not need this
+    /// Hard-coded variable names that are used in main for temporary readability
+    macro_rules! build_global_program {
+        () => {
+            Program {
+                conn: &mut conn,
+                definitions: &mut definitions,
+                config: &mut config,
+                transfer_client: &mut transfer_client,
+                updater: &mut updater,
+                control: &mut control,
+                app_interface: &app_interface,
+                cli: &cli,
+                state: &mut state,
             }
         };
-
-        info!(
-            "[DEFINITIONS] {} loaded successfully for {}.",
-            config_to_load, sim
-        );
-
-        true
-    };
-
-    let connect_to_sim = |conn: &mut SimConnector, definitions: &mut Definitions| {
-        // Connect to simconnect
-        *definitions = Definitions::new();
-        let connected = if skip_sim_connect {
-            info!("[SIM] SimConnect connection skipped (cli).");
-            true
-        } else {
-            conn.connect("YourControls")
-        };
-        if connected {
-            if !skip_sim_connect {
-                // Display not connected to server message
-                info!("[SIM] Connected to SimConnect.");
-            }
-        } else {
-            // Display trying to connect message
-            app_interface.error("Could not connect to SimConnect! Is the sim running?");
-        };
-
-        connected
-    };
+    }
 
     loop {
         let timer = Instant::now();
@@ -634,80 +535,17 @@ fn main() {
                     port,
                     is_ipv6,
                     method,
-                    use_upnp,
+                    use_upnp, // Defaults to true in the UI
                 } => {
-                    let connected = connect_to_sim(&mut conn, &mut definitions);
+                    let server_params = StartServerParameters {
+                        method,
+                        is_ipv6,
+                        use_upnp,
+                    };
+                    config.name = username.clone();
+                    config.port = port;
 
-                    if config_to_load.is_empty() {
-                        app_interface.server_fail("Select an aircraft config first!");
-                    } else if !load_definitions(
-                        &mut definitions,
-                        &mut sim_to_load,
-                        &mut config_to_load,
-                    ) {
-                        app_interface.error(
-                            "Error loading definition files. Check the log for more information.",
-                        );
-                    } else if connected {
-                        definitions.on_connected(&conn, skip_sim_connect).ok();
-                        control.on_connected(&conn);
-                        // Display attempting to start server
-                        app_interface.attempt();
-
-                        match method {
-                            ConnectionMethod::Direct | ConnectionMethod::CloudServer => {
-                                let mut server = Box::new(Server::new(
-                                    username.clone(),
-                                    updater.get_version().to_string(),
-                                    config.conn_timeout,
-                                ));
-
-                                let result = match method {
-                                    ConnectionMethod::Direct => {
-                                        server.start(is_ipv6, port, use_upnp)
-                                    }
-                                    ConnectionMethod::CloudServer => {
-                                        server.start_with_hole_punching(is_ipv6)
-                                    }
-                                    _ => panic!("Not implemented!"),
-                                };
-
-                                match result {
-                                    Ok(_) => {
-                                        // Assign server as transfer client
-                                        transfer_client = Some(server);
-                                        info!("[NETWORK] Server started.");
-                                    }
-                                    Err(e) => {
-                                        app_interface.server_fail(&e.to_string());
-                                        info!("[NETWORK] Could not start server! Reason: {}", e);
-                                    }
-                                }
-                            }
-                            ConnectionMethod::Relay => {
-                                let mut client = Box::new(Client::new(
-                                    username.clone(),
-                                    updater.get_version().to_string(),
-                                    config.conn_timeout,
-                                ));
-
-                                match client.start_with_relay(is_ipv6) {
-                                    Ok(_) => {
-                                        transfer_client = Some(client);
-                                        info!("[NETWORK] Hosting started.");
-                                    }
-                                    Err(e) => {
-                                        info!("[NETWORK] Hosting could not start! Reason: {}", e);
-                                        app_interface.server_fail(&e.to_string());
-                                    }
-                                }
-                            }
-                        };
-
-                        config.port = port;
-                        config.name = username;
-                        write_configuration(&config);
-                    }
+                    build_global_program!().handle_start_server(&server_params);
                 }
                 AppMessage::Connect {
                     session_id,
@@ -718,7 +556,7 @@ fn main() {
                     isipv6,
                     hostname,
                 } => {
-                    let connected = connect_to_sim(&mut conn, &mut definitions);
+                    let connected = { build_global_program!().connect_to_sim() };
 
                     if connected {
                         // Display attempting to start server
@@ -753,7 +591,8 @@ fn main() {
                         } else {
                             String::new()
                         };
-                        write_configuration(&config);
+
+                        config.write();
                     }
                 }
                 AppMessage::Disconnect => {
@@ -794,12 +633,20 @@ fn main() {
                         "[DEFINITIONS] {} aircraft config selected for {}.",
                         config_file_name, sim
                     );
-                    config_to_load.clone_from(&config_file_name);
-                    sim_to_load.clone_from(&sim);
+                    if let Some(definition_path) =
+                        DefinitionPathResolver::from_sim_and_config(&sim, &config_file_name)
+                    {
+                        build_global_program!().load_definitions(&definition_path);
+                    } else {
+                        error!(
+                            "[DEFINITIONS] Could not find definition file for {} config {}!",
+                            sim, config_file_name
+                        );
+                    }
                 }
                 AppMessage::Startup => {
                     // List aircraft
-                    if let Ok(configs) = get_fs2020_configs() {
+                    if let Ok(configs) = DefinitionPathResolver::get_fs_2020_configs() {
                         info!(
                             "[DEFINITIONS] Found {} FS2020 configuration file(s).",
                             configs.len()
@@ -809,7 +656,7 @@ fn main() {
                             app_interface.add_fs2020_aircraft(&aircraft_config);
                         }
                     }
-                    if let Ok(configs) = get_fs2024_configs() {
+                    if let Ok(configs) = DefinitionPathResolver::get_fs_2024_configs() {
                         info!(
                             "[DEFINITIONS] Found {} FS2024 configuration file(s).",
                             configs.len()
@@ -834,6 +681,8 @@ fn main() {
                     } else {
                         info!("[UPDATER] Version {} in use.", app_version)
                     }
+
+                    build_global_program!().handle_ui_startup();
                 }
                 AppMessage::RunUpdater => {
                     match updater.run_installer() {
@@ -849,7 +698,7 @@ fn main() {
                 }
                 AppMessage::UpdateConfig { new_config } => {
                     config = new_config;
-                    write_configuration(&config);
+                    config.write();
                     info!("[CONFIG] Settings saved.");
                 }
                 AppMessage::ForceTakeControl => {

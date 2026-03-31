@@ -16,9 +16,13 @@ use std::{
     thread,
 };
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-pub enum ConnectionMethod { Direct, Relay, CloudServer }
+pub enum ConnectionMethod {
+    Direct,
+    Relay,
+    CloudServer,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "camelCase")]
@@ -39,15 +43,25 @@ pub enum AppMessage {
         port: Option<u16>,
         method: ConnectionMethod,
     },
-    TransferControl { target: String },
-    SetObserver { target: String, is_observer: bool },
-    LoadAircraft { config_file_name: String, sim: String },
+    TransferControl {
+        target: String,
+    },
+    SetObserver {
+        target: String,
+        is_observer: bool,
+    },
+    LoadAircraft {
+        config_file_name: String,
+        sim: String,
+    },
     Disconnect,
     Startup,
     RunUpdater,
     ForceTakeControl,
-    UpdateConfig { new_config: simconfig::Config },
-    GoObserver
+    UpdateConfig {
+        new_config: simconfig::Config,
+    },
+    GoObserver,
 }
 
 fn get_message_str(type_string: &str, data: &str) -> String {
@@ -238,6 +252,10 @@ impl App {
         self.invoke("add_fs2024_aircraft", Some(name));
     }
 
+    pub fn set_aircraft(&self, config: &str) {
+        self.invoke("set_aircraft", Some(config));
+    }
+
     pub fn version(&self, version: &str) {
         self.invoke("version", Some(version))
     }
@@ -251,7 +269,9 @@ impl App {
     }
 
     pub fn send_network(&self, metrics: &Metrics) {
-        self.invoke("metrics", Some(
+        self.invoke(
+            "metrics",
+            Some(
                 json!({
                     "sentPackets": metrics.sent_packets,
                     "receivePackets": metrics.received_packets,

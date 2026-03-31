@@ -375,6 +375,9 @@ function MessageReceived(data) {
         case "session":
             SetSessionCode(data["data"])
             break;
+        case "set_aircraft":
+            SetAircraftUI(data["data"])
+            break;
     }
 
 }
@@ -413,6 +416,17 @@ function UpdateAircraft(filename, sim) {
         sim: sim,
     });
 }
+
+function SetAircraftUI(filename) {
+    let baseName = filename.split(/(\\|\/)/g).pop();
+
+    if (filename.indexOf("FS2020") !== -1) {
+        fs2020List.value = baseName;
+    } else if (filename.indexOf("FS2024") !== -1) {
+        fs2024List.value = baseName;
+    }
+}
+
 
 // Buttons functions
 

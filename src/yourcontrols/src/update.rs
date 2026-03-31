@@ -1,8 +1,7 @@
 use semver::Version;
 use serde_json::Value;
 use std::{
-    env,
-    fs,
+    env, fs,
     io::{copy, Cursor},
 };
 
@@ -148,5 +147,9 @@ impl Updater {
 
     pub fn get_version(&self) -> Version {
         Version::parse(env!("CARGO_PKG_VERSION")).unwrap()
+    }
+
+    pub fn get_version_string(&self) -> String {
+        self.get_version().to_string()
     }
 }
