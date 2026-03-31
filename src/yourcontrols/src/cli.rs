@@ -59,6 +59,9 @@ struct Cli {
         help = "Override instructor mode (true/false)."
     )]
     instructor_mode: Option<bool>,
+
+    #[arg(long, help = "Log to the terminal in addition to log.txt.")]
+    log_console: bool,
 }
 
 #[derive(Copy, Clone, Debug, ValueEnum)]
@@ -127,5 +130,9 @@ impl CliWrapper {
         if let Some(instructor_mode) = self.cli.instructor_mode {
             config.instructor_mode = instructor_mode;
         }
+    }
+
+    pub fn log_to_console(&self) -> bool {
+        self.cli.log_console
     }
 }
