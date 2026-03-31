@@ -143,6 +143,7 @@ function OnConnected() {
 
 
     SetStuffVisible(true);
+
 }
 
 function OnDisconnect(text) {
@@ -375,6 +376,7 @@ function MessageReceived(data) {
             SetSessionCode(data["data"])
             break;
     }
+
 }
 
 // Init
@@ -536,6 +538,7 @@ $("#settings-form").submit(function (e) {
 });
 
 $("#server-button").click(function (e) {
+    e.preventDefault()
 
     if (is_connected) {
         invoke({
@@ -577,6 +580,7 @@ $("#server-button").click(function (e) {
 });
 
 $("#connect-button").click(function (e) {
+    e.preventDefault()
 
     if (is_connected) {
         invoke({
