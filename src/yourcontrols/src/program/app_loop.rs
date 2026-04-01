@@ -6,7 +6,6 @@ use crate::cli::CliWrapper;
 use crate::definitions::Definitions;
 use crate::paths::DefinitionPathResolver;
 use crate::simconfig::Config;
-use crate::sync::control::Control;
 use crate::update::Updater;
 
 use super::emulator_runtime::{EmulatorController, EmulatorSetContext};
@@ -35,7 +34,6 @@ pub struct AppContext<'a> {
     pub program_state: &'a mut ProgramState,
     pub sim: &'a mut SimState,
     pub network: &'a mut NetworkState,
-    pub control: &'a mut Control,
     pub config: &'a mut Config,
     pub cli: &'a CliWrapper,
     pub updater: &'a mut Updater,
@@ -267,7 +265,6 @@ impl AppHandler {
                 let mut set_ctx = EmulatorSetContext {
                     definitions: &mut ctx.sim.definitions,
                     conn: &ctx.sim.conn,
-                    control: ctx.control,
                     client: ctx.network.transfer_client.as_deref(),
                     app: &state.app_interface,
                 };
@@ -357,7 +354,6 @@ impl AppHandler {
             .definitions
             .on_connected(&ctx.sim.conn, skip_sim_connect)
             .ok();
-        ctx.control.on_connected(&ctx.sim.conn);
         // Display attempting to start server
         state.app_interface.attempt();
 

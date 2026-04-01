@@ -10,7 +10,6 @@ use crate::cli::CliWrapper;
 use crate::clientmanager::ClientManager;
 use crate::definitions::SyncPermission;
 use crate::simconfig::Config;
-use crate::sync::control::Control;
 use crate::update::Updater;
 use crate::util::get_hostname_ip;
 
@@ -44,7 +43,6 @@ impl NetworkState {
 pub struct NetworkContext<'a> {
     pub emulator: &'a EmulatorRuntimeState,
     pub sim: &'a mut SimState,
-    pub control: &'a mut Control,
     pub config: &'a Config,
     pub cli: &'a CliWrapper,
     pub updater: &'a Updater,
@@ -206,18 +204,14 @@ impl NetworkHandler {
                 ctx.sim.definitions.reset_sync();
                 if to == client.get_server_name() {
                     info!("[CONTROL] Taking control from {}", from);
-                    ctx.control
-                        .take_control(&ctx.sim.conn, &ctx.sim.definitions.lvarstransfer.transfer);
+                    ctx.sim.definitions.on_control_change(&ctx.sim.conn, true);
                     ctx.app.gain_control();
                     state.clients.set_no_control();
                 // Someone else has controls, if we have controls we let go and listen for their messages
                 } else {
                     if from == client.get_server_name() {
                         ctx.app.lose_control();
-                        ctx.control.lose_control(
-                            &ctx.sim.conn,
-                            &ctx.sim.definitions.lvarstransfer.transfer,
-                        );
+                        ctx.sim.definitions.on_control_change(&ctx.sim.conn, false);
                     }
                     info!("[CONTROL] {} is now in control.", to);
                     ctx.app.set_incontrol(&to);
@@ -262,7 +256,7 @@ impl NetworkHandler {
             }
             // Person is ready to receive data
             Payloads::Ready => {
-                if ctx.control.has_control() {
+                if ctx.sim.definitions.has_control() {
                     client.update(ctx.sim.definitions.get_all_current(), false);
                 }
                 // Request time update to sync
@@ -282,10 +276,7 @@ impl NetworkHandler {
                         info!("[CONTROL] {} had control, taking control back.", name);
                         ctx.app.gain_control();
 
-                        ctx.control.take_control(
-                            &ctx.sim.conn,
-                            &ctx.sim.definitions.lvarstransfer.transfer,
-                        );
+                        ctx.sim.definitions.on_control_change(&ctx.sim.conn, true);
                         client.transfer_control(client.get_server_name().to_string());
                     }
                 }
@@ -327,7 +318,6 @@ impl NetworkHandler {
                     Ok(_) => {
                         info!("[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events from the server.",
                         ctx.sim.definitions.get_number_avars(), ctx.sim.definitions.get_number_lvars(), ctx.sim.definitions.get_number_events());
-                        ctx.control.on_connected(&ctx.sim.conn);
 
                         let skip_sim_connect = ctx.cli.skip_sim_connect();
                         let def_connect_result = ctx
@@ -341,10 +331,7 @@ impl NetworkHandler {
                             )
                         }
                         // Freeze aircraft
-                        ctx.control.lose_control(
-                            &ctx.sim.conn,
-                            &ctx.sim.definitions.lvarstransfer.transfer,
-                        );
+                        ctx.sim.definitions.on_control_change(&ctx.sim.conn, false);
                     }
                     Err(e) => {
                         error!(
@@ -409,8 +396,7 @@ impl NetworkHandler {
                         ctx.app.set_session_code(session_code);
                     }
                     // Unfreeze aircraft
-                    ctx.control
-                        .take_control(&ctx.sim.conn, &ctx.sim.definitions.lvarstransfer.transfer);
+                    ctx.sim.take_control();
                     ctx.app.gain_control();
                     // Not really used by the host
                     ctx.sync.connection_time = Some(Instant::now());
@@ -423,8 +409,7 @@ impl NetworkHandler {
             Event::ConnectionLost(reason) => {
                 info!("[NETWORK] Server/Client stopped. Reason: {}", reason);
                 // TAKE BACK CONTROL
-                ctx.control
-                    .take_control(&ctx.sim.conn, &ctx.sim.definitions.lvarstransfer.transfer);
+                ctx.sim.take_control();
 
                 state.clients.reset();
                 state.observing = false;

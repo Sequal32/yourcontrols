@@ -15,6 +15,7 @@ use std::{
 use crate::{
     corrector::Corrector,
     sync::{
+        freezer::Freezer,
         gaugecommunicator::{GetResult, InterpolateData, InterpolationType},
         jscommunicator::{JSCommunicator, JSPayloads},
         transfer::{AircraftVars, Events, LVarSyncer},
@@ -498,6 +499,8 @@ pub struct Definitions {
     emulator: EmulatorState,
     // To keep track of time
     time: Instant,
+    // Freezer struct to handle freezing the sim when control is lost
+    freezer: Freezer,
 }
 
 fn get_category_from_string(category: &str) -> Result<Category, Error> {
@@ -547,6 +550,7 @@ impl Definitions {
             pending_action: None,
             emulator: EmulatorState::new(),
             time: Instant::now(),
+            freezer: Freezer::new(),
         }
     }
 
@@ -1400,7 +1404,11 @@ impl Definitions {
 
     // Process changed aircraft variables and update SyncActions related to it
     #[allow(unused_variables)]
-    pub fn process_sim_object_data(&mut self, data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA) {
+    pub fn process_sim_object_data(
+        &mut self,
+        conn: &SimConnector,
+        data: &simconnect::SIMCONNECT_RECV_SIMOBJECT_DATA,
+    ) {
         // self.physics_corrector.process_sim_object_data(data);
         if self.avarstransfer.define_id != data.dwDefineID {
             return;
@@ -1409,6 +1417,9 @@ impl Definitions {
         if let Ok(data) = self.avarstransfer.read_vars(data) {
             // Remove some computed components
             // self.physics_corrector.remove_components(&mut data);
+            self.freezer
+                .on_vars_change(&data, conn, &self.lvarstransfer.transfer);
+
             // Update all syncactions with the changed values
             for (var_name, value) in &data {
                 // Determine if this variable should be updated
@@ -1606,8 +1617,6 @@ impl Definitions {
                         continue;
                     }
 
-                    info!("Processing aircraft var: {}, value: {}", var_name, data);
-
                     execute_mapping!(
                         new_value,
                         action,
@@ -1713,6 +1722,8 @@ impl Definitions {
 
     // To be called when SimConnect connects
     pub fn on_connected(&mut self, conn: &SimConnector, skip_sim_connect: bool) -> Result<(), ()> {
+        self.freezer.register_vars(&mut self.avarstransfer);
+
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
         self.lvarstransfer.on_connected(conn);
@@ -1791,5 +1802,17 @@ impl Definitions {
         swap(&mut self.pending_action, &mut next_action);
 
         next_action
+    }
+
+    // Called when control is gained or lost to check if we need to freeze the sim
+    pub fn on_control_change(&mut self, conn: &SimConnector, has_control: bool) {
+        self.lvarstransfer.transfer.stop_interpolation(conn);
+        self.freezer
+            .on_control_change(conn, &self.lvarstransfer.transfer, has_control);
+    }
+
+    // Check if we currently have control
+    pub fn has_control(&self) -> bool {
+        self.freezer.has_control()
     }
 }

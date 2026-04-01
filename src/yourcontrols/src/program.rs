@@ -5,7 +5,6 @@ use spin_sleep::sleep;
 use crate::app::App;
 use crate::cli::CliWrapper;
 use crate::simconfig::Config;
-use crate::sync::control::Control;
 use crate::update::Updater;
 
 mod app_loop;
@@ -36,7 +35,6 @@ pub struct Program {
     state: ProgramState,
     cli: CliWrapper,
     config: Config,
-    control: Control,
     updater: Updater,
     sim: simconnect::SimState,
     network: NetworkState,
@@ -56,7 +54,6 @@ impl Program {
             state: ProgramState::default(),
             cli,
             config,
-            control: Control::new(),
             updater,
             sim: simconnect::SimState::new(),
             network: NetworkState::new(),
@@ -79,7 +76,6 @@ impl Program {
                         let mut net_ctx = NetworkContext {
                             emulator: &self.state.emulator,
                             sim: &mut self.sim,
-                            control: &mut self.control,
                             config: &self.config,
                             cli: &self.cli,
                             updater: &self.updater,
@@ -90,12 +86,7 @@ impl Program {
                         NetworkController::poll(&mut self.network, &mut net_ctx);
                     }
 
-                    SyncController::tick(
-                        &mut self.sync,
-                        &mut self.network,
-                        &mut self.sim,
-                        &mut self.control,
-                    );
+                    SyncController::tick(&mut self.sync, &mut self.network, &mut self.sim);
                 }
             }
 
@@ -104,7 +95,6 @@ impl Program {
                     program_state: &mut self.state,
                     sim: &mut self.sim,
                     network: &mut self.network,
-                    control: &mut self.control,
                     config: &mut self.config,
                     cli: &self.cli,
                     updater: &mut self.updater,

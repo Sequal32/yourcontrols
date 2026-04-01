@@ -15,6 +15,17 @@ impl SimState {
             definitions: Definitions::new(),
         }
     }
+
+    pub fn has_control(&self) -> bool {
+        self.definitions.has_control()
+    }
+
+    pub fn take_control(&mut self) {
+        self.definitions.on_control_change(&self.conn, true);
+    }
+    pub fn lose_control(&mut self) {
+        self.definitions.on_control_change(&self.conn, false);
+    }
 }
 
 pub enum SimAction {
@@ -26,7 +37,9 @@ pub struct SimController;
 impl SimController {
     pub fn poll(state: &mut SimState) -> Option<SimAction> {
         while let Ok(message) = state.conn.get_next_message() {
-            if let Some(action) = SimHandler::handle_message(&mut state.definitions, message) {
+            if let Some(action) =
+                SimHandler::handle_message(&state.conn, &mut state.definitions, message)
+            {
                 return Some(action);
             }
         }
@@ -38,10 +51,14 @@ impl SimController {
 pub struct SimHandler;
 
 impl SimHandler {
-    fn handle_message(definitions: &mut Definitions, message: DispatchResult) -> Option<SimAction> {
+    fn handle_message(
+        conn: &SimConnector,
+        definitions: &mut Definitions,
+        message: DispatchResult,
+    ) -> Option<SimAction> {
         match message {
             DispatchResult::SimObjectData(data) => {
-                definitions.process_sim_object_data(data);
+                definitions.process_sim_object_data(conn, data);
                 None
             }
             DispatchResult::Exception(data) => {

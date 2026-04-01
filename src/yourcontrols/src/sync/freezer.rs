@@ -8,9 +8,9 @@ use simconnect::SimConnector;
 use yourcontrols_types::VarReaderTypes;
 
 const CHECK_FREEZE_VARS: [&str; 3] = [
-    "IS_ALTITUDE_FREEZE_ON",
-    "IS_ATTITUDE_FREEZE_ON",
-    "IS_LATITUDE_LONGITUDE_FREEZE_ON",
+    "IS ALTITUDE FREEZE ON",
+    "IS ATTITUDE FREEZE ON",
+    "IS LATITUDE LONGITUDE FREEZE ON",
 ];
 
 const FREEZE_EVENTS: [&str; 3] = [
@@ -31,7 +31,7 @@ impl Freezer {
     }
 
     // Start subscribing for sim events
-    pub fn on_startup(&self, avars: &mut AircraftVars) {
+    pub fn register_vars(&self, avars: &mut AircraftVars) {
         for var in CHECK_FREEZE_VARS {
             debug!("[Freezer] Subscribing to {}", var);
             avars.add_var(var, "Bool", InDataTypes::Bool);
@@ -40,7 +40,7 @@ impl Freezer {
 
     fn perform_transfer(&self, conn: &SimConnector, gauge: &GaugeCommunicator, has_control: bool) {
         let should_freeze = if has_control { "0" } else { "1" };
-        debug!(
+        info!(
             "[Freezer] Performing transfer, has_control: {}, freezing: {}",
             has_control, should_freeze
         );

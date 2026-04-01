@@ -3,7 +3,6 @@ use std::time::{Duration, Instant};
 
 use crate::app::App;
 use crate::definitions::{Definitions, SyncPermission};
-use crate::sync::control::Control;
 use simconnect::SimConnector;
 use yourcontrols_net::TransferClient;
 
@@ -32,7 +31,6 @@ pub struct EmulatorController;
 pub struct EmulatorSetContext<'a> {
     pub definitions: &'a mut Definitions,
     pub conn: &'a SimConnector,
-    pub control: &'a Control,
     pub client: Option<&'a dyn TransferClient>,
     pub app: &'a App,
 }
@@ -43,7 +41,11 @@ impl EmulatorController {
         app.emulator_enabled(enabled);
     }
 
-    pub fn send_vars_if_enabled(state: &EmulatorRuntimeState, definitions: &Definitions, app: &App) {
+    pub fn send_vars_if_enabled(
+        state: &EmulatorRuntimeState,
+        definitions: &Definitions,
+        app: &App,
+    ) {
         if !state.enabled {
             return;
         }
@@ -112,12 +114,15 @@ impl EmulatorController {
             if client.is_host() {
                 let permission = SyncPermission {
                     is_server: true,
-                    is_master: ctx.control.has_control(),
+                    is_master: ctx.definitions.has_control(),
                     is_init: true,
                 };
-                apply_result = ctx
-                    .definitions
-                    .apply_emulator_value_to_sim(ctx.conn, var_id, value, &permission);
+                apply_result = ctx.definitions.apply_emulator_value_to_sim(
+                    ctx.conn,
+                    var_id,
+                    value,
+                    &permission,
+                );
             } else {
                 apply_result = ctx.definitions.apply_emulator_value(var_id, value);
             }
