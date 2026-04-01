@@ -144,6 +144,9 @@ function OnConnected() {
 
     SetStuffVisible(true);
 
+    if (typeof EmulatorSetConnectionState === "function") {
+        EmulatorSetConnectionState(true, is_client);
+    }
 }
 
 function OnDisconnect(text) {
@@ -182,6 +185,10 @@ function OnDisconnect(text) {
 
     ResetForm();
     SetStuffVisible(false);
+
+    if (typeof EmulatorSetConnectionState === "function") {
+        EmulatorSetConnectionState(false, false);
+    }
 }
 
 function SetSessionCode(code) {
@@ -380,6 +387,9 @@ function MessageReceived(data) {
             break;
     }
 
+    if (typeof EmulatorMessageReceived === "function") {
+        EmulatorMessageReceived(data);
+    }
 }
 
 // Init

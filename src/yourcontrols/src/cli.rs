@@ -60,6 +60,9 @@ struct Cli {
     )]
     instructor_mode: Option<bool>,
 
+    #[arg(long, help = "Enable emulator UI and controls.")]
+    emulator: bool,
+
     #[arg(long, help = "Log to the terminal in addition to log.txt.")]
     log_console: bool,
 }
@@ -100,6 +103,14 @@ impl CliWrapper {
         self.cli.start_server
     }
 
+    pub fn emulator_enabled(&self) -> bool {
+        self.cli.emulator
+    }
+
+    pub fn log_to_console(&self) -> bool {
+        self.cli.log_console
+    }
+
     pub fn connection_method(&self) -> ConnectionMethod {
         match self.cli.connection_method {
             CliConnectionMethod::Direct => ConnectionMethod::Direct,
@@ -130,9 +141,5 @@ impl CliWrapper {
         if let Some(instructor_mode) = self.cli.instructor_mode {
             config.instructor_mode = instructor_mode;
         }
-    }
-
-    pub fn log_to_console(&self) -> bool {
-        self.cli.log_console
     }
 }

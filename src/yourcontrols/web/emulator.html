@@ -1,0 +1,33 @@
+<div class="col-12" id="emulator-panel" hidden>
+    <div class="card themed">
+        <div class="card-body">
+            <h5 class="card-title">Emulator Client</h5>
+            <div class="form-row align-items-end emulator-controls">
+                <div class="form-group col-sm-8 bottom-margin">
+                    <label for="emulator-var-select">Variable</label>
+                    <select id="emulator-var-select" class="form-control themed"></select>
+                </div>
+                <div class="form-group col-sm-4 bottom-margin">
+                    <button id="emulator-add-var" class="btn btn-outline-primary w-100" type="button">
+                        Add Variable
+                    </button>
+                </div>
+            </div>
+            <div id="emulator-empty" class="themed emulator-empty">No variables added.</div>
+            <div class="table-responsive">
+                <table class="table table-sm table-borderless emulator-table themed" id="emulator-table" hidden>
+                    <thead>
+                        <tr>
+                            <th scope="col">Variable</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Quick Set</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="emulator-rows"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

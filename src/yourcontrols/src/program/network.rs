@@ -14,6 +14,8 @@ use crate::sync::control::Control;
 use crate::update::Updater;
 use crate::util::get_hostname_ip;
 
+use super::emulator_runtime::EmulatorController;
+use super::emulator_runtime::EmulatorRuntimeState;
 use super::simconnect::{SimAction, SimState};
 use super::sync::SyncState;
 
@@ -40,6 +42,7 @@ impl NetworkState {
 }
 
 pub struct NetworkContext<'a> {
+    pub emulator: &'a EmulatorRuntimeState,
     pub sim: &'a mut SimState,
     pub control: &'a mut Control,
     pub config: &'a Config,
@@ -350,6 +353,12 @@ impl NetworkHandler {
                         );
                     }
                 }
+
+                EmulatorController::send_vars_if_enabled(
+                    ctx.emulator,
+                    &ctx.sim.definitions,
+                    ctx.app,
+                );
                 // Start the connection timer to wait to send the ready payload
                 ctx.sync.connection_time = Some(Instant::now());
             }

@@ -9,12 +9,14 @@ use crate::sync::control::Control;
 use crate::update::Updater;
 
 mod app_loop;
+mod emulator_runtime;
 mod network;
 mod simconnect;
 mod state;
 mod sync;
 
 use app_loop::{AppContext, AppController, AppState};
+use emulator_runtime::EmulatorController;
 use network::{NetworkContext, NetworkController, NetworkState};
 use simconnect::SimController;
 use state::ProgramState;
@@ -75,6 +77,7 @@ impl Program {
                 if self.network.has_client() {
                     {
                         let mut net_ctx = NetworkContext {
+                            emulator: &self.state.emulator,
                             sim: &mut self.sim,
                             control: &mut self.control,
                             config: &self.config,
@@ -109,6 +112,13 @@ impl Program {
 
                 AppController::poll(&mut self.app, &mut app_ctx);
             }
+
+            EmulatorController::tick(
+                &mut self.state.emulator,
+                self.network.transfer_client.as_deref(),
+                &self.sim.definitions,
+                &self.app.app_interface,
+            );
 
             NetworkController::cleanup_if_needed(&mut self.network, &mut self.sync, &mut self.sim);
 

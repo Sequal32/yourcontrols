@@ -1,4 +1,5 @@
 use indexmap::IndexMap;
+use log::info;
 use serde::Deserialize;
 use serde_yaml::{self, Value};
 use simconnect::SimConnector;
@@ -24,6 +25,8 @@ use crate::{
     },
     util::{Category, InDataTypes},
 };
+
+use crate::emulator::{EmulatorState, EmulatorVarInfo, EmulatorVarSource};
 
 use yourcontrols_types::{AllNeedSync, Error, Event, EventData, VarMap, VarReaderTypes};
 
@@ -91,10 +94,9 @@ fn set_did_write_recently(map: &mut HashMap<String, Instant>, data_name: &str) {
 }
 
 fn check_did_write_recently(map: &mut HashMap<String, Instant>, data_name: &str) -> bool {
-    return map
-        .get(data_name)
+    map.get(data_name)
         .map(|x| x.elapsed().as_secs() < 1)
-        .unwrap_or(false);
+        .unwrap_or(false)
 }
 
 fn get_data_type_from_string(string: &str) -> Result<InDataTypes, Error> {
@@ -204,7 +206,7 @@ fn evaluate_conditions(
     true
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 enum VarType {
     AircraftVar,
     LocalVar,
@@ -492,6 +494,10 @@ pub struct Definitions {
     interpolate_vars: HashSet<String>,
     // For indicating that an event has been triggered and the control should be transferred to the next person
     pending_action: Option<ProgramAction>,
+    // Track known variable types for emulator UI
+    emulator: EmulatorState,
+    // To keep track of time
+    time: Instant,
 }
 
 fn get_category_from_string(category: &str) -> Result<Category, Error> {
@@ -539,6 +545,8 @@ impl Definitions {
             interpolate_vars: HashSet::new(),
 
             pending_action: None,
+            emulator: EmulatorState::new(),
+            time: Instant::now(),
         }
     }
 
@@ -646,6 +654,9 @@ impl Definitions {
             // Keep var_name with L: in it to pass to execute_calculator code
             self.add_local_variable(category, var_name, var_units)?;
 
+            self.emulator
+                .register_var(var_name, var_type, EmulatorVarSource::Local);
+
             Ok((var_name.to_string(), VarType::LocalVar))
         } else {
             let actual_var_name = get_real_var_name(var_name);
@@ -656,8 +667,42 @@ impl Definitions {
                 return Err(Error::MissingField("var_units"));
             }
 
+            self.emulator
+                .register_var(&actual_var_name, var_type, EmulatorVarSource::Aircraft);
+
             Ok((actual_var_name, VarType::AircraftVar))
         }
+    }
+
+    pub fn get_emulator_vars(&self) -> Vec<EmulatorVarInfo> {
+        self.emulator.get_vars()
+    }
+
+    pub fn get_emulator_var_value(&self, id: &str) -> Option<EmulatorVarInfo> {
+        self.emulator.get_var_value(id)
+    }
+
+    pub fn apply_emulator_value(&mut self, id: &str, value: f64) -> Result<(), Error> {
+        self.emulator.apply_value(id, value, &mut self.current_sync)
+    }
+
+    pub fn apply_emulator_value_to_sim(
+        &mut self,
+        conn: &SimConnector,
+        id: &str,
+        value: f64,
+        sync_permission: &SyncPermission,
+    ) -> Result<(), Error> {
+        let mut data = AllNeedSync::new();
+        self.emulator.apply_value(id, value, &mut data)?;
+        data.filter(|var_name| self.can_sync(var_name, sync_permission));
+        self.write_event_data(data.events)?;
+        self.write_aircraft_data(
+            conn,
+            data.avars,
+            Instant::now().duration_since(self.time).as_secs_f64(),
+        );
+        self.write_local_data(conn, data.lvars)
     }
 
     fn process_new_condition(&mut self, condition: &mut Condition) -> Result<(), Error> {
@@ -1245,7 +1290,9 @@ impl Definitions {
 
         self.current_sync
             .lvars
-            .insert(result.var_name, VarReaderTypes::F64(result.value));
+            .insert(result.var_name.clone(), VarReaderTypes::F64(result.value));
+        self.emulator
+            .record_last_known(&result.var_name, VarReaderTypes::F64(result.value));
     }
 
     // Processes client data and adds to the result queue if it changed
@@ -1393,6 +1440,7 @@ impl Definitions {
                 if should_write {
                     // Queue data for reading
                     self.current_sync.avars.insert(var_name.clone(), *value);
+                    self.emulator.record_last_known(var_name, *value);
                 }
             }
         }
@@ -1558,6 +1606,8 @@ impl Definitions {
                         continue;
                     }
 
+                    info!("Processing aircraft var: {}, value: {}", var_name, data);
+
                     execute_mapping!(
                         new_value,
                         action,
@@ -1649,6 +1699,7 @@ impl Definitions {
         time: f64,
         sync_permission: &SyncPermission,
     ) -> Result<(), Error> {
+        self.emulator.update_from_sync(&data);
         data.filter(|name| self.can_sync(name, sync_permission));
 
         // In this specific order

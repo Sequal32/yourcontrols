@@ -9,6 +9,7 @@ use crate::simconfig::Config;
 use crate::sync::control::Control;
 use crate::update::Updater;
 
+use super::emulator_runtime::{EmulatorController, EmulatorSetContext};
 use super::network::{NetworkController, NetworkState};
 use super::simconnect::SimState;
 use super::state::ProgramState;
@@ -215,6 +216,11 @@ impl AppHandler {
                 }
 
                 Self::handle_ui_startup(state, ctx);
+                EmulatorController::set_enabled(
+                    &mut ctx.program_state.emulator,
+                    &state.app_interface,
+                    ctx.cli.emulator_enabled(),
+                );
             }
             AppMessage::RunUpdater => match ctx.updater.run_installer() {
                 Ok(_) => {
@@ -238,6 +244,39 @@ impl AppHandler {
                         client.take_control(client_name.clone())
                     }
                 }
+            }
+            AppMessage::EmulatorRequestVars => {
+                EmulatorController::request_vars(
+                    &ctx.program_state.emulator,
+                    &ctx.sim.definitions,
+                    &state.app_interface,
+                );
+            }
+            AppMessage::EmulatorAddVar { name } => {
+                EmulatorController::add_var(
+                    &mut ctx.program_state.emulator,
+                    &ctx.sim.definitions,
+                    &state.app_interface,
+                    &name,
+                );
+            }
+            AppMessage::EmulatorRemoveVar { name } => {
+                EmulatorController::remove_var(&mut ctx.program_state.emulator, &name);
+            }
+            AppMessage::EmulatorSetVar { name, value } => {
+                let mut set_ctx = EmulatorSetContext {
+                    definitions: &mut ctx.sim.definitions,
+                    conn: &ctx.sim.conn,
+                    control: ctx.control,
+                    client: ctx.network.transfer_client.as_deref(),
+                    app: &state.app_interface,
+                };
+                EmulatorController::set_var(
+                    &ctx.program_state.emulator,
+                    &mut set_ctx,
+                    &name,
+                    value,
+                );
             }
         }
     }

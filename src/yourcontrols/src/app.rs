@@ -62,6 +62,17 @@ pub enum AppMessage {
         new_config: simconfig::Config,
     },
     GoObserver,
+    EmulatorRequestVars,
+    EmulatorAddVar {
+        name: String,
+    },
+    EmulatorRemoveVar {
+        name: String,
+    },
+    EmulatorSetVar {
+        name: String,
+        value: f64,
+    },
 }
 
 fn get_message_str(type_string: &str, data: &str) -> String {
@@ -107,11 +118,13 @@ impl App {
                     <body class="themed">
                     <img src="data:image/png;base64,{logo}" class="logo-image"/>
                     {body}
+                    {emulator_body}
                 </body>
                 <script>
                     {jquery}
                     {bootstrapjs}
                     {js1}
+                    {js_emulator}
                     {js}
                 </script>
                 </html>
@@ -119,7 +132,9 @@ impl App {
                     css = include_str!("../web/stylesheet.css"),
                     js = include_str!("../web/main.js"),
                     js1 = include_str!("../web/list.js"),
+                    js_emulator = include_str!("../web/emulator.js"),
                     body = include_str!("../web/index.html"),
+                    emulator_body = include_str!("../web/emulator.html"),
                     jquery = include_str!("../web/jquery.min.js"),
                     bootstrapjs = include_str!("../web/bootstrap.bundle.min.js"),
                     bootstrapcss = include_str!("../web/bootstrap.min.css"),
@@ -288,5 +303,24 @@ impl App {
 
     pub fn set_host(&self) {
         self.invoke("host", None);
+    }
+
+    pub fn emulator_enabled(&self, enabled: bool) {
+        self.invoke(
+            "emulator_enabled",
+            Some(if enabled { "true" } else { "false" }),
+        );
+    }
+
+    pub fn send_emulator_vars(&self, value: &str) {
+        self.invoke("emulator_vars", Some(value));
+    }
+
+    pub fn send_emulator_var_value(&self, value: &str) {
+        self.invoke("emulator_value", Some(value));
+    }
+
+    pub fn emulator_error(&self, reason: &str) {
+        self.invoke("emulator_error", Some(reason));
     }
 }

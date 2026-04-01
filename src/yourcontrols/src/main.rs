@@ -6,6 +6,7 @@ mod cli;
 mod clientmanager;
 mod corrector;
 mod definitions;
+mod emulator;
 mod paths;
 mod program;
 mod simconfig;
@@ -42,8 +43,6 @@ fn main() {
         File::create(LOG_FILENAME).unwrap(),
     ));
     CombinedLogger::init(loggers).ok();
-
-    // Start program loop
 
     let mut program = Program::new(cli);
     program.run();
