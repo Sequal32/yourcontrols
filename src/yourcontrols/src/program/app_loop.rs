@@ -280,6 +280,7 @@ impl AppHandler {
 
     fn load_definitions(state: &mut AppState, ctx: &mut AppContext<'_>) -> bool {
         let definition_path = &state.definitions_to_load;
+
         match ctx.sim.definitions.load_config(definition_path.clone()) {
             Ok(_) => {
                 info!(
@@ -348,7 +349,12 @@ impl AppHandler {
 
         let skip_sim_connect = ctx.cli.skip_sim_connect();
 
-        Self::load_definitions(state, ctx);
+        if !Self::load_definitions(state, ctx) {
+            state
+                .app_interface
+                .error("Failed to load definition file! Server not started.");
+            return;
+        }
 
         ctx.sim
             .definitions
