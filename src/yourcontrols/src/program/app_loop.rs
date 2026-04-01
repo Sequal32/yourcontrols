@@ -17,6 +17,7 @@ use super::StartServerParameters;
 pub struct AppState {
     pub(crate) app_interface: App,
     pub(crate) installer_spawned: bool,
+    pub(crate) definitions_to_load: String,
 }
 
 impl AppState {
@@ -24,6 +25,7 @@ impl AppState {
         Self {
             app_interface,
             installer_spawned: false,
+            definitions_to_load: String::new(),
         }
     }
 }
@@ -159,7 +161,12 @@ impl AppHandler {
                 if let Some(definition_path) =
                     DefinitionPathResolver::from_sim_and_config(&sim, &config_file_name)
                 {
-                    Self::load_definitions(state, ctx, &definition_path);
+                    info!(
+                        "[DEFINITIONS] Will load definition file {} for {}.",
+                        definition_path.display(),
+                        sim
+                    );
+                    state.definitions_to_load = definition_path.to_string_lossy().to_string();
                 } else {
                     error!(
                         "[DEFINITIONS] Could not find definition file for {} config {}!",
@@ -235,16 +242,9 @@ impl AppHandler {
         }
     }
 
-    fn load_definitions(
-        _state: &mut AppState,
-        ctx: &mut AppContext<'_>,
-        definition_path: &std::path::Path,
-    ) -> bool {
-        match ctx
-            .sim
-            .definitions
-            .load_config(definition_path.to_string_lossy().to_string())
-        {
+    fn load_definitions(state: &mut AppState, ctx: &mut AppContext<'_>) -> bool {
+        let definition_path = &state.definitions_to_load;
+        match ctx.sim.definitions.load_config(definition_path.clone()) {
             Ok(_) => {
                 info!(
                     "[DEFINITIONS] Loaded and mapped {} aircraft vars, {} local vars, and {} events.",
@@ -256,25 +256,24 @@ impl AppHandler {
             Err(e) => {
                 error!(
                     "[DEFINITIONS] Could not load configuration file {}: {}",
-                    definition_path.display(),
-                    e
+                    definition_path, e
                 );
                 return false;
             }
         };
 
-        info!(
-            "[DEFINITIONS] {} loaded successfully",
-            definition_path.display()
-        );
+        info!("[DEFINITIONS] {} loaded successfully", definition_path);
+
+        // EmulatorController::send_vars_if_enabled(
+        //     &ctx.program_state.emulator,
+        //     &ctx.sim.definitions,
+        //     &state.app_interface,
+        // );
 
         true
     }
 
     fn connect_to_sim(state: &mut AppState, ctx: &mut AppContext<'_>) -> bool {
-        // Connect to simconnect
-        ctx.sim.definitions = Definitions::new();
-
         let connected = if ctx.cli.skip_sim_connect() {
             info!("[SIM] SimConnect connection skipped (cli).");
             true
@@ -300,6 +299,8 @@ impl AppHandler {
         ctx: &mut AppContext<'_>,
         server_params: &StartServerParameters,
     ) {
+        ctx.sim.definitions = Definitions::new(); // Clear definitions on new server start to prevent old definitions being used if sim is restarted
+
         let sim_connected = Self::connect_to_sim(state, ctx);
 
         if !sim_connected {
@@ -310,6 +311,9 @@ impl AppHandler {
         }
 
         let skip_sim_connect = ctx.cli.skip_sim_connect();
+
+        Self::load_definitions(state, ctx);
+
         ctx.sim
             .definitions
             .on_connected(&ctx.sim.conn, skip_sim_connect)
@@ -397,16 +401,7 @@ impl AppHandler {
             definition_file
         );
 
-        let loaded =
-            Self::load_definitions(state, ctx, &std::path::PathBuf::from(&definition_file));
-
-        if loaded {
-            state.app_interface.set_aircraft(&definition_file);
-        } else {
-            state.app_interface.error(
-                "Failed to load definition file on startup! Check the logs for more details.",
-            );
-        }
+        state.app_interface.set_aircraft(&definition_file);
     }
 
     fn handle_ui_startup(state: &mut AppState, ctx: &mut AppContext<'_>) {
