@@ -1,5 +1,4 @@
 use indexmap::IndexMap;
-use log::info;
 use serde::Deserialize;
 use serde_yaml::{self, Value};
 use simconnect::SimConnector;

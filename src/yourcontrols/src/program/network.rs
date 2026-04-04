@@ -204,14 +204,14 @@ impl NetworkHandler {
                 ctx.sim.definitions.reset_sync();
                 if to == client.get_server_name() {
                     info!("[CONTROL] Taking control from {}", from);
-                    ctx.sim.definitions.on_control_change(&ctx.sim.conn, true);
+                    ctx.sim.take_control();
                     ctx.app.gain_control();
                     state.clients.set_no_control();
                 // Someone else has controls, if we have controls we let go and listen for their messages
                 } else {
                     if from == client.get_server_name() {
                         ctx.app.lose_control();
-                        ctx.sim.definitions.on_control_change(&ctx.sim.conn, false);
+                        ctx.sim.lose_control();
                     }
                     info!("[CONTROL] {} is now in control.", to);
                     ctx.app.set_incontrol(&to);
@@ -275,8 +275,7 @@ impl NetworkHandler {
                     if client.is_host() {
                         info!("[CONTROL] {} had control, taking control back.", name);
                         ctx.app.gain_control();
-
-                        ctx.sim.definitions.on_control_change(&ctx.sim.conn, true);
+                        ctx.sim.take_control();
                         client.transfer_control(client.get_server_name().to_string());
                     }
                 }
@@ -331,7 +330,7 @@ impl NetworkHandler {
                             )
                         }
                         // Freeze aircraft
-                        ctx.sim.definitions.on_control_change(&ctx.sim.conn, false);
+                        ctx.sim.lose_control();
                     }
                     Err(e) => {
                         error!(

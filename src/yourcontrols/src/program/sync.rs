@@ -84,7 +84,7 @@ impl SyncHandler {
             ProgramAction::TakeControls => {
                 if !sim.has_control() && !network.observing {
                     if let Some(in_control) = network.clients.get_client_in_control() {
-                        sim.definitions.on_control_change(&sim.conn, true);
+                        sim.take_control();
                         client.take_control(in_control.clone());
                     }
                 }
@@ -95,7 +95,7 @@ impl SyncHandler {
                         client.transfer_control(next_control.clone())
                     }
                 } else if let Some(in_control) = network.clients.get_client_in_control() {
-                    sim.definitions.on_control_change(&sim.conn, false);
+                    sim.lose_control();
                     client.take_control(in_control.clone());
                 }
             }
