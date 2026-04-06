@@ -311,6 +311,8 @@ impl AppHandler {
     }
 
     fn connect_to_sim(state: &mut AppState, ctx: &mut AppContext<'_>) -> bool {
+        ctx.sim.definitions = Definitions::new(); // Clear definitions prevent old definitions being used if sim is restarted
+
         let connected = if ctx.cli.skip_sim_connect() {
             info!("[SIM] SimConnect connection skipped (cli).");
             true
@@ -336,8 +338,6 @@ impl AppHandler {
         ctx: &mut AppContext<'_>,
         server_params: &StartServerParameters,
     ) {
-        ctx.sim.definitions = Definitions::new(); // Clear definitions on new server start to prevent old definitions being used if sim is restarted
-
         let sim_connected = Self::connect_to_sim(state, ctx);
 
         if !sim_connected {
