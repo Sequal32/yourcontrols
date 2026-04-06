@@ -23,11 +23,15 @@ const FREEZE_EVENTS: [&str; 3] = [
 // Ensures the sim stays consistent with the player's control state as well
 pub struct Freezer {
     has_control: bool,
+    is_client: bool,
 }
 
 impl Freezer {
     pub fn new() -> Self {
-        Self { has_control: false }
+        Self {
+            has_control: false,
+            is_client: false,
+        }
     }
 
     // Start subscribing for sim events
@@ -70,6 +74,10 @@ impl Freezer {
         conn: &SimConnector,
         gauge: &GaugeCommunicator,
     ) {
+        if !self.is_client {
+            return;
+        }
+
         for freeze_var in CHECK_FREEZE_VARS {
             let Some(VarReaderTypes::Bool(is_freeze_on)) = vars.get(freeze_var) else {
                 continue;
@@ -92,5 +100,9 @@ impl Freezer {
 
     pub fn has_control(&self) -> bool {
         self.has_control
+    }
+
+    pub fn set_is_client(&mut self, is_client: bool) {
+        self.is_client = is_client;
     }
 }

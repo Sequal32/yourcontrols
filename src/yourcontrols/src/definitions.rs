@@ -1720,8 +1720,14 @@ impl Definitions {
     }
 
     // To be called when SimConnect connects
-    pub fn on_connected(&mut self, conn: &SimConnector, skip_sim_connect: bool) -> Result<(), ()> {
+    pub fn on_connected(
+        &mut self,
+        conn: &SimConnector,
+        skip_sim_connect: bool,
+        is_client: bool,
+    ) -> Result<(), ()> {
         self.freezer.register_vars(&mut self.avarstransfer);
+        self.freezer.set_is_client(is_client);
 
         self.avarstransfer.on_connected(conn);
         self.events.on_connected(conn);
